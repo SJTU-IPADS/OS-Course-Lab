@@ -1,7 +1,12 @@
 # SJTU OS Course Labs From IPADS
 Please find each lab on its individual branch.
 
-![Our textbook is:](os-book.jpeg)
+The course textbook:
+
+<img src="os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
+
+More information is available on https://ipads.se.sjtu.edu.cn/ospi/ .
+
 
 
 ## Lab0: Bomb
