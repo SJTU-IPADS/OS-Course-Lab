@@ -1,6 +1,8 @@
 # SJTU OS Course Labs From IPADS
 Please find each lab on its individual branch.
 
+![Our textbook is:](os-book.jpeg)
+
 
 ## Lab0: Bomb
 This lab is inspired by CSAPP which designs a bomb lab for x86/x86-64.
