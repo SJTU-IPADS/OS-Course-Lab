@@ -1,12 +1,14 @@
 # 实验 1：机器启动
 
-本实验作为 ChCore 操作系统课程实验的第一个实验，分为两个部分：第一部分介绍实验所需的基础知识，第二部分熟悉 ChCore 内核的启动过程。
+本实验作为 ChCore 操作系统课程实验的第一个实验，分为两个部分：第一部分介绍实验所需的基础知识，第二部分熟悉并完成ChCore 内核的启动过程。
+实验面向的硬件平台是树莓派3b+（AArch64）。你可以在QEMU模拟器上完成实验，也可以在树莓派开发板上完成。
 
 实验中的“思考题”，请在实验报告中用文字或示意图简述，“练习题”则需在 ChCore 代码中填空，并在实验报告阐述实现过程，“挑战题”为难度稍高的练习题，此后的实验也类似，不再重复说明。
 
-本实验代码包含了完整的 ChCore 操作系统，除了练习题相关部分的源码以外，其余部分通过二进制格式提供。
-完成本实验的练习题之后，你可以进入 ChCore shell，体验 ChCore 的功能。
-例如，可以在 shell 中输入 `/hello_world.bin` 运行一个简单的用户态程序。
+本实验代码包含了基础的ChCore 微内核操作系统，除了练习题相关的源码以外，其余部分通过二进制格式提供。
+完成本实验的练习题之后，你可以进入 ChCore shell，运行命令或执行程序。
+例如，可以在 shell 中输入 `hello_world.bin` 运行一个简单的用户态程序;
+输入`ls` 查看目录内容。
 
 ```
  ______     __  __     ______     __  __     ______     __         __        
@@ -31,13 +33,15 @@ $ make build # 构建 ChCore
 $ make qemu # 使用 QEMU 运行 ChCore（初始时运行不会有任何输出），按 Ctrl-A 再按 X 退出
 ```
 
+小贴士：
+
 ChCore 采用 CMake 编写的构建系统管理其构建过程，并通过 Shell 脚本 `./chbuild` 对 CMake 的配置（configure）、构建（build）和清理（clean）的操作进行管理，另外，为了同学们更方便地进行实验，在 ChCore 实验中又添加了 Makefile 进一步对 `./chbuild` 脚本进行封装。
 
 具体地，在根目录的 `CMakeLists.txt` 中，通过 `chcore_add_subproject` 命令（实际上就是 CMake 内置的 [`ExternalProject_Add`](https://cmake.org/cmake/help/latest/module/ExternalProject.html)）添加了 kernel 子项目，并传入根级 `CMakeLists.txt` 在 configure 步骤后获得的配置（CMake cache 变量）；在 kernel 子项目中，通过各级子目录共同构建了 `kernel.img` 文件，并放在 ChCore 根目录的 `build` 目录下。
 
-关于 CMake 的更多信息请参考 [IPADS 新人培训：CMake](https://www.bilibili.com/video/BV14h41187FZ)。
-
 ### AArch64 汇编
+
+在课程中，我们已经介绍过和实验相关的AArch64汇编知识，系列实验中的Bomb-Lab也是帮助大家熟悉AArch64汇编。下面提供了一些资料可供查阅。
 
 AArch64 是 ARMv8 ISA 的 64 位执行状态。在 ChCore 实验中需要理解 AArch64 架构的一些特性，并能看懂和填写 AArch64 汇编代码，因此请先参考 [Arm Instruction Set Reference Guide](https://developer.arm.com/documentation/100076/0100) 的 [Overview of the Arm Architecture](https://developer.arm.com/documentation/100076/0100/instruction-set-overview/overview-of-the-arm-architecture) 和 [Overview of AArch64 state](https://developer.arm.com/documentation/100076/0100/instruction-set-overview/overview-of-aarch64-state) 章节以对 AArch64 架构有基本的认识，[A64 Instruction Set Reference](https://developer.arm.com/documentation/100076/0100/a64-instruction-set-reference) 章节则是完整的指令参考手册。
 
@@ -45,7 +49,7 @@ AArch64 是 ARMv8 ISA 的 64 位执行状态。在 ChCore 实验中需要理解 
 
 ### QEMU 和 GDB
 
-在本实验中常常需要对 ChCore 内核和用户态代码进行调试，因此需要开启 QEMU 的 GDB server，并使用 GDB（在 x86-64 平台的 Ubuntu 系统上应使用 `gdb-multiarch` 命令）连接远程目标来进行调试。
+在完成ChCore实验的过程中，我们常常需要对 ChCore 内核和用户态代码进行调试，因此需要开启 QEMU 的 GDB server，并使用 GDB（在 x86-64 平台的 Ubuntu 系统上应使用 `gdb-multiarch` 命令）连接远程目标（运行ChCore的虚拟机）来进行调试。
 
 ChCore 根目录提供了 `.gdbinit` 文件来对 GDB 进行初始化，以方便使用。
 
@@ -59,7 +63,7 @@ $ make qemu-gdb # 需要先确保已运行 make build
 $ make gdb
 ```
 
-不出意外的话，终端 1 将会“卡住”没有任何输出，终端 2 将会进入 GDB 调试界面，并显示从 `0x80000` 内存地址开始的一系列指令。此时在 GDB 窗口输入命令可以控制 QEMU 中 ChCore 内核的运行，例如：
+不出意外的话，终端 1 将会“卡住”没有任何输出，终端 2 将会进入 GDB 调试界面，并显示从 `0x80000` （这是树莓派3b+平台指定的内核第一行指令地址）内存地址开始的指令。此时在 GDB 窗口输入命令可以控制 QEMU 中 ChCore 内核的运行，例如：
 
 - `ni` 可以执行到下一条指令
 - `si` 可以执行到下一条指令，且会跟随 `bl` 进入函数
@@ -98,11 +102,8 @@ QEMU `raspi3b` 机器启动时，CPU 异常级别为 EL3，我们需要在启动
 >
 > 提示：通过 `CurrentEL` 系统寄存器可获得当前异常级别。通过 GDB 在指令级别单步调试可验证实现是否正确。
 
-无论从哪个异常级别跳到更低异常级别，基本的逻辑都是：
-
-- 先设置当前级别的控制寄存器（EL3 的 `scr_el3`、EL2 的 `hcr_el2`、EL1 的 `sctlr_el1`），以控制低一级别的执行状态等行为
-- 然后设置 `elr_elx`（异常链接寄存器）和 `spsr_elx`（保存的程序状态寄存器），分别控制异常返回后执行的指令地址，和返回后应恢复的程序状态（包括异常返回后的异常级别）
-- 最后调用 `eret` 指令，进行异常返回
+`eret`指令可用于从高异常级别跳到更低的异常级别，在执行它之前我们需要设置
+设置 `elr_elx`（异常链接寄存器）和 `spsr_elx`（保存的程序状态寄存器），分别控制`eret`执行后的指令地址（PC）和程序状态（包括异常返回后的异常级别）。
 
 > 练习题 3：在 `arm64_elX_to_el1` 函数的 `LAB 1 TODO 2` 处填写大约 4 行汇编代码，设置从 EL3 跳转到 EL1 所需的 `elr_el3` 和 `spsr_el3` 寄存器值。具体地，我们需要在跳转到 EL1 时暂时屏蔽所有中断、并使用内核栈（`sp_el1` 寄存器指定的栈指针）。
 
@@ -110,9 +111,9 @@ QEMU `raspi3b` 机器启动时，CPU 异常级别为 EL3，我们需要在启动
 
 ### 跳转到第一行 C 代码
 
-降低异常级别到 EL1 后，应尽快从汇编跳转到 C 代码，以便提高代码的可复用性和可读性。因此在 `_start` 函数从 `arm64_elX_to_el1` 返回后，立即设置启动所需的栈，并跳转到第一个 C 函数 `init_c`。
+降低异常级别到 EL1 后，我们准备从汇编跳转到 C 代码，在此之前我们先设置栈（SP）。因此，`_start` 函数在执行 `arm64_elX_to_el1` 后，即设置内核启动阶段的栈，并跳转到第一个 C 函数 `init_c`。
 
-> 思考题 4：结合此前 ICS 课的知识，并参考 `kernel.img` 的反汇编（通过 `aarch64-linux-gnu-objdump -S` 可获得），说明为什么要在进入 C 函数之前设置启动栈。如果不设置，会发生什么？
+> 思考题 4：说明为什么要在进入 C 函数之前设置启动栈。如果不设置，会发生什么？
 
 进入 `init_c` 函数后，第一件事首先通过 `clear_bss` 函数清零了 `.bss` 段，该段用于存储未初始化的全局变量和静态变量（具体请参考附录）。
 
@@ -120,13 +121,14 @@ QEMU `raspi3b` 机器启动时，CPU 异常级别为 EL3，我们需要在启动
 
 ### 初始化串口输出
 
-到目前为止我们仍然只能通过 GDB 追踪内核的执行过程，而无法看到任何输出，这无疑是对我们写操作系统的积极性的一种打击。因此在 `init_c` 中，我们应该尽快启用某个可以输出字符的东西，而这个“东西”在树莓派上叫做 UART 串口。
+到目前为止我们仍然只能通过 GDB 追踪内核的执行过程，而无法看到任何输出，这无疑是对我们写操作系统的积极性的一种打击。因此在 `init_c` 中，我们启用树莓派的 UART 串口，从而能够输出字符。
 
 在 `kernel/arch/aarch64/boot/raspi3/peripherals/uart.c` 已经给出了 `early_uart_init` 和 `early_uart_send` 函数，分别用于初始化 UART 和发送单个字符（也就是输出字符）。
 
 > 练习题 6：在 `kernel/arch/aarch64/boot/raspi3/peripherals/uart.c` 中 `LAB 1 TODO 3` 处实现通过 UART 输出字符串的逻辑。
 
 恭喜！我们终于在内核中输出了第一个字符串！
+感兴趣的同学请思考`early_uart_send`究竟是怎么输出字符的。
 
 ### 启用 MMU
 
@@ -144,8 +146,8 @@ QEMU `raspi3b` 机器启动时，CPU 异常级别为 EL3，我们需要在启动
 
 由于没有配置启动页表，在启用 MMU 后，内核会立即发生地址翻译错误（Translation Fault），进而尝试跳转到异常处理函数（Exception Handler），
 该异常处理函数的地址为异常向量表基地址（`vbar_el1` 寄存器）加上 `0x200`。
-此时我们没有设置异常向量表，因此执行流会来到 `0x200` 地址，此处的代码为非法指令，会再次触发异常并跳转到 `0x200` 地址。
-使用 GDB 调试，在 GDB 中输入 `continue` 后，待内核输出停止后，按 Ctrl-C，可以观察到在 `0x200` 处无限循环。
+此时我们没有设置异常向量表（`vbar_el1` 寄存器的值是0），因此执行流会来到 `0x200` 地址，此处的代码为非法指令，会再次触发异常并跳转到 `0x200` 地址。
+使用 GDB 调试，在 GDB 中输入 `continue` 后，待内核输出停止后，按 Ctrl-C，可以观察到内核在 `0x200` 处无限循环。
 
 ## 第三部分：内核启动页表
 
@@ -162,7 +164,7 @@ QEMU `raspi3b` 机器启动时，CPU 异常级别为 EL3，我们需要在启动
 
 了解了如何决定使用 `ttbr0_el1` 还是 `ttbr1_el1` 指向的页表，再来看地址翻译过程如何进行。通常我们会将系统配置为使用 4KB 翻译粒度、4 级页表（L0 到 L3），同时在 L1 和 L2 页表中分别允许映射 2MB 和 1GB 大页（或称为块）[^huge-page]，因此地址翻译的过程如下图所示：
 
-[^huge-page]: 现代操作系统：原理与实现，4.3.5 大页
+[^huge-page]: 操作系统：原理与实现
 
 ![](assets/lab1-trans.svg)
 
@@ -202,7 +204,7 @@ AttrIndx | bits[4:2] | 表示内存属性索引，间接指向 `mair_el1` 寄存
 
 有了关于页表配置的前置知识，我们终于可以开始配置内核的启动页表了。
 
-操作系统内核通常需要“运行在”虚拟内存的高地址（如前所述，`0xffff_0000_0000_0000` 之后的虚拟地址），这里“运行在”的意思是，通过对内核页表的配置，将虚拟内存高地址映射到内核所在的物理内存，在执行内核代码时，PC 寄存器的值是高地址，对全局变量、栈等的访问都使用高地址。在内核运行时，除了需要访问内核代码和数据等，往往还需要能够对任意物理内存和外设内存（MMIO）进行读写，这种读写同样通过高地址进行。
+操作系统内核通常运行在虚拟内存的高地址（如前所述，`0xffff_0000_0000_0000` 之后的虚拟地址）。通过对内核页表的配置，将虚拟内存高地址映射到内核实际所在的物理内存，在执行内核代码时，PC 寄存器的值是高地址，对全局变量、栈等的访问都使用高地址。在内核运行时，除了需要访问内核代码和数据等，往往还需要能够对任意物理内存和外设内存（MMIO）进行读写，这种读写同样通过高地址进行。
 
 因此，在内核启动时，首先需要对内核自身、其余可用物理内存和外设内存进行虚拟地址映射，最简单的映射方式是一对一的映射，即将虚拟地址 `0xffff_0000_0000_0000 + addr` 映射到 `addr`。需要注意的是，在 ChCore 实验中我们使用了 `0xffff_ff00_0000_0000` 作为内核虚拟地址的开始（注意开头 `f` 数量的区别），不过这不影响我们对知识点的理解。
 
