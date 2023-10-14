@@ -38,7 +38,7 @@ qemu-gdb:
 	$(V)$(_QEMU) -S -gdb tcp::$(QEMU_GDB_PORT) $(QEMU_OPTS)
 
 gdb:
-	$(V)gdb-multiarch
+	$(V)gdb-multiarch --nx -x $(PROJECT_DIR)/.gdbinit
 
 .PHONY: grade
 
