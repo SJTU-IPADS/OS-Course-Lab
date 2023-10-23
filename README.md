@@ -1,3 +1,8 @@
+This lab explains how to set the CPU exception level, configure the kernel page table, and enable MMU during kernel boot.
+We will use a basic version of [ChCore microkernel](https://www.usenix.org/conference/atc20/presentation/gu) in the series of kernel labs and the experiment machine is Raspi3b+ (both QEMU and board are OK).
+
+Tutorial: https://www.bilibili.com/video/BV1gj411i7dh/
+
 # 实验 1：机器启动
 
 本实验作为 ChCore 操作系统课程实验的第一个实验，分为两个部分：第一部分介绍实验所需的基础知识，第二部分熟悉并完成ChCore 内核的启动过程。
