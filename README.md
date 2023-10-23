@@ -29,6 +29,8 @@ Branch: ChCore-Lab1
 
 Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab1
 
+Tutorial: https://www.bilibili.com/video/BV1gj411i7dh/
+
 ## Main Contributors
 ### Directors
 Jinyu Gu
@@ -39,5 +41,7 @@ Yubin Xia
 Chunwei Zhou
 
 Jiacheng Shi
+
+Yuchao Ye
 
 Tianlin Wen
