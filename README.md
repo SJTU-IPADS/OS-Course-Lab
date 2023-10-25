@@ -29,7 +29,7 @@ Branch: ChCore-Lab1
 
 Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab1
 
-Tutorial: https://www.bilibili.com/video/BV1gj411i7dh/
+Tutorial: [https://www.bilibili.com/video/BV1gj411i7dh/](https://www.bilibili.com/video/BV1gj411i7dh/?spm_id_from=333.337.search-card.all.click)
 
 ## Main Contributors
 ### Directors
