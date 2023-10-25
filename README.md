@@ -1,7 +1,8 @@
 This lab explains how to set the CPU exception level, configure the kernel page table, and enable MMU during kernel boot.
 We will use a basic version of [ChCore microkernel](https://www.usenix.org/conference/atc20/presentation/gu) in the series of kernel labs and the experiment machine is Raspi3b+ (both QEMU and board are OK).
 
-Tutorial: https://www.bilibili.com/video/BV1gj411i7dh/
+Tutorial: [https://www.bilibili.com/video/BV1gj411i7dh/](https://www.bilibili.com/video/BV1gj411i7dh/?spm_id_from=333.337.search-card.all.click)
+
 
 # 实验 1：机器启动
 
