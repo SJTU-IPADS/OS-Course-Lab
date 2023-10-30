@@ -316,6 +316,7 @@ static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa, size_t
          * create new page table page if necessary, fill in the final level
          * pte with the help of `set_pte_flags`. Iterate until all pages are
          * mapped.
+         * Since we are adding new mappings, there is no need to flush TLBs.
          */
         /* BLANK BEGIN */
 
@@ -387,11 +388,18 @@ int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, long *rss)
          * Hint: Walk through each level of page table using `get_next_ptp`,
          * mark the final level pte as invalid. Iterate until all pages are
          * unmapped.
+         * You don't need to flush tlb here since tlb is now flushed after
+         * this function is called.
          */
         /* BLANK BEGIN */
 
         /* BLANK END */
         /* LAB 2 TODO 4 END */
+
+        dsb(ishst);
+        isb();
+
+        return 0;
 }
 
 int mprotect_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, vmr_prop_t flags)
