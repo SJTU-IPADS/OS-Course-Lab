@@ -31,6 +31,18 @@ Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab1
 
 Tutorial: [https://www.bilibili.com/video/BV1gj411i7dh/](https://www.bilibili.com/video/BV1gj411i7dh/?spm_id_from=333.337.search-card.all.click)
 
+
+## Lab2: Memory Management
+This lab explains how to manage physical memory with buddy systems and slab allocators as well as set up page tables for applications.
+
+Branch: ChCore-Lab2
+
+Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab2
+
+Tutorial: TDB
+
+
+
 ## Main Contributors
 ### Directors
 Jinyu Gu
