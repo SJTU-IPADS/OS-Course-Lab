@@ -305,6 +305,7 @@ int query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
 
         /* BLANK END */
         /* LAB 2 TODO 4 END */
+        return 0;
 }
 
 static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
@@ -317,11 +318,13 @@ static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa, size_t
          * pte with the help of `set_pte_flags`. Iterate until all pages are
          * mapped.
          * Since we are adding new mappings, there is no need to flush TLBs.
+         * Return 0 on success.
          */
         /* BLANK BEGIN */
 
         /* BLANK END */
         /* LAB 2 TODO 4 END */
+        return 0;
 }
 
 /* Map vm range in kernel */
@@ -390,6 +393,7 @@ int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, long *rss)
          * unmapped.
          * You don't need to flush tlb here since tlb is now flushed after
          * this function is called.
+         * Return 0 on success.
          */
         /* BLANK BEGIN */
 
@@ -409,11 +413,13 @@ int mprotect_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, vmr_prop_t flags)
          * Hint: Walk through each level of page table using `get_next_ptp`,
          * modify the permission in the final level pte using `set_pte_flags`.
          * The `kind` argument of `set_pte_flags` should always be `USER_PTE`.
+         * Return 0 on success.
          */
         /* BLANK BEGIN */
 
         /* BLANK END */
         /* LAB 2 TODO 4 END */
+        return 0;
 }
 
 void parse_pte_to_common(pte_t *pte, unsigned int level,
