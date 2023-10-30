@@ -57,7 +57,7 @@ ChCore 中每个由伙伴系统管理的内存区域称为一个 `struct phys_me
 >
 > 提示：
 >
-> - 暂时不用考虑 TLB 刷新，目前实现的只是页表作为内存上的数据结构的管理操作，还没有真的设置到页表基址寄存器（TTBR）
+> - 需要实现的函数内部无需刷新 TLB，TLB 刷新会在这些函数的外部进行
 > - 实现中可以使用 `get_next_ptp`、`set_pte_flags`、`virt_to_phys`、`GET_LX_INDEX` 等已经给定的函数和宏
 > - `map_range_in_pgtbl_common`、`unmap_range_in_pgtbl`、`get_next_ptp` 中的 `rss` 参数是用于统计物理内存使用量的[^rss]，在本实验中你不必实现该功能，该功能的正确实现与否不影响本题得分。在调用 `get_next_ptp` 时可以直接使用 `NULL` 作为 `rss` 参数。（当然你也可以选择正确实现这一功能）
 > - 更多提示见代码注释
