@@ -134,7 +134,7 @@ static struct slab_header *init_slab_cache(int order, int size)
         return slab;
 }
 
-static void choose_new_current_slab(struct slab_pointer *pool, int order)
+static void choose_new_current_slab(struct slab_pointer *pool)
 {
         /* LAB 2 TODO 2 BEGIN */
         /* Hint: Choose a partial slab to be a new current slab. */
@@ -216,7 +216,7 @@ static void try_return_slab_to_buddy(struct slab_header *slab, int order)
                 return;
 
         if (slab == slab_pool[order].current_slab)
-                choose_new_current_slab(&slab_pool[order], order);
+                choose_new_current_slab(&slab_pool[order]);
         else
                 list_del(&slab->node);
 
