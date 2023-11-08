@@ -43,6 +43,6 @@ gdb:
 .PHONY: grade
 
 grade:
-	$(V)test -f $(PROJECT_DIR)/.config && cp $(PROJECT_DIR)/.config $(PROJECT_DIR)/.config.bak
+	$(V)test -f $(PROJECT_DIR)/.config && cp $(PROJECT_DIR)/.config $(PROJECT_DIR)/.config.bak || true
 	$(V)$(PROJECT_DIR)/scripts/grade/lab$(LAB).sh
-	$(V)test -f $(PROJECT_DIR)/.config.bak && mv $(PROJECT_DIR)/.config.bak $(PROJECT_DIR)/.config
+	$(V)test -f $(PROJECT_DIR)/.config.bak && mv $(PROJECT_DIR)/.config.bak $(PROJECT_DIR)/.config || true
