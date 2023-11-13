@@ -5,7 +5,6 @@ The course textbook:
 
 <img src="os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
 
-More information is available on https://ipads.se.sjtu.edu.cn/ospi/ .
 
 **If you have any suggestions or corrections, please don't hesitate to submit Pull Requests or issues. Let's collaborate together to improve the labs.**
 
