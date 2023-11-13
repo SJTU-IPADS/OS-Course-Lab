@@ -39,7 +39,7 @@ Branch: ChCore-Lab2
 
 Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab2
 
-Tutorial: TDB
+Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f50fa94e8122dd7d38
 
 
 
