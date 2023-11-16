@@ -1,0 +1,3 @@
+[submodule "user/chcore-libc/musl-libc"]
+	path = user/chcore-libc/musl-libc
+	url = https://github.com/bminor/musl.git

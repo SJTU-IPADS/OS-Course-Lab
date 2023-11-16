@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="staros" fetch="."/>
+  
+  <default remote="staros"/>
+
+  <project name="{{ kernel.name }}" path="kernel" revision="{{ kernel.revision }}"/>
+  <project name="{{ apps.name }}" path="user/apps" revision="{{ apps.revision }}"/>
+  <project name="{{ libs.name }}" path="user/chcore-libs" revision="{{ libs.revision }}"/>
+  <project name="{{ system_services.name }}" path="user/system-services" revision="{{ system_services.revision }}">
+    <linkfile src="chcore-libc" dest="user/chcore-libc"/>
+  </project>
+</manifest>
