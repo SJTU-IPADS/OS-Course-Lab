@@ -1,0 +1,232 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+log_user 0
+
+set RED "\033\[0;31m"
+set BLUE "\033\[0;34m"
+set GREEN "\033\[0;32m"
+set ORANGE "\033\[0;33m"
+set BOLD "\033\[1m"
+set NONE "\033\[0m"
+
+proc print_color {msg color} {
+    global NONE
+    puts -nonewline $color
+    puts "$msg"
+    puts -nonewline $NONE
+}
+
+set scores {
+    {"FSM IPC Handler" 0 20}
+    {"FS_Base vnode"  0 15}
+    {"FS_Base server_entry" 0 15}
+    {"wrapper open & close"  0 10}
+    {"wrapper read & write"  0 20}
+    {"wrapper lseek"  0 10}
+    {"wrapper mmap"  0 10}
+}
+
+set fsm_cmake "user/system-services/system-servers/fsm/CMakeLists.txt"
+set fsbase_cmake "user/system-services/system-servers/fs_base/CMakeLists.txt"
+
+set fsm_full_cmake "scripts/grade/cmakelists/cmake-fsm-full.txt"
+set fsm_part2_cmake "scripts/grade/cmakelists/cmake-fsm-part2.txt"
+set fsbase_part1_cmake "scripts/grade/cmakelists/cmake-fs_base-part1.txt"
+set fsbase_full_cmake "scripts/grade/cmakelists/cmake-fs_base-full.txt"
+set fsbase_part2_vnode_cmake "scripts/grade/cmakelists/cmake-fs_base-part2-vnode.txt"
+set fsbase_part2_server_entry_cmake "scripts/grade/cmakelists/cmake-fs_base-part2-server_entry.txt"
+
+proc check_cmake_file_exist {} {
+    global fsm_cmake
+    global fsbase_cmake
+    global RED
+
+    if {![file exists $fsm_cmake]} {
+        print_color "FSM CMakeLists.txt not exists" $RED
+        exit 1
+    }
+
+    if {![file exists $fsbase_cmake]} {
+        print_color "FS_Base CMakeLists.txt not exists" $RED
+        exit 1
+    }
+}
+
+proc clean_and_build {n} {
+    global ORANGE
+    global RED
+    check_cmake_file_exist
+
+    exec bash -c "make clean"
+    
+    spawn bash -c "make build"
+    expect {
+        "Succeeded to build all targets" {
+            print_color "...Build complete" $ORANGE
+        }
+        "make: *** \[Makefile:24: build\] Error 2" {
+            print_color "...Build fail" $RED
+            exit 0
+        }
+        timeout {
+            print_color "Build Timeout" $RED
+            exit 0
+        }
+    }
+}
+
+proc grade {} {
+    global GREEN
+    global RED
+    global scores
+    set score 0
+    foreach x $scores {
+        set name [lindex $x 0]
+        set n [lindex $x 1]
+        if { $n == 0 } {
+            print_color "GRADE: $name: $n" $RED
+        } else {
+            print_color "GRADE: $name: $n" $GREEN
+            incr score $n
+        }
+    }
+
+    exit $score
+}
+
+trap {
+    grade
+} SIGINT
+
+# Part 1
+exec rm $fsm_cmake
+exec rm $fsbase_cmake
+
+file copy $fsm_full_cmake $fsm_cmake
+file copy $fsbase_part1_cmake $fsbase_cmake
+
+clean_and_build 1
+
+print_color "...Testing Part1" $ORANGE
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+expect {
+    "All fs tests passed" {
+        lset scores {0 1} [lindex $scores {0 2}]
+    }
+    "BUG:" {
+        print_color "...Bug" $RED
+    }
+    timeout {
+        print_color "Timeout" $RED
+    }
+}
+
+exec kill -9 $qemu_pid
+
+# Part 2 vnode
+
+exec rm $fsm_cmake
+exec rm $fsbase_cmake
+
+file copy $fsm_part2_cmake $fsm_cmake
+file copy $fsbase_part2_vnode_cmake $fsbase_cmake
+
+clean_and_build 2
+
+print_color "...Testing Part2 vnode" $ORANGE
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+expect {
+    "All fs tests passed" {
+        lset scores {1 1} [lindex $scores {1 2}]
+    }
+    "BUG:" {
+        print_color "...Bug" $RED
+    }
+    timeout {
+        print_color "Timeout" $RED
+    }
+}
+
+exec kill -9 $qemu_pid
+
+# Part 2 server_entry
+
+exec rm $fsm_cmake
+exec rm $fsbase_cmake
+
+file copy $fsm_part2_cmake $fsm_cmake
+file copy $fsbase_part2_server_entry_cmake $fsbase_cmake
+
+clean_and_build 2
+
+print_color "...Testing Part2 server_entry" $ORANGE
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+expect {
+    "All fs tests passed" {
+        lset scores {2 1} [lindex $scores {2 2}]
+    }
+    "BUG:" {
+        print_color "...Bug" $RED
+    }
+    timeout {
+        print_color "Timeout" $RED
+    }
+}
+
+exec kill -9 $qemu_pid
+
+# Full test
+
+exec rm $fsm_cmake
+exec rm $fsbase_cmake
+
+file copy $fsm_full_cmake $fsm_cmake
+file copy $fsbase_full_cmake $fsbase_cmake
+
+clean_and_build 2
+
+print_color "...Testing All" $ORANGE
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+expect {
+    "test_open finished" {
+        lset scores {3 1} [lindex $scores {3 2}]
+        exp_continue -continue_timer
+    }
+    "test_content finished" {
+        lset scores {4 1} [lindex $scores {4 2}]
+        exp_continue -continue_timer
+    }
+    "test_lseek finished" {
+        lset scores {5 1} [lindex $scores {5 2}]
+        exp_continue -continue_timer
+    }
+    "test_mmap finished" {
+        lset scores {6 1} [lindex $scores {6 2}]
+        exp_continue -continue_timer
+    }
+    "All fs tests passed" {
+        print_color "...Finished" $ORANGE
+    }
+    "BUG:" {
+        print_color "...Bug" $RED
+    }
+    timeout {
+        print_color "Timeout" $RED
+    }
+}
+
+exec kill -9 $qemu_pid
+grade
