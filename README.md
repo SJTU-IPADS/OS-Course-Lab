@@ -1,60 +1,68 @@
-# SJTU OS Course Labs From IPADS
-Please find each lab on its individual branch.
+# 实验概述SJTU OS Course Labs From IPADS
 
-The course textbook:
+本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验放在独立分支。
+
+课程教材:
 
 <img src="os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
 
+**如果你有任何建议或更正意见，欢迎提交 Pull Requests 或 Issues。让我们一起合作改进实验~**
 
-**If you have any suggestions or corrections, please don't hesitate to submit Pull Requests or issues. Let's collaborate together to improve the labs.**
 
+## Lab0: 拆炸弹（ARM汇编）
+该实验受到CSAPP课程启发，CSAPP课程设计了一个针对x86/x86-64汇编的拆炸弹实验。
+不同之处在于，本实验目标是熟悉ARM汇编语言，并为后续的ARM/树莓派内核实验做好准备。
 
-## Lab0: Bomb
-This lab is inspired by CSAPP which designs a bomb lab for x86/x86-64.
+分支: bomb-lab
 
-Differently, our lab is for getting familiar with ARM assembly and getting prepared for the following kernel labs on ARM/Raspi.
-
-Branch: bomb-lab
-
-Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/bomb-lab
+链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/bomb-lab
 
 Tutorial: https://www.bilibili.com/video/BV1q94y1a7BF/?vd_source=63231f40c83c4d292b2a881fda478960
 
-## Lab1: Kernel Boot
-This lab explains how to set the CPU exception level, configure the kernel page table, and enable MMU during kernel boot.
-We will use a basic version of [ChCore microkernel](https://www.usenix.org/conference/atc20/presentation/gu) in the series of kernel labs and the experiment machine is Raspi3b+ (both QEMU and board are OK).
+## Lab1: 内核启动
+该实验的主要内容是关于如何在内核启动过程中设置CPU异常级别、配置内核页表并启用MMU。
+在内核实验系列中，我们将使用 [ChCore 微内核](https://www.usenix.org/conference/atc20/presentation/gu) 的基础版本，并使用 Raspi3b+作为实验平台（无论是使用QEMU树莓派模拟器还是树莓派开发板都可以）。
 
-Branch: ChCore-Lab1
+分支: ChCore-Lab1
 
-Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab1
+链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab1
 
 Tutorial: [https://www.bilibili.com/video/BV1gj411i7dh/](https://www.bilibili.com/video/BV1gj411i7dh/?spm_id_from=333.337.search-card.all.click)
 
 
-## Lab2: Memory Management
-This lab explains how to manage physical memory with buddy systems and slab allocators as well as set up page tables for applications.
+## Lab2: 内存管理
+该实验主要内容是关于内核中的伙伴系统和slab分配器的实现，并为应用程序设置页表。
 
-Branch: ChCore-Lab2
+分支: ChCore-Lab2
 
-Link: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab2
+链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab2
 
 Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f50fa94e8122dd7d38
 
 
+## Lab3: 进程与线程
 
-## Main Contributors
-### Directors
-Jinyu Gu
 
-Yubin Xia
+分支: ChCore-Lab3
+
+链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab3
+
+Tutorial: TBD
+
+
+## 仓库建设者
+### 教师
+古金宇
+
+夏虞斌
 
 ### Teaching Assistants
-Chunwei Zhou
+周淳威
 
-Jiacheng Shi
+叶瑜超
 
-Yuchao Ye
+苏浩然
 
-Haoran Su
+史嘉成
 
-Tianlin Wen
+闻天麟
