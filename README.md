@@ -1,4 +1,4 @@
-# 实验概述SJTU OS Course Labs From IPADS
+# 实验概述
 
 本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验放在独立分支。
 
@@ -41,7 +41,7 @@ Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f
 
 
 ## Lab3: 进程与线程
-
+该实验主要内容包括创建第一个用户态进程和线程，完善异常处理流程和系统调用，编写一个Hello-World在实验内核上运行。
 
 分支: ChCore-Lab3
 
@@ -56,7 +56,7 @@ Tutorial: TBD
 
 夏虞斌
 
-### Teaching Assistants
+### 助教
 周淳威
 
 叶瑜超
