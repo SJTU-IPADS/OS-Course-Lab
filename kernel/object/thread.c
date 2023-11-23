@@ -30,23 +30,6 @@
 
 #include "thread_env.h"
 
-void test_root_thread_basic(const struct cap_group *ptr)
-{
-        BUG_ON(ptr == NULL);
-        BUG_ON(container_of(ptr, struct object, opaque)->type
-               != TYPE_CAP_GROUP);
-        kinfo("Cap_create Pretest Ok!\n");
-}
-
-void test_root_thread_after_create(const struct cap_group *ptr,
-                                   const int thread_cap)
-{
-        BUG_ON(ptr->thread_cnt == 0);
-        BUG_ON(thread_cap == 0);
-        kinfo("Thread_create Ok!\n");
-
-}
-
 /*
  * local functions
  */
@@ -201,8 +184,7 @@ void create_root_thread(void)
 
 
         root_cap_group = create_root_cap_group(ROOT_NAME, strlen(ROOT_NAME));
-        test_root_thread_basic(root_cap_group);
-        
+
         init_vmspace = obj_get(root_cap_group, VMSPACE_OBJ_ID, TYPE_VMSPACE);
 
         /* Allocate and setup a user stack for the init thread */
@@ -212,7 +194,6 @@ void create_root_thread(void)
                                    0,
                                    &stack_pmo);
         BUG_ON(stack_pmo_cap < 0);
-
 
         ret = vmspace_map_range(init_vmspace,
                                 ROOT_THREAD_STACK_BASE,
@@ -236,28 +217,56 @@ void create_root_thread(void)
                        sizeof(data));
                 flags = (unsigned int)le32_to_cpu(*(u32 *)data);
 
-                /* LAB 3 TODO BEGIN */
-                /* Get offset, vaddr, filesz, memsz from image*/
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_OFFSET_OFF),
+                       sizeof(data));
+                offset = (unsigned long)le64_to_cpu(*(u64 *)data);
 
-                /* LAB 3 TODO END */
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_VADDR_OFF),
+                       sizeof(data));
+                vaddr = (unsigned long)le64_to_cpu(*(u64 *)data);
+
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_FILESZ_OFF),
+                       sizeof(data));
+                filesz = (unsigned long)le64_to_cpu(*(u64 *)data);
+
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_MEMSZ_OF),
+                       sizeof(data));
+                memsz = (unsigned long)le64_to_cpu(*(u64 *)data);
 
                 struct pmobject *segment_pmo;
-                /* LAB 3 TODO BEGIN */
-
-                /* LAB 3 TODO END */
-
+                ret = create_pmo(ROUND_UP(memsz, PAGE_SIZE),
+                                 PMO_DATA,
+                                 root_cap_group,
+                                 0,
+                                 &segment_pmo);
                 BUG_ON(ret < 0);
+                memset((void *)phys_to_virt(segment_pmo->start),
+                       0,
+                       segment_pmo->size);
+                memcpy((void *)phys_to_virt(segment_pmo->start),
+                       (void *)(((unsigned long)&binary_procmgr_bin_start)
+                                + ROOT_BIN_HDR_SIZE + offset),
+                       filesz);
 
-                /* LAB 3 TODO BEGIN */
-                /* Copy elf file contents into memory*/
-
-                /* LAB 3 TODO END */
-                
-                unsigned vmr_flags = 0;    
-                /* LAB 3 TODO BEGIN */
-                /* Set flags*/
-
-                /* LAB 3 TODO END */
+                unsigned vmr_flags = 0;
+                if (flags & PHDR_FLAGS_R)
+                        vmr_flags |= VMR_READ;
+                if (flags & PHDR_FLAGS_W)
+                        vmr_flags |= VMR_WRITE;
+                if (flags & PHDR_FLAGS_X)
+                        vmr_flags |= VMR_EXEC;
 
                 ret = vmspace_map_range(init_vmspace,
                                         vaddr,
@@ -299,7 +308,6 @@ void create_root_thread(void)
         /* Allocate the cap for the init thread */
         thread_cap = cap_alloc(root_cap_group, thread);
         BUG_ON(thread_cap < 0);
-        test_root_thread_after_create(root_cap_group, thread_cap);
 
         /* L1 icache & dcache have no coherence on aarch64 */
         flush_idcache();
