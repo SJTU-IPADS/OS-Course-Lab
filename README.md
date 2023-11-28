@@ -47,7 +47,7 @@ Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f
 
 链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab3
 
-Tutorial: TBD
+Tutorial: https://www.bilibili.com/video/BV11N411j7bR/
 
 
 ## 仓库建设者
