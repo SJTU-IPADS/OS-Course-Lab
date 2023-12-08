@@ -101,7 +101,7 @@ ChCore 中仅使用了其中的两个异常级别：EL0 和 EL1。其中，EL1 �
 
 发生异常后，处理器需要找到与发生的异常相对应的异常处理程序代码并执行。在 AArch64 中，存储于内存之中的异常处理程序代码被叫做异常向量（exception vector），而所有的异常向量被存储在一张异常向量表（exception vector table）中。可参考`kernel/arch/aarch64/irq/irq_entry.S`中的图表。
 
-<div align=center><img src="docs/assets/3-exception.png"  style="zoom: 20%;" /></div>
+<img src="docs/assets/3-exception.png" alt="The course textbook" style="width:300px;height:400px;">
 
 
 AArch64 中的每个异常级别都有其自己独立的异常向量表，其虚拟地址由该异常级别下的异常向量基地址寄存器（`VBAR_EL3`，`VBAR_EL2` 和 `VBAR_EL1`）决定。每个异常向量表中包含 16 个条目，每个条目里存储着发生对应异常时所需执行的异常处理程序代码。以上表格给出了每个异常向量条目的偏移量。
