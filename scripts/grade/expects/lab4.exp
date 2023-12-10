@@ -12,10 +12,12 @@ spawn bash -c "make qemu"
 set qemu_pid [exp_pid -i $spawn_id]
 
 set scores {
-    {"Cap create pretest" 0 20}
-    {"Userland"  0 40}
-    {"Successful printf"  0 20}
-    {"Hello ChCore"  0 20}
+    {"Scheduler metadata initialization" 0 10}
+    {"Schedule Enqueue"  0 10}
+    {"Schedule Dequeue"  0 10}
+    {"Cooperative Schedluing"  0 20}
+    {"Preemptive Schedluing"  0 20}
+    {"Test IPC"  0 30}
 }
 
 proc grade {} {
@@ -37,20 +39,28 @@ trap {
 } SIGINT
 
 expect {
-    "Cap_create Pretest Ok!" {
+    "Scheduler metadata is successfully initialized!" {
         lset scores {0 1} [lindex $scores {0 2}]
         exp_continue -continue_timer
     }
-    "Hello userland!" {
+    "Successfully enqueue root thread" {
         lset scores {1 1} [lindex $scores {1 2}]
         exp_continue -continue_timer
     }
-    "Welcome to ChCore shell!" {
+    "test_schedule_dequeue: OK" {
         lset scores {2 1} [lindex $scores {2 2}]
         exp_continue -continue_timer
     }
-    "Hello ChCore!" {
+    "Cooperative Schedluing Test Done!" {
         lset scores {3 1} [lindex $scores {3 2}]
+        exp_continue -continue_timer
+    }
+    "Preemptive Schedluing Test Done!" {
+        lset scores {4 1} [lindex $scores {4 2}]
+        exp_continue -continue_timer
+    }
+    "Test IPC finished!" {
+        lset scores {5 1} [lindex $scores {5 2}]
         exp_continue -continue_timer
     }
     "BUG:" {

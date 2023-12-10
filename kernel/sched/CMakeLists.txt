@@ -8,5 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE sched.c.obj context.c.obj policy_pb.c.obj
-                                        policy_rr.c.obj)
+target_sources(${kernel_target} PRIVATE sched.c context.c.obj policy_pb.c.obj
+                                        policy_rr.c)

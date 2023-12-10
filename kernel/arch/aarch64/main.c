@@ -27,6 +27,7 @@
 #include <machine.h>
 #include <irq/irq.h>
 #include <object/thread.h>
+#include "../../tests/runtime/tests.h"
 
 ALIGN(STACK_ALIGNMENT)
 char cpu_stacks[PLAT_CPU_NUM][CPU_STACK_SIZE];
@@ -120,6 +121,7 @@ void main(paddr_t boot_flag, void *info)
 
 	/* Leave the scheduler to do its job */
 	sched();
+	test_schedule_dequeue();
 
 	/* Context switch to the picked thread */
 	eret_to_thread(switch_context());

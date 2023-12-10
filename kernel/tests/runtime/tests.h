@@ -18,11 +18,10 @@
                 if (expr) {                                               \
                         printk("[TEST] %s: OK\n", test_name);             \
                 } else {                                                  \
-                        printk("[TEST] %s: FAIL, loc: %s:%d, expr: %s\n", \
+                        printk("[TEST] %s: FAIL, loc: %s:%d\n", \
                                test_name,                                 \
                                __FILE__,                                  \
-                               __LINE__,                                  \
-                               #expr);                                    \
+                               __LINE__);                                 \
                 }                                                         \
         } while (0)
 
@@ -30,5 +29,10 @@
         do {                       \
                 ok = ok && (expr); \
         } while (0)
+
+void test_scheduler_meta(void);
+void test_schedule_enqueue(struct thread *root_thread);
+void test_schedule_dequeue(void);
+void test_timer_init(void);
 
 #endif /* KERNEL_TESTS_RUNTIME_TESTS_H */

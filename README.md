@@ -1,161 +1,135 @@
-# 实验 3：进程与线程
+# 实验 4：多核、多进程、调度与IPC
+在本实验中，ChCore将支持在多核处理器上启动（第一部分）；实现多核调度器以调度执行多个线程（第二部分）；最后实现进程间通信IPC（第三部分）。注释`/* LAB 4 TODO BEGIN (exercise #) */`和`/* LAB 4 TODO END (exercise #) */`之间代表需要填空的代码部分。
 
-用户进程是操作系统对在用户模式运行中的程序的抽象。在实验 1 和实验 2 中，已经完成了内核的启动和物理内存的管理，以及一个可供用户进程使用的页表实现。现在，我们将一步一步支持用户态程序的运行。
+## 第一部分：多核支持
+本部分实验没有代码题，仅有思考题。为了让ChCore支持多核，我们需要考虑如下问题：
 
-本实验包括四个部分：
+如何启动多核，让每个核心执行初始化代码并开始执行用户代码？
+如何区分不同核心在内核中保存的数据结构（比如状态，配置，内核对象等）？
+如何保证内核中对象并发正确性，确保不会由于多个核心同时访问内核对象导致竞争条件？
+在启动多核之前，我们先介绍ChCore如何解决第二个问题。ChCore对于内核中需要每个CPU核心单独存一份的内核对象，都根据核心数量创建了多份（即利用一个数组来保存）。ChCore支持的核心数量为PLAT_CPU_NUM（该宏定义在 kernel/common/machine.h 中，其代表可用CPU核心的数量，根据具体平台而异）。 比如，实验使用的树莓派3平台拥有4个核心，因此该宏定义的值为4。ChCore会CPU核心的核心ID作为数组的索引，在数组中取出对应的CPU核心本地的数据。为了方便确定当前执行该代码的CPU核心ID，我们在 kernel/arch/aarch64/machine/smp.c中提供了smp_get_cpu_id函数。该函数通过访问系统寄存器tpidr_el1来获取调用它的CPU核心的ID，该ID可用作访问上述数组的索引。
 
-1. 使用对应的数据结构，支持创建第一个用户态进程和线程，分析代码如何从内核态切换到用户态。
-2. 完善异常处理流程，为系统添加必要的异常处理的支持。
-3. 正确处理部分系统调用，保证用户程序的正常输出。
-4. 编写一个简单用户程序，使用提供的 ChCore libc 进行编译，并加载至内核镜像中。
+### 启动多核
+在实验1中我们已经介绍，在QEMU模拟的树莓派中，所有CPU核心在开机时会被同时启动。在引导时这些核心会被分为两种类型。一个指定的CPU核心会引导整个操作系统和初始化自身，被称为主CPU（primary CPU）。其他的CPU核心只初始化自身即可，被称为其他CPU（backup CPU）。CPU核心仅在系统引导时有所区分，在其他阶段，每个CPU核心都是被相同对待的。
 
-本实验代码包含了基础的 ChCore 操作系统镜像，除了练习题相关部分的源码以外（指明需要阅读的代码），其余部分通过二进制格式提供。
-正确完成本实验的练习题之后，你可以在树莓派3B+QEMU或开发板上进入 ChCore shell。
+> 思考题 1:阅读汇编代码kernel/arch/aarch64/boot/raspi3/init/start.S。说明ChCore是如何选定主CPU，并阻塞其他其他CPU的执行的。
 
-本实验（以及之后的实验）使用 `expect` 工具进行自动化评分，你可能需要先在你的环境中安装 `expect`，具体方法因你使用的环境而异。例如，在Ubuntu上，你可以执行：
+在树莓派真机中，还需要主CPU手动指定每一个CPU核心的的启动地址。这些CPU核心会读取固定地址的上填写的启动地址，并跳转到该地址启动。在kernel/arch/aarch64/boot/raspi3/init/init_c.c中，我们提供了wakeup_other_cores函数用于实现该功能，并让所有的CPU核心同在QEMU一样开始执行_start函数。
 
-```bash
-sudo apt install expect
-```
+与之前的实验一样，主CPU在第一次返回用户态之前会在kernel/arch/aarch64/main.c中执行main函数，进行操作系统的初始化任务。在本小节中，ChCore将执行enable_smp_cores函数激活各个其他CPU。
 
-## Preparation
+> 思考题2：阅读汇编代码kernel/arch/aarch64/boot/raspi3/init/start.S, init_c.c以及kernel/arch/aarch64/main.c，解释用于阻塞其他CPU核心的secondary_boot_flag是物理地址还是虚拟地址？是如何传入函数enable_smp_cores中，又是如何赋值的（考虑虚拟地址/物理地址）？
 
-实验 3 相较于实验 1 和实验 2 开放了部分用户态程序的代码，`user` 文件夹下提供了 `chcore-libc` 及 `system-services` 文件夹，并在根目录下添加了 `ramdisk` 文件夹，下面逐个介绍其作用。
+## 第二部分：多核调度
+ChCore已经可以启动多核，但仍然无法对多个线程进行调度。本部分将首先实现协作式调度，从而允许当前在CPU核心上运行的线程主动退出或主动放弃CPU时，CPU核心能够切换到另一个线程继续执行。其后，我们将驱动树莓派上的物理定时器，使其以一定的频率发起中断，使得内核可以在一定时间片后重新获得对CPU核心的控制，并基于此进一步实现抢占式调度。
 
-- `ramdisk`。所有在 `ramdisk` 目录下的文件将被放入内核镜像的文件系统中。完成本实验后，可以在 shell 中使用 `ls` 命令查看文件。在 `ramdisk` 中预置了一些必要的系统服务程序(包括 shell、lwip、shared memory 等)以及测试程序(userland.bin)，请勿将其删除。
-- `chcore-libc`。libc 是 C 语言标准库(C Standard Library)的缩写，它是一组提供了基本功能和操作的函数的库，用于支持 C 语言的标准。libc 中包含了很多标准的 C 函数，这些函数提供了许多基本的操作，如字符串处理、内存管理、输入输出等(来自 GPT)。`chcore-libc` 基于 `musl-libc` 进行修改以配合内核进行管理及系统调用，所有对 `musl-libc` 的修改均在 `chcore-libc/libchcore`中，实际编译时将使用脚本进行覆盖或打补丁。本实验也将在此处设置测试点。
-- `system-services`。其中存放一些基本的系统服务，除了在 `ramdisk` 中已经包含的，还有 `tmpfs` 和 `procmgr`。`tmpfs` 是 ChCore 基本的内存文件系统，后续实验中将会有所涉及，本实验中无需关注。`procmgr` 是 ChCore 的进程管理器，所有代码均以源代码形式给出，其中包含了创建进程、加载 elf 文件等操作，感兴趣的同学可以阅读。
+ChCore中与调度相关的函数与数据结构定义在kernel/include/sched/sched.h中。
+sched_ops是用于抽象ChCore中调度器的一系列操作。它存储指向不同调度操作的函数指针，以支持不同的调度策略。
+cur_sched_ops则是一个sched_ops的实例，其在内核初始化过程中（main函数）调用sched_init进行初始化。
+ChCore用在 kernel/include/sched/sched.h 中定义的静态函数封装对cur_sched_ops的调用。sched_ops中定义的调度器操作如下所示：
 
-> 练习 0: 在项目根目录下运行以下命令以拉取 `musl-libc` 代码。
->```bash
-> git submodule update --init --recursive
->```
-> 使用 `make build` 检查是否能够正确项目编译。
->
-> 注意：请确保成功拉取`musl-libc`代码后再尝试进行编译。若未成功拉取`musl-libc`就进行编译将会自动创建`musl-libc`文件夹，这可能导致无法成功拉取`musl-libc`代码，也无法编译成功。出现此种情况可以尝试将`user/chcore-libc/musl-libc`文件夹删除，并运行以上指令重新拉取代码。
+* sche_init：初始化调度器。
+* sched：进行一次调度。即将正在运行的线程放回就绪队列，然后在就绪队列中选择下一个需要执行的线程返回。
+* sched_enqueue：将新线程添加到调度器的就绪队列中。
+* sched_dequeue：从调度器的就绪队列中取出一个线程。
+* sched_top：用于debug,打印当前所有核心上的运行线程以及等待线程的函数。
 
-## 第一部分：用户进程和线程
+在本部分将实现一个基本的Round Robin（时间片轮转）调度器，该程序调度在同一CPU核心上运行的线程，因此内核初始化过程调用sched_init时传入了&rr作为参数。该调度器的调度操作（即对于sched_ops定义的各个函数接口的实现）实现在kernel/sched/policy_rr.c中，这里煎药介绍其涉及的数据结构：
 
-本实验的 OS 运行在 AArch64 体系结构，该体系结构采用“异常级别”这一概念定义程序执行时所拥有的特权级别。从低到高分别是 EL0、EL1、EL2 和 EL3。每个异常级别的具体含义和常见用法已在课程中讲述。
+`current_threads`是一个数组，分别指向每个CPU核心上运行的线程。而`current_thread`则利用`smp_get_cpu_id`获取当前运行核心的id，从而找到当前核心上运行的线程。
 
-ChCore 中仅使用了其中的两个异常级别：EL0 和 EL1。其中，EL1 是内核模式，`kernel` 目录下的内核代码运行于此异常级别。EL0 是用户模式，`user` 目录下的用户库与用户程序代码运行在用户模式下。
+`struct queue_meta`定义了round robin调度器使用的就绪队列，其中`queue_head`字段是连接该就绪队列上所有等待线程的队列，`queue_len`字段是目前该就绪队列的长度，`queue_lock`字段是用于保证该队列并发安全的锁。 kernel/sched/policy_rr.c定义了一个全局变量`rr_ready_queue_meta`,该变量是一个`struct queue_meta`类型的数组，数组大小由`PLAT_CPU_NUM`定义，即代表每个CPU核心都具有一个就绪队列。运行的CPU核心可以通过`smp_get_cpu_id`获取当前运行核心的id，从而在该数组中找到当前核心对应的就绪队列。
 
-在 ChCore 中，内核提供给用户的一切资源均采用 **Capability** 机制进行管理，所有的内核资源（如物理内存等）均被抽象为了**内核对象（kernel object）**。Capability 可以类比 Linux 中的文件描述符（File Descriptor）。在 Linux 中，文件描述符即相当于一个整型的 Capability，而文件本身则相当于一个内核对象。ChCore 的一个进程是一些对特定内核对象享有相同的 Capability 的线程的集合。ChCore 中的每个进程至少包含一个主线程，也可能有多个子线程，而每个线程则从属且仅从属于一个进程。
-
-在实现中，一个 `cap_group` 作为一个进程的抽象，具体定义可以参见 `kernel/include/object/cap_group.h`。线程结构的定义可参见 `kernel/include/object/thread.h`。
-
-关于 `cap_group` 的知识，可以参阅代码以及文档。
-
-进程和线程相关的概念已经介绍完毕。在 ChCore 中，第一个被创建的进程是 `procmgr`，是 ChCore 核心的系统服务。本实验将以创建 `procmgr` 为例探索在 ChCore 中如何创建进程，以及成功创建第一个进程后如何实现内核态向用户态的切换。
-
-创建用户程序至少需要包括创建对应的 `cap_group`、加载用户程序镜像并且切换到程序。在内核完成必要的初始化之后，内核将会跳转到创建第一个用户程序的操作中，该操作通过调用 `create_root_thread` 函数完成，本函数完成第一个用户进程的创建，其中的操作包括从`procmgr`镜像中读取程序信息，调用`create_root_cap_group`创建第一个 `cap_group` 进程，并在 `root_cap_group` 中创建第一个线程，线程加载着信息中记录的 elf 程序（实际上就是`procmgr`系统服务）。此外，用户程序也可以通过 `sys_create_cap_group` 系统调用创建一个全新的 `cap_group`。
-
-由于 `cap_group` 也是一个内核对象，因此在创建 `cap_group` 时，需要通过 `obj_alloc` 分配全新的 `cap_group` 和 `vmspace` 对象（`TYPE_CAP_GROUP` 与 `TYPE_VMSPACE`）。对分配得到的 `cap_group` 对象，需要通过 `cap_group_init` 函数初始化并且设置必要的参数(Tip: size 参数已定义好 `BASE_OBJECT_NUM`)。对分配得到的 `vmspace` 对象则需要调用 `cap_alloc` 分配对应的槽（slot）。
-
-> 练习 1: 在 `kernel/object/cap_group.c` 中完善 `sys_create_cap_group`、`create_root_cap_group` 函数。在完成填写之后，你可以通过 Cap create pretest 测试点。
->
-> 提示：
-> 可以阅读 `kernel/object/capability.c` 中各个与 cap 机制相关的函数以及参考文档。
-
-然而，完成 `cap_group` 的分配之后，用户程序并没有办法直接运行，因为`cap_group`只是一个资源集合的概念。线程才是内核中的调度执行单位，因此还需要进行线程的创建，将用户程序 ELF 的各程序段加载到内存中。(此为内核中 ELF 程序加载过程，用户态进行 ELF 程序解析可参考`user/system-services/system-servers/procmgr/libs/libchcoreelf/libchcoreelf.c`，如何加载程序可以对`user/system-services/system-servers/procmgr/srvmgr.c`中的`procmgr_launch_process`函数进行详细分析)
-
-> 练习 2: 在 `kernel/object/thread.c` 中完成 `create_root_thread` 函数，将用户程序 ELF 加载到刚刚创建的进程地址空间中。
->
-> 提示：
->
-> - 程序头可以参考`kernel/object/thread_env.h`。
-> - 内存分配操作使用 `create_pmo`，可详细阅读`kernel/object/memory.c`了解内存分配。
-> - 本练习并无测试点，请确保对 elf 文件内容读取及内存分配正确。否则有可能在后续切换至用户态程序运行时出错。
-
-完成用户程序的内存分配后，用户程序代码实际上已经被映射在`root_cap_group`的虚拟地址空间中。接下来需要对创建的线程进行初始化，以做好从内核态切换到用户态线程的准备。
-
-> 练习 3: 在 `kernel/arch/aarch64/sched/context.c` 中完成 `init_thread_ctx` 函数，完成线程上下文的初始化。
-
-至此，我们完成了第一个用户进程与第一个用户线程的创建。接下来就可以从内核态向用户态进行跳转了。
-
-回到`kernel/arch/aarch64/main.c`，在`create_root_thread()`
-完成后，分别调用了`sched()`与`eret_to_thread(switch_context())`。
-
-`sched()`的作用是进行一次调度，在此场景下我们创建的第一个线程将被选择。
-
-`switch_context()`函数的作用则是进行线程上下文的切换，包括vmspace、fpu、tls等。并且将`cpu_info`中记录的当前CPU线程上下文记录为被选择线程的上下文（完成后续实验后对此可以有更深的理解）。`switch_context()` 最终返回被选择线程的`thread_ctx`地址，即`target_thread->thread_ctx`。
-
-`eret_to_thread`最终调用了`kernel/arch/aarch64/irq/irq_entry.S`中的 `__eret_to_thread` 函数。其接收参数为`target_thread->thread_ctx`，将 `target_thread->thread_ctx` 写入`sp`寄存器后调用了 `exception_exit` 函数，`exception_exit` 最终调用 eret 返回用户态，从而完成了从内核态向用户态的第一次切换。
-
-注意此处因为尚未完成`exception_exit`函数，因此无法正确切换到用户态程序，在后续完成`exception_exit`后，可以通过 gdb 追踪 pc 寄存器的方式查看是否正确完成内核态向用户态的切换。
-
-> 思考题 4: 思考内核从完成必要的初始化到第一次切换到用户态程序的过程是怎么样的？尝试描述一下调用关系。
-
-然而，目前任何一个用户程序并不能正常退出，也不能正常输出结果。这是由于程序中包括了 `svc #0` 指令进行系统调用。由于此时 ChCore 尚未配置从用户模式（EL0）切换到内核模式（EL1）的相关内容，在尝试执行 `svc` 指令时，ChCore 将根据目前的配置（尚未初始化，异常处理向量指向随机位置）执行位于随机位置的异常处理代码，进而导致触发错误指令异常。同样的，由于错误指令异常仍未指定处理代码的位置，对该异常进行处理会再次出发错误指令异常。ChCore 将不断重复此循环，并最终表现为 QEMU 不响应。后续的练习中将会通过正确配置异常向量表的方式，对这一问题进行修复。
-
-## 第二部分：异常向量表
-
-由于 ChCore 尚未对用户模式与内核模式的切换进行配置，一旦 ChCore 进入用户模式执行就再也无法正常返回内核模式使用操作系统提供其他功能了。在这一部分中，我们将通过正确配置异常向量表的方式，为 ChCore 添加异常处理的能力。
-
-在 AArch64 架构中，异常是指低特权级软件（如用户程序）请求高特权软件（例如内核中的异常处理程序）采取某些措施以确保程序平稳运行的系统事件，包含**同步异常**和**异步异常**：
-
-- 同步异常：通过直接执行指令产生的异常。同步异常的来源包括同步中止（synchronous abort）和一些特殊指令。当直接执行一条指令时，若取指令或数据访问过程失败，则会产生同步中止。此外，部分指令（包括 `svc` 等）通常被用户程序用于主动制造异常以请求高特权级别软件提供服务（如系统调用）。
-- 异步异常：与正在执行的指令无关的异常。异步异常的来源包括普通中 IRQ、快速中断 FIQ 和系统错误 SError。IRQ 和 FIQ 是由其他与处理器连接的硬件产生的中断，系统错误则包含多种可能的原因。本实验不涉及此部分。
-
-发生异常后，处理器需要找到与发生的异常相对应的异常处理程序代码并执行。在 AArch64 中，存储于内存之中的异常处理程序代码被叫做异常向量（exception vector），而所有的异常向量被存储在一张异常向量表（exception vector table）中。可参考`kernel/arch/aarch64/irq/irq_entry.S`中的图表。
-
-<div align=center><img src="docs/assets/3-exception.png"  style="zoom: 20%;" /></div>
-
-
-AArch64 中的每个异常级别都有其自己独立的异常向量表，其虚拟地址由该异常级别下的异常向量基地址寄存器（`VBAR_EL3`，`VBAR_EL2` 和 `VBAR_EL1`）决定。每个异常向量表中包含 16 个条目，每个条目里存储着发生对应异常时所需执行的异常处理程序代码。以上表格给出了每个异常向量条目的偏移量。
-
-在 ChCore 中，仅使用了 EL0 和 EL1 两个异常级别，因此仅需要对 EL1 异常向量表进行初始化即可。在本实验中，ChCore 内除系统调用外所有的同步异常均交由 `handle_entry_c` 函数进行处理。遇到异常时，硬件将根据 ChCore 的配置执行对应的汇编代码，将异常类型和当前异常处理程序条目类型作为参数传递，对于 sync_el1h 类型的异常，跳转 `handle_entry_c` 使用 C 代码处理异常。对于 irq_el1t、fiq_el1t、fiq_el1h、error_el1t、error_el1h、sync_el1t 则跳转 `unexpected_handler` 处理异常。
-
-> 练习 5: 按照前文所述的表格填写 `kernel/arch/aarch64/irq/irq_entry.S` 中的异常向量表，并且增加对应的函数跳转操作。
-
-## 第三部分：系统调用
-
-系统调用是系统为用户程序提供的高特权操作接口。在本实验中，用户程序通过 `svc` 指令进入内核模式。在内核模式下，首先操作系统代码和硬件将保存用户程序的状态。操作系统根据系统调用号码执行相应的系统调用处理代码，完成系统调用的实际功能，并保存返回值。最后，操作系统和硬件将恢复用户程序的状态，将系统调用的返回值返回给用户程序，继续用户程序的执行。
-
-通过异常进入到内核后，需要保存当前线程的各个寄存器值，以便从内核态返回用户态时进行恢复。保存工作在`exception_enter` 中进行，恢复工作则由`exception_exit`完成。可以参考`kernel/include/arch/aarch64/arch/machine/register.h`中的寄存器结构，保存时在栈中应准备`ARCH_EXEC_CONT_SIZE`大小的空间。
-
-完成保存后，需要进行内核栈切换，首先从`TPIDR_EL1`寄存器中读取到当前核的`per_cpu_info`（参考`kernel/include/arch/aarch64/arch/machine/smp.h`）,从而拿到其中的`cpu_stack`地址。
-
-> 练习 6: 填写 `kernel/arch/aarch64/irq/irq_entry.S` 中的 `exception_enter` 与 `exception_exit`，实现上下文保存的功能，以及 `switch_to_cpu_stack` 内核栈切换函数。如果正确完成这一部分，可以通过 Userland 测试点。这代表着程序已经可以在用户态与内核态间进行正确切换。显示如下结果
->
-> ```
-> Hello userland!
-> ```
-
-在本实验中新加入了 `libc` 文件，用户态程序可以链接其编译生成的`libc.so`,并通过 `libc` 进行系统调用从而进行向内核态的异常切换。在实验提供的 `libc` 中，尚未实现 `printf` 的系统调用，因此用户态程序无法进行正常输出。实验接下来将对 `printf` 函数的调用链进行分析与探索。
-
-`printf` 函数调用了 `vfprintf`，其中文件描述符参数为 `stdout`。这说明在 `vfprintf` 中将使用 `stdout` 的某些操作函数。
-
-在 `user/chcore-libc/musl-libc/src/stdio/stdout.c`中可以看到 `stdout` 的 `write` 操作被定义为 `__stdout_write`，之后调用到 `__stdio_write` 函数。
-
-最终 `printf` 函数将调用到 `chcore_stdout_write`。
-
-> 思考 7: 尝试描述 `printf` 如何调用到 `chcore_stdout_write` 函数。
->
-> 提示：`chcore_write` 中使用了文件描述符，`stdout` 描述符的设置在`user/chcore-libc/musl-libc/src/chcore-port/syscall_dispatcher.c` 中。
-
-`chcore_stdout_write` 中的核心函数为 `put`，此函数的作用是向终端输出一个字符串。
-
-> 练习 8: 在其中添加一行以完成系统调用，目标调用函数为内核中的 `sys_putstr`。使用 `chcore_syscallx` 函数进行系统调用。
-
-至此，我们完成了对 `printf` 函数的分析及完善。从 `printf` 的例子我们也可以看到从通用 api 向系统相关 abi 的调用过程，并最终通过系统调用完成从用户态向内核态的异常切换。
-
-## 第四部分：Hello ChCore
-
-我们完成了内核态向用户态的切换，以及用户态向内核态的异常切换。同时，我们拥有了一个完整的 `libc`，可以帮助我们进行系统调用。接下来，我们将尝试使用 ChCore 的 `libc` 及编译器进行简单的程序编译，并将其加载到内核镜像中运行。
-
-> 练习 9: 尝试编写一个简单的用户程序，其作用至少包括打印以下字符(测试将以此为得分点)。
->```
-> Hello ChCore!
->```
-> 使用 chcore-libc 的编译器进行对其进行编译，编译输出文件名命名为 `hello_chcore.bin`，并将其放入 ramdisk 加载进内核运行。内核启动时将自动运行 文件名为 `hello_chcore.bin` 的可执行文件。
->
-> 提示:
+### 调度队列初始化
+内核初始化过程中会调用`sched_init`初始化调度相关的元数据，`sched_init`定义在kernel/sched/sched.c中，该函数首先初始化idle_thread(每个CPU核心拥有一个idle_thread，当调度器的就绪队列中没有等待线程时会切换到idle_thread运行)，然后会初始化`current_threads`数组，最后调用`struct sched_ops rr`中定义的sched_init函数，即`rr_sched_init`。
+> 练习 1：在 kernel/sched/policy_rr.c 中完善 `rr_sched_init` 函数，对 `rr_ready_queue_meta` 进行初始化。在完成填写之后，你可以看到输出“Scheduler metadata is successfully initialized!”并通过 Scheduler metadata initialization 测试点。
 > 
-> - ChCore 的编译工具链在 `build/chcore-libc/bin` 文件夹中。 
-> - 如使用 cmake 进行编译，可以将工具链文件指定为 `build/toolchain.cmake`，将默认使用 ChCore 编译工具链。
+> 提示：sched_init 只会在主 CPU 初始化时调用，因此 rr_sched_init 需要对每个 CPU 核心的就绪队列都进行初始化。
 
-到这里，你的程序应该可以通过所有的测试点并且获得满分。你可以编写一些更复杂的程序并尝试放入 ChCore 中运行。
+### 调度队列入队
+内核初始化过程结束之后会调用`create_root_thread`来创建第一个用户态进程及线程，在`create_root_thread`最后会调用`sched_enqueue`函数将创建的线程加入调度队列之中。`sched_enqueue`
+最终会调用kernel/sched/policy_rr.c中定义的`rr_sched_enqueue`函数。该函数首先挑选合适的CPU核心的就绪队列（考虑线程是否绑核以及各个CPU核心之间的负载均衡），然后调用`__rr_sched_enqueue`将线程插入到选中的就绪队列中。
+> 练习 2：在 kernel/sched/policy_rr.c 中完善 `__rr_sched_enqueue` 函数，将`thread`插入到`cpuid`对应的就绪队列中。在完成填写之后，你可以看到输出“Successfully enqueue root thread”并通过 Schedule Enqueue 测试点。
 
+### 调度队列出队
+内核初始化过程结束并调用`create_root_thread`创建好第一个用户态进程及线程之后，在第一次进入用户态之前，会调用`sched`函数来挑选要返回到用户态运行的线程（虽然此时就绪队列中只有root thread一个线程）。`sched`最终会调用kernel/sched/policy_rr.c中定义的`rr_sched`函数。
+该调度函数的操作非常直观，就是将现在正在运行的线程重新加入调度器的就绪队列当中，并从就绪队列中挑选出一个新的线程运行。
+由于内核刚刚完成初始化，我们还没有设置过`current_thread`，所以`rr_sched`函数中`old`为`NULL`，后面的练习中我们会考虑`old`不为`NULL`的情况。紧接着`rr_sched`会调用`rr_sched_choose_thread`函数挑选出下一个运行的线程，并切换到该线程。
 
+`rr_sched_choose_thread`内部会调用`find_runnable_thread`从当前CPU核心的就绪队列中选取一个可以运行的线程并调用`__rr_sched_dequeue`将其从就绪队列中移除。
+> 练习 3：在 kernel/sched/policy_rr.c 中完善 `find_runnable_thread` 函数，在就绪队列中找到第一个满足运行条件的线程并返回。 在 kernel/sched/policy_rr.c 中完善 `__rr_sched_dequeue` 函数，将被选中的线程从就绪队列中移除。在完成填写之后，运行 ChCore 将可以成功进入用户态，你可以看到输出“Enter Procmgr Root thread (userspace)”并通过 Schedule Enqueue 测试点。
 
+### 协作式调度
+顾名思义，协作式调度需要线程主动放弃CPU。为了实现该功能，我们提供了`sys_yield`这一个系统调用(syscall)。该syscall可以主动放弃当前CPU核心，并调用上述的`sched`接口完成调度器的调度工作。kernel/sched/policy_rr.c中定义的`rr_sched`函数中，如果当前运行线程的状态为`TS_RUNNING`，即还处于可以运行的状态，我们应该将其重新加入到就绪队列当中，这样该线程在之后才可以被再次调度执行。
+
+> 练习 4：在kernel/sched/sched.c中完善系统调用`sys_yield`，使用户态程序可以主动让出CPU核心触发线程调度。
+> 此外，请在kernel/sched/policy_rr.c 中完善`rr_sched`函数，将当前运行的线程重新加入调度队列中。在完成填写之后，运行 ChCore 将可以成功进入用户态并创建两个线程交替执行，你可以看到输出“Cooperative Schedluing Test Done!”并通过 Cooperative Schedluing 测试点。
+
+### 抢占式调度
+
+使用刚刚实现的协作式调度器，ChCore能够在线程主动调用`sys_yield`系统调用让出CPU核心的情况下调度线程。然而，若用户线程不想放弃对CPU核心的占据，内核便只能让用户线程继续执行，而无法强制用户线程中止。 因此，在这一部分中，本实验将实现抢占式调度，以帮助内核定期重新获得对CPU核心的控制权。
+
+ChCore启动的第一个用户态线程（执行user/system-services/system-servers/procmgr/procmgr.c的`main`函数）将创建一个“自旋线程”，该线程在获得CPU核心的控制权后便会执行无限循环，进而导致无论是该程序的主线程还是ChCore内核都无法重新获得CPU核心的控制权。就保护系统免受用户程序中的错误或恶意代码影响而言，这一情况显然并不理想，任何用户应用线程均可以如该“自旋线程”一样，通过进入无限循环来永久“霸占”整个CPU核心。
+
+为了处理“自旋线程”的问题，ChCore内核必须具有强行中断一个正在运行的线程并夺回对CPU核心的控制权的能力，为此我们必须扩展ChCore以支持处理来自物理时钟的外部硬件中断。
+
+**物理时钟初始化**
+
+本部分我们将通过配置ARM提供的Generic Timer来使能物理时钟并使其以固定的频率发起中断。
+我们需要处理的系统寄存器如下(Refer：https://developer.arm.com/documentation/102379/0101/The-processor-timers):
+* CNTPCT_EL0: 它的值代表了当前的 system count。
+* CNTFRQ_EL0: 它的值代表了物理时钟运行的频率，即每秒钟 system count 会增加多少。
+* CNTP_CVAL_EL0: 是一个64位寄存器，操作系统可以向该寄存器写入一个值，当 system count 达到或超过该值时，物理时钟会触发中断。
+* CNTP_TVAL_EL0: 是一个32位寄存器，操作系统可以写入 TVAL，处理器会在内部读取当前的系统计数，加上写入的值，然后填充 CVAL。
+* CNTP_CTL_EL0: 物理时钟的控制寄存器，第0位ENABLE控制时钟是否开启，1代表enble，0代表disable；第1位IMASK代表是否屏蔽时钟中断，0代表不屏蔽，1代表屏蔽。
+
+对物理时钟进行初始化的代码位于kernel/arch/aarch64/plat/raspi3/irq/timer.c的`plat_timer_init`函数。
+> 练习 5：请根据代码中的注释在kernel/arch/aarch64/plat/raspi3/irq/timer.c中完善`plat_timer_init`函数，初始化物理时钟。需要完成的步骤有：
+> * 读取 CNTFRQ_EL0 寄存器，为全局变量 cntp_freq 赋值。
+> * 根据 TICK_MS（由ChCore决定的时钟中断的时间间隔，以ms为单位，ChCore默认每10ms触发一次时钟中断）和cntfrq_el0 （即物理时钟的频率）计算每两次时钟中断之间 system count 的增长量，将其赋值给 cntp_tval 全局变量，并将 cntp_tval 写入 CNTP_TVAL_EL0 寄存器！
+> * 根据上述说明配置控制寄存器CNTP_CTL_EL0。
+> 
+> 由于启用了时钟中断，但目前还没有对中断进行处理，所以会影响评分脚本的评分，你可以通过运行ChCore观察是否有"Physical Timer was successfully initialized!"输出来判断是否正确对物理时钟进行初始化。
+
+**物理时钟中断与抢占**
+
+我们在lab3中已经为ChCore配置过异常向量表（kernel/arch/aarch64/irq/irq_entry.S），当收到来自物理时钟的外部中断时，内核会进入`handle_irq`中断处理函数，该函数会调用平台相关的`plat_handle_irq`来进行中断处理。`plat_handle_irq`内部如果判断中断源为物理时钟，则调用`handle_timer_irq`。
+
+ChCore记录每个线程所拥有的时间片（`thread->thread_ctx->sc->budget`），为了能够让线程之间轮转运行，我们应当在处理时钟中断时递减当前运行线程的时间片，并在当前运行线程的时间片耗尽时进行调度，选取新的线程运行。
+
+> 练习 6：请在kernel/arch/aarch64/plat/raspi3/irq/irq.c中完善`plat_handle_irq`函数，当中断号irq为INT_SRC_TIMER1（代表中断源为物理时钟）时调用`handle_timer_irq`并返回。 请在kernel/irq/irq.c中完善`handle_timer_irq`函数，递减当前运行线程的时间片budget，并调用sched函数触发调度。 请在kernel/sched/policy_rr.c中完善`rr_sched`函数，在将当前运行线程重新加入就绪队列之前，恢复其调度时间片budget为DEFAULT_BUDGET。
+> 在完成填写之后，运行 ChCore 将可以成功进入用户态并打断创建的“自旋线程”让内核和主线程可以拿回CPU核心的控制权，你可以看到输出“Preemptive Schedluing Test Done!”并通过 Preemptive Scheduling 测试点。
+
+## 第三部分：进程间通信（IPC）
+
+在本部分，我们将实现ChCore的进程间通信，从而允许跨地址空间的两个进程可以使用IPC进行信息交换。
+
+### ChCore进程间通讯概览
+![](./docs/assets/IPC-overview.png)
+
+ChCore的IPC接口不是传统的send/recv接口。其更像客户端/服务器模型，其中IPC请求接收者是服务器，而IPC请求发送者是客户端。 服务器进程中包含三类线程:
+* 主线程：该线程与普通的线程一样，类型为`TYPE_USER`。该线程会调用`ipc_register_server`将自己声明为一个IPC的服务器进程，调用的时候会提供两个参数:服务连接请求的函数client_register_handler和服务真正IPC请求的函数server_handler（即图中的`ipc_dispatcher`），调用该函数会创建一个注册回调线程;
+* 注册回调线程：该线程的入口函数为上文提到的client_register_handler，类型为`TYPE_REGISTER`。正常情况下该线程不会被调度执行，仅当有Client发起建立IPC连接的请求时，该线程运行并执行client_register_handler，为请求建立连接的Client创建一个服务线程（即图中的IPC handler thread）并在服务器进程的虚拟地址空间中分配一个可以用来映射共享内存的虚拟地址。
+* 服务线程：当Client发起建立IPC连接请求时由注册回调线程创建，入口函数为上文提到的server_handler，类型为`TYPE_SHADOW`。正常情况下该线程不会被调度执行，仅当有Client端线程使用`ipc_call`发起IPC请求时，该线程运行并执行server_handler（即图中的`ipc_dispatcher`），执行结束之后会调用`ipc_return`回到Client端发起IPC请求的线程。
+
+Note：注册回调线程和服务线程都不再拥有调度上下文（Scheduling Context），也即不会主动被调度器调度到。其在客户端申请建立IPC连接或者发起IPC请求的时候才会被调度执行。为了实现该功能，这两种类型的线程会继承IPC客户端线程的调度上下文（即调度时间片budget），从而能被调度器正确地调度。
+
+### ChCore IPC具体流程
+为了实现ChCore IPC的功能，首先需要在Client与Server端创建起一个一对一的IPC Connection。该Connection保存了IPC Server的服务线程（即上图中IPC handler Thread）、Client与Server的共享内存（用于存放IPC通信的内容）。同一时刻，一个Connection只能有一个Client接入，并使用该Connection切换到Server的处理流程。ChCore提供了一系列机制，用于创建Connection以及创建每个Connection对应的服务线程。下面将以具体的IPC注册到调用的流程，详细介绍ChCore的IPC机制：
+
+1. IPC服务器的主线程调用`ipc_register_server`（user/chcore-libc/musl-libc/src/chcore-port/ipc.c中）来声明自己为IPC的服务器端。
+    * 参数包括server_handler和client_register_handler，其中server_handler为服务端用于提供服务的回调函数（比如上图中IPC handler Thread的入口函数`ipc_dispatcher`）；client_register_handler为服务端提供的用于注册的回调函数，该函数会创建一个注册回调线程。
+    * 随后调用ChCore提供的的系统调用：`sys_register_server`。该系统调用实现在kernel/ipc/connection.c当中，该系统调用会分配并初始化一个`struct ipc_server_config`和一个`struct ipc_server_register_cb_config`。之后将调用者线程（即主线程）的general_ipc_config字段设置为创建的`struct ipc_server_config`，其中记录了注册回调线程和IPC服务线程的入口函数（即图中的`ipc_dispatcher`）。将注册回调线程的general_ipc_config字段设置为创建的`struct ipc_server_register_cb_config`，其中记录了注册回调线程的入口函数和用户态栈地址等信息。
+2. IPC客户端线程调用`ipc_register_client`（定义在user/chcore-libc/musl-libc/src/chcore-port/ipc.c中）来申请建立IPC连接。
+    * 该函数仅有一个参数，即IPC服务器的主线程在客户端进程cap_group中的capability。该函数会首先通过系统调用申请一块物理内存作为和服务器的共享内存（即图中的Shared Memory）。
+    * 随后调用`sys_register_client`系统调用。该系统调用实现在kernel/ipc/connection.c当中，该系统调用会将刚才申请的物理内存映射到客户端的虚拟地址空间中，然后调用`create_connection`创建并初始化一个`struct ipc_connection`类型的内核对象，该内核对象中的shm字段会记录共享内存相关的信息（包括大小，分别在客户端进程和服务器进程当中的虚拟地址和capability）。
+    * 之后会设置注册回调线程的栈地址、入口地址和第一个参数，并切换到注册回调线程运行。
+3. 注册回调线程运行的入口函数为主线程调用`ipc_register_server`是提供的client_register_handler参数，一般会使用默认的`DEFAULT_CLIENT_REGISTER_HANDLER`宏定义的入口函数，即定义在user/chcore-libc/musl-libc/src/chcore-port/ipc.c中的`register_cb`。
+    * 该函数首先分配一个用来映射共享内存的虚拟地址，随后创建一个服务线程。
+    * 随后调用`sys_ipc_register_cb_return`系统调用进入内核，该系统调用将共享内存映射到刚才分配的虚拟地址上，补全`struct ipc_connection`内核对象中的一些元数据之后切换回客户端线程继续运行，客户端线程从`ipc_register_client`返回，完成IPC建立连接的过程。
+4. IPC客户端线程调用`ipc_create_msg`和`ipc_set_msg_data`向IPC共享内存中填充数据，然后调用`ipc_call`（user/chcore-libc/musl-libc/src/chcore-port/ipc.c中）发起IPC请求。
+    * `ipc_call`中会发起`sys_ipc_call`系统调用（定义在kernel/ipc/connection.c中），该系统调用将设置服务器端的服务线程的栈地址、入口地址、各个参数，然后迁移到该服务器端服务线程继续运行。由于当前的客户端线程需要等待服务器端的服务线程处理完毕，因此需要更新其状态为TS_WAITING，且不要加入等待队列。
+5. IPC服务器端的服务线程在处理完IPC请求之后使用`ipc_return`返回。
+    * `ipc_return`会发起`sys_ipc_return`系统调用，该系统调用会迁移回到IPC客户端线程继续运行，IPC客户端线程从`ipc_call`中返回。
+
+> 练习 7：在user/chcore-libc/musl-libc/src/chcore-port/ipc.c与kernel/ipc/connection.c中实现了大多数IPC相关的代码，请根据注释补全kernel/ipc/connection.c中的代码。之后运行ChCore可以看到 “[TEST] Test IPC finished!” 输出，你可以通过 Test IPC 测试点。

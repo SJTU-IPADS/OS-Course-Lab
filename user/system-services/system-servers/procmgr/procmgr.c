@@ -473,11 +473,64 @@ void *handler_thread_routine(void *arg)
         return NULL;
 }
 
+static void bind_to_cpu(int cpu)
+{
+        cpu_set_t mask;
+
+        CPU_ZERO(&mask);
+        CPU_SET(cpu, &mask);
+        sched_setaffinity(0, sizeof(mask), &mask);
+
+        /*
+         * Invoke usys_yield to ensure current thread to run on the target CPU.
+         * If current thread is running on another CPU, it will be migrated to
+         * the specific CPU after setting affinity.
+        */
+        usys_yield();
+}
+
+void *thread_routine1(void *arg)
+{
+        bind_to_cpu(0);
+        for (int i = 0; i < 3; ++i) {
+                printf("Hello from thread 2\n");
+                usys_yield();
+        }
+        printf("Cooperative Schedluing Test Done!\n");
+        return NULL;
+}
+
+void *thread_routine2(void *arg)
+{
+        printf("Hello, I am thread 3. I'm spinning.\n");
+
+        while (1) {
+        }
+        return 0;
+}
+
+void test_sched(void)
+{
+        pthread_t tid;
+        pthread_create(&tid, NULL, thread_routine1, NULL);
+        usys_yield();
+        for (int i = 0; i < 3; ++i) {
+                printf("Hello from thread 1\n");
+                usys_yield();
+        }
+        pthread_join(tid, NULL);
+
+        printf("Thread 1 creates a spinning thread!\n");
+        pthread_create(&tid, NULL, thread_routine2, NULL);
+        usys_yield();
+        printf("Thread 1 successfully regains the control!\n");
+        printf("Preemptive Schedluing Test Done!\n");
+}
+
 void boot_default_apps(void)
 {
         char *shell_argv = "chcore_shell.bin";
-        char *userland_argv = "userland.bin";
-        char *hello_argv = "hello_chcore.bin";
+        char *test_ipc = "test_ipc.bin";
 
 #define CONFIG_MACHINE_ARM 0
 #if CONFIG_MACHINE_ARM == 1
@@ -498,12 +551,10 @@ void boot_default_apps(void)
         procmgr_launch_process(
                 1, &shell_argv, "chcore-shell", true, INIT_BADGE, NULL, COMMON_APP);
  
-        /* Lab 3 Test */
+        /* Lab 4 Test */
         procmgr_launch_process(
-                1, &userland_argv, "userland", true, INIT_BADGE, NULL, COMMON_APP);
-        procmgr_launch_process(
-                1, &hello_argv, "hello_chcore", true, INIT_BADGE, NULL, COMMON_APP);
-        /* Lab 3 Test End*/
+                1, &test_ipc, "test_ipc", true, INIT_BADGE, NULL, COMMON_APP);
+        /* Lab 4 Test End*/ 
 
 #if defined(CHCORE_PLAT_RASPI3) && defined(CHCORE_SERVER_GUI)
         char *terminal_argv = "terminal.bin";
@@ -518,6 +569,7 @@ int main(int argc, char *argv[], char *envp[])
         pthread_t recycle_thread;
         pthread_t procmgr_handler_tid;
 
+        printf("Enter Procmgr Root thread (userspace)\n");
         pthread_create(&recycle_thread, NULL, recycle_routine, NULL);
 
         init_procmgr();
@@ -528,6 +580,7 @@ int main(int argc, char *argv[], char *envp[])
 
         init_root_proc_node();
 
+        test_sched();
         boot_default_servers();
 
         boot_default_apps();

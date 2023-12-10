@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE connection.c.obj notification.c.obj futex.c.obj)
+target_sources(${kernel_target} PRIVATE connection.c notification.c.obj futex.c.obj)

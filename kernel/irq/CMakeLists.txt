@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE timer.c.obj ipi.c.obj)
+target_sources(${kernel_target} PRIVATE timer.c ipi.c.obj)

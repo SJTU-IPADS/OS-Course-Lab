@@ -151,7 +151,6 @@ u64 handle_entry_c(int type, u64 esr, u64 address)
 void handle_irq(void)
 {
 	plat_handle_irq();
-	sched_periodic();
 	eret_to_thread(switch_context());
 }
 

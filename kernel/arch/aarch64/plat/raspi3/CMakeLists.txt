@@ -8,5 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE uart/uart.c.obj irq/irq.c.obj irq/timer.c.obj
+target_sources(${kernel_target} PRIVATE uart/uart.c.obj irq/irq.c irq/timer.c
                                         mm/mmparse.c.obj poweroff.c.obj)

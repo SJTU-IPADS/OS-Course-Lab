@@ -16,9 +16,9 @@ NONE='\033[0m'
 grade_dir=$(dirname $0)
 
 echo -e "${BOLD}===============${NONE}"
-echo -e "${BLUE}Grading lab 2...(may take 10 seconds)${NONE}"
+echo -e "${BLUE}Grading lab 4...(may take 10 seconds)${NONE}"
 
-$grade_dir/expects/lab3.exp
+$grade_dir/expects/lab4.exp
 score=$?
 
 echo -e "${BOLD}===============${NONE}"

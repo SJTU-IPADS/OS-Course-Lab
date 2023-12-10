@@ -29,6 +29,7 @@
 #include <ipc/futex.h>
 
 #include "thread_env.h"
+#include "../tests/runtime/tests.h"
 
 /*
  * local functions
@@ -76,8 +77,8 @@ void thread_deinit(void *thread_ptr)
         thread = (struct thread *)thread_ptr;
 
         BUG_ON(thread->thread_ctx->thread_exit_state != TE_EXITED);
-        if (thread->thread_ctx->state != TS_EXIT)
-                kwarn("thread ctx->state is %d\n", thread->thread_ctx->state);
+        // if (thread->thread_ctx->state != TS_EXIT)
+        //         kwarn("thread ctx->state is %d\n", thread->thread_ctx->state);
 
         cap_group = thread->cap_group;
         lock(&cap_group->threads_lock);
@@ -316,6 +317,7 @@ void create_root_thread(void)
         /* Enqueue: put init thread into the ready queue */
         BUG_ON(sched_enqueue(root_thread));
         obj_put(root_thread);
+        test_schedule_enqueue(root_thread);
 }
 
 static cap_t create_thread(struct cap_group *cap_group, vaddr_t stack,
