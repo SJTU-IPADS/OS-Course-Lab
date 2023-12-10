@@ -43,11 +43,11 @@ void plat_timer_init(void)
 
 	/* LAB 4 TODO BEGIN (exercise 5) */
 	/* Note: you should add three lines of code. */
-	/* Read system register cntfrq_el0 */
+	/* Read system register cntfrq_el0 to cntp_freq*/
 
 	/* Calculate the cntp_tval based on TICK_MS and cntp_freq */
 
-	/* Write cntp_tval to cntp_tval_el0 */
+	/* Write cntp_tval to the system register cntp_tval_el0 */
 
 	/* LAB 4 TODO END (exercise 5) */
 

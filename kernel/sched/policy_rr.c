@@ -259,7 +259,7 @@ int rr_sched(void)
                                 return 0; /* no schedule needed */
                         }
                         /* LAB 4 TODO BEGIN (exercise 6) */
-                        /* Refill budget for current running thread */
+                        /* Refill budget for current running thread (old) */
 
                         /* LAB 4 TODO END (exercise 6) */
 
