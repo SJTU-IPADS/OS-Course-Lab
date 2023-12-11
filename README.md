@@ -89,7 +89,7 @@ ChCore启动的第一个用户态线程（执行user/system-services/system-serv
 > * 根据 TICK_MS（由ChCore决定的时钟中断的时间间隔，以ms为单位，ChCore默认每10ms触发一次时钟中断）和cntfrq_el0 （即物理时钟的频率）计算每两次时钟中断之间 system count 的增长量，将其赋值给 cntp_tval 全局变量，并将 cntp_tval 写入 CNTP_TVAL_EL0 寄存器！
 > * 根据上述说明配置控制寄存器CNTP_CTL_EL0。
 > 
-> 由于启用了时钟中断，但目前还没有对中断进行处理，所以会影响评分脚本的评分，你可以通过运行ChCore观察是否有"Physical Timer was successfully initialized!"输出来判断是否正确对物理时钟进行初始化。
+> 由于启用了时钟中断，但目前还没有对中断进行处理，所以会影响评分脚本的评分，你可以通过运行ChCore观察是否有"[TEST] Physical Timer was successfully initialized!: OK"输出来判断是否正确对物理时钟进行初始化。
 
 **物理时钟中断与抢占**
 
