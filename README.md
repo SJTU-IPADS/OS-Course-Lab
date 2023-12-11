@@ -98,7 +98,7 @@ ChCore启动的第一个用户态线程（执行user/system-services/system-serv
 ChCore记录每个线程所拥有的时间片（`thread->thread_ctx->sc->budget`），为了能够让线程之间轮转运行，我们应当在处理时钟中断时递减当前运行线程的时间片，并在当前运行线程的时间片耗尽时进行调度，选取新的线程运行。
 
 > 练习 6：请在kernel/arch/aarch64/plat/raspi3/irq/irq.c中完善`plat_handle_irq`函数，当中断号irq为INT_SRC_TIMER1（代表中断源为物理时钟）时调用`handle_timer_irq`并返回。 请在kernel/irq/irq.c中完善`handle_timer_irq`函数，递减当前运行线程的时间片budget，并调用sched函数触发调度。 请在kernel/sched/policy_rr.c中完善`rr_sched`函数，在将当前运行线程重新加入就绪队列之前，恢复其调度时间片budget为DEFAULT_BUDGET。
-> 在完成填写之后，运行 ChCore 将可以成功进入用户态并打断创建的“自旋线程”让内核和主线程可以拿回CPU核心的控制权，你可以看到输出“Preemptive Schedluing Test Done!”并通过 Preemptive Scheduling 测试点。
+> 在完成填写之后，运行 ChCore 将可以成功进入用户态并打断创建的“自旋线程”让内核和主线程可以拿回CPU核心的控制权，你可以看到输出"Hello, I am thread 3. I'm spinning."和“Thread 1 successfully regains the control!”并通过 Preemptive Scheduling 测试点。
 
 ## 第三部分：进程间通信（IPC）
 

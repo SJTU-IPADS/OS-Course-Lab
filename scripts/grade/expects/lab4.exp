@@ -55,9 +55,13 @@ expect {
         lset scores {3 1} [lindex $scores {3 2}]
         exp_continue -continue_timer
     }
-    "Preemptive Schedluing Test Done!" {
-        lset scores {4 1} [lindex $scores {4 2}]
-        exp_continue -continue_timer
+    "Hello, I am thread 3. I'm spinning." {
+        expect {
+            "Preemptive Schedluing Test Done!" {
+                lset scores {4 1} [lindex $scores {4 2}]
+                exp_continue -continue_timer
+            }
+        }
     }
     "Test IPC finished!" {
         lset scores {5 1} [lindex $scores {5 2}]
