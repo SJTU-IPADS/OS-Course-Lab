@@ -50,6 +50,14 @@ Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f
 Tutorial: https://www.bilibili.com/video/BV11N411j7bR/
 
 
+## Lab4：多核调度与IPC
+该实验中可以看到多核是如何启动的、多线程如何调度、基于capability权限管控的进程间通信机制。
+
+分支：ChCore-Lab4
+
+链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab4
+
+
 ## 仓库建设者
 ### 教师
 古金宇
