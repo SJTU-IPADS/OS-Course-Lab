@@ -5,7 +5,6 @@
 
 实验 4 与实验 3相同，需要在根目录下拉取 `musl-libc` 代码。
 
-> 练习 0: 在项目根目录下运行以下命令以拉取 `musl-libc` 代码。
 >```bash
 > git submodule update --init --recursive
 >```
