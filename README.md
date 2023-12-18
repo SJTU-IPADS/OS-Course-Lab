@@ -68,7 +68,7 @@ ChCore用在 kernel/include/sched/sched.h 中定义的静态函数封装对cur_s
 由于内核刚刚完成初始化，我们还没有设置过`current_thread`，所以`rr_sched`函数中`old`为`NULL`，后面的练习中我们会考虑`old`不为`NULL`的情况。紧接着`rr_sched`会调用`rr_sched_choose_thread`函数挑选出下一个运行的线程，并切换到该线程。
 
 `rr_sched_choose_thread`内部会调用`find_runnable_thread`从当前CPU核心的就绪队列中选取一个可以运行的线程并调用`__rr_sched_dequeue`将其从就绪队列中移除。
-> 练习 3：在 kernel/sched/policy_rr.c 中完善 `find_runnable_thread` 函数，在就绪队列中找到第一个满足运行条件的线程并返回。 在 kernel/sched/policy_rr.c 中完善 `__rr_sched_dequeue` 函数，将被选中的线程从就绪队列中移除。在完成填写之后，运行 ChCore 将可以成功进入用户态，你可以看到输出“Enter Procmgr Root thread (userspace)”并通过 Schedule Enqueue 测试点。
+> 练习 3：在 kernel/sched/sched.c 中完善 `find_runnable_thread` 函数，在就绪队列中找到第一个满足运行条件的线程并返回。 在 kernel/sched/policy_rr.c 中完善 `__rr_sched_dequeue` 函数，将被选中的线程从就绪队列中移除。在完成填写之后，运行 ChCore 将可以成功进入用户态，你可以看到输出“Enter Procmgr Root thread (userspace)”并通过 Schedule Enqueue 测试点。
 
 ### 协作式调度
 顾名思义，协作式调度需要线程主动放弃CPU。为了实现该功能，我们提供了`sys_yield`这一个系统调用(syscall)。该syscall可以主动放弃当前CPU核心，并调用上述的`sched`接口完成调度器的调度工作。kernel/sched/policy_rr.c中定义的`rr_sched`函数中，如果当前运行线程的状态为`TS_RUNNING`，即还处于可以运行的状态，我们应该将其重新加入到就绪队列当中，这样该线程在之后才可以被再次调度执行。
