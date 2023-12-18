@@ -23,13 +23,13 @@
 ### 启动多核
 在实验1中我们已经介绍，在QEMU模拟的树莓派中，所有CPU核心在开机时会被同时启动。在引导时这些核心会被分为两种类型。一个指定的CPU核心会引导整个操作系统和初始化自身，被称为主CPU（primary CPU）。其他的CPU核心只初始化自身即可，被称为其他CPU（backup CPU）。CPU核心仅在系统引导时有所区分，在其他阶段，每个CPU核心都是被相同对待的。
 
-> 思考题 1:阅读汇编代码kernel/arch/aarch64/boot/raspi3/init/start.S。说明ChCore是如何选定主CPU，并阻塞其他其他CPU的执行的。
+> 思考题 1：阅读汇编代码kernel/arch/aarch64/boot/raspi3/init/start.S。说明ChCore是如何选定主CPU，并阻塞其他其他CPU的执行的。
 
 在树莓派真机中，还需要主CPU手动指定每一个CPU核心的的启动地址。这些CPU核心会读取固定地址的上填写的启动地址，并跳转到该地址启动。在kernel/arch/aarch64/boot/raspi3/init/init_c.c中，我们提供了wakeup_other_cores函数用于实现该功能，并让所有的CPU核心同在QEMU一样开始执行_start函数。
 
 与之前的实验一样，主CPU在第一次返回用户态之前会在kernel/arch/aarch64/main.c中执行main函数，进行操作系统的初始化任务。在本小节中，ChCore将执行enable_smp_cores函数激活各个其他CPU。
 
-> 思考题2：阅读汇编代码kernel/arch/aarch64/boot/raspi3/init/start.S, init_c.c以及kernel/arch/aarch64/main.c，解释用于阻塞其他CPU核心的secondary_boot_flag是物理地址还是虚拟地址？是如何传入函数enable_smp_cores中，又是如何赋值的（考虑虚拟地址/物理地址）？
+> 思考题 2：阅读汇编代码kernel/arch/aarch64/boot/raspi3/init/start.S, init_c.c以及kernel/arch/aarch64/main.c，解释用于阻塞其他CPU核心的secondary_boot_flag是物理地址还是虚拟地址？是如何传入函数enable_smp_cores中，又是如何赋值的（考虑虚拟地址/物理地址）？
 
 ## 第二部分：多核调度
 ChCore已经可以启动多核，但仍然无法对多个线程进行调度。本部分将首先实现协作式调度，从而允许当前在CPU核心上运行的线程主动退出或主动放弃CPU时，CPU核心能够切换到另一个线程继续执行。其后，我们将驱动树莓派上的物理定时器，使其以一定的频率发起中断，使得内核可以在一定时间片后重新获得对CPU核心的控制，并基于此进一步实现抢占式调度。
