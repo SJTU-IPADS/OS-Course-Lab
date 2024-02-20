@@ -1,4 +1,4 @@
-Tutorial视频链接：https://www.bilibili.com/video/BV1AS421N7rU/?vd_source=316867e8ad2c56f50fa94e8122dd7d38#reply1500879304
+Tutorial视频链接：https://www.bilibili.com/video/BV1AS421N7rU
 
 # 实验 4：多核调度与IPC
 在本实验中，ChCore将支持在多核处理器上启动（第一部分）；实现多核调度器以调度执行多个线程（第二部分）；最后实现进程间通信IPC（第三部分）。注释`/* LAB 4 TODO BEGIN (exercise #) */`和`/* LAB 4 TODO END (exercise #) */`之间代表需要填空的代码部分。
