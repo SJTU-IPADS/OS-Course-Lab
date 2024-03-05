@@ -69,14 +69,14 @@ $ make qemu-gdb # 需要先确保已运行 make build
 $ make gdb
 ```
 
-不出意外的话，终端 1 将会“卡住”没有任何输出，终端 2 将会进入 GDB 调试界面，并显示从 `0x80000` （这是树莓派3b+平台指定的内核第一行指令地址）内存地址开始的指令。此时在 GDB 窗口输入命令可以控制 QEMU 中 ChCore 内核的运行，例如：
+不出意外的话，终端 1 将会“卡住”没有任何输出(QEMU 使用 Ctrl-A + X 退出)，终端 2 将会进入 GDB 调试界面，并显示从 `0x80000` （这是树莓派3b+平台指定的内核第一行指令地址）内存地址开始的指令。此时在 GDB 窗口输入命令可以控制 QEMU 中 ChCore 内核的运行，例如：
 
 - `ni` 可以执行到下一条指令
 - `si` 可以执行到下一条指令，且会跟随 `bl` 进入函数
 - `break [func]`/`b [func]` 可以在函数 `[func]` 开头打断点
 - `break *[addr]` 可以在内存地址 `[addr]` 处打断点
 - `info reg [reg]`/`i r [reg]` 可以打印 `[reg]` 寄存器的值
-- `continue`/`c` 可以继续 ChCore 的执行，直到出发断点或手动按 Ctrl-C
+- `continue`/`c` 可以继续 ChCore 的执行，直到触发断点或手动按 Ctrl-C
 
 更多常用的 GDB 命令和用法请参考 [GDB Quick Reference](https://users.ece.utexas.edu/~adnan/gdb-refcard.pdf) 和 [Debugging with GDB](https://sourceware.org/gdb/onlinedocs/gdb/)。
 
@@ -106,14 +106,14 @@ QEMU `raspi3b` 机器启动时，CPU 异常级别为 EL3，我们需要在启动
 
 > 练习题 2：在 `arm64_elX_to_el1` 函数的 `LAB 1 TODO 1` 处填写一行汇编代码，获取 CPU 当前异常级别。
 >
-> 提示：通过 `CurrentEL` 系统寄存器可获得当前异常级别。通过 GDB 在指令级别单步调试可验证实现是否正确。
+> 提示：通过 `CurrentEL` 系统寄存器可获得当前异常级别。通过 GDB 在指令级别单步调试可验证实现是否正确。注意参考文档理解 `CurrentEL` 各个 bits 的[意义](https://developer.arm.com/documentation/ddi0601/2020-12/AArch64-Registers/CurrentEL--Current-Exception-Level)。
 
 `eret`指令可用于从高异常级别跳到更低的异常级别，在执行它之前我们需要设置
 设置 `elr_elx`（异常链接寄存器）和 `spsr_elx`（保存的程序状态寄存器），分别控制`eret`执行后的指令地址（PC）和程序状态（包括异常返回后的异常级别）。
 
-> 练习题 3：在 `arm64_elX_to_el1` 函数的 `LAB 1 TODO 2` 处填写大约 4 行汇编代码，设置从 EL3 跳转到 EL1 所需的 `elr_el3` 和 `spsr_el3` 寄存器值。具体地，我们需要在跳转到 EL1 时暂时屏蔽所有中断、并使用`sp_el1` 寄存器指定的栈指针。
+> 练习题 3：在 `arm64_elX_to_el1` 函数的 `LAB 1 TODO 2` 处填写大约 4 行汇编代码，设置从 EL3 跳转到 EL1 所需的 `elr_el3` 和 `spsr_el3` 寄存器值。
 >
-> 提示：`elr_el3` 应设置为 `.Ltarget`
+> 提示：`elr_el3` 的正确设置应使得控制流在 `eret` 后从 `arm64_elX_to_el1` 返回到 `_start` 继续执行初始化。 `spsr_el3` 的正确设置应正确屏蔽 DAIF 四类中断，并且将 [SP](https://developer.arm.com/documentation/ddi0500/j/CHDDGJID) 正确设置为 `EL1h`. 在设置好这两个系统寄存器后，不需要立即 `eret`.
 
 
 练习完成后，可使用 GDB 跟踪内核代码的执行过程，由于此时不会有任何输出，可通过是否正确从 `arm64_elX_to_el1` 函数返回到 `_start` 来判断代码的正确性。
@@ -229,11 +229,20 @@ AttrIndx | bits[4:2] | 表示内存属性索引，间接指向 `mair_el1` 寄存
 
 现在将目光转移到 `kernel/arch/aarch64/boot/raspi3/init/mmu.c` 文件，我们需要在 `init_kernel_pt` 为内核配置从 `0x00000000` 到 `0x80000000`（`0x40000000` 后的 1G，ChCore 只需使用这部分地址中的本地外设）的映射，其中 `0x00000000` 到 `0x3f000000` 映射为 normal memory，`0x3f000000` 到 `0x80000000`映射为 device memory，其中 `0x00000000` 到 `0x40000000` 以 2MB 块粒度映射，`0x40000000` 到 `0x80000000` 以 1GB 块粒度映射。
 
-> 练习题 9：请在 `init_kernel_pt` 函数的 `LAB 1 TODO 5` 处配置内核高地址页表（`boot_ttbr1_l0`、`boot_ttbr1_l1` 和 `boot_ttbr1_l2`），以 2MB 粒度映射。
+> 思考题 9: 请结合上述地址翻译规则，计算在练习题 10 中，你需要映射几个 L2 页表条目，几个 L1 页表条目，几个 L0 页表条目。页表页需要占用多少物理内存？
+>
 
-> 思考题 10：请思考在 `init_kernel_pt` 函数中为什么还要为低地址配置页表，并尝试验证自己的解释。
+> 练习题 10：在 `init_kernel_pt` 函数的 `LAB 1 TODO 5` 处配置内核高地址页表（`boot_ttbr1_l0`、`boot_ttbr1_l1` 和 `boot_ttbr1_l2`），以 2MB 粒度映射。
+>
+> 提示：你只需要将 `addr`(`0x00000000` 到 `0x80000000`) 按照要求的页粒度一一映射到 `KERNEL_VADDR + addr`(`vaddr`) 上。`vaddr` 对应的物理地址是 `vaddr - KERNEL_VADDR`. Attributes 的设置请参考给出的低地址页表配置。
 
-完成 `init_kernel_pt` 函数后，ChCore 内核便可以在 `el1_mmu_activate` 启用 MMU 后继续执行，并通过 `start_kernel` 跳转到高地址，进而跳转到内核的 `main` 函数（位于 `kernel/arch/aarch64/main.c`）。
+> 思考题 11：请思考在 `init_kernel_pt` 函数中为什么还要为低地址配置页表，并尝试验证自己的解释。
+
+完成 `init_kernel_pt` 函数后，ChCore 内核便可以在 `el1_mmu_activate` 中将 `boot_ttbr1_l0` 等物理地址写入实际寄存器(如 `ttbr1_el1` )，随后启用 MMU 后继续执行，并通过 `start_kernel` 跳转到高地址，进而跳转到内核的 `main` 函数（位于 `kernel/arch/aarch64/main.c`, 尚未发布，以 binary 提供）。
+
+> 思考题 12：在一开始我们暂停了三个其他核心的执行，根据现有代码简要说明它们什么时候会恢复执行。思考为什么一开始只让 0 号核心执行初始化流程？
+>
+> 提示： `secondary_boot_flag` 将在 main 函数执行完时钟，调度器，锁的初始化后被设置。
 
 ## 附录
 
