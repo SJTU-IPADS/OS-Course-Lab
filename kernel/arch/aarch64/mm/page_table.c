@@ -128,7 +128,7 @@ static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind)
  *
  */
 static int get_next_ptp(ptp_t *cur_ptp, u32 level, vaddr_t va, ptp_t **next_ptp,
-                        pte_t **pte, bool alloc, long *rss)
+                        pte_t **pte, bool alloc)
 {
         u32 index = 0;
         pte_t *entry;
@@ -170,8 +170,6 @@ static int get_next_ptp(ptp_t *cur_ptp, u32 level, vaddr_t va, ptp_t **next_ptp,
                         if (new_ptp == NULL)
                                 return -ENOMEM;
                         memset((void *)new_ptp, 0, PAGE_SIZE);
-                        if (rss)
-                                *rss += PAGE_SIZE;
 
                         new_ptp_paddr = virt_to_phys((vaddr_t)new_ptp);
 
@@ -203,7 +201,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
 
         // L0 page table
         l0_ptp = (ptp_t *)pgtbl;
-        ret = get_next_ptp(l0_ptp, L0, va, &l1_ptp, &pte, false, NULL);
+        ret = get_next_ptp(l0_ptp, L0, va, &l1_ptp, &pte, false);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L0 no mapping.\n");
                 return ret;
@@ -211,7 +209,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         printk("L0 pte is 0x%lx\n", pte->pte);
 
         // L1 page table
-        ret = get_next_ptp(l1_ptp, L1, va, &l2_ptp, &pte, false, NULL);
+        ret = get_next_ptp(l1_ptp, L1, va, &l2_ptp, &pte, false);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L1 no mapping.\n");
                 return ret;
@@ -219,7 +217,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         printk("L1 pte is 0x%lx\n", pte->pte);
 
         // L2 page table
-        ret = get_next_ptp(l2_ptp, L2, va, &l3_ptp, &pte, false, NULL);
+        ret = get_next_ptp(l2_ptp, L2, va, &l3_ptp, &pte, false);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L2 no mapping.\n");
                 return ret;
@@ -227,7 +225,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         printk("L2 pte is 0x%lx\n", pte->pte);
 
         // L3 page table
-        ret = get_next_ptp(l3_ptp, L3, va, &phys_page, &pte, false, NULL);
+        ret = get_next_ptp(l3_ptp, L3, va, &phys_page, &pte, false);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L3 no mapping.\n");
                 return ret;
@@ -309,7 +307,7 @@ int query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
 }
 
 static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
-                       vmr_prop_t flags, int kind, long *rss)
+                       vmr_prop_t flags, int kind)
 {
         /* LAB 2 TODO 4 BEGIN */
         /*
@@ -332,15 +330,15 @@ int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa,
 		       size_t len, vmr_prop_t flags)
 {
 	return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
-                                         KERNEL_PTE, NULL);
+                                         KERNEL_PTE);
 }
 
 /* Map vm range in user */
 int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags, long *rss)
+		       size_t len, vmr_prop_t flags)
 {
 	return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
-                                         USER_PTE, rss);
+                                         USER_PTE);
 }
 
 /*
@@ -353,7 +351,7 @@ int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
  * 	- nonzero otherwise
  */
 static int try_release_ptp(ptp_t *high_ptp, ptp_t *low_ptp,
-                                  int index, long *rss)
+                                  int index)
 {
         int i;
 
@@ -366,25 +364,23 @@ static int try_release_ptp(ptp_t *high_ptp, ptp_t *low_ptp,
         BUG_ON(index < 0 || index >= PTP_ENTRIES);
         high_ptp->ent[index].pte = PTE_DESCRIPTOR_INVALID;
         kfree(low_ptp);
-        if (rss)
-                *rss -= PAGE_SIZE;
 
         return 1;
 }
 
 static void recycle_pgtable_entry(ptp_t *l0_ptp, ptp_t *l1_ptp, ptp_t *l2_ptp,
-                                  ptp_t *l3_ptp, vaddr_t va, long *rss)
+                                  ptp_t *l3_ptp, vaddr_t va)
 {
-        if (!try_release_ptp(l2_ptp, l3_ptp, GET_L2_INDEX(va), rss))
+        if (!try_release_ptp(l2_ptp, l3_ptp, GET_L2_INDEX(va)))
                 return;
 
-        if (!try_release_ptp(l1_ptp, l2_ptp, GET_L1_INDEX(va), rss))
+        if (!try_release_ptp(l1_ptp, l2_ptp, GET_L1_INDEX(va)))
                 return;
 
-        try_release_ptp(l0_ptp, l1_ptp, GET_L0_INDEX(va), rss);
+        try_release_ptp(l0_ptp, l1_ptp, GET_L0_INDEX(va));
 }
 
-int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, long *rss)
+int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len)
 {
         /* LAB 2 TODO 4 BEGIN */
         /*
