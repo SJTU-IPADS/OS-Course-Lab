@@ -34,7 +34,7 @@ set -e
 
 project_dir=$(cd $(dirname $(dirname $(cd $(dirname "$0"); pwd))); pwd)
 cpp_dir="$project_dir/.cpp"
-download_dir="$project_dir/.cpp/download/"
+download_dir="$project_dir/.cpp/download"
 
 libfile_url="git@ipads.se.sjtu.edu.cn:staros/cpp-libs.git"
 

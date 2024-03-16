@@ -38,7 +38,7 @@ struct process_metadata {
 #define PHDR_VADDR_OFF  16
 #define PHDR_PADDR_OFF  24
 #define PHDR_FILESZ_OFF 32
-#define PHDR_MEMSZ_OF   40
+#define PHDR_MEMSZ_OFF   40
 #define PHDR_ALIGN_OFF  48
 
 #define PHDR_FLAGS_R (1 << 2)

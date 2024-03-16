@@ -154,7 +154,7 @@ void lab2_test_page_table(void)
                 int ret;
 
                 ret = map_range_in_pgtbl(
-                        pgtbl, 0x1001000, 0x1000, PAGE_SIZE, flags, NULL);
+                        pgtbl, 0x1001000, 0x1000, PAGE_SIZE, flags);
                 lab_assert(ret == 0);
 
                 ret = query_in_pgtbl(pgtbl, 0x1001000, &pa, &pte);
@@ -164,7 +164,7 @@ void lab2_test_page_table(void)
                 ret = query_in_pgtbl(pgtbl, 0x1001050, &pa, &pte);
                 lab_assert(ret == 0 && pa == 0x1050);
 
-                ret = unmap_range_in_pgtbl(pgtbl, 0x1001000, PAGE_SIZE, NULL);
+                ret = unmap_range_in_pgtbl(pgtbl, 0x1001000, PAGE_SIZE);
                 lab_assert(ret == 0);
                 ret = query_in_pgtbl(pgtbl, 0x1001000, &pa, &pte);
                 lab_assert(ret == -ENOMAPPING);
@@ -182,10 +182,10 @@ void lab2_test_page_table(void)
                 size_t nr_pages = 10;
                 size_t len = PAGE_SIZE * nr_pages;
 
-                ret = map_range_in_pgtbl(pgtbl, 0x1001000, 0x1000, len, flags, NULL);
+                ret = map_range_in_pgtbl(pgtbl, 0x1001000, 0x1000, len, flags);
                 lab_assert(ret == 0);
                 ret = map_range_in_pgtbl(
-                        pgtbl, 0x1001000 + len, 0x1000 + len, len, flags, NULL);
+                        pgtbl, 0x1001000 + len, 0x1000 + len, len, flags);
                 lab_assert(ret == 0);
 
                 for (int i = 0; i < nr_pages * 2; i++) {
@@ -196,9 +196,9 @@ void lab2_test_page_table(void)
                                    && pte->l3_page.is_page);
                 }
 
-                ret = unmap_range_in_pgtbl(pgtbl, 0x1001000, len, NULL);
+                ret = unmap_range_in_pgtbl(pgtbl, 0x1001000, len);
                 lab_assert(ret == 0);
-                ret = unmap_range_in_pgtbl(pgtbl, 0x1001000 + len, len, NULL);
+                ret = unmap_range_in_pgtbl(pgtbl, 0x1001000 + len, len);
                 lab_assert(ret == 0);
 
                 for (int i = 0; i < nr_pages * 2; i++) {
@@ -221,13 +221,13 @@ void lab2_test_page_table(void)
                 size_t len = (1 << 30) + (4 << 20) + 10 * PAGE_SIZE;
 
                 ret = map_range_in_pgtbl(
-                        pgtbl, 0x100000000, 0x100000000, len, flags, NULL);
+                        pgtbl, 0x100000000, 0x100000000, len, flags);
                 lab_assert(ret == 0);
                 ret = map_range_in_pgtbl(pgtbl,
                                          0x100000000 + len,
                                          0x100000000 + len,
                                          len,
-                                         flags, NULL);
+                                         flags);
                 lab_assert(ret == 0);
 
                 for (vaddr_t va = 0x100000000; va < 0x100000000 + len * 2;
@@ -236,9 +236,9 @@ void lab2_test_page_table(void)
                         lab_assert(ret == 0 && pa == va);
                 }
 
-                ret = unmap_range_in_pgtbl(pgtbl, 0x100000000, len, NULL);
+                ret = unmap_range_in_pgtbl(pgtbl, 0x100000000, len);
                 lab_assert(ret == 0);
-                ret = unmap_range_in_pgtbl(pgtbl, 0x100000000 + len, len, NULL);
+                ret = unmap_range_in_pgtbl(pgtbl, 0x100000000 + len, len);
                 lab_assert(ret == 0);
 
                 for (vaddr_t va = 0x100000000; va < 0x100000000 + len;
