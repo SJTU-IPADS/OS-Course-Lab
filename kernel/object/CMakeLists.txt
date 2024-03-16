@@ -10,9 +10,9 @@
 
 target_sources(
     ${kernel_target}
-    PRIVATE cap_group.c
+    PRIVATE cap_group.c.obj
             capability.c
-            thread.c
+            thread.c.obj
             irq.c.obj
             memory.c
             set_thread_env.c

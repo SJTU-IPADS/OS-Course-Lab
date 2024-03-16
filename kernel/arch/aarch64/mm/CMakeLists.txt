@@ -15,7 +15,7 @@ target_sources(
             memcpy.S.obj
             memmove.S.obj
             memset.c.obj
-            page_table.c
+            page_table.c.obj
             page_table.S.obj
             tlb.c.obj
             uaccess.c.obj
