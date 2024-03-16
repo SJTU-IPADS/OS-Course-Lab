@@ -67,7 +67,6 @@ ChCore 中每个由伙伴系统管理的内存区域称为一个 `struct phys_me
 >
 > - 需要实现的函数内部无需刷新 TLB，TLB 刷新会在这些函数的外部进行
 > - 实现中可以使用 `get_next_ptp`、`set_pte_flags`、`virt_to_phys`、`GET_LX_INDEX` 等已经给定的函数和宏
-> - `map_range_in_pgtbl_common`、`unmap_range_in_pgtbl`、`get_next_ptp` 中的 `rss` 参数是用于统计物理内存使用量的[^rss]，在本实验中你不必实现该功能，该功能的正确实现与否不影响本题得分。在调用 `get_next_ptp` 时可以直接使用 `NULL` 作为 `rss` 参数。（当然你也可以选择正确实现这一功能）
 > - 更多提示见代码注释
 
 [^rss]: https://en.wikipedia.org/wiki/Resident_set_size
@@ -97,10 +96,10 @@ ChCore 中每个由伙伴系统管理的内存区域称为一个 `struct phys_me
 > - 一个虚拟地址空间所包含的 VMR 通过 rb_tree 的数据结构保存在 `vmspace` 结构体的 `vmr_tree` 字段
 > - 可以使用 `kernel/include/common/rbtree.h` 中定义的 `rb_search`、`rb_entry` 等函数或宏来对 rb_tree 进行搜索或操作
 
-缺页处理主要针对 `PMO_SHM` 和 `PMO_ANONYM` 类型的 PMO，这两种 PMO 的物理页是在访问时按需分配的。缺页处理逻辑为首先尝试检查 PMO 中当前 fault 地址对应的物理页是否存在（通过 `get_page_from_pmo` 函数尝试获取 PMO 中 offset 对应的物理页）。若对应物理页未分配，则需要分配一个新的物理页，将将页记录到 PMO 中，并增加页表映射。若对应物理页已分配，则只需要修改页表映射即可。
+缺页处理主要针对 `PMO_SHM` 和 `PMO_ANONYM` 类型的 PMO，这两种 PMO 的物理页是在访问时按需分配的。缺页处理逻辑为首先尝试检查 PMO 中当前 fault 地址对应的物理页是否存在（通过 `get_page_from_pmo` 函数尝试获取 PMO 中 offset 对应的物理页）。若对应物理页未分配，则需要分配一个新的物理页，再将页记录到 PMO 中，并增加页表映射。若对应物理页已分配，则只需要修改页表映射即可。
 
 > 练习题 10: 完成 `kernel/mm/pgfault_handler.c` 中的 `handle_trans_fault` 函数中的 `LAB 2 TODO 7` 部分（函数内共有 3 处填空，不要遗漏），实现 `PMO_SHM` 和 `PMO_ANONYM` 的按需物理页分配。你可以阅读代码注释，调用你之前见到过的相关函数来实现功能。
 
 正确完成上述练习题后，运行 `make qemu` 后 ChCore 应当能正常进入 Shell；运行 `make grade`，你应当能够得到 100 分。如果你无法通过测试，请考虑到也有可能是你前面两个部分的实现存在漏洞。
 
-> 挑战题 11: 由于没有磁盘，因此我们采用一部分内存模拟磁盘。内存页是可以换入换出的，请设计一套换页策略（如 LRU 等），并在 `kernel/mm/pgfault_handler.c` 中的的适当位置简单实现你的换页方法。
+> 挑战题 11: `map_range_in_pgtbl_common`、`unmap_range_in_pgtbl` 函数中可以增加一个参数`rss` 参数来统计map映射中实际的物理内存使用量[^rss]，在本次挑战题中，你需要修改相关的代码来通过`Compute physical memory`测试，不实现该挑战题并不影响其他部分功能的实现及测试。如果你想检测是否通过此部分测试，需要修改kernel/config.cmake中`CHCORE_KERNEL_PM_USAGE_TEST`为 ON,同时需要对应调整练习题1-10中涉及接口的参数。

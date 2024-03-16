@@ -72,7 +72,10 @@ void main(paddr_t boot_flag, void *info)
 	lab2_test_kmalloc();
 	void lab2_test_page_table(void);
 	lab2_test_page_table();
-
+#if defined(CHCORE_KERNEL_PM_USAGE_TEST)
+	void lab2_test_pm_usage(void);
+	lab2_test_pm_usage();
+#endif
 	/* Mapping KSTACK into kernel page table. */
 	map_range_in_pgtbl_kernel((void*)((unsigned long)boot_ttbr1_l0 + KBASE), 
 			KSTACKx_ADDR(0),

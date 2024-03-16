@@ -221,7 +221,6 @@ static int fill_page_table(struct vmspace *vmspace, struct vmregion *vmr)
         paddr_t pa;
         vaddr_t va;
         int ret;
-        long rss = 0;
 
         pm_size = vmr->pmo->size;
         pa = vmr->pmo->start;
@@ -229,8 +228,7 @@ static int fill_page_table(struct vmspace *vmspace, struct vmregion *vmr)
 
         lock(&vmspace->pgtbl_lock);
         ret = map_range_in_pgtbl(
-                vmspace->pgtbl, va, pa, pm_size, vmr->perm, &rss);
-        vmspace->rss += rss;
+                vmspace->pgtbl, va, pa, pm_size, vmr->perm);
         unlock(&vmspace->pgtbl_lock);
 
         return ret;
@@ -270,8 +268,6 @@ int vmspace_init(struct vmspace *vmspace, unsigned long pcid)
         reset_history_cpus(vmspace);
 
         vmspace->heap_boundary_vmr = NULL;
-
-        vmspace->rss = 0;
 
         return 0;
 }
@@ -364,10 +360,8 @@ static void __vmspace_unmap_range_pgtbl(struct vmspace *vmspace, vaddr_t va,
                                         size_t len)
 {
         if (len != 0) {
-                long rss = 0;
                 lock(&vmspace->pgtbl_lock);
-                unmap_range_in_pgtbl(vmspace->pgtbl, va, len, &rss);
-                vmspace->rss += rss;
+                unmap_range_in_pgtbl(vmspace->pgtbl, va, len);
                 unlock(&vmspace->pgtbl_lock);
                 flush_tlb_by_range(vmspace, va, len);
         }

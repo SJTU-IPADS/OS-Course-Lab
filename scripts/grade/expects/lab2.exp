@@ -21,7 +21,10 @@ set scores {
     {"Map & unmap one page"               0 10}
     {"Map & unmap multiple pages"         0 10}
     {"Map & unmap huge range"             0 20}
-
+    {"Compute physical memory-1"          0  1}
+    {"Compute physical memory-2"          0  1}
+    {"Compute physical memory-3"          0  1}
+    {"Compute physical memory-4"          0  2}
     {"Page fault"                         0 30}
 }
 
@@ -76,8 +79,24 @@ expect {
         lset scores {7 1} [lindex $scores {7 2}]
         exp_continue -continue_timer
     }
-    "Welcome to ChCore shell!" {
+    "Compute physical memory-1: OK" {
         lset scores {8 1} [lindex $scores {8 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-2: OK" {
+        lset scores {9 1} [lindex $scores {9 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-3: OK" {
+        lset scores {10 1} [lindex $scores {10 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-4: OK" {
+        lset scores {11 1} [lindex $scores {12 2}]
+        exp_continue -continue_timer
+    }
+    "Welcome to ChCore shell!" {
+        lset scores {12 1} [lindex $scores {12 2}]
         exp_continue -continue_timer
     }
     timeout {
