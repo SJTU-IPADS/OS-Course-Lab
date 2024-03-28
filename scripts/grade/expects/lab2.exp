@@ -92,7 +92,7 @@ expect {
         exp_continue -continue_timer
     }
     "Compute physical memory-4: OK" {
-        lset scores {11 1} [lindex $scores {12 2}]
+        lset scores {11 1} [lindex $scores {11 2}]
         exp_continue -continue_timer
     }
     "Welcome to ChCore shell!" {
