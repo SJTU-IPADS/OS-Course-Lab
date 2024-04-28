@@ -558,7 +558,7 @@ static int ipc_send_cap(struct thread *target_thread, unsigned int cap_num)
         cap_t *src_cap_buf, *dest_cap_buf;
         struct cap_group *target_cap_group;
 
-        if (cap_num >= MAX_CAP_TRANSFER) {
+        if (cap_num > MAX_CAP_TRANSFER) {
                 r = -EINVAL;
                 goto out_fail;
         }

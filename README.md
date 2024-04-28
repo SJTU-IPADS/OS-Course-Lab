@@ -47,7 +47,7 @@ ChCore用在 kernel/include/sched/sched.h 中定义的静态函数封装对cur_s
 * sched_dequeue：从调度器的就绪队列中取出一个线程。
 * sched_top：用于debug,打印当前所有核心上的运行线程以及等待线程的函数。
 
-在本部分将实现一个基本的Round Robin（时间片轮转）调度器，该程序调度在同一CPU核心上运行的线程，因此内核初始化过程调用sched_init时传入了&rr作为参数。该调度器的调度操作（即对于sched_ops定义的各个函数接口的实现）实现在kernel/sched/policy_rr.c中，这里煎药介绍其涉及的数据结构：
+在本部分将实现一个基本的Round Robin（时间片轮转）调度器，该程序调度在同一CPU核心上运行的线程，因此内核初始化过程调用sched_init时传入了&rr作为参数。该调度器的调度操作（即对于sched_ops定义的各个函数接口的实现）实现在kernel/sched/policy_rr.c中，这里简要介绍其涉及的数据结构：
 
 `current_threads`是一个数组，分别指向每个CPU核心上运行的线程。而`current_thread`则利用`smp_get_cpu_id`获取当前运行核心的id，从而找到当前核心上运行的线程。
 
