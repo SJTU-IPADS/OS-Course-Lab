@@ -75,7 +75,7 @@ struct fs_vnode {
 
 文件描述符（File Descriptor，简称 fd）是操作系统用于管理文件和其他输入/输出资源（如管道、网络连接等）的一种抽象标识符。在类 Unix 系统（如 Linux、macOS）中，文件描述符是一个非负整数，它指向一个内核中的文件表项，每个表项包含了文件的各种状态信息和操作方法。ChCore 将进程的 fd 保存在 chcore-libc 当中，同时在文件系统中通过 server_entry 维护了各个 Client 的 fd 的信息，把各个 Client 的 fd 和在文件系统侧的 fid 对应起来（(client_badge, fd) -> fid(server_entry)）。
 
- FS_Base 的 IPC handler 在处理 IPC 请求时，会先把 IPC 消息中包含的文件 fd 转换为 fid。
+FS_Base 的 IPC handler 在处理 IPC 请求时，会先把 IPC 消息中包含的文件 fd 转换为 fid。
 
 > 练习5：实现 `user/system-services/system-servers/fs_base/fs_wrapper.c` 中的 `fs_wrapper_set_server_entry` 和 `fs_wrapper_get_server_entry` 函数。
 >
