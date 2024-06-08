@@ -60,6 +60,7 @@ proc clean_and_build {n} {
 
     exec bash -c "make clean"
     
+    set timeout 240
     spawn bash -c "make build"
     expect {
         "Succeeded to build all targets" {
