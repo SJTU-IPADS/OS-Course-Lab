@@ -1,6 +1,6 @@
 # 实验概述
 
-本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验放在独立分支。
+本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验位于独立的目录。
 
 课程教材:
 
@@ -23,19 +23,11 @@ Tutorial: https://www.bilibili.com/video/BV1q94y1a7BF/?vd_source=63231f40c83c4d2
 该实验的主要内容是关于如何在内核启动过程中设置CPU异常级别、配置内核页表并启用MMU。
 在内核实验系列中，我们将使用 [ChCore 微内核](https://www.usenix.org/conference/atc20/presentation/gu) 的基础版本，并使用 Raspi3b+作为实验平台（无论是使用QEMU树莓派模拟器还是树莓派开发板都可以）。
 
-分支: ChCore-Lab1
-
-链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab1
-
 Tutorial: [https://www.bilibili.com/video/BV1gj411i7dh/](https://www.bilibili.com/video/BV1gj411i7dh/?spm_id_from=333.337.search-card.all.click)
 
 
 ## Lab2: 内存管理
 该实验主要内容是关于内核中的伙伴系统和slab分配器的实现，并为应用程序设置页表。
-
-分支: ChCore-Lab2
-
-链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab2
 
 Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f50fa94e8122dd7d38
 
@@ -43,38 +35,14 @@ Tutorial: https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f
 ## Lab3: 进程与线程
 该实验主要内容包括创建第一个用户态进程和线程，完善异常处理流程和系统调用，编写一个Hello-World在实验内核上运行。
 
-分支: ChCore-Lab3
-
-链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab3
-
 Tutorial: https://www.bilibili.com/video/BV11N411j7bR/
 
 
 ## Lab4：多核调度与IPC
 该实验中可以看到多核是如何启动的、多线程如何调度、基于capability权限管控的进程间通信机制。
 
-分支：ChCore-Lab4
-
-链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/ChCore-Lab4
-
 Tutorial: https://www.bilibili.com/video/BV1AS421N7rU/
 
 
-## 仓库建设者
-### 教师
-古金宇
-
-夏虞斌
-
-### 助教
-周淳威
-
-叶瑜超
-
-苏浩然
-
-史嘉成
-
-王子轩
-
-闻天麟
+## Lab5：虚拟文件系统
+该实验关注虚拟文件系统（Virtual File System，VFS）, VFS抽象层使得不同类型的文件系统可以在应用程序层面以统一的方式进行访问。
