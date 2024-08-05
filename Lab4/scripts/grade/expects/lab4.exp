@@ -1,0 +1,78 @@
+#!/usr/bin/expect -f
+
+proc print {msg} {
+    puts "GRADE: $msg"
+    flush stdout
+}
+
+set timeout 10
+log_user 0
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+set scores {
+    {"Scheduler metadata initialization" 0 10}
+    {"Schedule Enqueue"  0 10}
+    {"Schedule Dequeue"  0 10}
+    {"Cooperative Schedluing"  0 20}
+    {"Preemptive Schedluing"  0 20}
+    {"Test IPC"  0 30}
+}
+
+proc grade {} {
+    global scores
+    set score 0
+    foreach x $scores {
+        set name [lindex $x 0]
+        set n [lindex $x 1]
+        print "$name: $n"
+        incr score $n
+    }
+    global qemu_pid
+    exec kill -9 $qemu_pid
+    exit $score
+}
+
+trap {
+    grade
+} SIGINT
+
+expect {
+    "Scheduler metadata is successfully initialized!" {
+        lset scores {0 1} [lindex $scores {0 2}]
+        exp_continue -continue_timer
+    }
+    "Successfully enqueue root thread" {
+        lset scores {1 1} [lindex $scores {1 2}]
+        exp_continue -continue_timer
+    }
+    "test_schedule_dequeue: OK" {
+        lset scores {2 1} [lindex $scores {2 2}]
+        exp_continue -continue_timer
+    }
+    "Cooperative Schedluing Test Done!" {
+        lset scores {3 1} [lindex $scores {3 2}]
+        exp_continue -continue_timer
+    }
+    "Hello, I am thread 3. I'm spinning." {
+        expect {
+            "Preemptive Schedluing Test Done!" {
+                lset scores {4 1} [lindex $scores {4 2}]
+            }
+        }
+        exp_continue -continue_timer
+    }
+    "Test IPC finished!" {
+        lset scores {5 1} [lindex $scores {5 2}]
+        exp_continue -continue_timer
+    }
+    "BUG:" {
+        grade
+    }
+    timeout {
+        grade
+    }
+}
+
+grade

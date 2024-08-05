@@ -1,0 +1,9 @@
+#enable_uart=1
+disable_commandline_tags=1
+arm_64bit=1
+kernel=kernel8.img
+disable_l2cache=0
+gpu_mem=32
+disable_overscan=1
+#framebuffer_depth=16
+#force_turbo=1
