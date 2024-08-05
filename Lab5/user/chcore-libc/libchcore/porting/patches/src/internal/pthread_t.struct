@@ -1,0 +1,3 @@
+	ipc_struct_t system_ipc_fsm;
+	ipc_struct_t system_ipc_net;
+	ipc_struct_t system_ipc_procmgr;
