@@ -1,0 +1,64 @@
+#!/usr/bin/expect -f
+
+proc print {msg} {
+    puts "GRADE: $msg"
+    flush stdout
+}
+
+set timeout 10
+log_user 0
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+set scores {
+    {"Cap create pretest" 0 20}
+    {"Userland"  0 40}
+    {"Successful printf"  0 20}
+    {"Hello ChCore"  0 20}
+}
+
+proc grade {} {
+    global scores
+    set score 0
+    foreach x $scores {
+        set name [lindex $x 0]
+        set n [lindex $x 1]
+        print "$name: $n"
+        incr score $n
+    }
+    global qemu_pid
+    exec kill -9 $qemu_pid
+    exit $score
+}
+
+trap {
+    grade
+} SIGINT
+
+expect {
+    "Cap_create Pretest Ok!" {
+        lset scores {0 1} [lindex $scores {0 2}]
+        exp_continue -continue_timer
+    }
+    "Hello userland!" {
+        lset scores {1 1} [lindex $scores {1 2}]
+        exp_continue -continue_timer
+    }
+    "Welcome to ChCore shell!" {
+        lset scores {2 1} [lindex $scores {2 2}]
+        exp_continue -continue_timer
+    }
+    "Hello ChCore!" {
+        lset scores {3 1} [lindex $scores {3 2}]
+        exp_continue -continue_timer
+    }
+    "BUG:" {
+        grade
+    }
+    timeout {
+        grade
+    }
+}
+
+grade
