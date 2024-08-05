@@ -1,0 +1,107 @@
+#!/usr/bin/expect -f
+
+proc print {msg} {
+    puts "GRADE: $msg"
+    flush stdout
+}
+
+set timeout 8
+log_user 0
+
+spawn bash -c "make qemu"
+set qemu_pid [exp_pid -i $spawn_id]
+
+set scores {
+    {"Allocate & free order 0"            0 5}
+    {"Allocate & free each order"         0 5}
+    {"Allocate & free all orders"         0 5}
+    {"Allocate & free all memory: OK"     0 5}
+    {"kmalloc"                            0 10}
+
+    {"Map & unmap one page"               0 10}
+    {"Map & unmap multiple pages"         0 10}
+    {"Map & unmap huge range"             0 20}
+    {"Compute physical memory-1"          0  1}
+    {"Compute physical memory-2"          0  1}
+    {"Compute physical memory-3"          0  1}
+    {"Compute physical memory-4"          0  2}
+    {"Page fault"                         0 30}
+}
+
+proc grade {} {
+    global scores
+    set score 0
+    foreach x $scores {
+        set name [lindex $x 0]
+        set n [lindex $x 1]
+        print "$name: $n"
+        incr score $n
+    }
+    global qemu_pid
+    exec kill -9 $qemu_pid
+    exit $score
+}
+
+trap {
+    grade
+} SIGINT
+
+expect {
+    "Allocate & free order 0: OK" {
+        lset scores {0 1} [lindex $scores {0 2}]
+        exp_continue -continue_timer
+    }
+    "Allocate & free each order: OK" {
+        lset scores {1 1} [lindex $scores {1 2}]
+        exp_continue -continue_timer
+    }
+    "Allocate & free all orders: OK" {
+        lset scores {2 1} [lindex $scores {2 2}]
+        exp_continue -continue_timer
+    }
+    "Allocate & free all memory: OK" {
+        lset scores {3 1} [lindex $scores {3 2}]
+        exp_continue -continue_timer
+    }
+    "kmalloc: OK" {
+        lset scores {4 1} [lindex $scores {4 2}]
+        exp_continue -continue_timer
+    }
+    "Map & unmap one page: OK" {
+        lset scores {5 1} [lindex $scores {5 2}]
+        exp_continue -continue_timer
+    }
+    "Map & unmap multiple pages: OK" {
+        lset scores {6 1} [lindex $scores {6 2}]
+        exp_continue -continue_timer
+    }
+    "Map & unmap huge range: OK" {
+        lset scores {7 1} [lindex $scores {7 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-1: OK" {
+        lset scores {8 1} [lindex $scores {8 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-2: OK" {
+        lset scores {9 1} [lindex $scores {9 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-3: OK" {
+        lset scores {10 1} [lindex $scores {10 2}]
+        exp_continue -continue_timer
+    }
+    "Compute physical memory-4: OK" {
+        lset scores {11 1} [lindex $scores {11 2}]
+        exp_continue -continue_timer
+    }
+    "Welcome to ChCore shell!" {
+        lset scores {12 1} [lindex $scores {12 2}]
+        exp_continue -continue_timer
+    }
+    timeout {
+        grade
+    }
+}
+
+grade
