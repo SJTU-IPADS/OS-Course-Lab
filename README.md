@@ -46,3 +46,7 @@ Tutorial: https://www.bilibili.com/video/BV1AS421N7rU/
 
 ## Lab5：虚拟文件系统
 该实验关注虚拟文件系统（Virtual File System，VFS）, VFS抽象层使得不同类型的文件系统可以在应用程序层面以统一的方式进行访问。
+
+
+## Lab6：GUI
+该实验将详细介绍ChCore上基于Wayland的GUI系统的运行原理，包括Wayland通信协议和Wayland Compositor，并且要求读者在了解基于Wayland的GUI系统运行原理的基础上，基于ChCore的GUI框架编写自己的具有GUI界面的APP。
