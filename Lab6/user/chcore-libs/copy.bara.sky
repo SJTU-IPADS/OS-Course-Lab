@@ -1,0 +1,45 @@
+sourceUrl = "ssh://git@ipads.se.sjtu.edu.cn/staros/staros-libs.git"
+destinationUrl = "https://gitee.com/opentrustee/opentrustee_os_internal_libs.git"
+
+commit_message = "Test message!"
+commit_author = "Copybara <example@example.com>"
+origin_branch = "oh-tee"
+dest_branch = "master"
+
+all_excludes = [
+    "**/CMakeLists.txt",
+    "**/*cmake*",
+    "**/*clang-tidy",
+    "**/*clang-format",
+    ".gitlab/**",
+    "CMakeLists.txt",
+    "*cmake*",
+    "*clang-tidy",
+    "*clang-format",
+    ".gitlab-ci.yml"
+]
+
+libs_includes = [
+    ".gitignore",
+    "sys-libs/libohtee/**"
+]
+
+def set_commit_message(ctx):
+    ctx.set_message(commit_message)
+    return ctx.success()
+
+core.workflow(
+    name = "push",
+    origin = git.origin(
+        url = sourceUrl,
+        ref = origin_branch,
+    ),
+    destination = git.destination(
+        url = destinationUrl,
+        fetch = dest_branch,
+        push = dest_branch
+    ),
+    origin_files = glob(include = libs_includes, exclude = all_excludes),
+    authoring = authoring.pass_thru(commit_author),
+    transformations = [set_commit_message]
+)

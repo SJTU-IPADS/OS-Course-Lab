@@ -1,0 +1,4 @@
+[submodule "user/chcore-libc/musl-libc"]
+	path = user/chcore-libc/musl-libc
+	url = git://git.musl-libc.org/musl
+	branch = v1.2.3

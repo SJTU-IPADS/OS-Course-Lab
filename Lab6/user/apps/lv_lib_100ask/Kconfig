@@ -1,0 +1,188 @@
+# Kconfig file
+
+menu "LV_LIB_100ASK configuration"
+
+    menu "Pinyin input method"
+        config LV_USE_100ASK_PINYIN_IME
+            bool "Enable LV_USE_100ASK_PINYIN_IME."
+            default n
+            help
+                Must deploy LV_USE_KEYBOARD for "lv_conf.h".
+
+        config LV_100ASK_PINYIN_IME_ZH_CN_PIN_YIN_DICT
+            bool "Enable LV_100ASK_PINYIN_IME_ZH_CN_PIN_YIN_DICT."
+            depends on LV_USE_100ASK_PINYIN_IME
+            default n
+            help
+                Use internal Thesaurus.
+        
+        config LV_100ASK_PINYIN_IME_CAND_TEXT_NUM
+            int "Set the number of candidate characters."
+            depends on LV_USE_100ASK_PINYIN_IME
+            default 10
+            help
+                Adjust according to screen width.
+
+        config LV_100ASK_PINYIN_IME_SIMPLE_TEST
+            bool "Enable LV_100ASK_PINYIN_IME_SIMPLE_TEST."
+            depends on LV_USE_100ASK_PINYIN_IME
+            default n
+            help
+                Pinyin input method simple test.
+    endmenu
+
+    menu "Page manager"
+        config LV_USE_100ASK_PAGE_MANAGER
+            bool "Enable LV_USE_100ASK_PAGE_MANAGER."
+            default n
+        
+        config LV_100ASK_PAGE_MANAGER_SW_DEL_PAGE
+            bool "Switch pages and delete old pages at the same time.."
+            depends on LV_USE_100ASK_PAGE_MANAGER
+            default n
+            help
+                Switch pages and delete old pages at the same time.
+                1: DELETE , 0:DELETE NO
+        
+        config LV_100ASK_PAGE_MANAGER_COSTOM_ANIMARION
+            bool "Page switch animation"
+            depends on LV_USE_100ASK_PAGE_MANAGER
+            default n
+            help
+                1: use custom animation , 0:Use built-in animation
+        
+        config PAGE_SWITCHER_SNAPSHOT
+            bool "Page switcher snapshot"
+            depends on LV_USE_100ASK_PAGE_MANAGER
+            default n
+            help
+                TODO
+                        
+        config LV_100ASK_PAGE_MANAGER_SIMPLE_TEST
+            bool "Enable LV_100ASK_PAGE_MANAGER_SIMPLE_TEST."
+            depends on LV_USE_100ASK_PAGE_MANAGER
+            default n
+    endmenu
+
+    menu "lv_lib_100ask sketchpad"
+        config LV_USE_100ASK_SKETCHPAD
+            bool "Enable LV_USE_100ASK_SKETCHPAD."
+            default n
+            help
+                Must deploy LV_USE_CANVAS for "lv_conf.h".
+
+        config SKETCHPAD_DEFAULT_WIDTH
+            int "sketchpad default width."
+            depends on LV_USE_100ASK_SKETCHPAD
+            default 20
+        config SKETCHPAD_DEFAULT_HEIGHT
+            int "sketchpad default height."
+            depends on LV_USE_100ASK_SKETCHPAD
+            default 20
+
+        config LV_100ASK_SKETCHPAD_SIMPLE_TEST
+            bool "Enable LV_100ASK_SKETCHPAD_SIMPLE_TEST."
+            depends on LV_USE_100ASK_SKETCHPAD
+            default n
+            help
+                Sketchpad simple test.
+    endmenu
+
+    menu "Calculator"
+        config LV_USE_100ASK_CALC
+            bool "Enable LV_100ASK_CALC."
+            default n
+        config LV_100ASK_CALC_EXPR_LEN
+            int "Enable LV_100ASK_CALC_EXPR_LEN."
+            depends on LV_USE_100ASK_CALC
+            default 128
+        config LV_100ASK_CALC_MAX_NUM_LEN
+            int "Enable LV_100ASK_CALC_MAX_NUM_LEN."
+            depends on LV_USE_100ASK_CALC
+            default 5
+
+        config LV_100ASK_CALC_SIMPLE_TEST
+            bool "Enable LV_100ASK_CALC_SIMPLE_TEST."
+            depends on LV_USE_100ASK_CALC
+            default n
+    endmenu
+
+    menu "Memory game"
+        config LV_USE_100ASK_MEMORY_GAME
+            bool "Enable LV_USE_100ASK_MEMORY_GAME."
+            default n
+        config LV_100ASK_MEMORY_GAME_DEFAULT_ROW
+            int "Enable LV_100ASK_CALC_EXPR_LEN."
+            depends on LV_USE_100ASK_MEMORY_GAME
+            default 4
+        config LV_100ASK_MEMORY_GAME_DEFAULT_COL
+            int "Enable LV_100ASK_CALC_MAX_NUM_LEN."
+            depends on LV_USE_100ASK_MEMORY_GAME
+            default 4
+
+        config LV_100ASK_MEMORY_GAME_SIMPLE_TEST
+            bool "Enable LV_100ASK_MEMORY_GAME_SIMPLE_TEST."
+            depends on LV_USE_100ASK_MEMORY_GAME
+            default n
+    endmenu
+
+    menu "Game 2048"
+        config LV_USE_100ASK_2048
+            bool "Enable LV_100ASK_MEMORY_GAME."
+            default n
+        config LV_100ASK_2048_MATRIX_SIZE
+            int "Set LV_100ASK_2048_MATRIX_SIZE."
+            depends on LV_USE_100ASK_2048
+            default 4
+
+        config LV_100ASK_2048_SIMPLE_TEST
+            bool "Enable LV_100ASK_2048_SIMPLE_TEST."
+            depends on LV_USE_100ASK_2048
+            default y
+    endmenu
+
+    menu "File explorer"
+        config LV_USE_100ASK_FILE_EXPLORER
+            bool "Enable File explorer."
+            default n
+        config LV_100ASK_FILE_EXPLORER_PATH_MAX_LEN
+            int "Set LV_100ASK_FILE_EXPLORER_PATH_MAX_LEN."
+            depends on LV_USE_100ASK_FILE_EXPLORER
+            default 128
+        config LV_100ASK_FILE_EXPLORER_QUICK_ACCESS
+            bool "Enable LV_100ASK_FILE_EXPLORER_QUICK_ACCESS."
+            depends on LV_USE_100ASK_FILE_EXPLORER
+            default y
+            
+        config LV_100ASK_FILE_EXPLORER_SIMPLE_TEST
+            bool "Enable LV_100ASK_FILE_EXPLORER_SIMPLE_TEST."
+            depends on LV_USE_100ASK_FILE_EXPLORER
+            default y
+    endmenu
+
+    menu "NES Simulator"
+        config LV_USE_100ASK_NES
+            bool "Enable NES simulator."
+            default n
+        config LV_100ASK_NES_PLATFORM_POSIX
+            bool "POSIX platform"
+            depends on LV_USE_100ASK_NES
+            default n
+        config LV_100ASK_NES_PLATFORM_FREERTOS
+            bool "freeRTOS platform"
+            depends on LV_USE_100ASK_NES
+            default y
+        config LV_100ASK_NES_PLATFORM_RTTHREAD
+            bool "RT-Thread platform"
+            depends on LV_USE_100ASK_NES
+            default n
+            help
+                TODO
+            
+        config LV_100ASK_NES_SIMPLE_TEST
+            bool "Enable LV_100ASK_NES_SIMPLE_TEST."
+            depends on LV_USE_100ASK_NES && LV_USE_100ASK_FILE_EXPLORER
+            default y
+    endmenu
+
+endmenu
