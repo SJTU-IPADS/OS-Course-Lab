@@ -13,10 +13,6 @@
 该实验受到CSAPP课程启发，CSAPP课程设计了一个针对x86/x86-64汇编的拆炸弹实验。
 不同之处在于，本实验目标是熟悉ARM汇编语言，并为后续的ARM/树莓派内核实验做好准备。
 
-分支: bomb-lab
-
-链接: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/bomb-lab
-
 Tutorial: https://www.bilibili.com/video/BV1q94y1a7BF/?vd_source=63231f40c83c4d292b2a881fda478960
 
 ## Lab1: 内核启动
