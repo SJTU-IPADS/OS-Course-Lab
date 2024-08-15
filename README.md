@@ -1,5 +1,8 @@
 # 实验概述
 
+> [!WARNING]
+> 本实验仓库正在进行重构升级，请优先使用各个分支下的代码进行实验，main分支的代码目前并不保证运行正常。本条目将在维护完成后删除。
+
 本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验位于独立的目录。
 
 课程教材:
@@ -46,3 +49,4 @@ Tutorial: https://www.bilibili.com/video/BV1AS421N7rU/
 
 ## Lab6：GUI
 该实验将详细介绍ChCore上基于Wayland的GUI系统的运行原理，包括Wayland通信协议和Wayland Compositor，并且要求读者在了解基于Wayland的GUI系统运行原理的基础上，基于ChCore的GUI框架编写自己的具有GUI界面的APP。
+

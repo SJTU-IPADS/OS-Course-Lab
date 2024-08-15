@@ -43,3 +43,4 @@ __pycache__
 infer_*_report.txt
 infer-out/
 .repo/
+*.tar.gz
