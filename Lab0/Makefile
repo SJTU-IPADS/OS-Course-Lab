@@ -1,18 +1,40 @@
-# .PHONY: gdb qemu qemu-gdb clean
-## compile
+LAB := 0
+
+ifndef PROJECT
+PROJECT := $(shell git rev-parse --show-toplevel)
+endif
+
+export CURDIR LAB
+
+include $(PROJECT)/scripts/lab.mk
 
 bomb: student-number.txt
-	./generate_bomb.sh
+	@echo "  GEN bomb"
+	@$(CURDIR)/scripts/generate_bomb.sh
 
 clean:
-	rm -f bomb
+	@echo "  CLEAN bomb"
+	@rm -f bomb
 
 ## execute bomb
-qemu: bomb
-	qemu-aarch64 bomb
+qemu:
+	@qemu-aarch64 bomb
 
-qemu-gdb: bomb
-	qemu-aarch64 -g 1234 bomb
+qemu-gdb:
+	@qemu-aarch64 -g 1234 bomb
+
+qemu-grade:
+	@qemu-aarch64 bomb < ans.txt
 
 gdb:
-	gdb-multiarch -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
+	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
+
+grade:
+	@$(CURDIR)/scripts/grade/lab0.sh
+
+submit:
+	@echo "  SUBMIT lab0"
+	@grep -q '[^[:space:]]' < student-number.txt && echo "  Student number: $(shell cat student-number.txt)" || (echo "  Student number not found" && exit 1)
+	@tar -caf lab$(LAB).tar.gz ans.txt student-number.txt
+
+.PHONY: qemu qemu-grade qemu-gdb gdb grade clean bomb
