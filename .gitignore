@@ -33,7 +33,7 @@ run_*
 exec_log
 make-tag.sh
 
-!scripts/build/
+!/**/scripts/build/
 
 /ramdisk
 /.chpm
