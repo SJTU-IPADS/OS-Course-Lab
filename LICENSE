@@ -1,127 +1,130 @@
-                     Ä¾À¼¿íËÉĞí¿ÉÖ¤, µÚ2°æ
+æœ¨å…°å®½æ¾è®¸å¯è¯ï¼Œ ç¬¬2ç‰ˆ
 
-   Ä¾À¼¿íËÉĞí¿ÉÖ¤£¬ µÚ2°æ
-   2020Äê1ÔÂ http://license.coscl.org.cn/MulanPSL2
+2020å¹´1æœˆ http://license.coscl.org.cn/MulanPSL2
 
+æ‚¨å¯¹â€œè½¯ä»¶â€çš„å¤åˆ¶ã€ä½¿ç”¨ã€ä¿®æ”¹åŠåˆ†å‘å—æœ¨å…°å®½æ¾è®¸å¯è¯ï¼Œç¬¬2ç‰ˆï¼ˆâ€œæœ¬è®¸å¯è¯â€ï¼‰çš„å¦‚ä¸‹æ¡æ¬¾çš„çº¦æŸï¼š
 
-   Äú¶Ô¡°Èí¼ş¡±µÄ¸´ÖÆ¡¢Ê¹ÓÃ¡¢ĞŞ¸Ä¼°·Ö·¢ÊÜÄ¾À¼¿íËÉĞí¿ÉÖ¤£¬µÚ2°æ£¨¡°±¾Ğí¿ÉÖ¤¡±£©µÄÈçÏÂÌõ¿îµÄÔ¼Êø£º
+0.   å®šä¹‰
 
-   0. ¶¨Òå
+â€œè½¯ä»¶â€ æ˜¯æŒ‡ç”±â€œè´¡çŒ®â€æ„æˆçš„è®¸å¯åœ¨â€œæœ¬è®¸å¯è¯â€ä¸‹çš„ç¨‹åºå’Œç›¸å…³æ–‡æ¡£çš„é›†åˆã€‚
 
-      ¡°Èí¼ş¡±ÊÇÖ¸ÓÉ¡°¹±Ï×¡±¹¹³ÉµÄĞí¿ÉÔÚ¡°±¾Ğí¿ÉÖ¤¡±ÏÂµÄ³ÌĞòºÍÏà¹ØÎÄµµµÄ¼¯ºÏ¡£
+â€œè´¡çŒ®â€ æ˜¯æŒ‡ç”±ä»»ä¸€â€œè´¡çŒ®è€…â€è®¸å¯åœ¨â€œæœ¬è®¸å¯è¯â€ä¸‹çš„å—ç‰ˆæƒæ³•ä¿æŠ¤çš„ä½œå“ã€‚
 
-      ¡°¹±Ï×¡±ÊÇÖ¸ÓÉÈÎÒ»¡°¹±Ï×Õß¡±Ğí¿ÉÔÚ¡°±¾Ğí¿ÉÖ¤¡±ÏÂµÄÊÜ°æÈ¨·¨±£»¤µÄ×÷Æ·¡£
+â€œè´¡çŒ®è€…â€ æ˜¯æŒ‡å°†å—ç‰ˆæƒæ³•ä¿æŠ¤çš„ä½œå“è®¸å¯åœ¨â€œæœ¬è®¸å¯è¯â€ä¸‹çš„è‡ªç„¶äººæˆ–â€œæ³•äººå®ä½“â€ã€‚
 
-      ¡°¹±Ï×Õß¡±ÊÇÖ¸½«ÊÜ°æÈ¨·¨±£»¤µÄ×÷Æ·Ğí¿ÉÔÚ¡°±¾Ğí¿ÉÖ¤¡±ÏÂµÄ×ÔÈ»ÈË»ò¡°·¨ÈËÊµÌå¡±¡£
+â€œæ³•äººå®ä½“â€ æ˜¯æŒ‡æäº¤è´¡çŒ®çš„æœºæ„åŠå…¶â€œå…³è”å®ä½“â€ã€‚
 
-      ¡°·¨ÈËÊµÌå¡±ÊÇÖ¸Ìá½»¹±Ï×µÄ»ú¹¹¼°Æä¡°¹ØÁªÊµÌå¡±¡£
+â€œå…³è”å®ä½“â€ æ˜¯æŒ‡ï¼Œå¯¹â€œæœ¬è®¸å¯è¯â€ä¸‹çš„è¡Œä¸ºæ–¹è€Œè¨€ï¼Œæ§åˆ¶ã€å—æ§åˆ¶æˆ–ä¸å…¶å…±åŒå—æ§åˆ¶çš„æœºæ„ï¼Œæ­¤å¤„çš„æ§åˆ¶æ˜¯æŒ‡æœ‰å—æ§æ–¹æˆ–å…±åŒå—æ§æ–¹è‡³å°‘50%ç›´æ¥æˆ–é—´æ¥çš„æŠ•ç¥¨æƒã€èµ„é‡‘æˆ–å…¶ä»–æœ‰ä»·è¯åˆ¸ã€‚
 
-      ¡°¹ØÁªÊµÌå¡±ÊÇÖ¸£¬¶Ô¡°±¾Ğí¿ÉÖ¤¡±ÏÂµÄĞĞÎª·½¶øÑÔ£¬¿ØÖÆ¡¢ÊÜ¿ØÖÆ»òÓëÆä¹²Í¬ÊÜ¿ØÖÆµÄ»ú¹¹£¬´Ë´¦µÄ¿ØÖÆÊÇÖ¸ÓĞÊÜ¿Ø·½»ò¹²Í¬ÊÜ¿Ø·½ÖÁÉÙ50%Ö±½Ó»ò¼ä½ÓµÄÍ¶Æ±È¨¡¢×Ê½ğ»òÆäËûÓĞ¼ÛÖ¤È¯¡£
+1.   æˆäºˆç‰ˆæƒè®¸å¯
 
-   1. ÊÚÓè°æÈ¨Ğí¿É
+æ¯ä¸ªâ€œè´¡çŒ®è€…â€æ ¹æ®â€œæœ¬è®¸å¯è¯â€æˆäºˆæ‚¨æ°¸ä¹…æ€§çš„ã€å…¨çƒæ€§çš„ã€å…è´¹çš„ã€éç‹¬å çš„ã€ä¸å¯æ’¤é”€çš„ç‰ˆæƒè®¸å¯ï¼Œæ‚¨å¯ä»¥å¤åˆ¶ã€ä½¿ç”¨ã€ä¿®æ”¹ã€åˆ†å‘å…¶â€œè´¡çŒ®â€ï¼Œä¸è®ºä¿®æ”¹ä¸å¦ã€‚
 
-      Ã¿¸ö¡°¹±Ï×Õß¡±¸ù¾İ¡°±¾Ğí¿ÉÖ¤¡±ÊÚÓèÄúÓÀ¾ÃĞÔµÄ¡¢È«ÇòĞÔµÄ¡¢Ãâ·ÑµÄ¡¢·Ç¶ÀÕ¼µÄ¡¢²»¿É³·ÏúµÄ°æÈ¨Ğí¿É£¬Äú¿ÉÒÔ¸´ÖÆ¡¢Ê¹ÓÃ¡¢ĞŞ¸Ä¡¢·Ö·¢Æä¡°¹±Ï×¡±£¬²»ÂÛĞŞ¸ÄÓë·ñ¡£
+2.   æˆäºˆä¸“åˆ©è®¸å¯
 
-   2. ÊÚÓè×¨ÀûĞí¿É
+æ¯ä¸ªâ€œè´¡çŒ®è€…â€æ ¹æ®â€œæœ¬è®¸å¯è¯â€æˆäºˆæ‚¨æ°¸ä¹…æ€§çš„ã€å…¨çƒæ€§çš„ã€å…è´¹çš„ã€éç‹¬å çš„ã€ä¸å¯æ’¤é”€çš„ï¼ˆæ ¹æ®æœ¬æ¡è§„å®šæ’¤é”€é™¤å¤–ï¼‰ä¸“åˆ©è®¸å¯ï¼Œä¾›æ‚¨åˆ¶é€ ã€å§”æ‰˜åˆ¶é€ ã€ä½¿ç”¨ã€è®¸è¯ºé”€å”®ã€é”€å”®ã€è¿›å£å…¶â€œè´¡çŒ®â€æˆ–ä»¥å…¶ä»–æ–¹å¼è½¬ç§»å…¶â€œè´¡çŒ®â€ã€‚å‰è¿°ä¸“åˆ©è®¸å¯ä»…é™äºâ€œè´¡çŒ®è€…â€ç°åœ¨æˆ–å°†æ¥æ‹¥æœ‰æˆ–æ§åˆ¶çš„å…¶â€œè´¡çŒ®â€æœ¬èº«æˆ–å…¶â€œè´¡çŒ®â€ä¸è®¸å¯â€œè´¡çŒ®â€æ—¶çš„â€œè½¯ä»¶â€ç»“åˆè€Œå°†å¿…ç„¶ä¼šä¾µçŠ¯çš„ä¸“åˆ©æƒåˆ©è¦æ±‚ï¼Œä¸åŒ…æ‹¬å¯¹â€œè´¡çŒ®â€çš„ä¿®æ”¹æˆ–åŒ…å«â€œè´¡çŒ®â€çš„å…¶ä»–ç»“åˆã€‚å¦‚æœæ‚¨æˆ–æ‚¨çš„â€œå…³è”å®ä½“â€ç›´æ¥æˆ–é—´æ¥åœ°ï¼Œå°±â€œè½¯ä»¶â€æˆ–å…¶ä¸­çš„â€œè´¡çŒ®â€å¯¹ä»»ä½•äººå‘èµ·ä¸“åˆ©ä¾µæƒè¯‰è®¼ï¼ˆåŒ…æ‹¬åè¯‰æˆ–äº¤å‰è¯‰è®¼ï¼‰æˆ–å…¶ä»–ä¸“åˆ©ç»´æƒè¡ŒåŠ¨ï¼ŒæŒ‡æ§å…¶ä¾µçŠ¯ä¸“åˆ©æƒï¼Œåˆ™â€œæœ¬è®¸å¯è¯â€æˆäºˆæ‚¨å¯¹â€œè½¯ä»¶â€çš„ä¸“åˆ©è®¸å¯è‡ªæ‚¨æèµ·è¯‰è®¼æˆ–å‘èµ·ç»´æƒè¡ŒåŠ¨ä¹‹æ—¥ç»ˆæ­¢ã€‚
 
-      Ã¿¸ö¡°¹±Ï×Õß¡±¸ù¾İ¡°±¾Ğí¿ÉÖ¤¡±ÊÚÓèÄúÓÀ¾ÃĞÔµÄ¡¢È«ÇòĞÔµÄ¡¢Ãâ·ÑµÄ¡¢·Ç¶ÀÕ¼µÄ¡¢²»¿É³·ÏúµÄ£¨¸ù¾İ±¾Ìõ¹æ¶¨³·Ïú³ıÍâ£©×¨ÀûĞí¿É£¬¹©ÄúÖÆÔì¡¢Î¯ÍĞÖÆÔì¡¢Ê¹ÓÃ¡¢ĞíÅµÏúÊÛ¡¢ÏúÊÛ¡¢½ø¿ÚÆä¡°¹±Ï×¡±»òÒÔÆäËû·½Ê½×ªÒÆÆä¡°¹±Ï×¡±¡£Ç°Êö×¨ÀûĞí¿É½öÏŞÓÚ¡°¹±Ï×Õß¡±ÏÖÔÚ»ò½«À´ÓµÓĞ»ò¿ØÖÆµÄÆä¡°¹±Ï×¡±±¾Éí»òÆä¡°¹±Ï×¡±ÓëĞí¿É¡°¹±Ï×¡±Ê±µÄ¡°Èí¼ş¡±½áºÏ¶ø½«±ØÈ»»áÇÖ·¸µÄ×¨ÀûÈ¨ÀûÒªÇó£¬²»°üÀ¨¶Ô¡°¹±Ï×¡±µÄĞŞ¸Ä»ò°üº¬¡°¹±Ï×¡±µÄÆäËû½áºÏ¡£Èç¹ûÄú»òÄúµÄ¡°¹ØÁªÊµÌå¡±Ö±½Ó»ò¼ä½ÓµØ£¬¾Í¡°Èí¼ş¡±»òÆäÖĞµÄ¡°¹±Ï×¡±¶ÔÈÎºÎÈË·¢Æğ×¨ÀûÇÖÈ¨ËßËÏ£¨°üÀ¨·´Ëß»ò½»²æËßËÏ£©»òÆäËû×¨ÀûÎ¬È¨ĞĞ¶¯£¬Ö¸¿ØÆäÇÖ·¸×¨ÀûÈ¨£¬Ôò¡°±¾Ğí¿ÉÖ¤¡±ÊÚÓèÄú¶Ô¡°Èí¼ş¡±µÄ×¨ÀûĞí¿É×ÔÄúÌáÆğËßËÏ»ò·¢ÆğÎ¬È¨ĞĞ¶¯Ö®ÈÕÖÕÖ¹¡£
+3.   æ— å•†æ ‡è®¸å¯
 
-   3. ÎŞÉÌ±êĞí¿É
+â€œæœ¬è®¸å¯è¯â€ä¸æä¾›å¯¹â€œè´¡çŒ®è€…â€çš„å•†å“åç§°ã€å•†æ ‡ã€æœåŠ¡æ ‡å¿—æˆ–äº§å“åç§°çš„å•†æ ‡è®¸å¯ï¼Œä½†æ‚¨ä¸ºæ»¡è¶³ç¬¬4æ¡è§„å®šçš„å£°æ˜ä¹‰åŠ¡è€Œå¿…é¡»ä½¿ç”¨é™¤å¤–ã€‚
 
-      ¡°±¾Ğí¿ÉÖ¤¡±²»Ìá¹©¶Ô¡°¹±Ï×Õß¡±µÄÉÌÆ·Ãû³Æ¡¢ÉÌ±ê¡¢·şÎñ±êÖ¾»ò²úÆ·Ãû³ÆµÄÉÌ±êĞí¿É£¬µ«ÄúÎªÂú×ãµÚ4Ìõ¹æ¶¨µÄÉùÃ÷ÒåÎñ¶ø±ØĞëÊ¹ÓÃ³ıÍâ¡£
+4.   åˆ†å‘é™åˆ¶
 
-   4. ·Ö·¢ÏŞÖÆ
+æ‚¨å¯ä»¥åœ¨ä»»ä½•åª’ä»‹ä¸­å°†â€œè½¯ä»¶â€ä»¥æºç¨‹åºå½¢å¼æˆ–å¯æ‰§è¡Œå½¢å¼é‡æ–°åˆ†å‘ï¼Œä¸è®ºä¿®æ”¹ä¸å¦ï¼Œä½†æ‚¨å¿…é¡»å‘æ¥æ”¶è€…æä¾›â€œæœ¬è®¸å¯è¯â€çš„å‰¯æœ¬ï¼Œå¹¶ä¿ç•™â€œè½¯ä»¶â€ä¸­çš„ç‰ˆæƒã€å•†æ ‡ã€ä¸“åˆ©åŠå…è´£å£°æ˜ã€‚
 
-      Äú¿ÉÒÔÔÚÈÎºÎÃ½½éÖĞ½«¡°Èí¼ş¡±ÒÔÔ´³ÌĞòĞÎÊ½»ò¿ÉÖ´ĞĞĞÎÊ½ÖØĞÂ·Ö·¢£¬²»ÂÛĞŞ¸ÄÓë·ñ£¬µ«Äú±ØĞëÏò½ÓÊÕÕßÌá¹©¡°±¾Ğí¿ÉÖ¤¡±µÄ¸±±¾£¬²¢±£Áô¡°Èí¼ş¡±ÖĞµÄ°æÈ¨¡¢ÉÌ±ê¡¢×¨Àû¼°ÃâÔğÉùÃ÷¡£
+5.   å…è´£å£°æ˜ä¸è´£ä»»é™åˆ¶
 
-   5. ÃâÔğÉùÃ÷ÓëÔğÈÎÏŞÖÆ
+â€œè½¯ä»¶â€åŠå…¶ä¸­çš„â€œè´¡çŒ®â€åœ¨æä¾›æ—¶ä¸å¸¦ä»»ä½•æ˜ç¤ºæˆ–é»˜ç¤ºçš„æ‹…ä¿ã€‚åœ¨ä»»ä½•æƒ…å†µä¸‹ï¼Œâ€œè´¡çŒ®è€…â€æˆ–ç‰ˆæƒæ‰€æœ‰è€…ä¸å¯¹ä»»ä½•äººå› ä½¿ç”¨â€œè½¯ä»¶â€æˆ–å…¶ä¸­çš„â€œè´¡çŒ®â€è€Œå¼•å‘çš„ä»»ä½•ç›´æ¥æˆ–é—´æ¥æŸå¤±æ‰¿æ‹…è´£ä»»ï¼Œä¸è®ºå› ä½•ç§åŸå› å¯¼è‡´æˆ–è€…åŸºäºä½•ç§æ³•å¾‹ç†è®º,å³ä½¿å…¶æ›¾è¢«å»ºè®®æœ‰æ­¤ç§æŸå¤±çš„å¯èƒ½æ€§ã€‚
 
-      ¡°Èí¼ş¡±¼°ÆäÖĞµÄ¡°¹±Ï×¡±ÔÚÌá¹©Ê±²»´øÈÎºÎÃ÷Ê¾»òÄ¬Ê¾µÄµ£±£¡£ÔÚÈÎºÎÇé¿öÏÂ£¬¡°¹±Ï×Õß¡±»ò°æÈ¨ËùÓĞÕß²»¶ÔÈÎºÎÈËÒòÊ¹ÓÃ¡°Èí¼ş¡±»òÆäÖĞµÄ¡°¹±Ï×¡±¶øÒı·¢µÄÈÎºÎÖ±½Ó»ò¼ä½ÓËğÊ§³Ğµ£ÔğÈÎ£¬²»ÂÛÒòºÎÖÖÔ­Òòµ¼ÖÂ»òÕß»ùÓÚºÎÖÖ·¨ÂÉÀíÂÛ£¬¼´Ê¹ÆäÔø±»½¨ÒéÓĞ´ËÖÖËğÊ§µÄ¿ÉÄÜĞÔ¡£
+6.   è¯­è¨€
 
-   6. ÓïÑÔ
-      ¡°±¾Ğí¿ÉÖ¤¡±ÒÔÖĞÓ¢ÎÄË«Óï±íÊö£¬ÖĞÓ¢ÎÄ°æ±¾¾ßÓĞÍ¬µÈ·¨ÂÉĞ§Á¦¡£Èç¹ûÖĞÓ¢ÎÄ°æ±¾´æÔÚÈÎºÎ³åÍ»²»Ò»ÖÂ£¬ÒÔÖĞÎÄ°æÎª×¼¡£
+â€œæœ¬è®¸å¯è¯â€ä»¥ä¸­è‹±æ–‡åŒè¯­è¡¨è¿°ï¼Œä¸­è‹±æ–‡ç‰ˆæœ¬å…·æœ‰åŒç­‰æ³•å¾‹æ•ˆåŠ›ã€‚å¦‚æœä¸­è‹±æ–‡ç‰ˆæœ¬å­˜åœ¨ä»»ä½•å†²çªä¸ä¸€è‡´ï¼Œä»¥ä¸­æ–‡ç‰ˆä¸ºå‡†ã€‚
 
-   Ìõ¿î½áÊø
+æ¡æ¬¾ç»“æŸ
 
-   ÈçºÎ½«Ä¾À¼¿íËÉĞí¿ÉÖ¤£¬µÚ2°æ£¬Ó¦ÓÃµ½ÄúµÄÈí¼ş
+å¦‚ä½•å°†æœ¨å…°å®½æ¾è®¸å¯è¯ï¼Œç¬¬2ç‰ˆï¼Œåº”ç”¨åˆ°æ‚¨çš„è½¯ä»¶
 
-   Èç¹ûÄúÏ£Íû½«Ä¾À¼¿íËÉĞí¿ÉÖ¤£¬µÚ2°æ£¬Ó¦ÓÃµ½ÄúµÄĞÂÈí¼ş£¬ÎªÁË·½±ã½ÓÊÕÕß²éÔÄ£¬½¨ÒéÄúÍê³ÉÈçÏÂÈı²½£º
+å¦‚æœæ‚¨å¸Œæœ›å°†æœ¨å…°å®½æ¾è®¸å¯è¯ï¼Œç¬¬2ç‰ˆï¼Œåº”ç”¨åˆ°æ‚¨çš„æ–°è½¯ä»¶ï¼Œä¸ºäº†æ–¹ä¾¿æ¥æ”¶è€…æŸ¥é˜…ï¼Œå»ºè®®æ‚¨å®Œæˆå¦‚ä¸‹ä¸‰æ­¥ï¼š
 
-      1£¬ ÇëÄú²¹³äÈçÏÂÉùÃ÷ÖĞµÄ¿Õ°×£¬°üÀ¨Èí¼şÃû¡¢Èí¼şµÄÊ×´Î·¢±íÄê·İÒÔ¼°Äú×÷Îª°æÈ¨ÈËµÄÃû×Ö£»
+1ï¼Œ è¯·æ‚¨è¡¥å……å¦‚ä¸‹å£°æ˜ä¸­çš„ç©ºç™½ï¼ŒåŒ…æ‹¬è½¯ä»¶åã€è½¯ä»¶çš„é¦–æ¬¡å‘è¡¨å¹´ä»½ä»¥åŠæ‚¨ä½œä¸ºç‰ˆæƒäººçš„åå­—ï¼›
 
-      2£¬ ÇëÄúÔÚÈí¼ş°üµÄÒ»¼¶Ä¿Â¼ÏÂ´´½¨ÒÔ¡°LICENSE¡±ÎªÃûµÄÎÄ¼ş£¬½«Õû¸öĞí¿ÉÖ¤ÎÄ±¾·ÅÈë¸ÃÎÄ¼şÖĞ£»
+2ï¼Œ è¯·æ‚¨åœ¨è½¯ä»¶åŒ…çš„ä¸€çº§ç›®å½•ä¸‹åˆ›å»ºä»¥â€œLICENSEâ€ä¸ºåçš„æ–‡ä»¶ï¼Œå°†æ•´ä¸ªè®¸å¯è¯æ–‡æœ¬æ”¾å…¥è¯¥æ–‡ä»¶ä¸­ï¼›
 
-      3£¬ Çë½«ÈçÏÂÉùÃ÷ÎÄ±¾·ÅÈëÃ¿¸öÔ´ÎÄ¼şµÄÍ·²¿×¢ÊÍÖĞ¡£
+3ï¼Œ è¯·å°†å¦‚ä¸‹å£°æ˜æ–‡æœ¬æ”¾å…¥æ¯ä¸ªæºæ–‡ä»¶çš„å¤´éƒ¨æ³¨é‡Šä¸­ã€‚
 
-   Copyright (c) [Year] [name of copyright holder]
-   [Software Name] is licensed under Mulan PSL v2.
-   You can use this software according to the terms and conditions of the Mulan PSL v2.
-   You may obtain a copy of Mulan PSL v2 at:
-            http://license.coscl.org.cn/MulanPSL2
-   THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-   See the Mulan PSL v2 for more details.
-
-
-                     Mulan Permissive Software License£¬Version 2
-
-   Mulan Permissive Software License£¬Version 2 (Mulan PSL v2)
-   January 2020 http://license.coscl.org.cn/MulanPSL2
-
-   Your reproduction, use, modification and distribution of the Software shall be subject to Mulan PSL v2 (this License) with the following terms and conditions:
-
-   0. Definition
-
-      Software means the program and related documents which are licensed under this License and comprise all Contribution(s).
-
-      Contribution means the copyrightable work licensed by a particular Contributor under this License.
-
-      Contributor means the Individual or Legal Entity who licenses its copyrightable work under this License.
-
-      Legal Entity means the entity making a Contribution and all its Affiliates.
-
-      Affiliates means entities that control, are controlled by, or are under common control with the acting entity under this License, ¡®control¡¯ means direct or indirect ownership of at least fifty percent (50%) of the voting power, capital or other securities of controlled or commonly controlled entity.
-
-   1. Grant of Copyright License
-
-      Subject to the terms and conditions of this License, each Contributor hereby grants to you a perpetual, worldwide, royalty-free, non-exclusive, irrevocable copyright license to reproduce, use, modify, or distribute its Contribution, with modification or not.
-
-   2. Grant of Patent License
-
-      Subject to the terms and conditions of this License, each Contributor hereby grants to you a perpetual, worldwide, royalty-free, non-exclusive, irrevocable (except for revocation under this Section) patent license to make, have made, use, offer for sale, sell, import or otherwise transfer its Contribution, where such patent license is only limited to the patent claims owned or controlled by such Contributor now or in future which will be necessarily infringed by its Contribution alone, or by combination of the Contribution with the Software to which the Contribution was contributed. The patent license shall not apply to any modification of the Contribution, and any other combination which includes the Contribution. If you or your Affiliates directly or indirectly institute patent litigation (including a cross claim or counterclaim in a litigation) or other patent enforcement activities against any individual or entity by alleging that the Software or any Contribution in it infringes patents, then any patent license granted to you under this License for the Software shall terminate as of the date such litigation or activity is filed or taken.
-
-   3. No Trademark License
-
-      No trademark license is granted to use the trade names, trademarks, service marks, or product names of Contributor, except as required to fulfill notice requirements in Section 4.
-
-   4. Distribution Restriction
-
-      You may distribute the Software in any medium with or without modification, whether in source or executable forms, provided that you provide recipients with a copy of this License and retain copyright, patent, trademark and disclaimer statements in the Software.
-
-   5. Disclaimer of Warranty and Limitation of Liability
-
-      THE SOFTWARE AND CONTRIBUTION IN IT ARE PROVIDED WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. IN NO EVENT SHALL ANY CONTRIBUTOR OR COPYRIGHT HOLDER BE LIABLE TO YOU FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO ANY DIRECT, OR INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OR INABILITY TO USE THE SOFTWARE OR THE CONTRIBUTION IN IT, NO MATTER HOW IT¡¯S CAUSED OR BASED ON WHICH LEGAL THEORY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-   6. Language
-
-      THIS LICENSE IS WRITTEN IN BOTH CHINESE AND ENGLISH, AND THE CHINESE VERSION AND ENGLISH VERSION SHALL HAVE THE SAME LEGAL EFFECT. IN THE CASE OF DIVERGENCE BETWEEN THE CHINESE AND ENGLISH VERSIONS, THE CHINESE VERSION SHALL PREVAIL.
-
-   END OF THE TERMS AND CONDITIONS
-
-   How to Apply the Mulan Permissive Software License£¬Version 2 (Mulan PSL v2) to Your Software
-
-      To apply the Mulan PSL v2 to your work, for easy identification by recipients, you are suggested to complete following three steps:
-
-      i Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
-
-      ii Create a file named ¡°LICENSE¡± which contains the whole context of this License in the first directory of your software package;
-
-      iii Attach the statement to the appropriate annotated syntax at the beginning of each source file.
+Copyright (c) [Year] [name of copyright holder]
+[Software Name] is licensed under Mulan PSL v2.
+You can use this software according to the terms and conditions of the Mulan PSL v2.
+You may obtain a copy of Mulan PSL v2 at:
+         http://license.coscl.org.cn/MulanPSL2
+THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+See the Mulan PSL v2 for more details.
 
 
-   Copyright (c) [Year] [name of copyright holder]
-   [Software Name] is licensed under Mulan PSL v2.
-   You can use this software according to the terms and conditions of the Mulan PSL v2.
-   You may obtain a copy of Mulan PSL v2 at:
-               http://license.coscl.org.cn/MulanPSL2
-   THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-   See the Mulan PSL v2 for more details.
+Mulan Permissive Software Licenseï¼ŒVersion 2
+
+Mulan Permissive Software Licenseï¼ŒVersion 2 (Mulan PSL v2)
+
+January 2020 http://license.coscl.org.cn/MulanPSL2
+
+Your reproduction, use, modification and distribution of the Software shall be subject to Mulan PSL v2 (this License) with the following terms and conditions:
+
+0. Definition
+
+Software means the program and related documents which are licensed under this License and comprise all Contribution(s).
+
+Contribution means the copyrightable work licensed by a particular Contributor under this License.
+
+Contributor means the Individual or Legal Entity who licenses its copyrightable work under this License.
+
+Legal Entity means the entity making a Contribution and all its Affiliates.
+
+Affiliates means entities that control, are controlled by, or are under common control with the acting entity under this License, â€˜controlâ€™ means direct or indirect ownership of at least fifty percent (50%) of the voting power, capital or other securities of controlled or commonly controlled entity.
+
+1. Grant of Copyright License
+
+Subject to the terms and conditions of this License, each Contributor hereby grants to you a perpetual, worldwide, royalty-free, non-exclusive, irrevocable copyright license to reproduce, use, modify, or distribute its Contribution, with modification or not.
+
+2. Grant of Patent License
+
+Subject to the terms and conditions of this License, each Contributor hereby grants to you a perpetual, worldwide, royalty-free, non-exclusive, irrevocable (except for revocation under this Section) patent license to make, have made, use, offer for sale, sell, import or otherwise transfer its Contribution, where such patent license is only limited to the patent claims owned or controlled by such Contributor now or in future which will be necessarily infringed by its Contribution alone, or by combination of the Contribution with the Software to which the Contribution was contributed. The patent license shall not apply to any modification of the Contribution, and any other combination which includes the Contribution. If you or your Affiliates directly or indirectly institute patent litigation (including a cross claim or counterclaim in a litigation) or other patent enforcement activities against any individual or entity by alleging that the Software or any Contribution in it infringes patents, then any patent license granted to you under this License for the Software shall terminate as of the date such litigation or activity is filed or taken.
+
+3. No Trademark License
+
+No trademark license is granted to use the trade names, trademarks, service marks, or product names of Contributor, except as required to fulfill notice requirements in section 4.
+
+4. Distribution Restriction
+
+You may distribute the Software in any medium with or without modification, whether in source or executable forms, provided that you provide recipients with a copy of this License and retain copyright, patent, trademark and disclaimer statements in the Software.
+
+5. Disclaimer of Warranty and Limitation of Liability
+
+THE SOFTWARE AND CONTRIBUTION IN IT ARE PROVIDED WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. IN NO EVENT SHALL ANY CONTRIBUTOR OR COPYRIGHT HOLDER BE LIABLE TO YOU FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO ANY DIRECT, OR INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OR INABILITY TO USE THE SOFTWARE OR THE CONTRIBUTION IN IT, NO MATTER HOW ITâ€™S CAUSED OR BASED ON WHICH LEGAL THEORY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+6. Language
+
+THIS LICENSE IS WRITTEN IN BOTH CHINESE AND ENGLISH, AND THE CHINESE VERSION AND ENGLISH VERSION SHALL HAVE THE SAME LEGAL EFFECT. IN THE CASE OF DIVERGENCE BETWEEN THE CHINESE AND ENGLISH VERSIONS, THE CHINESE VERSION SHALL PREVAIL.
+
+END OF THE TERMS AND CONDITIONS
+
+How to Apply the Mulan Permissive Software Licenseï¼ŒVersion 2 (Mulan PSL v2) to Your Software
+
+To apply the Mulan PSL v2 to your work, for easy identification by recipients, you are suggested to complete following three steps:
+
+    Fill in the blanks in following statement, including insert your software name, the year of the first publication of your software, and your name identified as the copyright owner;
+
+    Create a file named "LICENSE" which contains the whole context of this License in the first directory of your software package;
+
+    Attach the statement to the appropriate annotated syntax at the beginning of each source file.
+
+Copyright (c) [Year] [name of copyright holder]
+[Software Name] is licensed under Mulan PSL v2.
+You can use this software according to the terms and conditions of the Mulan PSL v2.
+You may obtain a copy of Mulan PSL v2 at:
+         http://license.coscl.org.cn/MulanPSL2
+THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+See the Mulan PSL v2 for more details.
