@@ -1,0 +1,14 @@
+[book]
+authors = ["Institute of Parallel and Distributed Systems, Shanghai Jiao Tong University"]
+language = "zh-CN"
+multilingual = false
+src = "Pages"
+title = "上海交通大学IPADS实验室操作系统课程实验指导书"
+
+[output.html]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+
+[preprocessor.callouts]
+[preprocessor.mermaid]
+[preprocessor.toc]
+render = "html"
