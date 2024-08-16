@@ -7,7 +7,7 @@
 
 课程教材:
 
-<img src="os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
+<img src="assets/os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
 
 **如果你有任何建议或更正意见，欢迎提交 Pull Requests 或 Issues。让我们一起合作改进实验~**
 
