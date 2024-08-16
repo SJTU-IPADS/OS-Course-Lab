@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROJECT=$(git rev-parse --show-toplevel)
-. $PROJECT/scripts/env_setup.sh
+. $PROJECT/Scripts/env_setup.sh
 
 make="${MAKE:-make}"
 

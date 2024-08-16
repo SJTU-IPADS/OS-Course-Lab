@@ -8,6 +8,6 @@ endif
 # Toolchain configuration
 GDB?=gdb
 
-ifeq (,$(wildcard $(PROJECT)/scripts/env_generated.mk))
+ifeq (,$(wildcard $(PROJECT)/Scripts/env_generated.mk))
 $(error Please run fixdeps to create the environment first!)
 endif

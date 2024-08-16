@@ -6,11 +6,11 @@ endif
 
 export CURDIR LAB
 
-include $(PROJECT)/scripts/lab.mk
+include $(PROJECT)/Scripts/lab.mk
 
 bomb: student-number.txt
 	@echo "  GEN bomb"
-	@$(CURDIR)/scripts/generate_bomb.sh
+	@$(CURDIR)/Scripts/generate_bomb.sh
 
 clean:
 	@echo "  CLEAN bomb"
@@ -30,7 +30,7 @@ gdb:
 	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
 
 grade:
-	@$(CURDIR)/scripts/grade/lab0.sh
+	@$(CURDIR)/Scripts/grade/lab0.sh
 
 submit:
 	@echo "  SUBMIT lab0"
