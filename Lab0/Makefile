@@ -30,7 +30,7 @@ gdb:
 	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
 
 grade:
-	@$(CURDIR)/Scripts/grade/lab0.sh
+	@$(CURDIR)/scripts/grade/lab0.sh
 
 submit:
 	@echo "  SUBMIT lab0"
