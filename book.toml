@@ -12,3 +12,5 @@ additional-js = ["mermaid.min.js", "mermaid-init.js"]
 [preprocessor.mermaid]
 [preprocessor.toc]
 render = "html"
+[preprocessor.last-changed]
+render = "html"
