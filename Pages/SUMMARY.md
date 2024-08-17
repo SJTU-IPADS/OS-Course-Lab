@@ -2,7 +2,7 @@
 
 [前言](./Intro.md)
 [如何开始实验](./Getting-started.md)
-[贡献指南](./Contribute.md)
+[贡献指南]()
 
 - [Lab0：拆炸弹](./Lab0.md)
   - [基本知识](./Lab0/instructions.md)
