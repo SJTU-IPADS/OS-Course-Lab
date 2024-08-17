@@ -1,16 +1,15 @@
 LAB := 0
 
-ifndef PROJECT
-PROJECT := $(shell git rev-parse --show-toplevel)
-endif
+PROJECT := $(CURDIR)/..
+GRADER := $(PROJECT)/Scripts/grader.sh
 
-export CURDIR LAB
+export PROJECT CURDIR LAB
 
-include $(PROJECT)/scripts/lab.mk
+include $(PROJECT)/Scripts/lab.mk
 
 bomb: student-number.txt
 	@echo "  GEN bomb"
-	@$(CURDIR)/scripts/generate_bomb.sh
+	@$(CURDIR)/Scripts/generate_bomb.sh
 
 clean:
 	@echo "  CLEAN bomb"
@@ -30,7 +29,7 @@ gdb:
 	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
 
 grade:
-	@$(CURDIR)/scripts/grade/lab0.sh
+	@$(GRADER)
 
 submit:
 	@echo "  SUBMIT lab0"

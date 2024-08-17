@@ -44,3 +44,6 @@ infer_*_report.txt
 infer-out/
 .repo/
 *.tar.gz
+book/
+**mermaid**
+**/index.html

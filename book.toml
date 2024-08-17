@@ -1,0 +1,18 @@
+[book]
+authors = ["Institute of Parallel and Distributed Systems, Shanghai Jiao Tong University"]
+language = "zh-CN"
+multilingual = false
+src = "Pages"
+title = "IPADS OS Course Lab Manual"
+
+[output.html]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+git-repository-url = "https://github.com/SJTU-IPADS/OS-Course-Lab"
+git-repository-icon = "fa-github"
+
+[preprocessor.callouts]
+[preprocessor.mermaid]
+[preprocessor.toc]
+render = "html"
+[preprocessor.last-changed]
+render = "html"
