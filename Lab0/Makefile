@@ -1,10 +1,7 @@
 LAB := 0
+PROJECT := $(CURDIR)/..
 
-ifndef PROJECT
-PROJECT := $(shell git rev-parse --show-toplevel)
-endif
-
-export CURDIR LAB
+export PROJECT CURDIR LAB
 
 include $(PROJECT)/Scripts/lab.mk
 

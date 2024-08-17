@@ -1,7 +1,11 @@
 #!/bin/bash
 
-PROJECT=$(git rev-parse --show-toplevel)
-. $PROJECT/Scripts/env_setup.sh
+if [[ -z $PROJECT ]]; then
+    echo "Please set the PROJECT environment variable to the root directory of your project. (Makefile)"
+    exit 1
+fi
+
+. ${PROJECT}/Scripts/env_setup.sh
 
 make="${MAKE:-make}"
 
