@@ -46,3 +46,4 @@ infer-out/
 *.tar.gz
 book/
 **mermaid**
+**/index.html
