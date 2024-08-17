@@ -1,4 +1,6 @@
-# 实验概述
+# IPADS OS Course Lab Manual
+
+[![GitHub Pages](https://github.com/SJTU-IPADS/OS-Course-Lab/actions/workflows/github-pages.yml/badge.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/)
 
 > [!WARNING]
 > 本实验仓库正在进行重构升级，请优先使用各个分支下的代码进行实验，main分支的代码目前并不保证运行正常。本条目将在维护完成后删除。
