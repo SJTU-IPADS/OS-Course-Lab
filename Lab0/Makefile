@@ -1,5 +1,7 @@
 LAB := 0
+
 PROJECT := $(CURDIR)/..
+GRADER := $(PROJECT)/Scripts/grader.sh
 
 export PROJECT CURDIR LAB
 
@@ -27,7 +29,7 @@ gdb:
 	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
 
 grade:
-	@$(CURDIR)/scripts/grade/lab0.sh
+	@$(GRADER)
 
 submit:
 	@echo "  SUBMIT lab0"

@@ -8,13 +8,20 @@ fi
 . ${PROJECT}/Scripts/env_setup.sh
 
 make="${MAKE:-make}"
-
-grade_dir=$(dirname $0)
-
 info "Grading lab ${LAB} ...(may take 10 seconds)"
 
-$grade_dir/expects/lab0.exp
+bold "===================="
+${PROJECT}/Lab${LAB}/grade.exp
 score=$?
-
-bold "==============="
 info "Score: $score/100"
+bold "===================="
+
+if [[ $score -gt 100 ]]; then
+    fatal "Score is greater than 100, something went wrong."
+fi
+
+if [[ ! $score -eq 100 ]]; then
+    exit 1
+else
+    exit 0
+fi
