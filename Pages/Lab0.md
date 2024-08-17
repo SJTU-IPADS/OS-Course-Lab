@@ -1,4 +1,4 @@
-# Lab0 拆炸弹
+# Lab0：拆炸弹
 
 <!-- toc -->
 
@@ -10,7 +10,7 @@
 需要分析炸弹程序，推测正确的输入来使得炸弹程序能正常退出。
 
 > [!WARNING]
-> 在完成本实验之前，请务必将你的学号填写在student-number.txt当中，否则本lab实验的成绩将计为0分
+> 在完成本实验之前，请务必将你的学号填写在`student-number.txt`当中，否则本lab实验的成绩将计为0分
 
 ## Makefile 讲解
 
@@ -21,10 +21,9 @@
 
 ## 评分与提交规则
 
+本实验你只需要提交`ans.txt`以及`student-number.txt`即可
+
 > [!IMPORTANT]
 > 运行 `make grade` 来得到本实验的分数  
 > 运行 `make submit` 会在检查student-number.txt内容之后打包必要的提交文件
 
-## 附录
-
--  [线上教程](https://www.bilibili.com/video/BV1q94y1a7BF/?vd_source=63231f40c83c4d292b2a881fda478960)
