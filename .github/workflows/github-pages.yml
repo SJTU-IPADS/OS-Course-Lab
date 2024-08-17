@@ -2,8 +2,6 @@ name: GitHub Pages
 
 on:
   push:
-    branches:
-      - "main"
     sources:
       - "Pages/**"
   workflow_dispatch:
