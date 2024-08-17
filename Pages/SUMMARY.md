@@ -8,6 +8,10 @@
   - [基本知识](./Lab0/instructions.md)
   - [二进制炸弹拆除](./Lab0/defuse.md)
 
+- [Lab1: 机器启动](./Lab1.md)
+  - [内核启动](./Lab1/boot.md)
+  - [页表映射](./Lab1/pte.md)
+
 - [附录](./Appendix.md)
   - [Lab0: 工具教程](./Appendix/toolchains.md)
     - [TL;DR Cheatsheet](./Appendix/toolchains/tldr.md)
@@ -20,3 +24,5 @@
     - [qemu](./Appendix/toolchains/qemu.md)
       - [进程级模拟 vs 系统级模拟](./Appendix/toolchains/qemu/emulation.md)
       - [GDBServer](./Appendix/toolchains/qemu/usage.md)
+    - [ELF格式](./Appendix/elf.md)
+    - [Linker Script](./Appendix/linker.md)
