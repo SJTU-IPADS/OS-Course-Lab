@@ -24,5 +24,5 @@
     - [qemu](./Appendix/toolchains/qemu.md)
       - [进程级模拟 vs 系统级模拟](./Appendix/toolchains/qemu/emulation.md)
       - [GDBServer](./Appendix/toolchains/qemu/usage.md)
-    - [ELF格式](./Appendix/elf.md)
-    - [Linker Script](./Appendix/linker.md)
+  - [Lab1: ELF格式](./Appendix/elf.md)
+  - [Lab1: Linker Script](./Appendix/linker.md)
