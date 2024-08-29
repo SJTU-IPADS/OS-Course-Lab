@@ -1,11 +1,9 @@
 LAB := 0
+TIMEOUT := 10
 
-PROJECT := $(CURDIR)/..
-GRADER := $(PROJECT)/Scripts/grader.sh
+include $(CURDIR)/../Scripts/lab.mk
 
-export PROJECT CURDIR LAB
-
-include $(PROJECT)/Scripts/lab.mk
+export LABROOT LABDIR LAB TIMEOUT
 
 bomb: student-number.txt
 	@echo "  GEN bomb"
@@ -17,19 +15,19 @@ clean:
 
 ## execute bomb
 qemu:
-	@qemu-aarch64 bomb
+	@$(QEMU) bomb
 
 qemu-gdb:
-	@qemu-aarch64 -g 1234 bomb
+	@$(QEMU) -g 1234 bomb
 
 qemu-grade:
-	@qemu-aarch64 bomb < ans.txt
+	@$(QEMU) bomb < ans.txt
 
 gdb:
 	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
 
 grade:
-	@$(GRADER)
+	@$(GRADER) -t $(TIMEOUT) -f $(CURDIR)/scores.json make qemu-grade
 
 submit:
 	@echo "  SUBMIT lab0"
