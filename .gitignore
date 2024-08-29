@@ -10,7 +10,6 @@ cscope.*
 !/**/firmware/*.elf
 
 build
-.vscode
 simulate.sh
 debug.sh
 .config
