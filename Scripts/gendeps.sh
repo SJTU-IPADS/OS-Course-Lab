@@ -8,9 +8,14 @@ declare -A TOOLCHAINS
 make_labs_env() {
 	case "${DIST}" in
 	"ubuntu")
-		TOOLCHAINS["gdb"]="gdb-multiarch"
+		if command -v gdb-multiarch &>/dev/null; then
+			TOOLCHAINS["gdb"]="gdb-multiarch"
+		else
+			TOOLCHAINS["gdb"]="gdb"
+		fi
 		;;
 	"fedora")
+		TOOLCHAINS["gdb"]="gdb"
 		;;
 	"arch")
 		TOOLCHAINS["gdb"]="gdb"
@@ -31,6 +36,7 @@ make_labs_env() {
 
 def_labs_env() {
 	rm -f $(dirname $0)/env_generated.mk
+	touch $(dirname $0)/env_generated.mk
 	for toolchain in "${!TOOLCHAINS[@]}"; do
 		LHS=$(echo $toolchain | tr '[:lower:]' '[:upper:]')
 		RHS=${TOOLCHAINS[$toolchain]}
