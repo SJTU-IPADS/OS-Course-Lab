@@ -11,7 +11,7 @@
 > 我们使用Github Issues跟踪所有的问题，如果你在实验过程中产生了任何预期以外的错误，欢迎提交Issues.
 
 > [!NOTE] MDBook
-> 我们使用基于MdBook构建Markdown文档体系，你可以参照`.github/github-pages.yaml`中的下载指示，将所有的Mdbook及其所需要的所有**预处理器**，都安装到你的系统环境路径中。如果你对文档方面有任何的更正，你可以在`Pages/SUMMARY.md`中找到实验手册的文档结构以及对应的所有文件。更改后在仓库根目录你可以运行`mdbook serve`，并访问`localhost:3000`查看编译后的文档。我们也使用`markdownlint`对所有文档开启的CI检查，请确保提交后能够通过CI.
+> 我们使用基于MdBook构建Markdown文档体系，你可以参照`.github/github-pages.yaml`中的下载指示，将所有的Mdbook及其所需要的所有**预处理器**，都安装到你的系统环境路径中。如果你对文档方面有任何的更正，你可以在`Pages/SUMMARY.md`中找到实验手册的文档结构以及对应的所有文件。更改后在仓库根目录你可以运行`mdbook-mermaid install .`然后运行`mdbook serve`，并访问`localhost:3000`查看编译后的文档。我们也使用`markdownlint`对所有文档开启的CI检查，请确保提交后能够通过CI.
 
 ## 工具链使用
 
