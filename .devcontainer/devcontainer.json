@@ -8,8 +8,10 @@
 		"vscode": {
 		"extensions": [
 			"ms-vscode.cpptools",
+			"ms-vscode.hexeditor",
 			"llvm-vs-code-extensions.vscode-clangd",
-			"ms-vscode.makefile-tools"
+			"ms-vscode.makefile-tools",
+			"dan-c-underwood.arm"
 		]
 	}
   }
