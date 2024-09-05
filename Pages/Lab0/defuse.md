@@ -2,7 +2,7 @@
 
 我们在实验中提供了一个二进制炸弹程序bomb以及它的部分源码bomb.c。在 bomb.c 中，你可以看到一共有 6 个 phase。对每个 phase，bomb程序将从标准中输入中读取一行用户输入作为这一阶段的拆弹密码。若这一密码错误，炸弹程序将异常退出。你的任务是通过 GDB 以及阅读汇编代码，判断怎样的输入可以使得炸弹程序正常通过每个 phase。以下是一次失败尝试的例子：
 
-```
+```console
 [user@localhost lab0] $ make qemu
 qemu -aarch64 bomb
 Type in your defuse password:
