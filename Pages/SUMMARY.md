@@ -17,7 +17,7 @@
   - [页表映射](./Lab1/pte.md)
 
 - [附录](./Appendix.md)
-  - [Lab0: 工具教程](./Appendix/toolchains.md)
+  - [Bomb: 工具教程](./Appendix/toolchains.md)
     - [TL;DR Cheatsheet](./Appendix/toolchains/tldr.md)
     - [tmux](./Appendix/toolchains/tmux.md)
     - [gdb](./Appendix/toolchains/gdb.md)
@@ -28,6 +28,6 @@
     - [qemu](./Appendix/toolchains/qemu.md)
       - [进程级模拟 vs 系统级模拟](./Appendix/toolchains/qemu/emulation.md)
       - [GDBServer](./Appendix/toolchains/qemu/usage.md)
-  - [Kernel: 调试指北](./Appendix/debugging.md)
   - [Kernel: ELF格式](./Appendix/elf.md)
   - [Kernel: Linker Script](./Appendix/linker.md)
+  - [Kernel: 调试指北](./Appendix/debugging.md)
