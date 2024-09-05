@@ -3,16 +3,23 @@
 import argparse
 import asyncio
 import json
-import signal
 import sys
 from asyncio.subprocess import DEVNULL, PIPE, STDOUT
 from dataclasses import dataclass
 
 import psutil
 
+if sys.version_info[0] != 3 or sys.version_info[1] < 6:
+    print(
+        "This script requires Python version 3.7 and later. Please upgrade your Python version to grade this lab."
+    )
+    sys.exit(0)
+
 
 @dataclass
 class LineCapture:
+    """Line capture definition. Used for parsing scores.json in lab folders."""
+
     content: str
     msg: str
     proposed: int
@@ -20,6 +27,7 @@ class LineCapture:
 
 
 def killall(pid):
+    """Kill all children processes of a process."""
     try:
         parent = psutil.Process(pid)
         for child in parent.children(recursive=True):
@@ -34,6 +42,7 @@ process = None
 
 
 async def main(args: argparse.Namespace):
+    """Main grading function."""
 
     try:
         with open(args.file, "rb") as f:
@@ -101,7 +110,8 @@ if __name__ == "__main__":
     try:
         result = asyncio.run(main(args))
     except KeyboardInterrupt:
-        pass
+        if process:
+            killall(process.pid)
 
     scores = 0
     for line_capture in captures:
