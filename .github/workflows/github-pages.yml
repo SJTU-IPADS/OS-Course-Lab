@@ -1,7 +1,7 @@
 name: GitHub Pages
 on:
   push:
-    sources:
+    paths:
       - "Pages/**"
   workflow_dispatch:
 
