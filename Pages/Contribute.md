@@ -1,5 +1,7 @@
 # 贡献指南
 
+<!-- toc -->
+
 ## 代码规范
 
 > [!IMPORTANT] Commit
@@ -17,3 +19,9 @@
 
 > [!IMPORTANT]
 > 对于所有源代码的预编译，请一定准备两份，并且对调试符号段的所有信息都使用`aarch64-gnu-linux-strip`进行删除。
+
+## 如何提交新实验
+
+对于新实验，我们使用两个文件进行定义实验规范，即`filelist.mk`以及`scores.json`，其中`scores.json`用于定义给分点以及对应的分数，
+`filelist.mk`则是提交文件列表，用于定义该Lab的提交文件，运行`make submit`后`make`会读取`filelist.mk`的文件定义，并按照一致的相对路径进行打包。
+文件定义样例在Lab1中可以查看。
