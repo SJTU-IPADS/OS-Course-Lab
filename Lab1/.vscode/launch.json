@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "QEMU (cppdbg)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/kernel.img",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "stopAtEntry": true,
+            "stopAtConnect": true,
+            "setupCommands": [],
+            "MIMode": "gdb",
+            "targetArchitecture": "arm64",
+            "miDebuggerServerAddress": "localhost:1234",
+            "miDebuggerPath": "/usr/local/bin/gdb",
+        }
+    ]
+}
