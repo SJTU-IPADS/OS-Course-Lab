@@ -33,12 +33,14 @@ qemu: build
 	$(Q)$(_QEMU) $(QEMU_OPTS)
 
 qemu-gdb: build
+	$(Q)echo "[QEMU] Waiting for GDB Connection"
 	$(Q)$(_QEMU) -S -gdb tcp::$(QEMU_GDB_PORT) $(QEMU_OPTS)
 
 gdb:
 	$(Q)$(GDB) --nx -x $(LABDIR)/.gdbinit
 
 grade:
+	$(MAKE) distclean
 	$(Q)$(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json make qemu
 
 .PHONY: qemu qemu-gdb gdb defconfig build clean distclean grade all
