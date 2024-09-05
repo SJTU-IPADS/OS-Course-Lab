@@ -8,14 +8,14 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(
+chcore_target_precompile(
     ${kernel_target}
-    PRIVATE cap_group.c.obj
-            capability.c.obj
-            irq.c.obj
-            memory.c.obj
-            recycle.c.obj
-            set_thread_env.c.obj
-            thread.c.obj
-            ptrace.c.obj
-            user_fault.c.obj)
+    PRIVATE cap_group.c
+            capability.c
+            irq.c
+            memory.c
+            recycle.c
+            set_thread_env.c
+            thread.c
+            ptrace.c
+            user_fault.c)

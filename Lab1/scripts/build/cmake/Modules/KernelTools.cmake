@@ -42,6 +42,22 @@ macro(chcore_target_sources_out_objects _target _scope _objects)
     unset(_curr_bin_rel_path)
 endmacro()
 
+# Add precompile objects based on current debug options.
+macro(chcore_target_precompile _target _scope)
+    set(DEBUG ${CHCORE_KERNEL_DEBUG} PARENT_SCOPE)
+    if(DEBUG)
+        set(_obj_extension ".dbg.obj")
+    else() 
+        set(_obj_extension ".obj")
+    endif()
+    set (_sources ${ARGN})
+    list(TRANSFORM _sources APPEND ${_obj_extension} OUTPUT_VARIABLE _precompile_objects)
+    target_sources(${_target} ${_scope} ${_precompile_objects})
+    unset(_obj_extension)
+    unset(_sources)
+    unset(_precompile_objects)
+endmacro()
+
 # Add target to convert ELF kernel to binary image.
 function(chcore_objcopy_binary _kernel_target _binary_name)
     add_custom_target(
