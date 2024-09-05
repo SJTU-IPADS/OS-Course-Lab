@@ -12,11 +12,18 @@
             "externalConsole": false,
             "stopAtEntry": true,
             "stopAtConnect": true,
-            "setupCommands": [],
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
             "MIMode": "gdb",
             "targetArchitecture": "arm64",
             "miDebuggerServerAddress": "localhost:1234",
             "miDebuggerPath": "/usr/local/bin/gdb",
+            "preLaunchTask": "Setup QEMU"
         }
     ]
 }
