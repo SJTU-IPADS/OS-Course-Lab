@@ -17,19 +17,19 @@
 
 [^huge-page]: 操作系统：原理与实现
 
-![](assets/lab1-trans.svg)
+![lab1-trans](assets/lab1-trans.svg)
 
 其中，当映射为 1GB 块或 2MB 块时，图中 L2、L3 索引或 L3 索引的位置和低 12 位共同组成块内偏移。
 
 每一级的每一个页表占用一个 4KB 物理页，称为页表页（Page Table Page），其中有 512 个条目，每个条目占 64 位。AArch64 中，页表条目称为描述符（descriptor）[^descriptor]，最低位（bit[0]）为 `1` 时，描述符有效，否则无效。有效描述符有两种类型，一种指向下一级页表（称为表描述符），另一种指向物理块（大页）或物理页（称为块描述符或页描述符）。在上面所说的地址翻译配置下，描述符结构如下（“Output address”在这里即物理地址，一些地方称为物理页帧号（Page Frame Number，PFN））：
 
-**L0、L1、L2 页表描述符**
+- **L0、L1、L2 页表描述符**
 
-![](assets/lab1-pte-1.png)
+![lab1-pte-1](assets/lab1-pte-1.png)
 
-**L3 页表描述符**
+- **L3 页表描述符**
 
-![](assets/lab1-pte-2.png)
+![lab1-pte-2](assets/lab1-pte-2.png)
 
 [^descriptor]: Arm Architecture Reference Manual, D5.3
 

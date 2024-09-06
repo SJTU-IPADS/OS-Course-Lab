@@ -66,6 +66,7 @@ x0
 "Type in your defuse password!"
 
 ```
+
 在破解后续阶段时，为了避免每次都需要输入先前阶段的拆弹密码，你可以通过重定向的方式来让炸弹程序读取文件中的密码：
 
 ```console
@@ -81,6 +82,3 @@ Type in your defuse password:
 Congrats! You have defused all phases!
 
 ```
-
-
-
