@@ -48,27 +48,27 @@ Contents of the .debug_info section:
 > ELF文件所使用的调试信息格式为DWARF格式，如果感兴趣你可以它的官网[^DWARF]来详细了解。
 
 构建完成后，在左侧侧边栏找到调试按钮，点击后在上方找到`QEMU(cppdbg)`的调试设置点击调试，既可以运行我们预先准备好的vscode gdb设置。此时你的调试器会暂停自动停在`start.S`中，此时你就可以像c++课上进行debug的方式一样自由的打断点以及观察点并进行调试了。由于`qemu-system-aarch64`模拟了所有的机器核心，在左侧显示了四个线程的调用堆栈。当你关闭调试后，qemu会自动退出，与调试普通的程序是一致的.
-![](./assets/vscode-gdb.png)
+![vscode-gdb](./assets/vscode-gdb.png)
 
 ### Debug Console
 
 那么如果我们有的时候还是想要敲一下键盘输一些gui没有的命令，比如让gdb罗列一下这个镜像里有多少函数，此时`debug adapter protocol`协议
 会帮助我们向gdb传输命令，在代码编辑栏下方的`DEBUG CONSOLE`展示的就是我们cpptools所连接的`gdb-mi`的所返回的输出，此时使用`-exec <command>`即可以如同往常我们使用gdb一样获取我们所需要的信息，如`-exec info functions` 即可以提取我们需要该镜像中的所有符号。
-![](./assets/vscode-console.png)
+![vscode-console](./assets/vscode-console.png)
 
 ### Disassembler
 
 由于我们对一些重要的代码只提供了预先编译的可链接文件，所以这些文件一般都没有调试符号，但是你仍然可以对其进行的反编译代码进行查看
 例如`arm64_elX_to_el1`函数你可以使用`-exec b arm64_elX_to_el1`进行断点添加，当你点击继续执行后此时`gdb-mi`会抛出异常并停下执行。
 此时打开vscode的命令面板输入`disassembly`打开反编译器面板即找到断点出的代码信息，在这个面板里你也可以使用单步调试对`汇编`进行调试。
-![](./assets/vscode-disassembly.png)
+![vscode-disassembly](./assets/vscode-disassembly.png)
 
 ### Hex Editor
 
 有的时候你想对一块内存区域使用16进制编码进行查看，但是苦于gdb羸弱的表达方法效率很差，此时你可以使用Microsoft官方的`hex editor`来直接进行查看，
 你可以在左方的watchpoint中输入内存地址或者变量地址，当你停下后在watchpoint的右侧会出现一个16进制的按钮点开既可以对你监视点的内存区域的
 内容进行16进制的编辑与阅读。这个工具当你在苦于调试一段内存读写代码的时候很有用处。
-![](./assets/vscode-hex.png)
+![vscode-hex](./assets/vscode-hex.png)
 
 ### GDB Stub
 

@@ -1,0 +1,19 @@
+name: Commitlint
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: "./.commitlintrc.json"
+          helpURL: "https://sjtu-ipads.github.io/OS-Course-Lab/Contribute.html#%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83"

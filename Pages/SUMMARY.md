@@ -3,6 +3,7 @@
 [前言](./Intro.md)
 [如何开始实验](./Getting-started.md)
 [贡献指南](./Contribute.md)
+[CHANGELOG](./Changes.md)
 ---
 
 - [Lab0：拆炸弹](./Lab0.md)
@@ -30,4 +31,4 @@
       - [GDBServer](./Appendix/toolchains/qemu/usage.md)
   - [Kernel: ELF格式](./Appendix/elf.md)
   - [Kernel: Linker Script](./Appendix/linker.md)
-  - [Kernel: 调试指北](./Appendix/debugging.md)
+  - [Kernel: 调试指北](./Appendix/kernel-debugging.md)
