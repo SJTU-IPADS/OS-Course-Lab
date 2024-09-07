@@ -4,9 +4,9 @@
 
 本实验作为 ChCore 操作系统课程实验的第一个实验，分为三个部分。
 
-1. [RTFSC](../Lab1/RTFSC.html): 代码导读，由于是Lab1，我们主要注重于Chcore的构建系统，这部分没有习题。
-2. [机器启动](../Lab1/boot.html)：介绍aarch64结构启动时的关键寄存器以及关键的启动函数。
-3. [页表配置](../Lab1/pte.html)：介绍aarch64页表结构，以及针对树莓派3平台的内存布局编写页表配置。
+1. [RTFSC](./Lab1/RTFSC.html): 代码导读，由于是Lab1，我们主要注重于Chcore的构建系统，这部分没有习题。
+2. [机器启动](./Lab1/boot.html)：介绍aarch64结构启动时的关键寄存器以及关键的启动函数。
+3. [页表配置](./Lab1/pte.html)：介绍aarch64页表结构，以及针对树莓派3平台的内存布局编写页表配置。
 
 > [!IMPORTANT] 调试指北
 > 在开始实验之前，请务必读完[调试指北](./Appendix/kernel-debugging.html)，以帮助你快速上手调试。
