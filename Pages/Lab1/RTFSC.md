@@ -177,7 +177,7 @@ incclean -.- kernel.img
 在备份`.config`之后，其会调用`capturer.py`的内容，去动态捕捉命令的输出，并按照顺序与`scores.json`的内容进行比对，
 从而计算评分，如果提前退出或者接收到`SIGINT`信号，则整个程序会直接退出并返回`0分`。
 
-> [!IMPORTANT]
+> [!BUG]
 > 请注意我们是根据capturer.py的返回值来进行评分，如果有问题欢迎提交issues!
 
 ---
