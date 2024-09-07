@@ -1,6 +1,12 @@
 # IPADS OS Course Lab Manual
 
 [![GitHub Pages](https://github.com/SJTU-IPADS/OS-Course-Lab/actions/workflows/github-pages.yml/badge.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/)
+[![Github License](https://img.shields.io/github/license/SJTU-IPADS/OS-Course-Lab)](https://github.com/SJTU-IPADS/OS-Course-Lab/blob/main/LICENSE)
+[![Github Releases](https://img.shields.io/github/v/release/SJTU-IPADS/OS-Course-Lab)](https://github.com/SJTU-IPADS/OS-Course-Lab/releases/latest)
+[![Github Issues](https://img.shields.io/github/issues/SJTU-IPADS/OS-Course-Lab)](https://github.com/SJTU-IPADS/OS-Course-Lab/issues)
+
+[![forthebadge](Assets/docs.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/)
+[![forthebadge cc-nc-sa](http://ForTheBadge.com/images/badges/cc-nc-sa.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 
 > [!WARNING]
 > 本实验仓库正在进行重构升级，请优先使用各个分支下的代码进行实验，main分支的代码目前并不保证运行正常。本条目将在维护完成后删除。
@@ -53,3 +59,4 @@ Tutorial: <https://www.bilibili.com/video/BV1AS421N7rU/>
 ## Lab6：GUI
 
 该实验将详细介绍ChCore上基于Wayland的GUI系统的运行原理，包括Wayland通信协议和Wayland Compositor，并且要求读者在了解基于Wayland的GUI系统运行原理的基础上，基于ChCore的GUI框架编写自己的具有GUI界面的APP。
+
