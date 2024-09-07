@@ -7,12 +7,12 @@ endif
 
 BUILDDIR := $(LABDIR)/build
 KERNEL_IMG := $(BUILDDIR)/kernel.img
-_QEMU := $(LABDIR)/scripts/qemu/qemu_wrapper.sh $(QEMU)
+_QEMU := $(SCRIPTS)/qemu_wrapper.sh $(QEMU)
 QEMU_GDB_PORT := 1234
 QEMU_OPTS := -machine raspi3b -nographic -serial mon:stdio -m size=1G -kernel $(KERNEL_IMG)
 CHBUILD := $(SCRIPTS)/chbuild
 
-export LABROOT LABDIR LAB TIMEOUT
+export LABROOT LABDIR SCRIPTS LAB TIMEOUT
 
 all: build
 
@@ -37,7 +37,7 @@ qemu-gdb: build
 	$(Q)$(_QEMU) -S -gdb tcp::$(QEMU_GDB_PORT) $(QEMU_OPTS)
 
 gdb:
-	$(Q)$(GDB) --nx -x $(LABDIR)/.gdbinit
+	$(Q)$(GDB) --nx -x $(SCRIPTS)/gdb/gdbinit
 
 grade:
 	$(MAKE) distclean

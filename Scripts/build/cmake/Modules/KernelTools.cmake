@@ -69,19 +69,3 @@ function(chcore_objcopy_binary _kernel_target _binary_name)
             DESTINATION ${CMAKE_INSTALL_PREFIX})
 endfunction()
 
-# Add target to generate qemu emulation script.
-function(chcore_generate_emulate_sh _qemu _qemu_options)
-    set(qemu ${_qemu})
-    set(qemu_options ${_qemu_options})
-    configure_file(${CHCORE_PROJECT_DIR}/scripts/qemu/emulate.tpl.sh emulate.sh
-                   @ONLY)
-    unset(qemu)
-    unset(qemu_options)
-
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/emulate.sh
-            DESTINATION ${CMAKE_INSTALL_PREFIX})
-    install(
-        PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/emulate.sh
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
-        RENAME simulate.sh)
-endfunction()
