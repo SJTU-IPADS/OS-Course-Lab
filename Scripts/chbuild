@@ -18,14 +18,14 @@ clean_command="$self clean"
 cmake_build_dir="build"
 cmake_cache_file="build/CMakeCache.txt"
 
-cmake_script_dir="scripts/build/cmake"
+cmake_script_dir="$SCRIPTS/build/cmake"
 cmake_init_cache_default="$cmake_script_dir/LoadConfigDefault.cmake"
 cmake_init_cache_ask="$cmake_script_dir/LoadConfigAsk.cmake"
 cmake_init_cache_abort="$cmake_script_dir/LoadConfigAbort.cmake"
 cmake_init_cache_dump="$cmake_script_dir/DumpConfig.cmake"
 
 config_file=".config"
-defconfig_dir="scripts/build/defconfigs"
+defconfig_dir="$SCRIPTS/build/defconfigs"
 
 repo_tool_dir=".repo"
 manifest_upstream="git@ipads.se.sjtu.edu.cn:staros/staros-manifests.git"
@@ -275,10 +275,11 @@ _docker_run() {
         echo "chbuild: use_cgroup: $use_cgroup, tags: $CI_RUNNER_TAGS"
         test -t 1 && use_tty="-t"
         docker run -i $use_tty --rm \
+            -e SCRIPTS=$SCRIPTS \
             -u $(id -u ${USER}):$(id -g ${USER}) \
             -v ${LABROOT}:${LABROOT} -w $(pwd) \
             --security-opt=seccomp:unconfined \
-            ipads/chcore_builder:v1.8.3 \
+            ipads/chcore_builder:v1.9.0 \
             $self $@
     fi
 }

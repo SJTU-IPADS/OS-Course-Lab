@@ -28,12 +28,3 @@ set(init_objects
 
 chcore_objcopy_binary(${kernel_target} kernel8.img)
 
-# Note: `$basedir` is a shell variable in `emulate.tpl.sh`
-set(_qemu_opts
-    "-machine raspi3b -nographic -serial mon:stdio -m size=1G -kernel \$basedir/kernel.img"
-)
-if(CHCORE_QEMU_SDCARD_IMG)
-    set(_qemu_opts
-        "${_qemu_opts} -drive if=sd,format=raw,file=${CHCORE_QEMU_SDCARD_IMG}")
-endif()
-chcore_generate_emulate_sh("qemu-system-aarch64" ${_qemu_opts})

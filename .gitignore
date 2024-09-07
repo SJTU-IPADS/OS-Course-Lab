@@ -9,7 +9,7 @@ cscope.*
 !/**/firmware/*.bin
 !/**/firmware/*.elf
 
-build
+Lab*/build
 simulate.sh
 debug.sh
 .config

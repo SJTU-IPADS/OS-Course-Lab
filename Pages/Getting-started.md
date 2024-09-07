@@ -76,4 +76,4 @@ zypper install qemu qemu-linux-user python3 python3-psutil make gdb
 
 ## CI评分
 
-在新实验中，我们特意准备了支持github actions以及gitlab ci的CI配置，你可以在你所使用的代码托管平台上自动运行脚本，为了确保你不会篡改预编译的`.obj`文件，我们会根据本仓库的主线的各个Lab中的`filelists.mk`(详细见贡献指南)的定义自动提取提交中所需要的文件与仓库主线的文件树进行合并，最终进行评分。
+在新实验中，我们特意准备了支持github actions以及gitlab ci的CI配置，你可以在你所使用的代码托管平台上自动运行脚本，为了确保你不会篡改预编译的`.obj`文件，我们会根据本仓库的主线的各个Lab中的`filelist.mk`(详细见贡献指南)的定义自动提取提交中所需要的文件与当前仓库主线的文件树进行合并，最终进行评分。

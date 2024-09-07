@@ -62,6 +62,9 @@ RUN curl -SLO https://download.qemu.org/qemu-9.1.0.tar.xz && \
 RUN apt-get install -y libglib2.0-dev
 RUN apt-get clean
 
+# install repo
+RUN curl -SL https://storage.googleapis.com/git-repo-downloads/repo -o /usr/local/bin/repo && \
+	chmod +x /usr/local/bin/repo
 RUN useradd -m -u $USER_UID -U -s /bin/bash stu
 RUN usermod -aG sudo stu
 RUN passwd -d stu
