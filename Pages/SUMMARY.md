@@ -13,7 +13,7 @@
 ---
 
 - [Lab1: 机器启动](./Lab1.md)
-  - [RTFSC](./Lab1/RTFSC.md)
+  - [RTFSC(1)](./Lab1/RTFSC.md)
   - [内核启动](./Lab1/boot.md)
   - [页表映射](./Lab1/pte.md)
 
