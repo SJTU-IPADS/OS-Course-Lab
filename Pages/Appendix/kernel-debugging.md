@@ -9,12 +9,12 @@
 
 ## VSCode
 
-在Lab0中我们学习并熟悉了GDB的使用方法，但是从Lab开始，Lab中的可调试文件就陡然增加了，使用GDB最麻烦的地方就是定位源文件进行单步调试，
+在Lab0中我们学习并熟悉了GDB的使用方法，但是从Lab1开始，Lab中的可调试文件就陡然增加了，使用GDB最麻烦的地方就是定位源文件进行单步调试，
 同时在调试的同时我们也无法迅速的对文件进行修改来做出调整，为此我们新增加了vscode的gdb设置，使用它你就可以一步进行对于内核镜像的调试工作。
 
 ### 环境搭建
 
-> [!IMPORTANT] Devcontainer
+> [!IMPORTANT] DevContainer
 > 如果你使用我们提供的vscode devcontainer配置，你可以直接跳过本节。
 
 你需要安装Microsoft所提供的官方[C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)插件.
@@ -88,8 +88,8 @@ sequenceDiagram
 
 ## 代码跳转 compile_commands.json
 
-有的时候，你可能会奇怪为什么代码提示出错了，与脚本语言不同，C/C++的lsp代码提示也是依赖于编译选项的，例如默认以及新增包含路径以及宏定义（即编译时的上下文）。如果我们不给LSP服务器提供我们浏览文件是怎么编译的，那么LSP就会按照默认的设置搜索默认的包含路径以及符号表，如果恰好你的项目里有多个同名头文件，
-亦或者是在不同的文件里面定义了相同的符号，那么LSP就会报错，因为他不知道到底哪个文件以及哪个符号是参与了构建的。此时你就需要给LSP服务器提供一个提示性的信息用于告知该文件编译时的上下文。通常来说这个编译时的上下文构建系统是知道的，而llvm他们定义了一个标准的上下文文件格式即`compile_commands.json`，你可以在`build/kernel/compile_commands.json`里看到它。其记录了构建这个elf文件的过程中所使用的编译命令，此时LSP服务器即可以解析这个文件获取编译时刻的上下文信息，完成后就能得出准确的提示信息了。
+有的时候，你可能会奇怪为什么代码提示出错了，与脚本语言不同，C/C++的lsp代码提示也是依赖于编译选项的，例如你为编译器指定的包含路径以及宏定义（即编译时的上下文）。如果我们不给LSP服务器提供我们浏览文件是怎么编译的，那么LSP就会按照默认的设置搜索默认的包含路径以及符号表，如果恰好你的项目里有多个同名头文件，
+亦或者是在不同的文件里面定义了相同的符号，那么LSP就会报错，因为它不知道到底哪个文件以及哪个符号是参与了最终构建。此时你就需要给LSP服务器提供一个提示性的信息用于告知该文件编译时的上下文。通常来说这个编译时的上下文构建系统是知道的，而llvm他们定义了一个标准的上下文文件格式即`compile_commands.json`，你可以在`build/kernel/compile_commands.json`里看到它，这个文件在`CMake`生成build目录的时候会根据需要编译的文件自动生成。其记录了构建这个elf文件的过程中所使用的编译命令，此时LSP服务器即可以解析这个文件获取编译时刻的上下文信息，完成后就能得出准确的提示信息了。
 
 ```json
 [
@@ -112,7 +112,7 @@ sequenceDiagram
 
 ```
 
-我们在每个lab的`.vscode`下都为`clangd`这个LSP服务器提供了`compile_commands.json`，同时也不使用`vscode`的同学们提供了`.clangd`的配置，用于引导clangd正确找到`compile_commands.json`的位置，在为LSP获取到正确的编译上下文信息后，他就可以为我们提供正常的重构，跳转，以及代码查看的功能了。
+我们在每个lab的`.vscode`下都为`clangd`这个LSP服务器提供了`compile_commands.json`的位置配置，同时也不使用`vscode`的同学们提供了`.clangd`的配置，用于引导clangd正确找到`compile_commands.json`的位置，在为LSP获取到正确的编译上下文信息后，他就可以为我们提供正常的重构，跳转，以及代码查看的功能了。
 
 > [!NOTE] Compile Database
 > 针对LLVM Compile Database的更多信息，请查阅llvm compile database的官方文档[^compile_database]

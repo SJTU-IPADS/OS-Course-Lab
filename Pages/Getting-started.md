@@ -61,6 +61,9 @@ zypper install qemu qemu-linux-user python3 python3-psutil make gdb
 
 ```
 
+> [!IMPORTANT]
+> 当你完成后，请务必直接运行`Scripts/gendeps.sh`，此时会根据你的系统环境生成环境定义。
+
 ## 文档说明
 
 各实验文档除开`lab0`为单独的实验内容，其他都包含了以下的几种习题，请根据下方的指示完成对应实验报告以及对应的编程题。
