@@ -296,7 +296,7 @@ int query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         /* LAB 2 TODO 4 BEGIN */
         /*
          * Hint: Walk through each level of page table using `get_next_ptp`,
-         * return the pa and pte until a L0/L1 block or page, return
+         * return the pa and pte until a L1/L2 block or page, return
          * `-ENOMAPPING` if the va is not mapped.
          */
         /* BLANK BEGIN */
