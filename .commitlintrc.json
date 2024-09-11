@@ -11,6 +11,8 @@
         "chore",
         "ci",
         "docs",
+        "fix",
+        "minor",
         "infra",
         "feat",
         "refactor",
