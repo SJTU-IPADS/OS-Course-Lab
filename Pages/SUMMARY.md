@@ -17,6 +17,12 @@
   - [内核启动](./Lab1/boot.md)
   - [页表映射](./Lab1/pte.md)
 
+- [Lab2: 内存管理](./Lab2.md)
+  - [物理内存管理](./Lab2/physical.md)
+  - [页表管理](./Lab2/pte.md)
+  - [缺页管理](./Lab2/page_fault.md)
+
+
 - [附录](./Appendix.md)
   - [Bomb: 工具教程](./Appendix/toolchains.md)
     - [TL;DR Cheatsheet](./Appendix/toolchains/tldr.md)
