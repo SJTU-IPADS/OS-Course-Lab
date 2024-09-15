@@ -83,7 +83,7 @@ void free_pages_without_record(void *addr)
         _free_pages(addr, false);
 }
 
-static int size_to_page_order(unsigned long size)
+__maybe_unused static int size_to_page_order(unsigned long size)
 {
         unsigned long order;
         unsigned long pg_num;
@@ -107,7 +107,7 @@ static int size_to_page_order(unsigned long size)
 /* Currently, BUG_ON no available memory. */
 void *_kmalloc(size_t size, bool is_record, size_t *real_size)
 {
-        void *addr;
+        void *addr = NULL;
         int order;
 
         if (unlikely(size == 0))
@@ -117,6 +117,8 @@ void *_kmalloc(size_t size, bool is_record, size_t *real_size)
                 /* LAB 2 TODO 3 BEGIN */
                 /* Step 1: Allocate in slab for small requests. */
                 /* BLANK BEGIN */
+                UNUSED(addr);
+                UNUSED(order);
 
                 /* BLANK END */
 #if ENABLE_MEMORY_USAGE_COLLECTING == ON

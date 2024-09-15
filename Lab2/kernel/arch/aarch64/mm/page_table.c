@@ -61,7 +61,7 @@ static int __ap_to_vmr_prot(int ap)
 /*
  * the 3rd arg means the kind of PTE.
  */
-static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind)
+__maybe_unused static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind)
 {
 
         BUG_ON(kind != USER_PTE && kind != KERNEL_PTE);
@@ -368,7 +368,7 @@ static int try_release_ptp(ptp_t *high_ptp, ptp_t *low_ptp,
         return 1;
 }
 
-static void recycle_pgtable_entry(ptp_t *l0_ptp, ptp_t *l1_ptp, ptp_t *l2_ptp,
+__maybe_unused static void recycle_pgtable_entry(ptp_t *l0_ptp, ptp_t *l1_ptp, ptp_t *l2_ptp,
                                   ptp_t *l3_ptp, vaddr_t va)
 {
         if (!try_release_ptp(l2_ptp, l3_ptp, GET_L2_INDEX(va)))

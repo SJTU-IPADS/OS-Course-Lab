@@ -149,7 +149,7 @@ static int cmp_vmr_and_range(const void *va_range, const struct rb_node *node)
  *  0: va belongs to node
  *  1: va > node
  */
-static int cmp_vmr_and_va(const void *va, const struct rb_node *node)
+__maybe_unused static int cmp_vmr_and_va(const void *va, const struct rb_node *node)
 {
         struct vmregion *vmr;
         vaddr_t vmr_start, vmr_end;
@@ -451,12 +451,12 @@ out_unlock:
 }
 
 /* This function should be surrounded with the vmspace_lock. */
-struct vmregion *find_vmr_for_va(struct vmspace *vmspace, vaddr_t addr)
+__maybe_unused struct vmregion *find_vmr_for_va(struct vmspace *vmspace, vaddr_t addr)
 {
         /* LAB 2 TODO 6 BEGIN */
         /* Hint: Find the corresponding vmr for @addr in @vmspace */
         /* BLANK BEGIN */
-
+        return NULL;
         /* BLANK END */
         /* LAB 2 TODO 6 END */
 }

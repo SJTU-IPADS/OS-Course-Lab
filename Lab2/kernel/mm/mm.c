@@ -100,3 +100,14 @@ unsigned long get_free_mem_size(void)
 
         return size;
 }
+
+unsigned long get_total_mem_size(void)
+{
+        unsigned long size = 0;
+        int i;
+
+        for (i = 0; i < physmem_map_num; ++i)
+                size += get_total_mem_size_from_buddy(&global_mem[i]);
+
+        return size;
+}

@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include <common/util.h>
@@ -15,8 +15,8 @@
 #include <common/kprint.h>
 #include <mm/buddy.h>
 
-static struct page *get_buddy_chunk(struct phys_mem_pool *pool,
-                                    struct page *chunk)
+__maybe_unused static struct page *get_buddy_chunk(struct phys_mem_pool *pool,
+                                                   struct page *chunk)
 {
         vaddr_t chunk_addr;
         vaddr_t buddy_chunk_addr;
@@ -44,8 +44,9 @@ static struct page *get_buddy_chunk(struct phys_mem_pool *pool,
 
 /* The most recursion level of split_chunk is decided by the macro of
  * BUDDY_MAX_ORDER. */
-static struct page *split_chunk(struct phys_mem_pool *pool, int order,
-                                struct page *chunk)
+__maybe_unused static struct page *split_chunk(struct phys_mem_pool *__maybe_unused pool,
+                                int __maybe_unused order,
+                                struct page *__maybe_unused chunk)
 {
         /* LAB 2 TODO 1 BEGIN */
         /*
@@ -53,6 +54,7 @@ static struct page *split_chunk(struct phys_mem_pool *pool, int order,
          * a suitable free list.
          */
         /* BLANK BEGIN */
+        return NULL;
 
         /* BLANK END */
         /* LAB 2 TODO 1 END */
@@ -60,7 +62,8 @@ static struct page *split_chunk(struct phys_mem_pool *pool, int order,
 
 /* The most recursion level of merge_chunk is decided by the macro of
  * BUDDY_MAX_ORDER. */
-static struct page *merge_chunk(struct phys_mem_pool *pool, struct page *chunk)
+__maybe_unused static struct page * merge_chunk(struct phys_mem_pool *__maybe_unused pool,
+                                struct page *__maybe_unused chunk)
 {
         /* LAB 2 TODO 1 BEGIN */
         /*
@@ -68,6 +71,7 @@ static struct page *merge_chunk(struct phys_mem_pool *pool, struct page *chunk)
          * if possible.
          */
         /* BLANK BEGIN */
+        return NULL;
 
         /* BLANK END */
         /* LAB 2 TODO 1 END */
@@ -140,10 +144,12 @@ struct page *buddy_get_pages(struct phys_mem_pool *pool, int order)
          * in the free lists, then split it if necessary.
          */
         /* BLANK BEGIN */
+        UNUSED(cur_order);
+        UNUSED(free_list);
 
         /* BLANK END */
         /* LAB 2 TODO 1 END */
-out:
+out: __maybe_unused
         unlock(&pool->buddy_lock);
         return page;
 }
@@ -152,7 +158,6 @@ void buddy_free_pages(struct phys_mem_pool *pool, struct page *page)
 {
         int order;
         struct list_head *free_list;
-
         lock(&pool->buddy_lock);
 
         /* LAB 2 TODO 1 BEGIN */
@@ -161,7 +166,8 @@ void buddy_free_pages(struct phys_mem_pool *pool, struct page *page)
          * a suitable free list.
          */
         /* BLANK BEGIN */
-
+        UNUSED(free_list);
+        UNUSED(order);
         /* BLANK END */
         /* LAB 2 TODO 1 END */
 
@@ -228,4 +234,9 @@ unsigned long get_free_mem_size_from_buddy(struct phys_mem_pool *pool)
                        list->nr_free);
         }
         return total_size;
+}
+
+unsigned long get_total_mem_size_from_buddy(struct phys_mem_pool *pool)
+{
+        return pool->pool_mem_size;
 }
