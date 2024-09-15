@@ -99,5 +99,6 @@ void buddy_free_pages(struct phys_mem_pool *, struct page *page);
 void *page_to_virt(struct page *page);
 struct page *virt_to_page(void* ptr);
 unsigned long get_free_mem_size_from_buddy(struct phys_mem_pool *);
+unsigned long get_total_mem_size_from_buddy(struct phys_mem_pool *);
 
 #endif /* MM_BUDDY_H */
