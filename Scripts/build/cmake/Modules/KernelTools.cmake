@@ -44,18 +44,47 @@ endmacro()
 
 # Add precompile objects based on current debug options.
 macro(chcore_target_precompile _target _scope)
-    set(DEBUG ${CHCORE_KERNEL_DEBUG} PARENT_SCOPE)
-    if(DEBUG)
+    if(CHCORE_KERNEL_DEBUG)
         set(_obj_extension ".dbg.obj")
     else() 
         set(_obj_extension ".obj")
     endif()
     set (_sources ${ARGN})
     list(TRANSFORM _sources APPEND ${_obj_extension} OUTPUT_VARIABLE _precompile_objects)
+
     target_sources(${_target} ${_scope} ${_precompile_objects})
     unset(_obj_extension)
     unset(_sources)
     unset(_precompile_objects)
+endmacro()
+
+macro(chcore_target_precompile_out_objects _target _scope _objects)
+    string(REGEX REPLACE "^${CMAKE_BINARY_DIR}/" "" _curr_bin_rel_path
+                         ${CMAKE_CURRENT_BINARY_DIR})
+    if(CHCORE_KERNEL_DEBUG)
+        set(_obj_extension ".dbg.obj")
+    else() 
+        set(_obj_extension ".obj")
+    endif()
+    foreach(_src ${ARGN})
+        if(_src MATCHES "\.(c|C)$")
+            set(_obj_extension ${CMAKE_C_OUTPUT_EXTENSION})
+        elseif(_src MATCHES "\.(s|S)$")
+            set(_obj_extension ${CMAKE_ASM_OUTPUT_EXTENSION})
+        elseif(_src MATCHES "\.(cpp|CPP|cxx|CXX|cc|CC)$")
+            set(_obj_extension ${CMAKE_CXX_OUTPUT_EXTENSION})
+        else()
+            message(FATAL_ERROR "Unsupported file type: ${_src}")
+        endif()
+        list(
+            APPEND
+            ${_objects}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${_src}${_obj_extension}
+        )
+    endforeach()
+    chcore_target_precompile(${_target} ${_scope} ${ARGN})
+    unset(_obj_extension)
+    unset(_curr_bin_rel_path)
 endmacro()
 
 # Add target to convert ELF kernel to binary image.
