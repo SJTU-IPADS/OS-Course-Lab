@@ -8,5 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE ipi.c.obj irq_entry.c.obj irq_entry.S.obj irq.S.obj
-                                        pgfault.c)
+chcore_target_precompile(${kernel_target} PRIVATE ipi.c irq_entry.c irq_entry.S irq.S)
+target_sources(${kernel_target} PRIVATE pgfault.c)

@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE context.c.obj fpu.c.obj idle.S.obj sched.c.obj)
+chcore_target_precompile(${kernel_target} PRIVATE context.c fpu.c idle.S sched.c)

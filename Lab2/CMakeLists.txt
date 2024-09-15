@@ -11,7 +11,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(ChCore)
 
-set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/scripts/build/cmake)
+set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/../Scripts/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_cmake_script_dir}/Modules)
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/user)
 

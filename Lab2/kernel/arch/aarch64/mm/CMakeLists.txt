@@ -8,17 +8,17 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(
+target_sources(${kernel_target} PRIVATE page_table.c)
+chcore_target_precompile(
     ${kernel_target}
-    PRIVATE bzero.S.obj
-            cache.c.obj
-            memcpy.S.obj
-            memmove.S.obj
-            memset.c.obj
-            page_table.c
-            page_table.S.obj
-            tlb.c.obj
-            uaccess.c.obj
-            vmspace.c.obj
-            copy_from_user.S.obj
-            copy_to_user.S.obj)
+    PRIVATE bzero.S
+            cache.c
+            memcpy.S
+            memmove.S
+            memset.c
+            page_table.S
+            tlb.c
+            uaccess.c
+            vmspace.c
+            copy_from_user.S
+            copy_to_user.S)
