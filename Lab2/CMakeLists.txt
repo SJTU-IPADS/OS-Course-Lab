@@ -11,7 +11,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(ChCore)
 
-set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/scripts/build/cmake)
+set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/../Scripts/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_cmake_script_dir}/Modules)
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/user)
 
@@ -201,7 +201,7 @@ chcore_add_subproject(
         -DCHCORE_USER_INSTALL_DIR=${_system_services_install_dir} # used by kernel/CMakeLists.txt to incbin cpio files
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
         -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/kernel.cmake
-    CMAKE_CACHE_ARGS ${_cache_args}
+        ${_cache_args}
     DEPENDS kernel-clean-incbin
     BUILD_ALWAYS TRUE)
 

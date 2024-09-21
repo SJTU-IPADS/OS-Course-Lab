@@ -9,6 +9,7 @@ title = "IPADS OS Course Lab Manual"
 additional-js = ["mermaid.min.js", "mermaid-init.js"]
 git-repository-url = "https://github.com/SJTU-IPADS/OS-Course-Lab"
 git-repository-icon = "fa-github"
+mathjax-support = true
 
 [preprocessor.callouts]
 [preprocessor.mermaid]

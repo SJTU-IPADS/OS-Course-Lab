@@ -46,7 +46,7 @@ void do_page_fault(u64 esr, u64 fault_ins_addr, int type, u64 *fix_addr)
         vaddr_t fault_addr;
         int fsc; // fault status code
         int wnr;
-        int ret;
+        int ret = 0;
 
         fault_addr = get_fault_addr();
         fsc = GET_ESR_EL1_FSC(esr);

@@ -62,7 +62,7 @@ struct vmspace {
         struct vmregion *heap_boundary_vmr;
 
         /* Records size of memory mapped. Protected by pgtbl_lock. */
-        unsigned long rss;
+        long rss;
 };
 
 /* Interfaces on vmspace management */
@@ -72,7 +72,7 @@ void plat_vmspace_init(struct vmspace *vmspace);
 int vmspace_map_range(struct vmspace *vmspace, vaddr_t va, size_t len,
                       vmr_prop_t flags, struct pmobject *pmo);
 int vmspace_unmap_range(struct vmspace *vmspace, vaddr_t va, size_t len);
-int vmspace_unmap_pmo(struct vmspace *vmspace, vaddr_t va,
+int vmspace_unmap_pmo(struct vmspace *vmspace, vaddr_t va, size_t len,
                       struct pmobject *pmo);
 struct vmregion *find_vmr_for_va(struct vmspace *vmspace, vaddr_t addr);
 int trans_uva_to_kva(vaddr_t user_va, vaddr_t *kernel_va);

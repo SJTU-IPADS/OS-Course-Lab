@@ -8,7 +8,8 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE head.S.obj main.c tools.S.obj)
+target_sources(${kernel_target} PRIVATE main.c)
+chcore_target_precompile(${kernel_target} PRIVATE head.S tools.S)
 
 add_subdirectory(boot)
 

@@ -134,7 +134,7 @@ static struct slab_header *init_slab_cache(int order, int size)
         return slab;
 }
 
-static void choose_new_current_slab(struct slab_pointer *pool)
+static void choose_new_current_slab(struct slab_pointer * __maybe_unused pool)
 {
         /* LAB 2 TODO 2 BEGIN */
         /* Hint: Choose a partial slab to be a new current slab. */
@@ -149,6 +149,7 @@ static void *alloc_in_slab_impl(int order)
         struct slab_header *current_slab;
         struct slab_slot_list *free_list;
         void *next_slot;
+        UNUSED(next_slot);
 
         lock(&slabs_locks[order]);
 
@@ -297,6 +298,7 @@ void free_in_slab(void *addr)
          */
         /* BLANK BEGIN */
 
+        UNUSED(slot);
         /* BLANK END */
         /* LAB 2 TODO 2 END */
 

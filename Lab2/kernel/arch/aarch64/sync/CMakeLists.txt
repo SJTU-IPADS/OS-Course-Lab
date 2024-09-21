@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE rwlock.c.obj ticket.c.obj)
+chcore_target_precompile(${kernel_target} PRIVATE rwlock.c ticket.c)

@@ -44,18 +44,38 @@ endmacro()
 
 # Add precompile objects based on current debug options.
 macro(chcore_target_precompile _target _scope)
-    set(DEBUG ${CHCORE_KERNEL_DEBUG} PARENT_SCOPE)
-    if(DEBUG)
+    if(CHCORE_KERNEL_DEBUG)
         set(_obj_extension ".dbg.obj")
     else() 
         set(_obj_extension ".obj")
     endif()
     set (_sources ${ARGN})
     list(TRANSFORM _sources APPEND ${_obj_extension} OUTPUT_VARIABLE _precompile_objects)
+
     target_sources(${_target} ${_scope} ${_precompile_objects})
     unset(_obj_extension)
     unset(_sources)
     unset(_precompile_objects)
+endmacro()
+
+macro(chcore_target_precompile_out_objects _target _scope _objects)
+    string(REGEX REPLACE "^${CMAKE_BINARY_DIR}/" "" _curr_bin_rel_path
+                         ${CMAKE_CURRENT_BINARY_DIR})
+    foreach(_src ${ARGN})
+        if(CHCORE_KERNEL_DEBUG)
+            set(_obj_extension ".dbg.obj")
+        else() 
+            set(_obj_extension ".obj")
+        endif()
+        list(
+            APPEND
+            ${_objects}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${_src}${_obj_extension}
+        )
+    endforeach()
+    chcore_target_precompile(${_target} ${_scope} ${ARGN})
+    unset(_obj_extension)
+    unset(_curr_bin_rel_path)
 endmacro()
 
 # Add target to convert ELF kernel to binary image.

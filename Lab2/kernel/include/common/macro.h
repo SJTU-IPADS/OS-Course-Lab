@@ -80,6 +80,9 @@
 #define likely(x)   (!!(x))
 #define unlikely(x) (!!(x))
 #endif  // __GNUC__
+//
+#define __maybe_unused __attribute__((unused))
+#define UNUSED(x) (void)(x)
 
 /*
  * Different platform may have different cacheline size

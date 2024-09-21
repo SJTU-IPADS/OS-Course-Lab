@@ -19,4 +19,6 @@ extern graphic_putc_handler graphic_putc;
 void set_graphic_putc_handler(graphic_putc_handler f);
 void printk(const char *fmt, ...);
 
+int simple_sprintf(char *str, const char *fmt, ...);
+
 #endif /* LIB_PRINTK_H */
