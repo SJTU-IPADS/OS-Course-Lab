@@ -201,7 +201,7 @@ chcore_add_subproject(
         -DCHCORE_USER_INSTALL_DIR=${_system_services_install_dir} # used by kernel/CMakeLists.txt to incbin cpio files
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
         -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/kernel.cmake
-    CMAKE_CACHE_ARGS ${_cache_args}
+        ${_cache_args}
     DEPENDS kernel-clean-incbin
     BUILD_ALWAYS TRUE)
 
