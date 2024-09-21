@@ -1,3 +1,0 @@
-[submodule "opensbi"]
-	path = arch/riscv64/boot/opensbi
-	url = git@ipads.se.sjtu.edu.cn:chcore-dev-team/opensbi.git
