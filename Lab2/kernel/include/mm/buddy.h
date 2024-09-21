@@ -17,7 +17,7 @@
 #include <common/list.h>
 #include <common/lock.h>
 
-#define N_PHYS_MEM_POOLS 2
+#define N_PHYS_MEM_POOLS 3
 
 /* The following two are defined in mm.c and filled by mmparse.c. */
 extern paddr_t physmem_map[N_PHYS_MEM_POOLS][2];

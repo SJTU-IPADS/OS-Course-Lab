@@ -17,12 +17,24 @@
 #define CPU_STACK_SIZE          4096
 #define STACK_ALIGNMENT         16
 
+#ifdef CHCORE_PGTBL_SV39
+#define SV39
+#else 
+#define SV48
+#endif
+
 #ifndef KBASE
+
 #if __SIZEOF_POINTER__ == 4 /* 32-bit architecture */
 #define KBASE		0xc0000000
 #else /* 64-bit architecture */
-#define KBASE		0xffffff0000000000
+#if defined(SV39)
+#define KBASE       0xFFFFFFF000000000
+#else
+#define KBASE		0xFFFFFF0000000000
 #endif
+#endif
+
 #endif
 
 #endif /* COMMON_VARS_H */
