@@ -10,17 +10,22 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#pragma once
+#ifndef UAPI_OPENTRUSTEE_SMC_H
+#define UAPI_OPENTRUSTEE_SMC_H
 
-typedef int cap_t;
-typedef int badge_t;
-/*
- * Rights of capabilities.
- * Rights can be divided into two types, one is object-specific rights (such
- * as PMO_READ, PMO_WRITE, PMO_EXEC, PMO_COW), and the other is some general
- * rights (CAP_RIGHT_COPY and CAP_RIGHT_REVOKE_ALL) to define capability
- * actions.
- * NOTE: When defining new capability rights, it is necessary to be careful
- * NOT to cause CONFLICTS between the above two types of rights.
- */
-typedef int cap_right_t;
+struct smc_registers {
+        unsigned long x0;
+        unsigned long x1;
+        unsigned long x2;
+        unsigned long x3;
+        unsigned long x4;
+};
+
+enum tz_switch_req {
+        TZ_SWITCH_REQ_ENTRY_DONE,
+        TZ_SWITCH_REQ_STD_REQUEST,
+        TZ_SWITCH_REQ_STD_RESPONSE,
+        TZ_SWITCH_REQ_NR
+};
+
+#endif /* UAPI_OPENTRUSTEE_SMC_H */
