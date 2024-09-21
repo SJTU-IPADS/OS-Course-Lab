@@ -1,0 +1,12 @@
+MM := kernel/mm
+MM_ARCH := kernel/arch/aarch64/mm
+ARCH := kernel/arch/aarch64
+
+BUDDY := $(MM)/buddy.c
+SLAB := $(MM)/slab.c
+PTE := $(MM_ARCH)/page_table.c 
+MAIN := $(ARCH)/main.c
+PGFAULT := $(ARCH)/irq/pgfault.c $(MM)/pgfault_handler.c
+VMSPACE := $(MM)/vmspace.c
+
+FILES := $(BUDDY) $(SLAB) $(PTE) $(MAIN) $(PGFAULT) $(VMSPACE)
