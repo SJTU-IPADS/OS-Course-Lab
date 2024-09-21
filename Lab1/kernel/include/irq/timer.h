@@ -53,7 +53,7 @@ struct sleep_state {
 #define NS_IN_S		(1000000000UL)
 #define US_IN_S		(1000000UL)
 #define NS_IN_US	(1000UL)
-#define US_IN_MS	(1000UL)
+#define US_IN_MS        (1000UL)
 
 extern struct list_head sleep_lists[PLAT_CPU_NUM];
 extern u64 tick_per_us;

@@ -10,15 +10,13 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#ifndef LIB_PRINTK_H
-#define LIB_PRINTK_H
+#ifndef UAPI_OBJECT_H
+#define UAPI_OBJECT_H
 
-typedef void (*graphic_putc_handler)(char c);
-extern graphic_putc_handler graphic_putc;
+#include <uapi/types.h>
 
-void set_graphic_putc_handler(graphic_putc_handler f);
-void printk(const char *fmt, ...);
+#define CAP_RIGHT_REVOKE_ALL (1 << (sizeof(cap_right_t) * 8 - 1))
+#define CAP_RIGHT_COPY       (1 << (sizeof(cap_right_t) * 8 - 2))
+#define CAP_RIGHT_NO_RIGHTS  (0)
 
-int simple_sprintf(char *str, const char *fmt, ...);
-
-#endif /* LIB_PRINTK_H */
+#endif /* UAPI_OBJECT_H */

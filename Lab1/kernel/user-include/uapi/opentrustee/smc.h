@@ -10,15 +10,22 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#ifndef LIB_PRINTK_H
-#define LIB_PRINTK_H
+#ifndef UAPI_OPENTRUSTEE_SMC_H
+#define UAPI_OPENTRUSTEE_SMC_H
 
-typedef void (*graphic_putc_handler)(char c);
-extern graphic_putc_handler graphic_putc;
+struct smc_registers {
+        unsigned long x0;
+        unsigned long x1;
+        unsigned long x2;
+        unsigned long x3;
+        unsigned long x4;
+};
 
-void set_graphic_putc_handler(graphic_putc_handler f);
-void printk(const char *fmt, ...);
+enum tz_switch_req {
+        TZ_SWITCH_REQ_ENTRY_DONE,
+        TZ_SWITCH_REQ_STD_REQUEST,
+        TZ_SWITCH_REQ_STD_RESPONSE,
+        TZ_SWITCH_REQ_NR
+};
 
-int simple_sprintf(char *str, const char *fmt, ...);
-
-#endif /* LIB_PRINTK_H */
+#endif /* UAPI_OPENTRUSTEE_SMC_H */
