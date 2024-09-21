@@ -55,15 +55,15 @@ static int __ap_to_vmr_prot(int ap)
         return 0;
 }
 
-#define USER_PTE 0
+#define USER_PTE   0
 #define KERNEL_PTE 1
 
 /*
  * the 3rd arg means the kind of PTE.
  */
-__maybe_unused static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind)
+__maybe_unused static int set_pte_flags(pte_t *entry, vmr_prop_t flags,
+                                        int kind)
 {
-
         BUG_ON(kind != USER_PTE && kind != KERNEL_PTE);
 
         /*
@@ -323,15 +323,17 @@ static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa,
 
         /* BLANK END */
         /* LAB 2 TODO 4 END */
+        dsb(ishst);
+        isb();
         return 0;
 }
 
 /* Map vm range in kernel */
 int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
-                              vmr_prop_t flags, __maybe_unused long *rss)
+                              vmr_prop_t flags)
 {
         return map_range_in_pgtbl_common(
-                pgtbl, va, pa, len, flags, KERNEL_PTE, rss);
+                pgtbl, va, pa, len, flags, KERNEL_PTE, NULL);
 }
 
 /* Map vm range in user */

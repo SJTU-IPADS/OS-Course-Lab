@@ -432,7 +432,8 @@ out_unlock:
         return ret;
 }
 
-int vmspace_unmap_pmo(struct vmspace *vmspace, vaddr_t va, struct pmobject *pmo)
+int vmspace_unmap_pmo(struct vmspace *vmspace, vaddr_t va, size_t len,
+                      struct pmobject *pmo)
 {
         int ret = 0;
 
