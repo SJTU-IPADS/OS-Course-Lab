@@ -21,6 +21,7 @@ ENTRY(_start)
 
 SECTIONS
 {
+    DWARF_DEBUG
     . = TEXT_OFFSET;
 
     img_start = .;
