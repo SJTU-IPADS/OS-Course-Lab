@@ -128,7 +128,7 @@ __maybe_unused static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind
  *
  */
 static int get_next_ptp(ptp_t *cur_ptp, u32 level, vaddr_t va, ptp_t **next_ptp,
-                        pte_t **pte, bool alloc)
+                        pte_t **pte, bool alloc, __maybe_unused long *rss)
 {
         u32 index = 0;
         pte_t *entry;
@@ -201,7 +201,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
 
         // L0 page table
         l0_ptp = (ptp_t *)pgtbl;
-        ret = get_next_ptp(l0_ptp, L0, va, &l1_ptp, &pte, false);
+        ret = get_next_ptp(l0_ptp, L0, va, &l1_ptp, &pte, false, NULL);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L0 no mapping.\n");
                 return ret;
@@ -209,7 +209,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         printk("L0 pte is 0x%lx\n", pte->pte);
 
         // L1 page table
-        ret = get_next_ptp(l1_ptp, L1, va, &l2_ptp, &pte, false);
+        ret = get_next_ptp(l1_ptp, L1, va, &l2_ptp, &pte, false, NULL);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L1 no mapping.\n");
                 return ret;
@@ -217,7 +217,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         printk("L1 pte is 0x%lx\n", pte->pte);
 
         // L2 page table
-        ret = get_next_ptp(l2_ptp, L2, va, &l3_ptp, &pte, false);
+        ret = get_next_ptp(l2_ptp, L2, va, &l3_ptp, &pte, false, NULL);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L2 no mapping.\n");
                 return ret;
@@ -225,7 +225,7 @@ int debug_query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         printk("L2 pte is 0x%lx\n", pte->pte);
 
         // L3 page table
-        ret = get_next_ptp(l3_ptp, L3, va, &phys_page, &pte, false);
+        ret = get_next_ptp(l3_ptp, L3, va, &phys_page, &pte, false, NULL);
         if (ret < 0) {
                 printk("[debug_query_in_pgtbl] L3 no mapping.\n");
                 return ret;
@@ -306,8 +306,9 @@ int query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry)
         return 0;
 }
 
-static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
-                       vmr_prop_t flags, int kind)
+static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa,
+                                     size_t len, vmr_prop_t flags, int kind,
+                                     __maybe_unused long *rss)
 {
         /* LAB 2 TODO 4 BEGIN */
         /*
@@ -326,19 +327,19 @@ static int map_range_in_pgtbl_common(void *pgtbl, vaddr_t va, paddr_t pa, size_t
 }
 
 /* Map vm range in kernel */
-int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags)
+int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
+                              vmr_prop_t flags, __maybe_unused long *rss)
 {
-	return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
-                                         KERNEL_PTE);
+        return map_range_in_pgtbl_common(
+                pgtbl, va, pa, len, flags, KERNEL_PTE, rss);
 }
 
 /* Map vm range in user */
-int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags)
+int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
+                       vmr_prop_t flags, __maybe_unused long *rss)
 {
-	return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
-                                         USER_PTE);
+        return map_range_in_pgtbl_common(
+                pgtbl, va, pa, len, flags, USER_PTE, rss);
 }
 
 /*
@@ -350,8 +351,8 @@ int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
  * 	- zero if lower page table page is not all empty
  * 	- nonzero otherwise
  */
-static int try_release_ptp(ptp_t *high_ptp, ptp_t *low_ptp,
-                                  int index)
+static int try_release_ptp(ptp_t *high_ptp, ptp_t *low_ptp, int index,
+                           __maybe_unused long *rss)
 {
         int i;
 
@@ -368,19 +369,22 @@ static int try_release_ptp(ptp_t *high_ptp, ptp_t *low_ptp,
         return 1;
 }
 
-__maybe_unused static void recycle_pgtable_entry(ptp_t *l0_ptp, ptp_t *l1_ptp, ptp_t *l2_ptp,
-                                  ptp_t *l3_ptp, vaddr_t va)
+__maybe_unused static void recycle_pgtable_entry(ptp_t *l0_ptp, ptp_t *l1_ptp,
+                                                 ptp_t *l2_ptp, ptp_t *l3_ptp,
+                                                 vaddr_t va,
+                                                 __maybe_unused long *rss)
 {
-        if (!try_release_ptp(l2_ptp, l3_ptp, GET_L2_INDEX(va)))
+        if (!try_release_ptp(l2_ptp, l3_ptp, GET_L2_INDEX(va), rss))
                 return;
 
-        if (!try_release_ptp(l1_ptp, l2_ptp, GET_L1_INDEX(va)))
+        if (!try_release_ptp(l1_ptp, l2_ptp, GET_L1_INDEX(va), rss))
                 return;
 
-        try_release_ptp(l0_ptp, l1_ptp, GET_L0_INDEX(va));
+        try_release_ptp(l0_ptp, l1_ptp, GET_L0_INDEX(va), rss);
 }
 
-int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len)
+int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len,
+                         __maybe_unused long *rss)
 {
         /* LAB 2 TODO 4 BEGIN */
         /*
@@ -454,7 +458,8 @@ void update_pte(pte_t *dest, unsigned int level, struct common_pte_t *src)
                                              AARCH64_MMU_ATTR_PAGE_UXN);
 
                 dest->l3_page.is_valid = src->valid;
-#if !(defined(CHCORE_PLAT_RASPI3) || defined(CHCORE_PLAT_RASPI4) || defined(CHCORE_PLAT_FT2000))
+#if !(defined(CHCORE_PLAT_RASPI3) || defined(CHCORE_PLAT_RASPI4) \
+      || defined(CHCORE_PLAT_FT2000))
                 /**
                  * Some platforms do not support setting AF and DBM
                  * by hardware, so on these platforms we ignored them.

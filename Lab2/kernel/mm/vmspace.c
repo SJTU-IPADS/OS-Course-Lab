@@ -149,7 +149,8 @@ static int cmp_vmr_and_range(const void *va_range, const struct rb_node *node)
  *  0: va belongs to node
  *  1: va > node
  */
-__maybe_unused static int cmp_vmr_and_va(const void *va, const struct rb_node *node)
+__maybe_unused static int cmp_vmr_and_va(const void *va,
+                                         const struct rb_node *node)
 {
         struct vmregion *vmr;
         vaddr_t vmr_start, vmr_end;
@@ -221,6 +222,7 @@ static int fill_page_table(struct vmspace *vmspace, struct vmregion *vmr)
         paddr_t pa;
         vaddr_t va;
         int ret;
+        long rss;
 
         pm_size = vmr->pmo->size;
         pa = vmr->pmo->start;
@@ -228,7 +230,8 @@ static int fill_page_table(struct vmspace *vmspace, struct vmregion *vmr)
 
         lock(&vmspace->pgtbl_lock);
         ret = map_range_in_pgtbl(
-                vmspace->pgtbl, va, pa, pm_size, vmr->perm);
+                vmspace->pgtbl, va, pa, pm_size, vmr->perm, &rss);
+        vmspace->rss += rss;
         unlock(&vmspace->pgtbl_lock);
 
         return ret;
@@ -360,8 +363,10 @@ static void __vmspace_unmap_range_pgtbl(struct vmspace *vmspace, vaddr_t va,
                                         size_t len)
 {
         if (len != 0) {
+                long rss = 0;
                 lock(&vmspace->pgtbl_lock);
-                unmap_range_in_pgtbl(vmspace->pgtbl, va, len);
+                unmap_range_in_pgtbl(vmspace->pgtbl, va, len, &rss);
+                vmspace->rss += rss;
                 unlock(&vmspace->pgtbl_lock);
                 flush_tlb_by_range(vmspace, va, len);
         }
@@ -451,7 +456,8 @@ out_unlock:
 }
 
 /* This function should be surrounded with the vmspace_lock. */
-__maybe_unused struct vmregion *find_vmr_for_va(struct vmspace *vmspace, vaddr_t addr)
+__maybe_unused struct vmregion *find_vmr_for_va(struct vmspace *vmspace,
+                                                vaddr_t addr)
 {
         /* LAB 2 TODO 6 BEGIN */
         /* Hint: Find the corresponding vmr for @addr in @vmspace */

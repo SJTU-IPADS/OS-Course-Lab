@@ -56,10 +56,10 @@
 
 /* functions */
 int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags);
+		       size_t len, vmr_prop_t flags, __maybe_unused long *rss);
 int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags);
-int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len);
+		       size_t len, vmr_prop_t flags, __maybe_unused long *rss);
+int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, __maybe_unused long *rss);
 int query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry);
 int mprotect_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, vmr_prop_t prop);
 void set_ttbr0_el1(paddr_t ttbr0);
