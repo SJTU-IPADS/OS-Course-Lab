@@ -1,2 +1,2 @@
 CompileFlags:
-  CompilationDatabasePath: build/kernel/
+  CompilationDatabase: build/kernel/
