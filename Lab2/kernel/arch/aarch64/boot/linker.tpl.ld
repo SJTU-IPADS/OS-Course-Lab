@@ -26,7 +26,7 @@ SECTIONS
 
     img_start = .;
     init : {
-        ${init_objects}
+        ${init_objects}(.text* .data* .rodata* .bss* .extable*)
     }
     . = ALIGN(4K);
     init_end = ABSOLUTE(.);
@@ -45,6 +45,8 @@ SECTIONS
 
     .rodata : {
         *(.rodata*)
+        . = ALIGN(4K);
+        ${incbin_linker_script}
     }
     . = ALIGN(4K);
     _edata = . - KERNEL_VADDR;

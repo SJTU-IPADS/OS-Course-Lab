@@ -16,6 +16,11 @@
 #define KERNEL_VADDR 0xffffff0000000000
 #define TEXT_OFFSET  0x80000
 
+/*
+ * DWARF debug sections.
+ * Symbols in the DWARF debugging sections are relative to
+ * the beginning of the section so we begin them at 0.
+ */
 #define DWARF_DEBUG							\
 		/* DWARF 1 */						\
 		.debug          0 : { *(.debug) }			\
@@ -56,5 +61,6 @@
 		.debug_names	0 : { *(.debug_names) }			\
 		.debug_rnglists	0 : { *(.debug_rnglists) }		\
 		.debug_str_offsets	0 : { *(.debug_str_offsets) }
+
 
 #endif /* IMAGE_H */
