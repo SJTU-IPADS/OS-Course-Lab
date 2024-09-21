@@ -197,6 +197,7 @@ chcore_add_subproject(
     BINARY_DIR ${_kernel_build_dir}
     INSTALL_DIR ${_kernel_install_dir}
     CMAKE_ARGS
+        ${_cache_args}
         ${_common_args}
         -DCHCORE_USER_INSTALL_DIR=${_system_services_install_dir} # used by kernel/CMakeLists.txt to incbin cpio files
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
