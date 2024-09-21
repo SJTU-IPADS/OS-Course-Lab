@@ -22,9 +22,9 @@
 > [!CODING] 练习题10
 > 完成 `kernel/mm/pgfault_handler.c` 中的 `handle_trans_fault` 函数中的 `LAB 2 TODO 7` 部分（函数内共有 3 处填空，不要遗漏），实现 `PMO_SHM` 和 `PMO_ANONYM` 的按需物理页分配。你可以阅读代码注释，调用你之前见到过的相关函数来实现功能。
 
-
 > [!CHALLENGE] 挑战题 11
-> `map_range_in_pgtbl_common`、`unmap_range_in_pgtbl` 函数中可以增加一个参数`rss` 参数来统计map映射中实际的物理内存使用量[^rss]，在本次挑战题中，你需要修改相关的代码来通过`Compute physical memory`测试，不实现该挑战题并不影响其他部分功能的实现及测试。如果你想检测是否通过此部分测试，需要修改kernel/config.cmake中`CHCORE_KERNEL_PM_USAGE_TEST`为 ON,同时需要对应调整练习题1-10中涉及接口的参数。
+> 我们在`map_range_in_pgtbl_common`、`unmap_range_in_pgtbl` 函数中预留了没有被使用过的参数`rss` 用来来统计map映射中实际的物理内存使用量[^rss]，
+> 你需要修改相关的代码来通过`Compute physical memory`测试，不实现该挑战题并不影响其他部分功能的实现及测试。如果你想检测是否通过此部分测试，需要修改.config中`CHCORE_KERNEL_PM_USAGE_TEST`为ON
 
 ---
 
