@@ -66,13 +66,6 @@ void main(paddr_t boot_flag, void *info)
 
 	kinfo("[ChCore] mm init finished\n");
 
-	void lab2_test_buddy(void);
-	lab2_test_buddy();
-	void lab2_test_kmalloc(void);
-	lab2_test_kmalloc();
-	void lab2_test_page_table(void);
-	lab2_test_page_table();
-
 	/* Mapping KSTACK into kernel page table. */
 	map_range_in_pgtbl_kernel((void*)((unsigned long)boot_ttbr1_l0 + KBASE), 
 			KSTACKx_ADDR(0),
