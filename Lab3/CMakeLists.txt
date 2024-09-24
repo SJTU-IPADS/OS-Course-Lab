@@ -11,7 +11,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(ChCore)
 
-set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/scripts/build/cmake)
+set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/../Scripts/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_cmake_script_dir}/Modules)
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/user)
 
@@ -52,35 +52,35 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/config.cmake)
 
 # --- LibC ---
 
-set(_libc_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/user/chcore-libc)
-set(_libc_build_dir ${CMAKE_CURRENT_BINARY_DIR}/user/chcore-libc)
+# set(_libc_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/user/chcore-libc)
+# set(_libc_build_dir ${CMAKE_CURRENT_BINARY_DIR}/user/chcore-libc)
 
 # Main targets for Libc
-chcore_add_subproject(
-    libc
-    SOURCE_DIR ${_libc_source_dir}
-    BINARY_DIR ${_libc_build_dir}
-    INSTALL_DIR ${_libc_install_dir}
-    CMAKE_ARGS
-        ${_common_args}
-        -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    CMAKE_CACHE_ARGS ${_cache_args}
-    INSTALL_COMMAND echo "Performed in CMake"
-    BUILD_ALWAYS TRUE)
+# chcore_add_subproject(
+#     libc
+#     SOURCE_DIR ${_libc_source_dir}
+#     BINARY_DIR ${_libc_build_dir}
+#     INSTALL_DIR ${_libc_install_dir}
+#     CMAKE_ARGS
+#         ${_common_args}
+#         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+#     CMAKE_CACHE_ARGS ${_cache_args}
+#     INSTALL_COMMAND echo "Performed in CMake"
+#     BUILD_ALWAYS TRUE)
 
 # Clean target for LibC
-add_custom_target(
-    libc-clean-trigger
-    WORKING_DIRECTORY ${_libc_build_dir}
-    COMMAND [ -d ${_libc_build_dir}/CMakeFiles ] && ${CMAKE_COMMAND} --build . --target  libc-clean || true
-    COMMAND /bin/rm -rf ${_libc_install_dir})
+# add_custom_target(
+#     libc-clean-trigger
+#     WORKING_DIRECTORY ${_libc_build_dir}
+#     COMMAND [ -d ${_libc_build_dir}/CMakeFiles ] && ${CMAKE_COMMAND} --build . --target  libc-clean || true
+#     COMMAND /bin/rm -rf ${_libc_install_dir})
 
 # --- Clean Ramdisk ---
 # Target to re-create ramdisk, must be run before build user-level stuffs
 
-set(build_ramdisk_dir ${CMAKE_CURRENT_BINARY_DIR}/ramdisk)
-file(REMOVE_RECURSE ${build_ramdisk_dir})
-file(MAKE_DIRECTORY ${build_ramdisk_dir})
+# set(build_ramdisk_dir ${CMAKE_CURRENT_BINARY_DIR}/ramdisk)
+# file(REMOVE_RECURSE ${build_ramdisk_dir})
+# file(MAKE_DIRECTORY ${build_ramdisk_dir})
 
 
 # --- Ramdisk ---
@@ -138,44 +138,43 @@ file(MAKE_DIRECTORY ${build_ramdisk_dir})
 #     DEPENDS libs
 #     BUILD_ALWAYS TRUE)
 
-set(_system_services_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/user/system-services)
-set(_system_services_build_dir ${CMAKE_CURRENT_BINARY_DIR}/user/system-services)
-set(_system_services_install_dir ${_system_services_build_dir})
+# set(_system_services_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/user/system-services)
+# set(_system_services_build_dir ${CMAKE_CURRENT_BINARY_DIR}/user/system-services)
+# set(_system_services_install_dir ${_system_services_build_dir})
 # set(_ci_config_dir ${CMAKE_CURRENT_SOURCE_DIR}/scripts/ci)
 
 # We embed a binary into other binaries by creating a source file named incbin_*.S, such files
 # need to be re-generated per compilation. So we have to remove them from build dir every time. And that's why it is not included in system-services-clean-trigger
-add_custom_target(
-    system-services-clean-incbin
-    COMMAND
-        [ -d ${_system_services_build_dir} ]
-        && find ${_system_services_build_dir} -type f -name "incbin_*.S.*" | xargs rm -f
-        || true)
+# add_custom_target(
+#     system-services-clean-incbin
+#     COMMAND
+#         [ -d ${_system_services_build_dir} ]
+#         && find ${_system_services_build_dir} -type f -name "incbin_*.S.*" | xargs rm -f
+#         || true)
 
 # Clean target for system services
-add_custom_target(
-    system-services-clean-trigger
-    WORKING_DIRECTORY ${_system_services_build_dir}
-    COMMAND [ -d ${_system_services_build_dir}/CMakeFiles ] && ${CMAKE_COMMAND} --build . --target system-services-clean || true
-)
+# add_custom_target(
+#     system-services-clean-trigger
+#     WORKING_DIRECTORY ${_system_services_build_dir}
+#     COMMAND [ -d ${_system_services_build_dir}/CMakeFiles ] && ${CMAKE_COMMAND} --build . --target system-services-clean || true
+# )
 
-chcore_add_subproject(
-    system-services
-    SOURCE_DIR ${_system_services_source_dir}
-    BINARY_DIR ${_system_services_build_dir}
-    INSTALL_DIR ${_system_services_install_dir}
-    CMAKE_ARGS
-        ${_common_args}
-        -DCHCORE_MUSL_LIBC_INSTALL_DIR=${_libc_install_dir} # used by user.cmake toolchain to find `musl-gcc`
-        -DCHCORE_RAMDISK_DIR=${build_ramdisk_dir}
-        # -DCHCORE_CI_CONFIG_DIR=${_ci_config_dir}
-        -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-        -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/user.cmake
-    CMAKE_CACHE_ARGS ${_cache_args}
-    INSTALL_COMMAND echo "Nothing to install"
-    # DEPENDS apps system-services-clean-incbin
-    DEPENDS libc system-services-clean-incbin
-    BUILD_ALWAYS TRUE)
+# chcore_add_subproject(
+#     system-services
+#     SOURCE_DIR ${_system_services_source_dir}
+#     BINARY_DIR ${_system_services_build_dir}
+#     INSTALL_DIR ${_system_services_install_dir}
+#     CMAKE_ARGS
+#         ${_common_args}
+#         -DCHCORE_MUSL_LIBC_INSTALL_DIR=${_libc_install_dir} # used by user.cmake toolchain to find `musl-gcc`
+#         -DCHCORE_RAMDISK_DIR=${build_ramdisk_dir}
+#         -DCHCORE_CI_CONFIG_DIR=${_ci_config_dir}
+#         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+#         -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/user.cmake
+#     CMAKE_CACHE_ARGS ${_cache_args}
+#     INSTALL_COMMAND echo "Nothing to install"
+#     DEPENDS apps system-services-clean-incbin
+#     BUILD_ALWAYS TRUE)
 
 # --- Kernel ---
 
@@ -202,8 +201,8 @@ chcore_add_subproject(
         -DCHCORE_USER_INSTALL_DIR=${_system_services_install_dir} # used by kernel/CMakeLists.txt to incbin cpio files
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
         -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/kernel.cmake
-    CMAKE_CACHE_ARGS ${_cache_args}
-    DEPENDS system-services kernel-clean-incbin
+        ${_cache_args}
+    DEPENDS kernel-clean-incbin
     BUILD_ALWAYS TRUE)
 
 # Generate toolchain file
@@ -230,7 +229,7 @@ add_custom_target(
     clean-all
 )
 
-add_dependencies(clean-all libc-clean-trigger system-services-clean-trigger)
+# add_dependencies(clean-all libc-clean-trigger system-services-clean-trigger)
 
 # --- Update Submodules (always run in local env) ---
 
