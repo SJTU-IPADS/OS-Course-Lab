@@ -25,6 +25,9 @@
 #include <mm/vmspace.h>
 #include <lib/printk.h>
 #include <sched/context.h>
+#ifdef CHCORE_OPENTRUSTEE
+#include <ipc/channel.h>
+#endif /* CHCORE_OPENTRUSTEE */
 
 const obj_deinit_func obj_deinit_tbl[TYPE_NR] = {
         [0 ... TYPE_NR - 1] = NULL,
@@ -35,8 +38,14 @@ const obj_deinit_func obj_deinit_tbl[TYPE_NR] = {
         [TYPE_IRQ] = irq_deinit,
         [TYPE_PMO] = pmo_deinit,
         [TYPE_VMSPACE] = vmspace_deinit,
+#ifdef CHCORE_OPENTRUSTEE
+        [TYPE_CHANNEL] = channel_deinit,
+        [TYPE_MSG_HDL] = msg_hdl_deinit,
+#endif /* CHCORE_OPENTRUSTEE */
         [TYPE_PTRACE] = ptrace_deinit
 };
+
+#define CAP_DEFAULT_RIGHTS (CAP_RIGHT_COPY | CAP_RIGHT_REVOKE_ALL)
 
 /*
  * Usage:
@@ -84,7 +93,7 @@ void obj_free(void *obj)
         kfree(object);
 }
 
-cap_t cap_alloc(struct cap_group *cap_group, void *obj)
+cap_t cap_alloc_with_rights(struct cap_group *cap_group, void *obj, cap_right_t rights)
 {
         struct object *object;
         struct slot_table *slot_table;
@@ -109,6 +118,10 @@ cap_t cap_alloc(struct cap_group *cap_group, void *obj)
         slot->slot_id = slot_id;
         slot->cap_group = cap_group;
         slot->object = object;
+        /* Assuming cap is allocated with CAP_DEFAULT_RIGHTS */
+        slot->rights = cap_rights_change(rights,
+                                         CAP_DEFAULT_RIGHTS,
+                                         CAP_DEFAULT_RIGHTS);
         list_add(&slot->copies, &object->copies_head);
 
         BUG_ON(object->refcount != 0);
@@ -123,6 +136,11 @@ out_free_slot_id:
 out_unlock_table:
         write_unlock(&slot_table->table_guard);
         return r;
+}
+
+cap_t cap_alloc(struct cap_group *cap_group, void *obj)
+{
+        return cap_alloc_with_rights(cap_group, obj, 0);
 }
 
 #ifndef TEST_OBJECT
@@ -241,8 +259,15 @@ int cap_free(struct cap_group *cap_group, cap_t slot_id)
         return __cap_free(cap_group, slot_id, false, false);
 }
 
+/*
+ * Use two masks, `mask` and `rest`, to describe the process of restricting
+ * capability's rights. The bits under `mask` of the copied capability's
+ * rights will be restricted into `rest`, while other bits will remain
+ * unchanged.
+ */
 cap_t cap_copy(struct cap_group *src_cap_group,
-               struct cap_group *dest_cap_group, cap_t src_slot_id)
+               struct cap_group *dest_cap_group, cap_t src_slot_id, 
+               cap_right_t mask, cap_right_t rest)
 {
         struct object_slot *src_slot, *dest_slot;
         cap_t r, dest_slot_id;
@@ -272,6 +297,17 @@ cap_t cap_copy(struct cap_group *src_cap_group,
                 goto out_unlock;
         }
 
+        if (!cap_rights_equal(src_slot->rights, CAP_RIGHT_COPY, CAP_RIGHT_COPY)) {
+                r = -ECAPBILITY;
+                goto out_unlock;
+        }
+
+        /* new rights cannot be greater than rights before */
+        if (!cap_rights_contain(src_slot->rights, rest, mask)) {
+                r = -EINVAL;
+                goto out_unlock;
+        }
+
         dest_slot_id = alloc_slot_id(dest_cap_group);
         if (dest_slot_id == -1) {
                 r = -ENOMEM;
@@ -288,6 +324,7 @@ cap_t cap_copy(struct cap_group *src_cap_group,
         dest_slot->slot_id = dest_slot_id;
         dest_slot->cap_group = dest_cap_group;
         dest_slot->object = src_slot->object;
+        dest_slot->rights = cap_rights_change(src_slot->rights, rest, mask);
 
         object = src_slot->object;
         lock(&object->copies_lock);
@@ -324,7 +361,12 @@ int cap_free_all(struct cap_group *cap_group, cap_t slot_id)
          * Since obj_get requires to pass the cap type
          * which is not available here, get_opaque is used instead.
          */
-        obj = get_opaque(cap_group, slot_id, false, 0);
+        obj = get_opaque(cap_group,
+                         slot_id,
+                         false,
+                         TYPE_NO_TYPE,
+                         CAP_RIGHT_REVOKE_ALL,
+                         CAP_RIGHT_REVOKE_ALL);
 
         if (!obj) {
                 r = -ECAPBILITY;
@@ -360,25 +402,34 @@ out_fail:
         return r;
 }
 
+#define MAX_TRANSFER_NUM 16
+
 /* Transfer a number (@nr_caps) of caps from current_cap_group to
- * dest_group_cap. */
+ * dest_group_cap. Use two masks, `mask` and `rest`, to describe the process
+ * of restricting capability's rights. See details in `cap_copy`.
+ */
 int sys_transfer_caps(cap_t dest_group_cap, unsigned long src_caps_buf,
-                      int nr_caps, unsigned long dst_caps_buf)
+                      int nr_caps, unsigned long dst_caps_buf,
+                      unsigned long mask_buf, unsigned long rest_buf)
 {
         struct cap_group *dest_cap_group;
         int i;
-        int *src_caps;
-        int *dst_caps;
-        size_t size;
+        cap_t src_caps[MAX_TRANSFER_NUM], dst_caps[MAX_TRANSFER_NUM];
+        cap_right_t masks[MAX_TRANSFER_NUM], rests[MAX_TRANSFER_NUM];
+        size_t size, right_size;
         int ret;
 
-#define MAX_TRANSFER_NUM 16
         if ((nr_caps <= 0) || (nr_caps > MAX_TRANSFER_NUM))
                 return -EINVAL;
 
-        size = sizeof(int) * nr_caps;
+        size = sizeof(cap_t) * nr_caps;
         if ((check_user_addr_range(src_caps_buf, size) != 0)
             || (check_user_addr_range(dst_caps_buf, size) != 0))
+                return -EINVAL;
+        
+        right_size = sizeof(cap_right_t) * nr_caps;
+        if (check_user_addr_range(mask_buf, right_size) != 0
+            || check_user_addr_range(rest_buf, right_size) != 0)
                 return -EINVAL;
 
         dest_cap_group =
@@ -386,34 +437,47 @@ int sys_transfer_caps(cap_t dest_group_cap, unsigned long src_caps_buf,
         if (!dest_cap_group)
                 return -ECAPBILITY;
 
-        src_caps = kmalloc(size);
-        dst_caps = kmalloc(size);
+        if (mask_buf && rest_buf) {
+                ret = copy_from_user(masks, (void *)mask_buf, right_size);
+                if (ret) {
+                        ret = -EINVAL;
+                        goto out_fail;
+                }
+                ret = copy_from_user(rests, (void *)rest_buf, right_size);
+                if (ret) {
+                        ret = -EINVAL;
+                        goto out_fail;
+                }
+        } else {
+                for (i = 0; i < nr_caps; i++) {
+                        masks[i] = CAP_RIGHT_NO_RIGHTS;
+                        rests[i] = CAP_RIGHT_NO_RIGHTS;
+                }
+        }
 
         /* get args from user buffer @src_caps_buf */
         ret = copy_from_user((void *)src_caps, (void *)src_caps_buf, size);
         if (ret) {
                 ret = -EINVAL;
-                goto out_obj_put;
+                goto out_fail;
         }
 
         for (i = 0; i < nr_caps; ++i) {
-                dst_caps[i] = cap_copy(
-                        current_cap_group, dest_cap_group, src_caps[i]);
+                dst_caps[i] = cap_copy(current_cap_group,
+                                       dest_cap_group,
+                                       src_caps[i],
+                                       masks[i],
+                                       rests[i]);
         }
 
         /* write results to user buffer @dst_caps_buf */
         ret = copy_to_user((void *)dst_caps_buf, (void *)dst_caps, size);
         if (ret) {
                 ret = -EINVAL;
-                goto out_obj_put;
+                goto out_fail;
         }
 
-        kfree(src_caps);
-        kfree(dst_caps);
-
-        obj_put(dest_cap_group);
-        return 0;
-out_obj_put:
+out_fail:
         obj_put(dest_cap_group);
         return ret;
 }

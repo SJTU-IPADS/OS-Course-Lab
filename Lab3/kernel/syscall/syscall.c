@@ -34,6 +34,7 @@
 #include <irq/irq.h>
 #include <common/poweroff.h>
 #include <uapi/get_system_info.h>
+#include <syscall/opentrustee.h>
 
 #ifdef CHCORE_ARCH_X86_64
 #include <arch/pci.h>
@@ -221,5 +222,7 @@ const void *syscall_table[NR_SYSCALL] = {
         /* - futex */
         [CHCORE_SYS_futex] = sys_futex,      
         [CHCORE_SYS_set_tid_address] = sys_set_tid_address,
+
+        [CHCORE_SYS_opentrustee] = sys_opentrustee,
 
 };

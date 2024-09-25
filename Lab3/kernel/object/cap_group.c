@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include <object/cap_group.h>
@@ -74,8 +74,20 @@ out_fail:
         return r;
 }
 
-int cap_group_init(struct cap_group *cap_group, unsigned int size,
-                   badge_t badge)
+struct cap_group_args {
+        badge_t badge;
+        vaddr_t name;
+        unsigned long name_len;
+        unsigned long pcid;
+        int pid;
+#ifdef CHCORE_OPENTRUSTEE
+        vaddr_t puuid;
+        unsigned long heap_size;
+#endif /* CHCORE_OPENTRUSTEE */
+};
+
+__maybe_unused static int cap_group_init_common(struct cap_group *cap_group, unsigned int size,
+                                 badge_t badge)
 {
         struct slot_table *slot_table = &cap_group->slot_table;
 
@@ -92,7 +104,51 @@ int cap_group_init(struct cap_group *cap_group, unsigned int size,
         /* Set the futex info for the new cap group */
         futex_init(cap_group);
 
+#ifdef CHCORE_OPENTRUSTEE
+        cap_group->heap_size_limit = (size_t)-1;
+#endif /* CHCORE_OPENTRUSTEE */
+
         return 0;
+}
+
+__maybe_unused static int cap_group_init_user(struct cap_group *cap_group, unsigned int size,
+                               struct cap_group_args *args)
+{
+#ifdef CHCORE_OPENTRUSTEE
+        if (check_user_addr_range((vaddr_t)args.puuid, sizeof(TEE_UUID)) != 0)
+                return -EINVAL;
+#endif /* CHCORE_OPENTRUSTEE */
+
+        if (check_user_addr_range((vaddr_t)args->name, (size_t)args->name_len)
+            != 0)
+                return -EINVAL;
+
+        cap_group->pid = args->pid;
+#ifdef CHCORE_OPENTRUSTEE
+        new_cap_group->heap_size_limit = args.heap_size;
+        /* pid used in OH-TEE */
+        if (args.puuid) {
+                copy_from_user(&new_cap_group->uuid,
+                               (void *)args.puuid,
+                               sizeof(TEE_UUID));
+        } else {
+                memset(&new_cap_group->uuid, 0, sizeof(TEE_UUID));
+        }
+#endif /* CHCORE_OPENTRUSTEE */
+
+        cap_group->notify_recycler = 0;
+        /* Set the cap_group_name (process_name) for easing debugging */
+        memset(cap_group->cap_group_name, 0, MAX_GROUP_NAME_LEN + 1);
+        if (args->name_len > MAX_GROUP_NAME_LEN)
+                args->name_len = MAX_GROUP_NAME_LEN;
+
+        if (copy_from_user(cap_group->cap_group_name,
+                           (void *)args->name,
+                           args->name_len)
+            != 0) {
+                return -EINVAL;
+        }
+        return cap_group_init_common(cap_group, size, args->badge);
 }
 
 void cap_group_deinit(void *ptr)
@@ -183,7 +239,7 @@ out_fail:
 }
 
 void *get_opaque(struct cap_group *cap_group, cap_t slot_id, bool type_valid,
-                 int type)
+                 int type, cap_right_t mask, cap_right_t rights)
 {
         struct slot_table *slot_table = &cap_group->slot_table;
         struct object_slot *slot;
@@ -199,7 +255,8 @@ void *get_opaque(struct cap_group *cap_group, cap_t slot_id, bool type_valid,
         BUG_ON(slot == NULL);
         BUG_ON(slot->object == NULL);
 
-        if (!type_valid || slot->object->type == type) {
+        if ((!type_valid || slot->object->type == type)
+            && cap_rights_equal(slot->rights, rights, mask)) {
                 obj = slot->object->opaque;
         } else {
                 obj = NULL;
@@ -216,9 +273,19 @@ out_unlock_table:
 /* Get an object reference through its cap.
  * The interface will also add the object's refcnt by one.
  */
+void *obj_get_with_rights(struct cap_group *cap_group, cap_t slot_id, int type,
+                          cap_right_t mask, cap_right_t rights)
+{
+        return get_opaque(cap_group, slot_id, true, type, mask, rights);
+}
+
 void *obj_get(struct cap_group *cap_group, cap_t slot_id, int type)
 {
-        return get_opaque(cap_group, slot_id, true, type);
+        return obj_get_with_rights(cap_group,
+                                   slot_id,
+                                   type,
+                                   CAP_RIGHT_NO_RIGHTS,
+                                   CAP_RIGHT_NO_RIGHTS);
 }
 
 /* This is a pair interface of obj_get.
@@ -240,11 +307,11 @@ void obj_put(void *obj)
         }
 }
 
-/* 
+/*
  * This interface will add an object's refcnt by one.
  * If you do not have the cap of an object, you can
  * use this interface to just claim a reference.
- * 
+ *
  * Be sure to call obj_put when releasing the reference.
  */
 void obj_ref(void *obj)
@@ -255,13 +322,6 @@ void obj_ref(void *obj)
         atomic_fetch_add_long(&object->refcount, 1);
 }
 
-struct cap_group_args {
-	badge_t badge;
-	vaddr_t name;
-	unsigned long name_len;
-	unsigned long pcid;
-};
-
 cap_t sys_create_cap_group(unsigned long cap_group_args_p)
 {
         struct cap_group *new_cap_group;
@@ -271,22 +331,23 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
         struct cap_group_args args = {0};
 
         r = hook_sys_create_cap_group(cap_group_args_p);
-        if (r != 0) return r;
+        if (r != 0)
+                return r;
 
         if (check_user_addr_range((vaddr_t)cap_group_args_p,
-                sizeof(struct cap_group_args)) != 0)
+                                  sizeof(struct cap_group_args))
+            != 0)
                 return -EINVAL;
 
-        r = copy_from_user(&args, (void *)cap_group_args_p, sizeof(struct cap_group_args));
+        r = copy_from_user(
+                &args, (void *)cap_group_args_p, sizeof(struct cap_group_args));
         if (r) {
                 return -EINVAL;
         }
 
-        if (check_user_addr_range((vaddr_t)args.name, (size_t)args.name_len) != 0)
-                return -EINVAL;
-
         /* cap current cap_group */
         /* LAB 3 TODO BEGIN */
+        new_cap_group = obj_alloc(TYPE_CAP_GROUP, sizeof(*new_cap_group));
 
         /* LAB 3 TODO END */
         if (!new_cap_group) {
@@ -294,7 +355,7 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
                 goto out_fail;
         }
         /* LAB 3 TODO BEGIN */
-        /* initialize cap group */
+        /* initialize cap group from user*/
 
         /* LAB 3 TODO END */
 
@@ -305,9 +366,14 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
         }
 
         /* 1st cap is cap_group */
-        if (cap_copy(current_thread->cap_group, new_cap_group, cap)
+        if (cap_copy(current_thread->cap_group,
+                     new_cap_group,
+                     cap,
+                     CAP_RIGHT_NO_RIGHTS,
+                     CAP_RIGHT_NO_RIGHTS)
             != CAP_GROUP_OBJ_ID) {
-                kwarn("%s: cap_copy fails or cap[0] is not cap_group\n", __func__);
+                kwarn("%s: cap_copy fails or cap[0] is not cap_group\n",
+                      __func__);
                 r = -ECAPBILITY;
                 goto out_free_cap_grp_current;
         }
@@ -326,23 +392,9 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
 
         r = cap_alloc(new_cap_group, vmspace);
         if (r != VMSPACE_OBJ_ID) {
-                kwarn("%s: cap_copy fails or cap[1] is not vmspace\n", __func__);
+                kwarn("%s: cap_copy fails or cap[1] is not vmspace\n",
+                      __func__);
                 r = -ECAPBILITY;
-                goto out_free_obj_vmspace;
-        }
-
-        new_cap_group->notify_recycler = 0;
-
-        /* Set the cap_group_name (process_name) for easing debugging */
-        memset(new_cap_group->cap_group_name, 0, MAX_GROUP_NAME_LEN + 1);
-        if (args.name_len > MAX_GROUP_NAME_LEN)
-                args.name_len = MAX_GROUP_NAME_LEN;
-        
-        r = copy_from_user(new_cap_group->cap_group_name,
-                           (void *)args.name,
-                           args.name_len);
-        if (r) {
-                r = -EINVAL;
                 goto out_free_obj_vmspace;
         }
 
@@ -361,17 +413,19 @@ out_fail:
 /* This is for creating the first (init) user process. */
 struct cap_group *create_root_cap_group(char *name, size_t name_len)
 {
-        struct cap_group *cap_group;
-        struct vmspace *vmspace;
+        struct cap_group *cap_group = NULL;
+        struct vmspace *vmspace = NULL;
         cap_t slot_id;
 
         /* LAB 3 TODO BEGIN */
+        UNUSED(vmspace);
+        UNUSED(cap_group);
 
         /* LAB 3 TODO END */
         BUG_ON(!cap_group);
 
         /* LAB 3 TODO BEGIN */
-        /* initialize cap group, use ROOT_CAP_GROUP_BADGE */
+        /* initialize cap group with common, use ROOT_CAP_GROUP_BADGE */
 
         /* LAB 3 TODO END */
         slot_id = cap_alloc(cap_group, cap_group);
@@ -387,7 +441,7 @@ struct cap_group *create_root_cap_group(char *name, size_t name_len)
         vmspace_init(vmspace, ROOT_PROCESS_PCID);
 
         /* LAB 3 TODO BEGIN */
-        
+
         /* LAB 3 TODO END */
 
         BUG_ON(slot_id != VMSPACE_OBJ_ID);

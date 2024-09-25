@@ -10,6 +10,7 @@
  * Mulan PSL v2 for more details.
  */
 
+#include <common/errno.h>
 #include <object/object.h>
 #include <object/thread.h>
 #include <object/memory.h>
@@ -18,6 +19,7 @@
 #include <mm/mm.h>
 #include <mm/kmalloc.h>
 #include <common/lock.h>
+#include <common/util.h>
 #include <arch/mmu.h>
 #include <object/user_fault.h>
 #include <syscall/syscall_hooks.h>
@@ -29,12 +31,21 @@ static int pmo_init(struct pmobject *pmo, pmo_type_t type, size_t len,
                     paddr_t paddr);
 void pmo_deinit(void *pmo_ptr);
 
+CAP_ALLOC_IMPL(create_pmo,
+               TYPE_PMO,
+               sizeof(struct pmobject),
+               CAP_ALLOC_OBJ_FUNC(pmo_init, type, len, paddr),
+               CAP_ALLOC_OBJ_FUNC(pmo_deinit),
+               pmo_type_t type,
+               size_t len,
+               paddr_t paddr);
+
 /*
  * @paddr is only used when creating device pmo;
  * @new_pmo is output arg if it is not NULL.
  */
 cap_t create_pmo(size_t size, pmo_type_t type, struct cap_group *cap_group,
-                 paddr_t paddr, struct pmobject **new_pmo)
+                 paddr_t paddr, struct pmobject **new_pmo, cap_right_t rights)
 {
         cap_t r, cap;
         struct pmobject *pmo;
@@ -49,7 +60,7 @@ cap_t create_pmo(size_t size, pmo_type_t type, struct cap_group *cap_group,
         if (r)
                 goto out_free_obj;
 
-        cap = cap_alloc(cap_group, pmo);
+        cap = cap_alloc_with_rights(cap_group, pmo, rights);
         if (cap < 0) {
                 r = cap;
                 goto out_pmo_deinit;
@@ -68,12 +79,136 @@ out_fail:
         return r;
 }
 
-cap_t create_device_pmo(paddr_t paddr, unsigned long size)
+cap_t create_device_pmo(paddr_t paddr, unsigned long size, cap_right_t rights)
 {
-        return create_pmo(size, PMO_DEVICE, current_cap_group, paddr, NULL);
+        return CAP_ALLOC_CALL(create_pmo, current_cap_group, rights, PMO_DEVICE, size, paddr);
 }
 
-cap_t sys_create_pmo(unsigned long size, pmo_type_t type, unsigned long val)
+#ifdef CHCORE_OPENTRUSTEE
+cap_t create_tz_ns_pmo(paddr_t paddr, unsigned long size, cap_right_t rights)
+{
+        return CAP_ALLOC_CALL(create_pmo, current_cap_group, rights, PMO_TZ_NS, size, paddr);
+}
+
+int tz_shm_pmo_init(struct pmobject *pmo, unsigned long size,
+                    struct cap_group *target, struct tee_uuid *uuid)
+{
+        int ret;
+        struct tee_shm_private *priv;
+
+        priv = kmalloc(sizeof(*priv));
+        if (priv == NULL) {
+                ret = -ENOMEM;
+                goto out_fail_kmalloc;
+        }
+        priv->owner = target;
+        memcpy(&priv->uuid, uuid, sizeof(struct tee_uuid));
+
+        ret = pmo_init(pmo, PMO_TZ_SHM, size, 0);
+
+        if (ret < 0) {
+                goto out_fail_pmo_init;
+        }
+        pmo->private = priv;
+
+        return 0;
+
+out_fail_pmo_init:
+        kfree(priv);
+out_fail_kmalloc:
+        return ret;
+}
+
+CAP_ALLOC_IMPL(create_tz_shm_pmo,
+               TYPE_PMO,
+               sizeof(struct pmobject),
+               CAP_ALLOC_OBJ_FUNC(tz_shm_pmo_init, size, target, uuid),
+               CAP_ALLOC_OBJ_FUNC(pmo_deinit),
+               unsigned long size,
+               struct cap_group *target,
+               struct tee_uuid *uuid);
+
+struct tz_shm_info {
+        cap_t target_cap_group;
+        struct tee_uuid *uuid;
+        cap_t *self_cap;
+};
+cap_t create_tz_shm_pmo(struct tz_shm_info *info, unsigned long size, cap_right_t rights)
+{
+        cap_t ret;
+        struct cap_group *target_cap_group;
+        struct pmobject *pmobject;
+        cap_t self_pmo, target_pmo;
+        struct tee_uuid kuuid;
+        bool success = false;
+        cap_t cap_group = info->target_cap_group;
+        struct tee_uuid *uuid = info->uuid;
+        cap_t *self_cap = info->self_cap;
+
+        if (check_user_addr_range((vaddr_t)uuid, sizeof(*uuid)) != 0) {
+                ret = -EINVAL;
+                goto out;
+        }
+        if (check_user_addr_range((vaddr_t)self_cap, sizeof(*self_cap)) != 0) {
+                ret = -EINVAL;
+                goto out;
+        }
+
+        if (copy_from_user(&kuuid, uuid, sizeof(*uuid))) {
+                ret = -EFAULT;
+                goto out;
+        }
+
+        target_cap_group =
+                obj_get(current_cap_group, cap_group, TYPE_CAP_GROUP);
+        if (target_cap_group == NULL) {
+                ret = -ECAPBILITY;
+                goto out;
+        }
+        
+        target_pmo = CAP_ALLOC_CALL(create_tz_shm_pmo,
+                                    target_cap_group,
+                                    rights,
+                                    size,
+                                    target_cap_group,
+                                    &kuuid);
+        if (target_pmo < 0) {
+                ret = target_pmo;
+                goto out_put_cap_group;
+        }
+
+        self_pmo = cap_copy(target_cap_group,
+                            current_cap_group,
+                            target_pmo,
+                            CAP_RIGHT_NO_RIGHTS,
+                            CAP_RIGHT_NO_RIGHTS);
+        if (self_pmo < 0) {
+                ret = self_pmo;
+                goto out_destroy_pmo;
+        }
+        if (copy_to_user(self_cap, &self_pmo, sizeof(self_pmo))) {
+                ret = -EFAULT;
+                goto out_free_self_pmo_cap;
+        }
+        success = true;
+        ret = target_pmo;
+
+out_free_self_pmo_cap:
+        if (!success) {
+                cap_free(current_cap_group, self_pmo);
+        }
+out_destroy_pmo:
+        if (!success) {
+                cap_free(target_cap_group, target_pmo);
+        }
+out_put_cap_group:
+        obj_put(target_cap_group);
+out:
+        return ret;
+}
+#endif /* CHCORE_OPENTRUSTEE */
+
+cap_t sys_create_pmo(unsigned long size, pmo_type_t type, unsigned long val, cap_right_t rights)
 {
         cap_t r;
 
@@ -84,10 +219,18 @@ cap_t sys_create_pmo(unsigned long size, pmo_type_t type, unsigned long val)
 
         switch (type) {
         case PMO_DEVICE:
-                r = create_device_pmo((paddr_t)val, size);
+                r = create_device_pmo((paddr_t)val, size, rights);
                 break;
+#ifdef CHCORE_OPENTRUSTEE
+        case PMO_TZ_NS:
+                r = create_tz_ns_pmo((paddr_t)val, size, rights);
+                break;
+        case PMO_TZ_SHM:
+                r = create_tz_shm_pmo((struct tz_shm_info *)val, size, rights);
+                break;
+#endif /* CHCORE_OPENTRUSTEE */
         default:
-                r = create_pmo(size, type, current_cap_group, 0, NULL);
+                r = CAP_ALLOC_CALL(create_pmo, current_cap_group, rights, type, size, 0);
                 break;
         }
         
@@ -116,7 +259,17 @@ static int read_write_pmo(cap_t pmo_cap, unsigned long offset,
                 goto out_fail;
         }
 
-        pmo = obj_get(current_cap_group, pmo_cap, TYPE_PMO);
+        if (op_type == READ) {
+                pmo = obj_get_with_rights(
+                        current_cap_group, pmo_cap, TYPE_PMO, PMO_READ, PMO_READ);
+        } else if (op_type == WRITE) {
+                pmo = obj_get_with_rights(
+                        current_cap_group, pmo_cap, TYPE_PMO, PMO_WRITE, PMO_WRITE);
+        } else {
+                r = -EINVAL;
+                goto out_fail;
+        }
+
         if (!pmo) {
                 r = -ECAPBILITY;
                 goto out_fail;
@@ -284,7 +437,8 @@ int sys_map_pmo(cap_t target_cap_group_cap, cap_t pmo_cap, unsigned long addr,
         struct cap_group *target_cap_group;
         int r;
 
-        pmo = obj_get(current_cap_group, pmo_cap, TYPE_PMO);
+        pmo = obj_get_with_rights(
+                current_cap_group, pmo_cap, TYPE_PMO, perm, perm);
         if (!pmo) {
                 r = -ECAPBILITY;
                 goto out_fail;
@@ -309,6 +463,21 @@ int sys_map_pmo(cap_t target_cap_group_cap, cap_t pmo_cap, unsigned long addr,
         vmspace = obj_get(target_cap_group, VMSPACE_OBJ_ID, TYPE_VMSPACE);
         BUG_ON(vmspace == NULL);
 
+#ifdef CHCORE_OPENTRUSTEE
+        if (pmo->type == PMO_TZ_SHM) {
+                struct tee_shm_private *priv;
+                priv = (struct tee_shm_private *)pmo->private;
+                if (priv->owner != target_cap_group
+                    && memcmp(&current_cap_group->uuid,
+                              &priv->uuid,
+                              sizeof(struct tee_uuid))
+                               != 0) {
+                        r = -EINVAL;
+                        goto out_obj_put_vmspace;
+                }
+        }
+#endif /* CHCORE_OPENTRUSTEE */
+
         r = vmspace_map_range(vmspace, addr, len, perm, pmo);
         if (r != 0) {
                 r = -EPERM;
@@ -321,7 +490,11 @@ int sys_map_pmo(cap_t target_cap_group_cap, cap_t pmo_cap, unsigned long addr,
          */
         if (target_cap_group != current_cap_group)
                 /* if using cap_move, we need to consider remove the mappings */
-                r = cap_copy(current_cap_group, target_cap_group, pmo_cap);
+                r = cap_copy(current_cap_group,
+                             target_cap_group,
+                             pmo_cap,
+                             PMO_ALL_RIGHTS,
+                             perm);
         else
                 r = 0;
 
@@ -369,7 +542,8 @@ out_fail:
         return r;
 }
 
-int sys_unmap_pmo(cap_t target_cap_group_cap, cap_t pmo_cap, unsigned long addr)
+int sys_unmap_pmo(cap_t target_cap_group_cap, cap_t pmo_cap,
+                  unsigned long addr, size_t size)
 {
         struct vmspace *vmspace;
         struct pmobject *pmo;
@@ -380,6 +554,10 @@ int sys_unmap_pmo(cap_t target_cap_group_cap, cap_t pmo_cap, unsigned long addr)
         pmo = obj_get(current_cap_group, pmo_cap, TYPE_PMO);
         if (!pmo)
                 return -ECAPBILITY;
+
+        /* set default length (-1) to pmo_size */
+        if (likely(size == -1))
+                size = pmo->size;
 
         /* map the pmo to the target cap_group */
         target_cap_group = obj_get(
@@ -395,7 +573,7 @@ int sys_unmap_pmo(cap_t target_cap_group_cap, cap_t pmo_cap, unsigned long addr)
                 goto out_obj_put_cap_group;
         }
 
-        ret = vmspace_unmap_pmo(vmspace, addr, pmo);
+        ret = vmspace_unmap_pmo(vmspace, addr, size, pmo);
 
         obj_put(vmspace);
 
@@ -409,7 +587,7 @@ out_obj_put_pmo:
 
 /*
  * Initialize an allocated pmobject.
- * @paddr is only used when @type == PMO_DEVICE.
+ * @paddr is only used when @type == PMO_DEVICE || @type == PMO_TZ_NS.
  */
 static int pmo_init(struct pmobject *pmo, pmo_type_t type, size_t len,
                     paddr_t paddr)
@@ -424,6 +602,9 @@ static int pmo_init(struct pmobject *pmo, pmo_type_t type, size_t len,
         pmo->type = type;
 
         switch (type) {
+#ifdef CHCORE_OPENTRUSTEE
+        case PMO_TZ_SHM:
+#endif /* CHCORE_OPENTRUSTEE */
         case PMO_DATA:
         case PMO_DATA_NOCACHE: {
                 /*
@@ -481,6 +662,7 @@ static int pmo_init(struct pmobject *pmo, pmo_type_t type, size_t len,
                  */
                 pmo->radix = new_radix();
                 init_radix(pmo->radix);
+                pmo->private = NULL;
                 break;
         }
         case PMO_DEVICE: {
@@ -492,6 +674,12 @@ static int pmo_init(struct pmobject *pmo, pmo_type_t type, size_t len,
                 pmo->start = paddr;
                 break;
         }
+#ifdef CHCORE_OPENTRUSTEE
+        case PMO_TZ_NS: {
+                pmo->start = paddr;
+                break;
+        }
+#endif /* CHCORE_OPENTRUSTEE */
         case PMO_FORBID: {
                 /* This type marks the corresponding area cannot be accessed */
                 break;
@@ -535,7 +723,7 @@ static void remove_pmo_mappings(struct pmobject *pmo)
 {
         struct vmregion *vmr, *tmp;
         for_each_in_list_safe(vmr, tmp, mapping_list_node, &pmo->mapping_list) {
-                vmspace_unmap_pmo(vmr->vmspace, vmr->start, pmo);
+                vmspace_unmap_pmo(vmr->vmspace, vmr->start, vmr->size, pmo);
         }
 }
 
@@ -550,6 +738,11 @@ void pmo_deinit(void *pmo_ptr)
         remove_pmo_mappings(pmo);
 
         switch (type) {
+#ifdef CHCORE_OPENTRUSTEE
+        case PMO_TZ_SHM:
+                kfree(pmo->private);
+                /* Fall through. See case PMO_TZ_SHM in pmo_init. */
+#endif /* CHCORE_OPENTRUSTEE */
         case PMO_DATA:
         case PMO_DATA_NOCACHE: {
                 paddr_t start_addr;
@@ -577,6 +770,11 @@ void pmo_deinit(void *pmo_ptr)
                 break;
         }
         case PMO_DEVICE:
+#ifdef CHCORE_OPENTRUSTEE
+        case PMO_TZ_NS: {
+                break;
+        }
+#endif /* CHCORE_OPENTRUSTEE */
         case PMO_FORBID: {
                 break;
         }
@@ -608,12 +806,16 @@ unsigned long sys_handle_brk(unsigned long addr, unsigned long heap_start)
         BUG_ON(vmspace == NULL);
         lock(&vmspace->vmspace_lock);
         if (addr == 0) {
+                if (likely(vmspace->heap_boundary_vmr)) {
+                        retval = vmspace->heap_boundary_vmr->start + vmspace->heap_boundary_vmr->size;
+                        goto out;
+                }
                 retval = heap_start;
 
                 /* create the heap pmo for the user process */
                 len = 0;
                 pmo_cap =
-                        create_pmo(len, PMO_ANONYM, current_cap_group, 0, &pmo);
+                        create_pmo(len, PMO_ANONYM, current_cap_group, 0, &pmo, PMO_ALL_RIGHTS);
                 if (pmo_cap < 0) {
                         kinfo("Fail: cannot create the initial heap pmo.\n");
                         BUG_ON(1);
@@ -716,6 +918,12 @@ int sys_handle_mprotect(unsigned long addr, unsigned long length, int prot)
          * Note that only the first and last vmrs may be split.
          */
         vmr = find_vmr_for_va(vmspace, addr);
+        
+        if (!vmr) {
+                ret = -EINVAL;
+                goto out;
+        }
+
         if (addr > vmr->start) {
                 ret = split_vmr_locked(vmspace, vmr, addr);
                 if (ret) {
@@ -758,7 +966,23 @@ out:
         return ret;
 }
 
-unsigned long sys_get_free_mem_size(void)
+int sys_get_free_mem_size(struct free_mem_info *info)
 {
-        return get_free_mem_size();
+        struct free_mem_info kbuf;
+        int ret = 0;
+
+        if (check_user_addr_range((vaddr_t)info, sizeof(struct free_mem_info)) != 0) {
+                return -EINVAL;
+        }
+
+        kbuf.free_mem_size = get_free_mem_size();
+        kbuf.total_mem_size = get_total_mem_size();
+
+        ret = copy_to_user(info, &kbuf, sizeof(struct free_mem_info));
+        if (ret < 0) {
+                ret = -EINVAL;
+                return ret;
+        }
+        
+        return 0;
 }
