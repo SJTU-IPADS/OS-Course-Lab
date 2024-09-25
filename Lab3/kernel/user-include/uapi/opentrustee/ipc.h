@@ -10,17 +10,14 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#pragma once
+#ifndef UAPI_OPENTRUSTEE_IPC_H
+#define UAPI_OPENTRUSTEE_IPC_H
 
-typedef int cap_t;
-typedef int badge_t;
-/*
- * Rights of capabilities.
- * Rights can be divided into two types, one is object-specific rights (such
- * as PMO_READ, PMO_WRITE, PMO_EXEC, PMO_COW), and the other is some general
- * rights (CAP_RIGHT_COPY and CAP_RIGHT_REVOKE_ALL) to define capability
- * actions.
- * NOTE: When defining new capability rights, it is necessary to be careful
- * NOT to cause CONFLICTS between the above two types of rights.
- */
-typedef int cap_right_t;
+#define PID_OFFSET 16U
+#define PID_MASK   ((0x1 << PID_OFFSET) - 1)
+#define pid_to_taskid(tid, pid) \
+        (((u32)(tid) << PID_OFFSET) | ((u32)(pid)&PID_MASK))
+#define taskid_to_pid(task_id) ((task_id)&PID_MASK)
+#define taskid_to_tid(task_id) (((task_id) >> PID_OFFSET) & TID_MASK)
+
+#endif /* UAPI_OPENTRUSTEE_IPC_H */

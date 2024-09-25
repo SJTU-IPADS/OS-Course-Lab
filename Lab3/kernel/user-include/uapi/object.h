@@ -10,17 +10,13 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#pragma once
+#ifndef UAPI_OBJECT_H
+#define UAPI_OBJECT_H
 
-typedef int cap_t;
-typedef int badge_t;
-/*
- * Rights of capabilities.
- * Rights can be divided into two types, one is object-specific rights (such
- * as PMO_READ, PMO_WRITE, PMO_EXEC, PMO_COW), and the other is some general
- * rights (CAP_RIGHT_COPY and CAP_RIGHT_REVOKE_ALL) to define capability
- * actions.
- * NOTE: When defining new capability rights, it is necessary to be careful
- * NOT to cause CONFLICTS between the above two types of rights.
- */
-typedef int cap_right_t;
+#include <uapi/types.h>
+
+#define CAP_RIGHT_REVOKE_ALL (1 << (sizeof(cap_right_t) * 8 - 1))
+#define CAP_RIGHT_COPY       (1 << (sizeof(cap_right_t) * 8 - 2))
+#define CAP_RIGHT_NO_RIGHTS  (0)
+
+#endif /* UAPI_OBJECT_H */
