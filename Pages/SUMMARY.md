@@ -29,6 +29,15 @@
   - [系统调用](./Lab3/syscall.md)
   - [用户态程序编写](./Lab3/userland.md)
 
+- [Lab4: 多核调度与IPC](./Lab4.md)
+  - [多核支持](./Lab4/multicore.md)
+  - [多核调度](./Lab4/scheduler.md)
+  - [进程间通信(IPC)](./Lab4/IPC.md)
+  - [实机运行与IPC性能优化](./Lab4/performance.md)
+
+- [Lab5: 虚拟文件系统](./Lab5.md)
+  - [FSM](./Lab5/FSM.md)
+  - [FS_Base](./Lab5/base.md)
 
 - [附录](./Appendix.md)
   - [Bomb: 工具教程](./Appendix/toolchains.md)
