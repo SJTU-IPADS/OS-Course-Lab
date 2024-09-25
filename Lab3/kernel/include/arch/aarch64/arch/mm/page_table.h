@@ -35,6 +35,9 @@
 /* Access flag bit. */
 #define AARCH64_MMU_ATTR_PAGE_AF_ACCESSED           (1)
 
+/* Non-secure bit */
+#define AARCH64_MMU_ATTR_PAGE_NS_NON_SECURE         (1)
+
 /* Present (valid) bit. */
 #define AARCH64_MMU_PTE_INVALID_MASK                (1 << 0)
 /* Table bit: whether the next level is aonther pte or physical memory page. */

@@ -17,7 +17,7 @@
 #include <common/list.h>
 #include <common/lock.h>
 
-#define N_PHYS_MEM_POOLS 2
+#define N_PHYS_MEM_POOLS 3
 
 /* The following two are defined in mm.c and filled by mmparse.c. */
 extern paddr_t physmem_map[N_PHYS_MEM_POOLS][2];
@@ -99,5 +99,6 @@ void buddy_free_pages(struct phys_mem_pool *, struct page *page);
 void *page_to_virt(struct page *page);
 struct page *virt_to_page(void* ptr);
 unsigned long get_free_mem_size_from_buddy(struct phys_mem_pool *);
+unsigned long get_total_mem_size_from_buddy(struct phys_mem_pool *);
 
 #endif /* MM_BUDDY_H */
