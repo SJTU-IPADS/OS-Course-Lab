@@ -94,7 +94,7 @@ add_custom_target(libc-configure ALL
 # Compile libc
 add_custom_target(libc-build ALL
     WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND make -j${_nproc}
+    COMMAND bear make -j${_nproc} || make -j${_nproc}
     DEPENDS libc-configure)
 
 # Install libc as usual
@@ -106,4 +106,6 @@ add_custom_target(libc-install ALL
 # clean target
 add_custom_target(libc-clean
     WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND make clean)
+    COMMAND make clean
+    COMMAND git reset --hard HEAD || :
+    COMMAND git clean -fdx || :)
