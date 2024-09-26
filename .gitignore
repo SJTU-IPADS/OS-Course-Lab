@@ -46,3 +46,5 @@ infer-out/
 book/
 **mermaid**
 **/index.html
+compile_commands.json
+.cache/
