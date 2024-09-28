@@ -22,7 +22,8 @@
 /* The shell main thread cap.*/
 cap_t shell_cap = -1;
 int shell_pid = -1;
-int shell_is_waiting = false;
+struct proc_node *shell_proc_node = NULL;
+volatile int shell_is_waiting = false;
 
 /* The terminal main thread cap */
 cap_t terminal_cap = -1;
@@ -32,8 +33,8 @@ void handle_recv_sig(ipc_msg_t *ipc_msg, struct proc_request *pr)
         // pthread_mutex_lock(&client_proc->waiting);
         switch (pr->recv_sig.sig) {
         case CTRL('Z'):
-                // client_proc->is_waiting = false;
                 shell_is_waiting = false;
+                pthread_cond_broadcast(&shell_proc_node->wait_cv);
                 break;
         default:
                 printf("[procmgr] Unsupported signal type.\n");
@@ -58,15 +59,11 @@ void handle_check_state(ipc_msg_t *ipc_msg, badge_t client_badge,
                 goto out;
         }
 
-        pthread_mutex_lock(&client_proc->lock);
-        for_each_in_list (
-                child, struct proc_node, node, &client_proc->children) {
-                if (child->pid == pr->check_state.pid) {
-                        ret = READ_ONCE(child->state);
-                        break;
-                }
+        child = get_child(client_proc, pr->check_state.pid);
+        if (child) {
+                ret = child->state;
+                put_proc_node(child);
         }
-        pthread_mutex_unlock(&client_proc->lock);
 
         /*
          * If we can not find a child process with pid of pr->pid, it stands for
@@ -78,6 +75,7 @@ void handle_check_state(ipc_msg_t *ipc_msg, badge_t client_badge,
         else
                 ret = 0;
 
+        put_proc_node(client_proc);
 out:
         ipc_return(ipc_msg, ret);
 }
@@ -112,6 +110,8 @@ void handle_set_shell_cap(ipc_msg_t *ipc_msg, badge_t client_badge)
         if (shell_cap == -1) {
                 shell_cap = ipc_get_msg_cap(ipc_msg, 0);
                 shell_pid = client_proc->pid;
+                /* transfer the ref to shell_proc_node */
+                shell_proc_node = client_proc;
                 ipc_return(ipc_msg, 0);
         }
 }

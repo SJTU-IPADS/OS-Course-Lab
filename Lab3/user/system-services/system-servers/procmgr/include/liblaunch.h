@@ -21,6 +21,9 @@
 
 #include <chcore/type.h>
 #include "libchcoreelf.h"
+#ifdef CHCORE_OPENTRUSTEE
+#include <spawn_ext.h>
+#endif /* CHCORE_OPENTRUSTEE */
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +34,11 @@ struct cap_group_args {
         vaddr_t name;
         unsigned long name_len;
         unsigned long pcid;
+        int pid;
+#ifdef CHCORE_OPENTRUSTEE
+        vaddr_t puuid;
+        unsigned long heap_size;
+#endif /* CHCORE_OPENTRUSTEE */
 };
 
 struct launch_process_args {
@@ -96,6 +104,11 @@ struct launch_process_args {
         int envp_argc;
         char **envp_argv;
         unsigned long stack_size;
+
+#ifdef CHCORE_OPENTRUSTEE
+        spawn_uuid_t *puuid;
+        unsigned long heap_size;
+#endif /* CHCORE_OPENTRUSTEE */
 
         /** output parameters */
         cap_t *child_process_cap;

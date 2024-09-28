@@ -52,7 +52,7 @@
 #define AT_EXECFN 31 /* filename of program */
 
 #define INIT_ENV_SIZE   PAGE_SIZE
-#define FAKE_RANDOM_OFF 64
+#define RANDOM_OFF 64 /* offset of a random number */
 
 const char PLAT[] = "aarch64";
 
@@ -103,7 +103,6 @@ static void env_buf_append_str_auxv(struct env_buf *env_buf, unsigned long type,
 
 #define FAKE_UGID       1000
 #define FAKE_CLKTLK     100
-#define FAKE_RANDOM_OFF 64
 
 /**
  * NOTE: The stack format:
@@ -117,11 +116,15 @@ static void construct_init_env(char *env, vaddr_t top_vaddr,
                                int nr_pmo_map_reqs, cap_t caps[], int nr_caps,
                                int argc, char **argv,
                                int envp_argc, char ** envp_argv,
-                               int pid, unsigned long load_offset)
+                               int pid, unsigned long load_offset,
+                               struct pmo_map_request *pmos_map_requests,
+                               int cnt)
 {
         int i;
         struct env_buf env_buf;
         char pidstr[16];
+        int cow_cnt = 1;
+        int libc_pmo_cap = 0;
 
         memset(env, 0, INIT_ENV_SIZE);
 
@@ -145,7 +148,7 @@ static void construct_init_env(char *env, vaddr_t top_vaddr,
         env_buf_append_str(&env_buf, LD_LIB_PATH);
         snprintf(pidstr, 15, "PID=%d\n", pid);
         env_buf_append_str(&env_buf, pidstr);
-        
+
         for (i = 0; i < envp_argc; i++) {
                 env_buf_append_str(&env_buf, envp_argv[i]);
         }
@@ -168,8 +171,13 @@ static void construct_init_env(char *env, vaddr_t top_vaddr,
         env_buf_append_int_auxv(&env_buf, AT_CLKTCK, FAKE_CLKTLK);
         env_buf_append_int_auxv(&env_buf, AT_HWCAP, 0);
         env_buf_append_str_auxv(&env_buf, AT_PLATFORM, PLAT);
+
+        /* set a random canary for process */
+        size_t *canary = (size_t *)(env + INIT_ENV_SIZE - RANDOM_OFF);
+        *canary = rand();
         env_buf_append_int_auxv(
-                &env_buf, AT_RANDOM, top_vaddr - FAKE_RANDOM_OFF);
+                &env_buf, AT_RANDOM, top_vaddr - RANDOM_OFF);
+
         env_buf_append_int_auxv(&env_buf, AT_BASE, 0);
         env_buf_append_int_auxv(
                 &env_buf, AT_CHCORE_PMO_CNT, nr_pmo_map_reqs ?: ENVP_NONE_PMOS);
@@ -183,6 +191,15 @@ static void construct_init_env(char *env, vaddr_t top_vaddr,
         for (i = 0; i < nr_caps; i++) {
                 env_buf_append_int_auxv(&env_buf, AT_CHCORE_CAP_VAL, caps[i]);
         }
+        for (int i = 0; i < cnt; ++i) {
+                struct pmo_map_request *req = &pmos_map_requests[i];
+                if (cow_cnt && (((req->perm) & VMR_COW) == VMR_COW)){
+                        libc_pmo_cap = req->ret;
+                        cow_cnt--;
+                }
+        }
+        env_buf_append_int_auxv(
+                &env_buf, AT_CHCORE_LIBC_PMO_CAP, libc_pmo_cap);
         env_buf_append_int_auxv(&env_buf, AT_NULL, 0);
 }
 
@@ -250,7 +267,7 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
         u64 stack_top, stack_base;
         int i;
         /* for mapping pmos */
-        struct pmo_map_request *seg_pmos_map_requests;
+        struct pmo_map_request *seg_pmos_map_requests = NULL;
         cap_t *transfer_caps = NULL;
         vaddr_t load_offset = lp_args->load_offset;
         char init_env[INIT_ENV_SIZE];
@@ -281,6 +298,8 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
         cap_t *child_main_thread_cap = lp_args->child_main_thread_cap;
         struct pmo_map_request *pmo_map_reqs = lp_args->pmo_map_reqs;
         int nr_pmo_map_reqs = lp_args->nr_pmo_map_reqs;
+        cap_right_t *masks = NULL, *rests = NULL;
+        cap_t *origin_pmos = NULL, *shrunk_pmos = NULL;
         cap_t *caps = lp_args->caps;
         int nr_caps = lp_args->nr_caps;
         s32 cpuid = lp_args->cpuid;
@@ -302,7 +321,11 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
 
         seg_pmos_map_requests = malloc(sizeof(struct pmo_map_request)
                                        * (user_elf->segs_nr + DEFAULT_PMO_CNT));
-        if (!seg_pmos_map_requests) {
+        masks = malloc(sizeof(*masks) * user_elf->segs_nr);
+        rests = malloc(sizeof(*rests) * user_elf->segs_nr);
+        origin_pmos = malloc(sizeof(*origin_pmos) * user_elf->segs_nr);
+        shrunk_pmos = malloc(sizeof(*shrunk_pmos) * user_elf->segs_nr);
+        if (!seg_pmos_map_requests || !masks || !rests || !shrunk_pmos) {
                 goto nomem;
         }
 
@@ -311,6 +334,15 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
         cg_args.name = (vaddr_t)process_name;
         cg_args.name_len = strlen(process_name);
         cg_args.pcid = pcid;
+        cg_args.pid = pid;
+#ifdef CHCORE_OPENTRUSTEE
+        cg_args.heap_size = lp_args->heap_size;
+        if (lp_args->puuid != NULL) {
+                cg_args.puuid = (vaddr_t)&lp_args->puuid->uuid;
+        } else {
+                cg_args.puuid = 0;
+        }
+#endif
         new_process_cap = usys_create_cap_group((unsigned long)&cg_args);
         if (new_process_cap < 0) {
                 printf("%s: fail to create new_process_cap (ret: %d)\n",
@@ -361,36 +393,11 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
                 goto fail;
         }
 
-        /* Step-4: Construct auxiliary vector on the stack. */
+        /* Step-4: Map the two pmos and pmos of segments in the ELF file */
         stack_base = (MAIN_THREAD_STACK_BASE
                       + ASLR_RAND_OFFSET)
                      & (~stack_size);
-        stack_top = stack_base + stack_size;
 
-        construct_init_env(init_env,
-                           stack_top,
-                           &user_elf->elf_meta,
-                           user_elf->path,
-                           pmo_map_reqs,
-                           nr_pmo_map_reqs,
-                           transfer_caps,
-                           nr_caps,
-                           argc,
-                           argv,
-                           envp_argc, 
-                           envp_argv,
-                           pid,
-                           load_offset);
-        offset = stack_size - INIT_ENV_SIZE;
-
-        free(transfer_caps);
-
-        ret = usys_write_pmo(main_stack_cap, offset, init_env, INIT_ENV_SIZE);
-        if (ret != 0) {
-                printf("%s: fail to write_pmo (ret: %d)\n", __func__, ret);
-                goto fail;
-        }
-        /** Step-5: Map the two pmos and pmos of segments in the ELF file */
         /* Map the main stack pmo */
         seg_pmos_map_requests[0].pmo_cap = main_stack_cap;
         seg_pmos_map_requests[0].addr = stack_base;
@@ -401,10 +408,35 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
         seg_pmos_map_requests[1].addr = stack_base - PAGE_SIZE;
         seg_pmos_map_requests[1].perm = VM_FORBID;
 
+        for (i = 0; i < user_elf->segs_nr; ++i) {
+                origin_pmos[i] = user_elf->user_elf_segs[i].elf_pmo;
+                /*
+                 * Drop CAP_RIGHT_REVOKE_ALL to prevent applications from
+                 * maliciously revoking all of this file PMO.
+                 */
+                if (user_elf->user_elf_segs[i].perm & VMR_COW) {
+                        masks[i] = CAP_RIGHT_REVOKE_ALL;
+                } else {
+                        masks[i] = CAP_RIGHT_NO_RIGHTS;
+                }
+                rests[i] = CAP_RIGHT_NO_RIGHTS;
+        }
+
+        ret = usys_transfer_caps_restrict(SELF_CAP,
+                                          origin_pmos,
+                                          user_elf->segs_nr,
+                                          shrunk_pmos,
+                                          masks,
+                                          rests);
+        if (ret != 0) {
+                printf("%s: fail to restrict pmo rights (ret: %d)\n", __func__, ret);
+                goto fail;
+        }
+
         /* Map each segment in the elf binary */
         for (i = 0; i < user_elf->segs_nr; ++i) {
                 seg_pmos_map_requests[DEFAULT_PMO_CNT + i].pmo_cap =
-                        user_elf->user_elf_segs[i].elf_pmo;
+                        shrunk_pmos[i];
                 seg_pmos_map_requests[DEFAULT_PMO_CNT + i].addr = ROUND_DOWN(
                         user_elf->user_elf_segs[i].p_vaddr + load_offset,
                         PAGE_SIZE);
@@ -420,6 +452,39 @@ int launch_process_with_pmos_caps(struct launch_process_args *lp_args)
                 goto fail;
         }
 
+        for (i = 0; i < user_elf->segs_nr; ++i) {
+                usys_revoke_cap(shrunk_pmos[i], false);
+        }
+
+        /* Step-5: Construct auxiliary vector on the stack. */
+        stack_top = stack_base + stack_size;
+
+        construct_init_env(init_env,
+                           stack_top,
+                           &user_elf->elf_meta,
+                           user_elf->path,
+                           pmo_map_reqs,
+                           nr_pmo_map_reqs,
+                           transfer_caps,
+                           nr_caps,
+                           argc,
+                           argv,
+                           envp_argc, 
+                           envp_argv,
+                           pid,
+                           load_offset,
+                           (void *)seg_pmos_map_requests,
+                           DEFAULT_PMO_CNT + i);
+        offset = stack_size - INIT_ENV_SIZE;
+
+        free(transfer_caps);
+
+        ret = usys_write_pmo(main_stack_cap, offset, init_env, INIT_ENV_SIZE);
+        if (ret != 0) {
+                printf("%s: fail to write_pmo (ret: %d)\n", __func__, ret);
+                goto fail;
+        }
+        
         /* Remove two caps just created for the new process in procmgr */
         usys_revoke_cap(main_stack_cap, false);
         usys_revoke_cap(forbid_area_cap, false);
@@ -462,5 +527,10 @@ fail:
         free(seg_pmos_map_requests);
         return -EINVAL;
 nomem:
+        free(shrunk_pmos);
+        free(origin_pmos);
+        free(masks);
+        free(rests);
+        free(seg_pmos_map_requests);
         return -ENOMEM;
 }
