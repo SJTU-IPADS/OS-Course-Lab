@@ -14,8 +14,10 @@
 #define CHCORE_PORT_FILE_H
 
 #include <stddef.h>
+#include <sys/types.h>
 
 int chcore_chdir(const char *path);
+int chcore_fchmodat(int dirfd, char *path, mode_t mode);
 int chcore_fchdir(int fd);
 long chcore_getcwd(char *buf, size_t size);
 int chcore_ftruncate(int fd, off_t length);
@@ -29,6 +31,7 @@ int chcore_readlinkat(int dirfd, const char *pathname, char *buf,
                       size_t bufsiz);
 int chcore_renameat(int olddirfd, const char *oldpath, int newdirfd,
                     const char *newpath);
+int chcore_vfs_rename(int, const char *);
 int chcore_faccessat(int dirfd, const char *pathname, int amode, int flags);
 int chcore_fallocate(int fd, int mode, off_t offset, off_t len);
 int chcore_statx(int dirfd, const char *pathname, int flags, unsigned int mask,

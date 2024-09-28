@@ -12,6 +12,7 @@
 
 #pragma once
 #include <stdlib.h>
+#include <chcore/defs.h>
 
 // clang-format off
 /**
@@ -39,7 +40,12 @@
 
 #define ASLR_HIGHER_BIT ((__SIZEOF_POINTER__ == 4) ? 8 : 4)
 #define ASLR_ALIGN_BIT  (16)
+
+#ifdef SV39
+#define TOTAL_ADDR_BIT (35)
+#else
 #define TOTAL_ADDR_BIT  ((__SIZEOF_POINTER__ == 4) ? 32 : 48)
+#endif
 
 #if CHCORE_ASLR
 #define ASLR_ENTROPY_BIT (TOTAL_ADDR_BIT - ASLR_ALIGN_BIT - ASLR_HIGHER_BIT)

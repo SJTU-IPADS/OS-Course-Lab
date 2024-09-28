@@ -53,12 +53,22 @@ int usys_resume(unsigned long thread_cap)
 
 cap_t usys_create_device_pmo(unsigned long paddr, unsigned long size)
 {
-        return chcore_syscall3(CHCORE_SYS_create_pmo, size, PMO_DEVICE, paddr);
+        return chcore_syscall4(CHCORE_SYS_create_pmo, size, PMO_DEVICE, paddr, PMO_ALL_RIGHTS);
+}
+
+cap_t usys_create_pmo_with_rights(unsigned long size, unsigned long type, cap_right_t rights)
+{
+        return chcore_syscall4(CHCORE_SYS_create_pmo, size, type, 0, rights);
 }
 
 cap_t usys_create_pmo(unsigned long size, unsigned long type)
 {
-        return chcore_syscall2(CHCORE_SYS_create_pmo, size, type);
+        return chcore_syscall4(CHCORE_SYS_create_pmo, size, type, 0, PMO_ALL_RIGHTS);
+}
+
+cap_t usys_create_pmo_with_val(unsigned long size, unsigned long type, unsigned long val)
+{
+        return chcore_syscall4(CHCORE_SYS_create_pmo, size, type, val, PMO_ALL_RIGHTS);
 }
 
 int usys_map_pmo(cap_t cap_group_cap, cap_t pmo_cap,
@@ -74,8 +84,8 @@ int usys_map_pmo(cap_t cap_group_cap, cap_t pmo_cap,
 
 int usys_unmap_pmo(cap_t cap_group_cap, cap_t pmo_cap, unsigned long addr)
 {
-        return chcore_syscall3(
-                CHCORE_SYS_unmap_pmo, cap_group_cap, pmo_cap, addr);
+        return chcore_syscall4(
+                CHCORE_SYS_unmap_pmo, cap_group_cap, pmo_cap, addr, -1);
 }
 
 int usys_revoke_cap(cap_t obj_cap, bool revoke_copy)
@@ -171,14 +181,29 @@ _Noreturn void usys_ipc_exit_routine_return(void)
         __builtin_unreachable();
 }
 
-cap_t usys_ipc_get_cap(int index)
+cap_t usys_ipc_get_cap(cap_t conn, int index)
 {
-        return chcore_syscall1(CHCORE_SYS_ipc_get_cap, index);
+        return chcore_syscall2(CHCORE_SYS_ipc_get_cap, conn, index);
 }
 
-int usys_ipc_set_cap(int index, cap_t cap)
+int usys_ipc_set_cap_restrict(cap_t conn, int index, cap_t cap,
+                              cap_right_t mask, cap_right_t rest)
 {
-        return chcore_syscall2(CHCORE_SYS_ipc_set_cap, index, cap);
+        return chcore_syscall5(CHCORE_SYS_ipc_set_cap,
+                               conn,
+                               index,
+                               cap,
+                               mask,
+                               rest);
+}
+
+int usys_ipc_set_cap(cap_t conn, int index, cap_t cap)
+{
+        return usys_ipc_set_cap_restrict(conn,
+                                         index,
+                                         cap,
+                                         CAP_RIGHT_NO_RIGHTS,
+                                         CAP_RIGHT_NO_RIGHTS);
 }
 
 int usys_write_pmo(cap_t cap, unsigned long offset, void *buf,
@@ -198,11 +223,21 @@ int usys_read_pmo(cap_t cap, unsigned long offset, void *buf,
 int usys_transfer_caps(cap_t cap_group, cap_t *src_caps, int nr,
                        cap_t *dst_caps)
 {
-        return chcore_syscall4(CHCORE_SYS_transfer_caps,
-                               cap_group,
+        return usys_transfer_caps_restrict(
+                cap_group, src_caps, nr, dst_caps, NULL, NULL);
+}
+
+int usys_transfer_caps_restrict(cap_t dest_group_cap, cap_t *src_caps,
+                                int nr_caps, cap_t *dst_caps,
+                                cap_right_t *masks, cap_right_t *rests)
+{
+        return chcore_syscall6(CHCORE_SYS_transfer_caps,
+                               dest_group_cap,
                                (unsigned long)src_caps,
-                               (unsigned long)nr,
-                               (unsigned long)dst_caps);
+                               (unsigned long)nr_caps,
+                               (unsigned long)dst_caps,
+                               (unsigned long)masks,
+                               (unsigned long)rests);
 }
 
 void usys_empty_syscall(void)
@@ -237,6 +272,12 @@ int usys_map_pmo_with_length(cap_t pmo_cap, vaddr_t addr, unsigned long perm,
 {
         return chcore_syscall5(
                 CHCORE_SYS_map_pmo, SELF_CAP, pmo_cap, addr, perm, length);
+}
+
+int usys_unmap_pmo_with_length(cap_t pmo_cap, unsigned long addr, size_t size)
+{
+        return chcore_syscall4(
+                CHCORE_SYS_unmap_pmo, SELF_CAP, pmo_cap, addr, size);
 }
 
 cap_t usys_irq_register(int irq)
@@ -325,9 +366,9 @@ int usys_ipc_close_connection(cap_t cap)
 }
 
 /* Get the size of free memory */
-unsigned long usys_get_free_mem_size(void)
+int usys_get_free_mem_size(struct free_mem_info *info)
 {
-        return chcore_syscall0(CHCORE_SYS_get_free_mem_size);
+        return chcore_syscall1(CHCORE_SYS_get_free_mem_size, (unsigned long)info);
 }
 
 void usys_get_mem_usage_msg(void)
@@ -368,4 +409,13 @@ int usys_ptrace(int req, unsigned long cap, unsigned long tid,
 {
         return chcore_syscall5(CHCORE_SYS_ptrace, req, cap, tid,
                                (unsigned long)addr, (unsigned long)data);
+}
+
+long usys_opentrustee(long z, long a, long b, long c, long d, long e, long f)
+{
+#ifdef CHCORE_OPENTRUSTEE
+        return chcore_syscall7(CHCORE_SYS_opentrustee, z, a, b, c, d, e, f);
+#else 
+        return -ENOSYS;
+#endif /* CHCORE_OPENTRUSTEE */
 }

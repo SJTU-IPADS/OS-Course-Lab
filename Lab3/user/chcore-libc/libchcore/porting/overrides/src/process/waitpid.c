@@ -10,9 +10,12 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#pragma once
+#include <sys/wait.h>
+#include "syscall.h"
 
-#include <chcore/ipc.h>
-#include <chcore-internal/procmgr_defs.h>
+#include <chcore/proc.h>
 
-ipc_struct_t *chcore_conn_srv(const char* service_name);
+pid_t waitpid(pid_t pid, int *status, int options)
+{
+        return chcore_waitpid(pid, status, options, 0);
+}

@@ -155,6 +155,10 @@ out:
 int chcore_chdir(const char *path)
 {
         /* FIXME: need to check if path exists */
+        if (!path) {
+                return -EBADF;
+        }
+
         if (path[0] != '/') {
                 /* Relative Path */
                 path = path_join(cwd_path, path);
@@ -225,13 +229,13 @@ int chcore_ftruncate(int fd, off_t length)
 }
 
 /**
- * In ChCore, we hijack the syscall function so that many 
- * syscalls are forwarded to userspace wrappers like chcore_lseek 
- * which implicitly exploits IPC to implement the semantics 
- * of hijacked syscall. 
- * 
- * Note that this is a pure userspace process, which doesn't 
- * cross ABI boundary or has nothing to do with ABI, so it's 
+ * In ChCore, we hijack the syscall function so that many
+ * syscalls are forwarded to userspace wrappers like chcore_lseek
+ * which implicitly exploits IPC to implement the semantics
+ * of hijacked syscall.
+ *
+ * Note that this is a pure userspace process, which doesn't
+ * cross ABI boundary or has nothing to do with ABI, so it's
  * safe for chcore_lseek to return a 64bit off_t on any architectures.
  */
 off_t chcore_lseek(int fd, off_t offset, int whence)
@@ -299,8 +303,8 @@ int chcore_mkdirat(int dirfd, const char *pathname, mode_t mode)
 
         /* Send IPC to fs_server */
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_MKDIR;
@@ -349,8 +353,8 @@ int chcore_unlinkat(int dirfd, const char *pathname, int flags)
 
         /* Send IPC to fs_server */
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         if (flags & AT_REMOVEDIR) {
@@ -402,8 +406,8 @@ int chcore_symlinkat(const char *target, int newdirfd, const char *linkpath)
 
         /* Send IPC to fs_server */
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_SYMLINKAT;
@@ -470,6 +474,55 @@ error:
         return ret;
 }
 
+int chcore_fchmodat(int dirfd, char *path, mode_t mode)
+{
+        ipc_msg_t *ipc_msg;
+        ipc_struct_t *mounted_fs_ipc_struct;
+        struct fs_request *fr_ptr;
+        int ret = 0;
+        int mount_id;
+        char *full_path;
+        char server_path[FS_REQ_PATH_BUF_LEN];
+
+        /* Check arguments */
+        if (!access_ok(path))
+                return -EFAULT;
+
+        /* Prepare full_path for IPC arguments, don't forget free(full_path) */
+        ret = generate_full_path(dirfd, path, &full_path);
+        if (ret)
+                return ret;
+
+        /* Send IPC to FSM and parse full_path */
+        if (parse_full_path(full_path, &mount_id, server_path) != 0) {
+                free(full_path);
+                return -EINVAL;
+        }
+
+        /* Send IPC to fs_server */
+        mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
+        fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
+
+        fr_ptr->req = FS_REQ_CHMOD;
+        if (pathcpy(fr_ptr->chmod.pathname,
+                    FS_REQ_PATH_BUF_LEN,
+                    server_path,
+                    strlen(server_path))
+            != 0) {
+                ipc_destroy_msg(ipc_msg);
+                free(full_path);
+                return -EBADF;
+        }
+        fr_ptr->chmod.mode = mode;
+        ret = ipc_call(mounted_fs_ipc_struct, ipc_msg);
+        ipc_destroy_msg(ipc_msg);
+
+        free(full_path);
+        return ret;
+}
+
 int chcore_file_fcntl(int fd, int cmd, int arg)
 {
         ipc_msg_t *ipc_msg = 0;
@@ -496,8 +549,8 @@ int chcore_file_fcntl(int fd, int cmd, int arg)
                 _fs_ipc_struct = get_ipc_struct_by_mount_id(fd_ext->mount_id);
                 if (_fs_ipc_struct == NULL)
                         return -EBADF;
-                ipc_msg = ipc_create_msg(
-                        _fs_ipc_struct, sizeof(struct fs_request));
+                ipc_msg = ipc_create_msg(_fs_ipc_struct,
+                                         sizeof(struct fs_request));
                 fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
                 fr_ptr->req = FS_REQ_FCNTL;
                 fr_ptr->fcntl.fcntl_cmd = F_DUPFD;
@@ -523,8 +576,8 @@ int chcore_file_fcntl(int fd, int cmd, int arg)
                                 get_ipc_struct_by_mount_id(fd_ext->mount_id);
                         if (_fs_ipc_struct == NULL)
                                 return -EBADF;
-                        ipc_msg = ipc_create_msg(
-                                _fs_ipc_struct, sizeof(struct fs_request));
+                        ipc_msg = ipc_create_msg(_fs_ipc_struct,
+                                                 sizeof(struct fs_request));
                         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
                         fr_ptr->req = FS_REQ_FCNTL;
@@ -568,8 +621,8 @@ int chcore_readlinkat(int dirfd, const char *pathname, char *buf, size_t bufsiz)
 
         /* Send IPC to fs_server */
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_READLINKAT;
@@ -646,8 +699,8 @@ int chcore_renameat(int olddirfd, const char *oldpath, int newdirfd,
 
         /* Send IPC to fs_server */
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(old_mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_RENAME;
@@ -664,6 +717,17 @@ int chcore_renameat(int olddirfd, const char *oldpath, int newdirfd,
 
         free(old_full_path);
         free(new_full_path);
+        return ret;
+}
+
+int chcore_vfs_rename(int oldfd, const char *newpath)
+{
+        int ret = chcore_renameat(
+                AT_FDCWD,
+                ((struct fd_record_extension *)fd_dic[oldfd]->private_data)
+                        ->path,
+                AT_FDCWD,
+                newpath);
         return ret;
 }
 
@@ -690,13 +754,13 @@ int chcore_faccessat(int dirfd, const char *pathname, int amode, int flags)
 
         /* Send IPC to fs_server */
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_FACCESSAT;
         fr_ptr->faccessat.flags = flags;
-        fr_ptr->faccessat.mode = amode;
+        fr_ptr->faccessat.amode = amode;
         if (pathcpy(fr_ptr->faccessat.pathname,
                     FS_REQ_PATH_BUF_LEN,
                     server_path,
@@ -731,8 +795,8 @@ int chcore_fallocate(int fd, int mode, off_t offset, off_t len)
         BUG_ON(sizeof(struct fs_request) > IPC_SHM_AVAILABLE); // san check
 
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(fd_ext->mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_FALLOCATE;
@@ -868,8 +932,8 @@ int chcore_openat(int dirfd, const char *pathname, int flags, mode_t mode)
                 free(full_path);
                 return -EBADF;
         }
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         fr_ptr->req = FS_REQ_OPEN;
@@ -902,19 +966,25 @@ int chcore_openat(int dirfd, const char *pathname, int flags, mode_t mode)
         return ret;
 }
 
-typedef ssize_t (*file_read_ipc_callback)(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg, int fd, size_t count, off_t offset);
+typedef ssize_t (*file_read_ipc_callback)(ipc_struct_t *fs_ipc_struct,
+                                          struct ipc_msg *ipc_msg, int fd,
+                                          size_t count, off_t offset);
 
 /**
-* Caller should guarantee @count can be casted to ssize_t safely(This is generally true
-* because read(2)/write(2) can only transfer at most 0x7ffff000 bytes once).
-*/
-ssize_t chcore_file_read_core(ipc_struct_t *fs_ipc_struct, file_read_ipc_callback callback, int fd, void *buf, size_t count, off_t initial_offset)
+ * Caller should guarantee @count can be casted to ssize_t safely(This is
+ * generally true because read(2)/write(2) can only transfer at most 0x7ffff000
+ * bytes once).
+ */
+ssize_t chcore_file_read_core(ipc_struct_t *fs_ipc_struct,
+                              file_read_ipc_callback callback, int fd,
+                              void *buf, size_t count, off_t initial_offset)
 {
         ssize_t ret = 0;
         ssize_t remain = count;
         size_t cnt;
         off_t offset = initial_offset;
-        struct ipc_msg *ipc_msg = ipc_create_msg(fs_ipc_struct, IPC_SHM_AVAILABLE);
+        struct ipc_msg *ipc_msg =
+                ipc_create_msg(fs_ipc_struct, IPC_SHM_AVAILABLE);
 
         while (remain > 0) {
                 cnt = MIN(remain, IPC_SHM_AVAILABLE);
@@ -940,7 +1010,9 @@ ssize_t chcore_file_read_core(ipc_struct_t *fs_ipc_struct, file_read_ipc_callbac
         return ret;
 }
 
-ssize_t chcore_file_read_cb(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg, int fd, size_t count, off_t offset)
+ssize_t chcore_file_read_cb(ipc_struct_t *fs_ipc_struct,
+                            struct ipc_msg *ipc_msg, int fd, size_t count,
+                            off_t offset)
 {
         struct fs_request *fr_ptr;
 
@@ -949,12 +1021,14 @@ ssize_t chcore_file_read_cb(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg
         fr_ptr->read.fd = fd;
         fr_ptr->read.count = count;
         /**
-        * @offset is ignored because in read IPC offset is managed by server.
-        */
+         * @offset is ignored because in read IPC offset is managed by server.
+         */
         return ipc_call(fs_ipc_struct, ipc_msg);
 }
 
-ssize_t chcore_file_pread_cb(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg, int fd, size_t count, off_t offset)
+ssize_t chcore_file_pread_cb(ipc_struct_t *fs_ipc_struct,
+                             struct ipc_msg *ipc_msg, int fd, size_t count,
+                             off_t offset)
 {
         struct fs_request *fr_ptr;
 
@@ -973,7 +1047,7 @@ static ssize_t chcore_file_read(int fd, void *buf, size_t count)
         struct fd_record_extension *fd_ext;
         ssize_t ret = 0;
         /**
-         * read(2): 
+         * read(2):
          * On Linux, read() (and similar system calls) will transfer at most
          * 0x7ffff000 (2,147,479,552) bytes, returning the number of bytes
          * actually transferred.  (This is true on both 32-bit and 64-bit
@@ -989,11 +1063,12 @@ static ssize_t chcore_file_read(int fd, void *buf, size_t count)
         BUG_ON(fd_ext->mount_id < 0);
         BUG_ON(sizeof(struct fs_request) > IPC_SHM_AVAILABLE); // san check
         _fs_ipc_struct = get_ipc_struct_by_mount_id(fd_ext->mount_id);
-        
+
         /**
-        * initial_offset could be arbitary value due to read_cb will ignore it.
-        */
-        ret = chcore_file_read_core(_fs_ipc_struct, chcore_file_read_cb, fd, buf, count, 0);
+         * initial_offset could be arbitary value due to read_cb will ignore it.
+         */
+        ret = chcore_file_read_core(
+                _fs_ipc_struct, chcore_file_read_cb, fd, buf, count, 0);
         return ret;
 }
 
@@ -1015,27 +1090,35 @@ static ssize_t chcore_file_pread(int fd, void *buf, size_t count, off_t offset)
         BUG_ON(fd_ext->mount_id < 0);
         BUG_ON(sizeof(struct fs_request) > IPC_SHM_AVAILABLE); // san check
         _fs_ipc_struct = get_ipc_struct_by_mount_id(fd_ext->mount_id);
-        
+
         /**
-        * initial_offset could be arbitary value due to read_cb will ignore it.
-        */
-        ret = chcore_file_read_core(_fs_ipc_struct, chcore_file_pread_cb, fd, buf, count, offset);
+         * initial_offset could be arbitary value due to read_cb will ignore it.
+         */
+        ret = chcore_file_read_core(
+                _fs_ipc_struct, chcore_file_pread_cb, fd, buf, count, offset);
         return ret;
 }
 
-typedef ssize_t (*file_write_ipc_callback)(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg, int fd, void *buf, size_t count, off_t offset);
+typedef ssize_t (*file_write_ipc_callback)(ipc_struct_t *fs_ipc_struct,
+                                           struct ipc_msg *ipc_msg, int fd,
+                                           void *buf, size_t count,
+                                           off_t offset);
 
 /**
-* Caller should guarantee @count can be casted to ssize_t safely(This is generally true
-* because read(2)/write(2) can only transfer at most 0x7ffff000 bytes once).
-*/
-ssize_t chcore_file_write_core(ipc_struct_t *fs_ipc_struct, file_write_ipc_callback callback, int fd, void *buf, size_t count, off_t initial_offset)
+ * Caller should guarantee @count can be casted to ssize_t safely(This is
+ * generally true because read(2)/write(2) can only transfer at most 0x7ffff000
+ * bytes once).
+ */
+ssize_t chcore_file_write_core(ipc_struct_t *fs_ipc_struct,
+                               file_write_ipc_callback callback, int fd,
+                               void *buf, size_t count, off_t initial_offset)
 {
         ssize_t ret = 0;
         ssize_t remain = count;
         off_t offset = initial_offset;
         size_t cnt;
-        struct ipc_msg *ipc_msg = ipc_create_msg(fs_ipc_struct, IPC_SHM_AVAILABLE);
+        struct ipc_msg *ipc_msg =
+                ipc_create_msg(fs_ipc_struct, IPC_SHM_AVAILABLE);
 
         while (remain > 0) {
                 cnt = MIN(remain, FS_BUF_SIZE);
@@ -1048,17 +1131,18 @@ ssize_t chcore_file_write_core(ipc_struct_t *fs_ipc_struct, file_write_ipc_callb
         }
 
         // let -errno propagate to caller code
-        if (ret >= 0)
-        {
+        if (ret >= 0) {
                 ret = (ssize_t)count - remain;
         }
-        
+
         ipc_destroy_msg(ipc_msg);
 
         return ret;
 }
 
-ssize_t chcore_file_write_cb(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg, int fd, void *buf, size_t count, off_t offset)
+ssize_t chcore_file_write_cb(ipc_struct_t *fs_ipc_struct,
+                             struct ipc_msg *ipc_msg, int fd, void *buf,
+                             size_t count, off_t offset)
 {
         struct fs_request *fr_ptr;
 
@@ -1067,13 +1151,16 @@ ssize_t chcore_file_write_cb(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_ms
         fr_ptr->write.fd = fd;
         fr_ptr->write.count = count;
         // This offset indicates write position of ipc data, not @offset
-        // @offset is ignored due to file offset is managed by server in write operation
+        // @offset is ignored due to file offset is managed by server in write
+        // operation
         ipc_set_msg_data(ipc_msg, buf, sizeof(struct fs_request), count);
 
         return ipc_call(fs_ipc_struct, ipc_msg);
 }
 
-ssize_t chcore_file_pwrite_cb(ipc_struct_t *fs_ipc_struct, struct ipc_msg *ipc_msg, int fd, void *buf, size_t count, off_t offset)
+ssize_t chcore_file_pwrite_cb(ipc_struct_t *fs_ipc_struct,
+                              struct ipc_msg *ipc_msg, int fd, void *buf,
+                              size_t count, off_t offset)
 {
         struct fs_request *fr_ptr;
 
@@ -1107,9 +1194,11 @@ static ssize_t chcore_file_write(int fd, void *buf, size_t count)
         _fs_ipc_struct = get_ipc_struct_by_mount_id(fd_ext->mount_id);
 
         /**
-        * initial_offset could be arbitary value due to write_cb will ignore it.
-        */
-        return chcore_file_write_core(_fs_ipc_struct, chcore_file_write_cb, fd, buf, count, 0);
+         * initial_offset could be arbitary value due to write_cb will ignore
+         * it.
+         */
+        return chcore_file_write_core(
+                _fs_ipc_struct, chcore_file_write_cb, fd, buf, count, 0);
 }
 
 static ssize_t chcore_file_pwrite(int fd, void *buf, size_t count, off_t offset)
@@ -1131,9 +1220,11 @@ static ssize_t chcore_file_pwrite(int fd, void *buf, size_t count, off_t offset)
         _fs_ipc_struct = get_ipc_struct_by_mount_id(fd_ext->mount_id);
 
         /**
-        * initial_offset could be arbitary value due to write_cb will ignore it.
-        */
-        return chcore_file_write_core(_fs_ipc_struct, chcore_file_pwrite_cb, fd, buf, count, offset);
+         * initial_offset could be arbitary value due to write_cb will ignore
+         * it.
+         */
+        return chcore_file_write_core(
+                _fs_ipc_struct, chcore_file_pwrite_cb, fd, buf, count, offset);
 }
 
 static int chcore_file_close(int fd)
@@ -1185,7 +1276,8 @@ int chcore_mount(const char *special, const char *dir, const char *fstype,
         int ret;
 
         /* Bind 'fs_cap' and 'mount_point' in FSM */
-        ipc_msg = ipc_create_msg_with_cap(fsm_ipc_struct, sizeof(struct fsm_request), 1);
+        ipc_msg = ipc_create_msg_with_cap(
+                fsm_ipc_struct, sizeof(struct fsm_request), 1);
         fsm_req = (struct fsm_request *)ipc_get_msg_data(ipc_msg);
 
         fsm_req->req = FSM_REQ_MOUNT;
@@ -1222,10 +1314,11 @@ int chcore_umount(const char *special)
         struct fsm_request *fsm_req;
         int ret;
 
-        ipc_msg = ipc_create_msg_with_cap(fsm_ipc_struct, sizeof(struct fsm_request), 1);
+        ipc_msg = ipc_create_msg_with_cap(
+                fsm_ipc_struct, sizeof(struct fsm_request), 1);
         fsm_req = (struct fsm_request *)ipc_get_msg_data(ipc_msg);
 
-        fsm_req->req = FS_REQ_UMOUNT;
+        fsm_req->req = FSM_REQ_UMOUNT;
 
         /* fs_req_data->path = special (device_name) */
         if (pathcpy(fsm_req->path, FS_REQ_PATH_BUF_LEN, special, strlen(special))
@@ -1276,8 +1369,8 @@ int __xstatxx(int req, int fd, const char *path, int flags, void *statbuf,
         }
 
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
-        ipc_msg = ipc_create_msg(
-                mounted_fs_ipc_struct, sizeof(struct fs_request));
+        ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
+                                 sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
         /* There are 4 type of stat req */

@@ -17,6 +17,9 @@ includedir = $(prefix)/include
 libdir = $(prefix)/lib
 syslibdir = /lib
 
+ohrootdir = ../../../../../../../
+teekerneldir = $(ohrootdir)/base/tee/tee_os_kernel
+
 MALLOC_DIR = mallocng
 SRC_DIRS = $(addprefix $(srcdir)/,src/* src/malloc/$(MALLOC_DIR) crt ldso $(COMPAT_SRC_DIRS))
 BASE_GLOBS = $(addsuffix /*.c,$(SRC_DIRS))
@@ -27,6 +30,9 @@ BASE_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(BASE_SRCS)))
 ARCH_OBJS = $(patsubst $(srcdir)/%,%.o,$(basename $(ARCH_SRCS)))
 REPLACED_OBJS = $(sort $(subst /$(ARCH)/,/,$(ARCH_OBJS)))
 ALL_OBJS = $(addprefix obj/, $(filter-out $(REPLACED_OBJS), $(sort $(BASE_OBJS) $(ARCH_OBJS))))
+BOUNDS_CHECKING_OBJS = $(wildcard $(ohrootdir)/third_party/bounds_checking_function/obj/*)
+PWD = $(pwd)
+OH_TEE_OBJS = $(wildcard $(teekerneldir)/user/chcore-libs/sys-libs/libohtee/*.c.o)
 
 LIBC_OBJS = $(filter obj/src/%,$(ALL_OBJS)) $(filter obj/compat/%,$(ALL_OBJS))
 LDSO_OBJS = $(filter obj/ldso/%,$(ALL_OBJS:%.o=%.lo))
@@ -59,7 +65,7 @@ INSTALL = $(srcdir)/tools/install.sh
 ARCH_INCLUDES = $(wildcard $(srcdir)/arch/$(ARCH)/bits/*.h)
 GENERIC_INCLUDES = $(wildcard $(srcdir)/arch/generic/bits/*.h)
 INCLUDES = $(wildcard $(srcdir)/include/*.h $(srcdir)/include/*/*.h $(srcdir)/include/*/*/*.h)
-UAPI_INCLUDES = $(wildcard $(UAPI_INCLUDE)/uapi/*.h)
+UAPI_INCLUDES = $(wildcard $(UAPI_INCLUDE)/uapi/*.h $(UAPI_INCLUDE)/uapi/*/*.h)
 ALL_INCLUDES = $(sort $(INCLUDES:$(srcdir)/%=%) $(GENH:obj/%=%) $(ARCH_INCLUDES:$(srcdir)/arch/$(ARCH)/%=include/%) $(GENERIC_INCLUDES:$(srcdir)/arch/generic/%=include/%) $(UAPI_INCLUDES:$(UAPI_INCLUDE)/%=include/%))
 
 EMPTY_LIB_NAMES = m rt pthread crypt util xnet resolv dl
@@ -78,6 +84,13 @@ LDSO_PATHNAME = $(syslibdir)/ld-musl-$(ARCH)$(SUBARCH).so.1
 
 -include config.mak
 -include $(srcdir)/arch/$(ARCH)/arch.mak
+
+# cross-compiling libc with clang
+ifeq (clang, $(findstring clang, $(CC)))
+	CFLAGS_ALL += -target ${TARGET}
+	LDFLAGS_ALL += -fuse-ld=lld
+	LIBCC = -lclang_rt.builtins
+endif
 
 ifeq ($(ARCH),)
 
@@ -194,7 +207,7 @@ obj/musl-strip: config.mak
 	chmod +x $@
 
 obj/%-clang: $(srcdir)/tools/%-clang.in config.mak
-	sed -e 's!@CC@!$(WRAPCC_CLANG)!g' -e 's!@PREFIX@!$(prefix)!g' -e 's!@INCDIR@!$(includedir)!g' -e 's!@LIBDIR@!$(libdir)!g' -e 's!@LDSO@!$(LDSO_PATHNAME)!g' $< > $@
+	sed -e 's!@CC@!$(WRAPCC_CLANG)!g' -e 's!@PREFIX@!$(prefix)!g' -e 's!@INCDIR@!$(includedir)!g' -e 's!@LIBDIR@!$(libdir)!g' -e 's!@LDSO@!$(LDSO_PATHNAME)!g' -e 's!@TARGET@!$(TARGET)!g' -e 's!@COMPILER_DIR@!$(COMPILER_DIR)!g'  $< > $@
 	chmod +x $@
 
 $(DESTDIR)$(bindir)/%: obj/%

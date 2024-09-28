@@ -114,7 +114,8 @@ fail_out:
         __initial_common_stack_success = false;
 }
 
-static struct pmo_node *new_pmo_node(cap_t cap, vaddr_t va, size_t length)
+static struct pmo_node *new_pmo_node(cap_t cap, vaddr_t va, size_t length,
+                                     ipc_struct_t *_fs_ipc_struct)
 {
         struct pmo_node *node;
 
@@ -125,6 +126,7 @@ static struct pmo_node *new_pmo_node(cap_t cap, vaddr_t va, size_t length)
         node->cap = cap;
         node->va = va;
         node->pmo_size = length;
+        node->_fs_ipc_struct = _fs_ipc_struct;
         init_hlist_node(&node->hash_node);
         return node;
 }
@@ -276,7 +278,7 @@ void *chcore_mmap(void *start, size_t length, int prot, int flags, int fd,
                 goto err_free_addr;
         }
 
-        node = new_pmo_node(pmo_cap, (vaddr_t)map_addr, length);
+        node = new_pmo_node(pmo_cap, (vaddr_t)map_addr, length, NULL);
         if (node == NULL) {
                 goto err_free_pmo;
         }
@@ -310,14 +312,20 @@ err_exit:
 void *chcore_fmap(void *start, size_t length, int prot, int flags, int fd,
                   off_t off)
 {
+        struct pmo_node *node;
         struct fd_record_extension *fd_ext;
         struct fs_request *fr;
         ipc_struct_t *_fs_ipc_struct;
         cap_t fmap_pmo_cap;
         ipc_msg_t *ipc_msg;
         long ret;
+        bool vaddr_alloc = false;
 
-        BUG_ON(fd_dic[fd] == 0);
+        if (fd_dic[fd] == 0) {
+                ret = -EBADF;
+                goto out_fail;
+        }
+
         /**
          * One cap slot number to receive pmo_cap.
          */
@@ -331,9 +339,10 @@ void *chcore_fmap(void *start, size_t length, int prot, int flags, int fd,
         if (!start) {
                 start = (void *)chcore_alloc_vaddr(length /* length */);
                 if (!start) {
-                        ipc_destroy_msg(ipc_msg);
-                        return CHCORE_ERR_PTR(-ENOMEM);
+                        ret = -ENOMEM;
+                        goto out_destroy_msg;
                 }
+                vaddr_alloc = true;
         }
 
         fr->req = FS_REQ_FMAP;
@@ -346,13 +355,21 @@ void *chcore_fmap(void *start, size_t length, int prot, int flags, int fd,
 
         ret = ipc_call(_fs_ipc_struct, ipc_msg);
         if (ret < 0) {
-                return CHCORE_ERR_PTR(ret);
+                goto out_free_vaddr;
         }
 
         BUG_ON(ipc_get_msg_return_cap_num(ipc_msg) <= 0);
 
         fmap_pmo_cap = ipc_get_msg_cap(ipc_msg, 0);
-        ipc_destroy_msg(ipc_msg);
+        if (fmap_pmo_cap < 0) {
+                goto out_funmap;
+        }
+
+        node = new_pmo_node(fmap_pmo_cap, (vaddr_t)start, length, _fs_ipc_struct);
+        if (node == NULL) {
+                ret = -ENOMEM;
+                goto out_revoke_pmo_cap;
+        }
 
         /* Step: map pmo in addr */
         vmr_prop_t perm;
@@ -369,10 +386,36 @@ void *chcore_fmap(void *start, size_t length, int prot, int flags, int fd,
         // | VM_WRITE);
 
         if (ret < 0) {
-                return CHCORE_ERR_PTR(ret);
+                goto out_free_pmo_node;
         }
 
+        ipc_destroy_msg(ipc_msg);
+
+        pthread_once(&init_mmap_once, initial_mmap);
+        pthread_spin_lock(&va2pmo_lock);
+        htable_add(&va2pmo, VA_TO_KEY(start), &node->hash_node);
+        add_node_in_order(node);
+        pthread_spin_unlock(&va2pmo_lock);
+
         return start; /* Generated addr */
+
+out_free_pmo_node:
+        free_pmo_node(node);
+out_revoke_pmo_cap:
+        usys_revoke_cap(fmap_pmo_cap, false);
+out_funmap:
+        fr->req = FS_REQ_FUNMAP;
+        fr->munmap.addr = start;
+        fr->munmap.length = length;
+        ipc_call(_fs_ipc_struct, ipc_msg);
+out_free_vaddr:
+        if (vaddr_alloc) {
+               chcore_free_vaddr((vaddr_t)start, length);
+        }
+out_destroy_msg:
+        ipc_destroy_msg(ipc_msg);
+out_fail:
+        return CHCORE_ERR_PTR(ret);
 }
 
 int chcore_munmap(void *start, size_t length)
@@ -384,6 +427,9 @@ int chcore_munmap(void *start, size_t length)
         vaddr_t end_addr;
         struct pmo_node *node;
         struct pmo_node *prev_node = NULL;
+        struct fs_request *fr;
+        ipc_struct_t *_fs_ipc_struct;
+        ipc_msg_t *ipc_msg;
 
         if (((vaddr_t)start % PAGE_SIZE) || (length % PAGE_SIZE)) {
                 ret = -EINVAL;
@@ -409,16 +455,28 @@ int chcore_munmap(void *start, size_t length)
                 pmo_cap = node->cap;
                 pmo_size = node->pmo_size;
                 addr = node->va;
+                _fs_ipc_struct = node->_fs_ipc_struct;
 
                 hlist_del(&node->hash_node);
                 list_del(&node->list_node);
                 if (prev_node)
                         free_pmo_node(prev_node);
 
-                usys_unmap_pmo(SELF_CAP, pmo_cap, (vaddr_t)addr);
+                usys_unmap_pmo_with_length(pmo_cap, (vaddr_t)addr, pmo_size);
                 usys_revoke_cap(pmo_cap, false);
                 chcore_free_vaddr(addr, pmo_size);
                 pthread_spin_unlock(&va2pmo_lock);
+
+                /* This mapping is file mmap. */
+                if (_fs_ipc_struct) {
+                        ipc_msg = ipc_create_msg(_fs_ipc_struct, sizeof(struct fs_request));
+                        fr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
+                        fr->req = FS_REQ_FUNMAP;
+                        fr->munmap.addr = (void *)addr;
+                        fr->munmap.length = pmo_size;
+                        ret = ipc_call(_fs_ipc_struct, ipc_msg);
+                        ipc_destroy_msg(ipc_msg);
+                }
 
                 addr += pmo_size;
                 length = end_addr - addr;

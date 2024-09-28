@@ -49,7 +49,12 @@ typedef uint64_t vaddr_t;
 #define ET_DYN  3
 #define ET_CORE 4
 
+#ifdef CHCORE_OPENTRUSTEE
+#define CHCORE_LOADER "/libc_shared.so"
+#else /* CHCORE_OPENTRUSTEE */
 #define CHCORE_LOADER "/libc.so"
+#endif /* CHCORE_OPENTRUSTEE */
+
 #define LDD_NAME \
         "/ldd" /* ldd is actually a copy of libc.so but with different name */
 

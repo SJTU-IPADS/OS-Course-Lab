@@ -17,6 +17,9 @@
 #include <stddef.h>
 #include <uapi/ipc.h>
 #include <errno.h>
+#ifdef CHCORE_OPENTRUSTEE
+#include <uapi/opentrustee/ipc.h>
+#endif /* CHCORE_OPENTRUSTEE */
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,6 +88,7 @@ void __ipc_server_init_raw_msg(ipc_msg_t *ipc_msg, void *shm_ptr, unsigned int m
 
 #define IPC_SHM_AVAILABLE (IPC_PER_SHM_SIZE - sizeof(struct ipc_response_hdr))
 
+#ifndef CHCORE_OPENTRUSTEE
 #ifdef CHCORE_ARCH_X86_64
 #define DECLARE_SERVER_HANDLER(name) __attribute__((naked)) void name(void *shm_ptr, unsigned int max_data_len, unsigned int cap_num, badge_t badge)
 
@@ -114,6 +118,29 @@ void name(void *shm_ptr, unsigned int max_data_len, unsigned int cap_num, badge_
 } \
 static void __##name(ipc_msg_t *ipc_msg, badge_t client_badge)
 #endif
+#else /* CHCORE_OPENTRUSTEE */
+#define DECLARE_SERVER_HANDLER(name) void name(void *shm_ptr, unsigned int max_data_len, unsigned int cap_num, unsigned int task_id)
+
+#define DEFINE_SERVER_HANDLER(name) \
+static void __##name(ipc_msg_t *ipc_msg, badge_t client_badge); \
+void name(void *shm_ptr, unsigned int max_data_len, unsigned int cap_num, unsigned int task_id) { \
+        char buf[SERVER_IPC_MSG_BUF_SIZE]; \
+        ipc_msg_t *ipc_msg = (ipc_msg_t *)buf; \
+        __ipc_server_init_raw_msg(ipc_msg, shm_ptr, max_data_len, cap_num); \
+        __##name(ipc_msg, taskid_to_pid(task_id)); \
+} \
+static void __##name(ipc_msg_t *ipc_msg, badge_t client_badge)
+
+#define DEFINE_SERVER_HANDLER_TASKID(name) \
+static void __##name(ipc_msg_t *ipc_msg, pid_t pid, cap_t tid); \
+void name(void *shm_ptr, unsigned int max_data_len, unsigned int cap_num, unsigned int task_id) { \
+        char buf[SERVER_IPC_MSG_BUF_SIZE]; \
+        ipc_msg_t *ipc_msg = (ipc_msg_t *)buf; \
+        __ipc_server_init_raw_msg(ipc_msg, shm_ptr, max_data_len, cap_num); \
+        __##name(ipc_msg, taskid_to_pid(task_id), taskid_to_tid(task_id)); \
+} \
+static void __##name(ipc_msg_t *ipc_msg, pid_t pid, cap_t tid)
+#endif /* CHCORE_OPENTRUSTEE */
 
 typedef void (*server_destructor)(badge_t);
 
@@ -138,6 +165,8 @@ ipc_msg_t *ipc_create_msg_with_cap(ipc_struct_t *icb, unsigned int data_len, uns
 char *ipc_get_msg_data(ipc_msg_t *ipc_msg);
 cap_t ipc_get_msg_cap(ipc_msg_t *ipc_msg, unsigned int cap_id);
 int ipc_set_msg_data(ipc_msg_t *ipc_msg, void *data, unsigned int offset, unsigned int len);
+int ipc_set_msg_cap_restrict(ipc_msg_t *ipc_msg, unsigned int cap_slot_index,
+                             cap_t cap, cap_right_t mask, cap_right_t rest);
 int ipc_set_msg_cap(ipc_msg_t *ipc_msg, unsigned int cap_slot_index, cap_t cap);
 unsigned int ipc_get_msg_send_cap_num(ipc_msg_t *ipc_msg);
 void ipc_set_msg_send_cap_num(ipc_msg_t *ipc_msg, unsigned int cap_num);
