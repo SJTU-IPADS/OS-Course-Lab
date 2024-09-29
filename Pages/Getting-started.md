@@ -4,7 +4,8 @@
 
 ## 环境准备
 
-对于所有的操作系统，本实验必须依赖Docker环境，请按照Docker官方指示为你运行的操作系统安装对应的Docker发行版。
+对于所有的操作系统，本实验必须依赖Docker环境且仅能在Linux系统上进行运行(我们不支持Mac OS系统)，
+请按照Docker官方指示为你运行的操作系统安装对应的Docker发行版。
 
 > [!IMPORTANT] 关于Docker
 > 由于中国大陆地区的网络限制，请确保你的docker能够连接到docker-hub，测试方法可以使用 `docker pull nginx:latest`，如果无法访问，您可以依照[该文档](https://docs.docker.com/engine/daemon/)为你的docker daemon添加代理规则。
