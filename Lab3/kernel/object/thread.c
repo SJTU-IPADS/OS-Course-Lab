@@ -35,7 +35,7 @@ void test_root_thread_basic(const struct cap_group *ptr)
         BUG_ON(ptr == NULL);
         BUG_ON(container_of(ptr, struct object, opaque)->type
                != TYPE_CAP_GROUP);
-        kinfo("Cap_create Pretest Ok!\n");
+        ktest("Cap_create Pretest Ok!");
 }
 
 void test_root_thread_after_create(const struct cap_group *ptr,
@@ -43,7 +43,7 @@ void test_root_thread_after_create(const struct cap_group *ptr,
 {
         BUG_ON(ptr->thread_cnt == 0);
         BUG_ON(thread_cap == 0);
-        kinfo("Thread_create Ok!\n");
+        ktest("Thread_create Pretest Ok!");
 }
 
 /*
