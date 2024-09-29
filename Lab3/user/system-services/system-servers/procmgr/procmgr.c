@@ -586,6 +586,25 @@ void *handler_thread_routine(void *arg)
 
 void boot_default_apps(void)
 {
+        char *userland_argv = "userland.bin";
+        (void)procmgr_launch_process(1,
+                                     &userland_argv,
+                                     "userland",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
+
+        char *hello_world_argv= "hello_world.bin";
+        (void)procmgr_launch_process(1,
+                                     &hello_world_argv,
+                                     "userland",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
         /* Start shell. */
         char *shell_argv = "chcore_shell.bin";
         (void)procmgr_launch_process(1,

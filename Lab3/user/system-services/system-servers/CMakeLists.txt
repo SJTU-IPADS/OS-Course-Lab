@@ -38,7 +38,7 @@ add_subdirectory(procmgr)
 
 # File Systems
 # add_subdirectory(fs_base)
-#add_subdirectory(tmpfs)
+add_subdirectory(tmpfs)
 # if(CHCORE_FS_FAT32)
 #     add_subdirectory(fat32)
 # endif()

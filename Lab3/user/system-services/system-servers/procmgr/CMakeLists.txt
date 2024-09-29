@@ -44,7 +44,7 @@ endmacro()
 _procmgr_incbin(fsm.srv fsm_elf
                 ${CHCORE_PROJECT_DIR}/ramdisk/fsm.srv)
 _procmgr_incbin(tmpfs.srv tmpfs_elf
-                ${CHCORE_PROJECT_DIR}/ramdisk/tmpfs.srv)
+                ${system_services_build_dir}/system-servers/tmpfs/tmpfs.srv)
 
 add_custom_target(touch-inc-tmpfs
                 COMMAND touch ${CMAKE_CURRENT_BINARY_DIR}/incbin_tmpfs_elf.S)
