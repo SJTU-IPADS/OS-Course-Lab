@@ -10,3 +10,6 @@
 [submodule "Lab6/user/chcore-libc/musl-libc"]
 	path = Lab6/user/chcore-libc/musl-libc
 	url = git://git.musl-libc.org/musl
+[submodule "Thirdparty/musl-libc"]
+	path = Thirdparty/musl-libc
+	url = git://git.musl-libc.org/musl
