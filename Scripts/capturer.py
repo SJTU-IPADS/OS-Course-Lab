@@ -86,7 +86,7 @@ async def main(args: argparse.Namespace):
             decoded_line = line.decode()
             if (
                 args.serial
-                and f"End of Kernel Checkpoints: {args.serial}" in decoded_line
+                and "End of Kernel Checkpoints: {}".format(args.serial) in decoded_line
             ):
 
                 passed_kernel_serial = True
