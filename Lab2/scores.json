@@ -57,6 +57,7 @@
   {
     "capture": "Welcome to ChCore shell!",
     "msg": "Page fault",
-    "proposed": 30
+    "proposed": 30,
+    "userland": true
   }
 ]

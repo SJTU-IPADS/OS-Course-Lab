@@ -46,6 +46,12 @@ SECTIONS
     }
     . = ALIGN(4K);
 
+    .init.serial : {
+        *(.init.serial*)
+    }
+    . = ALIGN(4K);
+    _serial_end = . - KERNEL_VADDR;
+
     .rodata : {
         *(.rodata*)
     }

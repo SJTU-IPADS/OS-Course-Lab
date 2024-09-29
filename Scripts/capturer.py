@@ -24,6 +24,7 @@ class LineCapture:
     msg: str
     proposed: int
     actual: int = 0
+    userland: bool = False
 
 
 def killall(pid):
@@ -61,26 +62,45 @@ async def main(args: argparse.Namespace):
                     content=line_capture["capture"],
                     msg=line_capture["msg"],
                     proposed=line_capture["proposed"],
+                    userland=line_capture.get("userland", False),
                 )
             )
         except KeyError:
             print("Invalid line capture definition.")
             raise
+
     process = await asyncio.create_subprocess_exec(
         *args.command, stdin=DEVNULL, stdout=PIPE, stderr=STDOUT
     )
-    for line_capture in captures:
+
+    passed_kernel_serial = False
+    passed = 0
+    while passed != len(captures):
         try:
-            while True:
-                line = await asyncio.wait_for(process.stdout.readline(), args.timeout)
-                if len(line) == 0:
-                    break
-                if line_capture.content in line.decode():
-                    line_capture.actual = line_capture.proposed
-                    break
+            line = await asyncio.wait_for(process.stdout.readline(), args.timeout)
         except asyncio.TimeoutError:
             break
+        for line_capture in captures:
+            if len(line) == 0:
+                break
+            decoded_line = line.decode()
+            if (
+                args.serial
+                and f"End of Kernel Checkpoints: {args.serial}" in decoded_line
+            ):
 
+                passed_kernel_serial = True
+
+            if line_capture.content in decoded_line:
+                if line_capture.userland:
+                    if not args.serial or passed_kernel_serial:
+                        line_capture.actual = line_capture.proposed
+                        passed += 1
+                else:
+                    if args.serial in decoded_line:
+                        line_capture.actual = line_capture.proposed
+                        passed += 1
+                break
     killall(process.pid)
     await process.wait()
 
@@ -104,6 +124,14 @@ if __name__ == "__main__":
         dest="timeout",
         required=True,
         help="Timeout for the grading process.",
+    )
+    parser.add_argument(
+        "-s",
+        "--serial",
+        type=str,
+        dest="serial",
+        required=False,
+        help="Serial Number to proceed.",
     )
     parser.add_argument("command", nargs=argparse.REMAINDER, help="Command to grade.")
     args = parser.parse_args()

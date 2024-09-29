@@ -35,6 +35,10 @@ struct lock big_kernel_lock;
 ALIGN(PAGE_SIZE)
 char empty_page[4096] = {0};
 
+__attribute__((section(".init.serial")))
+ALIGN(PAGE_SIZE)
+char serial_number[4096] = "0xDEADBEEF";
+
 /* Kernel Test */
 void run_test(void);
 
@@ -120,6 +124,7 @@ void main(paddr_t boot_flag, void *info)
 	/* Create initial thread here, which use the `init.bin` */
 	create_root_thread();
 	kinfo("[ChCore] create initial thread done\n");
+	kinfo("End of Kernel Checkpoints: %s\n", serial_number);
 
 	/* Leave the scheduler to do its job */
 	sched();

@@ -13,10 +13,11 @@
 #ifndef KERNEL_TESTS_RUNTIME_TESTS_H
 #define KERNEL_TESTS_RUNTIME_TESTS_H
 
+extern char serial_number[4096];
 #define TEST_SUITE(lab, name) void lab##_##name(void)
 #define TEST(name)                           \
         for (const char *test_name = (name); \
-             printk("[TEST] %s: OK\n", test_name),0;)
+             printk("[TEST] %s: OK: %s\n", test_name, serial_number),0;)
 #define ASSERT(expr)                                                       \
         do {                                                               \
                 if (!(expr))                                               \
