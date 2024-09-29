@@ -35,7 +35,7 @@ void test_root_thread_basic(const struct cap_group *ptr)
         BUG_ON(ptr == NULL);
         BUG_ON(container_of(ptr, struct object, opaque)->type
                != TYPE_CAP_GROUP);
-        kinfo("Cap_create Pretest Ok!\n");
+        ktest("Cap_create Pretest Ok!");
 }
 
 void test_root_thread_after_create(const struct cap_group *ptr,
@@ -43,8 +43,7 @@ void test_root_thread_after_create(const struct cap_group *ptr,
 {
         BUG_ON(ptr->thread_cnt == 0);
         BUG_ON(thread_cap == 0);
-        kinfo("Thread_create Ok!\n");
-
+        ktest("Thread_create Pretest Ok!");
 }
 
 /*
@@ -92,9 +91,7 @@ void thread_deinit(void *thread_ptr)
 
         thread = (struct thread *)thread_ptr;
 
-        BUG_ON(thread->thread_ctx->thread_exit_state != TE_EXITED);
-        if (thread->thread_ctx->state != TS_EXIT)
-                kwarn("thread ctx->state is %d\n", thread->thread_ctx->state);
+        BUG_ON(!thread_is_exited(thread));
 
         cap_group = thread->cap_group;
         lock(&cap_group->threads_lock);
@@ -109,9 +106,9 @@ void thread_deinit(void *thread_ptr)
         /* The thread struct itself will be freed in __free_object */
 }
 
-#define PFLAGS2VMRFLAGS(PF)                                       \
-        (((PF)&PF_X ? VMR_EXEC : 0) | ((PF)&PF_W ? VMR_WRITE : 0) \
-         | ((PF)&PF_R ? VMR_READ : 0))
+#define PFLAGS2VMRFLAGS(PF)                                           \
+        (((PF) & PF_X ? VMR_EXEC : 0) | ((PF) & PF_W ? VMR_WRITE : 0) \
+         | ((PF) & PF_R ? VMR_READ : 0))
 
 #define OFFSET_MASK (0xFFF)
 
@@ -199,10 +196,9 @@ void create_root_thread(void)
                sizeof(data));
         meta.phdr_addr = (unsigned long)be64_to_cpu(*(u64 *)data);
 
-
         root_cap_group = create_root_cap_group(ROOT_NAME, strlen(ROOT_NAME));
         test_root_thread_basic(root_cap_group);
-        
+
         init_vmspace = obj_get(root_cap_group, VMSPACE_OBJ_ID, TYPE_VMSPACE);
 
         /* Allocate and setup a user stack for the init thread */
@@ -210,9 +206,9 @@ void create_root_thread(void)
                                    PMO_ANONYM,
                                    root_cap_group,
                                    0,
-                                   &stack_pmo);
+                                   &stack_pmo,
+                                   PMO_ALL_RIGHTS);
         BUG_ON(stack_pmo_cap < 0);
-
 
         ret = vmspace_map_range(init_vmspace,
                                 ROOT_THREAD_STACK_BASE,
@@ -238,11 +234,16 @@ void create_root_thread(void)
 
                 /* LAB 3 TODO BEGIN */
                 /* Get offset, vaddr, filesz, memsz from image*/
+                UNUSED(flags);
+                UNUSED(filesz);
+                UNUSED(offset);
+                UNUSED(memsz);
 
                 /* LAB 3 TODO END */
 
-                struct pmobject *segment_pmo;
+                struct pmobject *segment_pmo = NULL;
                 /* LAB 3 TODO BEGIN */
+                UNUSED(segment_pmo);
 
                 /* LAB 3 TODO END */
 
@@ -252,8 +253,8 @@ void create_root_thread(void)
                 /* Copy elf file contents into memory*/
 
                 /* LAB 3 TODO END */
-                
-                unsigned vmr_flags = 0;    
+
+                unsigned vmr_flags = 0;
                 /* LAB 3 TODO BEGIN */
                 /* Set flags*/
 
@@ -265,7 +266,6 @@ void create_root_thread(void)
                                         vmr_flags,
                                         segment_pmo);
                 BUG_ON(ret < 0);
-
         }
         obj_put(init_vmspace);
 
@@ -370,15 +370,18 @@ static cap_t create_thread(struct cap_group *cap_group, vaddr_t stack,
 
         /* ret is thread_cap in the current_cap_group */
         if (cap_group != current_cap_group)
-                cap = cap_copy(cap_group, current_cap_group, cap);
+                cap = cap_copy(cap_group,
+                               current_cap_group,
+                               cap,
+                               CAP_RIGHT_NO_RIGHTS,
+                               CAP_RIGHT_NO_RIGHTS);
         if (type == TYPE_USER) {
-                thread->thread_ctx->state = TS_INTER;
                 if (startup_suspend) {
                         thread->thread_ctx->is_suspended = true;
                 }
                 BUG_ON(sched_enqueue(thread));
         } else if ((type == TYPE_SHADOW) || (type == TYPE_REGISTER)) {
-                thread->thread_ctx->state = TS_WAITING;
+                thread_set_ts_waiting(thread);
         }
         return cap;
 
@@ -477,7 +480,8 @@ void sys_thread_exit(void)
 
         if (current_thread->clear_child_tid) {
                 int val = 0;
-                copy_to_user(current_thread->clear_child_tid, &val, sizeof(int));
+                copy_to_user(
+                        current_thread->clear_child_tid, &val, sizeof(int));
                 sys_futex_wake(current_thread->clear_child_tid, 0, 1);
         }
 
@@ -533,7 +537,7 @@ int sys_get_affinity(cap_t thread_cap)
         return aff;
 }
 
-int sys_set_prio(cap_t thread_cap, int prio)
+int sys_set_prio(cap_t thread_cap, unsigned int prio)
 {
         /* Only support the thread itself */
         if (thread_cap != 0)

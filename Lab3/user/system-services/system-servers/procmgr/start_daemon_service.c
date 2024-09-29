@@ -19,18 +19,52 @@ void start_daemon_service(void)
         char *args[1];
         args[0] = "/network-cp.service";
 
-        procmgr_launch_process(
-                1, args, "network-cp.service", true, INIT_BADGE, NULL, COMMON_APP);
+        (void)procmgr_launch_process(1,
+                                     args,
+                                     "network-cp.service",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
 
-#if (defined CHCORE_ARCH_X86_64) && (defined CHCORE_KERNEL_ENABLE_QEMU_VIRTIO_NET)
+#if defined(CHCORE_ARCH_X86_64) \
+        && defined(CHCORE_KERNEL_ENABLE_QEMU_VIRTIO_NET)
         args[0] = "/virtio-net.bin";
-        procmgr_launch_process(
-                1, args, "virtio-net.bin", true, INIT_BADGE, NULL, SYSTEM_DRIVER);
+        (void)procmgr_launch_process(1,
+                                     args,
+                                     "virtio-net.bin",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     SYSTEM_DRIVER,
+                                     NULL);
 #endif
 
-#if (defined CHCORE_PLAT_LEON3) && !(defined CHCORE_QEMU)
+#if defined(CHCORE_PLAT_LEON3) && !defined(CHCORE_QEMU)
         args[0] = "/greth.bin";
-        procmgr_launch_process(1, args, "greth.bin", true, INIT_BADGE, NULL, SYSTEM_DRIVER);
+        (void)procmgr_launch_process(1,
+                                     args,
+                                     "greth.bin",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     SYSTEM_DRIVER,
+                                     NULL);
 #endif
 #endif
+
+#if defined(CHCORE_APP_SATELLITE_NETWORK)
+        char *args_sl_network[1];
+        args_sl_network[0] = "/nmru";
+        (void)procmgr_launch_process(1,
+                                     args_sl_network,
+                                     "satellite_network_manager",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
+#endif
+
 }

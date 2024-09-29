@@ -22,8 +22,6 @@
 #include "proc_node.h"
 #include "procmgr_dbg.h"
 
-pthread_mutex_t recycle_lock;
-
 /* A recycle_msg is set by the kernel when one process needs to
  * be recycled.
  */
@@ -46,13 +44,28 @@ void *recycle_routine(void *arg)
         struct recycle_msg msg;
         struct proc_node *proc_to_recycle;
 
+#ifdef CHCORE_OPENTRUSTEE
+        /*
+         * Because the priority of idle thread in OpenTrustee is 1, priorities
+         * of all other threads should be higher, including recycle thread.
+         * 
+         * Because of EAGAIN in usys_cap_group_recycle, the priority of
+         * recycle thread should be lower than all recyclable
+         * threads(TAs or other processes).
+         * 
+         * Setting priority to 2 meets these conditions.
+         */
+        usys_set_prio(0, 2);
+        sched_yield();
+#endif /* CHCORE_OPENTRUSTEE */
+
         /* Recycle_thread will wait on this notification */
         notific_cap = usys_create_notifc();
 
         /* The msg on recycling which process is in msg_buffer */
         recycle_msg_buffer =
                 new_ringbuffer(MAX_MSG_NUM, sizeof(struct recycle_msg));
-        assert(recycle_msg_buffer);
+        BUG_ON(!recycle_msg_buffer);
 
         ret = usys_register_recycle_thread(notific_cap,
                                            (vaddr_t)recycle_msg_buffer);
@@ -62,15 +75,12 @@ void *recycle_routine(void *arg)
                 usys_wait(notific_cap, 1 /* Block */, NULL /* No timeout */);
                 while (get_one_msg(recycle_msg_buffer, &msg)) {
                         proc_to_recycle = get_proc_node(msg.badge);
-                        assert(proc_to_recycle != 0);
+                        if (!proc_to_recycle) {
+                                continue;
+                        }
 
-                        pthread_mutex_lock(&recycle_lock);
                         proc_to_recycle->exitstatus = msg.exitcode;
-                        /*
-                         * chcore_waitpid() will block until the state of
-                         * corresponding process is set as PROC_STATE_EXIT.
-                         */
-                        proc_to_recycle->state = PROC_STATE_EXIT;
+                        signal_waiters(proc_to_recycle);
 
                         do {
                                 ret = usys_cap_group_recycle(
@@ -86,9 +96,9 @@ void *recycle_routine(void *arg)
                          * Currently, this can be ensured when the recycle is
                          * done.
                          */
+                        proc_node_exit(proc_to_recycle);
 
-                        del_proc_node(proc_to_recycle);
-                        pthread_mutex_unlock(&recycle_lock);
+                        put_proc_node(proc_to_recycle);
                 }
         }
 }

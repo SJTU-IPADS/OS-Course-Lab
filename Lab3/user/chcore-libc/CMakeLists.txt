@@ -87,14 +87,14 @@ add_custom_target(libc-configure ALL
     WORKING_DIRECTORY ${_libc_target_dir}
     COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX} --syslibdir=${CMAKE_INSTALL_PREFIX}/lib --with-malloc=oldmalloc
     $<$<BOOL:${CHCORE_USER_DEBUG}>:--enable-debug>
-    CROSS_COMPILE=${CHCORE_CROSS_COMPILE} $<$<BOOL:${libc_defs}>:CFLAGS=${libc_defs}>
+    CROSS_COMPILE=${CHCORE_CROSS_COMPILE} COMPILER=${CMAKE_C_COMPILER} $<$<BOOL:${libc_defs}>:CFLAGS=${libc_defs}>
     UAPI_INCLUDE=${CHCORE_PROJECT_DIR}/kernel/user-include
 )
 
 # Compile libc
 add_custom_target(libc-build ALL
     WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND make -j${_nproc}
+    COMMAND bear make -j${nproc} || make -j${_nproc}
     DEPENDS libc-configure)
 
 # Install libc as usual
@@ -106,4 +106,6 @@ add_custom_target(libc-install ALL
 # clean target
 add_custom_target(libc-clean
     WORKING_DIRECTORY ${_libc_target_dir}
+    COMMAND git clean -fdx || :
+    COMMAND git reset --hard HEAD || :
     COMMAND make clean)

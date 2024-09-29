@@ -76,6 +76,10 @@ int set_one_msg(struct ring_buffer *ring_buf, void *msg)
 
 struct ring_buffer *new_ringbuffer(int msg_num, size_t msg_size)
 {
+        if (msg_num <= 0) {
+                return NULL;
+        }
+
         size_t buffer_size = msg_num * msg_size + sizeof(struct ring_buffer);
         int page_num = ROUND_UP(buffer_size, 0x1000);
         struct ring_buffer *ring_buf =

@@ -8,7 +8,7 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_enable_clang_tidy()
+set(SYS_SERVER_CONFIGURE_FILE "/server_configure.yaml")
 include_directories(include)
 add_subdirectory(libs)
 add_executable(
@@ -20,21 +20,29 @@ add_executable(
     start_daemon_service.c
     srvmgr.c
     loader.c)
+
+add_library(cyaml STATIC IMPORTED)
+set_target_properties(cyaml PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/libcyaml.a")
+add_library(yaml STATIC IMPORTED)
+set_target_properties(yaml PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/libyaml.a")
 target_link_libraries(procmgr.srv PRIVATE chcoreelf)
 target_link_libraries(procmgr.srv PRIVATE launch)
+target_link_libraries(procmgr.srv PRIVATE refcnt)
+target_link_libraries(procmgr.srv PRIVATE cyaml)
+target_link_libraries(procmgr.srv PRIVATE yaml)
+target_compile_definitions(procmgr.srv PRIVATE SYS_SERVER_CONFIGURE_FILE="${SYS_SERVER_CONFIGURE_FILE}")
 
 macro(_procmgr_incbin _target_name _binary_name _binary_path)
     set(_binary_name ${_binary_name})
     set(_binary_path ${_binary_path})
     configure_file(incbin_basic_srv.tpl.S incbin_${_binary_name}.S)
     target_sources(procmgr.srv PRIVATE incbin_${_binary_name}.S)
-    add_dependencies(procmgr.srv ${_target_name})
     unset(_binary_name)
     unset(_binary_path)
 endmacro()
 
 _procmgr_incbin(fsm.srv fsm_elf
-                ${system_services_build_dir}/system-servers/fsm/fsm.srv)
+                ${CHCORE_PROJECT_DIR}/ramdisk/fsm.srv)
 _procmgr_incbin(tmpfs.srv tmpfs_elf
                 ${system_services_build_dir}/system-servers/tmpfs/tmpfs.srv)
 
@@ -52,11 +60,22 @@ add_custom_target(
     COMMAND echo "build procmgr binary..."
     COMMAND read_procmgr_elf_tool ${CMAKE_CURRENT_BINARY_DIR}/procmgr.srv
     COMMAND chmod 666 elf_info.temp
-    COMMAND cat elf_info.temp procmgr.bin > procmgr
+    COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}/procmgr.srv procmgr
+    COMMAND exec 3<>procmgr && 
+            cat elf_info.temp >&3
     COMMAND rm -f ${CMAKE_CURRENT_BINARY_DIR}/elf_info.temp
     COMMAND echo "build procmgr success!"
-    DEPENDS procmgr.srv procmgr.bin)
+    DEPENDS procmgr.srv)
 
 chcore_all_force_static_linked()
 
-chcore_objcopy_binary(procmgr.srv procmgr.bin)
+get_directory_property(defs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS)
+add_custom_target(
+    generate_configure_file ALL
+    COMMAND python3 
+    ${CMAKE_CURRENT_SOURCE_DIR}/srvmgr_config_generator/generate_config.py 
+    ${CONFIGURABLE_SERVER_CONFIG_INTERMEDIATE_FILE}
+    ${USER_SERVER_CONFIG_INTERMEDIATE_FILE}
+    ${CHCORE_RAMDISK_DIR}/${SYS_SERVER_CONFIGURE_FILE} ARGS ${defs}
+)
+

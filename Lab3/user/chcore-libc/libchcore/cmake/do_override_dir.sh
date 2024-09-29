@@ -65,7 +65,7 @@ function traverse {
 
         if [ -d "$file" ]; then
             if [ ! -e "$target_file" ]; then
-                ln -s "$file" "$target_file"
+                ln -sf "$file" "$target_file"
                 echo "--- Overrided ${target_file} with ${file} symlink"
             elif [ ! -L "$target_file" ]; then
                 traverse "$file"
@@ -82,11 +82,11 @@ function traverse {
                 fi
             else
                 if [ ! -e "$target_file" ]; then
-                    ln -s "$file" "$target_file"
+                    ln -sf "$file" "$target_file"
                     echo "--- Overrided ${target_file} with ${file}"
                 elif [ ! -L "$target_file" ]; then
                     mv "$target_file" "$target_file.bak"
-                    ln -s "$file" "$target_file"
+                    ln -sf "$file" "$target_file"
                     echo "--- Overrided ${target_file} with ${file}"
                 else
                     echo "--- Target file ${target_file} is already a symlink, skipping..."

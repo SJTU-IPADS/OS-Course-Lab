@@ -202,7 +202,7 @@ TEST_SUITE(lab2, test_page_table)
 
                 free_page_table(pgtbl);
         }
-        TEST("Map & unmap huge pages")
+        TEST("Map & unmap huge range")
         {
                 void *pgtbl = get_pages(0);
                 paddr_t pa;

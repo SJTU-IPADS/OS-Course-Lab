@@ -35,6 +35,8 @@
 #include <chcore-internal/lwip_defs.h>
 #include <chcore/pthread.h>
 
+#define CONN_CAP_SERVER -1
+
 struct ipc_msg {
         void *data_ptr;
         unsigned int max_data_len;
@@ -51,6 +53,10 @@ struct ipc_msg {
         /* icb: ipc control block (not needed by the kernel) */
         ipc_struct_t *icb;
         struct ipc_response_hdr *response_hdr;
+        enum {
+                THREAD_SERVER,
+                THREAD_CLIENT,
+        } thread_type;
 } __attribute__((aligned(sizeof(void *))));
 
 /*
@@ -99,8 +105,10 @@ ipc_msg_t *ipc_create_msg_with_cap(ipc_struct_t *icb, unsigned int data_len,
 
         if (unlikely(icb->conn_cap == 0)) {
                 /* Create the IPC connection on demand */
-                if (connect_system_server(icb) != 0)
-                        return NULL;
+                if (connect_system_server(icb) != 0) {
+                        printf("connect ipc server failed!\n");
+                        exit(-1);
+                }
         }
 
         /* Grab the ipc lock before setting ipc msg */
@@ -133,11 +141,14 @@ ipc_msg_t *ipc_create_msg_with_cap(ipc_struct_t *icb, unsigned int data_len,
         ipc_msg->send_cap_num = send_cap_num;
         ipc_msg->response_hdr = (struct ipc_response_hdr *)icb->shared_buf;
         ipc_msg->icb = icb;
+        ipc_msg->thread_type = THREAD_CLIENT;
                   
         return ipc_msg;
 out_unlock:
         chcore_spin_unlock(&(icb->lock));
-        return NULL;
+        printf("ipc create msg failed!\n");
+        exit(-1);
+
 }
 
 void __ipc_server_init_raw_msg(ipc_msg_t *ipc_msg, void *shm_ptr, unsigned int max_data_len, unsigned int cap_num)
@@ -146,6 +157,7 @@ void __ipc_server_init_raw_msg(ipc_msg_t *ipc_msg, void *shm_ptr, unsigned int m
         ipc_msg->max_data_len = max_data_len;
         ipc_msg->send_cap_num = cap_num;
         ipc_msg->response_hdr = (struct ipc_response_hdr *)shm_ptr;
+        ipc_msg->thread_type = THREAD_SERVER;
 }
 
 char *ipc_get_msg_data(ipc_msg_t *ipc_msg)
@@ -176,25 +188,47 @@ int ipc_set_msg_data(ipc_msg_t *ipc_msg, void *data, unsigned int offset,
 
 cap_t ipc_get_msg_cap(ipc_msg_t *ipc_msg, unsigned int cap_slot_index)
 {
-        cap_t cap;
+        cap_t cap, conn_cap;
+        if (ipc_msg->thread_type == THREAD_SERVER)
+                conn_cap = CONN_CAP_SERVER;
+        else
+                conn_cap = ipc_msg->icb->conn_cap;
 
-        if ((cap = usys_ipc_get_cap(cap_slot_index)) < 0) {
-                printf("%s failed, ret = %d\n", __func__, cap);
-                return -1;
+        while ((cap = usys_ipc_get_cap(conn_cap, cap_slot_index)) < 0) {
+                if (cap != -EIPCRETRY) {
+                        printf("%s failed, ret = %d\n", __func__, cap);
+                        return -1;
+                }
         }
-
         return cap;
 }
 
 int ipc_set_msg_cap(ipc_msg_t *ipc_msg, unsigned int cap_slot_index, cap_t cap)
 {
+        return ipc_set_msg_cap_restrict(ipc_msg,
+                                        cap_slot_index,
+                                        cap,
+                                        CAP_RIGHT_NO_RIGHTS,
+                                        CAP_RIGHT_NO_RIGHTS);
+}
+
+int ipc_set_msg_cap_restrict(ipc_msg_t *ipc_msg, unsigned int cap_slot_index,
+                             cap_t cap, cap_right_t mask, cap_right_t rest)
+{
         int ret;
+        cap_t conn_cap;
 
-        if ((ret = usys_ipc_set_cap(cap_slot_index, cap)) < 0) {
-                printf("%s failed, ret = %d\n", __func__, ret);
-                return -1;
+        if (ipc_msg->thread_type == THREAD_SERVER)
+                conn_cap = CONN_CAP_SERVER;
+        else
+                conn_cap = ipc_msg->icb->conn_cap;
+        
+        while ((ret = usys_ipc_set_cap_restrict(conn_cap, cap_slot_index, cap, mask, rest)) < 0) {
+               if (ret != -EIPCRETRY) {
+                        printf("%s failed, ret = %d\n", __func__, cap);
+                        return -1;
+                }
         }
-
         return 0;
 }
 
@@ -559,7 +593,12 @@ int simple_ipc_forward(ipc_struct_t *ipc_struct, void *data, int len)
         int ret;
 
         ipc_msg = ipc_create_msg(ipc_struct, len);
-        ipc_set_msg_data(ipc_msg, data, 0, len);
+        ret = ipc_set_msg_data(ipc_msg, data, 0, len);
+        
+        if (ret < 0) {
+                return -EINVAL;
+        }
+
         ret = ipc_call(ipc_struct, ipc_msg);
         ipc_destroy_msg(ipc_msg);
 

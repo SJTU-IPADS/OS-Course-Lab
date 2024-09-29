@@ -1,0 +1,15 @@
+[submodule "Lab3/user/chcore-libc/musl-libc"]
+	path = Lab3/user/chcore-libc/musl-libc
+	url = git://git.musl-libc.org/musl
+[submodule "Lab4/user/chcore-libc/musl-libc"]
+	path = Lab4/user/chcore-libc/musl-libc
+	url = git://git.musl-libc.org/musl
+[submodule "Lab5/user/chcore-libc/musl-libc"]
+	path = Lab5/user/chcore-libc/musl-libc
+	url = git://git.musl-libc.org/musl
+[submodule "Lab6/user/chcore-libc/musl-libc"]
+	path = Lab6/user/chcore-libc/musl-libc
+	url = git://git.musl-libc.org/musl
+[submodule "Thirdparty/musl-libc"]
+	path = Thirdparty/musl-libc
+	url = git://git.musl-libc.org/musl

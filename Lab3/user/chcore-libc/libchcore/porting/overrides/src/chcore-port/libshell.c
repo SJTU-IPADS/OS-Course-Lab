@@ -26,8 +26,8 @@ void shell_new_fg_proc(pid_t pid) {
 	struct shell_req *req;
 
 	if (shell_msg_struct == NULL) {
-		procmgr_msg = ipc_create_msg_with_cap(
-				procmgr_ipc_struct, sizeof(struct proc_request), 1);
+		procmgr_msg = ipc_create_msg(
+				procmgr_ipc_struct, sizeof(struct proc_request));
 		proc_req = (struct proc_request *)ipc_get_msg_data(procmgr_msg);
 
 		proc_req->req = PROC_REQ_GET_SHELL_CAP;

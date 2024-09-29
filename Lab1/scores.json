@@ -1,7 +1,8 @@
 [
   {
-    "capture": "Jump to kernel main",
+    "capture": "Welcome to ChCore shell!",
     "msg": "Jump to kernel main",
-    "proposed": 100
+    "proposed": 100,
+    "userland": true
   }
 ]

@@ -14,3 +14,13 @@
 
 typedef int cap_t;
 typedef int badge_t;
+/*
+ * Rights of capabilities.
+ * Rights can be divided into two types, one is object-specific rights (such
+ * as PMO_READ, PMO_WRITE, PMO_EXEC, PMO_COW), and the other is some general
+ * rights (CAP_RIGHT_COPY and CAP_RIGHT_REVOKE_ALL) to define capability
+ * actions.
+ * NOTE: When defining new capability rights, it is necessary to be careful
+ * NOT to cause CONFLICTS between the above two types of rights.
+ */
+typedef int cap_right_t;

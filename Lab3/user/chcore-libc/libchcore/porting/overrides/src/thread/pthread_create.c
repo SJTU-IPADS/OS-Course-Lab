@@ -376,18 +376,10 @@ int __pthread_create_internal(int type, pthread_t *restrict res,
 	if (!tsd) {
 		/* TODO: mprotect */
 		/* if (guard) */
-		if (0) {
-			map = __mmap(0, size, PROT_NONE, MAP_PRIVATE|MAP_ANON, -1, 0);
-			if (map == MAP_FAILED) goto fail;
-			if (__mprotect(map+guard, size-guard, PROT_READ|PROT_WRITE)
-			    && errno != ENOSYS) {
-				__munmap(map, size);
-				goto fail;
-			}
-		} else {
-			map = __mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
-			if (map == MAP_FAILED) goto fail;
-		}
+
+		map = __mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+		if (map == MAP_FAILED) goto fail;
+
 		tsd = map + size - __pthread_tsd_size;
 		if (!stack) {
 			stack = tsd - libc.tls_size;
@@ -578,6 +570,21 @@ cap_t chcore_pthread_create_register_cb(pthread_t *restrict res,
 				 void *restrict arg)
 {
 	return __pthread_create_internal(TYPE_REGISTER, res, attrp, entry, arg);
+}
+
+int chcore_pthread_get_tid(pthread_t thread)
+{
+	return thread->tid;
+}
+void chcore_pthread_wake_joiner(pthread_t thread)
+{
+	libc.threads_minus_1--;
+	thread->next->prev = thread->prev;
+	thread->prev->next = thread->next;
+	thread->prev = thread->next = thread;
+
+	a_store(&thread->detach_state, DT_EXITED);
+	__wake(&thread->detach_state, 1, 1);
 }
 
 

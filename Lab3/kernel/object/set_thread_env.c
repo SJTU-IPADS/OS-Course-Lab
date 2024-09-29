@@ -12,6 +12,7 @@
 
 #include <mm/mm.h>
 #include <common/util.h>
+#include <lib/krand.h>
 
 #include "thread_env.h"
 
@@ -32,6 +33,8 @@
 #define AT_HWCAP    16 /* arch dependent hints at CPU capabilities */
 #define AT_SECURE   23 /* secure mode boolean */
 #define AT_RANDOM   25 /* address of 16 random bytes */
+
+#define RANDOM_OFF 64 /* offset of a 64bit random number */
 
 struct env_buf {
         unsigned long *entries_tail;
@@ -113,7 +116,10 @@ void prepare_env(char *env, vaddr_t top_vaddr, char *name,
         env_buf_append_int_auxv(&env_buf, AT_GID, FAKE_UGID);
         env_buf_append_int_auxv(&env_buf, AT_EGID, FAKE_UGID);
         env_buf_append_int_auxv(&env_buf, AT_HWCAP, 0);
-        env_buf_append_int_auxv(&env_buf, AT_RANDOM, top_vaddr - FAKE_RANDOM_OFF);
+        size_t *canary = (size_t *)(env + ENV_SIZE_ON_STACK - RANDOM_OFF);
+        *canary = krand();
+        env_buf_append_int_auxv(
+                &env_buf, AT_RANDOM, top_vaddr - RANDOM_OFF);
         env_buf_append_int_auxv(&env_buf, AT_NULL, 0);
 
         /* add more auxv here */
