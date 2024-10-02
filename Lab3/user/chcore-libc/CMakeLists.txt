@@ -74,6 +74,7 @@ set(_libc_target_dir ${CMAKE_CURRENT_SOURCE_DIR}/musl-libc)
 set(_libchcore_porting_dir ${CMAKE_CURRENT_SOURCE_DIR}/libchcore/porting)
 set(_libchcore_overrides_dir ${_libchcore_porting_dir}/overrides)
 set(_libchcore_patches_dir ${_libchcore_porting_dir}/patches)
+set(_libchcore_cleanup_script ${CMAKE_CURRENT_SOURCE_DIR}/libchcore/cmake/do_cleanup.sh)
 
 do_overrides(${_libchcore_overrides_dir} ${_libc_target_dir})
 do_patches(${_libchcore_patches_dir} ${_libc_target_dir})
@@ -94,7 +95,7 @@ add_custom_target(libc-configure ALL
 # Compile libc
 add_custom_target(libc-build ALL
     WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND bear make -j${nproc} || make -j${_nproc}
+    COMMAND make -j${_nproc}
     DEPENDS libc-configure)
 
 # Install libc as usual
@@ -105,7 +106,5 @@ add_custom_target(libc-install ALL
 
 # clean target
 add_custom_target(libc-clean
-    WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND git clean -fdx || :
-    COMMAND git reset --hard HEAD || :
-    COMMAND make clean)
+    COMMAND make -C ${_libc_target_dir} clean
+    COMMAND bash ${_libchcore_cleanup_script} ${_libc_target_dir})
