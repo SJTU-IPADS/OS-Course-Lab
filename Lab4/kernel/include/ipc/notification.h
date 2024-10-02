@@ -14,6 +14,7 @@
 #define IPC_NOTIFICATION_H
 
 #include <object/thread.h>
+#include <object/object.h>
 
 struct notification {
 	unsigned int not_delivered_notifc_count;
@@ -31,7 +32,7 @@ struct notification {
 
 struct irq_notification;
 
-void init_notific(struct notification *notifc);
+int init_notific(struct notification *notifc);
 void deinit_notific(struct notification *notifc);
 int wait_notific_internal(struct notification *notifc, bool is_block,
                           struct timespec *timeout, bool need_unlock,
@@ -55,5 +56,7 @@ int wait_notific_internal(struct notification *notifc, bool is_block,
                           bool need_obj_put);
 int sys_wait(cap_t notifc_cap, bool is_block, struct timespec *timeout);
 int sys_notify(cap_t notifc_cap);
+
+CAP_ALLOC_DECLARE(create_notific);
 
 #endif /* IPC_NOTIFICATION_H */

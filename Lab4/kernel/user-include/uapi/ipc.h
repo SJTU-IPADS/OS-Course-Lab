@@ -54,3 +54,12 @@ struct ipc_response_hdr {
  * @param client_badge: badge of client.
  */
 typedef void (*server_handler)(void *shm_ptr, unsigned int max_data_len, unsigned int send_cap_num, badge_t client_badge);
+
+#ifdef CHCORE_OPENTRUSTEE
+#define PID_OFFSET 16U
+#define PID_MASK   ((0x1 << PID_OFFSET) - 1)
+#define pid_to_taskid(tid, pid) \
+        (((u32)(tid) << PID_OFFSET) | ((u32)(pid)&PID_MASK))
+#define taskid_to_pid(task_id) ((task_id)&PID_MASK)
+#define taskid_to_tid(task_id) (((task_id) >> PID_OFFSET) & TID_MASK)
+#endif /* CHCORE_OPENTRUSTEE */

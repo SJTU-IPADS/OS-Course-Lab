@@ -36,7 +36,7 @@ struct process_info
         /* thread number */
         int thread_num;
         /* physical memory ss */
-        unsigned long rss;
+        long rss;
         /* virtual memory ss */
         unsigned long vss;
 };

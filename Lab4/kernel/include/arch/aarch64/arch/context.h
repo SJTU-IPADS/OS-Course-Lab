@@ -10,15 +10,11 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#ifndef LIB_PRINTK_H
-#define LIB_PRINTK_H
+#ifndef ARCH_AARCH64_ARCH_CONTEXT_H
+#define ARCH_AARCH64_ARCH_CONTEXT_H
 
-typedef void (*graphic_putc_handler)(char c);
-extern graphic_putc_handler graphic_putc;
+#include <object/thread.h>
 
-void set_graphic_putc_handler(graphic_putc_handler f);
-void printk(const char *fmt, ...);
+void arch_thread_mask_fiq(struct thread *thread, bool mask);
 
-int simple_sprintf(char *str, const char *fmt, ...);
-
-#endif /* LIB_PRINTK_H */
+#endif /* ARCH_AARCH64_ARCH_CONTEXT_H */
