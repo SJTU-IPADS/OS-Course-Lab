@@ -18,6 +18,9 @@
 #include <sched/fpu.h>
 #include <arch/machine/smp.h>
 #include <arch/machine/esr.h>
+#ifdef CHCORE_OPENTRUSTEE
+#include <arch/trustzone/smc.h>
+#endif /* CHCORE_OPENTRUSTEE */
 #include "irq_entry.h"
 
 u8 irq_handle_type[MAX_IRQ_NUM];
@@ -151,6 +154,7 @@ u64 handle_entry_c(int type, u64 esr, u64 address)
 void handle_irq(void)
 {
 	plat_handle_irq();
+	sched_periodic();
 	eret_to_thread(switch_context());
 }
 

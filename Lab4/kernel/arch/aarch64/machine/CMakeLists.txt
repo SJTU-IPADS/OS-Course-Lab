@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE pmu.c.obj smp.c)
+chcore_target_precompile(${kernel_target} PRIVATE pmu.c)
+target_sources(${kernel_target} PRIVATE smp.c)

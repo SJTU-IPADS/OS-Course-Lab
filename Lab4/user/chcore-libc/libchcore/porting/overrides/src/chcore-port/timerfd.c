@@ -82,8 +82,6 @@ int chcore_timerfd_create(int clockid, int flags)
 
         return timerfd;
 fail_out:
-        if (timerfd > 0)
-                free_fd(timerfd);
         if (timer_file > 0)
                 free(timer_file);
         return ret;
@@ -132,7 +130,7 @@ int chcore_timerfd_settime(int fd, int flags, struct itimerspec *new_value,
         /* Set the time to expire. */
         timer_file->it = *new_value;
         if (new_value->it_value.tv_sec != 0
-            || new_value->it_value.tv_sec != 0) {
+            || new_value->it_value.tv_nsec != 0) {
                 val_ns = timespec_to_ns(&new_value->it_value);
                 clock_gettime(CLOCK_MONOTONIC, &cur_time);
                 cur_ns = timespec_to_ns(&cur_time);

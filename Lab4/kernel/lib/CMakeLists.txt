@@ -8,5 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE printk.c.obj radix.c.obj ring_buffer.c.obj rbtree.c
-                                        mem_usage_info_tool.c.obj)
+chcore_target_precompile(${kernel_target} PRIVATE printk.c radix.c ring_buffer.c mem_usage_info_tool.c rbtree.c krand_stub.c)

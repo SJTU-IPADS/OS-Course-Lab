@@ -188,6 +188,16 @@ void plat_handle_irq(void)
 	}
 	irq = get32(BCM2835_IRQ_PENDING2);
 	if (irq != 0) {
+		if (irq & IRQ_SDIO_BIT) {
+			if (irq_handle_type[IRQ_SDIO] == HANDLE_USER) {
+				user_handle_irq(IRQ_SDIO);
+			}
+		} else if (irq & IRQ_ARASANSDIO_BIT) {
+			if (irq_handle_type[IRQ_ARASANSDIO] == HANDLE_USER) {
+				user_handle_irq(IRQ_ARASANSDIO);
+			}
+		}
+
 		#if USE_mini_uart == 0
 		if (irq & IRQ_UART_BIT) {
 			uart_irq_handler();

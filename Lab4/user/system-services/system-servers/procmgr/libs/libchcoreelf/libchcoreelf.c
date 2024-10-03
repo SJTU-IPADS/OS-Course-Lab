@@ -566,6 +566,7 @@ static int __load_elf_into_pmos(struct elf_file *elf_file,
         struct user_elf_seg *cur_user_elf_seg;
         size_t seg_sz, seg_map_sz, seg_file_sz;
         u64 p_vaddr;
+	unsigned long phdr_addr = 0;
         cap_t seg_pmo;
         char *seg_buf, *seg_load_start;
 
@@ -600,9 +601,14 @@ static int __load_elf_into_pmos(struct elf_file *elf_file,
         for (int i = 0, j = 0; i < elf_file->header.e_phnum; i++) {
                 cur_ph = &elf_file->p_headers[i];
                 cur_user_elf_seg = &elf->user_elf_segs[j];
-                if (cur_ph->p_type != PT_LOAD) {
+                if (cur_ph->p_type != PT_LOAD && cur_ph->p_type != PT_PHDR) {
                         continue;
                 }
+
+		if (cur_ph->p_type == PT_PHDR) {
+			phdr_addr = cur_ph->p_vaddr;
+			continue;
+		}
 
                 seg_sz = cur_ph->p_memsz;
                 p_vaddr = cur_ph->p_vaddr;
@@ -625,8 +631,6 @@ static int __load_elf_into_pmos(struct elf_file *elf_file,
                         usys_revoke_cap(seg_pmo, false);
                         goto out_fail;
                 }
-
-                memset(seg_buf, 0, seg_map_sz);
 
                 /*
                  * OFFSET_MASK is for calculating the final offset for loading
@@ -676,8 +680,7 @@ static int __load_elf_into_pmos(struct elf_file *elf_file,
          * be calculated by adding this virtual address with phoff from the ELF
          * header.
          */
-        elf->elf_meta.phdr_addr =
-                elf_file->p_headers[0].p_vaddr + elf_file->header.e_phoff;
+        elf->elf_meta.phdr_addr = phdr_addr ? phdr_addr : elf_file->p_headers[0].p_vaddr + elf_file->header.e_phoff;
         elf->elf_meta.phentsize = elf_file->header.e_phentsize;
         elf->elf_meta.phnum = elf_file->header.e_phnum;
         elf->elf_meta.flags = elf_file->header.e_flags;

@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 /*
@@ -59,6 +59,9 @@
 #include <object/memory.h>
 #include <sched/context.h>
 #include <common/util.h>
+#ifdef CHCORE_OPENTRUSTEE
+#include <uapi/opentrustee/ipc.h>
+#endif /* CHCORE_OPENTRUSTEE */
 
 /*
  * Overall, a server thread that declares a serivce with this interface
@@ -99,8 +102,17 @@ static int register_server(struct thread *server, unsigned long ipc_routine,
         }
 
         config = kmalloc(sizeof(*config));
+        if (!config) {
+                obj_put(register_cb_thread);
+                return -ENOMEM;
+        }
 
         /*
+         * @ipc_routine will be the real ipc_routine_entry.
+         * No need to validate such address because the server just
+         * kill itself if the address is illegal.
+         */
+/*
          * @ipc_routine will be the real ipc_routine_entry.
          * No need to validate such address because the server just
          * kill itself if the address is illegal.
@@ -115,6 +127,11 @@ static int register_server(struct thread *server, unsigned long ipc_routine,
         /* LAB 4 TODO END (exercise 7) */
 
         register_cb_config = kmalloc(sizeof(*register_cb_config));
+        if (!register_cb_config) {
+                kfree(config);
+                obj_put(register_cb_thread);
+                return -ENOMEM;
+        }
         register_cb_thread->general_ipc_config = register_cb_config;
 
         /*
@@ -212,8 +229,11 @@ static int create_connection(struct thread *client, struct thread *server,
          * It is reasonable to count the shared memory usage on the client.
          * So, a client should prepare the shm and tell the server.
          */
-        shm_cap_server =
-                cap_copy(current_cap_group, server->cap_group, shm_cap_client);
+        shm_cap_server = cap_copy(current_cap_group,
+                                  server->cap_group,
+                                  shm_cap_client,
+                                  CAP_RIGHT_NO_RIGHTS,
+                                  CAP_RIGHT_NO_RIGHTS);
 
         /* Create struct ipc_connection */
         conn = obj_alloc(TYPE_CONNECTION, sizeof(*conn));
@@ -269,8 +289,11 @@ static int create_connection(struct thread *client, struct thread *server,
         }
 
         /* Give the ipc_connection (cap) to the server */
-        server_conn_cap =
-                cap_copy(current_cap_group, server->cap_group, conn_cap);
+        server_conn_cap = cap_copy(current_cap_group,
+                                   server->cap_group,
+                                   conn_cap,
+                                   CAP_RIGHT_NO_RIGHTS,
+                                   CAP_RIGHT_NO_RIGHTS);
         if (server_conn_cap < 0) {
                 ret = server_conn_cap;
                 goto out_free_cap;
@@ -297,7 +320,7 @@ out_fail:
  * Grap the ipc lock before doing any modifications including
  * modifing the conn or sending the caps.
  */
-static inline int grab_ipc_lock(struct ipc_connection *conn)
+static inline int lock_ipc_handler_thread(struct ipc_connection *conn)
 {
         struct thread *target;
         struct ipc_server_handler_config *handler_config;
@@ -328,7 +351,7 @@ static inline int grab_ipc_lock(struct ipc_connection *conn)
         return 0;
 }
 
-static inline int release_ipc_lock(struct ipc_connection *conn)
+static inline int unlock_ipc_handler_thread(struct ipc_connection *conn)
 {
         struct thread *target;
         struct ipc_server_handler_config *handler_config;
@@ -343,7 +366,8 @@ static inline int release_ipc_lock(struct ipc_connection *conn)
 }
 
 static void ipc_thread_migrate_to_server(struct ipc_connection *conn,
-                                     unsigned long shm_addr, size_t shm_size, unsigned int cap_num)
+                                         unsigned long shm_addr,
+                                         size_t shm_size, unsigned int cap_num)
 {
         struct thread *target;
         struct ipc_server_handler_config *handler_config;
@@ -367,8 +391,8 @@ static void ipc_thread_migrate_to_server(struct ipc_connection *conn,
          */
         conn->current_client_thread = current_thread;
 
-        /* Mark current_thread as TS_WAITING */
-        current_thread->thread_ctx->state = TS_WAITING;
+        /* Mark current_thread as TS_BLOCKING */
+        thread_set_ts_blocking(current_thread);
 
         /* Pass the scheduling context */
         target->thread_ctx->sc = current_thread->thread_ctx->sc;
@@ -388,9 +412,14 @@ static void ipc_thread_migrate_to_server(struct ipc_connection *conn,
         // arch_set_thread_arg0(target, xxx);
         // arch_set_thread_arg1(target, xxx);
         // arch_set_thread_arg2(target, xxx);
-        // arch_set_thread_arg3(target, xxx);
         /* LAB 4 TODO END (exercise 7) */
-
+#ifdef CHCORE_OPENTRUSTEE
+        /* pid == badge if CHCORE_OPENTRUSTEE */
+        // This is left empty for current lab.
+        // arch_set_thread_arg3(target, xxx);
+#else /* CHCORE_OPENTRUSTEE */
+        // arch_set_thread_arg3(target, xxx);
+#endif /* CHCORE_OPENTRUSTEE */
         set_thread_arch_spec_state_ipc(target);
 
         /* Switch to the target thread */
@@ -420,8 +449,7 @@ struct client_shm_config {
 
 /* IPC related system calls */
 
-int sys_register_server(unsigned long ipc_routine,
-                        cap_t register_thread_cap,
+int sys_register_server(unsigned long ipc_routine, cap_t register_thread_cap,
                         unsigned long destructor)
 {
         return register_server(
@@ -491,8 +519,13 @@ cap_t sys_register_client(cap_t server_cap, unsigned long shm_config_ptr)
                 goto out_fail_unlock;
         }
 
-        copy_from_user((void *)&shm_config, (void *)shm_config_ptr, sizeof(shm_config));
-
+        r = copy_from_user((void *)&shm_config,
+                           (void *)shm_config_ptr,
+                           sizeof(shm_config));
+        if (r) {
+                r = -EINVAL;
+                goto out_fail_unlock;
+        }
 
         /* Map the pmo of the shared memory */
         r = map_pmo_in_current_cap_group(
@@ -516,9 +549,8 @@ cap_t sys_register_client(cap_t server_cap, unsigned long shm_config_ptr)
         /* Record the server_shm_cap for current connection */
         register_cb_config->shm_cap_in_server = res.server_shm_cap;
 
-        /* Mark current_thread as TS_WAITING */
-        current_thread->thread_ctx->state = TS_WAITING;
-
+        /* Mark current_thread as TS_BLOCKING */
+        thread_set_ts_blocking(current_thread);
         /* LAB 4 TODO BEGIN (exercise 7) */
         /* Set target thread SP/IP/arg, replace xxx with actual arguments */
         /* Note: see how stack address and ip are get in sys_register_server */
@@ -551,39 +583,75 @@ out_fail: /* Maybe EAGAIN */
         return r;
 }
 
-static int ipc_send_cap(struct thread *target_thread, unsigned int cap_num)
+static int ipc_send_cap(struct cap_group *source_cap_group,
+                        struct cap_group *target_cap_group,
+                        struct ipc_send_cap_struct *src_cap_buf,
+                        struct ipc_send_cap_struct *dest_cap_buf,
+                        unsigned int start_idx, unsigned int cap_num)
 {
         int i, r = 0;
         cap_t dest_cap;
-        cap_t *src_cap_buf, *dest_cap_buf;
-        struct cap_group *target_cap_group;
 
-        if (cap_num > MAX_CAP_TRANSFER) {
+        if (!(start_idx <= start_idx + cap_num
+              && start_idx + cap_num < MAX_CAP_TRANSFER)) {
                 r = -EINVAL;
                 goto out_fail;
         }
 
-        src_cap_buf = current_thread->cap_buffer;
-        dest_cap_buf = target_thread->cap_buffer;
-        target_cap_group = target_thread->cap_group;
-
-        for (i = 0; i < cap_num; i++) {
-                dest_cap = cap_copy(current_cap_group, target_cap_group,
-                                    src_cap_buf[i]);
+        for (i = start_idx; i < start_idx + cap_num; i++) {
+                dest_cap = cap_copy(source_cap_group,
+                                    target_cap_group,
+                                    src_cap_buf[i].cap,
+                                    src_cap_buf[i].mask,
+                                    src_cap_buf[i].rest);
                 if (dest_cap < 0) {
                         r = dest_cap;
                         goto out_free_cap;
                 }
-                dest_cap_buf[i] = dest_cap;
+                dest_cap_buf[i].cap = dest_cap;
+                dest_cap_buf[i].valid = true;
         }
 
         return 0;
 
 out_free_cap:
-        for (--i; i >= 0; i--)
-                cap_free(target_cap_group, dest_cap_buf[i]);
+        for (--i; i >= (int)start_idx; i--)
+                cap_free(target_cap_group, dest_cap_buf[i].cap);
 out_fail:
         return r;
+}
+
+static int check_if_exiting()
+{
+        if (thread_is_exiting(current_thread)) {
+                /* The connection is locked by the recycler */
+
+                if (current_thread->thread_ctx->type == TYPE_SHADOW) {
+                        /*
+                         * The current thread is B in chained IPC
+                         * (A:B:C). B will receives an Error.
+                         * We hope B invokes sys_ipc_return to give
+                         * the control flow back to A and unlock the
+                         * related connection.
+                         *
+                         * B may do not return the control flow
+                         * back to A. If so, A will always hang and the
+                         * recycler (sys_recycle_cap_group) cannot lock
+                         * the connection. Extra mechanism like timeout
+                         * is required.
+                         */
+                        return -ESRCH;
+                } else {
+                        /* Current thread will be set to exited by
+                         * the scheduler */
+                        sched();
+                        eret_to_thread(switch_context());
+                        BUG_ON(1);
+                }
+        } else {
+                /* The connection is locked by someone else */
+                return -EIPCRETRY;
+        }
 }
 
 /* Issue an IPC request */
@@ -614,35 +682,8 @@ unsigned long sys_ipc_call(cap_t conn_cap, unsigned int cap_num)
         } else {
                 /* Fails to lock the connection */
                 obj_put(conn);
-
-                if (current_thread->thread_ctx->thread_exit_state == TE_EXITING) {
-                        /* The connection is locked by the recycler */
-
-                        if (current_thread->thread_ctx->type == TYPE_SHADOW) {
-                                /*
-                                 * The current thread is B in chained IPC
-                                 * (A:B:C). B will receives an Error.
-                                 * We hope B invokes sys_ipc_return to give
-                                 * the control flow back to A and unlock the
-                                 * related connection.
-                                 *
-                                 * B may do not return the control flow
-                                 * back to A. If so, A will always hang and the
-                                 * recycler (sys_recycle_cap_group) cannot lock
-                                 * the connection. Extra mechanism like timeout
-                                 * is required.
-                                 */
-                                return -ESRCH;
-                        } else {
-                                /* Current thread will be set to exited by
-                                 * the scheduler */
-                                sched();
-                                eret_to_thread(switch_context());
-                        }
-                } else {
-                        /* The connection is locked by someone else */
-                        return -EIPCRETRY;
-                }
+                r = check_if_exiting();
+                return r;
         }
 
         /*
@@ -650,28 +691,25 @@ unsigned long sys_ipc_call(cap_t conn_cap, unsigned int cap_num)
          * No modifications happen before locking, so the client
          * can simply try again later.
          */
-        if ((r = grab_ipc_lock(conn)) != 0)
+        if ((r = lock_ipc_handler_thread(conn)) != 0)
                 goto out_obj_put;
 
-        if (cap_num != 0) {
-                r = ipc_send_cap(conn->server_handler_thread, cap_num);
-                if (r < 0)
-                        goto out_release_lock;
+        for (int i = 0; i < MAX_CAP_TRANSFER; i++) {
+                conn->server_cap_buf[i].valid = false;
         }
 
         /*
-        * A shm is bound to one connection.
-        * But, the client and server can map the shm at different addresses.
-        * So, we pass the server-side shm address here.
-        */
+         * A shm is bound to one connection.
+         * But, the client and server can map the shm at different addresses.
+         * So, we pass the server-side shm address here.
+         */
 
         /* Call server (handler thread) */
-        ipc_thread_migrate_to_server(conn, conn->shm.server_shm_uaddr, conn->shm.shm_size, cap_num);
+        ipc_thread_migrate_to_server(
+                conn, conn->shm.server_shm_uaddr, conn->shm.shm_size, cap_num);
 
         BUG("should not reach here\n");
 
-out_release_lock:
-        release_ipc_lock(conn);
 out_obj_put:
         unlock(&conn->ownership);
         obj_put(conn);
@@ -692,7 +730,7 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
         if (!conn)
                 return -EINVAL;
 
-                /*
+        /*
          * Get the client thread that issues this IPC.
          *
          * Note that it is **unnecessary** to set the field to NULL
@@ -706,27 +744,26 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
          * Step-2
          *     -> No: continue to Step-2
          */
-        if (current_thread->thread_ctx->thread_exit_state == TE_EXITING) {
+        if (thread_is_exiting(current_thread)) {
                 kdebug("%s:%d Step-1\n", __func__, __LINE__);
 
                 conn->state = CONN_INCOME_STOPPED;
 
-                current_thread->thread_ctx->thread_exit_state = TE_EXITED;
-                current_thread->thread_ctx->state = TS_EXIT;
+                thread_set_exited(current_thread);
 
                 /* Returns an error to the client */
                 ret = -ESRCH;
         }
 
-        /* Step-2. check if client_thread is TS_EXITING
+        /* Step-2. check if client_thread is TE_EXITING
          *     -> Yes: set current_client_thread to NULL
          *	  Then check if client is shadow
-         *         -> No: set client to TS_EXIT and then sched
+         *         -> No: set client to TE_EXITED and then sched
          *         -> Yes: return to client (it will recycle itself at next
          *ipc_return)
          *     -> No: return normally
          */
-        if (client->thread_ctx->thread_exit_state == TE_EXITING) {
+        if (thread_is_exiting(client)) {
                 kdebug("%s:%d Step-2\n", __func__, __LINE__);
 
                 /*
@@ -748,7 +785,7 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
                         kdebug("%s:%d Step-2.0\n", __func__, __LINE__);
                         handler_config->active_conn = NULL;
 
-                        current_thread->thread_ctx->state = TS_WAITING;
+                        thread_set_ts_waiting(current_thread);
 
                         current_thread->thread_ctx->sc = NULL;
 
@@ -757,8 +794,7 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
                         unlock(&conn->ownership);
                         obj_put(conn);
 
-                        client->thread_ctx->thread_exit_state = TE_EXITED;
-                        client->thread_ctx->state = TS_EXIT;
+                        thread_set_exited(client);
 
                         sched();
                         eret_to_thread(switch_context());
@@ -767,7 +803,15 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
         }
 
         if (cap_num != 0) {
-                int r = ipc_send_cap(conn->current_client_thread, cap_num);
+                for (int i = 0; i < MAX_CAP_TRANSFER; i++) {
+                        conn->client_cap_buf[i].valid = false;
+                }
+                int r = ipc_send_cap(current_cap_group,
+                                     conn->current_client_thread->cap_group,
+                                     conn->server_cap_buf,
+                                     conn->client_cap_buf,
+                                     0,
+                                     cap_num);
                 if (r < 0)
                         return r;
         }
@@ -779,7 +823,7 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
          * Return control flow (sched-context) back later.
          * Set current_thread state to TS_WAITING again.
          */
-        current_thread->thread_ctx->state = TS_WAITING;
+        thread_set_ts_waiting(current_thread);
 
         /*
          * Shadow thread should not any more use
@@ -809,8 +853,8 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
 }
 
 int sys_ipc_register_cb_return(cap_t server_handler_thread_cap,
-                                unsigned long server_thread_exit_routine,
-                                unsigned long server_shm_addr)
+                               unsigned long server_thread_exit_routine,
+                               unsigned long server_shm_addr)
 {
         struct ipc_server_register_cb_config *config;
         struct ipc_connection *conn;
@@ -868,6 +912,10 @@ int sys_ipc_register_cb_return(cap_t server_handler_thread_cap,
         if (!ipc_server_handler_thread->general_ipc_config) {
                 handler_config = (struct ipc_server_handler_config *)kmalloc(
                         sizeof(*handler_config));
+                if (!handler_config) {
+                        r = -ENOMEM;
+                        goto out_fail_put_thread;
+                }
                 ipc_server_handler_thread->general_ipc_config = handler_config;
                 lock_init(&handler_config->ipc_lock);
 
@@ -887,13 +935,11 @@ int sys_ipc_register_cb_return(cap_t server_handler_thread_cap,
         obj_put(ipc_server_handler_thread);
         /* Initialize the ipc configuration for the handler_thread (end) */
 
-        /* Fill the server information in the IPC connection. */
-
         /* LAB 4 TODO BEGIN (exercise 7) */
         /* Complete the server_shm_uaddr field of shm, replace xxx with the actual value */
         // conn->shm.server_shm_uaddr = xxx;
         /* LAB 4 TODO END (exercise 7) */
-
+        /* Fill the server information in the IPC connection. */
         conn->server_handler_thread = ipc_server_handler_thread;
         conn->state = CONN_VALID;
         conn->current_client_thread = NULL;
@@ -905,7 +951,7 @@ int sys_ipc_register_cb_return(cap_t server_handler_thread_cap,
          * Return control flow (sched-context) back later.
          * Set current_thread state to TS_WAITING again.
          */
-        current_thread->thread_ctx->state = TS_WAITING;
+        thread_set_ts_waiting(current_thread);
 
         unlock(&config->register_lock);
 
@@ -938,7 +984,7 @@ void sys_ipc_exit_routine_return(void)
          * Set the server handler thread state to TS_WAITING again
          * so that it can be migrated to from the client.
          */
-        current_thread->thread_ctx->state = TS_WAITING;
+        thread_set_ts_waiting(current_thread);
         kfree(current_thread->thread_ctx->sc);
         current_thread->thread_ctx->sc = NULL;
         unlock(&config->ipc_lock);
@@ -947,24 +993,157 @@ out:
         eret_to_thread(switch_context());
 }
 
-cap_t sys_ipc_get_cap(int index)
+cap_t sys_ipc_get_cap(cap_t conn_cap, int index)
 {
-        if (index >= MAX_CAP_TRANSFER || index < 0) {
-                return -EINVAL;
-        }
-
-        return current_thread->cap_buffer[index];
-}
-
-int sys_ipc_set_cap(int index, cap_t cap)
-{
+        struct ipc_connection *conn;
         int ret = 0;
+        int is_server = (conn_cap == CONN_IPC_SERVER);
 
         if (index >= MAX_CAP_TRANSFER || index < 0) {
                 ret = -EINVAL;
+                goto out;
         }
 
-        current_thread->cap_buffer[index] = cap;
+        if (is_server) {
+                conn = ((struct ipc_server_handler_config
+                                 *)(current_thread->general_ipc_config))
+                               ->active_conn;
+        } else {
+                conn = obj_get(current_cap_group, conn_cap, TYPE_CONNECTION);
+        }
 
+        if (!conn) {
+                ret = -ECAPBILITY;
+                goto out;
+        }
+
+        if (!is_server) {
+                if (try_lock(&conn->ownership) == 0) {
+                        /*
+                         * Succeed in locking.
+                         * Continue IPC call only when the connection state is
+                         * VALID.
+                         */
+                        if (conn->state != CONN_VALID) {
+                                ret = -EINVAL;
+                                goto out_unlock;
+                        }
+                } else {
+                        /* Fails to lock the connection
+                         * obj_put(conn) is called before check_if_exiting()
+                         * because it may not return
+                         */
+                        if (!is_server) {
+                                obj_put(conn);
+                        }
+                        ret = check_if_exiting();
+                        goto out;
+                }
+        }
+
+        /* If current thread is a server, copy the cap sent by client lazily. */
+        if (is_server) {
+                if (conn->server_cap_buf[index].valid) {
+                        ret = conn->server_cap_buf[index].cap;
+                } else {
+                        ret = ipc_send_cap(
+                                conn->current_client_thread->cap_group,
+                                current_cap_group,
+                                conn->client_cap_buf,
+                                conn->server_cap_buf,
+                                index,
+                                1);
+                        if (ret < 0) {
+                                ret = -ECAPBILITY;
+                        } else {
+                                ret = conn->server_cap_buf[index].cap;
+                        }
+                }
+                /* If current thread is a client, caps have been already copied
+                 * in sys_ipc_return. */
+        } else {
+                if (conn->client_cap_buf[index].valid) {
+                        ret = conn->client_cap_buf[index].cap;
+                } else {
+                        ret = -ECAPBILITY;
+                }
+        }
+out_unlock:
+        if (!is_server) {
+                unlock(&conn->ownership);
+                obj_put(conn);
+        }
+out:
+        return ret;
+}
+
+/*
+ * Use two masks, `mask` and `rest`, to describe the process of restricting
+ * capability's rights. See details in `cap_copy`.
+ */
+int sys_ipc_set_cap(cap_t conn_cap, int index, cap_t cap,
+                    cap_right_t mask, cap_right_t rest)
+{
+        struct ipc_connection *conn;
+        int ret = 0;
+        int is_server = (conn_cap == CONN_IPC_SERVER);
+        if (index >= MAX_CAP_TRANSFER || index < 0) {
+                ret = -EINVAL;
+                goto out;
+        }
+
+        if (is_server) {
+                conn = ((struct ipc_server_handler_config
+                                 *)(current_thread->general_ipc_config))
+                               ->active_conn;
+        } else {
+                conn = obj_get(current_cap_group, conn_cap, TYPE_CONNECTION);
+        }
+
+        if (!conn) {
+                ret = -ECAPBILITY;
+                goto out;
+        }
+
+        if (!is_server) {
+                if (try_lock(&conn->ownership) == 0) {
+                        /*
+                         * Succeed in locking.
+                         * Continue IPC call only when the connection state is
+                         * VALID.
+                         */
+                        if (conn->state != CONN_VALID) {
+                                ret = -EINVAL;
+                                goto out_unlock;
+                        }
+                } else {
+                        /* Fails to lock the connection
+                         * obj_put(conn) is called before check_if_exiting()
+                         * because it may not return
+                         */
+                        if (!is_server) {
+                                obj_put(conn);
+                        }
+                        ret = check_if_exiting();
+                        goto out;
+                }
+        }
+
+        if (is_server) {
+                conn->server_cap_buf[index].cap = cap;
+                conn->server_cap_buf[index].mask = mask;
+                conn->server_cap_buf[index].rest = rest;
+        } else {
+                conn->client_cap_buf[index].cap = cap;
+                conn->client_cap_buf[index].mask = mask;
+                conn->client_cap_buf[index].rest = rest;
+        }
+
+out_unlock:
+        if (!is_server) {
+                unlock(&conn->ownership);
+                obj_put(conn);
+        }
+out:
         return ret;
 }

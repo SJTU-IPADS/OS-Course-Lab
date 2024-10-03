@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include <sched/sched.h>
 #include <common/kprint.h>
-#include <common/macro.h>
 #include <machine.h>
 #include <mm/kmalloc.h>
 #include <object/thread.h>
-#include "../tests/runtime/tests.h"
+#include <runtime/tests.h>
+
 /*
  * RR policy also has idle threads.
  * When no active user threads in ready queue,
@@ -44,14 +44,18 @@ struct queue_meta rr_ready_queue_meta[PLAT_CPU_NUM];
 
 int __rr_sched_enqueue(struct thread *thread, int cpuid)
 {
+        if (thread->thread_ctx->type == TYPE_IDLE) {
+                return 0;
+        }
+
         /* Already in the ready queue */
-        if (thread->thread_ctx->state == TS_READY) {
+        if (thread_is_ts_ready(thread)) {
                 return -EINVAL;
         }
-        thread->thread_ctx->cpuid = cpuid;
-        thread->thread_ctx->state = TS_READY;
-        obj_ref(thread);
 
+        thread->thread_ctx->cpuid = cpuid;
+        thread_set_ts_ready(thread);
+        obj_ref(thread);
         /* LAB 4 TODO BEGIN (exercise 2) */
         /* Insert thread into the ready queue of cpuid and update queue length */
         /* Note: you should add two lines of code. */
@@ -105,13 +109,12 @@ int rr_sched_enqueue(struct thread *thread)
 {
         BUG_ON(!thread);
         BUG_ON(!thread->thread_ctx);
+        if (thread->thread_ctx->type == TYPE_IDLE)
+                return 0;
 
         int cpubind = 0;
         unsigned int cpuid = 0;
         int ret = 0;
-
-        if (thread->thread_ctx->type == TYPE_IDLE)
-                return 0;
 
         cpubind = get_cpubind(thread);
         cpuid = cpubind == NO_AFF ? rr_sched_choose_cpu() : cpubind;
@@ -132,18 +135,21 @@ int rr_sched_enqueue(struct thread *thread)
 /* dequeue w/o lock */
 int __rr_sched_dequeue(struct thread *thread)
 {
-        if (thread->thread_ctx->state != TS_READY) {
+        /* IDLE thread will **not** be in any ready queue */
+        BUG_ON(thread->thread_ctx->type == TYPE_IDLE);
+
+        if (!thread_is_ts_ready(thread)) {
                 kwarn("%s: thread state is %d\n",
                       __func__,
                       thread->thread_ctx->state);
                 return -EINVAL;
         }
+
         /* LAB 4 TODO BEGIN (exercise 3) */
         /* Delete thread from the ready queue and upate the queue length */
         /* Note: you should add two lines of code. */
 
         /* LAB 4 TODO END (exercise 3) */
-        thread->thread_ctx->state = TS_INTER;
         obj_put(thread);
         return 0;
 }
@@ -195,11 +201,9 @@ struct thread *rr_sched_choose_thread(void)
                 }
 
                 BUG_ON(__rr_sched_dequeue(thread));
-                if (thread->thread_ctx->thread_exit_state == TE_EXITING ||
-                  thread->thread_ctx->thread_exit_state == TE_EXITED) {
-                        /* Thread need to exit. Set the state to TS_EXIT */
-                        thread->thread_ctx->state = TS_EXIT;
-                        thread->thread_ctx->thread_exit_state = TE_EXITED;
+                if (thread_is_exiting(thread) || thread_is_exited(thread)) {
+                        /* Thread need to exit. Set the state to TE_EXITED */
+                        thread_set_exited(thread);
                         goto again;
                 }
                 unlock(&(rr_ready_queue_meta[cpuid].queue_lock));
@@ -209,12 +213,18 @@ out:
         return &idle_threads[cpuid];
 }
 
+static inline void rr_sched_refill_budget(struct thread *target,
+                                          unsigned int budget)
+{
+        target->thread_ctx->sc->budget = budget;
+}
 
 /*
  * Schedule a thread to execute.
- * current_thread can be NULL, or the state is TS_RUNNING or TS_WAITING.
- * This function will suspend current running thread, if any, and schedule
- * another thread from `(rr_ready_queue_meta[cpuid].queue_head)`.
+ * current_thread can be NULL, or the state is TS_RUNNING or
+ * TS_WAITING/TS_BLOCKING. This function will suspend current running thread, if
+ * any, and schedule another thread from
+ * `(rr_ready_queue_meta[cpuid].queue_head)`.
  * ***the following text might be outdated***
  * 1. Choose an appropriate thread through calling *chooseThread* (Simple
  * Priority-Based Policy)
@@ -239,45 +249,33 @@ int rr_sched(void)
                 /* Set TE_EXITING after check won't cause any trouble, the
                  * thread will be recycle afterwards. Just a fast path. */
                 /* Check whether the thread is going to exit */
-                if (old->thread_ctx->thread_exit_state == TE_EXITING) {
-                        /* Set the state to TS_EXIT */
-                        old->thread_ctx->state = TS_EXIT;
-                        old->thread_ctx->thread_exit_state = TE_EXITED;
+                if (thread_is_exiting(old)) {
+                        /* Set the state to TE_EXITED */
+                        thread_set_exited(old);
                 }
 
                 /* check old state */
-                switch (old->thread_ctx->state) {
-                case TS_EXIT:
-                        /* do nothing */
-                        break;
-                case TS_RUNNING:
-                        /* A thread without SC should not be TS_RUNNING. */
-                        BUG_ON(!old->thread_ctx->sc);
-                        if (old->thread_ctx->sc->budget != 0
-                            && !old->thread_ctx->is_suspended) {
-                                switch_to_thread(old);
-                                return 0; /* no schedule needed */
-                        }
+                if (!thread_is_exited(old)) {
+                        if (thread_is_ts_running(old)) {
+                                /* A thread without SC should not be TS_RUNNING.
+                                 */
+                                BUG_ON(!old->thread_ctx->sc);
+                                if (old->thread_ctx->sc->budget != 0
+                                    && !thread_is_suspend(old)) {
+                                        switch_to_thread(old);
+                                        return 0; /* no schedule needed */
+                                }
                         /* LAB 4 TODO BEGIN (exercise 6) */
-                        /* Refill budget for current running thread (old) */
+                        /* Refill budget for current running thread (old) and enqueue the current thread.*/
 
                         /* LAB 4 TODO END (exercise 6) */
 
-                        old->thread_ctx->state = TS_INTER;
-
-                        /* LAB 4 TODO BEGIN (exercise 4) */
-                        /* Enqueue current running thread */
-                        /* Note: you should just add a function call (one line of code) */
-
-                        /* LAB 4 TODO END (exercise 4) */
-                        break;
-                case TS_WAITING:
-                        /* do nothing */
-                        break;
-                default:
-                        kinfo("thread state: %d\n", old->thread_ctx->state);
-                        BUG_ON(1);
-                        break;
+                        } else if (!thread_is_ts_blocking(old)
+                                   && !thread_is_ts_waiting(old)) {
+                                kinfo("thread state: %d\n",
+                                      old->thread_ctx->state);
+                                BUG_ON(1);
+                        }
                 }
         }
 
@@ -371,7 +369,7 @@ void rr_top(void)
 
 struct sched_ops rr = {.sched_init = rr_sched_init,
                        .sched = rr_sched,
-		       .sched_periodic = rr_sched,
+                       .sched_periodic = rr_sched,
                        .sched_enqueue = rr_sched_enqueue,
                        .sched_dequeue = rr_sched_dequeue,
                        .sched_top = rr_top};

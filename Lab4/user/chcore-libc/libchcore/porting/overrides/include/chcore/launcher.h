@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <chcore-internal/procmgr_defs.h>
 #include <chcore/type.h>
 
 #ifdef __cplusplus
@@ -23,11 +24,17 @@ struct new_process_caps {
         cap_t mt_cap;
 };
 
-int chcore_new_process(int argc, char *argv[]);
+#ifdef CHCORE_OPENTRUSTEE
+pid_t chcore_new_process_spawn(int argc, char *__argv[], char **envp,
+                               const posix_spawnattr_t *attr, int *tid,
+                               const char *path);
+#endif /* CHCORE_OPENTRUSTEE */
 
-int create_process(int argc, char *argv[], struct new_process_caps *caps);
+pid_t chcore_new_process(int argc, char *argv[]);
 
-int create_traced_process(int argc, char *__argv[], struct new_process_caps *caps);
+pid_t create_process(int argc, char *argv[], struct new_process_caps *caps);
+
+pid_t create_traced_process(int argc, char *__argv[], struct new_process_caps *caps);
 
 #ifdef __cplusplus
 }

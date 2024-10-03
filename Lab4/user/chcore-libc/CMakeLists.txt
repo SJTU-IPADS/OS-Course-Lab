@@ -74,6 +74,7 @@ set(_libc_target_dir ${CMAKE_CURRENT_SOURCE_DIR}/musl-libc)
 set(_libchcore_porting_dir ${CMAKE_CURRENT_SOURCE_DIR}/libchcore/porting)
 set(_libchcore_overrides_dir ${_libchcore_porting_dir}/overrides)
 set(_libchcore_patches_dir ${_libchcore_porting_dir}/patches)
+set(_libchcore_cleanup_script ${CMAKE_CURRENT_SOURCE_DIR}/libchcore/cmake/do_cleanup.sh)
 
 do_overrides(${_libchcore_overrides_dir} ${_libc_target_dir})
 do_patches(${_libchcore_patches_dir} ${_libc_target_dir})
@@ -87,7 +88,7 @@ add_custom_target(libc-configure ALL
     WORKING_DIRECTORY ${_libc_target_dir}
     COMMAND ./configure --prefix=${CMAKE_INSTALL_PREFIX} --syslibdir=${CMAKE_INSTALL_PREFIX}/lib --with-malloc=oldmalloc
     $<$<BOOL:${CHCORE_USER_DEBUG}>:--enable-debug>
-    CROSS_COMPILE=${CHCORE_CROSS_COMPILE} $<$<BOOL:${libc_defs}>:CFLAGS=${libc_defs}>
+    CROSS_COMPILE=${CHCORE_CROSS_COMPILE} COMPILER=${CMAKE_C_COMPILER} $<$<BOOL:${libc_defs}>:CFLAGS=${libc_defs}>
     UAPI_INCLUDE=${CHCORE_PROJECT_DIR}/kernel/user-include
 )
 
@@ -105,5 +106,5 @@ add_custom_target(libc-install ALL
 
 # clean target
 add_custom_target(libc-clean
-    WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND make clean)
+    COMMAND make -C ${_libc_target_dir} clean
+    COMMAND bash ${_libchcore_cleanup_script} ${_libc_target_dir})

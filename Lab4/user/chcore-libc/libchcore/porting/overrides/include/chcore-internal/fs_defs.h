@@ -35,6 +35,8 @@ enum fs_req_type {
         FS_REQ_OPEN,
         FS_REQ_CLOSE,
 
+        FS_REQ_CHMOD,
+
         FS_REQ_CREAT,
         FS_REQ_MKDIR,
         FS_REQ_RMDIR,
@@ -64,6 +66,7 @@ enum fs_req_type {
         FS_REQ_FCNTL,
 
         FS_REQ_FMAP,
+        FS_REQ_FUNMAP,
 
         FS_REQ_MOUNT,
         FS_REQ_UMOUNT,
@@ -96,11 +99,9 @@ enum fsm_req_type {
         FSM_REQ_CONNECT_PROCMGR_AND_FSM,
 };
 
-#define FS_SINGLE_REQ_READ_BUF_SIZE \
-        (IPC_SHM_AVAILABLE)
-#define FS_SINGLE_REQ_WRITE_BUF_SIZE  \
-        (IPC_SHM_AVAILABLE \
-         - (sizeof(struct fs_request)))
+#define FS_SINGLE_REQ_READ_BUF_SIZE (IPC_SHM_AVAILABLE)
+#define FS_SINGLE_REQ_WRITE_BUF_SIZE \
+        (IPC_SHM_AVAILABLE - (sizeof(struct fs_request)))
 
 /* Clients send fs_request to fs_server */
 struct fs_request {
@@ -121,6 +122,10 @@ struct fs_request {
                         char pathname[FS_REQ_PATH_BUF_LEN];
                         mode_t mode;
                 } creat;
+                struct {
+                        char pathname[FS_REQ_PATH_BUF_LEN];
+                        mode_t mode;
+                } chmod;
                 struct {
                         int fd;
                 } close;
@@ -204,12 +209,16 @@ struct fs_request {
                         off_t offset;
                 } mmap;
                 struct {
+                        void *addr;
+                        size_t length;
+                } munmap;
+                struct {
                         int fd;
                         size_t count;
                 } getdents64;
                 struct {
                         char pathname[FS_REQ_PATH_BUF_LEN];
-                        mode_t mode;
+                        int amode;
                         int flags;
                 } faccessat;
                 struct {

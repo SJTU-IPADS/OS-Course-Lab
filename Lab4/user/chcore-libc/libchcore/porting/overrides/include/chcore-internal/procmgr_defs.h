@@ -16,6 +16,10 @@
 #include <chcore/ipc.h>
 #include <sys/types.h>
 
+#ifdef CHCORE_OPENTRUSTEE
+#include "opentrustee_defs.h"
+#endif /* CHCORE_OPENTRUSTEE */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,7 +28,8 @@ enum PROC_REQ {
         PROC_REQ_NEWPROC = 1,
         PROC_REQ_WAIT,
         PROC_REQ_GET_MT_CAP,
-        PROC_REQ_GET_SERVER_CAP,
+        PROC_REQ_GET_SERVICE_CAP,
+        PROC_REQ_SET_SERVICE_CAP,
         PROC_REQ_RECV_SIG,
         PROC_REQ_CHECK_STATE,
         PROC_REQ_GET_SHELL_CAP,
@@ -32,6 +37,14 @@ enum PROC_REQ {
         PROC_REQ_GET_TERMINAL_CAP,
         PROC_REQ_SET_TERMINAL_CAP,
         PROC_REQ_KILL,
+#ifdef CHCORE_OPENTRUSTEE
+        PROC_REQ_SPAWN,
+        PROC_REQ_INFO_PROC_BY_PID,
+        PROC_REQ_TRANSFER_PMO_CAP,
+        PROC_REQ_TEE_ALLOC_SHM,
+        PROC_REQ_TEE_GET_SHM,
+        PROC_REQ_TEE_FREE_SHM,
+#endif /* CHCORE_OPENTRUSTEE */
         PROC_REQ_GET_SYSTEM_INFO,
         PROC_REQ_MAX
 };
@@ -42,28 +55,57 @@ enum PROC_TYPE {
         COMMON_APP,
         TRACED_APP,
 };
-
+#if 0
 enum CONFIGURABLE_SERVER {
-	SERVER_TMPFS = 1,
-	SERVER_SYSTEMV_SHMMGR,
-	SERVER_HDMI_DRIVER,
-	SERVER_SD_CARD,
-	SERVER_FAT32_FS,
-	SERVER_EXT4_FS,
-	SERVER_USB_DEVMGR,
-	SERVER_SERIAL,
-	SERVER_GPIO,
-	SERVER_GUI,
-	SERVER_LITTLEFS,
-	SERVER_FLASH,
-	CONFIG_SERVER_MAX,
+        SERVER_TMPFS = 1,
+        SERVER_SYSTEMV_SHMMGR,
+        SERVER_HDMI_DRIVER,
+        SERVER_SD_CARD,
+        SERVER_FAT32_FS,
+        SERVER_EXT4_FS,
+        SERVER_USB_DEVMGR,
+        SERVER_AUDIO,
+        SERVER_CPU_DRIVER,
+        SERVER_SERIAL,
+        SERVER_GPIO,
+        SERVER_GUI,
+        SERVER_CHANMGR,
+        SERVER_LITTLEFS,
+        SERVER_FLASH,
+        CONFIG_SERVER_MAX,
 };
+#else 
+#define SERVER_TMPFS "tmpfs"
+#define SERVER_SYSTEMV_SHMMGR "systemv_shmmgr"
+#define SERVER_HDMI_DRIVER "hdmi"
+#define SERVER_SD_CARD "sd_card"
+#define SERVER_FAT32_FS "fat32"
+#define SERVER_EXT4_FS "ext4"
+#define SERVER_USB_DEVMGR "usb_devmgr"
+#define SERVER_AUDIO "audio"
+#define SERVER_CPU_DRIVER "cpu_driver"
+#define SERVER_SERIAL "serial"
+#define SERVER_GPIO "gpio"
+#define SERVER_GUI "gui"
+#define SERVER_CHANMGR "chanmgr"
+#define SERVER_LITTLEFS "littlefs"
+#define SERVER_FLASH "flash"
+#endif
 
 #define PROC_REQ_NAME_LEN      255
 #define PROC_REQ_TEXT_SIZE     1600
 #define PROC_REQ_ARGC_MAX      128
 #define PROC_REQ_ENVC_MAX      128
 #define PROC_REQ_ENV_TEXT_SIZE 256
+
+#define SERVICE_NAME_LEN 32
+
+#ifdef CHCORE_OPENTRUSTEE
+struct proc_info {
+        spawn_uuid_t uuid;
+        size_t stack_size;
+};
+#endif /* CHCORE_OPENTRUSTEE */
 
 struct proc_request {
         enum PROC_REQ req;
@@ -82,8 +124,11 @@ struct proc_request {
                         pid_t pid;
                 } get_mt_cap;
                 struct {
-                        enum CONFIGURABLE_SERVER server_id;
-                } get_server_cap;
+                        char service_name[SERVICE_NAME_LEN + 1];
+                } get_service_cap;
+                struct {
+                        char service_name[SERVICE_NAME_LEN + 1];
+                } set_service_cap;
                 struct {
                         char sig;
                 } recv_sig;
@@ -105,6 +150,44 @@ struct proc_request {
                 struct {
                         pid_t pid;
                 } kill;
+#ifdef CHCORE_OPENTRUSTEE
+                struct {
+                        int argc;
+                        char argv_text[PROC_REQ_TEXT_SIZE];
+                        int argv_off[PROC_REQ_ARGC_MAX];
+                        int envc;
+                        char envp_text[PROC_REQ_ENV_TEXT_SIZE];
+                        int envp_off[PROC_REQ_ENVC_MAX];
+                        int attr_valid;
+                        posix_spawnattr_t attr;
+                        cap_t main_thread_id;
+                        char path[PROC_REQ_NAME_LEN];
+                } spawn;
+                struct {
+                        pid_t pid;
+                        struct proc_info info;
+                } info_proc_by_pid;
+                struct {
+                        uint32_t task_id;
+                        cap_t pmo;
+                } transfer_pmo_cap;
+                struct {
+                        uint32_t task_id;
+                        cap_t pmo;
+                } task_unmap_ns;
+                struct {
+                        vaddr_t vaddr;
+                        uint32_t size;
+                        struct tee_uuid uuid;
+                } tee_alloc_shm;
+                struct {
+                        vaddr_t vaddr;
+                        pid_t pid;
+                } tee_get_shm;
+                struct {
+                        vaddr_t vaddr;
+                } tee_free_shm;
+#endif /* CHCORE_OPENTRUSTEE */
         };
 };
 

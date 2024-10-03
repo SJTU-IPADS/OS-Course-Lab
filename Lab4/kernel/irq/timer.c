@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include <irq/irq.h>
@@ -113,7 +113,7 @@ void handle_timer_irq(void)
                 list_del(&iter->sleep_node);
 
                 BUG_ON(wakeup_thread->sleep_state.cb == sleep_timer_cb
-                       && wakeup_thread->thread_ctx->state != TS_WAITING);
+                       && !thread_is_ts_blocking(wakeup_thread));
                 kdebug("wake up t:%p at:%ld\n", wakeup_thread, current_tick);
                 BUG_ON(wakeup_thread->sleep_state.cb == NULL);
 
@@ -149,13 +149,7 @@ int sys_clock_gettime(clockid_t clock, struct timespec *ts)
         int r = 0;
 
         if (!ts)
-                return -1;
-
-        r = copy_from_user(&ts_k, ts, sizeof(ts_k));
-        if (r) {
-                r = -EINVAL;
-                goto out_fail;
-        }
+                return -EINVAL;
 
         mono_ns = plat_get_mono_time();
 
@@ -251,7 +245,6 @@ bool try_dequeue_sleeper(struct thread *thread)
 
 static void sleep_timer_cb(struct thread *thread)
 {
-        thread->thread_ctx->state = TS_INTER;
         BUG_ON(sched_enqueue(thread));
 }
 
@@ -262,7 +255,6 @@ int sys_clock_nanosleep(clockid_t clk, int flags, const struct timespec *req,
         struct timespec ts_k = {0};
 
         kdebug("sleep clk:%d flag:%x ", clk, flags);
-        kdebug("req:%ld.%ld\n", req ? req->tv_sec : 0, req ? req->tv_nsec : 0);
 
         if (rem != NULL) {
                 rem = NULL;
@@ -272,7 +264,7 @@ int sys_clock_nanosleep(clockid_t clk, int flags, const struct timespec *req,
         if (ret) {
                 return -EFAULT;
         }
-
+        kdebug("sys_clock_nanosleep req:%ld.%ld\n", ts_k.tv_sec, ts_k.tv_nsec);
         /*
          * Note: every operation that inserts/removes one thread into
          * a waiting queue (no mater sleep or wait_notific)
@@ -293,7 +285,7 @@ int sys_clock_nanosleep(clockid_t clk, int flags, const struct timespec *req,
 
         unlock(&current_thread->sleep_state.queue_lock);
 
-        current_thread->thread_ctx->state = TS_WAITING;
+        thread_set_ts_blocking(current_thread);
 
         /* Set the return value for nanosleep. */
         arch_set_thread_return(current_thread, 0);

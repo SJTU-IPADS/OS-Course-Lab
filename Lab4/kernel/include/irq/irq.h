@@ -41,7 +41,12 @@ int plat_get_irq_info(void *user_buf, unsigned long size);
 /* 
  * Syscalls
  * The following syscalls are only needed on SPRAC for VxWorks.
+ * 
+ * sys_configure_irq - Enable or disable the reception of interrupts in user mode
+ * @enable: Indicates whether to enable (1) or disable (0) interrupts
+ * @all_irq: Indicates whether to configure all interrupts or a specific interrupt number (1 for all, 0 for specific)
+ * @irqno: The specific interrupt number to configure when all_irq is 0
  */
-void sys_configure_irq(unsigned long all_irq, unsigned long irqno, unsigned long enable);
+void sys_configure_irq(unsigned long enable, unsigned long all_irq, unsigned long irqno);
 
 #endif /* IRQ_IRQ_H */
