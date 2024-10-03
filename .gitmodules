@@ -1,6 +1,3 @@
-[submodule "Lab3/user/chcore-libc/musl-libc"]
-	path = Lab3/user/chcore-libc/musl-libc
-	url = git://git.musl-libc.org/musl
 [submodule "Lab5/user/chcore-libc/musl-libc"]
 	path = Lab5/user/chcore-libc/musl-libc
 	url = git://git.musl-libc.org/musl
