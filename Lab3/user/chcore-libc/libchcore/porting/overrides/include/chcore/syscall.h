@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <chcore/memory.h>
 #include <uapi/object.h>
+#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,7 +100,7 @@ void usys_cache_config(unsigned long option);
 #endif
 
 cap_t usys_create_notifc(void);
-int usys_wait(cap_t notifc_cap, bool is_block, void *timeout);
+int usys_wait(cap_t notifc_cap, bool is_block, struct timespec *timeout);
 int usys_notify(cap_t notifc_cap);
 
 int usys_register_recycle_thread(cap_t cap, unsigned long buffer);

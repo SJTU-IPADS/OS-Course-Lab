@@ -8,6 +8,7 @@ cscope.*
 
 !/**/firmware/*.bin
 !/**/firmware/*.elf
+!/**/ramdisk/*.bin
 
 Lab*/build
 simulate.sh

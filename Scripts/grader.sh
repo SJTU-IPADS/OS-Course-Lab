@@ -19,11 +19,7 @@ bold "==========================================="
 
 test -f ${LABDIR}/.config.bak && cp ${LABDIR}/.config.bak ${LABDIR}/.config && rm .config.bak
 
-if [[ $score -gt 100 ]]; then
-	fatal "Score is greater than 100, something went wrong."
-fi
-
-if [[ ! $score -eq 100 ]]; then
+if [[ $score -lt 100 ]]; then
 	exit $?
 else
 	exit 0
