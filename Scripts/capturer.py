@@ -97,7 +97,7 @@ async def main(args: argparse.Namespace):
                         line_capture.actual = line_capture.proposed
                         passed += 1
                 else:
-                    if args.serial in decoded_line:
+                    if not args.serial or args.serial in decoded_line:
                         line_capture.actual = line_capture.proposed
                         passed += 1
                 break
