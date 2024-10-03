@@ -657,7 +657,7 @@ void boot_default_apps(void)
 
         char *hello_world_argv= "hello_world.bin";
         (void)procmgr_launch_process(1,
-                                     &userland_argv,
+                                     &hello_world_argv,
                                      "hello_world",
                                      true,
                                      INIT_BADGE,
