@@ -17,7 +17,7 @@
 #include <arch/machine/smp.h>
 #include <sched/sched.h>
 #include <arch/tools.h>
-#include "../../../tests/runtime/tests.h"
+#include <runtime/tests.h>
 
 u64 cntp_tval;
 u64 tick_per_us;
@@ -44,6 +44,7 @@ void plat_timer_init(void)
 	/* LAB 4 TODO BEGIN (exercise 5) */
 	/* Note: you should add three lines of code. */
 	/* Read system register cntfrq_el0 to cntp_freq*/
+	UNUSED(timer_ctl);
 
 	/* Calculate the cntp_tval based on TICK_MS and cntp_freq */
 

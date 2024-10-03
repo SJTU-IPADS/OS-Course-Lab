@@ -16,7 +16,7 @@
 #include <chcore/ipc.h>
 #include <chcore-internal/procmgr_defs.h>
 
-extern int shell_is_waiting;
+extern volatile int shell_is_waiting;
 extern cap_t shell_cap;
 extern int shell_pid;
 

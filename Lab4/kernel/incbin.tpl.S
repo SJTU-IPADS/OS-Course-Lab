@@ -12,8 +12,7 @@
 
 /* Kernel binary include template. */
 
-        .section .rodata
-        .align 4
+        .section .incbin-${binary_name}, "a"
         .globl binary_${binary_name}_start
 binary_${binary_name}_start:
         .incbin "${binary_path}"

@@ -39,7 +39,7 @@
 #include <chcore/syscall.h>
 #include <chcore/memory.h>
 
-#define CHCORE_GDB_AUTO_LOAD_LIB 1
+#define CHCORE_GDB_AUTO_LOAD_LIB 0
 
 #define malloc __libc_malloc
 #define calloc __libc_calloc
@@ -2107,6 +2107,25 @@ void __dls3(size_t *sp, size_t *auxv)
 
 	errno = 0;
 
+#ifdef CHCORE_OPENTRUSTEE
+	/*
+	 * Because CRT is not linked in opentrustee framework, we directly jump
+	 * into __libc_start_main instead of AT_ENTRY.
+	 */
+	extern int __libc_start_main(int (*main)(int,char **,char **), int argc, char **argv);
+	if (!strcmp("/gtask.elf", *argv)
+		|| !strcmp("/teesmcmgr.elf", *argv)
+		|| !strcmp("/tarunner.elf", *argv)) {
+		__asm__ __volatile__(
+			"mov x0, %0; mov x1, %1; mov x2, %2"
+			:
+			: "r"(aux[AT_ENTRY]), "r"(*(long *)(argv-1)), "r"(argv)
+			: "x0", "x1", "x2"
+		);
+		CRTJMP(__libc_start_main, argv-1);
+	}
+#endif /* CHCORE_OPENTRUSTEE */
+
 	CRTJMP((void *)aux[AT_ENTRY], argv-1);
 	for(;;);
 }
@@ -2133,6 +2152,18 @@ static void prepare_lazy(struct dso *p)
 	lazy_head = p;
 }
 
+#ifdef CHCORE_OHTEE
+int end_with_so(const char *str) {
+    size_t len = strlen(str);
+
+    if (len < 3) {
+        return 0;
+    }
+
+    return (strcmp(str + len - 3, ".so") == 0);
+}
+#endif
+
 void *dlopen(const char *file, int mode)
 {
 	struct dso *volatile p, *orig_tail, *orig_syms_tail, *orig_lazy_head, *next;
@@ -2145,6 +2176,9 @@ void *dlopen(const char *file, int mode)
 
 	if (!file) return head;
 
+#ifdef CHCORE_OHTEE
+	if (!end_with_so(file)) return head;
+#endif
 
 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cs);
 	pthread_rwlock_wrlock(&lock);

@@ -94,4 +94,3 @@ u64 smp_get_mpidr(void)
 	asm volatile ("mrs %0, mpidr_el1":"=r" (mpidr));
 	return mpidr;
 }
-

@@ -11,12 +11,13 @@
  */
 
 #include <chcore/services.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ipc_struct_t *chcore_conn_srv(enum CONFIGURABLE_SERVER srv_id)
+ipc_struct_t *chcore_conn_srv(const char *service_name)
 {
         extern ipc_struct_t *procmgr_ipc_struct;
         ipc_msg_t *ipc_msg;
@@ -28,9 +29,8 @@ ipc_struct_t *chcore_conn_srv(enum CONFIGURABLE_SERVER srv_id)
         ipc_msg = ipc_create_msg(
                 procmgr_ipc_struct, sizeof(struct proc_request));
         pr = (struct proc_request *)ipc_get_msg_data(ipc_msg);
-        pr->req = PROC_REQ_GET_SERVER_CAP;
-        pr->get_server_cap.server_id = srv_id;
-
+        pr->req = PROC_REQ_GET_SERVICE_CAP;
+        strncpy(pr->get_service_cap.service_name, service_name, SERVICE_NAME_LEN);
         ret = ipc_call(procmgr_ipc_struct, ipc_msg);
         if (ret < 0) {
                 ipc_destroy_msg(ipc_msg);

@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include <sched/sched.h>
@@ -40,8 +40,7 @@ int switch_to_thread(struct thread *target)
 {
         BUG_ON(!target);
         BUG_ON(!target->thread_ctx);
-        BUG_ON((target->thread_ctx->state == TS_READY));
-        BUG_ON((target->thread_ctx->thread_exit_state == TE_EXITED));
+        BUG_ON(thread_is_exited(target));
 
         unsigned int cpuid = smp_get_cpu_id();
 
@@ -51,7 +50,7 @@ int switch_to_thread(struct thread *target)
 
         /* No thread switch happens actually */
         if (target == current_thread) {
-                target->thread_ctx->state = TS_RUNNING;
+                thread_set_ts_running(target);
 
                 /* The previous thread is the thread itself */
                 target->prev_thread = THREAD_ITSELF;
@@ -60,7 +59,7 @@ int switch_to_thread(struct thread *target)
 
         target->thread_ctx->cpuid = cpuid;
 
-        target->thread_ctx->state = TS_RUNNING;
+        thread_set_ts_running(target);
 
         /* Record the thread transferring the CPU */
         target->prev_thread = current_thread;
@@ -146,10 +145,9 @@ void print_thread(struct thread *thread)
         char thread_state[][STATE_STR_LEN] = {
                 "TS_INIT      ",
                 "TS_READY     ",
-                "TS_INTER     ",
                 "TS_RUNNING   ",
-                "TS_EXIT      ",
                 "TS_WAITING   ",
+                "TS_BLOCKING  ",
         };
 
         printk("Thread %p\tType: %s\tState: %s\tCPU %d\tAFF %d\tSUSPEND %d\t"
@@ -263,14 +261,14 @@ void finish_switch(void)
         if ((prev_thread == THREAD_ITSELF) || (prev_thread == NULL))
                 return;
 
+        prev_thread->thread_ctx->kernel_stack_state = KS_FREE;
+
         if (prev_thread->thread_ctx->type == TYPE_SHADOW
-            && prev_thread->thread_ctx->state == TS_EXIT) {
+            && thread_is_exited(prev_thread)) {
                 cap_free(prev_thread->cap_group, prev_thread->cap);
                 current_thread->prev_thread = NULL;
                 return;
         }
-
-        prev_thread->thread_ctx->kernel_stack_state = KS_FREE;
 
 #ifdef CHCORE_KERNEL_RT
         /* If a resched IPI is received during send_ipi(), the local CPU will
@@ -306,9 +304,7 @@ void sched_to_thread(struct thread *target)
 {
         int is_fpu_owner;
 
-        /* TS_INTER may be set in signal_notific */
-        BUG_ON((target->thread_ctx->state != TS_WAITING)
-               && (target->thread_ctx->state != TS_INTER));
+        BUG_ON(!thread_is_ts_blocking(target) && !thread_is_ts_waiting(target));
 
         /* Switch to itself? */
         BUG_ON(target == current_thread);
@@ -348,7 +344,6 @@ void sched_to_thread(struct thread *target)
                  * local CPU cannot direct switch to it.
                  */
 
-                target->thread_ctx->state = TS_INTER;
                 BUG_ON(sched_enqueue(target));
 
                 sched();
@@ -356,17 +351,8 @@ void sched_to_thread(struct thread *target)
                 /* Fast path: direct switch to target thread (without
                  * scheduling). */
 
-                /*
-                 * Note: if disallow sched_to_thread in notification,
-                 * we can add BUG_ON(current_thread->thread_ctx->state !=
-                 * TS_WAITING) here and remove the below if statement.
-                 */
-
-                /* If current thread has not been set to TS_WAITING,
-                 * put it into the ready queue before switching to
-                 * the target thread.
-                 */
-                BUG_ON(current_thread->thread_ctx->state != TS_WAITING);
+                BUG_ON(!thread_is_ts_blocking(current_thread)
+                       && !thread_is_ts_waiting(current_thread));
 
                 switch_to_thread(target);
         }
@@ -409,6 +395,9 @@ static void init_idle_threads(void)
         /* Create a fake idle cap group to store the name */
         idle_cap_group = kzalloc(sizeof(*idle_cap_group));
         idle_name_len = MIN(idle_name_len, MAX_GROUP_NAME_LEN);
+
+        BUG_ON(!idle_cap_group);
+
         memcpy(idle_cap_group->cap_group_name, idle_name, idle_name_len);
         init_list_head(&idle_cap_group->thread_list);
 
@@ -420,6 +409,7 @@ static void init_idle_threads(void)
 
                 init_thread_ctx(
                         &idle_threads[i], 0, 0, IDLE_PRIO, TYPE_IDLE, i);
+                thread_set_ts_ready(&idle_threads[i]);
 
                 arch_idle_ctx_init(idle_threads[i].thread_ctx,
                                    idle_thread_routine);
@@ -484,10 +474,10 @@ int sys_suspend(unsigned long thread_cap)
                 thread = obj_get(current_cap_group, thread_cap, TYPE_THREAD);
                 if (thread == NULL)
                         return -ECAPBILITY;
-                thread->thread_ctx->is_suspended = true;
+                thread_set_suspend(thread);
                 obj_put(thread);
         } else {
-                current_thread->thread_ctx->is_suspended = true;
+                thread_set_suspend(current_thread);
         }
 
         /* Self-suspend */
@@ -510,7 +500,7 @@ int sys_resume(unsigned long thread_cap)
         if (thread == NULL)
                 return -ECAPBILITY;
 
-        thread->thread_ctx->is_suspended = false;
+        thread_set_resume(thread);
         obj_put(thread);
         return 0;
 }

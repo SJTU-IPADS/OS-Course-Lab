@@ -1,0 +1,36 @@
+
+
+# If you want to add a configurable server, you need to add a file as the example below, 
+# and add the file name with chcore_add_configurable_server in the CMakeLists.txt file.
+CHCORE_CONFIG:
+  filename: "name"
+  conditions:
+    - - "condition1"
+      - "condition2"
+    - - "condition2"
+  services:
+    - name: "service1":
+      conditions: 
+        - - "condition1"
+          - "condition2"
+    - name: "service2":
+      conditions:
+        - - "condition1"
+  boot_time: "eager"/"lazy"
+  registration_method: "active"/"passive"
+
+#  The value in conditions or under service name means the configure that the service depends on. 
+#  If the value is empty, it means the service does not depend on any configure.
+#  Each item in the top-level list must satisfy all conditions (AND relationship).
+#  Each Config in the second-level list of each item only needs to satisfy one of them (OR relationship).
+
+
+# If you want to add a non-configrable server as a system server, you need to add a file as the 
+# example below, and add the file name with chcore_add_user_server in the CMakeLists.txt file.
+
+filename: /posix_shm.srv 
+boot_time: lazy
+registration_method: passive
+services:
+- systemv_shmmgr
+type: server

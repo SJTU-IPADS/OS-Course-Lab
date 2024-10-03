@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE timer.c ipi.c.obj)
+chcore_target_precompile(${kernel_target} PRIVATE ipi.c)
+target_sources(${kernel_target} PRIVATE timer.c)

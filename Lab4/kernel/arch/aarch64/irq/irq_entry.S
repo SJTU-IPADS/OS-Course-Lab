@@ -259,10 +259,10 @@ irq_el0_64:
 	b .
 
 error_el0_64:
-fiq_el0_64:
 sync_el0_32:
 irq_el0_32:
 fiq_el0_32:
+fiq_el0_64:
 error_el0_32:
 	bl unexpected_handler
 
