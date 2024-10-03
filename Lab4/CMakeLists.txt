@@ -11,7 +11,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(ChCore)
 
-set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/scripts/build/cmake)
+set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/../Scripts/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_cmake_script_dir}/Modules)
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/user)
 
@@ -63,6 +63,7 @@ chcore_add_subproject(
     INSTALL_DIR ${_libc_install_dir}
     CMAKE_ARGS
         ${_common_args}
+        ${_cache_args}
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     CMAKE_CACHE_ARGS ${_cache_args}
     INSTALL_COMMAND echo "Performed in CMake"
@@ -166,6 +167,7 @@ chcore_add_subproject(
     INSTALL_DIR ${_system_services_install_dir}
     CMAKE_ARGS
         ${_common_args}
+        ${_cache_args}
         -DCHCORE_MUSL_LIBC_INSTALL_DIR=${_libc_install_dir} # used by user.cmake toolchain to find `musl-gcc`
         -DCHCORE_RAMDISK_DIR=${build_ramdisk_dir}
         # -DCHCORE_CI_CONFIG_DIR=${_ci_config_dir}
@@ -199,12 +201,14 @@ chcore_add_subproject(
     INSTALL_DIR ${_kernel_install_dir}
     CMAKE_ARGS
         ${_common_args}
+        ${_cache_args}
         -DCHCORE_USER_INSTALL_DIR=${_system_services_install_dir} # used by kernel/CMakeLists.txt to incbin cpio files
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
         -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/kernel.cmake
     CMAKE_CACHE_ARGS ${_cache_args}
     DEPENDS system-services kernel-clean-incbin
     BUILD_ALWAYS TRUE)
+
 
 # Generate toolchain file
 configure_file(${_cmake_script_dir}/Toolchains/toolchain_tpl.cmake 
@@ -234,17 +238,17 @@ add_dependencies(clean-all libc-clean-trigger system-services-clean-trigger)
 
 # --- Update Submodules (always run in local env) ---
 
-add_custom_target(update-submodules)
-
-macro(_update_submodule _target _subproject_path _module_rel_path)
-    add_custom_target(
-        ${_target}
-        WORKING_DIRECTORY ${_subproject_path}
-        COMMAND echo "Updating ${_subproject_path}/${_module_rel_path}..."
-        COMMAND git submodule update --init
-                --recursive --depth=1 ${_module_rel_path})
-    add_dependencies(update-submodules ${_target})
-endmacro()
+# add_custom_target(update-submodules)
+#
+# macro(_update_submodule _target _subproject_path _module_rel_path)
+#     add_custom_target(
+#         ${_target}
+#         WORKING_DIRECTORY ${_subproject_path}
+#         COMMAND echo "Updating ${_subproject_path}/${_module_rel_path}..."
+#         COMMAND git submodule update --init
+#                 --recursive --depth=1 ${_module_rel_path})
+#     add_dependencies(update-submodules ${_target})
+# endmacro()
 
 # _update_submodule(update-musl-libc ${_system_services_source_dir} chcore-libc/musl-libc)
 
