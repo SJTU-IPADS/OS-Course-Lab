@@ -37,9 +37,13 @@ macro(_procmgr_incbin _target_name _binary_name _binary_path)
     set(_binary_path ${_binary_path})
     configure_file(incbin_basic_srv.tpl.S incbin_${_binary_name}.S)
     target_sources(procmgr.srv PRIVATE incbin_${_binary_name}.S)
+    add_dependencies(procmgr.srv ${_target_name})
     unset(_binary_name)
     unset(_binary_path)
 endmacro()
+
+add_custom_target(fsm.srv
+                COMMAND touch ${CHCORE_PROJECT_DIR}/ramdisk/fsm.srv)
 
 _procmgr_incbin(fsm.srv fsm_elf
                 ${CHCORE_PROJECT_DIR}/ramdisk/fsm.srv)

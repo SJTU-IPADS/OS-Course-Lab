@@ -223,11 +223,18 @@ static void handle_kill(ipc_msg_t *ipc_msg, struct proc_request *pr)
                 goto out;
         }
 
+        if (proc_to_kill->badge < MIN_FREE_APP_BADGE) {
+                error("kill: Cannot kill system server or driver!\n");
+                ret = -EINVAL;
+                goto out_put_proc_node;
+        }
+
         proc_cap = proc_to_kill->proc_cap;
         ret = usys_kill_group(proc_cap);
         debug("[procmgr] usys_kill_group return value: %d\n", ret);
         if (ret) {
-                error("kill: usys_kill_group returns an error value: %d\n", ret);
+                error("kill: usys_kill_group returns an error value: %d\n",
+                      ret);
                 ret = -EINVAL;
                 goto out_put_proc_node;
         }
@@ -572,6 +579,25 @@ void boot_default_servers(void)
         return;
 #endif /* CHCORE_OPENTRUSTEE */
 
+#if defined(CHCORE_SERVER_LWIP)
+        printf("User Init: booting network server\n");
+        /* Pass the FS cap to NET since it may need to read some config files */
+        /* Net gets badge 3 */
+        srv_path = "/lwip.srv";
+        ret = procmgr_launch_process(1,
+                                     &srv_path,
+                                     "lwip",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     SYSTEM_SERVER,
+                                     &proc_node);
+        if (ret < 0) {
+                BUG("procmgr_launch_process lwip failed");
+        }
+        lwip_server_cap = proc_node->proc_mt_cap;
+        put_proc_node(proc_node);
+#endif
 }
 
 void *handler_thread_routine(void *arg)
@@ -586,7 +612,40 @@ void *handler_thread_routine(void *arg)
 
 void boot_default_apps(void)
 {
-        char *userland_argv = "userland.bin";
+#ifdef CHCORE_OPENTRUSTEE
+        char *chanmgr_argv = "/chanmgr.srv";
+        char *gtask_argv = "/gtask.elf";
+        struct proc_node *gtask_node;
+        int ret;
+
+        /* Start ipc channel manager for OpenTrustee. */
+        ret = procmgr_launch_process(1,
+                                     &chanmgr_argv,
+                                     "chanmgr",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
+        BUG_ON(ret != 0);
+        /* Start OpenTrustee gtask. */
+        ret = procmgr_launch_process(1,
+                                     &gtask_argv,
+                                     "gtask",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     SYSTEM_SERVER,
+                                     &gtask_node);
+        BUG_ON(ret != 0);
+        printf("%s: gtask pid %d\n", __func__, gtask_node->pid);
+        put_proc_node(gtask_node);
+        return;
+#endif /* CHCORE_OPENTRUSTEE */
+
+        /* Start shell. */
+
+        char *userland_argv= "userland.bin";
         (void)procmgr_launch_process(1,
                                      &userland_argv,
                                      "userland",
@@ -596,16 +655,6 @@ void boot_default_apps(void)
                                      COMMON_APP,
                                      NULL);
 
-        char *hello_world_argv= "hello_world.bin";
-        (void)procmgr_launch_process(1,
-                                     &hello_world_argv,
-                                     "userland",
-                                     true,
-                                     INIT_BADGE,
-                                     NULL,
-                                     COMMON_APP,
-                                     NULL);
-        /* Start shell. */
         char *shell_argv = "chcore_shell.bin";
         (void)procmgr_launch_process(1,
                                      &shell_argv,
@@ -616,6 +665,17 @@ void boot_default_apps(void)
                                      COMMON_APP,
                                      NULL);
 
+#if defined(CHCORE_PLAT_RASPI3) && defined(CHCORE_SERVER_GUI)
+        char *terminal_argv = "terminal.bin";
+        (void)procmgr_launch_process(1,
+                                     &terminal_argv,
+                                     "terminal",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
+#endif
 }
 
 int main(int argc, char *argv[], char *envp[])

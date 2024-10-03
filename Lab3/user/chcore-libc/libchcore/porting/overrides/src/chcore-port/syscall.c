@@ -328,7 +328,7 @@ cap_t usys_create_notifc(void)
         return chcore_syscall0(CHCORE_SYS_create_notifc);
 }
 
-int usys_wait(cap_t notifc_cap, bool is_block, void *timeout)
+int usys_wait(cap_t notifc_cap, bool is_block, struct timespec *timeout)
 {
         return chcore_syscall3(
                 CHCORE_SYS_wait, notifc_cap, is_block, (unsigned long)timeout);
