@@ -9,3 +9,4 @@
 # See the Mulan PSL v2 for more details.
 
 target_sources(${kernel_target} PRIVATE lab4.c.obj)
+target_include_directories(${kernel_target} PRIVATE ../)
