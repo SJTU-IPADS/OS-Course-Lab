@@ -7,7 +7,7 @@ SCHEDULER := $(SCHED)/sched.c
 RR := $(SCHED)/policy_rr.c
 ARCH_TIMER := $(ARCH_IRQ)/timer.c
 IRQ := $(ARCH_IRQ)/irq.c
-KERNEL_TIMER := $(IRQ)/timer.c
+KERNEL_TIMER := $(KERNEL_IRQ)/timer.c
 CONNECTION := $(IPC)/connection.c
 
 FILES := $(SCHEDULER) \
