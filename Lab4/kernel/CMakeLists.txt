@@ -137,7 +137,7 @@ macro(_kernel_incbin _binary_name _binary_path)
 endmacro()
 
 # Include essential user-level binaries
-_kernel_incbin(procmgr_bin ${CMAKE_CURRENT_SOURCE_DIR}/../user/procmgr)
+_kernel_incbin(procmgr_bin ${CHCORE_USER_INSTALL_DIR}/system-servers/procmgr/procmgr)
 
 # Rebuild kernel when ramdisk changes
 add_custom_target(touch-inc-procmgr

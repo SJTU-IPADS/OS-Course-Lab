@@ -645,20 +645,10 @@ void boot_default_apps(void)
 
         /* Start shell. */
 
-        char *userland_argv= "userland.bin";
+        char *test_ipc_argv= "test_ipc.bin";
         (void)procmgr_launch_process(1,
-                                     &userland_argv,
-                                     "userland",
-                                     true,
-                                     INIT_BADGE,
-                                     NULL,
-                                     COMMON_APP,
-                                     NULL);
-
-        char *hello_world_argv= "hello_world.bin";
-        (void)procmgr_launch_process(1,
-                                     &hello_world_argv,
-                                     "hello_world",
+                                     &test_ipc_argv,
+                                     "test_ipc",
                                      true,
                                      INIT_BADGE,
                                      NULL,
