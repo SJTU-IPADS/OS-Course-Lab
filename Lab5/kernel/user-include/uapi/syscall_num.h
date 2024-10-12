@@ -107,4 +107,7 @@
 #define CHCORE_SYS_futex      57
 #define CHCORE_SYS_set_tid_address  58
 
+/* OpenTrustee */
+#define CHCORE_SYS_opentrustee             59
+
 #endif /* UAPI_SYSCALL_NUM_H */

@@ -10,15 +10,18 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#ifndef LIB_PRINTK_H
-#define LIB_PRINTK_H
+#ifndef COMMON_TEE_UUID_H
+#define COMMON_TEE_UUID_H
 
-typedef void (*graphic_putc_handler)(char c);
-extern graphic_putc_handler graphic_putc;
+#include <common/types.h>
 
-void set_graphic_putc_handler(graphic_putc_handler f);
-void printk(const char *fmt, ...);
+#define NODE_LEN 8
 
-int simple_sprintf(char *str, const char *fmt, ...);
+typedef struct tee_uuid {
+        u32 timeLow;
+        u16 timeMid;
+        u16 timeHiAndVersion;
+        u8 clockSeqAndNode[NODE_LEN];
+} TEE_UUID;
 
-#endif /* LIB_PRINTK_H */
+#endif /* COMMON_TEE_UUID_H */
