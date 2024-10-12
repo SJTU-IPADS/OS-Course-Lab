@@ -1,0 +1,35 @@
+[
+  {
+    "capture": "test_scheduler_meta: OK",
+    "msg": "Scheduler Initialization",
+    "proposed": 10
+  },
+  {
+    "capture": "test_sched_enqueue: OK",
+    "msg": "Scheduler Enqueue",
+    "proposed": 10
+  },
+  {
+    "capture": "test_sched_dequeue: OK",
+    "msg": "Scheduler Dequeue",
+    "proposed": 10
+  },
+  {
+    "capture": "Cooperative Scheduling Test Done!",
+    "msg": "Cooperative Scheduling",
+    "proposed": 20,
+	"userland": true
+  },
+  {
+    "capture": "Preemptive Scheduling Test Done!",
+	"msg": "Preemptive Scheduling",
+	"proposed": 20,
+	"userland": true
+  },
+  {
+    "capture": "Test IPC finished!",
+    "msg": "Test IPC",
+    "proposed": 30,
+    "userland": true
+  }
+]

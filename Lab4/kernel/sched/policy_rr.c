@@ -292,7 +292,7 @@ int rr_sched_init(void)
 
         /* LAB 4 TODO END (exercise 1) */
 
-        test_scheduler_meta();
+        lab4_test_scheduler_meta();
         return 0;
 }
 

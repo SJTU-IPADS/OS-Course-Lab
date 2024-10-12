@@ -8,5 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE lab4.c.obj)
+chcore_target_precompile(${kernel_target} PRIVATE tests.c)
 target_include_directories(${kernel_target} PRIVATE ../)

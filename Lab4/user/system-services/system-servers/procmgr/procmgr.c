@@ -678,6 +678,60 @@ void boot_default_apps(void)
 #endif
 }
 
+static void bind_to_cpu(int cpu)
+{
+        cpu_set_t mask;
+
+        CPU_ZERO(&mask);
+        CPU_SET(cpu, &mask);
+        sched_setaffinity(0, sizeof(mask), &mask);
+
+        /*
+         * Invoke usys_yield to ensure current thread to run on the target CPU.
+         * If current thread is running on another CPU, it will be migrated to
+         * the specific CPU after setting affinity.
+        */
+        usys_yield();
+}
+
+void *thread_routine1(void *arg)
+{
+        bind_to_cpu(0);
+        for (int i = 0; i < 3; ++i) {
+                printf("Hello from thread 2\n");
+                usys_yield();
+        }
+        printf("Cooperative Schedluing Test Done!\n");
+        return NULL;
+}
+
+void *thread_routine2(void *arg)
+{
+        printf("Hello, I am thread 3. I'm spinning.\n");
+
+        while (1) {
+        }
+        return 0;
+}
+
+void test_sched(void)
+{
+        pthread_t tid;
+        pthread_create(&tid, NULL, thread_routine1, NULL);
+        usys_yield();
+        for (int i = 0; i < 3; ++i) {
+                printf("Hello from thread 1\n");
+                usys_yield();
+        }
+        pthread_join(tid, NULL);
+
+        printf("Thread 1 creates a spinning thread!\n");
+        pthread_create(&tid, NULL, thread_routine2, NULL);
+        usys_yield();
+        printf("Thread 1 successfully regains the control!\n");
+        printf("Preemptive Schedluing Test Done!\n");
+}
+
 int main(int argc, char *argv[], char *envp[])
 {
         cap_t cap;
@@ -694,6 +748,7 @@ int main(int argc, char *argv[], char *envp[])
 
         init_root_proc_node();
 
+        test_sched();
         boot_default_servers();
 
         /* Configure system servers, and boot some of them. */

@@ -13,26 +13,9 @@
 #ifndef KERNEL_TESTS_RUNTIME_TESTS_H
 #define KERNEL_TESTS_RUNTIME_TESTS_H
 
-#define lab_check(expr, test_name)                                        \
-        do {                                                              \
-                if (expr) {                                               \
-                        printk("[TEST] %s: OK\n", test_name);             \
-                } else {                                                  \
-                        printk("[TEST] %s: FAIL, loc: %s:%d\n", \
-                               test_name,                                 \
-                               __FILE__,                                  \
-                               __LINE__);                                 \
-                }                                                         \
-        } while (0)
-
-#define lab_assert(expr)           \
-        do {                       \
-                ok = ok && (expr); \
-        } while (0)
-
-void test_scheduler_meta(void);
-void test_schedule_enqueue(struct thread *root_thread);
-void test_schedule_dequeue(void);
-void test_timer_init(void);
-
+#define TEST_SUITE(lab, name, ...) void lab##_##name(__VA_ARGS__)
+TEST_SUITE(lab4, test_sched_enqueue, struct thread *root_thread);
+TEST_SUITE(lab4, test_sched_dequeue, void);
+TEST_SUITE(lab4, test_scheduler_meta, void);
+TEST_SUITE(lab4, test_timer_init, void);
 #endif /* KERNEL_TESTS_RUNTIME_TESTS_H */

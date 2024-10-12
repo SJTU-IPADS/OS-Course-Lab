@@ -279,7 +279,7 @@ _docker_run() {
             -u $(id -u ${USER}):$(id -g ${USER}) \
             -v ${LABROOT}:${LABROOT} -w $(pwd) \
             --security-opt=seccomp:unconfined \
-            ipads/chcore_builder:v1.9.0 \
+            ipads/oslab:24.09 \
             $self $@
     fi
 }
