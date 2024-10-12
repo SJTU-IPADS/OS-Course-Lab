@@ -64,8 +64,7 @@ void plat_timer_init(void)
 	/* Write timer_ctl to the control register (cntp_ctl_el0) */
 
 	/* LAB 4 TODO END (exercise 5) */
-
-	test_timer_init();
+	lab4_test_timer_init();
 	return;
 }
 
