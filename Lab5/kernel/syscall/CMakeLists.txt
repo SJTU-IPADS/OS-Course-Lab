@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE syscall.c.obj syscall_hooks.c.obj syscall_get_system_info.c.obj)
+chcore_target_precompile(${kernel_target} PRIVATE syscall.c syscall_hooks.c syscall_get_system_info.c syscall_opentrustee.c)

@@ -173,8 +173,7 @@ chcore_add_subproject(
         -DCMAKE_TOOLCHAIN_FILE=${_cmake_script_dir}/Toolchains/user.cmake
     CMAKE_CACHE_ARGS ${_cache_args}
     INSTALL_COMMAND echo "Nothing to install"
-    DEPENDS tests system-services-clean-incbin
-    DEPENDS libc system-services-clean-incbin
+    DEPENDS libc system-services-clean-incbin tests
     BUILD_ALWAYS TRUE)
 
 # --- Kernel ---

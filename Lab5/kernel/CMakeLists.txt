@@ -132,7 +132,8 @@ macro(_kernel_incbin _binary_name _binary_path)
     configure_file(incbin.tpl.S incbin_${_binary_name}.S)
     unset(binary_name)
     unset(binary_path)
-    target_sources(${kernel_target} PRIVATE incbin_${_binary_name}.S)
+    
+target_sources(${kernel_target} PRIVATE incbin_procmgr_bin.S)
 endmacro()
 
 # Include essential user-level binaries
