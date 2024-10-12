@@ -27,7 +27,6 @@ extern char serial_number[4096];
                        __FILE__,                                   \
                        __LINE__,                                   \
                        #expr);                                     \
-                break;                                             \
                 while (1)                                          \
                         ;                                          \
         }
