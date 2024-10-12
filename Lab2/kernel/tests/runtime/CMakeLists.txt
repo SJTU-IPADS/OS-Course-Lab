@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE lab2.c)
+target_sources(${kernel_target} PRIVATE tests.c)
