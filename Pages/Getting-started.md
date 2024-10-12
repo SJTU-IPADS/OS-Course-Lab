@@ -8,7 +8,16 @@
 请按照Docker官方指示为你运行的操作系统安装对应的Docker发行版。
 
 > [!IMPORTANT] 关于Docker
-> 由于中国大陆地区的网络限制，请确保你的docker能够连接到docker-hub，测试方法可以使用 `docker pull nginx:latest`，如果无法访问，您可以依照[该文档](https://docs.docker.com/engine/daemon/)为你的docker daemon添加代理规则。
+> 由于中国大陆地区的网络限制，请确保你的docker能够连接到docker-hub，测试方法可以使用 `docker pull nginx:latest`，如果无法访问，您可以依照[该文档](https://docs.docker.com/engine/daemon/)为你的docker daemon添加代理规则。  
+> 如果你缺少代理，你可以使用这个[链接(提取uwuv)](https://pan.baidu.com/s/1ipbMZ-C1Qk0S9PGDDMMy6w)下载压缩好的Docker镜像，镜像使用`zstd`进行压缩。你可以使用以下的命令解压后，再使用`docker`进行导入。
+>
+> ```
+> zstd -d docker.ipads.oslab.yy.mm.tar.zstd
+> docker load -i docker.ipads.oslab.yy.mm.tar
+> ```
+
+> [!IMPORTANT] 关于虚拟机
+> 如果你使用的是Windows/MacOS系统，如果不想手动安装docker以及下载镜像，我们也准备了基于VMWare 17的虚拟机镜像，你可以在这个[链接(提取uwuv)](https://pan.baidu.com/s/1ipbMZ-C1Qk0S9PGDDMMy6w)找到，你可以在解压之后导入vmware即可使用。用户stu 密码为123456
 
 ### 使用Dev-Container (推荐)
 
