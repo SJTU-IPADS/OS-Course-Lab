@@ -13,13 +13,21 @@
 #ifndef SRVMGR_H
 #define SRVMGR_H
 
+#ifdef CHCORE_OPENTRUSTEE
+#include <spawn_ext.h>
+#endif /* CHCORE_OPENTRUSTEE */
 #include <chcore/ipc.h>
 #include <chcore-internal/procmgr_defs.h>
+#include "proc_node.h"
 
 struct new_process_args {
         int envp_argc;
         char **envp_argv;
         unsigned long stack_size;
+#ifdef CHCORE_OPENTRUSTEE
+        spawn_uuid_t puuid;
+        unsigned long heap_size;
+#endif /* CHCORE_OPENTRUSTEE */
 };
 
 /* fsm_server_cap in current process; can be copied to others */
@@ -35,14 +43,13 @@ extern char __binary_fsm_elf_size;
 extern char __binary_tmpfs_elf_start;
 extern char __binary_tmpfs_elf_size;
 
-struct proc_node *procmgr_launch_process(int input_argc, char **input_argv,
-                                         char *name, bool if_has_parent,
-                                         badge_t parent_badge,
-                                         struct new_process_args *np_args,
-                                         int proc_type);
-struct proc_node *procmgr_launch_basic_server(int input_argc, char **input_argv,
-                                              char *name, bool if_has_parent,
-                                              badge_t parent_badge);
+int procmgr_launch_process(int input_argc, char **input_argv, char *name,
+                           bool if_has_parent, badge_t parent_badge,
+                           struct new_process_args *np_args,
+                           int proc_type, struct proc_node **out_proc);
+int procmgr_launch_basic_server(int input_argc, char **input_argv, char *name,
+                                bool if_has_parent, badge_t parent_badge,
+                                struct proc_node **out_proc);
 
 /*
  * There three kinds of servers in ChCore for now.
@@ -57,8 +64,7 @@ void boot_secondary_servers(void);
 
 /* Initialize sys_servers and sys_server_locks */
 void init_srvmgr(void);
-void handle_get_server_cap(ipc_msg_t *ipc_msg, struct proc_request *pr);
-
+void handle_get_service_cap(ipc_msg_t *ipc_msg, struct proc_request *pr);
+void handle_set_service_cap(ipc_msg_t *ipc_msg, badge_t badge, struct proc_request *pr);
 void start_daemon_service(void);
-
 #endif /* SRVMGR_H */

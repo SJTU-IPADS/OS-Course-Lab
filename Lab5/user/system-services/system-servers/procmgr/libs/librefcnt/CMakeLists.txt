@@ -8,6 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-add_subdirectory(libchcoreelf)
-add_subdirectory(liblaunch)
-add_subdirectory(librefcnt)
+add_library(refcnt librefcnt.c)

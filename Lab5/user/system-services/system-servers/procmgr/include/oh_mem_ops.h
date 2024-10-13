@@ -10,22 +10,20 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#ifndef SHELL_MSG_HANDLER_H
-#define SHELL_MSG_HANDLER_H
+#ifndef OH_MEM_OPS_H
+#define OH_MEM_OPS_H
 
 #include <chcore/ipc.h>
 #include <chcore-internal/procmgr_defs.h>
 
-extern volatile int shell_is_waiting;
-extern cap_t shell_cap;
-extern int shell_pid;
+void oh_mem_ops_init(void);
 
-void handle_recv_sig(ipc_msg_t *ipc_msg, struct proc_request *pr);
-void handle_check_state(ipc_msg_t *ipc_msg, badge_t client_badge,
-                        struct proc_request *pr);
-void handle_get_shell_cap(ipc_msg_t *ipc_msg);
-void handle_set_shell_cap(ipc_msg_t *ipc_msg, badge_t client_badge);
-void handle_get_terminal_cap(ipc_msg_t *ipc_msg);
-void handle_set_terminal_cap(ipc_msg_t *ipc_msg);
+void handle_transfer_pmo_cap(ipc_msg_t *ipc_msg, badge_t badge);
 
-#endif /* SHELL_MSG_HANDLER_H */
+void handle_tee_alloc_sharemem(ipc_msg_t *ipc_msg, badge_t badge);
+void handle_tee_get_sharemem(ipc_msg_t *ipc_msg, badge_t badge);
+void handle_tee_free_sharemem(ipc_msg_t *ipc_msg, badge_t badge);
+
+void clean_sharemem(badge_t badge);
+
+#endif /* OH_MEM_OPS_H */
