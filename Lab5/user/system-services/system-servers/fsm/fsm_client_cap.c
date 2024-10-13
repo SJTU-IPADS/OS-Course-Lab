@@ -20,17 +20,15 @@ struct list_head fsm_client_cap_table;
 /* Return mount_id */
 int fsm_set_client_cap(badge_t client_badge, cap_t cap)
 {
-        /* Lab 5 TODO Begin */
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO Begin (Part 1) */
         return 0;
+        /* Lab 5 TODO End (Part 1) */
 }
 
 /* Return mount_id if record exists, otherwise -1 */
 int fsm_get_client_cap(badge_t client_badge, cap_t cap)
 {
-        /* Lab 5 TODO Begin */
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO Begin (Part 1) */
         return -1;
+        /* Lab 5 TODO End (Part 1) */
 }

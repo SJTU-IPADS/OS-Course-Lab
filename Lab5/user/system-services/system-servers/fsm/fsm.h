@@ -34,7 +34,6 @@
 #include <chcore-internal/fs_debug.h>
 
 int init_fsm(void);
-
 int fsm_mount_fs(const char *path, const char *mount_point);
 int fsm_umount_fs(const char *path);
 

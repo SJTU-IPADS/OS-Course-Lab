@@ -8,6 +8,7 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-file(GLOB _sources device.c fsm_client_cap.c fsm.c mount_info.c)
-add_executable(fsm.srv ${_sources})
+file(GLOB _sources "*.c")
+add_user_executable_static_linked(fsm.srv ${_sources})
+target_link_libraries(fsm.srv PRIVATE yaml)
 chcore_all_force_static_linked()

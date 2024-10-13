@@ -20,9 +20,11 @@
 #include <pthread.h>
 #include <chcore-internal/procmgr_defs.h>
 #include <chcore/string.h>
+#include <chcore/pthread.h>
 
 #include "fsm_client_cap.h"
 #include "mount_info.h"
+#include "mount_disk_fs.h"
 
 int fs_num = 0;
 pthread_mutex_t fsm_client_cap_table_lock;
@@ -77,8 +79,9 @@ static int boot_tmpfs(void)
 
         ipc_msg =
                 ipc_create_msg(procmgr_ipc_struct, sizeof(struct proc_request));
-        pr.req = PROC_REQ_GET_SERVER_CAP;
-        pr.get_server_cap.server_id = SERVER_TMPFS;
+        pr.req = PROC_REQ_GET_SERVICE_CAP;
+        strncpy(pr.get_service_cap.service_name, SERVER_TMPFS,
+                SERVICE_NAME_LEN);
 
         ipc_set_msg_data(ipc_msg, &pr, 0, sizeof(pr));
         ret = ipc_call(procmgr_ipc_struct, ipc_msg);
@@ -140,12 +143,10 @@ int fsm_mount_fs(const char *path, const char *mount_point)
                         mount_point, strlen(mount_point), fs_cap);
         }
 
-        /* Lab 5 TODO Begin */
-
+        /* Lab 5 TODO Begin (Part 1) */
         UNUSED(mp_node);
-
-        /* Lab 5 TODO End */
         pthread_rwlock_unlock(&mount_point_infos_rwlock);
+        /* Lab 5 TODO End (Part 1) */
 
 out:
         return ret;
@@ -215,6 +216,11 @@ out:
         return ret;
 }
 
+/*
+ * Types in the following two functions would conflict with existing builds,
+ * I suggest to move the tmpfs code out of kernel tree to resolve this.
+ */
+
 DEFINE_SERVER_HANDLER(fsm_dispatch)
 {
         int ret = 0;
@@ -228,15 +234,14 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
         }
 
         fsm_req = (struct fsm_request *)ipc_get_msg_data(ipc_msg);
-
         switch (fsm_req->req) {
         case FSM_REQ_PARSE_PATH: {
-                /* Lab 5 TODO Begin */
-
+                // Get Corresponding MOUNT_INFO
+                /* Lab 5 TODO Begin (Part 1) */
                 UNUSED(mpinfo);
                 UNUSED(mount_id);
-                
-                /* Lab 5 TODO End */
+                /* Lab 5 TODO End (Part 1) */
+                break;
         }
         case FSM_REQ_MOUNT: {
                 // path=(device_name), path2=(mount_point)
@@ -265,14 +270,25 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
                 ipc_return(ipc_msg, ret);
 }
 
-int main(int argc, char *argv[], char *envp[])
-{
-        init_fsm();
+static void* fsm_server_thread_for_itself(void* args){
         info("[FSM] register server value = %u\n",
              ipc_register_server_with_destructor(fsm_dispatch,
                                                  DEFAULT_CLIENT_REGISTER_HANDLER,
                                                  fsm_destructor));
+        return NULL;
+}
 
+int main(int argc, char *argv[], char *envp[])
+{
+        cap_t server_cap;
+        init_fsm();
+        pthread_t fsm_server_thread_id;
+        info("[FSM] register server value = %u\n",
+             ipc_register_server_with_destructor(fsm_dispatch,
+                                                 DEFAULT_CLIENT_REGISTER_HANDLER,
+                                                 fsm_destructor));
+        server_cap = chcore_pthread_create(&fsm_server_thread_id, NULL, fsm_server_thread_for_itself, NULL);
+        mount_disk_fs(server_cap);
         usys_exit(0);
         return 0;
 }

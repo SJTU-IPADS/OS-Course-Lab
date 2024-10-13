@@ -110,11 +110,13 @@ static int chcore_parse_devices(void)
                 if (pinfo->fs_id == FAT32_PARTITION) {
                         /* FAT32 */
                         dparts[i].partition_type = FAT32_PARTITION;
-                        dparts[i].server_id = SERVER_FAT32_FS;
+                        strncpy(dparts[i].service_name, SERVER_FAT32_FS,
+                                SERVICE_NAME_LEN);
                 } else if (pinfo->fs_id == EXT4_PARTITION) {
                         /* EXT4 */
                         dparts[i].partition_type = EXT4_PARTITION;
-                        dparts[i].server_id = SERVER_EXT4_FS;
+                        strncpy(dparts[i].service_name, SERVER_EXT4_FS,
+                                SERVICE_NAME_LEN);
                 } else if (pinfo->fs_id == 0) {
                         /* do nothing */
                 } else {
@@ -129,7 +131,8 @@ static int chcore_parse_devices(void)
                 dparts[MAX_PARTS_CNT - 1].mounted = false;
                 dparts[MAX_PARTS_CNT - 1].partition_lba = 0;
                 dparts[MAX_PARTS_CNT - 1].partition_type = LITTLEFS_PARTITION;
-                dparts[MAX_PARTS_CNT - 1].server_id = SERVER_LITTLEFS;
+                strncpy(dparts[MAX_PARTS_CNT - 1].service_name, SERVER_LITTLEFS,
+                        SERVICE_NAME_LEN);
         } else {
                 printf("[WARNING] cannot connect to flash server\n");
                 dparts[MAX_PARTS_CNT - 1].valid = false;
@@ -241,28 +244,32 @@ int mount_storage_device(const char *device_name)
         proc_ipc_msg =
                 ipc_create_msg(procmgr_ipc_struct, sizeof(struct proc_request));
         proc_req = (struct proc_request *)ipc_get_msg_data(proc_ipc_msg);
-        proc_req->req = PROC_REQ_GET_SERVER_CAP;
-        proc_req->get_server_cap.server_id = fs_server->server_id;
-
+        proc_req->req = PROC_REQ_GET_SERVICE_CAP;
+        strncpy(proc_req->get_service_cap.service_name, fs_server->service_name,
+                SERVICE_NAME_LEN);
+        proc_req->get_service_cap.service_name[SERVICE_NAME_LEN - 1] = '\0';
         ipc_call(procmgr_ipc_struct, proc_ipc_msg);
         fs_server_cap = ipc_get_msg_cap(proc_ipc_msg, 0);
         ipc_destroy_msg(proc_ipc_msg);
 
         /* deal with different fs type */
-        if (fs_server->server_id == SERVER_FAT32_FS) {
+        if (strncmp(fs_server->service_name, SERVER_FAT32_FS,
+                    SERVICE_NAME_LEN) == 0) {
                 /* FAT type */
                 if (!fs_server->mounted) {
                         chcore_initial_fat_partition(
                                 fs_server_cap, fs_server->partition_index);
                         fs_server->mounted = true;
                 }
-        } else if (fs_server->server_id == SERVER_EXT4_FS) {
+        } else if (strncmp(fs_server->service_name, SERVER_EXT4_FS,
+                           SERVICE_NAME_LEN) == 0) {
                 /* EXT4 type */
                 if (!fs_server->mounted) {
                         chcore_initial_ext4_partition(fs_server_cap,
                                                       fs_server->partition_lba);
                 }
-        } else if (fs_server->server_id == SERVER_LITTLEFS) {
+        } else if (strncmp(fs_server->service_name, SERVER_LITTLEFS,
+                           SERVICE_NAME_LEN) == 0) {
                 /* LITTLEFS type */
                 if (!fs_server->mounted) {
                         chcore_initial_littlefs_partition(
@@ -318,9 +325,9 @@ void print_devices(void)
         printf("Device\tServer\tPartition\tType\n");
         for (i = 0; i < 5; i++)
                 if (dparts[i].valid)
-                        printf("%s\t%d\t%d\t%x\n",
+                        printf("%s\t%s\t%d\t%x\n",
                                dparts[i].device_name,
-                               dparts[i].server_id,
+                               dparts[i].service_name,
                                dparts[i].partition_index,
                                dparts[i].partition_type);
 }
