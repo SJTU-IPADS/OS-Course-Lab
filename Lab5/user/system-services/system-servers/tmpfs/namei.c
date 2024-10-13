@@ -222,7 +222,8 @@ static inline const char *lookup_last(struct nameidata *nd)
  * @param open_flags The open flags of this open() syscall.
  * @return struct dentry* Return the found/created dentry, or NULL if not found.
  */
-static struct dentry *lookup_create(struct nameidata *nd, unsigned open_flags)
+static struct dentry *lookup_create(struct nameidata *nd,
+                                    struct open_flags *open_flags)
 {
         struct dentry *dir = nd->current;
         struct inode *i_dir = dir->inode;
@@ -236,7 +237,13 @@ static struct dentry *lookup_create(struct nameidata *nd, unsigned open_flags)
         }
 
         /* not found, create it */
-        if (open_flags & O_CREAT) {
+        if (open_flags->o_flags & O_CREAT) {
+                /* can the caller create file under this dir? */
+                if (!i_dir->base_ops->check_permission(
+                            i_dir, TMPFS_WRITE, TMPFS_OWNER)) {
+                        return CHCORE_ERR_PTR(-EACCES);
+                }
+
                 dentry = i_dir->d_ops->alloc_dentry();
                 if (CHCORE_IS_ERR(dentry)) {
                         return dentry;
@@ -249,15 +256,15 @@ static struct dentry *lookup_create(struct nameidata *nd, unsigned open_flags)
                         return CHCORE_ERR_PTR(err);
                 }
 
-                /* we are not currently handling mode in open() */
-                mode_t faked_mode = 0x888;
-
-                err = i_dir->d_ops->mknod(i_dir, dentry, faked_mode, FS_REG);
+                err = i_dir->d_ops->mknod(
+                        i_dir, dentry, open_flags->mode, FS_REG);
                 if (err) {
                         i_dir->d_ops->remove_dentry(i_dir, dentry);
                         i_dir->d_ops->free_dentry(dentry);
                         return CHCORE_ERR_PTR(err);
                 }
+
+                open_flags->created = 1;
         }
 
         return dentry;
@@ -271,7 +278,8 @@ static struct dentry *lookup_create(struct nameidata *nd, unsigned open_flags)
  * @return const char* Return NULL if no symlink encountered or should/can not
  * follow, return the symlink to follow it.
  */
-static const char *lookup_last_open(struct nameidata *nd, unsigned open_flags)
+static const char *lookup_last_open(struct nameidata *nd,
+                                    struct open_flags *open_flags)
 {
         struct dentry *dentry;
 
@@ -279,7 +287,7 @@ static const char *lookup_last_open(struct nameidata *nd, unsigned open_flags)
                 return NULL;
         }
 
-        if ((open_flags & O_CREAT)) {
+        if ((open_flags->o_flags & O_CREAT)) {
                 /*
                  * when O_CREAT is set
                  * the path should not have trailing slashes
@@ -371,6 +379,13 @@ static int walk_prefix(const char *name, struct nameidata *nd)
                 if (nd->current->inode->type != FS_DIR) {
                         return -ENOTDIR;
                 }
+
+                /* check search permission for next component */
+                /* NOTE: we only check the owner permission for now */
+                if (!nd->current->inode->base_ops->check_permission(
+                            nd->current->inode, TMPFS_EXECUTE, TMPFS_OWNER)) {
+                        return -EACCES;
+                }
         }
         return 0;
 }
@@ -435,6 +450,11 @@ int path_lookupat(struct nameidata *nd, const char *path, unsigned flags,
         int err;
         init_nd(nd, flags);
 
+        err = 0;
+        if (strlen(path) == 0) {
+                goto out;
+        }
+
         if (path[strlen(path) - 1] == '/') {
                 nd->flags |= ND_TRAILING_SLASH | ND_DIRECTORY | ND_FOLLOW;
         }
@@ -444,6 +464,7 @@ int path_lookupat(struct nameidata *nd, const char *path, unsigned flags,
                 ;
         }
 
+out:
         /* requiring a directory(because of trailing slashes) */
         if (!err && (nd->flags & ND_DIRECTORY)
             && nd->current->inode->type != FS_DIR) {
@@ -480,8 +501,9 @@ int path_lookupat(struct nameidata *nd, const char *path, unsigned flags,
  * nd->last after calling path_openat().
  *
  */
-int path_openat(struct nameidata *nd, const char *path, unsigned open_flags,
-                unsigned flags, struct dentry **dentry)
+int path_openat(struct nameidata *nd, const char *path,
+                struct open_flags *open_flags, unsigned flags,
+                struct dentry **dentry)
 {
         int err;
 
@@ -492,11 +514,11 @@ int path_openat(struct nameidata *nd, const char *path, unsigned open_flags,
         }
 
         /* we don't follow symlinks at end by default */
-        if (!(open_flags & O_NOFOLLOW)) {
+        if (!(open_flags->o_flags & O_NOFOLLOW)) {
                 nd->flags |= ND_FOLLOW;
         }
 
-        if (open_flags & O_DIRECTORY) {
+        if (open_flags->o_flags & O_DIRECTORY) {
                 nd->flags |= ND_DIRECTORY;
         }
 
@@ -510,7 +532,8 @@ int path_openat(struct nameidata *nd, const char *path, unsigned open_flags,
 
                 /* we can check O_CREAT | O_EXCL here, but fs_base handles it */
 
-                if ((open_flags & O_CREAT) && (inode->type == FS_DIR)) {
+                if ((open_flags->o_flags & O_CREAT)
+                    && (inode->type == FS_DIR)) {
                         err = -EISDIR;
                         goto error;
                 }
@@ -520,7 +543,7 @@ int path_openat(struct nameidata *nd, const char *path, unsigned open_flags,
                         goto error;
                 }
 
-                /* we can check O_TRUNCATE here, but fs_base handles it */
+                /* we can check O_TRUNC here, but fs_base handles it */
 
                 *dentry = nd->current;
         }

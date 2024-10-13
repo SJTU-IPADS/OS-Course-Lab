@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include "defs.h"
+#include "fcntl.h"
 #include "namei.h"
-#include <chcore/cpio.h>
+#include "cpio.h"
 #include <chcore/ipc.h>
 #include <chcore/syscall.h>
 
@@ -20,6 +21,7 @@
 #include "../fs_base/fs_vnode.h"
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 struct id_manager fidman;
 struct fid_record fid_records[MAX_NR_FID_RECORDS];
@@ -39,56 +41,53 @@ int tmpfs_load_image(const char *start)
         struct cpio_file *f;
         struct inode *inode;
         struct dentry *dentry;
+        struct open_flags open_flags;
         const char *path;
         size_t len;
         int err = 0;
         ssize_t write_count;
         struct nameidata nd;
+        mode_t mode;
 
         BUG_ON(start == NULL);
 
         cpio_init_g_files();
         cpio_extract(start, "/");
 
-        char *tmp = malloc(MAX_PATH);
-
         for (f = g_files.head.next; f; f = f->next) {
-                if (!(f->header.c_filesize))
-                        continue;
-
                 path = f->name;
-
-                memset(tmp, 0, MAX_PATH);
-                tmp[0] = '/';
-
-                int i_tmp = 1;
+                mode = f->header.c_mode;
 
                 /* skipping '/'s. maybe this is unnecessary */
                 while (*path == '/') {
                         path++;
                 }
 
-                /* copying path to tmp while creating every directory
-                 * encountered during the copying process */
-                while (*path) {
-                        if (*path == '/') {
-                                err = tmpfs_mkdir(tmp, 0);
-                                if (err && err != -EEXIST) {
-                                        goto error;
-                                }
+                if (S_ISDIR(mode)) {
+                        err = tmpfs_mkdir(path, mode);
+                        /*
+                         * cpio file has the "." and ".." dirents in it,
+                         * which tmpfs have already created.
+                         * so we tolerate the EEXIST error here.
+                         */
+                        if (err && err != -EEXIST) {
+                                goto error;
                         }
-                        tmp[i_tmp++] = *path;
-                        path++;
-                }
-
-                if (*(path - 1) == '/') {
-                        warn("empty dir in cpio\n");
                         continue;
                 }
 
-                /* create the last non-directory component as a regular file,
-                 * simply by calling path_openat() with O_CREAT */
-                err = path_openat(&nd, tmp, O_CREAT, 0, &dentry);
+                if (!S_ISREG(mode)) {
+                        warn("path %s is not a directory nor a regular file, not supported now\n",
+                             path);
+                        continue;
+                }
+
+                /* path points a regular file now */
+
+                open_flags.o_flags = O_CREAT | O_WRONLY;
+                open_flags.mode = mode;
+
+                err = path_openat(&nd, path, &open_flags, 0, &dentry);
                 if (err) {
                         goto error;
                 }
@@ -103,8 +102,13 @@ int tmpfs_load_image(const char *start)
                 }
         }
 
+#ifdef CHCORE_OPENTRUSTEE
+        err = tmpfs_mkdir("/tafs", 0);
+        BUG_ON(err);
+#endif /* CHCORE_OPENTRUSTEE */
+
 error:
-        free(tmp);
+        cpio_free_g_files();
         return err;
 }
 
@@ -113,9 +117,9 @@ void init_root(void)
 {
         int err;
         tmpfs_root_dent = malloc(sizeof(struct dentry));
-        assert(tmpfs_root_dent);
+        BUG_ON(!tmpfs_root_dent);
 
-        tmpfs_root = tmpfs_inode_init(FS_DIR, 0);
+        tmpfs_root = tmpfs_inode_init(FS_DIR, S_IRUSR | S_IWUSR | S_IXUSR);
         assert(tmpfs_root);
         tmpfs_root_dent->inode = tmpfs_root;
 
@@ -155,7 +159,10 @@ int main(int argc, char *argv[], char *envp[])
 {
         init_tmpfs();
 
-        tmpfs_load_image((char *)&__binary_ramdisk_cpio_start);
+        int ret = tmpfs_load_image((char *)&__binary_ramdisk_cpio_start);
+        if (ret) {
+                BUG_ON(1);
+        }
 
         info("register server value = %u\n",
              ipc_register_server_with_destructor(fs_server_dispatch,

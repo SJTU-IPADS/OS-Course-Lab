@@ -40,7 +40,8 @@ int path_parentat(struct nameidata *nd, const char *path, unsigned flags,
                   struct dentry **parent);
 int path_lookupat(struct nameidata *nd, const char *path, unsigned flags,
                   struct dentry **dentry);
-int path_openat(struct nameidata *nd, const char *path, unsigned open_flags,
-                unsigned flags, struct dentry **dentry);
+int path_openat(struct nameidata *nd, const char *path,
+                struct open_flags *open_flags, unsigned flags,
+                struct dentry **dentry);
 
 #endif /* TMPFS_NAMEI_H */

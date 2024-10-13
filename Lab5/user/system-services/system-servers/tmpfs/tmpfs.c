@@ -23,8 +23,35 @@
 #include "namei.h"
 #include <limits.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <unistd.h>
+
+int oflags_to_perm(unsigned int oflags)
+{
+        int ret = 0;
+        unsigned int access_mode;
+
+        access_mode = oflags & O_ACCMODE;
+
+        switch (access_mode) {
+        case O_RDONLY:
+                ret = TMPFS_READ;
+                break;
+        case O_WRONLY:
+                ret = TMPFS_WRITE;
+                break;
+        case O_RDWR:
+                ret = TMPFS_READ | TMPFS_WRITE;
+                break;
+        case O_EXEC:
+                ret = TMPFS_EXECUTE;
+                break;
+        }
+
+        return ret;
+}
 
 /*
  * This file contains interfaces that fs_base will invoke
@@ -51,10 +78,14 @@ int tmpfs_creat(ipc_msg_t *ipc_msg, struct fs_request *fr)
         int err;
         struct nameidata nd;
         struct dentry *dentry;
+        struct open_flags open_flags;
 
         char *pathname = fr->creat.pathname;
 
-        err = path_openat(&nd, pathname, O_CREAT, 0, &dentry);
+        open_flags.mode = fr->creat.mode;
+        open_flags.o_flags = O_CREAT | O_WRONLY;
+
+        err = path_openat(&nd, pathname, &open_flags, 0, &dentry);
         if (err) {
                 goto error;
         }
@@ -86,17 +117,34 @@ int tmpfs_open(char *path, int o_flags, int mode, ino_t *vnode_id,
         int err;
         struct nameidata nd;
         struct dentry *dentry;
+        struct open_flags open_flags;
 
-        err = path_openat(&nd, path, o_flags, 0, &dentry);
+        open_flags.mode = mode;
+        open_flags.o_flags = o_flags;
+        open_flags.created = 0;
+
+        err = path_openat(&nd, path, &open_flags, 0, &dentry);
 
         if (!err) {
                 struct inode *inode = dentry->inode;
+                int perm_desired = oflags_to_perm(open_flags.o_flags);
+
+                /*
+                 * if the file is newly created,
+                 * we don't check its access mode
+                 */
+                if (!open_flags.created
+                    && !inode->base_ops->check_permission(
+                            inode, perm_desired, TMPFS_OWNER)) {
+                        err = -EACCES;
+                        goto out;
+                }
 
                 *vnode_id = (ino_t)(uintptr_t)inode;
                 *vnode_size = inode->size;
                 *vnode_private = inode;
 
-                /* vnode type can not be symlink? */
+                /* FIXME: vnode type can not be symlink? */
                 switch (inode->type) {
                 case FS_REG:
                         *vnode_type = FS_NODE_REG;
@@ -112,6 +160,7 @@ int tmpfs_open(char *path, int o_flags, int mode, ino_t *vnode_id,
                 inode->base_ops->open(inode);
         }
 
+out:
         return err;
 }
 
@@ -121,6 +170,25 @@ int tmpfs_close(void *operator, bool is_dir /* not handled */, bool do_close)
         if (do_close) {
                 inode->base_ops->close(inode);
         }
+
+        return 0;
+}
+
+int tmpfs_chmod(char *pathname, mode_t mode)
+{
+        int err;
+        struct nameidata nd;
+        struct dentry *dentry;
+        struct inode *inode;
+
+        err = path_lookupat(&nd, pathname, 0, &dentry);
+
+        if (err) {
+                return err;
+        }
+
+        inode = dentry->inode;
+        inode->base_ops->chmod(inode, mode);
 
         return 0;
 }
@@ -220,6 +288,7 @@ int tmpfs_mkdir(const char *path, mode_t mode)
         if (err) {
                 goto error;
         }
+
         /* only slashes */
         if (nd.last.str == NULL) {
                 return -EBUSY;
@@ -231,6 +300,13 @@ int tmpfs_mkdir(const char *path, mode_t mode)
                 i_parent->d_ops->dirlookup(i_parent, nd.last.str, nd.last.len);
         if (d_new_dir) {
                 err = -EEXIST;
+                goto error;
+        }
+
+        /* NOTE: treat all caller as file owner now */
+        if (!i_parent->base_ops->check_permission(
+                    i_parent, TMPFS_WRITE, TMPFS_OWNER)) {
+                err = -EACCES;
                 goto error;
         }
 
@@ -274,10 +350,12 @@ int tmpfs_rmdir(const char *path, int flags)
         if (err) {
                 goto error;
         }
+
         /* only slashes */
         if (nd.last.str == NULL) {
                 return -EBUSY;
         }
+
         i_parent = d_parent->inode;
 
         d_to_remove =
@@ -289,6 +367,13 @@ int tmpfs_rmdir(const char *path, int flags)
 
         if (d_to_remove->inode->type != FS_DIR) {
                 err = -ENOTDIR;
+                goto error;
+        }
+
+        /* NOTE: treat all caller as file owner now */
+        if (!i_parent->base_ops->check_permission(
+                    i_parent, TMPFS_WRITE, TMPFS_OWNER)) {
+                err = -EACCES;
                 goto error;
         }
 
@@ -307,22 +392,27 @@ int tmpfs_getdents(ipc_msg_t *ipc_msg, struct fs_request *fr)
 
         struct inode *inode = (struct inode *)server_entrys[fd]->vnode->private;
         int ret = 0, read_bytes;
-        if (inode) {
-                if (inode->type == FS_DIR) {
-                        ret = inode->d_ops->scan(inode,
-                                                 server_entrys[fd]->offset,
-                                                 buff,
-                                                 buff + count,
-                                                 &read_bytes);
-
-                        server_entrys[fd]->offset += ret;
-                        ret = read_bytes;
-                } else {
-                        ret = -ENOTDIR;
-                }
-        } else {
-                ret = -ENOENT;
+        if (!inode) {
+                return -ENOENT;
         }
+
+        if (inode->type != FS_DIR) {
+                return -ENOTDIR;
+        }
+
+        if (!inode->base_ops->check_permission(inode, TMPFS_READ, TMPFS_OWNER)) {
+                return -EACCES;
+        }
+
+        ret = inode->d_ops->scan(inode,
+                                 server_entrys[fd]->offset,
+                                 buff,
+                                 buff + count,
+                                 &read_bytes);
+
+        server_entrys[fd]->offset += ret;
+        ret = read_bytes;
+
         return ret;
 }
 
@@ -343,10 +433,12 @@ int tmpfs_symlinkat(ipc_msg_t *ipc_msg, struct fs_request *fr)
         if (err) {
                 goto error;
         }
+
         /* only slashes */
         if (nd.last.str == NULL) {
                 return -EBUSY;
         }
+
         i_parent = d_parent->inode;
 
         d_symlink =
@@ -359,6 +451,12 @@ int tmpfs_symlinkat(ipc_msg_t *ipc_msg, struct fs_request *fr)
         /* the path contains trailing slashes, return ENOTDIR per POSIX */
         if (nd.last.str[nd.last.len]) {
                 err = -ENOTDIR;
+                goto error;
+        }
+
+        if (!i_parent->base_ops->check_permission(
+                    i_parent, TMPFS_WRITE, TMPFS_OWNER)) {
+                err = -EACCES;
                 goto error;
         }
 
@@ -446,6 +544,7 @@ int tmpfs_unlink(const char *path, int flags)
         if (err) {
                 goto error;
         }
+
         /* only slashes */
         if (nd.last.str == NULL) {
                 return -EBUSY;
@@ -462,6 +561,12 @@ int tmpfs_unlink(const char *path, int flags)
 
         if (d_unlink->inode->type == FS_DIR) {
                 err = -EISDIR;
+                goto error;
+        }
+
+        if (!i_parent->base_ops->check_permission(
+                    i_parent, TMPFS_WRITE, TMPFS_OWNER)) {
+                err = -EACCES;
                 goto error;
         }
 
@@ -498,12 +603,18 @@ int tmpfs_rename(const char *oldpath, const char *newpath)
                 error("oldpath should exist!\n");
                 goto error;
         }
+
         /* only slashes */
         if (nd.last.str == NULL) {
                 return -EBUSY;
         }
 
         i_old_parent = d_old_parent->inode;
+
+        if (!i_old_parent->base_ops->check_permission(
+                    i_old_parent, TMPFS_WRITE, TMPFS_OWNER)) {
+                return -EACCES;
+        }
 
         d_old = i_old_parent->d_ops->dirlookup(
                 i_old_parent, nd.last.str, nd.last.len);
@@ -515,12 +626,18 @@ int tmpfs_rename(const char *oldpath, const char *newpath)
                 error("newpath prefix should exist!\n");
                 goto error;
         }
+
         /* only slashes */
         if (nd.last.str == NULL) {
                 return -EBUSY;
         }
 
         i_new_parent = d_new_parent->inode;
+
+        if (!i_new_parent->base_ops->check_permission(
+                    i_new_parent, TMPFS_WRITE, TMPFS_OWNER)) {
+                return -EACCES;
+        }
 
         d_new = i_new_parent->d_ops->alloc_dentry();
         if (CHCORE_IS_ERR(d_new)) {
@@ -590,11 +707,13 @@ int tmpfs_fstat(ipc_msg_t *ipc_msg, struct fs_request *fr)
 int tmpfs_faccessat(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
         int err;
+        bool allowed = true;
         struct nameidata nd;
         struct dentry *dentry;
+        struct inode *inode;
 
         const char *path = fr->faccessat.pathname;
-        /* mode_t mode = fr->faccessat.mode; // again, mode is not handled */
+        int amode = fr->faccessat.amode;
         int flags = fr->faccessat.flags;
 
         if (flags & (~AT_EACCESS)) {
@@ -604,7 +723,24 @@ int tmpfs_faccessat(ipc_msg_t *ipc_msg, struct fs_request *fr)
         /* look the path up does all the job */
         err = path_lookupat(&nd, path, 0, &dentry);
 
-        return err;
+        if (err || amode & F_OK) {
+                return err;
+        }
+
+        inode = dentry->inode;
+
+        if (amode & R_OK) {
+                allowed &= ((inode->mode >> 6) & TMPFS_READ) == TMPFS_READ;
+        }
+        if (amode & W_OK) {
+                allowed &= ((inode->mode >> 6) & TMPFS_WRITE) == TMPFS_WRITE;
+        }
+        if (amode & X_OK) {
+                allowed &= ((inode->mode >> 6) & TMPFS_EXECUTE)
+                           == TMPFS_EXECUTE;
+        }
+
+        return allowed ? 0 : -EACCES;
 }
 
 /* File system metadata operations */
@@ -722,6 +858,7 @@ struct fs_server_ops server_ops = {
         .creat = tmpfs_creat,
         .open = tmpfs_open,
         .close = tmpfs_close,
+        .chmod = tmpfs_chmod,
         .read = tmpfs_read,
         .write = tmpfs_write,
         .ftruncate = tmpfs_ftruncate,

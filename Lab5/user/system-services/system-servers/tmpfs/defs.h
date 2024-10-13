@@ -15,7 +15,6 @@
 
 #include <chcore/container/hashtable.h>
 #include <chcore/container/radix.h>
-#include <chcore/cpio.h>
 #include <chcore/type.h>
 #include <chcore/idman.h>
 #include <stdlib.h>
@@ -24,6 +23,7 @@
 #include <sys/statfs.h>
 #include <stddef.h>
 #include <string.h>
+#include "cpio.h"
 
 #define DEBUG 0
 
@@ -65,13 +65,27 @@
 #define MAX_PATH    (4096)
 #define MAX_SYM_LEN MAX_PATH
 
-#define MAX_NR_FID_RECORDS (1024)
+#define MAX_NR_FID_RECORDS   (1024)
 #define MAX_DIR_HASH_BUCKETS (1024)
 
 /* inode types */
 #define FS_REG (8)
 #define FS_DIR (4)
 #define FS_SYM (10)
+
+/* permission bits */
+#define TMPFS_READ    (0b100)
+#define TMPFS_WRITE   (0b010)
+#define TMPFS_EXECUTE (0b001)
+
+/* identity */
+#define TMPFS_OWNER  (0)
+#define TMPFS_GROUP  (1)
+#define TMPFS_OTHERS (2)
+
+#define OWNER_SHIFT  (6)
+#define GROUP_SHIFT  (3)
+#define OTHERS_SHIFT (0)
 
 #define PREFIX         "[tmpfs]"
 #define info(fmt, ...) printf(PREFIX " " fmt, ##__VA_ARGS__)
@@ -100,6 +114,12 @@ struct fid_record {
         struct inode *inode;
         u64 flags;
         off_t offset;
+};
+
+struct open_flags {
+        unsigned o_flags;
+        mode_t mode;
+        int created;
 };
 
 struct inode {
@@ -151,6 +171,8 @@ struct base_inode_ops {
         void (*inc_nlinks)(struct inode *inode);
         void (*free)(struct inode *inode);
         void (*stat)(struct inode *inode, struct stat *stat);
+        void (*chmod)(struct inode *inode, mode_t mode);
+        bool (*check_permission)(struct inode *inode, int perm_desired, int identity);
 };
 
 struct regfile_ops {
@@ -206,6 +228,7 @@ void init_root(void);
 
 /* tmpfs.c */
 int tmpfs_mkdir(const char *path, mode_t mode);
+int oflags_to_perm(unsigned oflags);
 
 extern struct inode *tmpfs_root;
 extern struct dentry *tmpfs_root_dent;
