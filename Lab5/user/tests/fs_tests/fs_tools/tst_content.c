@@ -30,7 +30,7 @@ void test_content_small(void)
         fname = path_join(test_content_dir, "for_test_content_small.txt");
 
         fs_assert_noent(fname);
-        fd = open(fname, O_CREAT | O_RDWR);
+        fd = open(fname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         fs_assert(fd > 0);
         fs_assert_empty_reg(fname);
 
@@ -82,7 +82,7 @@ void test_content(void)
         printf("\ntest_content begin at : %s\n", test_content_dir);
 
         fs_assert_noent(test_content_dir);
-        ret = mkdir(test_content_dir, 0);
+        ret = mkdir(test_content_dir, S_IRUSR | S_IWUSR | S_IXUSR);
         fs_assert_zero(ret);
 
         /* Test Start */

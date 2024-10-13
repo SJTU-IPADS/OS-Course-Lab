@@ -200,7 +200,7 @@ void mkdir_p_dirmax(char *dirmax)
         for (i = 0; i < iters; i++) {
                 strncpy(tmp, dirmax + 32 * i, 31);
                 tmp[31] = '\0';
-                fs_assert_zero(mkdir(tmp, 0));
+                fs_assert_zero(mkdir(tmp, S_IRUSR | S_IWUSR | S_IXUSR));
                 fs_assert_zero(chdir(tmp));
         }
         fs_assert_zero(chdir(cwd));

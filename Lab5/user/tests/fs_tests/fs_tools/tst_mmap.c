@@ -323,7 +323,7 @@ void test_mmap(void)
         printf("\ntest_mmap begin at : %s\n", test_mmap_dir);
 
         fs_assert_noent(test_mmap_dir);
-        ret = mkdir(test_mmap_dir, 0755);
+        ret = mkdir(test_mmap_dir, S_IRUSR | S_IWUSR | S_IXUSR);
         fs_assert_zero(ret);
 
         /* Test Start */

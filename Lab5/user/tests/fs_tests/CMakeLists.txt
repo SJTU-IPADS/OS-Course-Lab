@@ -12,9 +12,8 @@ file(GLOB _fs_test_sources "fs_tools/*.c")
 
 add_executable(fs_test_full.bin fs_test_full.c ${_fs_test_sources})
 target_include_directories(fs_test_full.bin PRIVATE fs_tools)
+target_link_libraries(fs_test_full.bin PRIVATE pthread)
 
 add_executable(fs_test_mmap.bin fs_test_mmap.c ${_fs_test_sources})
 target_include_directories(fs_test_mmap.bin PRIVATE fs_tools)
 target_link_libraries(fs_test_mmap.bin PRIVATE pthread)
-
-add_executable(fs_test_concurrency.bin fs_test_concurrency.c)

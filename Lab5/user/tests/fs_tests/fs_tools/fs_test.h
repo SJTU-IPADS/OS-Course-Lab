@@ -13,7 +13,6 @@
 #pragma once
 
 #ifndef FS_TEST_LINUX
-#include <chcore/cpio.h>
 #include <chcore/defs.h>
 #include <chcore/falloc.h>
 #include <chcore-internal/fs_defs.h>
@@ -137,6 +136,12 @@ extern void run_pjdtest();
                         printf(COLOR_GREEN "|" COLOR_DEFAULT "");                       \
                 }                                                                       \
         } while (0)
+
+#define file_op_assert(expr, ret, errno_expected) \
+    errno = 0; \
+    fs_assert((expr) == (ret)); \
+    fs_assert(errno == (errno_expected));
+
 
 static inline void print_hex(char *buf, int size, int per_line)
 {

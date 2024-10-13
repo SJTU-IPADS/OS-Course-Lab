@@ -42,7 +42,7 @@ static void test_open_multiple_times(void)
         char *fname;
 
         fname = path_join(test_open_dir, "test_open_multiple_times.txt");
-        fd1 = open(fname, O_CREAT | O_RDWR);
+        fd1 = open(fname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         fs_assert(fd1 > 0);
         fs_assert_empty_reg(fname);
         fd2 = open(fname, O_RDWR);
@@ -68,7 +68,7 @@ static void test_open_no_server_entry_leak(void)
         fname = path_join(test_open_dir, "test_open_no_server_entry_leak.txt");
 
         /* create file */
-        fd1 = open(fname, O_CREAT | O_RDWR);
+        fd1 = open(fname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         fs_assert(fd1 > 0);
         fs_assert_empty_reg(fname);
 
@@ -103,7 +103,7 @@ void test_open(void)
         printf("\ntest_open begin at : %s\n", test_open_dir);
 
         fs_assert_noent(test_open_dir);
-        ret = mkdir(test_open_dir, 0);
+        ret = mkdir(test_open_dir, S_IRUSR | S_IWUSR | S_IXUSR);
         fs_assert_zero(ret);
 
         /* Test cases */
@@ -126,7 +126,7 @@ void test_open_littlefs(void)
         printf("\ntest_open begin at : %s\n", test_open_dir);
 
         fs_assert_noent(test_open_dir);
-        ret = mkdir(test_open_dir, 0);
+        ret = mkdir(test_open_dir, S_IRUSR | S_IWUSR | S_IXUSR);
         fs_assert_zero(ret);
 
         /* Test cases */

@@ -19,3 +19,4 @@ void test_lseek(void);
 void test_content(void);
 void test_mmap(void);
 void test_dup(void);
+void test_mode(void);
