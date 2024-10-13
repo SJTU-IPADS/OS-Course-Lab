@@ -9,9 +9,6 @@
 # See the Mulan PSL v2 for more details.
 
 add_link_options(-static)
-chcore_enable_clang_tidy(
-    EXTRA_CHECKS -performance-no-int-to-ptr,-clang-analyzer-deadcode.DeadStores)
-message("CMAKE_C_CLANG_TIDY: ${CMAKE_C_CLANG_TIDY}")
 set(binary_path ${CHCORE_RAMDISK_DIR}/ramdisk.cpio)
 configure_file(incbin_ramdisk.tpl.S incbin_ramdisk.S)
 unset(binary_path)

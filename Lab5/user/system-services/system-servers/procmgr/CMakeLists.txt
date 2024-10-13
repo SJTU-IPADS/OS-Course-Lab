@@ -42,11 +42,10 @@ macro(_procmgr_incbin _target_name _binary_name _binary_path)
     unset(_binary_path)
 endmacro()
 
-add_custom_target(fsm.srv
-                COMMAND touch ${CHCORE_PROJECT_DIR}/ramdisk/fsm.srv)
 
 _procmgr_incbin(fsm.srv fsm_elf
-                ${CHCORE_PROJECT_DIR}/ramdisk/fsm.srv)
+                ${system_services_build_dir}/system-servers/fsm/fsm.srv)
+
 _procmgr_incbin(tmpfs.srv tmpfs_elf
                 ${system_services_build_dir}/system-servers/tmpfs/tmpfs.srv)
 

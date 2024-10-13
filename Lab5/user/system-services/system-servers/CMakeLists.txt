@@ -10,6 +10,23 @@
 
 add_custom_target(system-servers-clean)
 add_dependencies(system-services-clean system-servers-clean)
+set(CONFIGURABLE_SERVER_CONFIG_INTERMEDIATE_FILE ${CMAKE_CURRENT_BINARY_DIR}/procmgr/configurable_servers.txt)
+set(USER_SERVER_CONFIG_INTERMEDIATE_FILE ${CMAKE_CURRENT_BINARY_DIR}/procmgr/user_servers.txt)
+
+set(CONFIGURABLE_SERVER_CONFIG_FILES "" CACHE INTERNAL "Configurable server config files" FORCE)
+set(USER_SERVER_CONFIG_FILES "" CACHE INTERNAL "User server config files" FORCE)
+
+function(chcore_add_configurable_server file)
+    set(_list ${CONFIGURABLE_SERVER_CONFIG_FILES})
+    list(APPEND _list ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+    set(CONFIGURABLE_SERVER_CONFIG_FILES ${_list} CACHE INTERNAL "Configurable server config files")
+endfunction()
+
+function(chcore_add_user_server file)
+    set(_list ${USER_SERVER_CONFIG_FILES})
+    list(APPEND _list ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+    set(USER_SERVER_CONFIG_FILES ${_list} CACHE INTERNAL "User server config files")
+endfunction()
 # Process Manager
 add_subdirectory(procmgr)
 
@@ -62,3 +79,19 @@ add_subdirectory(tmpfs)
 # else()
 #     chcore_all_dynamic_linked_exec()
 # endif()
+add_custom_target(generate_configurable_server_intermediate_file
+    COMMAND ${CMAKE_COMMAND} -E echo "${CONFIGURABLE_SERVER_CONFIG_FILES}" > ${CONFIGURABLE_SERVER_CONFIG_INTERMEDIATE_FILE}
+    COMMAND ${CMAKE_COMMAND} -E echo "CONFIG_FILE_PATH=\"${CONFIGURABLE_SERVER_CONFIG_INTERMEDIATE_FILE}\""
+    COMMENT "Generating config file"
+    VERBATIM
+)
+
+add_custom_target(generate_user_server_intermediate_file
+    COMMAND ${CMAKE_COMMAND} -E echo "${USER_SERVER_CONFIG_FILES}" > ${USER_SERVER_CONFIG_INTERMEDIATE_FILE}
+    COMMAND ${CMAKE_COMMAND} -E echo "USER_SERVER_CONFIG_FILE_PATH=\"${USER_SERVER_CONFIG_INTERMEDIATE_FILE}\""
+    COMMENT "Generating user server config file"
+    VERBATIM
+)
+
+add_dependencies(generate_configure_file generate_configurable_server_intermediate_file)
+add_dependencies(generate_configure_file generate_user_server_intermediate_file)
