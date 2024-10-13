@@ -89,7 +89,11 @@
 #endif
 
 #define _SYSCALL_LL_REV(a, b) \
-        ((union { long long ll; long l[2]; }){.l = {(a), (b)}}).ll
+        ((union {             \
+                long long ll; \
+                long l[2];    \
+        }){.l = {(a), (b)}})  \
+                .ll
 
 /*
  * Used to issue ipc to user-space services
@@ -133,7 +137,8 @@ void __libc_connect_services(elf_auxv_t *auxv)
         procmgr_ipc_struct->conn_cap = 0;
         procmgr_ipc_struct->server_id = PROC_MANAGER;
 
-        for (i = 0; auxv[i].a_type != AT_CHCORE_CAP_CNT; i++);
+        for (i = 0; auxv[i].a_type != AT_CHCORE_CAP_CNT; i++)
+                ;
 
         nr_caps = auxv[i].a_val;
         if (nr_caps == ENVP_NONE_CAPS) {
@@ -141,19 +146,19 @@ void __libc_connect_services(elf_auxv_t *auxv)
                 return;
         }
 
-        procmgr_server_cap = (cap_t)(auxv[i+1].a_val);
+        procmgr_server_cap = (cap_t)(auxv[i + 1].a_val);
 
         /* Connect to FS only */
         if ((--nr_caps) == 0)
                 return;
 
-        fsm_server_cap = (cap_t)(auxv[i+2].a_val);
+        fsm_server_cap = (cap_t)(auxv[i + 2].a_val);
 
         /* Connect to FS and NET */
         if ((--nr_caps) == 0)
                 return;
 
-        lwip_server_cap = (cap_t)(auxv[i+3].a_val);
+        lwip_server_cap = (cap_t)(auxv[i + 3].a_val);
 
         /* Connect to FS, NET, and PROCMGR */
         // printf("%s: connect FS, NET and PROCMGR\n", __func__);
@@ -161,7 +166,8 @@ void __libc_connect_services(elf_auxv_t *auxv)
 weak_alias(__libc_connect_services, libc_connect_services);
 
 /* Set the random number generator seed for ASLR use */
-static inline void init_chcore_aslr() {
+static inline void init_chcore_aslr()
+{
         if (unlikely(!aslr_inited)) {
                 struct timespec ts;
                 clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -170,7 +176,8 @@ static inline void init_chcore_aslr() {
         }
 }
 
-static inline void init_heap_start() {
+static inline void init_heap_start()
+{
         if (unlikely(!heap_start_inited)) {
                 heap_start = HEAP_START + ASLR_RAND_OFFSET;
                 heap_start_inited = 1;
@@ -238,10 +245,11 @@ __attribute__((constructor(101))) void __libc_chcore_init(void)
         pidstr = getenv("PID");
         if (pidstr)
                 chcore_pid = atoi(pidstr);
-        
-        for (i = 0; __environ[i]; i++);
-	
-        auxv = (elf_auxv_t *)(__environ+i+1);
+
+        for (i = 0; __environ[i]; i++)
+                ;
+
+        auxv = (elf_auxv_t *)(__environ + i + 1);
 
         /* Set seed for ASLR */
         init_chcore_aslr();
@@ -360,15 +368,13 @@ long __syscall1(long n, long a)
                 return 0;
         case SYS_set_tid_address: {
                 /* TODO: use the impl of oh-tee */
-                chcore_syscall1(CHCORE_SYS_set_tid_address, a);
-                static long fake_tid_val = 10086;
-                return fake_tid_val++;
+                return chcore_syscall1(CHCORE_SYS_set_tid_address, a);
         }
         case SYS_brk:
                 /*
                  * Ideally we should do this initialization in only one place
                  * (__libc_chcore_init()), unluckily that won't work because
-                 * there will be malloc()s before the __libc_chcore_init() 
+                 * there will be malloc()s before the __libc_chcore_init()
                  * function is called. So we also do the initialization here.
                  */
                 init_chcore_aslr();
@@ -452,6 +458,11 @@ long __syscall2(long n, long a, long b)
                                  sizeof(struct stat) /* bufsize */
                 );
         }
+#ifdef SYS_chmod
+        case SYS_chmod: {
+                return chcore_fchmodat(AT_FDCWD, (char *)a, b);
+        }
+#endif
         case SYS_statfs: {
                 return __xstatxx(FS_REQ_STATFS,
                                  AT_FDCWD, /* fd */
@@ -502,7 +513,7 @@ long __syscall2(long n, long a, long b)
                 return 0;
         }
         case SYS_membarrier: {
-                warn_once("SYS_membarrier is not implmeneted.\n");
+                // warn_once("SYS_membarrier is not implmeneted.\n");
                 return 0;
         }
         case SYS_getrusage:
@@ -617,15 +628,15 @@ long __syscall3(long n, long a, long b, long c)
                 return __syscall6(SYS_openat, a, b, c, /* mode */ 0, 0, 0);
         }
         case SYS_futex: {
-                /* Multiple sys_futex entries here because the number of parameter varies in different futex ops. */
+                /* Multiple sys_futex entries here because the number of
+                 * parameter varies in different futex ops. */
                 return chcore_syscall6(CHCORE_SYS_futex, a, b, c, 0, 0, 0);
         }
         case SYS_fcntl: {
                 return chcore_fcntl(a, b, c);
         }
         case SYS_fchmodat: {
-                warn_once("SYS_fchmodat is not implemented.\n");
-                return 0;
+                return chcore_fchmodat(a, (char *)b, c);
         }
         case SYS_fchown: {
                 warn_once("SYS_fchown is not implemented.\n");
@@ -663,7 +674,7 @@ long __syscall3(long n, long a, long b, long c)
                 return 0;
         }
         /**
-         * SYS_ftruncate compat layer (for ABI not forcing 64bit 
+         * SYS_ftruncate compat layer (for ABI not forcing 64bit
          * argument start at even parameters)
          */
         case SYS_ftruncate: {
@@ -689,8 +700,8 @@ pid_t chcore_waitpid(pid_t pid, int *status, int options, int d)
         // procmgr_ipc_struct = ipc_register_client(procmgr_server_cap);
         // assert(procmgr_ipc_struct);
 
-        ipc_msg = ipc_create_msg(
-                procmgr_ipc_struct, sizeof(struct proc_request));
+        ipc_msg =
+                ipc_create_msg(procmgr_ipc_struct, sizeof(struct proc_request));
         pr.req = PROC_REQ_WAIT;
         pr.wait.pid = pid;
 
@@ -701,7 +712,9 @@ pid_t chcore_waitpid(pid_t pid, int *status, int options, int d)
         if (ret > 0) {
                 /* Get the actual exit status. */
                 reply_pr = (struct proc_request *)ipc_get_msg_data(ipc_msg);
-                *status = reply_pr->wait.exitstatus;
+                if (status) {
+                        *status = reply_pr->wait.exitstatus;
+                }
         }
         // debug("pid=%d => exitstatus: %d\n", pid, pr.exitstatus);
 
@@ -734,7 +747,7 @@ long __syscall4(long n, long a, long b, long c, long d)
                 return chcore_renameat(a, (const char *)b, c, (const char *)d);
         }
 #endif
-        case SYS_faccessat: 
+        case SYS_faccessat:
         case SYS_faccessat2: {
                 return chcore_faccessat(a, (const char *)b, c, d);
         }
@@ -745,7 +758,7 @@ long __syscall4(long n, long a, long b, long c, long d)
                 return chcore_syscall6(CHCORE_SYS_futex, a, b, c, d, 0, 0);
         }
         case SYS_rt_sigprocmask: {
-                warn_once("SYS_rt_sigprocmask is not implemented.\n");
+                // warn_once("SYS_rt_sigprocmask is not implemented.\n");
                 return 0;
         }
         case SYS_rt_sigaction: {
@@ -770,7 +783,7 @@ long __syscall4(long n, long a, long b, long c, long d)
                 return 0;
         }
         /**
-         * SYS_ftruncate compat layer (for ABI forcing 64bit 
+         * SYS_ftruncate compat layer (for ABI forcing 64bit
          * argument start at even parameters, b would be zero here)
          */
         case SYS_ftruncate: {
@@ -849,7 +862,12 @@ long __syscall6(long n, long a, long b, long c, long d, long e, long f)
         case SYS_mmap: {
                 /* TODO */
                 if (e != -1) {
-                        return (long)chcore_fmap((void *)a, (size_t)b, (int)c, (int)d, (int)e, (off_t)f);
+                        return (long)chcore_fmap((void *)a,
+                                                 (size_t)b,
+                                                 (int)c,
+                                                 (int)d,
+                                                 (int)e,
+                                                 (off_t)f);
                 }
                 return (long)chcore_mmap(
                         (void *)a, (size_t)b, (int)c, (int)d, (int)e, (off_t)f);
@@ -862,7 +880,12 @@ long __syscall6(long n, long a, long b, long c, long d, long e, long f)
         case SYS_mmap2: {
                 if (e != -1) {
                         off_t off = (off_t)f * PAGE_SIZE;
-                        return (long)chcore_fmap((void *)a, (size_t)b, (int)c, (int)d, (int)e, off);
+                        return (long)chcore_fmap((void *)a,
+                                                 (size_t)b,
+                                                 (int)c,
+                                                 (int)d,
+                                                 (int)e,
+                                                 off);
                 }
                 return (long)chcore_mmap(
                         (void *)a, (size_t)b, (int)c, (int)d, (int)e, (off_t)f);
@@ -889,17 +912,17 @@ long __syscall6(long n, long a, long b, long c, long d, long e, long f)
         }
         case SYS_getsockopt: {
                 return chcore_getsocketopt(
-                        a, b, c, (void *)d, (socklen_t * restrict) e);
+                        a, b, c, (void *)d, (socklen_t *restrict)e);
         }
         case SYS_getsockname: {
                 return chcore_getsockname(a,
-                                          (struct sockaddr * restrict) b,
-                                          (socklen_t * restrict) c);
+                                          (struct sockaddr *restrict)b,
+                                          (socklen_t *restrict)c);
         }
         case SYS_getpeername: {
                 return chcore_getpeername(a,
-                                          (struct sockaddr * restrict) b,
-                                          (socklen_t * restrict) c);
+                                          (struct sockaddr *restrict)b,
+                                          (socklen_t *restrict)c);
         }
         case SYS_bind: {
                 return chcore_bind(a, (const struct sockaddr *)b, (socklen_t)c);
@@ -909,8 +932,8 @@ long __syscall6(long n, long a, long b, long c, long d, long e, long f)
         }
         case SYS_accept: {
                 return chcore_accept(a,
-                                     (struct sockaddr * restrict) b,
-                                     (socklen_t * restrict) c);
+                                     (struct sockaddr *restrict)b,
+                                     (socklen_t *restrict)c);
         }
         case SYS_connect: {
                 return chcore_connect(
@@ -929,8 +952,8 @@ long __syscall6(long n, long a, long b, long c, long d, long e, long f)
                                        (void *restrict)b,
                                        c,
                                        d,
-                                       (struct sockaddr * restrict) e,
-                                       (socklen_t * restrict) f);
+                                       (struct sockaddr *restrict)e,
+                                       (socklen_t *restrict)f);
         }
         case SYS_recvmsg: {
                 return chcore_recvmsg(a, (struct msghdr *)b, c);
@@ -1009,25 +1032,28 @@ long __syscall6(long n, long a, long b, long c, long d, long e, long f)
          * SYS_fallocate compat layer
          */
         case SYS_fallocate: {
-                return chcore_fallocate(a, b, _SYSCALL_LL_REV(c, d), _SYSCALL_LL_REV(e, f));
+                return chcore_fallocate(
+                        a, b, _SYSCALL_LL_REV(c, d), _SYSCALL_LL_REV(e, f));
         }
         /**
-        * musl pread/pwrite wrapper uses syscall_cp to issue syscall, which would be translate
-        * to a function with no variadic parameters, and then that function would invoke
-        * __syscall6 unconditionally. (see src/internal/syscall.h and src/thread/pthread_cancel.c)
-        * So we have to check CHCORE_ARCH_XXX to determine whether we have to use _SYSCALL_LL_REV
-        * to combine two 32bit arguments. Fortunately, offset is an even parameter of pread/pwrite,
-        * so there is no difference between 32bit ABIs.
-        */
+         * musl pread/pwrite wrapper uses syscall_cp to issue syscall, which
+         * would be translate to a function with no variadic parameters, and
+         * then that function would invoke
+         * __syscall6 unconditionally. (see src/internal/syscall.h and
+         * src/thread/pthread_cancel.c) So we have to check CHCORE_ARCH_XXX to
+         * determine whether we have to use _SYSCALL_LL_REV to combine two 32bit
+         * arguments. Fortunately, offset is an even parameter of pread/pwrite,
+         * so there is no difference between 32bit ABIs.
+         */
         case SYS_pread64: {
-#if !defined (CHCORE_ARCH_SPARC)
+#if !defined(CHCORE_ARCH_SPARC)
                 return chcore_pread(a, (void *)b, c, d);
 #else
                 return chcore_pread(a, (void *)b, c, _SYSCALL_LL_REV(d, e));
 #endif
         }
         case SYS_pwrite64: {
-#if !defined (CHCORE_ARCH_SPARC)
+#if !defined(CHCORE_ARCH_SPARC)
                 return chcore_pwrite(a, (void *)b, c, d);
 #else
                 return chcore_pwrite(a, (void *)b, c, _SYSCALL_LL_REV(d, e));

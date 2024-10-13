@@ -465,6 +465,10 @@ int chcore_socket(int domain, int type, int protocol)
                 fd_dic[fd]->fd_op = &socket_ops;
                 if (type == SOCK_DGRAM) {
                         socket_type = malloc(sizeof(int));
+                        if (!socket_type) {
+                                free_fd(fd);
+                                return -ENOMEM;
+                        }
                         *socket_type = SOCK_DGRAM;
                         fd_dic[fd]->private_data = socket_type;
                 } else {

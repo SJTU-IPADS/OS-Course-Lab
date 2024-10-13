@@ -143,7 +143,7 @@ ssize_t chcore_pwrite(int fd, void *buf, size_t count, off_t offset)
 
 int chcore_close(int fd)
 {
-        if (fd < 0 || fd_dic[fd] == 0)
+        if (fd < 0 || fd > 1023 || fd_dic[fd] == 0)
                 return -EBADF;
         return fd_dic[fd]->fd_op->close(fd);
 }
@@ -271,7 +271,7 @@ int dup_fd_content(int fd, int arg)
         }
 
         // alloc_fd_since() is impossible to return new_fd >= MAX_FD in fact.
-        if (new_fd < 0 || new_fd >= MAX_FD) {
+        if (new_fd < 0) {
                 return new_fd;
         }
 
@@ -283,7 +283,7 @@ int dup_fd_content(int fd, int arg)
                 fd_dic[new_fd]->cap = fd_dic[fd]->cap;
                 fd_dic[new_fd]->flags = fd_dic[fd]->flags;
         } else if (type == FD_TYPE_STDIN || type == FD_TYPE_STDOUT
-                   || type == FD_TYPE_STDIN)
+                   || type == FD_TYPE_STDERR)
                 fd_dic[new_fd]->termios = fd_dic[fd]->termios;
         return new_fd;
 }

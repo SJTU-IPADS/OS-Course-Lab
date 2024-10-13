@@ -23,9 +23,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef SV39
+#define MEM_AUTO_ALLOC_BASE        (0x700000000UL) 
+#define MEM_AUTO_ALLOC_REGION_SIZE (0x100000000UL)
+#define MEM_SECTION_SIZE           (0x100000000UL)
+#else
 #define MEM_AUTO_ALLOC_BASE        (0x7000UL << (4 * sizeof(long)))
 #define MEM_AUTO_ALLOC_REGION_SIZE (0x1000UL << (4 * sizeof(long)))
 #define MEM_SECTION_SIZE           (0x1000UL << (4 * sizeof(long)))
+#endif
 
 /**
  * @brief This struct represents a continuous virtual address range
@@ -155,6 +161,9 @@ unsigned long chcore_alloc_vaddr(unsigned long size)
         pthread_once(&user_mm_once, user_mm_init);
         pthread_spin_lock(&user_mm.mu);
 
+        if (size > user_mm.end_addr - user_mm.start_addr) {
+                return ret;
+        }
         size = ROUND_UP(size, PAGE_SIZE);
 
         query.start = user_mm.free_addr_cache;
@@ -170,6 +179,12 @@ unsigned long chcore_alloc_vaddr(unsigned long size)
                         goto out;
                 }
                 new_vmr = malloc(sizeof(struct user_vmr));
+                
+                if (!new_vmr) {
+                        ret = 0;
+                        goto out;
+                }
+
                 new_vmr->start = query.start;
                 new_vmr->len = size;
                 user_mm.free_addr_cache += size;
@@ -227,6 +242,8 @@ unsigned long chcore_alloc_vaddr(unsigned long size)
                 goto out;
         } else {
                 new_vmr = malloc(sizeof(struct user_vmr));
+                BUG_ON(!new_vmr);
+                
                 new_vmr->start = query.start;
                 new_vmr->len = size;
                 rbp_insert(
@@ -279,10 +296,11 @@ void *chcore_auto_map_pmo(cap_t pmo, unsigned long size, unsigned long perm)
                 errno = EINVAL;
                 return NULL;
         }
-        int ret = usys_map_pmo(SELF_CAP, pmo, vaddr, perm);
+        int ret = usys_map_pmo_with_length(pmo, vaddr, perm, size);
         if (ret != 0) {
                 chcore_free_vaddr(vaddr, size);
                 errno = -ret;
+                perror("auto map");
                 return NULL;
         }
         return (void *)vaddr;
@@ -290,7 +308,12 @@ void *chcore_auto_map_pmo(cap_t pmo, unsigned long size, unsigned long perm)
 
 void chcore_auto_unmap_pmo(cap_t pmo, unsigned long vaddr, unsigned long size)
 {
-        usys_unmap_pmo(SELF_CAP, pmo, vaddr);
+        int ret;
+
+        ret = usys_unmap_pmo_with_length(pmo, vaddr, size);
+        if (ret)
+                printf("invalid parameter!\n");
+
         chcore_free_vaddr(vaddr, size);
 }
 
@@ -331,12 +354,11 @@ void chcore_free_dma_mem(struct chcore_dma_handle *dma_handle)
 {
         if (dma_handle == NULL || dma_handle->pmo < 0
             || dma_handle->vaddr == 0) {
-                BUG("dma_handle is invalid");
+                printf("dma_handle is invalid\n");
+                return;
         }
 
         chcore_auto_unmap_pmo(
                 dma_handle->pmo, dma_handle->vaddr, dma_handle->size);
         usys_revoke_cap(dma_handle->pmo, false);
-
-        // usys_unmap_pmo(SELF_CAP, dma_handle->pmo, dma_handle->vaddr);
 }

@@ -29,6 +29,92 @@
 #include <chcore/launcher.h>
 #include <chcore/memory.h>
 
+#ifdef CHCORE_OPENTRUSTEE
+pid_t chcore_new_process_spawn(int argc, char *__argv[], char **envp,
+                               const posix_spawnattr_t *attr, int *tid,
+                               const char *path)
+{
+        int ret;
+        const int MAX_ARGC = 128;
+        char *argv[MAX_ARGC];
+        int i;
+        int envp_argc;
+        struct proc_request *pr;
+        ipc_msg_t *ipc_msg;
+        int text_i;
+
+        if (argc + 1 >= MAX_ARGC) {
+                ret = -EINVAL;
+                goto out_fail;
+        }
+
+        if (strlen(path) >= PROC_REQ_NAME_LEN) {
+                ret = -ENAMETOOLONG;
+                goto out_fail;
+        }
+
+        ipc_msg =
+                ipc_create_msg(procmgr_ipc_struct, sizeof(struct proc_request));
+        pr = (struct proc_request *)ipc_get_msg_data(ipc_msg);
+
+        pr->req = PROC_REQ_SPAWN;
+        pr->spawn.argc = argc;
+        if (attr == NULL) {
+                pr->spawn.attr_valid = 0;
+        } else {
+                pr->spawn.attr_valid = 1;
+                memcpy(&pr->spawn.attr, attr, sizeof(*attr));
+        }
+
+        memcpy(&pr->spawn.path, path, strlen(path));
+        pr->spawn.path[strlen(path)] = 0;
+
+        for (i = 0, text_i = 0; i < argc; ++i) {
+                /* Plus 1 for the trailing \0. */
+                int len = strlen(__argv[i]) + 1;
+                if (len > PROC_REQ_TEXT_SIZE ||
+                    text_i + len > PROC_REQ_TEXT_SIZE) {
+                        ret = -EINVAL;
+                        goto out_destroy_msg;
+                }
+
+                memcpy(&pr->spawn.argv_text[text_i], __argv[i], len);
+
+                pr->spawn.argv_off[i] = text_i;
+                text_i += len;
+        }
+
+        i = 0;
+        if (envp != NULL) {
+                for (text_i = 0; envp[i] != NULL; ++i) {
+                        int len = strlen(envp[i]) + 1;
+                        if (text_i + len > PROC_REQ_ENV_TEXT_SIZE) {
+                                ret = -EINVAL;
+                                goto out_destroy_msg;
+                        }
+
+                        memcpy(&pr->spawn.envp_text[text_i], envp[i], len);
+
+                        pr->spawn.envp_off[i] = text_i;
+                        text_i += len;
+                }
+        }
+
+        pr->spawn.envc = i;
+
+        ret = ipc_call(procmgr_ipc_struct, ipc_msg);
+        if (ret >= 0 && tid != NULL) {
+                *tid = pr->spawn.main_thread_id;
+        }
+
+out_destroy_msg:
+        ipc_destroy_msg(ipc_msg);
+
+out_fail:
+        return ret;
+}
+#endif /* CHCORE_OPENTRUSTEE */
+
 static pid_t chcore_new_process_internal(int argc, char *argv[], int type)
 {
         int ret;
@@ -88,7 +174,7 @@ int get_new_process_mt_cap(int pid)
         return mt_cap;
 }
 
-int create_process(int argc, char *argv[], struct new_process_caps *caps)
+pid_t create_process(int argc, char *argv[], struct new_process_caps *caps)
 {
         pid_t pid;
         pid = chcore_new_process(argc, argv);
@@ -97,7 +183,7 @@ int create_process(int argc, char *argv[], struct new_process_caps *caps)
         return pid;
 }
 
-int create_traced_process(int argc, char *argv[], struct new_process_caps *caps)
+pid_t create_traced_process(int argc, char *argv[], struct new_process_caps *caps)
 {
         pid_t pid;
         pid = chcore_new_process_internal(argc, argv, TRACED_APP);
