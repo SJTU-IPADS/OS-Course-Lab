@@ -18,6 +18,19 @@
 #include "fs_vnode.h"
 #include "fs_page_cache.h"
 
+static int comp_vnode_key(const void *key, const struct rb_node *node)
+{
+        struct fs_vnode *vnode = rb_entry(node, struct fs_vnode, node);
+        ino_t vnode_id = *(ino_t *)key;
+
+        if (vnode_id < vnode->vnode_id)
+                return -1;
+        else if (vnode_id > vnode->vnode_id)
+                return 1;
+        else
+                return 0;
+}
+
 static bool less_vnode(const struct rb_node *lhs, const struct rb_node *rhs)
 {
         struct fs_vnode *l = rb_entry(lhs, struct fs_vnode, node);
@@ -51,20 +64,20 @@ int alloc_entry(void)
         return -1;
 }
 
-void assign_entry(struct server_entry *entry, u64 flags, off_t offset, int refcnt, void *path,
-                  struct fs_vnode *vnode)
+void assign_entry(struct server_entry *e, u64 f, off_t o, int t, void *p,
+                  struct fs_vnode *n)
 {
         fs_debug_trace_fswrapper(
                 "flags=0x%lo, offset=0x%ld, path=%s, vnode_id=%ld\n",
-                flags,
-                offset,
-                (char *)path,
-                vnode->vnode_id);
-        entry->flags = flags;
-        entry->offset = offset;
-        entry->path = path;
-        entry->vnode = vnode;
-        entry->refcnt = refcnt;
+                f,
+                o,
+                (char *)p,
+                n->vnode_id);
+        e->flags = f;
+        e->offset = o;
+        e->path = p;
+        e->vnode = n;
+        e->refcnt = t;
 }
 
 void fs_vnode_init(void)
@@ -77,15 +90,14 @@ void fs_vnode_init(void)
         init_rb_root(fs_vnode_list);
 }
 
-/* alloc fs_vnode & initalize its states */
 struct fs_vnode *alloc_fs_vnode(ino_t id, enum fs_vnode_type type, off_t size,
                                 void *private)
 {
-        /* Lab 5 TODO Begin */
+        /* Lab 5 TODO Begin (TODO 2) */
 
         return NULL;
 
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO End (TODO 2) */
 }
 
 void push_fs_vnode(struct fs_vnode *n)
@@ -104,31 +116,24 @@ void pop_free_fs_vnode(struct fs_vnode *n)
 
 struct fs_vnode *get_fs_vnode_by_id(ino_t vnode_id)
 {
-        /* Lab 5 TODO Begin */
-        
+        /* Lab 5 TODO Begin (Part 2) */
         return NULL;
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO End (Part 2) */
 }
 
-/* increase refcnt for vnode */
-int inc_ref_fs_vnode(void *n)
+/* refcnt for vnode */
+int inc_ref_fs_vnode(void *private)
 {
-        /* Lab 5 TODO Begin */
-
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO Begin (Part 2) */
+        UNUSED(private);
         return 0;
+        /* Lab 5 TODO End (Part 2) */
 }
 
-/* decrease vnode ref count and close file when refcnt is 0 */
-int dec_ref_fs_vnode(void *node)
+int dec_ref_fs_vnode(void *private)
 {
-        /* Lab 5 TODO Begin */
-
-        UNUSED(node);
-        
-        /* Lab 5 TODO End */
-
+        /* Lab 5 TODO Begin (Part 2) */
+        UNUSED(private);
         return 0;
+        /* Lab 5 TODO End (Part 2) */
 }

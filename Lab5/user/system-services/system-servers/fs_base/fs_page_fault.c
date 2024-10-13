@@ -351,7 +351,7 @@ int fmap_area_remove(badge_t client_badge, vaddr_t client_va_start,
 {
         int ret = -EINVAL;
         struct fmap_area_mapping *area_iter, *tmp;
-        pthread_rwlock_rdlock(&fmap_area_lock);
+        pthread_rwlock_wrlock(&fmap_area_lock);
         for_each_in_list_safe (area_iter, tmp, node, &fmap_area_mappings) {
                 if (area_iter->client_badge == client_badge
                     && (area_iter->client_va_start == client_va_start)
@@ -370,7 +370,7 @@ int fmap_area_remove(badge_t client_badge, vaddr_t client_va_start,
 void fmap_area_recycle(badge_t client_badge)
 {
         struct fmap_area_mapping *area_iter, *tmp;
-        pthread_rwlock_rdlock(&fmap_area_lock);
+        pthread_rwlock_wrlock(&fmap_area_lock);
         for_each_in_list_safe (area_iter, tmp, node, &fmap_area_mappings) {
                 if (area_iter->client_badge == client_badge) {
                         list_del(&area_iter->node);

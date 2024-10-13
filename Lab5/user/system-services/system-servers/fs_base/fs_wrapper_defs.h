@@ -38,6 +38,10 @@ struct test_count {
 extern struct test_count count;
 #endif
 
+#define OWNER_SHIFT  (6)
+#define GROUP_SHIFT  (3)
+#define OTHERS_SHIFT (0)
+
 /* Indicates whether a certain fs has been mounted */
 extern bool mounted;
 extern bool using_page_cache;
@@ -80,10 +84,11 @@ struct fs_server_ops {
 
         int (*open)(char *path, int flags, int mode, ino_t *vnode_id,
                     off_t *vnode_size, int *vnode_type, void **private);
-        ssize_t (*read)(void *operator, off_t offset, size_t size, char * buf);
+        ssize_t (*read)(void *operator, off_t offset, size_t size, char *buf);
         ssize_t (*write)(void *operator, off_t offset, size_t size,
-                         const char * buf);
+                         const char *buf);
         int (*close)(void *operator, bool is_dir, bool do_close);
+        int (*chmod)(char *pathname, mode_t mode);
 
         int (*creat)(ipc_msg_t *ipc_msg, struct fs_request *fr);
         int (*unlink)(const char *path, int flags);
@@ -113,9 +118,13 @@ ssize_t default_ssize_t_server_operation(ipc_msg_t *ipc_msg,
 #define default_fmap_get_page_addr NULL
 int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
                     struct fs_request *fr, bool *ret_with_cap);
+int fs_wrapper_funmap(badge_t client_badge, ipc_msg_t *ipc_msg,
+                      struct fs_request *fr);
 int fs_wrapper_open(badge_t client_badge, ipc_msg_t *ipc_msg,
                     struct fs_request *fr);
 int fs_wrapper_close(badge_t client_badge, ipc_msg_t *ipc_msg,
+                     struct fs_request *fr);
+int fs_wrapper_chmod(badge_t client_badge, ipc_msg_t *ipc_msg,
                      struct fs_request *fr);
 int fs_wrapper_read(ipc_msg_t *ipc_msg, struct fs_request *fr);
 int fs_wrapper_pread(ipc_msg_t *ipc_msg, struct fs_request *fr);

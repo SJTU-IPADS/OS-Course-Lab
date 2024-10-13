@@ -10,6 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
+#include "chcore-internal/procmgr_defs.h"
 #include "chcore/ipc.h"
 #include <errno.h>
 #include <pthread.h>
@@ -110,44 +111,17 @@ void init_fs_wrapper(void)
 /* Get (client_badge, fd) -> fid(server_entry) mapping */
 int fs_wrapper_get_server_entry(badge_t client_badge, int fd)
 {
-        struct server_entry_node *n;
-
-        /* Stable fd number, need no translating */
-        if (fd == AT_FDROOT)
-                return AT_FDROOT;
-
-        /* Validate fd */
-        if (fd < 0 || fd >= MAX_SERVER_ENTRY_PER_CLIENT) {
-                return -1;
-        }
-
-        /* Lab 5 TODO Begin */
-
-        UNUSED(n);
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO Begin (TODO 3)*/
         return -1;
+        /* Lab 5 TODO End (TODO 3)*/
 }
 
 /* Set (client_badge, fd) -> fid(server_entry) mapping */
 int fs_wrapper_set_server_entry(badge_t client_badge, int fd, int fid)
 {
-        struct server_entry_node *private_iter;
-
-        /* Validate fd */
-        BUG_ON(fd < 0 || fd >= MAX_SERVER_ENTRY_PER_CLIENT);
-
-        /* Lab 5 TODO Begin */
-
-        /* 
-         * Check if client_badge already involved, 
-         * create new server_entry_node if not.
-         */
-
-        UNUSED(private_iter);
-        
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO Begin (TODO 3)*/
         return 0;
+        /* Lab 5 TODO End (TODO 3)*/
 }
 
 void fs_wrapper_clear_server_entry(badge_t client_badge, int fid)
@@ -309,6 +283,9 @@ DEFINE_SERVER_HANDLER(fs_server_dispatch)
         case FS_REQ_OPEN:
                 ret = fs_wrapper_open(client_badge, ipc_msg, fr);
                 break;
+        case FS_REQ_CHMOD:
+                ret = fs_wrapper_chmod(client_badge, ipc_msg, fr);
+                break;
         case FS_REQ_READ:
                 ret = fs_wrapper_read(ipc_msg, fr);
                 break;
@@ -377,6 +354,9 @@ DEFINE_SERVER_HANDLER(fs_server_dispatch)
                 break;
         case FS_REQ_FMAP:
                 ret = fs_wrapper_fmap(client_badge, ipc_msg, fr, &ret_with_cap);
+                break;
+        case FS_REQ_FUNMAP:
+                ret = fs_wrapper_funmap(client_badge, ipc_msg, fr);
                 break;
         case FS_REQ_SYNC:
                 ret = fs_wrapper_sync();
