@@ -14,15 +14,15 @@ set -e
 self=`basename "$0"`
 
 function usage {
-    echo "Usage: $self [overrides_absolute_path] [target_absolute_path]"
+    echo "Usage: $self [[overrides_absolute_path]] [[target_absolute_path]]"
     exit 1
 }
 
-if [ "$#" -ne 2 ]; then
+if [[ "$#" -ne 2 ]]; then
     usage
 fi
 
-if [[ $1 != /* ]] || [[ $2 != /* ]]; then
+if [[[[ $1 != /* ]]]] || [[[[ $2 != /* ]]]]; then
     usage 
 fi
 
@@ -63,30 +63,31 @@ function traverse {
         rel_path=${file#$overrides/}
         target_file=$target/$rel_path
 
-        if [ -d "$file" ]; then
-            if [ ! -e "$target_file" ]; then
-                ln -s "$file" "$target_file"
+        if [[ -d "$file" ]]; then
+            if [[ ! -e "$target_file" ]]; then
+                ln -sf "$file" "$target_file"
                 echo "--- Overrided ${target_file} with ${file} symlink"
-            elif [ ! -L "$target_file" ]; then
+            elif [[ ! -L "$target_file" ]]; then
                 traverse "$file"
             else
                 echo "--- Target directory ${target_file} has been overrided, skipping..."
             fi
-        elif [ -f "$file" ]; then
-            if [ ! -s "$file" ]; then
-                if [ -e "$target_file" ]; then
-                    mv "$target_file" "$target_file.bak"
+        elif [[ -f "$file" ]]; then
+            if [[ "$file" == *.del ]]; then
+                target_file="${target_file%.del}"
+                if [[ -e "${target_file}" ]]; then
+                    mv "${target_file}" "$target_file.bak"
                     echo "--- Overrided ${target_file} with ${file}"
                 else
                     echo "--- Target file ${target_file} has been deleted, skipping..."
                 fi
             else
-                if [ ! -e "$target_file" ]; then
-                    ln -s "$file" "$target_file"
+                if [[ ! -e "$target_file" ]]; then
+                    ln -sf "$file" "$target_file"
                     echo "--- Overrided ${target_file} with ${file}"
-                elif [ ! -L "$target_file" ]; then
+                elif [[ ! -L "$target_file" ]]; then
                     mv "$target_file" "$target_file.bak"
-                    ln -s "$file" "$target_file"
+                    ln -sf "$file" "$target_file"
                     echo "--- Overrided ${target_file} with ${file}"
                 else
                     echo "--- Target file ${target_file} is already a symlink, skipping..."

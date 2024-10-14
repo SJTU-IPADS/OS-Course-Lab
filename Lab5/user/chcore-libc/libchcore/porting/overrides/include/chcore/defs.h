@@ -17,6 +17,11 @@
 #include <uapi/cache.h>
 #include <uapi/ptrace.h>
 
+
+#ifdef CHCORE_PLAT_VISIONFIVE2
+#define SV39
+#endif
+
 /* Use -1 instead of 0 (NULL) since 0 is used as the ending mark of envp */
 #define ENVP_NONE_PMOS (-1)
 #define ENVP_NONE_CAPS (-1)
@@ -26,6 +31,7 @@
 #define AT_CHCORE_PMO_MAP_ADDR 0xCC01
 #define AT_CHCORE_CAP_CNT 0xCC02
 #define AT_CHCORE_CAP_VAL 0xCC03
+#define AT_CHCORE_LIBC_PMO_CAP 0xCC04
 
 /*
  * Used as a token which is added at the beginnig of the path name
@@ -49,13 +55,20 @@
 /* a thread's own cap_group */
 #define SELF_CAP 0
 
-#define DEFAULT_PRIO	1
 #define MAX_PRIO	255
-#define MIN_PRIO	0
+#define MIN_PRIO	1
+#ifndef CHCORE_OPENTRUSTEE
+#define DEFAULT_PRIO	MIN_PRIO
+#else /* CHCORE_OPENTRUSTEE */
+#define DEFAULT_PRIO	10
+#endif /* CHCORE_OPENTRUSTEE */
 
 #if __SIZEOF_POINTER__ == 4
 #define CHILD_THREAD_STACK_BASE (0x50800000UL)
 #define CHILD_THREAD_STACK_SIZE (0x200000UL)
+#elif defined(SV39)
+#define CHILD_THREAD_STACK_BASE (0x3000800000UL)
+#define CHILD_THREAD_STACK_SIZE (0x800000UL)
 #else
 #define CHILD_THREAD_STACK_BASE (0x500000800000UL)
 #define CHILD_THREAD_STACK_SIZE (0x800000UL)
@@ -65,6 +78,9 @@
 #if __SIZEOF_POINTER__ == 4
 #define MAIN_THREAD_STACK_BASE (0x50000000UL)
 #define MAIN_THREAD_STACK_SIZE (0x200000UL)
+#elif defined(SV39)
+#define MAIN_THREAD_STACK_BASE (0x3000000000UL)
+#define MAIN_THREAD_STACK_SIZE (0x800000UL)
 #else
 #define MAIN_THREAD_STACK_BASE (0x500000000000UL)
 #define MAIN_THREAD_STACK_SIZE (0x800000UL)

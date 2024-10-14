@@ -212,6 +212,8 @@ int launch_process_using_loader(struct loader *this,
 /* Load offset of libc.so */
 #if __SIZEOF_POINTER__ == 4
 #define LIBC_LDSO_BASE (0x40000000UL)
+#elif defined(SV39)
+#define LIBC_LDSO_BASE (0x400000000UL)
 #else
 #define LIBC_LDSO_BASE (0x400000000000UL)
 #endif
@@ -233,7 +235,6 @@ static int elf_so_loader_init(struct loader *_this)
         struct elf_so_loader *this = (struct elf_so_loader *)_this;
 
         ret = load_elf_from_fs(this->base.path, &loader_elf);
-
         if (ret < 0) {
                 return ret;
         }
@@ -318,7 +319,6 @@ static int elf_so_loader_launch_process(struct loader *_this,
         lp_args->load_offset =
                 LIBC_LDSO_BASE
                 + ASLR_RAND_OFFSET;
-
         ret = launch_process_with_pmos_caps(lp_args);
 
         /**

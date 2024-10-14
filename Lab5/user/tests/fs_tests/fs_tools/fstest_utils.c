@@ -19,7 +19,7 @@ int init_file(char *fname, int size)
 {
         int fd, i;
         char buf[size];
-        fd = open(fname, O_CREAT | O_RDWR, 0644);
+        fd = open(fname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         fs_assert(fd > 0);
         memset(buf, 0, size);
         for (i = 0; i < size; i++) {

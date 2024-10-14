@@ -10,3 +10,4 @@
 
 add_subdirectory(libchcoreelf)
 add_subdirectory(liblaunch)
+add_subdirectory(librefcnt)

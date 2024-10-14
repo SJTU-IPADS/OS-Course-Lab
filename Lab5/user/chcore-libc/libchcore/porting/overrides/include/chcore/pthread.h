@@ -41,6 +41,10 @@ extern "C" {
 cap_t chcore_pthread_create(pthread_t *__restrict, const pthread_attr_t *__restrict, void *(*)(void *), void *__restrict);
 cap_t chcore_pthread_create_shadow(pthread_t *__restrict, const pthread_attr_t *__restrict, void *(*)(void *), void *__restrict);
 cap_t chcore_pthread_create_register_cb(pthread_t *__restrict, const pthread_attr_t *__restrict, void *(*)(void *), void *__restrict);
+#ifdef CHCORE_OPENTRUSTEE
+void chcore_pthread_wake_joiner(pthread_t thread);
+int chcore_pthread_get_tid(pthread_t thread);
+#endif /* CHCORE_OPENTRUSTEE */
 
 #ifdef __cplusplus
 }

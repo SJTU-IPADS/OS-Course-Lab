@@ -22,8 +22,8 @@
 #define SLAB_MIN_ORDER (5)
 #define SLAB_MAX_ORDER (11)
 
-/* The size of one slab is 2M. */
-#define SIZE_OF_ONE_SLAB (2*1024*1024)
+/* The size of one slab is 128K. */
+#define SIZE_OF_ONE_SLAB (128*1024)
 
 /* slab_header resides in the beginning of each slab (i.e., occupies the first slot). */
 struct slab_header {

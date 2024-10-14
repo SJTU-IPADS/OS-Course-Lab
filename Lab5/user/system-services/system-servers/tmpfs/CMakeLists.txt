@@ -9,13 +9,10 @@
 # See the Mulan PSL v2 for more details.
 
 add_link_options(-static)
-chcore_enable_clang_tidy(
-    EXTRA_CHECKS -performance-no-int-to-ptr,-clang-analyzer-deadcode.DeadStores)
-message("CMAKE_C_CLANG_TIDY: ${CMAKE_C_CLANG_TIDY}")
 set(binary_path ${CHCORE_RAMDISK_DIR}/ramdisk.cpio)
 configure_file(incbin_ramdisk.tpl.S incbin_ramdisk.S)
 unset(binary_path)
-
+add_library(cpio STATIC cpio.c cpio.h)
 add_executable(tmpfs.srv tmpfs.c internal_ops.c namei.c mem_usage_tool.c main.c)
 
 add_custom_target(touch-inc-ramdisk
@@ -25,6 +22,6 @@ add_dependencies(tmpfs.srv ramdisk touch-inc-ramdisk)
 
 target_sources(tmpfs.srv PRIVATE incbin_ramdisk.S)
 
-target_link_libraries(tmpfs.srv PRIVATE fs_base)
+target_link_libraries(tmpfs.srv PRIVATE fs_base cpio)
 
 chcore_all_force_static_linked()

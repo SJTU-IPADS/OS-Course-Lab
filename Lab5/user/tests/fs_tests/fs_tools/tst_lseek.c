@@ -32,7 +32,7 @@ static void test_lseek_basic(void)
         fname = path_join(test_lseek_dir, "test_lseek_basic.txt");
         fs_assert_noent(fname);
 
-        fd = open(fname, O_CREAT | O_RDWR);
+        fd = open(fname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         fs_assert(fd > 0);
         fs_assert_empty_reg(fname);
 
@@ -110,7 +110,7 @@ static void test_lseek_hole(void)
         fname = path_join(test_lseek_dir, "test_lseek_hole.txt");
         fs_assert_noent(fname);
 
-        fd = open(fname, O_CREAT | O_RDWR);
+        fd = open(fname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
         fs_assert(fd > 0);
         fs_assert_empty_reg(fname);
 
@@ -143,7 +143,7 @@ void test_lseek(void)
         printf("\ntest_lseek begin at : %s\n", test_lseek_dir);
 
         fs_assert_noent(test_lseek_dir);
-        ret = mkdir(test_lseek_dir, 0);
+        ret = mkdir(test_lseek_dir, S_IRUSR | S_IWUSR | S_IXUSR);
         fs_assert_zero(ret);
 
         /* Test Start */

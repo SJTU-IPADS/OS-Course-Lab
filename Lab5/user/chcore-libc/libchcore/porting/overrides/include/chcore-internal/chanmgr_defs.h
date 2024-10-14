@@ -10,13 +10,13 @@
  * See the Mulan PSL v2 for more details.
  */
 
-#ifdef CHCORE_OH_TEE
-
-#pragma once
+#ifndef CHANMGR_DEFS_H
+#define CHANMGR_DEFS_H
 
 #include <chcore/ipc.h>
 #include <sys/types.h>
-#include <chcore/ipclib.h>
+
+#include <ipclib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,4 +68,4 @@ struct chan_request {
 }
 #endif
 
-#endif /* CHCORE_OH_TEE */
+#endif /* CHANMGR_DEFS_H */

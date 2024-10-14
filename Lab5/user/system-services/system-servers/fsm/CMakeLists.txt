@@ -8,6 +8,10 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-file(GLOB _sources device.c fsm_client_cap.c fsm.c mount_info.c)
+file(GLOB _sources "*.c")
 add_executable(fsm.srv ${_sources})
+add_library(yaml STATIC IMPORTED)
+set_target_properties(yaml PROPERTIES IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libs/libyaml.a")
+target_link_libraries(fsm.srv PRIVATE yaml)
+target_include_directories(fsm.srv PRIVATE .)
 chcore_all_force_static_linked()

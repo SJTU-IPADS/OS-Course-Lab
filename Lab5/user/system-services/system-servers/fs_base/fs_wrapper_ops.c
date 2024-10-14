@@ -10,6 +10,7 @@
  * See the Mulan PSL v2 for more details.
  */
 
+#include "chcore/proc.h"
 #include "fcntl.h"
 #include "sys/stat.h"
 #include <errno.h>
@@ -117,70 +118,227 @@ ssize_t default_ssize_t_server_operation(ipc_msg_t *ipc_msg,
 int fs_wrapper_open(badge_t client_badge, ipc_msg_t *ipc_msg,
                     struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin */
-
-        /*
-         * Hint:
-         *   1. alloc new server_entry
-         *   2. get/alloc vnode
-         *   3. associate server_entry with vnode
-         */
-        
+        /* Lab 5 TODO Begin (TODO 4)*/
         return 0;
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO End (TODO 4)*/
 }
 
 int fs_wrapper_close(badge_t client_badge, ipc_msg_t *ipc_msg,
                      struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin */
+        /* Lab 5 TODO Begin (TODO 4)*/
         return 0;
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO End (TODO 4)*/
+}
+
+int fs_wrapper_chmod(badge_t client_badge, ipc_msg_t *ipc_msg,
+                     struct fs_request *fr)
+{
+        server_ops.chmod(fr->chmod.pathname, fr->chmod.mode);
+        return 0;
+}
+
+static int __fs_wrapper_read_core(struct server_entry *server_entry, void *buf,
+                                  size_t size, off_t offset)
+{
+        /* Lab 5 TODO Begin (TODO 4)*/
+        return 0;
+        /* Lab 5 TODO End (TODO 4)*/
 }
 
 int fs_wrapper_read(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin */
-        return 0;
-        /* Lab 5 TODO End */
+        int fd;
+        char *buf;
+        off_t offset;
+        size_t size;
+        int ret;
+
+        ret = 0;
+        fd = fr->read.fd;
+        buf = (void *)fr;
+        size = (size_t)fr->read.count;
+        fs_debug_trace_fswrapper("entry_id=%d\n", fd);
+
+        /**
+         * Check to prevent IPC buffer overflow
+         */
+        if (size > FS_SINGLE_REQ_READ_BUF_SIZE) {
+                return -EINVAL;
+        }
+
+        pthread_mutex_lock(&server_entrys[fd]->lock);
+
+        offset = (off_t)server_entrys[fd]->offset;
+
+        ret = __fs_wrapper_read_core(server_entrys[fd], buf, size, offset);
+
+        /* Update server_entry and vnode metadata */
+        if (ret > 0) {
+                server_entrys[fd]->offset += ret;
+        }
+
+        pthread_mutex_unlock(&server_entrys[fd]->lock);
+        return ret;
 }
 
 int fs_wrapper_pread(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin (OPTIONAL) */
+        int fd;
+        char *buf;
+        off_t offset;
+        size_t size;
+        int ret;
+
+        ret = 0;
+        fd = fr->pread.fd;
+        buf = (void *)fr;
+        size = (size_t)fr->pread.count;
+        offset = (off_t)fr->pread.offset;
+        fs_debug_trace_fswrapper("entry_id=%d\n", fd);
+
+        if (offset < 0) {
+                return -EINVAL;
+        }
+
+        /**
+         * Check to prevent IPC buffer overflow
+         */
+        if (size > FS_SINGLE_REQ_READ_BUF_SIZE) {
+                return -EINVAL;
+        }
+
+        /**
+         * pread is a read-only operation on server_entry, so there
+         * should be no need to lock server_entry.
+         */
+        ret = __fs_wrapper_read_core(server_entrys[fd], buf, size, offset);
+
+        return ret;
+}
+
+static int __fs_wrapper_write_core(struct server_entry *server_entry, void *buf,
+                                   size_t size, off_t offset)
+{
+        /* Lab 5 TODO Begin (TODO 4)*/
         return 0;
-        /* Lab 5 TODO End (OPTIONAL) */
+        /* Lab 5 TODO End (TODO 4)*/
 }
 
 int fs_wrapper_pwrite(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin (OPTIONAL) */
-        return 0;
-        /* Lab 5 TODO End (OPTIONAL) */
+        int fd;
+        char *buf;
+        size_t size;
+        off_t offset;
+        int ret;
+
+        ret = 0;
+        fd = fr->pwrite.fd;
+        buf = (void *)fr + sizeof(struct fs_request);
+        size = (size_t)fr->pwrite.count;
+        offset = (off_t)fr->pwrite.offset;
+        fs_debug_trace_fswrapper("entry_id=%d\n", fd);
+
+        if (offset < 0) {
+                return -EINVAL;
+        }
+
+        /**
+         * Check to prevent IPC buffer overflow
+         */
+        if (size > FS_SINGLE_REQ_WRITE_BUF_SIZE) {
+                return -EINVAL;
+        }
+
+        pthread_mutex_lock(&server_entrys[fd]->lock);
+
+        /*
+         * pwrite(2): POSIX requires that opening a file with the O_APPEND flag
+         * should have no affect on the location at which pwrite() writes data.
+         * However, on Linux, if a file is opened with O_APPEND, pwrite()
+         * appends data to the end of the file, regardless of the value of
+         * offset.
+         */
+        if (server_entrys[fd]->flags & O_APPEND) {
+                offset = (off_t)server_entrys[fd]->vnode->size;
+        }
+
+        ret = __fs_wrapper_write_core(server_entrys[fd], buf, size, offset);
+
+        /* pwrite should not affect offset, but must update file size */
+        if (ret > 0) {
+                if (offset + size > server_entrys[fd]->vnode->size) {
+                        server_entrys[fd]->vnode->size = (size_t)offset + size;
+                }
+        }
+
+        pthread_mutex_unlock(&server_entrys[fd]->lock);
+        return ret;
 }
 
 int fs_wrapper_write(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin */
-        return 0;
-        /* Lab 5 TODO End */
+        int fd;
+        char *buf;
+        size_t size;
+        off_t offset;
+        int ret;
+
+        ret = 0;
+        fd = fr->write.fd;
+        buf = (void *)fr + sizeof(struct fs_request);
+        size = (size_t)fr->write.count;
+        fs_debug_trace_fswrapper("entry_id=%d\n", fd);
+
+        /**
+         * Check to prevent IPC buffer overflow
+         */
+        if (size > FS_SINGLE_REQ_WRITE_BUF_SIZE) {
+                return -EINVAL;
+        }
+
+        pthread_mutex_lock(&server_entrys[fd]->lock);
+
+        offset = (off_t)server_entrys[fd]->offset;
+
+        /*
+         * POSIX: Before each write(2), the file offset is positioned at the end
+         * of the file, as if with lseek(2).
+         */
+        if (server_entrys[fd]->flags & O_APPEND) {
+                offset = (off_t)server_entrys[fd]->vnode->size;
+        }
+
+        ret = __fs_wrapper_write_core(server_entrys[fd], buf, size, offset);
+
+        /* Update server_entry and vnode metadata */
+        if (ret > 0) {
+                /*
+                 * POSIX: Before each write(2), the file offset is positioned at
+                 * the end of the file, as if with lseek(2). The adjustment of
+                 * the file offset and the write operation are performed as an
+                 * atomic step. So if write operation failed, the file
+                 * offset(and file size) is not changed. (This is also applies
+                 * to non O_APPEND write(2)).
+                 */
+                server_entrys[fd]->offset = offset + ret;
+                if (server_entrys[fd]->offset
+                    > server_entrys[fd]->vnode->size) {
+                        server_entrys[fd]->vnode->size =
+                                server_entrys[fd]->offset;
+                }
+        }
+
+        pthread_mutex_unlock(&server_entrys[fd]->lock);
+        return ret;
 }
 
 int fs_wrapper_lseek(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin */
-
-        /* 
-         * Hint: possible values of whence:
-         *   SEEK_SET 0
-         *   SEEK_CUR 1
-         *   SEEK_END 2
-         */
-        
+        /* Lab 5 TODO Begin (TODO 4)*/
         return 0;
-
-        /* Lab 5 TODO End */
+        /* Lab 5 TODO End (TODO 4)*/
 }
 
 int fs_wrapper_ftruncate(ipc_msg_t *ipc_msg, struct fs_request *fr)
@@ -441,6 +599,7 @@ int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
         struct fs_vnode *vnode;
         cap_t pmo_cap;
         int ret;
+        struct server_entry *entry;
 
         /* If there is no valid fmap implementation, return -EINVAL */
         if (!using_page_cache
@@ -457,7 +616,31 @@ int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
         fd = fr->mmap.fd;
         offset = (off_t)fr->mmap.offset;
 
-        vnode = server_entrys[fd]->vnode;
+        entry = server_entrys[fd];
+
+        vnode = entry->vnode;
+
+        /**
+         * A file opened without WRITE permission but with MAP_SHARED
+         * to persist modification can not be mmaped as WRITE
+         */
+        if ((prot & PROT_WRITE) == PROT_WRITE && (flags & MAP_SHARED)) {
+                if ((entry->flags & O_ACCMODE) == O_RDONLY) {
+                        return -EACCES;
+                }
+        }
+
+        /* Open flags do not check if a file can be executed so we check it again here */
+        if ((prot & PROT_EXEC) == PROT_EXEC) {
+                struct stat st;
+                ret = server_ops.fstatat(entry->path, &st, AT_SYMLINK_FOLLOW);
+                BUG_ON(ret);
+
+                /* NOTE: treating all caller as file owner for now */
+                if (!((st.st_mode >> (OWNER_SHIFT)) & X_OK)) {
+                        return -EPERM;
+                }
+        }
 
         fs_debug_trace_fswrapper(
                 "addr=0x%lx, length=0x%lx, prot=%d, flags=%d, fd=%d, offset=0x%lx\n",
@@ -489,12 +672,41 @@ int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
         UNUSED(fd);
         UNUSED(offset);
 
-        /* Lab 5 TODO Begin */
-        UNUSED(pmo_cap);
-        UNUSED(vnode);
-        UNUSED(ret);
+        /* Step: Record (client_badge, mmaped_va, length) -> (vnode, offset,
+         * flags) */
+        ret = fmap_area_insert(
+                client_badge, (vaddr_t)addr, length, vnode, offset, flags, prot);
+        if (ret < 0) {
+                goto out_fail;
+        }
+
+        /* Step: Create a PMO_FILE for file, if not created */
+        if (vnode->pmo_cap == -1) {
+                pmo_cap = usys_create_pmo(vnode->size, PMO_FILE);
+                if (pmo_cap < 0) {
+                        ret = pmo_cap;
+                        goto out_remove_mapping;
+                }
+                vnode->pmo_cap = pmo_cap;
+        }
+
+        /* Step: Send PMO_FILE back to client side */
+        ipc_set_msg_return_cap_num(ipc_msg, 1);
+        ipc_set_msg_cap(ipc_msg, 0, vnode->pmo_cap);
+        *ret_with_cap = true;
+
         return 0;
-        /* Lab 5 TODO End */
+out_remove_mapping:
+        fmap_area_remove(client_badge, (vaddr_t)addr, length);
+out_fail:
+        *ret_with_cap = false;
+        return ret;
+}
+
+int fs_wrapper_funmap(badge_t client_badge, ipc_msg_t *ipc_msg,
+                      struct fs_request *fr)
+{
+    return fmap_area_remove(client_badge, (vaddr_t)fr->munmap.addr, fr->munmap.length);
 }
 
 int fs_wrapper_creat(ipc_msg_t *ipc_msg, struct fs_request *fr)
@@ -555,6 +767,16 @@ int fs_wrapper_readlinkat(ipc_msg_t *ipc_msg, struct fs_request *fr)
 
 int fs_wrapper_fallocate(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
+        struct server_entry *entry = server_entrys[fr->fallocate.fd];
+
+        if (!entry) {
+                return -EBADF;
+        }
+
+        if ((entry->flags & O_ACCMODE) == O_RDONLY) {
+                return -EBADF;
+        }
+
         return server_ops.fallocate(ipc_msg, fr);
 }
 

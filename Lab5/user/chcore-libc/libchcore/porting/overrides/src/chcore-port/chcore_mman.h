@@ -15,6 +15,7 @@
 
 #include <chcore/container/hashtable.h>
 #include <chcore/type.h>
+#include <chcore/defs.h>
 
 #define MAP_SHARED  0x01
 #define MAP_PRIVATE 0x02
@@ -33,6 +34,8 @@
 
 #if __SIZEOF_POINTER__ == 4
 #define HEAP_START (0x60000000UL)
+#elif defined(SV39)
+#define HEAP_START (0x600000000UL)
 #else
 #define HEAP_START (0x600000000000UL)
 #endif
@@ -41,6 +44,7 @@ struct pmo_node {
         cap_t cap;
         vaddr_t va;
         size_t pmo_size;
+        ipc_struct_t *_fs_ipc_struct;
         struct list_head list_node;
         struct hlist_node hash_node;
 };

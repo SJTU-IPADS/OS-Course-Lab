@@ -22,6 +22,9 @@
 #include <common/lock.h>
 #include <common/hashtable.h>
 #include <arch/sync.h>
+#ifdef CHCORE_OPENTRUSTEE
+#include <common/tee_uuid.h>
+#endif
 
 struct object_slot {
 	int slot_id;
@@ -29,6 +32,8 @@ struct object_slot {
 	struct object *object;
 	/* link copied slots pointing to the same object */
 	struct list_head copies;
+	/* rights for object */
+	cap_right_t rights;
 };
 
 #define BASE_OBJECT_NUM		BITS_PER_LONG
@@ -65,6 +70,7 @@ struct cap_group {
 	 * Currently, badge is used as a client ID during IPC.
 	 */
 	badge_t badge;
+	int pid;
 
 	/* Ensures the cap_group_exit function only be executed once */
 	int notify_recycler;
@@ -78,6 +84,11 @@ struct cap_group {
 	/* Each Process has its own futex status */
 	struct lock futex_lock;
 	struct htable futex_entries;
+
+#ifdef CHCORE_OPENTRUSTEE
+	TEE_UUID uuid;
+	size_t heap_size_limit;
+#endif /* CHCORE_OPENTRUSTEE */
 };
 
 #define current_cap_group (current_thread->cap_group)
@@ -111,7 +122,8 @@ static inline void install_slot(struct cap_group *cap_group, cap_t slot_id,
 	cap_group->slot_table.slots[slot_id] = slot;
 }
 
-void *get_opaque(struct cap_group *cap_group, cap_t slot_id, bool type_valid, int type);
+void *get_opaque(struct cap_group *cap_group, cap_t slot_id, bool type_valid,
+                 int type, cap_right_t mask, cap_right_t rights);
 
 int __cap_free(struct cap_group *cap_group, cap_t slot_id,
 	       bool slot_table_locked, bool copies_list_locked);

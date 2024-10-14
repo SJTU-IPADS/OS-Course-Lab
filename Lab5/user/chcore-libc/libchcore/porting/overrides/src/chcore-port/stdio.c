@@ -63,6 +63,8 @@ static void get_buf_rpos_wpos(void)
                 BUG_ON(stdin_buff_cap < 0);
                 stdin_pmo_addr = (void *)chcore_auto_map_pmo(
                         stdin_buff_cap, PAGE_SIZE, PROT_READ | PROT_WRITE);
+                BUG_ON(!stdin_pmo_addr);
+                
                 stdin_buffer = (char *)stdin_pmo_addr + sizeof(int) * 2;
                 /*
                  * We use the first 8 bytes of stdin_buffer to standard for the

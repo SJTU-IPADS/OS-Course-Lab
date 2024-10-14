@@ -28,7 +28,6 @@ struct mount_point_info_node *set_mount_point(const char *path, int path_len,
         n->path[path_len] = '\0';
         n->path_len = path_len;
         n->fs_cap = fs_cap;
-
         list_add(&n->node, &mount_point_infos);
         return n;
 }

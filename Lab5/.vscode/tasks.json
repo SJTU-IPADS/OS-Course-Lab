@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Setup QEMU",
+            "type": "shell",
+            "isBackground": true,
+            "command": "make qemu-gdb",
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "^\\[QEMU\\] Waiting for GDB Connection"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^\\[QEMU\\] Waiting for GDB Connection",
+                    "endsPattern": "^\\[QEMU\\] Waiting for GDB Connection",
+                }
+            }
+        }
+    ]
+}

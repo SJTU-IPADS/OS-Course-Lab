@@ -1,0 +1,26 @@
+[
+  {
+    "capture": "test_open finished",
+    "msg": "wrapper open & close",
+    "proposed": 10,
+    "userland": true
+  },
+  {
+    "capture": "test_content finished",
+    "msg": "wrapper read & write",
+    "proposed": 20,
+    "userland": true
+  },
+  {
+    "capture": "test_lseek finished",
+    "msg": "wrapper lseek",
+    "proposed": 10,
+    "userland": true
+  },
+  {
+    "capture": "test_mmap finished",
+    "msg": "wrapper mmap",
+    "proposed": 10,
+    "userland": true
+  }
+]

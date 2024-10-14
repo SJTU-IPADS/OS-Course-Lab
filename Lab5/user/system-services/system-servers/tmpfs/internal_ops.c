@@ -61,15 +61,8 @@ u64 hash_chars(const char *str, size_t len)
         u64 hash = 0;
         int i;
 
-        if (len < 0) {
-                while (*str) {
-                        hash = (hash * seed) + *str;
-                        str++;
-                }
-        } else {
-                for (i = 0; i < len; ++i)
-                        hash = (hash * seed) + str[i];
-        }
+        for (i = 0; i < len; ++i)
+                hash = (hash * seed) + str[i];
 
         return hash;
 }
@@ -184,14 +177,17 @@ struct inode *tmpfs_inode_init(int type, mode_t mode)
 #else
                 init_radix_w_deleter(&inode->data, free);
 #endif
+                inode->mode = S_IFREG;
                 break;
         case FS_DIR:
                 inode->d_ops = &dir_ops;
                 init_htable(&inode->dentries, MAX_DIR_HASH_BUCKETS);
+                inode->mode = S_IFDIR;
                 break;
         case FS_SYM:
                 inode->sym_ops = &symlink_ops;
                 inode->symlink = NULL;
+                inode->mode = S_IFLNK;
                 break;
         default:
 #if DEBUG_MEM_USAGE
@@ -205,7 +201,7 @@ struct inode *tmpfs_inode_init(int type, mode_t mode)
         inode->type = type;
         inode->nlinks = 0; /* ZERO links now */
         inode->size = 0;
-        inode->mode = mode;
+        inode->mode |= mode;
         inode->opened = false;
         inode->base_ops = &base_inode_ops;
 
@@ -336,9 +332,48 @@ static void tmpfs_inode_stat(struct inode *inode, struct stat *stat)
         BUG_ON(inode->size >= LONG_MAX);
 #endif
 
+        stat->st_mode |= inode->mode;
         stat->st_size = (off_t)inode->size;
         stat->st_nlink = inode->nlinks;
         stat->st_ino = (ino_t)(uintptr_t)inode;
+}
+
+static inline void tmpfs_inode_chmod(struct inode *inode, mode_t mode)
+{
+        inode->mode = mode;
+}
+
+/**
+ * @brief Check an inode's mode against the desired permission and the identity
+ * of the caller.
+ * @param inode The inode to check permission.
+ * @param perm_desired The desired permission. Can be combinations of
+ * TMPFS_READ, TMPFS_WRITE and TMPFS_EXECUTE.
+ * @param identity The identity of the caller, can be one of TMPFS_OWNER,
+ * TMPFS_GROUP and TMPFS_OTHERS.
+ * @return bool true if permission check passes, false if permission check
+ * failed.
+ */
+static bool tmpfs_inode_check_permission(struct inode *inode, int perm_desired,
+                                   int identity)
+{
+        mode_t to_check;
+
+        switch (identity) {
+        case TMPFS_OWNER:
+                to_check = (inode->mode & S_IRWXU) >> OWNER_SHIFT;
+                break;
+        case TMPFS_GROUP:
+                to_check = (inode->mode & S_IRWXG) >> GROUP_SHIFT;
+                break;
+        case TMPFS_OTHERS:
+                to_check = (inode->mode & S_IRWXO) >> OTHERS_SHIFT;
+                break;
+        default:
+                BUG_ON(1);
+        }
+
+        return (perm_desired & to_check) == perm_desired;
 }
 
 /* Regular file operations */
@@ -1313,6 +1348,8 @@ struct base_inode_ops base_inode_ops = {
         .dec_nlinks = tmpfs_inode_dec_nlinks,
         .free = tmpfs_inode_free,
         .stat = tmpfs_inode_stat,
+        .chmod = tmpfs_inode_chmod,
+        .check_permission = tmpfs_inode_check_permission,
 };
 
 struct regfile_ops regfile_ops = {

@@ -61,7 +61,7 @@ int main(int argc, char *argv[], char *envp[])
 
         /* Prepare */
         fs_assert_noent(base_dir);
-        ret = mkdir(base_dir, 0);
+        ret = mkdir(base_dir, S_IRUSR | S_IWUSR | S_IXUSR);
         fs_assert_zero(ret);
 
         ret = lstat(base_dir, &stat_buf);

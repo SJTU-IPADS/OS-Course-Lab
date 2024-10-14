@@ -41,7 +41,7 @@ typedef struct {
         char device_name[256];
         int partition_type;
         bool valid;
-        int server_id;
+        char service_name[256];
         int partition_index;
         bool mounted;
         unsigned int partition_lba;

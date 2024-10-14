@@ -17,7 +17,7 @@ endif
 
 LABDIR  := $(LABROOT)/Lab$(LAB)
 SCRIPTS := $(LABROOT)/Scripts
-GRADER  := $(SCRIPTS)/grader.sh
+GRADER  ?= $(SCRIPTS)/grader.sh
 
 include $(SCRIPTS)/env_generated.mk
 
@@ -32,7 +32,7 @@ TIMEOUT ?= 10
 
 ifeq ($(shell test $(LAB) -eq 0; echo $$?),1)
 	QEMU := $(QEMU-SYS)
-	ifeq ($(shell test $(LAB) -gt 5; echo $$?),0)
+	ifeq ($(shell test $(LAB) -gt 4; echo $$?),0)
 		include $(LABROOT)/Scripts/extras/lab$(LAB).mk
 	else
 		include $(LABROOT)/Scripts/kernel.mk

@@ -1,4 +1,13 @@
 #!/bin/sh
+# Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
+# Licensed under the Mulan PSL v2.
+# You can use this software according to the terms and conditions of the Mulan PSL v2.
+# You may obtain a copy of Mulan PSL v2 at:
+#     http://license.coscl.org.cn/MulanPSL2
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
+# PURPOSE.
+# See the Mulan PSL v2 for more details.
 
 usage () {
 cat <<EOF
@@ -190,6 +199,8 @@ UAPI_INCLUDE=*) UAPI_INCLUDE=${arg#*=} ;;
 CPPFLAGS=*) CPPFLAGS=${arg#*=} ;;
 LDFLAGS=*) LDFLAGS=${arg#*=} ;;
 CROSS_COMPILE=*) CROSS_COMPILE=${arg#*=} ;;
+COMPILER_DIR=*) COMPILER_DIR=${arg#*=} ;;
+COMPILER=*) COMPILER=${arg#*=} ;;
 LIBCC=*) LIBCC=${arg#*=} ;;
 *=*) ;;
 *) build=$arg ; target=$arg ;;
@@ -244,9 +255,7 @@ CROSS_COMPILE="$target-"
 # Find a C compiler to use
 #
 printf "checking for C compiler... "
-trycc ${CROSS_COMPILE}gcc
-trycc ${CROSS_COMPILE}c99
-trycc ${CROSS_COMPILE}cc
+trycc ${COMPILER}
 printf "%s\n" "$CC"
 test -n "$CC" || { echo "$0: cannot find a C compiler" ; exit 1 ; }
 
@@ -600,6 +609,9 @@ tryldflag LDFLAGS_AUTO -Wl,--exclude-libs=ALL
 tryldflag LDFLAGS_AUTO -Wl,--dynamic-list="$srcdir/dynamic.list"
 
 # Find compiler runtime library
+if [[ $COMPILER == *"clang" ]]; then
+        LIBCC="-lclang_rt.builtins"
+fi
 test -z "$LIBCC" && tryldflag LIBCC -lgcc && tryldflag LIBCC -lgcc_eh
 test -z "$LIBCC" && tryldflag LIBCC -lcompiler_rt
 test -z "$LIBCC" && try_libcc=`$CC -print-libgcc-file-name 2>/dev/null` \
@@ -804,12 +816,14 @@ UAPI_INCLUDE = $UAPI_INCLUDE
 LDFLAGS = $LDFLAGS
 LDFLAGS_AUTO = $LDFLAGS_AUTO
 CROSS_COMPILE = $CROSS_COMPILE
+COMPILER_DIR = $COMPILER_DIR
 LIBCC = $LIBCC
 OPTIMIZE_GLOBS = $OPTIMIZE_GLOBS
 ALL_TOOLS = $tools
 TOOL_LIBS = $tool_libs
 ADD_CFI = $ADD_CFI
 MALLOC_DIR = $malloc_dir
+TARGET = $target
 EOF
 test "x$static" = xno && echo "STATIC_LIBS ="
 test "x$shared" = xno && echo "SHARED_LIBS ="
