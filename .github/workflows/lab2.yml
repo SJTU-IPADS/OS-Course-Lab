@@ -1,0 +1,24 @@
+name: Lab2
+
+on:
+  push:
+    paths:
+      - Lab2/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: ipads/oslab:24.09
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build Lab2
+        run: Scripts/gendeps.sh && cd Lab2 && make
