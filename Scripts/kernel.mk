@@ -29,6 +29,7 @@ build:
 
 clean:
 	$(Q)$(CHBUILD) clean
+	$(Q)find -L $(LABDIR) -path */compile_commands.json -exec rm {} \;
 
 distclean:
 	$(Q)$(CHBUILD) distclean
