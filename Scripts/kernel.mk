@@ -23,7 +23,7 @@ defconfig:
 build:
 	$(Q)test -f $(LABDIR)/.config || $(CHBUILD) defconfig
 	$(Q)$(CHBUILD) build
-	$(Q)find $(LABDIR) -path */compile_commands.json \
+	$(Q)find -L $(LABDIR) -path */compile_commands.json \
        ! -path $(LABDIR)/compile_commands.json -print \
 	   | $(SCRIPTS)/merge_compile_commands.py
 
