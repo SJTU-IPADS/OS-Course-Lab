@@ -18,7 +18,7 @@
 #include "fs_vnode.h"
 #include "fs_page_cache.h"
 
-static int comp_vnode_key(const void *key, const struct rb_node *node)
+__attribute__((unused)) static int comp_vnode_key(const void *key, const struct rb_node *node)
 {
         struct fs_vnode *vnode = rb_entry(node, struct fs_vnode, node);
         ino_t vnode_id = *(ino_t *)key;

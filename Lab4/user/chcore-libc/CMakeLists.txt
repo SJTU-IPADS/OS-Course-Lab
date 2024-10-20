@@ -95,7 +95,7 @@ add_custom_target(libc-configure ALL
 # Compile libc
 add_custom_target(libc-build ALL
     WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND make -j${_nproc}
+    COMMAND bear make -j${_nproc}
     DEPENDS libc-configure)
 
 # Install libc as usual
