@@ -4,12 +4,16 @@
 
 ChCore已经可以启动多核，但仍然无法对多个线程进行调度。本部分将首先实现协作式调度，从而允许当前在CPU核心上运行的线程主动退出或主动放弃CPU时，CPU核心能够切换到另一个线程继续执行。其后，我们将驱动树莓派上的物理定时器，使其以一定的频率发起中断，使得内核可以在一定时间片后重新获得对CPU核心的控制，并基于此进一步实现抢占式调度。
 
-ChCore中与调度相关的函数与数据结构定义在kernel/include/sched/sched.h中。
+ChCore中与调度相关的函数与数据结构定义在`kernel/include/sched/sched.h`中。
+
+```c
+{{#include ../../Lab4/kernel/include/sched/sched.h:76:84}}
+```
 sched_ops是用于抽象ChCore中调度器的一系列操作。它存储指向不同调度操作的函数指针，以支持不同的调度策略。
 cur_sched_ops则是一个sched_ops的实例，其在内核初始化过程中（main函数）调用sched_init进行初始化。
 ChCore用在 kernel/include/sched/sched.h 中定义的静态函数封装对cur_sched_ops的调用。sched_ops中定义的调度器操作如下所示：
 
-* sche_init：初始化调度器。
+* sched_init：初始化调度器。
 * sched：进行一次调度。即将正在运行的线程放回就绪队列，然后在就绪队列中选择下一个需要执行的线程返回。
 * sched_enqueue：将新线程添加到调度器的就绪队列中。
 * sched_dequeue：从调度器的就绪队列中取出一个线程。
@@ -101,5 +105,7 @@ ChCore记录每个线程所拥有的时间片（`thread->thread_ctx->sc->budget`
 > [!SUCCESS]
 > 在完成填写之后，运行 ChCore 将可以成功进入用户态并打断创建的“自旋线程”让内核和主线程可以拿回CPU核心的控制权，你可以看到输出`"Hello, I am thread 3. I'm spinning."`和`“Thread 1 successfully regains the control!”`并通过 `Preemptive Scheduling` 测试点。
 
-> [!IMPORTANT]
+--- 
+
+> [!SUCCESS]
 > 以上为Lab4 Part2的所有内容

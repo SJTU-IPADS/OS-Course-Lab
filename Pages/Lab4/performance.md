@@ -30,6 +30,10 @@ IPC性能测试程序的测试用例包括：
 
 在测试能够顺利通过的前提下，你可以修改任意代码。（测试程序所调用的函数位于 `user/chcore-libc/libchcore/porting/overrides/src/chcore-port/ipc.c`）
 
+> [!HINT]
+> 我们所有的任务都要求多次创建ipc链接并进行操作，你需要具体理解ipc链接的创建过程并根据测试的单独场景进行优化。
+
+---
 
 > [!SUCCESS]
 > 以上为Lab4 的所有内容
