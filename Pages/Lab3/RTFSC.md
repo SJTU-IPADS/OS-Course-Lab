@@ -44,8 +44,8 @@ end
 
 ```
 
-我们在Lab2中主要完成mm_init以及内存管理器与vmspace和pmo的互联，现在我们再从第一个线程创建的数据流来梳理并分析
-chcore微内核的资源管理模式。
+我们在`Lab2`中主要完成mm_init以及内存管理器与vmspace和pmo的互联，现在我们再从第一个线程创建的数据流来梳理并分析
+Chcore微内核的资源管理模式。
 
 ### 内核对象管理
 
@@ -72,3 +72,61 @@ Chcore通过能力组机制管理所有的系统资源，能力组本身只是�
 
 > [!NOTE]
 > 你可以根据上述的描述来梳理根进程创建以及普通进程创建的异同，最后梳理出创建进程的标准模式。
+
+
+### 用户态构建
+
+我们在`Lab1`的代码导读阶段说明了`kernel`目录下的代码是如何被链接成内核镜像的，我们在内核镜像链接中引入了`procmgr`这个预先构建的二进制文件。在`Lab3`中，我们引入了用户态的代码构建，所以我们将`procmgr`的依赖改为使用用户态的代码生成。下图为具体的构建规则图。
+
+```mermaid
+flowchart LR
+topcmake["CMakeLists.txt"]
+chcorelibc["chcore-libc"]
+libcso["libc.so"]
+procmgr["procmgr"]
+ramdisk["ramdisk"]
+ramdisk_cpio["ramdisk.cpio"]
+tmpfs["ramdisk/tmpfs.srv"]
+procmgr_tool["procmgr_tool"]
+kernel["kernel"]
+kernel_img["kernel.img"]
+
+subgraph libc
+    chcorelibc-->|autotools|libcso
+end
+
+subgraph system_services
+ramdisk-->|cpio|ramdisk_cpio
+ramdisk_cpio-->tmpfs
+tmpfs-->procmgr
+libcso-->procmgr
+procmgr-->procmgr_tool
+procmgr_tool-->procmgr
+end
+
+topcmake-->system_services
+topcmake-->libc
+procmgr-->kernel_img
+kernel-->kernel_img
+
+```
+`procmgr`是一个自包含的`ELF`程序，其代码在`procmgr`中列出，其主要包含一个`ELF`执行器以及作为Chcore微内核的`init`程序启动，其构建主要依赖于`fsm.srv`以及`tmpfs.srv`，其中`fsm.srv`为文件系统管理器其扮演的是虚拟文件系统的角色用于桥接不同挂载点上的文件系统的实现，而`tmpfs.srv`则是`Chcore`的根文件系统其由`ramdisk`下面的所有文件以及构建好`libc.so`所打包好的`ramdisk.cpio`构成。当构建完`tmpfs.srv`后其会跟`libc.so`进行动态链接，最终`tmpfs.srv`以及`fsm.srv`会以incbin脚本的形式以二进制的方式被连接至`procmgr`的最后。在构建`procmgr`的最后一步，`cmake`会调用`read_procmgr_elf_tool`将`procmgr`这个`ELF`文件的缩略信息粘贴至`procmgr`之前。此后`procmgr`也会以二进制的方式进一步嵌套进入内核镜像之后，最终会在`create_root_thread`的阶段通过其`elf`符号得以加载。 最终，Chcore的Kernel镜像的拓扑结构如下
+
+```mermaid
+flowchart LR
+kernel_img("kernel.img")
+kernel_objects("kernel/*.o")
+procmgr("procmgr")
+chcore_libc("libc.so")
+ramdisk("ramdisk")
+ramdisk_cpio("ramdisk.cpio")
+tmpfs("tmpfs.srv")
+fsm("fsm.srv")
+kernel_img-->kernel_objects
+kernel_img-->procmgr
+procmgr-->fsm
+procmgr-->tmpfs
+tmpfs-->ramdisk_cpio
+ramdisk_cpio-->ramdisk
+ramdisk_cpio-->chcore_libc
+```
