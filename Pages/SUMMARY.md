@@ -36,8 +36,9 @@
   - [实机运行与IPC性能优化](./Lab4/performance.md)
 
 - [Lab5: 虚拟文件系统](./Lab5.md)
+  - [Posix适配](./Lab5/posix.md)
   - [FSM](./Lab5/FSM.md)
-  - [FS_Base](./Lab5/base.md)
+  - [VFS(FS_Base)](./Lab5/base.md)
 
 - [附录](./Appendix.md)
   - [Bomb: 工具教程](./Appendix/toolchains.md)
