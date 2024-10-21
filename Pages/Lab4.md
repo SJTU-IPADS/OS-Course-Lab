@@ -1,16 +1,12 @@
 # Lab 4：多核调度与IPC
 
-在本实验中，ChCore将支持在多核处理器上启动（第一部分）；实现多核调度器以调度执行多个线程（第二部分）；最后实现进程间通信IPC（第三部分）。注释`/* LAB 4 TODO BEGIN (exercise #) */`和`/* LAB 4 TODO END (exercise #) */`之间代表需要填空的代码部分。
+在本实验中，我们将逐步实现ChCore的多核支持以及微内核系统的核心：进程间通信，本Lab包含四个部分：]
 
-## Preparation
+1. [多核启动支持](./Lab4/multicore.html): 使ChCore通过树莓派厂商所提供的固件唤醒多核执行
+2. [多核调度](./Lab4/scheduler.html): 使ChCore实现在多核上进行[round-robin](https://en.wikipedia.org/wiki/Round-robin_scheduling)调度。
+3. [IPC](./Lab4/IPC.html): 使ChCore支持进程间通信
+4. [IPC调优](./Lab4/performance.html): 为ChCore的IPC针对测试的特点进行调优。
 
-实验 4 与实验 3相同，需要在根目录下拉取 `musl-libc` 代码。
-
->```bash
-> git submodule update --init --recursive
->```
-
-使用 `make build` 检查是否能够正确项目编译。
-
-> [!WARNING]
-> 请确保成功拉取`musl-libc`代码后再尝试进行编译。若未成功拉取`musl-libc`就进行编译将会自动创建`musl-libc`文件夹，这可能导致无法成功拉取`musl-libc`代码，也无法编译成功。出现此种情况可以尝试将`user/chcore-libc/musl-libc`文件夹删除，并运行以上指令重新拉取代码。
+跟先前的Lab相同，本实验代码包含了基础的 ChCore 操作系统镜像，除了练习题相关部分的源码以外（指明需要阅读的代码），其余部分通过二进制格式提供。
+在正确完成本实验的练习题之后，你可以在树莓派3B+QEMU或开发板上进入 ChCore shell。
+注释`/* LAB 4 TODO BEGIN (exercise #) */`和`/* LAB 4 TODO END (exercise #) */`之间代表需要填空的代码部分。

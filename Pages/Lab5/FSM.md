@@ -54,5 +54,8 @@ struct mount_point_info_node {
 
 我们提供了所有需要实现的文件的 Obj 版本，你可以修改 CMakeLists.txt，将编译所需的源文件从未实现的 C 文件替换为包含了正确实现的 Obj 文件，以此验证某一部分练习的正确性。如果你需要调试某一个部分，你可以将 `scripts/grade/cmakelists` 下的CMakeLists对应复制到 `FSM` 以及 `FS_Base` 的目录下覆盖并重新编译，运行 `make qemu` 后你就可以查看到 printf 的调试信息。
 
+---
+
 > [!SUCCESS]
-> 完成第一部分后，执行 `make grade`，可以得到 `Scores: 20/100`。
+> 以上为Lab5 Part2的所有内容  
+> 执行 `make grade`，可以得到 `Scores: 20/100`。
