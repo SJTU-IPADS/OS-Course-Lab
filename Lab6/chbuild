@@ -278,7 +278,7 @@ _docker_run() {
         docker run -i $use_tty --rm \
             -u $(id -u ${USER}):$(id -g ${USER}) \
             -v $(pwd):$(pwd) -w $(pwd) \
-            ipads/chcore_builder:v1.9.0 \
+            ipads/oslab:24.09 \
             $self $@
     fi
 }
