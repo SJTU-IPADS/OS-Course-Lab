@@ -701,7 +701,7 @@ void *thread_routine1(void *arg)
                 printf("Hello from thread 2\n");
                 usys_yield();
         }
-        printf("Cooperative Schedluing Test Done!\n");
+        printf("Cooperative Scheduling Test Done!\n");
         return NULL;
 }
 
@@ -729,7 +729,7 @@ void test_sched(void)
         pthread_create(&tid, NULL, thread_routine2, NULL);
         usys_yield();
         printf("Thread 1 successfully regains the control!\n");
-        printf("Preemptive Schedluing Test Done!\n");
+        printf("Preemptive Scheduling Test Done!\n");
 }
 
 int main(int argc, char *argv[], char *envp[])
