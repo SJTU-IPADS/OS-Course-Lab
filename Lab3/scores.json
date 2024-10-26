@@ -10,7 +10,7 @@
 		"proposed": 20
 	},
 	{
-		"capture": "Hello userland!",
+		"capture": "Hello Userland!",
 		"msg": "Userland",
 		"proposed": 20,
 		"userland": true
@@ -22,7 +22,7 @@
 		"userland": true
 	},
 	{
-		"capture": "Hello ChCore",
+		"capture": "Hello ChCore!",
 		"msg": "Userland App",
 		"proposed": 20,
 		"userland": true

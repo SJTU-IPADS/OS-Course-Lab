@@ -13,6 +13,9 @@ ChCore 中仅使用了其中的两个异常级别：EL0 和 EL1。其中，EL1 �
 > [!CODING] 练习题1
 > 在 `kernel/object/cap_group.c` 中完善 `sys_create_cap_group`、`create_root_cap_group` 函数。在完成填写之后，你可以通过 Cap create pretest 测试点。
 
+> [!SUCCESS] CapGroup
+> 完成`create_root_cap_group`函数后并通过测试后，你可以得到20分。
+
 > [!HINT]
 > 可以阅读 `kernel/object/capability.c` 中各个与 cap 机制相关的函数以及参考文档。
 
@@ -55,4 +58,4 @@ ChCore 中仅使用了其中的两个异常级别：EL0 和 EL1。其中，EL1 �
 ---
 
 > [!SUCCESS]
-> 以上为Lab3 Part1 的所有内容，完成后你将获得20分
+> 以上为Lab3 Part1 的所有内容，完成后你将获得40分
