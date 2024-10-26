@@ -1,9 +1,12 @@
 name: GitHub Pages
 on:
   push:
+    tags-ignore:
+      - '**'
     paths:
       - "Pages/**"
       - "README.md"
+      - "CHANGELOG.md"
   workflow_dispatch:
 
 concurrency:
