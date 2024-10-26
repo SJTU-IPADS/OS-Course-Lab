@@ -2,12 +2,12 @@
 # This sets up the environment variable for lab's Makefile.
 
 ifndef LABROOT
-LABROOT := $(shell git rev-parse --show-toplevel)
+LABROOT := $(CURDIR)/..
 endif
 
 SCRIPTS := $(LABROOT)/Scripts
 ifeq (,$(wildcard $(SCRIPTS)/env_generated.mk))
-	$(error Please run $(SCRIPTS)/gendeps.sh to create the environment first!)
+$(error Please run $(SCRIPTS)/gendeps.sh to create the environment first!)
 endif
 
 ifeq (,$(LAB))

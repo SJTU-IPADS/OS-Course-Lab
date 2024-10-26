@@ -1,6 +1,5 @@
 #!/bin/bash
 
-LABROOT=$(git rev-parse --show-toplevel)
 DIST=$(cat /etc/os-release | grep -E "^ID=(.*)$" | cut -d "=" -f 2)
 
 fatal() {
