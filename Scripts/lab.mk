@@ -24,6 +24,22 @@ include $(SCRIPTS)/env_generated.mk
 
 # Toolchain configuration
 GDB ?= gdb
+DOCKER ?= docker
+DOCKER_IMAGE ?= ipads/oslab:24.09
+ifeq (,$(wildcard /docker.env))
+DOCKER_RUN ?= 
+else
+DOCKER_RUN ?= $(DOCKER) run -it --rm \
+		-e SCRIPTS=$(SCRIPTS) \
+		-e LABROOT=$(LABROOT) \
+		-e LABDIR=$(LABDIR) \
+		-e TIMEOUT=$(TIMEOUT) \
+		-e LAB=$(LAB) \
+		-u $(shell id -u $(USER)):$(shell id -g $(USER)) \
+		-v $(LABROOT):$(LABROOT) -w $(CURDIR) \
+		--security-opt=seccomp:unconfined \
+		ipads/oslab:24.09
+endif
 QEMU-SYS ?= qemu-system-aarch64
 QEMU-USER ?= qemu-aarch64
 

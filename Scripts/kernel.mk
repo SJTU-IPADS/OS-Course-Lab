@@ -50,6 +50,6 @@ gdb:
 
 grade:
 	$(MAKE) distclean
-	$(Q)$(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json -s $(SERIAL) make SERIAL=$(SERIAL) qemu-grade
+	$(Q)$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json -s $(SERIAL) make SERIAL=$(SERIAL) qemu-grade
 
 .PHONY: qemu qemu-gdb gdb defconfig build clean distclean grade all
