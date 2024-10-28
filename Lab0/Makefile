@@ -27,7 +27,7 @@ gdb:
 	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
 
 grade:
-	@$(GRADER) -t $(TIMEOUT) -f $(CURDIR)/scores.json make qemu-grade
+	@$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(CURDIR)/scores.json make qemu-grade
 
 submit:
 	@echo "  SUBMIT lab0"
