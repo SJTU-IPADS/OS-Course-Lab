@@ -7,14 +7,17 @@ import sys
 from asyncio.subprocess import DEVNULL, PIPE, STDOUT
 from dataclasses import dataclass
 
-import psutil
-
 if sys.version_info[0] != 3 or sys.version_info[1] < 6:
     print(
         "This script requires Python version 3.7 and later. Please upgrade your Python version to grade this lab."
     )
     sys.exit(0)
 
+try:
+    import psutil
+except ImportError:
+    print("This script requires PsUtil as main dependencies. Please install this module first.")
+    sys.exit(255)
 
 @dataclass
 class LineCapture:
