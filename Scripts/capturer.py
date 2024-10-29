@@ -11,7 +11,7 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 6:
     print(
         "This script requires Python version 3.7 and later. Please upgrade your Python version to grade this lab."
     )
-    sys.exit(0)
+    sys.exit(255)
 
 try:
     import psutil
