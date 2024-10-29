@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DIST=$(cat /etc/os-release | grep -E "^ID=(.*)$" | cut -d "=" -f 2)
 

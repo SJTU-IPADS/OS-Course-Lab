@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Version: 1.1
 # Date: 2022-01-11
 # This bash script generates a CMSIS Software Pack:

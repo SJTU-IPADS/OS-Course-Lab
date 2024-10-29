@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 CURRENT_REF="$(git rev-parse HEAD)"
