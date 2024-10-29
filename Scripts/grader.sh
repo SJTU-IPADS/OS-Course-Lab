@@ -14,6 +14,12 @@ info "Grading lab ${LAB} ...(may take ${TIMEOUT} seconds)"
 bold "==========================================="
 ${LABROOT}/Scripts/capturer.py $@ 2> /dev/null
 score=$?
+
+if [[ $score -eq 255 ]]; then
+	error "Something went wrong. Please check the output of your program"
+	exit 0
+fi
+
 info "Score: $score/100"
 bold "==========================================="
 

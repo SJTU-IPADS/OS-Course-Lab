@@ -20,9 +20,9 @@
                 },
             ],
             "MIMode": "gdb",
+            // "miDebuggerPath": "/path/to/your gdb",
             "targetArchitecture": "arm64",
             "miDebuggerServerAddress": "localhost:1234",
-            "miDebuggerPath": "/usr/local/bin/gdb",
             "preLaunchTask": "Setup QEMU"
         }
     ]

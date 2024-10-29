@@ -25,21 +25,37 @@ cp "${CMAKE_EXTRA_DIR}/cmake-fsm-full.txt" "${FSM_DIR}/CMakeLists.txt"
 cp "${CMAKE_EXTRA_DIR}/cmake-fs_base-part1.txt" "${FS_BASE_DIR}/CMakeLists.txt"
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part1.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
+if [[ $score -eq 255 ]]; then
+	error "Something went wrong. Please check the output of your program"
+	exit 0
+fi
 # Part2 VNode
 cp "${CMAKE_EXTRA_DIR}/cmake-fsm-part2.txt" "${FSM_DIR}/CMakeLists.txt"
 cp "${CMAKE_EXTRA_DIR}/cmake-fs_base-part2-vnode.txt" "${FS_BASE_DIR}/CMakeLists.txt"
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part2.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
+if [[ $score -eq 255 ]]; then
+	error "Something went wrong. Please check the output of your program"
+	exit 0
+fi
 # Part3 Server Entry
 cp "${CMAKE_EXTRA_DIR}/cmake-fsm-part2.txt" "${FSM_DIR}/CMakeLists.txt"
 cp "${CMAKE_EXTRA_DIR}/cmake-fs_base-part2-server_entry.txt" "${FS_BASE_DIR}/CMakeLists.txt"
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part3.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
+if [[ $score -eq 255 ]]; then
+	error "Something went wrong. Please check the output of your program"
+	exit 0
+fi
 # Part4 Ops
 mv "${FSM_DIR}/CMakeLists.txt.bak" "${FSM_DIR}/CMakeLists.txt"
 mv "${FS_BASE_DIR}/CMakeLists.txt.bak" "${FS_BASE_DIR}/CMakeLists.txt"
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part4.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
+if [[ $score -eq 255 ]]; then
+	error "Something went wrong. Please check the output of your program"
+	exit 0
+fi
 
 info "Score: $score/100"
 bold "==========================================="
