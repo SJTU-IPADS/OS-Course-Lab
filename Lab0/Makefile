@@ -7,7 +7,7 @@ export LABROOT LABDIR LAB TIMEOUT
 
 bomb: student-number.txt
 	@echo "  GEN bomb"
-	@$(CURDIR)/Scripts/generate_bomb.sh
+	@$(CURDIR)/scripts/generate_bomb.sh
 
 clean:
 	@echo "  CLEAN bomb"
