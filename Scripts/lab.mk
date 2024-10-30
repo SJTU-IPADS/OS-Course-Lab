@@ -14,9 +14,6 @@ ifeq (,$(LAB))
 $(error LAB is not set!)
 endif
 
-ifeq (0,$(shell id -u))
-$(error Please do not run this lab in root!.)
-endif
 
 LABDIR  := $(LABROOT)/Lab$(LAB)
 SCRIPTS := $(LABROOT)/Scripts
