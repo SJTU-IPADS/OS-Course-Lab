@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Credit: https://stackoverflow.com/a/4774063
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 TMPENVFILE=$(mktemp /tmp/lvgl.script.XXXXXX)

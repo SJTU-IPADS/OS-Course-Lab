@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z $LABROOT ]]; then
     echo "Please set the LABROOT environment variable to the root directory of your project. (Makefile)"

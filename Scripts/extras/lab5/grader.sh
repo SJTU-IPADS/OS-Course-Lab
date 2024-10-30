@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CMAKE_EXTRA_DIR="${LABROOT}/Scripts/extras/lab5/cmake"
 SYSTEM_SERVER_DIR="${LABDIR}/user/system-services/system-servers"
