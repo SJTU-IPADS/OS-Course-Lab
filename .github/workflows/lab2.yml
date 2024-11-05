@@ -2,10 +2,10 @@ name: Lab2
 
 on:
   push:
+    branches:
+      - 'main'
     paths:
       - Lab2/**
-    tags-ignore:
-      - '**'
   workflow_dispatch:
   workflow_call:
 
