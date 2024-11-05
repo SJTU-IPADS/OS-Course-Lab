@@ -19,6 +19,10 @@
 > 如果你使用的是Windows/MacOS系统，如果不想手动安装docker以及下载镜像，我们也准备了基于VMWare 17的虚拟机镜像，你也可以使用上方的链接下载vmware虚拟机镜像，你可以在解压之后导入vmware即可使用。  
 > 用户stu 密码为123456
 
+
+> [!WARNING]
+> 小心使用sudo，请注意我们在编译的时候我们会同步的在编译文件夹时写入timestamp文件，如果你使用root权限，会导致后续普通的正常构建返回错误。
+
 ### 使用Dev-Container (推荐)
 
 如果你使用的是带有支持Microsoft规范下[Dev-Container](https://vscode.github.net.cn/docs/devcontainers/tutorial)插件的代码编辑器或者集成开发环境，亦或者你使用的是非Linux平台的开发环境，我们**强烈建议**你使用Dev-container直接进行开发，我们已经在其中已经预先安装好了你可能需要使用的所有工具链。并且针对vscode我们在每个Lab的分支目录下都已经配置好了合适的插件配置，简单安装即可以一键启用。安装完之后进入本实验的**根目录**，此时dev-container会识别到容器开发环境，重新进入后就可以直接使用了。
