@@ -1,8 +1,8 @@
 name: GitHub Pages
 on:
   push:
-    tags-ignore:
-      - '**'
+    branches:
+      - 'main'
     paths:
       - "Pages/**"
       - "README.md"
