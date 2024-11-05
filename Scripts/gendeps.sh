@@ -7,7 +7,7 @@ declare -A TOOLCHAINS
 
 make_labs_env() {
 	case "${DIST}" in
-	"ubuntu")
+	"ubuntu" | "debian")
 		if command -v gdb-multiarch &>/dev/null; then
 			TOOLCHAINS["gdb"]="gdb-multiarch"
 		else
@@ -28,7 +28,7 @@ make_labs_env() {
 		;;
 	*)
 		error "Unsupported Linux Distribution: ${DIST}"
-		error "Supported OS Distributions are: ubuntu, fedora, arch, gentoo, opensuse"
+		error "Supported OS Distributions are: ubuntu/debian, fedora, arch, gentoo, opensuse"
 		fatal "If you want to add support for your distribution, please submit a PR."
 		;;
 	esac
