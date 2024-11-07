@@ -83,10 +83,10 @@ async def main(args: argparse.Namespace):
             line = await asyncio.wait_for(process.stdout.readline(), args.timeout)
         except asyncio.TimeoutError:
             break
+        if len(line) == 0 and process.returncode is not None:
+            break
+        decoded_line = line.decode()
         for line_capture in captures:
-            if len(line) == 0:
-                break
-            decoded_line = line.decode()
             if (
                 args.serial
                 and "End of Kernel Checkpoints: {}".format(args.serial) in decoded_line
