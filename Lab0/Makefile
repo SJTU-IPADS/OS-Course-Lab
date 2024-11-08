@@ -21,6 +21,8 @@ qemu-gdb:
 	@$(QEMU) -g 1234 bomb
 
 qemu-grade:
+	@touch ans.txt
+	@sed -E -i 's|\r$$||g' ans.txt
 	@$(QEMU) bomb < ans.txt
 
 gdb:
