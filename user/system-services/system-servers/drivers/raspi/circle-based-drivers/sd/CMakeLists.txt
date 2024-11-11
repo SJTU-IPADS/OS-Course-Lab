@@ -1,0 +1,6 @@
+set(LIB_storage_block_cache_path ${CMAKE_CURRENT_LIST_DIR}/../../../utility-libs/storage_block_cache)
+link_libraries(${circle_home}/addon/SDCard/libsdcard.a ${circle_home}/lib/fs/libfs.a)
+set(src ${LIB_storage_block_cache_path}/block_cache.c)
+list(APPEND src main.cpp)
+add_circle_lib(sd_circle ${src}) 
+include_directories(sd_circle PUBLIC ../../../utility-libs/storage_block_cache/include)

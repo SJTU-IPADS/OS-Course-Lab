@@ -1,0 +1,1 @@
+TYPEDEF struct { union { int __i[sizeof(long)==8?10:6]; volatile int __vi[sizeof(long)==8?10:6]; volatile void *volatile __p[sizeof(long)==8?5:6]; } __u; unsigned char ceil; unsigned char old_prio; } pthread_mutex_t;

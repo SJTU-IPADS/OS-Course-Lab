@@ -1,0 +1,11 @@
+CHCORE_SERVER_GUI:
+  filename: "/gui.srv"
+  conditions:
+    - - "CHCORE_PLAT_RASPI4"
+      - "CHCORE_PLAT_RASPI3"
+  services:
+    - name: "gui"
+      conditions: 
+  boot_time: "eager"
+  registration_method: "passive"
+  type: "driver"

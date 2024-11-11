@@ -1,0 +1,60 @@
+#!/usr/bin/expect -f
+
+source [file join [file dirname $argv0] libtest.tcl]
+
+set timeout 300
+set send_slow {1 .1}
+
+spawn bash -c "./build/simulate.sh"
+
+# Catch boot error
+if {[catch boot errmsg]} {
+    print $errmsg
+    exit 2
+}
+
+expect {
+    "Welcome to ChCore shell!" {
+        print "Succeeded to boot to ChCore shell"
+    }
+    timeout {
+        print "Failed to boot to ChCore shell"
+        exit 1
+    }
+}
+
+# Sleep several seconds for stable output
+print "Sleeping for 5 seconds..."
+sleep 5
+
+# Count test cases
+set test_config "test_perf_qemu.config"
+set test_timeouts [read_test_timeout "$this_dir/$test_config"]
+set test_count [llength $test_timeouts]
+print "Test count: $test_count"
+
+# Run test cases
+send -s "test_all.bin $test_config\n"
+
+for {set i 1} {$i <= $test_count} {incr i} {
+    set timeout [lindex $test_timeouts [expr $i-1]]
+    expect {
+        -re "$i/$test_count.*pass" {
+            print "Test $i passed"
+        }
+        -re "$i/$test_count.*fail" {
+            print "Test $i failed"
+            exit 2
+        }
+        "All tests pass" {
+            print "Test OK"
+            exit 0
+        }
+        timeout {
+            print "Test $i timeout"
+            exit 1
+        }
+    }
+}
+
+print "Test OK"

@@ -1,0 +1,9 @@
+CHCORE_FS_EXT4:
+  filename: "/ext4.srv"
+  conditions:
+  services:
+    - name: "ext4"
+      conditions: 
+  boot_time: "lazy"
+  registration_method: "passive"
+  type: "server"

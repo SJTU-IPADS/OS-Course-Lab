@@ -1,0 +1,10 @@
+macro(add_vx_test_executable _target)
+    add_user_executable(${_target} ${ARGN})
+    target_link_libraries(${_target} PRIVATE test_tools vxworks)
+endmacro(add_test_executable)
+
+add_vx_test_executable(test_vx_msg.bin test_vx_msg.c)
+add_vx_test_executable(test_vx_sem.bin test_vx_sem.c)
+add_vx_test_executable(test_vx_intlock.bin test_vx_intlock.c)
+add_vx_test_executable(test_vx_task.bin test_vx_task.c)
+add_vx_test_executable(test_vx_utils.bin test_vx_utils.c)

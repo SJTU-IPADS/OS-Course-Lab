@@ -1,0 +1,16 @@
+{
+	"name": "ChCore-Dev",
+	"build": { "dockerfile": "Dockerfile" },
+	"remoteUser": "stu",
+	"updateRemoteUserUID": true,
+	"runArgs": ["--hostname", "Chcore"],
+	"customizations": {
+		"vscode": {
+		"extensions": [
+			"ms-vscode.cpptools",
+			"llvm-vs-code-extensions.vscode-clangd",
+			"ms-vscode.makefile-tools"
+		]
+	}
+  }
+}

@@ -1,0 +1,11 @@
+CHCORE_DRIVER_HDMI:
+  filename: "/hdmi.srv"
+  conditions:
+    - - "CHCORE_PLAT_RASPI4"
+      - "CHCORE_PLAT_RASPI3"
+  services:
+  - name: "hdmi"
+    conditions:
+  boot_time: "eager"
+  registration_method: "passive"
+  type: "driver"

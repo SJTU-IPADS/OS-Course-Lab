@@ -1,0 +1,94 @@
+#!/usr/bin/expect -f
+
+source [file join [file dirname $argv0] libtest.tcl]
+
+set env(TERM) xterm-256color
+set env(SHELL) /bin/bash
+set env(HOME) /home/gitlab-runner
+set env(PATH) /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+set env(LOGNAME) gitlab-runner
+set env(SHLVL) 2
+set env(MAIL) /var/mail/gitlab-runner
+set env(SUDO_UID) 1000
+set env(SUDO_GID) 1000
+set env(SUDO_COMMAND) /bin/bash
+
+spawn sudo bash -c "sudo screen -S raspi -L -Logfile exec_log /dev/ttyUSB0 115200"
+
+proc screen_quit { } {
+    exec sudo screen -S raspi -X quit
+}
+
+proc screen_send {str} {
+    exec sudo screen -x -S raspi -p 0 -X stuff "$str"
+}
+
+set timeout 400
+set send_slow {1 .1}
+
+# Now, ChCore will boot USPI and print the following line.
+# =============== USPI done =================
+# We can change it later.
+# FIXME: Not expecting "Welcome to ChCore shell" because it's always
+# outputed out of order.
+expect {
+    "===" {
+        print "Succeeded to boot USPi"
+    }
+    timeout {
+        print "Failed to boot USPi"
+        screen_quit
+        exit 1
+    }
+}
+
+expect {
+    "IP:" {
+        print "Succeeded to run DHCP"
+    }
+    timeout {
+        print "Failed to run DHCP"
+        screen_quit
+        exit 1
+    }
+}
+
+# Sleep several seconds for stable output
+print "Sleeping for 5 seconds..."
+sleep 5
+
+# Count test cases
+set test_config "test_full_raspi3.config"
+set test_timeouts [read_test_timeout "$this_dir/$test_config"]
+set test_count [llength $test_timeouts]
+print "CI script test_count: $test_count"
+
+# Run test cases
+screen_send "test_all.bin $test_config\n"
+
+for {set i 1} {$i <= $test_count} {incr i} {
+    set timeout [lindex $test_timeouts [expr $i-1]]
+    expect {
+        -re "$i/$test_count.*pass" {
+            print "Test $i passed"
+        }
+        -re "$i/$test_count.*fail" {
+            screen_quit
+            print "Test $i failed"
+            exit 2
+        }
+        "All tests pass" {
+            screen_quit
+            print "Test OK"
+            exit 0
+        }
+        timeout {
+            screen_quit
+            print "Test $i timeout"
+            exit 1
+        }
+    }
+}
+
+screen_quit
+print "Test OK"

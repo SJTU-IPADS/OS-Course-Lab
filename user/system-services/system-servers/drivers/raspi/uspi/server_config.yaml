@@ -1,0 +1,10 @@
+CHCORE_DRIVER_USB:
+  filename: "/uspi.srv"
+  conditions:
+    - - "CHCORE_PLAT_RASPI3"
+  services:
+  - name: "usb_devmgr"
+    conditions:
+  boot_time: "lazy"
+  registration_method: "passive"
+  type: "driver"

@@ -1,0 +1,9 @@
+CHCORE_SERVER_POSIX_SHM:
+  filename: "/posix_shm.srv"
+  conditions:
+  services:
+  - name: "systemv_shmmgr"
+    conditions:
+  boot_time: "lazy"
+  registration_method: "passive"
+  type: "server"

@@ -1,0 +1,29 @@
+
+CHCORE_DRIVER_FWK_CIRCLE:
+  filename: "/circle.srv"
+  conditions:
+    - - "CHCORE_PLAT_RASPI4"
+      - "CHCORE_PLAT_RASPI3" 
+  services:
+  - name: "usb_devmgr"
+    conditions:
+      - - "CHCORE_DRIVER_USB"
+        - "CHCORE_PLAT_RASPI4"
+  - name: "audio"
+    conditions:
+      - - "CHCORE_DRIVER_AUDIO"
+  - name: "cpu_driver"
+    conditions:
+      - - "CHCORE_DRIVER_CPU_THROTTLE"
+  - name: "serial"
+    conditions:
+      - - "CHCORE_DRIVER_SERIAL"
+  - name: "gpio"
+    conditions:
+      - - "CHCORE_DRIVER_GPIO"
+  - name: "sd_card"
+    conditions:
+      - - "CHCORE_DRIVER_SD"
+  boot_time: "eager"
+  registration_method: "active"
+  type: "driver"

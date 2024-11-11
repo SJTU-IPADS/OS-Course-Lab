@@ -1,0 +1,9 @@
+CHCORE_FS_FAT32:
+  filename: "/fat32.srv"
+  conditions:
+  services:
+  - name: "fat32"
+    conditions:
+  boot_time: "lazy"
+  registration_method: "passive"
+  type: "server"

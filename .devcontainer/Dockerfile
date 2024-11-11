@@ -1,0 +1,7 @@
+FROM ipads/oslab:24.09
+
+ARG USERNAME=stu
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+CMD ["/bin/bash"]

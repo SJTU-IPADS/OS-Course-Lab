@@ -1,0 +1,68 @@
+
+set(libchcore_interfaces_include_path "")
+foreach(var ${libchcore_interfaces_include})
+    string(APPEND libchcore_interfaces_include_path "-I ${var} ")
+endforeach()
+link_libraries(-static-libgcc -static-libstdc++)
+set(CIRCLE_DRIVER_LIBS)
+include(circle.cmake)
+
+
+# Common drivers for raspi3 & 4
+if(CHCORE_DRIVER_SD)
+    add_compile_definitions(CIRCLE_SD)
+    add_subdirectory(sd)
+    list(APPEND CIRCLE_DRIVER_LIBS sd_circle)
+endif()
+
+if(CHCORE_DRIVER_WLAN)
+    add_compile_definitions(CIRCLE_WLAN)
+    add_subdirectory(wlan)
+    list(APPEND CIRCLE_DRIVER_LIBS wlan)
+endif()
+
+if(CHCORE_DRIVER_CPU_THROTTLE)
+    add_compile_definitions(CIRCLE_CPU)
+    add_subdirectory(cpu)
+    list(APPEND CIRCLE_DRIVER_LIBS cpu)
+endif()
+
+if(CHCORE_DRIVER_SERIAL)
+    add_compile_definitions(CIRCLE_SERIAL)
+    add_subdirectory(serial)
+    list(APPEND CIRCLE_DRIVER_LIBS serial)
+endif()
+
+if(CHCORE_DRIVER_GPIO)
+    add_compile_definitions(CIRCLE_GPIO)
+    add_subdirectory(gpio)
+    list(APPEND CIRCLE_DRIVER_LIBS gpio)
+endif()
+
+if(CHCORE_DRIVER_ETHERNET)
+if(CHCORE_PLAT STREQUAL "raspi4")
+    add_compile_definitions(CIRCLE_ETHERNET)
+    add_subdirectory(bcm54213)
+    list(APPEND CIRCLE_DRIVER_LIBS bcm54213)
+endif()
+endif()
+
+if(CHCORE_DRIVER_USB)
+if(CHCORE_PLAT STREQUAL "raspi4")
+    add_compile_definitions(CIRCLE_USB)
+    add_subdirectory(usb)
+    list(APPEND CIRCLE_DRIVER_LIBS usb_circle)
+endif()
+endif()
+
+if(CHCORE_DRIVER_AUDIO)
+    add_compile_definitions(CIRCLE_AUDIO)
+    add_subdirectory(audio)
+    list(APPEND CIRCLE_DRIVER_LIBS audio)
+endif()
+
+add_executable(circle.srv circle.cpp)
+target_link_libraries(circle.srv PUBLIC ${CIRCLE_DRIVER_LIBS})
+target_link_libraries(circle.srv PUBLIC ${circle_home}/lib/libcircle.a)
+target_include_directories(circle.srv PUBLIC ${circle_home}/include)
+chcore_add_configurable_server(server_config.yaml)

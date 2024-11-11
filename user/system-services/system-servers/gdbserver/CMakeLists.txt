@@ -1,0 +1,6 @@
+file(GLOB _sources "*.c")
+add_user_executable_static_linked(gdb.srv ${_sources})
+target_compile_options(gdb.srv PRIVATE "-Wno-pointer-sign")
+target_compile_options(gdb.srv PRIVATE "-Wno-unused-variable")
+chcore_all_force_static_linked()
+chcore_copy_all_targets_to_ramdisk()
