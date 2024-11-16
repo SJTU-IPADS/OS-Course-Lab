@@ -9,5 +9,6 @@ PTE := $(MM_ARCH)/page_table.c
 MAIN := $(ARCH)/main.c
 PGFAULT := $(ARCH)/irq/pgfault.c $(MM)/pgfault_handler.c
 VMSPACE := $(MM)/vmspace.c
+CONFIG := kernel/config.cmake
 
-FILES := $(BUDDY) $(KMALLOC) $(SLAB) $(PTE) $(MAIN) $(PGFAULT) $(VMSPACE)
+FILES := $(BUDDY) $(KMALLOC) $(SLAB) $(PTE) $(MAIN) $(PGFAULT) $(VMSPACE) $(CONFIG)
