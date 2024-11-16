@@ -13,6 +13,9 @@
 > - 实现中可以使用 `get_next_ptp`、`set_pte_flags`、`virt_to_phys`、`GET_LX_INDEX` 等已经给定的函数和宏
 > - 更多提示见代码注释
 
+> [!NOTE] 页表配错了怎么办？  
+> 在Aarch64的架构中，每当系统进入异常处理流程，寄存器`ELR_EL1`将保存错误发生的指令地址，而对于出错的虚拟内存地址，你可以通过查询`FAR_EL1`找到。
+
 > [!QUESTION] 思考题5
 > 阅读 Arm Architecture Reference Manual，思考要在操作系统中支持写时拷贝（Copy-on-Write，CoW）[^cow]需要配置页表描述符的哪个/哪些字段，并在发生页错误时如何处理。（在完成第三部分后，你也可以阅读页错误处理的相关代码，观察 ChCore 是如何支持 Cow 的）
 
