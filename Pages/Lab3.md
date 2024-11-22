@@ -10,5 +10,9 @@
 
 ## 工具链准备
 
-从Lab3开始我们开放了用户态的一些代码，你需要使用如下
+从Lab3开始我们开放了用户态的一些代码，你需要使用如下的命令下载libc.
 
+```
+git submodule update --init --recursive
+
+```
