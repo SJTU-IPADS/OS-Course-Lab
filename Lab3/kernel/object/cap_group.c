@@ -347,7 +347,7 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
 
         /* cap current cap_group */
         /* LAB 3 TODO BEGIN */
-        new_cap_group = obj_alloc(TYPE_CAP_GROUP, sizeof(*new_cap_group));
+        /* Allocate a new cap_group object */
 
         /* LAB 3 TODO END */
         if (!new_cap_group) {

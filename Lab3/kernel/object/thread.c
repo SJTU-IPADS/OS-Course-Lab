@@ -450,6 +450,7 @@ cap_t sys_create_thread(unsigned long thread_args_p)
 void sys_thread_exit(void)
 {
         int cnt;
+        u32 old_exit_state;
 
         /* As a normal application, the main thread will eventually invoke
          * sys_exit_group or trigger unrecoverable fault (e.g., segfault).
@@ -461,21 +462,28 @@ void sys_thread_exit(void)
 
         kdebug("%s is invoked\n", __func__);
 
-        /* Set thread state, which will be recycle afterwards */
-        current_thread->thread_ctx->thread_exit_state = TE_EXITING;
+        /*
+         * Use cmpxchg here because there are other threads that may modify
+         * thread_exit_state.
+         */
+        old_exit_state = atomic_cmpxchg_32(
+                (s32 *)(&current_thread->thread_ctx->thread_exit_state),
+                TE_RUNNING,
+                TE_EXITING);
+        if (old_exit_state == TE_RUNNING) {
+                lock(&(current_cap_group->threads_lock));
+                cnt = --current_cap_group->thread_cnt;
+                unlock(&(current_cap_group->threads_lock));
 
-        lock(&(current_cap_group->threads_lock));
-        cnt = --current_cap_group->thread_cnt;
-        unlock(&(current_cap_group->threads_lock));
-
-        if (cnt == 0) {
-                /*
-                 * Current thread is the last thread in this cap_group,
-                 * so we invoke sys_exit_group.
-                 */
-                kdebug("%s invokes sys_exit_group\n", __func__);
-                sys_exit_group(0);
-                /* The control flow will not go through */
+                if (cnt == 0) {
+                        /*
+                         * Current thread is the last thread in this cap_group,
+                         * so we invoke sys_exit_group.
+                         */
+                        kdebug("%s invokes sys_exit_group\n", __func__);
+                        sys_exit_group(0);
+                        /* The control flow will not go through */
+                }
         }
 
         if (current_thread->clear_child_tid) {
@@ -563,5 +571,5 @@ int sys_get_prio(cap_t thread_cap)
 int sys_set_tid_address(int *tidptr)
 {
         current_thread->clear_child_tid = tidptr;
-        return 0;
+        return current_thread->cap;
 }
