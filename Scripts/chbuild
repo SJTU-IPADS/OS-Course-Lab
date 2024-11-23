@@ -12,8 +12,8 @@ set -e
 
 self=$0
 
-defconfig_command="$self defconfig"
-clean_command="$self clean"
+defconfig_command="make defconfig"
+clean_command="make clean or make distclean"
 
 cmake_build_dir="build"
 cmake_cache_file="build/CMakeCache.txt"
@@ -206,7 +206,7 @@ clean() {
             cmake --build $cmake_build_dir --target $1-clean
             _echo_succ "Succeeded to clean \`$1\`"
         else
-            _echo_err "Cannot clean \`$1\`, please try \`$self clean\` to clean all"
+            _echo_err "Cannot clean \`$1\`, please try \`make distclean\` to clean all"
         fi
     fi
 }
