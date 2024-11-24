@@ -7,7 +7,7 @@
 > ```
 > Hello ChCore!
 > ```
-> 使用 chcore-libc 的编译器进行对其进行编译，编译输出文件名命名为 `hello_chcore.bin`，并将其放入 ramdisk 加载进内核运行。内核启动时将自动运行 文件名为 `hello_chcore.bin` 的可执行文件。
+> 使用 chcore-libc 的编译器进行对其进行编译，编译输出文件名命名为 `hello_world.bin`，并将其放入 ramdisk 加载进内核运行。内核启动时将自动运行 文件名为 `hello_world.bin` 的可执行文件。
 
 > [!HINT]
 >
