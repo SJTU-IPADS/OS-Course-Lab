@@ -82,6 +82,7 @@ async def main(args: argparse.Namespace):
         try:
             line = await asyncio.wait_for(process.stdout.readline(), args.timeout)
         except asyncio.TimeoutError:
+            print("Terminated Due to Timeout.")
             break
         if len(line) == 0 and process.returncode is not None:
             break
