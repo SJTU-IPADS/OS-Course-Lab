@@ -16,3 +16,5 @@
 git submodule update --init --recursive
 
 ```
+> [!IMPORTANT] 关于超时
+> 如果你发现时不时因为超时原因而无法正常通过测试，你可以尝试修改Lab文件夹的Makefile的TIMEOUT变量设置超时时间。
