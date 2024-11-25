@@ -42,7 +42,7 @@ static void dump_pgfault_error(void)
  * Step-1: get PA of page containing fault_addr, so as kernal VA of that page
  * Step-2: allocate a new page and record in VMR
  * Step-3: copy using kernel VA to new page
- * Step-4(?): update VMR perm (How and when? Neccessary?)
+ * Step-4(?): update VMR perm (How and when? Necessary?)
  * Step-5: update PTE permission and PPN
  * Step-6: Flush TLB of user virtual page(user_vpa)
  */
@@ -308,7 +308,7 @@ int handle_trans_fault(struct vmspace *vmspace, vaddr_t fault_addr)
  * instruction cannot be satisfied by permission of a page in page table
  * when **executing** the instruction by the hardware. To handle a
  * permission fault, we have to differentiate permissions in the VMR where
- * the faulting page belongs(declared_perm) and the priviledge needed
+ * the faulting page belongs(declared_perm) and the privilege needed
  * by the faulting instruction(desired_perm). In some cases, a permission
  * fault is demanded by us. For instance, if a page is shared through CoW,
  * it's mapped as readonly sharing at first, and there would be a permission

@@ -257,7 +257,7 @@ int vmspace_init(struct vmspace *vmspace, unsigned long pcid)
         memset((void *)vmspace->pgtbl, 0, PAGE_SIZE);
         vmspace->pcid = pcid;
 
-        /* Architecture-dependent initilization */
+        /* Architecture-dependent initialization */
         arch_vmspace_init(vmspace);
 
         /*
@@ -407,7 +407,7 @@ static int check_unmap(struct vmspace *vmspace, vaddr_t va, size_t len,
 
 /*
  * Unmap routine: unmap a virtual memory range.
- * Current limitation: only supports unmap multiple whole exsiting vmrs.
+ * Current limitation: only supports unmap multiple whole existing vmrs.
  */
 int vmspace_unmap_range(struct vmspace *vmspace, vaddr_t va, size_t len)
 {

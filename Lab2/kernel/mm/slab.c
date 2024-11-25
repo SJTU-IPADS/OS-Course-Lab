@@ -226,7 +226,7 @@ static void try_return_slab_to_buddy(struct slab_header *slab, int order)
         free_pages_without_record(slab);
 }
 
-/* Interfaces exported to the kernel/mm moudule */
+/* Interfaces exported to the kernel/mm module */
 
 void init_slab(void)
 {
