@@ -19,13 +19,13 @@
 char boot_cpu_stack[PLAT_CPU_NUMBER][INIT_STACK_SIZE] ALIGN(4096);
 
 /*
- * Initialize these varibles in order to make them not in .bss section.
+ * Initialize these variables in order to make them not in .bss section.
  * So, they will have concrete initial value even on real machine.
  *
  * Non-primary CPUs will spin until they see the secondary_boot_flag becomes
  * non-zero which is set in kernel (see enable_smp_cores).
  *
- * The secondary_boot_flag is initilized as {NOT_BSS, 0, 0, ...}.
+ * The secondary_boot_flag is initialized as {NOT_BSS, 0, 0, ...}.
  */
 #define NOT_BSS (0xBEEFUL)
 long secondary_boot_flag[PLAT_CPU_NUMBER] = {NOT_BSS};
@@ -85,7 +85,7 @@ void init_c(void)
 
 	wakeup_other_cores();
 
-	/* Initialize Kernell Page Table. */
+	/* Initialize Kernel Page Table. */
 	uart_send_string("[BOOT] Install kernel page table\r\n");
 	init_kernel_pt();
 

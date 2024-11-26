@@ -67,7 +67,7 @@ void init_kernel_pt(void)
                         | UXN /* Unprivileged execute never */
                         | ACCESSED /* Set access flag */
                         | NG /* Mark as not global */
-                        | INNER_SHARABLE /* Sharebility */
+                        | INNER_SHARABLE /* Shareability */
                         | NORMAL_MEMORY /* Normal memory */
                         | IS_VALID;
         }

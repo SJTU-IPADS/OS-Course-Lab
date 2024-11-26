@@ -85,7 +85,7 @@ __maybe_unused static int set_pte_flags(pte_t *entry, vmr_prop_t flags,
         else {
                 if (!(flags & VMR_EXEC))
                         entry->l3_page.UXN = AARCH64_MMU_ATTR_PAGE_UXN;
-                // EL1 cannot directly execute EL0 accessiable region.
+                // EL1 cannot directly execute EL0 accessible region.
                 entry->l3_page.PXN = AARCH64_MMU_ATTR_PAGE_PXN;
         }
 
@@ -252,21 +252,21 @@ void free_page_table(void *pgtbl)
         /* L0 page table */
         l0_ptp = (ptp_t *)pgtbl;
 
-        /* Interate each entry in the l0 page table*/
+        /* Iterate each entry in the l0 page table*/
         for (i = 0; i < PTP_ENTRIES; ++i) {
                 l0_pte = &l0_ptp->ent[i];
                 if (IS_PTE_INVALID(l0_pte->pte))
                         continue;
                 l1_ptp = (ptp_t *)GET_NEXT_PTP(l0_pte);
 
-                /* Interate each entry in the l1 page table*/
+                /* Iterate each entry in the l1 page table*/
                 for (j = 0; j < PTP_ENTRIES; ++j) {
                         l1_pte = &l1_ptp->ent[j];
                         if (IS_PTE_INVALID(l1_pte->pte))
                                 continue;
                         l2_ptp = (ptp_t *)GET_NEXT_PTP(l1_pte);
 
-                        /* Interate each entry in the l2 page table*/
+                        /* Iterate each entry in the l2 page table*/
                         for (k = 0; k < PTP_ENTRIES; ++k) {
                                 l2_pte = &l2_ptp->ent[k];
                                 if (IS_PTE_INVALID(l2_pte->pte))
@@ -345,7 +345,7 @@ int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa, size_t len,
 }
 
 /*
- * Try to relase a lower level page table page (low_ptp).
+ * Try to release a lower level page table page (low_ptp).
  * @high_ptp: the higher level page table page
  * @low_ptp: the next level page table page
  * @index: the index of low_ptp in high ptp entries

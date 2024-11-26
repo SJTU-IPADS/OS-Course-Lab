@@ -55,7 +55,7 @@ static void __rb_change_child(struct rb_root *root,
  *     t1 t2 t3  t4
  * There are three nodes and 4 corresponding subtrees, that's why this
  * function is named as connect34.
- * Differente kinds of double rotations only need to set arguments of
+ * Different kinds of double rotations only need to set arguments of
  * this function according to their targeted tree patterns. See codes
  * in __rb_insert_color and __rb_erase_color for concrete examples.
  */
@@ -389,7 +389,7 @@ static struct rb_node *__rb_erase(struct rb_root *this, struct rb_node *node,
                         __rb_change_child(this, parent, succ, succ_child);
 
                         // replace node with succ, succ would inherit node's
-                        // parent, color and **chilren**.
+                        // parent, color and **children**.
                         rb_replace_node(this, node, succ);
                 }
         }
@@ -492,7 +492,7 @@ static void __rb_erase_color(struct rb_root *root, struct rb_node *parent,
                                                  *        / \               / \
                                                  *       S1  S2            S1 S2
                                                  * Subtree P has 1 lower
-                                                 * blackheight than slibings of
+                                                 * blackheight than siblings of
                                                  * P. (X has 1 lower blackheight
                                                  * than S before). So we let
                                                  * @node = P and continue

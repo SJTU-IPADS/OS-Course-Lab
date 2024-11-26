@@ -30,7 +30,7 @@ void *_get_pages(int order, bool is_record)
         int i;
         void *addr;
 
-        /* Try to get continous physical memory pages from one physmem pool. */
+        /* Try to get continuous physical memory pages from one physmem pool. */
         for (i = 0; i < physmem_map_num; ++i) {
                 page = buddy_get_pages(&global_mem[i], order);
                 if (page)
