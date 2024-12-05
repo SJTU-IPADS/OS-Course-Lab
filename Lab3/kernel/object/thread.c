@@ -106,12 +106,6 @@ void thread_deinit(void *thread_ptr)
         /* The thread struct itself will be freed in __free_object */
 }
 
-#define PFLAGS2VMRFLAGS(PF)                                           \
-        (((PF) & PF_X ? VMR_EXEC : 0) | ((PF) & PF_W ? VMR_WRITE : 0) \
-         | ((PF) & PF_R ? VMR_READ : 0))
-
-#define OFFSET_MASK (0xFFF)
-
 /* Required by LibC */
 void prepare_env(char *env, vaddr_t top_vaddr, char *name,
                  struct process_metadata *meta);
