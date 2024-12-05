@@ -16,8 +16,11 @@ if sys.version_info[0] != 3 or sys.version_info[1] < 6:
 try:
     import psutil
 except ImportError:
-    print("This script requires PsUtil as main dependencies. Please install this module first.")
+    print(
+        "This script requires PsUtil as main dependencies. Please install this module first."
+    )
     sys.exit(255)
+
 
 @dataclass
 class LineCapture:
@@ -86,7 +89,12 @@ async def main(args: argparse.Namespace):
             break
         if len(line) == 0 and process.returncode is not None:
             break
+
         decoded_line = line.decode()
+
+        if args.verbose:
+            print(decoded_line, end="")
+
         for line_capture in captures:
             if (
                 args.serial
@@ -136,6 +144,14 @@ if __name__ == "__main__":
         dest="serial",
         required=False,
         help="Serial Number to proceed.",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        required=False,
+        default=False,
+        help="Verbose mode.",
     )
     parser.add_argument("command", nargs=argparse.REMAINDER, help="Command to grade.")
     args = parser.parse_args()
