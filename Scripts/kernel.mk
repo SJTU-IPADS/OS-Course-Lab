@@ -1,8 +1,13 @@
 V ?= 0
 Q := @
-
+GRADER_V :=
 ifeq ($(V), 1)
 	Q :=
+endif
+
+ifeq ($(V), 2)
+	Q :=
+	GRADER_V := -v
 endif
 
 BUILDDIR := $(LABDIR)/build
@@ -50,6 +55,6 @@ gdb:
 
 grade:
 	$(MAKE) distclean
-	$(Q)$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json -s $(SERIAL) make SERIAL=$(SERIAL) qemu-grade
+	$(Q)$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json $(GRADER_V) -s $(SERIAL) make SERIAL=$(SERIAL) qemu-grade
 
 .PHONY: qemu qemu-gdb gdb defconfig build clean distclean grade all
