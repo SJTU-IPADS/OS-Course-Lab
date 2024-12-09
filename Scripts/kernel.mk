@@ -42,7 +42,7 @@ distclean:
 qemu: build
 	$(Q)$(_QEMU) $(QEMU_OPTS)
 
-qemu-grade: build
+qemu-grade:
 	$(SCRIPTS)/change_serial $(KERNEL_IMG) $(SERIAL)
 	$(Q)$(_QEMU) $(QEMU_OPTS)
 
@@ -53,8 +53,11 @@ qemu-gdb: build
 gdb:
 	$(Q)$(GDB) --nx -x $(SCRIPTS)/gdb/gdbinit
 
-grade:
-	$(MAKE) distclean
+grade:  
+	$(Q)$(MAKE) distclean &> /dev/null
+	$(Q)(test -f ${LABDIR}/.config && cp ${LABDIR}/.config ${LABDIR}/.config.bak) || :
+	$(Q)$(MAKE) build
 	$(Q)$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json $(GRADER_V) -s $(SERIAL) make SERIAL=$(SERIAL) qemu-grade
+	$(Q)(test -f ${LABDIR}/.config.bak && cp ${LABDIR}/.config.bak ${LABDIR}/.config && rm .config.bak) || :
 
 .PHONY: qemu qemu-gdb gdb defconfig build clean distclean grade all

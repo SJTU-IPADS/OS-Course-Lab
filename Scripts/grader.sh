@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-test -f ${LABDIR}/.config && cp ${LABDIR}/.config ${LABDIR}/.config.bak
-
 if [[ -z $LABROOT ]]; then
 	echo "Please set the LABROOT environment variable to the root directory of your project. (Makefile)"
 	exit 1
@@ -22,8 +20,6 @@ fi
 
 info "Score: $score/100"
 bold "==========================================="
-
-test -f ${LABDIR}/.config.bak && cp ${LABDIR}/.config.bak ${LABDIR}/.config && rm .config.bak
 
 if [[ $score -lt 100 ]]; then
 	exit $?
