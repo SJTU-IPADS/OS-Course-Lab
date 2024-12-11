@@ -131,8 +131,7 @@ void handle_timer_irq(void)
         plat_handle_timer_irq(tick_delta);
         /* LAB 4 TODO BEGIN (exercise 6) */
         /* Decrease the budget of current thread by 1 if current thread is not NULL */
-
-        /* Then call sched to trigger scheduling */
+        /* We will call the sched_periodic in the caller handle_irq so no need to call sched() now. */
 
         /* LAB 4 TODO END (exercise 6) */
 }
