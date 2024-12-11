@@ -8,4 +8,4 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(libchcore-porting-symbols PRIVATE __unmapself.S)
+target_sources(libchcore-porting-symbols PRIVATE __unmapself.s)

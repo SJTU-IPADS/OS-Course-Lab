@@ -151,11 +151,11 @@ CC_CMD = $(CC) $(CFLAGS_ALL) -c -o $@ $<
 ifeq ($(ADD_CFI),yes)
 	AS_CMD = LC_ALL=C awk -f $(srcdir)/tools/add-cfi.common.awk -f $(srcdir)/tools/add-cfi.$(ARCH).awk $< | $(CC) $(CFLAGS_ALL) -x assembler -c -o $@ -
 else
-	AS_CMD = $(CC_CMD)
+	AS_CMD = $(CC) $(CFLAGS_ALL) -x assembler-with-cpp -c -o $@ $<
 endif
 
 obj/%.o: $(srcdir)/%.s
-	$(AS_CMD)
+	($(AS_CMD) 2> /dev/null) || $(CC_CMD)
 
 obj/%.o: $(srcdir)/%.S
 	$(CC_CMD)
@@ -164,7 +164,7 @@ obj/%.o: $(srcdir)/%.c $(GENH) $(IMPH)
 	$(CC_CMD)
 
 obj/%.lo: $(srcdir)/%.s
-	$(AS_CMD)
+	($(AS_CMD) 2> /dev/null) || $(CC_CMD)
 
 obj/%.lo: $(srcdir)/%.S
 	$(CC_CMD)

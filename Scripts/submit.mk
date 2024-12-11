@@ -1,6 +1,6 @@
 include $(CURDIR)/filelist.mk
 
-FILES := $(FILES) $(shell find -name "*.pdf" \
+FILES := $(FILES) $(shell find . -name "*.pdf" \
 		 -o -name "*.doc" \
 		 -o -name "*.docx")
 submit:

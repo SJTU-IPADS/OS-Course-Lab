@@ -101,7 +101,7 @@ add_custom_target(libc-build ALL
 # Install libc as usual
 add_custom_target(libc-install ALL
     WORKING_DIRECTORY ${_libc_target_dir}
-    COMMAND make install
+    COMMAND make -j1 install
     DEPENDS libc-build)
 
 # clean target

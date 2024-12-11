@@ -16,7 +16,7 @@ _QEMU := $(SCRIPTS)/qemu_wrapper.sh $(QEMU)
 QEMU_GDB_PORT := 1234
 QEMU_OPTS := -machine raspi3b -nographic -serial mon:stdio -m size=1G -kernel $(KERNEL_IMG)
 CHBUILD := $(SCRIPTS)/chbuild
-SERIAL := $(shell tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)
+SERIAL := $(shell LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)
 
 export LABROOT LABDIR SCRIPTS LAB TIMEOUT
 
