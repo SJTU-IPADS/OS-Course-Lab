@@ -59,9 +59,6 @@
 #include <object/memory.h>
 #include <sched/context.h>
 #include <common/util.h>
-#ifdef CHCORE_OPENTRUSTEE
-#include <uapi/opentrustee/ipc.h>
-#endif /* CHCORE_OPENTRUSTEE */
 
 /*
  * Overall, a server thread that declares a serivce with this interface
@@ -412,14 +409,9 @@ static void ipc_thread_migrate_to_server(struct ipc_connection *conn,
         // arch_set_thread_arg0(target, xxx);
         // arch_set_thread_arg1(target, xxx);
         // arch_set_thread_arg2(target, xxx);
+        // arch_set_thread_arg3(target, xxx);
+        
         /* LAB 4 TODO END (exercise 7) */
-#ifdef CHCORE_OPENTRUSTEE
-        /* pid == badge if CHCORE_OPENTRUSTEE */
-        // This is left empty for current lab.
-        // arch_set_thread_arg3(target, xxx);
-#else /* CHCORE_OPENTRUSTEE */
-        // arch_set_thread_arg3(target, xxx);
-#endif /* CHCORE_OPENTRUSTEE */
         set_thread_arch_spec_state_ipc(target);
 
         /* Switch to the target thread */

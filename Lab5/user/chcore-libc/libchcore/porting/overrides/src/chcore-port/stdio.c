@@ -130,9 +130,7 @@ static int get_one_char(void)
 
 static void put(char buffer[], unsigned size)
 {
-        /* LAB 3 TODO BEGIN */
-
-        /* LAB 3 TODO END */
+        chcore_syscall2(CHCORE_SYS_putstr, (vaddr_t)buffer, size);
 }
 
 #define MAX_LINE_SIZE 4095
