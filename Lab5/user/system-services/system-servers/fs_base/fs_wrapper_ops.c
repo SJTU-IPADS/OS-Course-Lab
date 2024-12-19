@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include "chcore/proc.h"
@@ -118,17 +118,41 @@ ssize_t default_ssize_t_server_operation(ipc_msg_t *ipc_msg,
 int fs_wrapper_open(badge_t client_badge, ipc_msg_t *ipc_msg,
                     struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin (TODO 4)*/
+        /* Lab 5 TODO Begin (Part 4)*/
+        /* Check the fr permission and open flag if necessary */
+
+        /* Use server_ops to open the file */
+
+        /* Check if the vnode_id is in rb tree.*/
+
+        /* If not, create a new vnode and insert it into the tree. */
+
+        /* If yes, then close the newly opened vnode and increment the refcnt of
+         * present vnode */
+
+        /* Alloc a server_entry and assign the vnode and client generated
+         * fd(fr->xxx) to it (Part3 Server fid)*/
+
+        /* Return the client fd */
+
         return 0;
-        /* Lab 5 TODO End (TODO 4)*/
+        /* Lab 5 TODO End (Part 4)*/
 }
 
 int fs_wrapper_close(badge_t client_badge, ipc_msg_t *ipc_msg,
                      struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin (TODO 4)*/
+        /* Lab 5 TODO Begin (Part 4)*/
+
+        /* Find the server_entry by client fd and client badge */
+
+        /* Decrement the server_entry refcnt */
+
+        /* If refcnt is 0, free the server_entry and decrement the vnode
+         * refcnt*/
+
         return 0;
-        /* Lab 5 TODO End (TODO 4)*/
+        /* Lab 5 TODO End (Part 4)*/
 }
 
 int fs_wrapper_chmod(badge_t client_badge, ipc_msg_t *ipc_msg,
@@ -141,9 +165,13 @@ int fs_wrapper_chmod(badge_t client_badge, ipc_msg_t *ipc_msg,
 static int __fs_wrapper_read_core(struct server_entry *server_entry, void *buf,
                                   size_t size, off_t offset)
 {
-        /* Lab 5 TODO Begin (TODO 4)*/
+        /* Lab 5 TODO Begin (Part 4)*/
+        /* Use server_ops to read the file into buf. */
+        /* Do check the boundary of the file and file permission correctly Check
+         * Posix Standard for further references. */
+        /* You also should update the offset of the server_entry offset */
         return 0;
-        /* Lab 5 TODO End (TODO 4)*/
+        /* Lab 5 TODO End (Part 4)*/
 }
 
 int fs_wrapper_read(ipc_msg_t *ipc_msg, struct fs_request *fr)
@@ -220,9 +248,13 @@ int fs_wrapper_pread(ipc_msg_t *ipc_msg, struct fs_request *fr)
 static int __fs_wrapper_write_core(struct server_entry *server_entry, void *buf,
                                    size_t size, off_t offset)
 {
-        /* Lab 5 TODO Begin (TODO 4)*/
+        /* Lab 5 TODO Begin (Part 4)*/
+        /* Use server_ops to write the file from buf. */
+        /* Do check the boundary of the file and file permission correctly Check
+         * Posix Standard for further references. */
+        /* You also should update the offset of the server_entry offset */
         return 0;
-        /* Lab 5 TODO End (TODO 4)*/
+        /* Lab 5 TODO End (Part 4)*/
 }
 
 int fs_wrapper_pwrite(ipc_msg_t *ipc_msg, struct fs_request *fr)
@@ -336,9 +368,10 @@ int fs_wrapper_write(ipc_msg_t *ipc_msg, struct fs_request *fr)
 
 int fs_wrapper_lseek(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
-        /* Lab 5 TODO Begin (TODO 4)*/
+        /* Lab 5 TODO Begin (Part 4)*/
+        /* Check the posix standard. Adjust the server_entry content.*/
         return 0;
-        /* Lab 5 TODO End (TODO 4)*/
+        /* Lab 5 TODO End (Part 4)*/
 }
 
 int fs_wrapper_ftruncate(ipc_msg_t *ipc_msg, struct fs_request *fr)
@@ -630,7 +663,8 @@ int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
                 }
         }
 
-        /* Open flags do not check if a file can be executed so we check it again here */
+        /* Open flags do not check if a file can be executed so we check it
+         * again here */
         if ((prot & PROT_EXEC) == PROT_EXEC) {
                 struct stat st;
                 ret = server_ops.fstatat(entry->path, &st, AT_SYMLINK_FOLLOW);
@@ -706,7 +740,8 @@ out_fail:
 int fs_wrapper_funmap(badge_t client_badge, ipc_msg_t *ipc_msg,
                       struct fs_request *fr)
 {
-    return fmap_area_remove(client_badge, (vaddr_t)fr->munmap.addr, fr->munmap.length);
+        return fmap_area_remove(
+                client_badge, (vaddr_t)fr->munmap.addr, fr->munmap.length);
 }
 
 int fs_wrapper_creat(ipc_msg_t *ipc_msg, struct fs_request *fr)
