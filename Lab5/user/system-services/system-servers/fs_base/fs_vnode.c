@@ -93,11 +93,11 @@ void fs_vnode_init(void)
 struct fs_vnode *alloc_fs_vnode(ino_t id, enum fs_vnode_type type, off_t size,
                                 void *private)
 {
-        /* Lab 5 TODO Begin (TODO 2) */
+        /* Lab 5 TODO Begin (Part 2) */
 
         return NULL;
 
-        /* Lab 5 TODO End (TODO 2) */
+        /* Lab 5 TODO End (Part 2) */
 }
 
 void push_fs_vnode(struct fs_vnode *n)
@@ -117,6 +117,7 @@ void pop_free_fs_vnode(struct fs_vnode *n)
 struct fs_vnode *get_fs_vnode_by_id(ino_t vnode_id)
 {
         /* Lab 5 TODO Begin (Part 2) */
+        /* Use the rb_xxx api */
         return NULL;
         /* Lab 5 TODO End (Part 2) */
 }
@@ -125,6 +126,7 @@ struct fs_vnode *get_fs_vnode_by_id(ino_t vnode_id)
 int inc_ref_fs_vnode(void *private)
 {
         /* Lab 5 TODO Begin (Part 2) */
+        /* Private is a fs_vnode */
         UNUSED(private);
         return 0;
         /* Lab 5 TODO End (Part 2) */
@@ -133,6 +135,7 @@ int inc_ref_fs_vnode(void *private)
 int dec_ref_fs_vnode(void *private)
 {
         /* Lab 5 TODO Begin (Part 2) */
+        /* Private is a fs_vnode Decrement its refcnt */
         UNUSED(private);
         return 0;
         /* Lab 5 TODO End (Part 2) */
