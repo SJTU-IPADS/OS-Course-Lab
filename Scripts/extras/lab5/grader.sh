@@ -5,7 +5,6 @@ SYSTEM_SERVER_DIR="${LABDIR}/user/system-services/system-servers"
 FSM_DIR="${SYSTEM_SERVER_DIR}/fsm"
 FS_BASE_DIR="${SYSTEM_SERVER_DIR}/fs_base"
 
-test -f ${LABDIR}/.config && cp ${LABDIR}/.config ${LABDIR}/.config.bak
 
 if [[ -z $LABROOT ]]; then
 	echo "Please set the LABROOT environment variable to the root directory of your project. (Makefile)"
@@ -23,6 +22,8 @@ score=0
 # Part1 FSM
 cp "${CMAKE_EXTRA_DIR}/cmake-fsm-full.txt" "${FSM_DIR}/CMakeLists.txt"
 cp "${CMAKE_EXTRA_DIR}/cmake-fs_base-part1.txt" "${FS_BASE_DIR}/CMakeLists.txt"
+make distclean &> /dev/null
+make build &> /dev/null
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part1.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
 if [[ $score -eq 255 ]]; then
@@ -32,24 +33,33 @@ fi
 # Part2 VNode
 cp "${CMAKE_EXTRA_DIR}/cmake-fsm-part2.txt" "${FSM_DIR}/CMakeLists.txt"
 cp "${CMAKE_EXTRA_DIR}/cmake-fs_base-part2-vnode.txt" "${FS_BASE_DIR}/CMakeLists.txt"
+make distclean &> /dev/null
+make build &> /dev/null
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part2.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
 if [[ $score -eq 255 ]]; then
 	error "Something went wrong. Please check the output of your program"
 	exit 0
 fi
+
 # Part3 Server Entry
+
 cp "${CMAKE_EXTRA_DIR}/cmake-fsm-part2.txt" "${FSM_DIR}/CMakeLists.txt"
 cp "${CMAKE_EXTRA_DIR}/cmake-fs_base-part2-server_entry.txt" "${FS_BASE_DIR}/CMakeLists.txt"
+make distclean &> /dev/null
+make build &> /dev/null
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part3.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
 if [[ $score -eq 255 ]]; then
 	error "Something went wrong. Please check the output of your program"
 	exit 0
 fi
+
 # Part4 Ops
 mv "${FSM_DIR}/CMakeLists.txt.bak" "${FSM_DIR}/CMakeLists.txt"
 mv "${FS_BASE_DIR}/CMakeLists.txt.bak" "${FS_BASE_DIR}/CMakeLists.txt"
+make distclean &> /dev/null
+make build &> /dev/null
 ${SCRIPTS}/capturer.py -f ${LABDIR}/scores-part4.json -t 30 make qemu-grade 2> /dev/null
 score=$(($score+$?))
 if [[ $score -eq 255 ]]; then
@@ -60,8 +70,6 @@ fi
 info "Score: $score/100"
 bold "==========================================="
 
-test -f ${LABDIR}/.config.bak && cp ${LABDIR}/.config.bak ${LABDIR}/.config && rm .config.bak
-cp "${CMAKE_EXTRA_DIR}/cmake-fsm-part2.txt" "${FSM_DIR}/CMakeLists.txt"
 
 if [[ $score -lt 100 ]]; then
 	exit $?
