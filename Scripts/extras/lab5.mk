@@ -51,7 +51,7 @@ gdb:
 
 grade:
 	$(Q)(test -f ${LABDIR}/.config && cp ${LABDIR}/.config ${LABDIR}/.config.bak) || :
-	$(Q)$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(LABDIR)/scores.json $(GRADER_V) -s $(SERIAL) make SERIAL=$(SERIAL) qemu-grade
+	$(Q)$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT)
 	$(Q)(test -f ${LABDIR}/.config.bak && cp ${LABDIR}/.config.bak ${LABDIR}/.config && rm .config.bak) || :
 
 .PHONY: qemu qemu-gdb gdb defconfig build clean distclean grade all
