@@ -66,10 +66,7 @@
 
 先总览代码，获取一个对源码的大致印象与结构
 
-<details>
-<summary>页表映射源码</summary>
-
-    
+```c
     #include <common/macro.h>
     #include "image.h"
     #include "boot.h"
@@ -276,10 +273,7 @@
                                                  | DEVICE_MEMORY /* Device memory */
                                                  | IS_VALID;
     }
-    
-
-</details>
-    
+```
 
 结合注释信息可知，这部分代码主要分为两部分：
 
