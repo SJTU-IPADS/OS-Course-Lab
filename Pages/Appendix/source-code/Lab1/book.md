@@ -34,7 +34,7 @@
 - EL2：用于虚拟化场景，**虚拟机监控器**通常运行在该特权级别。
 - EL3：与**安全特性**TrustZone相关，负责普通世界和安全世界之间的切换。
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/6b38de94-ae6a-4407-aea8-75e7dd2213db/4feff4bb-b130-4131-96d2-caa960975ddd/image.png)
+![](./assets/book1.jpg)
 
 这里需要注意的一点在于，对于许多ISA来说，当CPU运行在内核态运行用户ISA，一般会使用用户ISA的寄存器（如SP），这也是为什么从用户态切换到内核时，首先需要将用户态寄存器的值保存到内存。但是AArch64的做法是，为一些常用的用户态寄存器在不同特权级提供不同的硬件副本。例如对于栈寄存器SP，AArch64**提供了SP_EL0（用户态）与SP_EL1（内核态）**。其中，用户态在函数调用时使用SP_EL0，无法访问SP_EL1；内核态则使用SP_EL1。但也有权限读写SP_EL0。
 
@@ -44,7 +44,7 @@ AArch64的系统寄存器负责保存硬件系统状态，以及为操作系统�
 
 经过ICS的学习，相信我们的读者对于异常机制已经非常熟悉了，这里我们用一张图回顾一下异常控制流
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/6b38de94-ae6a-4407-aea8-75e7dd2213db/4484ef77-26d2-4be3-9f85-f56c7bef3310/image.png)
+![](./assets/book2.jpg)
 
 当操作系统发生异常事件导致“下陷”到内核态时，CPU只允许从固定的入口开始执行。为此，操作系统需要提前将代码的入口地址“告诉”处理器。对不同类型的异常事件，CPU通常支持设置不同的入口。这些**入口**通常以一张表的形式记录在内存中，也就是异常向量表，由操作系统负责构造。在系统启动后，操作系统会将**异常向量表的内存地址**写入CPU上的一个特殊寄存器——**异常向量表基地址寄存器**（如AArch64中的VBAR_EL1寄存器），然后开启中断，这样便完成了异常机制的初始化。
 
@@ -176,7 +176,7 @@ AArch64体系结构下一般为虚拟地址低48位参与地址翻译，页表�
 
 中间级的页表项直接指向物理页时，其指向的是大页（比下一级页表项指向的物理页大小更大）。此外页表项也可以存储一些属性位，允许操作系统设置读写等权限。若实际访问所需权限和页表项中设置的权限不一致，则MMU会在地址翻译中出发访问异常。下图为页表项格式
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/6b38de94-ae6a-4407-aea8-75e7dd2213db/74f22384-ee27-40cb-ad5a-1011224c1c4c/image.png)
+![](./assets/book3.jpg)
 
 ### 5、TLB：页表的缓存
 
@@ -194,7 +194,7 @@ CPU在上电启动后会默认使用物理地址，这是因为MMU的地址翻�
 
 下图为AArch64体系结构下的操作系统页表和应用进程页表
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/6b38de94-ae6a-4407-aea8-75e7dd2213db/85ad31c3-dc65-46f1-b41f-406ae364dde9/b1cb4768-5913-4a28-876b-3576de2ab86a.png)
+![](./assets/book4.jpg)
 
 ## 3、ChCore虚拟内存管理
 
@@ -291,7 +291,7 @@ CPU在执行msr指令时，PC中存放的指令地址是0x81000，由于MMU尚�
 
 下图展示了ChCore的启动过程：先使用物理过程，在使用经由启动页表翻译的虚拟地址，之后使用经由内核页表翻译的虚拟地址。
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/6b38de94-ae6a-4407-aea8-75e7dd2213db/00fa4be2-592b-40d4-a9fc-62f330840f3a/image.png)
+![](./assets/book5.jpg)
 
 ### 2、ChCore内存管理
 
