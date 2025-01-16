@@ -26,9 +26,12 @@ make_labs_env() {
 	"*suse*")
 		TOOLCHAINS["gdb"]="gdb"
 		;;
+	"nixos")
+		TOOLCHAINS["gdb"]="gdb"
+		;;
 	*)
 		error "Unsupported Linux Distribution: ${DIST}"
-		error "Supported OS Distributions are: ubuntu/debian, fedora, arch, gentoo, opensuse"
+		error "Supported OS Distributions are: ubuntu/debian, fedora, arch, gentoo, opensuse, nixos"
 		fatal "If you want to add support for your distribution, please submit a PR."
 		;;
 	esac

@@ -93,7 +93,7 @@ ci_sync() {
     if [ ! -d $repo_tool_dir ]; then
         _ci_init $@
     fi
-    repo sync -c --no-clone-bundle --no-tags -j$(nproc --all) -m $ci_manifest_name  --fetch-submodules
+    repo sync -c --no-clone-bundle --no-tags -j$(nproc --all) -m $ci_manifest_name --fetch-submodules
 }
 
 _init() {
@@ -139,7 +139,7 @@ config() {
     _check_config_file
     _config_ask
     _sync_config_with_cache
-    _echo_succ "Config syned to \`$config_file\` file."
+    _echo_succ "Config synced to \`$config_file\` file."
 }
 
 menuconfig() {
@@ -159,7 +159,7 @@ rambuild() {
     _echo_info "Building ramdisk..."
 
     cmake --build $cmake_build_dir --target rambuild --parallel $(nproc)
-    
+
     _echo_succ "Succeeded to rebuild ramdisk"
 }
 
@@ -167,7 +167,7 @@ build() {
     _check_config_file
     _config_ask
     _sync_config_with_cache
-    _echo_succ "Config syned to \`$config_file\` file."
+    _echo_succ "Config synced to \`$config_file\` file."
 
     if [ -z "$1" ]; then
         build_target="all"
@@ -265,7 +265,7 @@ _update_submodules() {
 }
 
 _docker_run() {
-    if [ -f /.dockerenv ]; then
+    if [[ -f /.dockerenv || -f /run/.containerenv ]]; then
         # we are already in docker container
         $@
     else
