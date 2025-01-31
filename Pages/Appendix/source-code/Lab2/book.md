@@ -399,10 +399,8 @@ void scan_and_swap(int num_page_to_swap)
                 swap_out(i);
                 --num_page_to_swap;
             }
-
-            tlb_flush();
-        }
     }
+    tlb_flush();
 }
 ```
 
