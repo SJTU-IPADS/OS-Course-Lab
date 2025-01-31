@@ -68,7 +68,7 @@ fs_cachep 是 fs_struct 类型的 Slab 缓存指针，该缓存会管理多个 f
 
 当需要分配 fs_struct 时，内核会调用：
 
-```jsx
+```c
 struct fs_struct *fs = kmem_cache_alloc(fs_cachep, GFP_KERNEL);
 ```
 
@@ -78,7 +78,7 @@ struct fs_struct *fs = kmem_cache_alloc(fs_cachep, GFP_KERNEL);
 
 当 fs_struct 不再需要时，调用：
 
-```jsx
+```c
 kmem_cache_free(fs_cachep, fs);
 ```
 
@@ -116,7 +116,7 @@ SLAB 分配器通过以下几种方式优化 CPU 缓存的利用率：
     
     例如：
     
-    ```jsx
+    ```c
     struct task_struct *t1 = kmem_cache_alloc(task_cache, GFP_KERNEL);
     struct task_struct *t2 = kmem_cache_alloc(task_cache, GFP_KERNEL);
     ```
@@ -137,7 +137,7 @@ SLUB 分配器是 Linux 内核中的一种 **优化版 SLAB 分配器**，它的
 
 **SLAB**：使用单独的 slab 结构来管理每个 slab 及其中的对象。每个 kmem_cache 对象有一个对应的 slab 列表，用来管理具体的内存分配。
 
-```jsx
+```c
 struct kmem_cache {
     const char *name;
     size_t obj_size;
@@ -154,7 +154,7 @@ struct slab {
 
 **SLUB**：SLUB 去除了 slab 结构，直接使用 struct page 来管理 slab 中的对象，简化了内存管理结构。每个 CPU 都有自己的 kmem_cache_cpu，管理空闲对象列表。
 
-```jsx
+```c
 struct kmem_cache {
     const char *name;
     size_t obj_size;
@@ -175,7 +175,7 @@ struct page {
 
 **SLAB**：由于多个 CPU 可能会同时访问同一个 slab，所以需要通过加锁来同步访问。每个 kmem_cache 都有一个全局的锁来管理 slab。
 
-```jsx
+```c
 struct kmem_cache {
     spinlock_t lock;  // 用于保护 kmem_cache 的访问
 };
@@ -183,7 +183,7 @@ struct kmem_cache {
 
 **SLUB**：SLUB 采用每个 CPU 独立管理空闲对象列表（freelist），因此在大多数情况下，不需要加锁，从而避免了锁争用，提高了并发性能。
 
-```jsx
+```c
 struct kmem_cache_cpu {
     void *freelist;  // 每个 CPU 独立管理，不需要加锁
 };
@@ -205,7 +205,7 @@ SLUB 基于每个 CPU 有独立的 freelist，这避免了对共享资源的频�
 
 **SLUB 代码：**
 
-```jsx
+```c
 struct kmem_cache_cpu {
     void *freelist;  // 每个 CPU 独立管理，支持 NUMA 亲和性
 };
@@ -221,7 +221,7 @@ struct page {
 
 **SLAB 代码：**
 
-```jsx
+```c
 void *slab_alloc(struct kmem_cache *cache) {
     struct slab *slab;
     if (slab->freelist) {
@@ -236,7 +236,7 @@ void *slab_alloc(struct kmem_cache *cache) {
 
 **SLUB 代码：**
 
-```jsx
+```c
 void *slub_alloc(struct kmem_cache *cache) {
     struct kmem_cache_cpu *cpu_cache = &per_cpu(cache->cpu_cache, smp_processor_id());
     if (cpu_cache->freelist) {
@@ -270,7 +270,7 @@ void *slub_alloc(struct kmem_cache *cache) {
     
     内核内存池和缓存的优化机制可以大大提升内存访问的效率。通过 **SLAB 分配器**，内核可以创建缓存池来存储常用的内存对象，以避免频繁的分配和回收。内存池还可以通过维护一些常用对象的缓存，提高内存的 **时间局部性**，从而减少内存访问的延迟。例如，SLAB 分配器通过将内存块组织成一个个对象的缓存池，可以有效地减少碎片，提高分配和回收的效率。
     
-    ```jsx
+    ```c
     struct kmem_cache *create_cache(const char *name, size_t size)
     {
         struct kmem_cache *cache;
@@ -285,7 +285,7 @@ void *slub_alloc(struct kmem_cache *cache) {
     
     内核关注 **空间局部性**，即在同一时间，程序对内存的访问通常会集中在一些相邻的内存区域，因此内核会尽量优化内存的页分配策略。例如，通过 **伙伴系统**（Buddy System）或 **SLAB 分配器** 来管理和回收内存，减少内存碎片并提高内存分配的速度。
     
-    ```jsx
+    ```c
     void *kmalloc(size_t size, gfp_t flags)
     {
         struct page *page;
@@ -321,7 +321,7 @@ void *slub_alloc(struct kmem_cache *cache) {
     
     **相关代码（malloc 内存池）：**
     
-    ```jsx
+    ```c
     void *malloc(size_t size)
     {
         void *ptr;
@@ -349,7 +349,7 @@ kmalloc 是内核空间的内存分配函数。其主要特点是提供快速分
 
 用户空间的内存管理更侧重于 **灵活性**，通过如 malloc 这样的分配函数，用户可以按需分配内存。用户内存分配的性能往往与分配器的设计、使用模式等因素密切相关， malloc 通过内部的缓存池、合并空闲内存块等技术来提升分配效率。
 
-malloc 是用户态的内存分配函数，背后通常由操作系统的动态链接库（如 **glibc**）来实现，采用的是 **堆管理** 和 **分配策略**，如使用 **双向链表** 管理空闲内存块(CSAPP 中的 malloc lab即采用不同管理策略）。
+malloc 是用户态的内存分配函数，背后通常由操作系统的动态链接库（如 **glibc**）来实现，采用的是 **堆管理** 和 **分配策略**，如使用 **双向链表** 管理空闲内存块（CSAPP 中的 malloc lab即采用不同管理策略）。
 
 ## **内存释放与回收**
 
