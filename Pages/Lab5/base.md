@@ -9,6 +9,7 @@
 在 FS_Base wrapper 中，ChCore 实现了 vnode 抽象，为文件系统中的对象（如文件、目录、符号链接等）提供一个统一的表示方式。
 
 ChCore 中 vnode 的定义为：
+
 ```C
 struct fs_vnode {
         ino_t vnode_id; /* identifier */
@@ -69,21 +70,21 @@ FS_Base 的 IPC handler 在处理 IPC 请求时，会先把 IPC 消息中包含�
 针对 mmap 操作，我们知道针对文件的 mmap 操作是采取 Demand Paging 的内存映射来实现的，当用户进程调用 `mmap` 时，FS 会首先为用户新增一个 `pmo` 即内存对象，并将其对应的类型设置为 `PMO_FILE`，并为其创建 `Page_Fault` 映射(`user/system-services/system-servers/fs_base/fs_page_fault.c`)，最后将该 `pmo` 对象发回用户进程并让其进行映射。当用户尝试访问该内存对象，并发生缺页异常时，内核会根据 pmo 的所有者(badge)将异常地址调用到对应FS处理函数进行处理，处理函数为每一个文件系统中的 `user_fault_handler`，此时 FS 服务器会根据缺页地址分配新的内存页，填充文件内容并完成缺页的处理，最终返回内核态，从而递交控制权到原来的用户进程。
 
 > [!CODING] 练习6
-> 实现 `user/system-services/system-servers/fs_base/fs_wrapper_ops.c` 中的 `fs_wrapper_open`、`fs_wrapper_close`、`fs_wrapper_read`、`fs_wrapper_pread`、`fs_wrapper_write`、`fs_wrapper_pwrite`、`fs_wrapper_lseek`、`fs_wrapper_fmap` 函数。
+> 实现 `user/system-services/system-servers/fs_base/fs_wrapper_ops.c` 中的 `fs_wrapper_open`、`fs_wrapper_close`、`__fs_wrapper_read_core`、`__fs_wrapper_write_core`, `fs_wrapper_lseek`函数。
 
 > [!HINT] Tip
->   * `user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/fs_defs.h` 中定义了 `struct fs_request`，其中定义了文件系统收到的 IPC 信息所包含的数据。
->   * 针对文件表项的helper函数如 `alloc_entry` 和 `free_entry` 在 `user/system-services/system-servers/fs_base/fs_vnode.c` 中定义。
->   * `user/system-services/system-servers/tmpfs/tmpfs.c` 中定义了 tmpfs 文件系统提供的文件操作接口 server_ops，fs_wrapper 接口会调用到 server_ops 进行实际的文件操作。
->   * 用户态的所有针对文件的请求，首先会被路由到 `user/chcore-libc/libchcore/porting/overrides/src/chcore-port/file.c` 中，该文件包含了在调用 `ipc` 前后的预备和收尾工作。
->   * 你应当回顾 Lab2 的代码，去了解针对 PMO_FILE，内核是怎么处理缺页并将其转发到FS中的。同时你需要查看 `user/system-services/system-servers/fs_base/fs_page_fault.c` 中的 `page_fault` 处理函数，了解 FS 是如何处理 mmap 缺页异常的。
+>
+> - `user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/fs_defs.h` 中定义了 `struct fs_request`，其中定义了文件系统收到的 IPC 信息所包含的数据。
+> - 针对文件表项的helper函数如 `alloc_entry` 和 `free_entry` 在 `user/system-services/system-servers/fs_base/fs_vnode.c` 中定义。
+> - `user/system-services/system-servers/tmpfs/tmpfs.c` 中定义了 tmpfs 文件系统提供的文件操作接口 server_ops，fs_wrapper 接口会调用到 server_ops 进行实际的文件操作。
+> - 用户态的所有针对文件的请求，首先会被路由到 `user/chcore-libc/libchcore/porting/overrides/src/chcore-port/file.c` 中，该文件包含了在调用 `ipc` 前后的预备和收尾工作。
+> - 你应当回顾 Lab2 的代码，去了解针对 PMO_FILE，内核是怎么处理缺页并将其转发到FS中的。同时你需要查看 `user/system-services/system-servers/fs_base/fs_page_fault.c` 中的 `page_fault` 处理函数，了解 FS 是如何处理 mmap 缺页异常的。
 
 > [!SUCCESS]
 > 完成练习6后，执行 `make grade`，可以得到 `Scores: 100/100`。
 
 > [!QUESTION] 练习7
 > 思考 ChCore 当前实现 VFS 的方式有何利弊？如果让你在微内核操作系统上实现 VFS 抽象，你会如何实现？
-
 
 ---
 
