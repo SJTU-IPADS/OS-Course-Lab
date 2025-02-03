@@ -43,35 +43,35 @@
 - Ubuntu/Debian
 
 ```console
-apt install qemu-system-aarch64 qemu-user python3 python3-pip python3-psutil make gdb-multiarch
+apt install qemu-system-aarch64 qemu-user python3 python3-pip python3-pexpect make gdb-multiarch
 
 ```
 
 - Fedora
 
 ```console
-dnf install qemu-system qemu-user python3 python3-pip python3-psutil make gdb
+dnf install qemu-system qemu-user python3 python3-pip python3-pexpect make gdb
 
 ```
 
 - Arch Linux
 
 ```console
-pacman -Sy qemu-user qemu-system-aarch64 python python-pip python-psutil base-devel gdb
+pacman -Sy qemu-user qemu-system-aarch64 python python-pip python-pexpect base-devel gdb
 
 ```
 
 - Gentoo
 
 ```console
-USE="qemu_mmu_targets_aarch64 qemu_user_targets_aarch64" emerge -1v qemu python dev-python/psutil python-pip make gdb qemu
+USE="qemu_mmu_targets_aarch64 qemu_user_targets_aarch64" emerge -1v qemu python dev-python/pexpect python-pip make gdb qemu
 
 ```
 
 - OpenSuse Tumbleweed
 
 ```console
-zypper install qemu qemu-linux-user python3 python3-psutil make gdb
+zypper install qemu qemu-linux-user python3 python3-pexpect make gdb
 
 ```
 
