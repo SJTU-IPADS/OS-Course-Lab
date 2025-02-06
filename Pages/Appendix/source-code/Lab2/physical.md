@@ -777,251 +777,24 @@ graph TD
 ```
 
 这里的对象即为内存块，在Chcore实现中用slot表示，下面会提到。实际的SLab分配器的设计可能用到full_slab链表也可能不会，具体根据其实现确定
-- **问题：怎么找到释放块所属的slab，一种方式是维护一个额外的full slab组，另一种方式是让slab的内存地址对齐，并在slab头部加上元数据实现**
 
-```c
-struct slab_pointer {
-        struct slab_header *current_slab;
-        struct list_head partial_slab_list;
-};
+查看本机Slab示例：
+```nasm
+sudo cat /proc/slabinfo
+
+kmalloc-4k           569    584   4096    8    8 : tunables    0    0    0 : slabdata     73     73      0
+kmalloc-2k           752    752   2048   16    8 : tunables    0    0    0 : slabdata     47     47      0
+kmalloc-1k           704    704   1024   32    8 : tunables    0    0    0 : slabdata     22     22      0
+kmalloc-512         2112   2112    512   32    4 : tunables    0    0    0 : slabdata     66     66      0
+kmalloc-256          768    768    256   32    2 : tunables    0    0    0 : slabdata     24     24      0
+kmalloc-192         1050   1050    192   42    2 : tunables    0    0    0 : slabdata     25     25      0
+kmalloc-128         1376   1376    128   32    1 : tunables    0    0    0 : slabdata     43     43      0
+kmalloc-96          1134   1134     96   42    1 : tunables    0    0    0 : slabdata     27     27      0
+kmalloc-64          3072   3072     64   64    1 : tunables    0    0    0 : slabdata     48     48      0
+kmalloc-32          3072   3072     32  128    1 : tunables    0    0    0 : slabdata     24     24      0
+kmalloc-16          6144   6144     16  256    1 : tunables    0    0    0 : slabdata     24     24      0
+kmalloc-8          12288  12288      8  512    1 : tunables    0    0    0 : slabdata     24     24      0
 ```
-
-在chcore之中采用的是内存对齐+元数据的方式，具体而言，元数据为：
-
-- 在每一个slab块的开头，维护一个其中内存槽slot的free list head
-- 在每一个内存槽slot之中，存一个next_free的指针
-- slab由buddy sys分配，保证slab header地址按 page 对齐
-
-这样，当我想要free addr时, 可以找到对应的page, 进而找到slab header, 进而得到free_list，最后在free_list之中插入这个slot, 然后由这个slab的空闲slot个数判断是否是 full → partial, partial→free, 从而进行插入partial list或者把slab空间归还给buddy sys的操作
-
-```c
-/*
- * order range: [SLAB_MIN_ORDER, SLAB_MAX_ORDER]
- * ChCore prepares the slab for each order in the range.
- */
-#define SLAB_MIN_ORDER (5)
-#define SLAB_MAX_ORDER (11)
-
-/* The size of one slab is 128K. */
-#define SIZE_OF_ONE_SLAB (128*1024)
-
-/* slab_header resides in the beginning of each slab (i.e., occupies the first slot). */
-struct slab_header {
-        /* The list of free slots, which can be converted to struct slab_slot_list. */
-        void *free_list_head;
-        /* Partial slab list. */
-        struct list_head node;
-
-        int order;
-        unsigned short total_free_cnt; /* MAX: 65536 */
-        unsigned short current_free_cnt;
-};
-
-/* Each free slot in one slab is regarded as slab_slot_list. */
-struct slab_slot_list {
-        void *next_free;
-};
-
-struct slab_pointer {
-        struct slab_header *current_slab;
-        struct list_head partial_slab_list;
-};
-
-/* All interfaces are kernel/mm module internal interfaces. */
-void init_slab(void);
-void *alloc_in_slab(unsigned long, size_t *);
-void free_in_slab(void *addr);
-unsigned long get_free_mem_size_from_slab(void);
-```
-
-```c
-static void try_insert_full_slab_to_partial(struct slab_header *slab)
-{
-        /* @slab is not a full one. */
-        if (slab->current_free_cnt != 0)
-                return;
-
-        int order;
-        order = slab->order;
-
-        list_append(&slab->node, &slab_pool[order].partial_slab_list);
-}
-static void try_return_slab_to_buddy(struct slab_header *slab, int order)
-{
-        /* The slab is whole free now. */
-        if (slab->current_free_cnt != slab->total_free_cnt)
-                return;
-
-        if (slab == slab_pool[order].current_slab)
-                choose_new_current_slab(&slab_pool[order], order);
-        else
-                list_del(&slab->node);
-
-        /* Clear the slab field in the page structures before freeing them. */
-        set_or_clear_slab_in_page(slab, SIZE_OF_ONE_SLAB, false);
-        free_pages_without_record(slab);
-}
-void free_in_slab(void *addr)
-{
-        struct page *page;
-        struct slab_header *slab;
-        struct slab_slot_list *slot;
-        int order;
-
-        slot = (struct slab_slot_list *)addr;
-        // 拿到对应的page
-        page = virt_to_page(addr);
-        if (!page) {
-                kdebug("invalid page in %s", __func__);
-                return;
-        }
-
-        slab = page->slab;
-        order = slab->order;
-        lock(&slabs_locks[order]);
-        // 检查是否是full -> partial(通过header中slot的free cnt)
-        try_insert_full_slab_to_partial(slab);
-
-#if ENABLE_DETECTING_DOUBLE_FREE_IN_SLAB == ON
-        /*
-         * SLAB double free detection: check whether the slot to free is
-         * already in the free list.
-         */
-        if (check_slot_is_free(slab, slot) == 1) {
-                kinfo("SLAB: double free detected. Address is %p\n",
-                      (unsigned long)slot);
-                BUG_ON(1);
-        }
-#endif
-
-        slot->next_free = slab->free_list_head;
-        slab->free_list_head = slot;
-        slab->current_free_cnt += 1;
-
-        try_return_slab_to_buddy(slab, order);
-
-        unlock(&slabs_locks[order]);
-}
-
-```
-
-**这里有一个很巧妙的类似union的设计**
-
-slot 是显式空闲链表的好处在于，在空闲时，slot的空间可以用来维护信息，例如
-
-```c
-struct slab_slot_list {
-        void *next_free; // 此处8字节
-};
-```
-
-但并没有影响slot的个数，缓存行和页的对齐
-
-**因为当实际alloc的时候，刚好这个slot不再是空闲链表的成员，不再需要它的信息**
-
-**所以可以直接返回slot的地址给调用者，覆盖掉这个next_free也没有任何关系**
-
-```c
-void *alloc_in_slab(unsigned long size, size_t *real_size)
-{
-				// real_size仅作统计用, 和slab无关
-        int order;
-
-        BUG_ON(size > order_to_size(SLAB_MAX_ORDER));
-
-        order = (int)size_to_order(size);
-        if (order < SLAB_MIN_ORDER)
-                order = SLAB_MIN_ORDER;
-
-#if ENABLE_MEMORY_USAGE_COLLECTING == ON
-        if (real_size)
-                *real_size = 1 << order;
-#endif
-				// 这里直接返回了这个slot的指针
-        return alloc_in_slab_impl(order);
-}
-```
-
-值得借鉴的还有alloc_in_slab_impl的lazy init
-
-```c
-static void *alloc_in_slab_impl(int order)
-{
-        struct slab_header *current_slab;
-        struct slab_slot_list *free_list;
-        void *next_slot;
-
-        lock(&slabs_locks[order]);
-			  // 这里做了一个lazy init, 不仅在资源上获得了一定的优势, 还简化了整体init模块的逻辑，
-			  // 把内部实现的部分全部放到了内部接口里面，保持外界的无感知，即为"高内聚低耦合"
-        current_slab = slab_pool[order].current_slab;
-        /* When serving the first allocation request. */
-        if (unlikely(current_slab == NULL)) {
-                current_slab = init_slab_cache(order, SIZE_OF_ONE_SLAB);
-                if (current_slab == NULL) {
-                        unlock(&slabs_locks[order]);
-                        return NULL;
-                }
-                slab_pool[order].current_slab = current_slab;
-        }
-
-        free_list = (struct slab_slot_list *)current_slab->free_list_head;
-        BUG_ON(free_list == NULL);
-
-        next_slot = free_list->next_free;
-        current_slab->free_list_head = next_slot;
-
-        current_slab->current_free_cnt -= 1;
-        /* When current_slab is full, choose a new slab as the current one. */
-        if (unlikely(current_slab->current_free_cnt == 0))
-                choose_new_current_slab(&slab_pool[order], order);
-
-        unlock(&slabs_locks[order]);
-
-        return (void *)free_list;
-}
-
-```
-
-最后的init函数就很简单了
-
-```c
-void init_slab(void)
-{
-        int order;
-
-        /* slab obj size: 32, 64, 128, 256, 512, 1024, 2048 */
-        for (order = SLAB_MIN_ORDER; order <= SLAB_MAX_ORDER; order++) {
-                lock_init(&slabs_locks[order]);
-                slab_pool[order].current_slab = NULL;
-                init_list_head(&(slab_pool[order].partial_slab_list));
-        }
-        kdebug("mm: finish initing slab allocators\n");
-}
-```
-
-梳理一下最终的实现逻辑:
-
-预留空间(全局变量): 各个order的slab组的结构体array和对应的lock
-
-init:
-
-- 初始化 32~ 2048 字节为slot的各个slab, 每一个slab为 `SIZE_OF_ONE_SLAB=128K` 大小，初始化对应的锁，对全局变量的slab array的 `free_list_head` `current_slab` `partial_slab_list` 初始化
-
-alloc:
-
-- 判断参数正确性
-- 如果current slab为null，为第一次分配，调用 `init_slab_cache` 进行初始化，从buddy system之中拿 `SIZE_OF_ONE_SLAB` 大小的空间，之后在第一个slot处初始化头元数据（总slot数量，slab order, free_list_head, 当前空闲slot数量），然后循环将每个slot的next_free指向下一个
-- 拿锁，从current slab的free list之中拿走第一个slot，空闲块数量-=1，修改free list头指针
-- 如果此时current slab是full, 从partial_slab_list之中拿一个过来作为新current
-- 放锁，返回slot的地址
-
-free:
-
-- 从addr拿到page和其他slab头信息
-- 拿锁，将free的slot头插回slab的free list
-- 如果slab原先是full，放回partial; 如果现在是空，放回buddy sys(如果是current, 先选择新current)
-- 放锁
 
 ## Chcore中SLab分配器的设计
 
@@ -1087,7 +860,18 @@ Chcore中的SLab分配器设定大体服从书上的安排，以内存池为单�
 是Chcore中代表一个个具体的slab的对象，其成员包含：
 
 - `void *free_list_head` ：内部空闲slot的链表
-- `struct list_head node` ：partial中表示自身的节点，如何由节点反过来得到其处于的slab？内存地址对齐+slab元数据
+- `struct list_head node` ：partial中表示自身的节点
+
+如何由节点反过来得到其处于的slab？
+
+在chcore之中采用的是内存对齐+元数据的方式，具体而言，元数据为：
+
+- 在每一个slab块的开头，维护一个其中内存槽slot的free list head
+- 在每一个内存槽slot之中，存一个next_free的指针
+- slab由buddy sys分配，保证slab header地址按 page 对齐
+
+这样，当我想要free addr时, 可以找到对应的page, 进而找到slab header, 进而得到free_list，最后在free_list之中插入这个slot, 然后由这个slab的空闲slot个数判断是否是 full → partial, partial→free, 从而进行插入partial list或者把slab空间归还给buddy sys的操作
+
 - `int order` ：该slab的阶数
 - `total_free_cnt & current_free_cnt` ：总的空闲块数 & 当前空闲块数
 
