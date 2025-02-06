@@ -158,7 +158,7 @@ END_FUNC(_start)
 
 ```
 
-以上代码有两部分我们应该注意：wait_for_bss_clear 和 wait_until_smp_enabled。当第一个CPU core执行到 init.c 的时候会调用clear_bss 将clear_bss_flag 设置为0 然后其他CPU core 会切换异常级别并建立stack但会停在wait_until_smp_enabled这部分。第一个CPU core 继续执行 init.c 中的代码（初始化串口输出，配置页表，启用MMU,然后调用start_kernel 跳转到main.c ）第一个CPU Core 在main.c 中执行完时钟，调度器，锁的初始化后其他CPU Core 开始初始化。故答案应是在多核系统中，时钟、调度器和锁是多个核心共享的资源。在初始化时，如果多个核心同时访问这些资源���可能会引发竞争条件或未定义的行为。
+以上代码有两部分我们应该注意：wait_for_bss_clear 和 wait_until_smp_enabled。当第一个CPU core执行到 init.c 的时候会调用clear_bss 将clear_bss_flag 设置为0 然后其他CPU core 会切换异常级别并建立stack但会停在wait_until_smp_enabled这部分。第一个CPU core 继续执行 init.c 中的代码（初始化串口输出，配置页表，启用MMU,然后调用start_kernel 跳转到main.c ）第一个CPU Core 在main.c 中执行完时钟，调度器，锁的初始化后其他CPU Core 开始初始化。故答案应是在多核系统中，时钟、调度器和锁是多个核心共享的资源。在初始化时，如果多个核心同时访问这些资源，可能会引发竞争条件或未定义的行为。
 
 接着看XV6代码：
 
@@ -364,7 +364,7 @@ main()
 
 #### Part 2.1：BIOS之前的故事
 
-由于Chcore文档并未过多讲述执行内核代码之前的事��，我们将基于Linux讲述执行内核代码之前的工作，以下描述主要讲述大体流程，细节并未十分完善。
+由于Chcore文档并未过多讲述执行内核代码之前的事，我们将基于Linux讲述执行内核代码之前的工作，以下描述主要讲述大体流程，细节并未十分完善。
 
 需要注意的一点是，内核代码很重要，但它并不是一开始就执行的，因为有一些非常基本的初始化工作要做，这主要与硬件有关。在Linux中，我们按下按钮，主板会从电池获取信号，然后启动CPU，CPU 则复位寄存器的所有数据，并设置每个寄存器的预定值，并且在 CPU 寄存器中定义了如下预定义数据：
 
