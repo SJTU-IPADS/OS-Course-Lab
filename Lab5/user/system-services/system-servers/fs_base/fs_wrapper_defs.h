@@ -87,6 +87,8 @@ struct fs_server_ops {
         ssize_t (*read)(void *operator, off_t offset, size_t size, char *buf);
         ssize_t (*write)(void *operator, off_t offset, size_t size,
                          const char *buf);
+
+        /* NOTE: close operates on a private vnode return by open*/
         int (*close)(void *operator, bool is_dir, bool do_close);
         int (*chmod)(char *pathname, mode_t mode);
 

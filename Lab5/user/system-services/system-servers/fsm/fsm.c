@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include "fsm.h"
@@ -80,7 +80,8 @@ static int boot_tmpfs(void)
         ipc_msg =
                 ipc_create_msg(procmgr_ipc_struct, sizeof(struct proc_request));
         pr.req = PROC_REQ_GET_SERVICE_CAP;
-        strncpy(pr.get_service_cap.service_name, SERVER_TMPFS,
+        strncpy(pr.get_service_cap.service_name,
+                SERVER_TMPFS,
                 SERVICE_NAME_LEN);
 
         ipc_set_msg_data(ipc_msg, &pr, 0, sizeof(pr));
@@ -144,7 +145,17 @@ int fsm_mount_fs(const char *path, const char *mount_point)
         }
 
         /* Lab 5 TODO Begin (Part 1) */
+        /* HINT: fsm has the ability to request page_cache syncing and mount and
+         * unmount request to the corresponding filesystem. Register an ipc client for each node*/
+        
+        /* mp_node->_fs_ipc_struct = ipc_register_client(...) */
+
+        /* Increment the fs_num */
+
+        /* Set the correct return value */
+
         UNUSED(mp_node);
+
         pthread_rwlock_unlock(&mount_point_infos_rwlock);
         /* Lab 5 TODO End (Part 1) */
 
@@ -236,9 +247,44 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
         fsm_req = (struct fsm_request *)ipc_get_msg_data(ipc_msg);
         switch (fsm_req->req) {
         case FSM_REQ_PARSE_PATH: {
-                // Get Corresponding MOUNT_INFO
                 /* Lab 5 TODO Begin (Part 1) */
+
+                /* HINT: MountInfo is the info node that records each mount
+                 * point and actual path*/
+                /* It also contains a ipc_client that delegates the actual
+                 * filesystem. PARSE_PATH is the actual vfs layer that does the
+                 * path traversing */
+                /* e.g. /mnt/ -> /dev/sda1 /mnt/1 -> /dev/sda2 */
+                /* You should use the get_mount_point function to get
+                 * mount_info. for example get_mount_info will return
+                 * mount_info(/mnt/1/123) node that represents /dev/sda2.*/
+                /* You should use get_mount_info to get the mount_info and set
+                 * the fsm_req ipc_msg with mount_id*/
+
+                /* lock the mount_info with rdlock */
+
+                /* mpinfo = get_mount_point(..., ...) */
+
+                /* lock the client_cap_table with mutex */
+
+                /* mount_id = fsm_get_client_cap(...) */
+
+                /* if mount_id is not present, we first register the cap set the
+                 * cap and get mount_id */
+
+                /* set the mount_id, mount_path, mount_path_len in the fsm_req
+                 */
+
+                /* Specifically if we register a new fs_cap in the cap_table, we
+                 * should let the caller know with a fsm_req->new_cap_flag and
+                 * then return fs_cap (noted above from mount_id) to the
+                 * caller*/
+
+                /* Before returning to the caller , unlock the client_cap_table
+                 * and mount_info_table */
+
                 UNUSED(mpinfo);
+
                 UNUSED(mount_id);
                 /* Lab 5 TODO End (Part 1) */
                 break;
@@ -258,8 +304,8 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
         }
         default:
                 error("%s: %d Not impelemented yet\n",
-                        __func__,
-                        ((int *)(ipc_get_msg_data(ipc_msg)))[0]);
+                      __func__,
+                      ((int *)(ipc_get_msg_data(ipc_msg)))[0]);
                 usys_exit(-1);
                 break;
         }
@@ -270,7 +316,8 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
                 ipc_return(ipc_msg, ret);
 }
 
-static void* fsm_server_thread_for_itself(void* args){
+static void *fsm_server_thread_for_itself(void *args)
+{
         info("[FSM] register server value = %u\n",
              ipc_register_server_with_destructor(fsm_dispatch,
                                                  DEFAULT_CLIENT_REGISTER_HANDLER,
@@ -287,7 +334,10 @@ int main(int argc, char *argv[], char *envp[])
              ipc_register_server_with_destructor(fsm_dispatch,
                                                  DEFAULT_CLIENT_REGISTER_HANDLER,
                                                  fsm_destructor));
-        server_cap = chcore_pthread_create(&fsm_server_thread_id, NULL, fsm_server_thread_for_itself, NULL);
+        server_cap = chcore_pthread_create(&fsm_server_thread_id,
+                                           NULL,
+                                           fsm_server_thread_for_itself,
+                                           NULL);
         mount_disk_fs(server_cap);
         usys_exit(0);
         return 0;

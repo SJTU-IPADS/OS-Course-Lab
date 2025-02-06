@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS), Shanghai Jiao Tong University (SJTU)
- * Licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * Copyright (c) 2023 Institute of Parallel And Distributed Systems (IPADS),
+ * Shanghai Jiao Tong University (SJTU) Licensed under the Mulan PSL v2. You can
+ * use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
  *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY
+ * KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. See the
+ * Mulan PSL v2 for more details.
  */
 
 #include "chcore-internal/procmgr_defs.h"
@@ -108,20 +108,21 @@ void init_fs_wrapper(void)
 
 /* +++++++++++++++++++++++++++ FID Mapping ++++++++++++++++++++++++++++++++ */
 
+/* Same as the previous fs_cap_table. Organize it in linked list */
 /* Get (client_badge, fd) -> fid(server_entry) mapping */
 int fs_wrapper_get_server_entry(badge_t client_badge, int fd)
 {
-        /* Lab 5 TODO Begin (TODO 3)*/
+        /* Lab 5 TODO Begin (Part 3)*/
         return -1;
-        /* Lab 5 TODO End (TODO 3)*/
+        /* Lab 5 TODO End (Part 3)*/
 }
 
 /* Set (client_badge, fd) -> fid(server_entry) mapping */
 int fs_wrapper_set_server_entry(badge_t client_badge, int fd, int fid)
 {
-        /* Lab 5 TODO Begin (TODO 3)*/
+        /* Lab 5 TODO Begin (Part 3)*/
         return 0;
-        /* Lab 5 TODO End (TODO 3)*/
+        /* Lab 5 TODO End (Part 3)*/
 }
 
 void fs_wrapper_clear_server_entry(badge_t client_badge, int fid)

@@ -19,11 +19,15 @@ LABDIR  := $(LABROOT)/Lab$(LAB)
 SCRIPTS := $(LABROOT)/Scripts
 GRADER  ?= $(SCRIPTS)/grader.sh
 
-include $(SCRIPTS)/env_generated.mk
+# Toolchain Configuration
+ifeq ($(shell command -v gdb-multiarch 2> /dev/null),)
+# Default to gdb if gdb-multiarch is not available
+# This is only the case on debian-based distros
+	GDB := gdb
+else
+	GDB := gdb-multiarch
+endif
 
-
-# Toolchain configuration
-GDB ?= gdb
 DOCKER ?= docker
 DOCKER_IMAGE ?= ipads/oslab:24.09
 ifeq (,$(wildcard /docker.env))

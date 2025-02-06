@@ -5,12 +5,15 @@ if [[ -z $LABROOT ]]; then
 	exit 1
 fi
 
-. ${LABROOT}/Scripts/shellenv.sh
+
+SCRIPTS=${LABROOT}/Scripts
+
+. ${SCRIPTS}/shellenv.sh
 
 info "Grading lab ${LAB} ...(may take ${TIMEOUT} seconds)"
 
 bold "==========================================="
-${LABROOT}/Scripts/capturer.py $@ 2> /dev/null
+${SCRIPTS}/expect.py $@
 score=$?
 
 if [[ $score -eq 255 ]]; then
@@ -18,7 +21,7 @@ if [[ $score -eq 255 ]]; then
 	exit 0
 fi
 
-info "Score: $score/100"
+info "Score: ${score}/100"
 bold "==========================================="
 
 if [[ $score -lt 100 ]]; then
