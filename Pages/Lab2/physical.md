@@ -37,8 +37,8 @@ ChCore 中每个由伙伴系统管理的内存区域称为一个 `struct phys_me
 
 有了伙伴系统和 SLAB 分配器，就可以实现 `kmalloc` 了。
 
-> [!CODING] 练习题 3 
->  完成 `kernel/mm/kmalloc.c` 中的 `_kmalloc` 函数中的 `LAB 2 TODO 3` 部分，在适当位置调用对应的函数，实现 `kmalloc` 功能
+> [!CODING] 练习题 3
+> 完成 `kernel/mm/kmalloc.c` 中的 `_kmalloc` 函数中的 `LAB 2 TODO 3` 部分，在适当位置调用对应的函数，实现 `kmalloc` 功能
 
 > [!HINT]
 >
@@ -53,7 +53,7 @@ ChCore 中每个由伙伴系统管理的内存区域称为一个 `struct phys_me
 
 > [!SUCCESS]
 > 以上为Lab2 Part1的所有内容。
-> 
+>
 > 正确完成这一部分的练习题后，运行 `make grade`，你应当能够得到 30 分。注意，测试可能会遗漏你代码中的一些问题。因此即使通过这部分测试，代码中的隐藏问题也可能会对后续实验产生影响导致无法通过最终的测试。不过，我们会按照 `make grade` 的结果为你计分。^_^
 
 [^buddy]: 操作系统：原理与实现，5.1.3 伙伴系统原理

@@ -110,6 +110,7 @@ procmgr-->kernel_img
 kernel-->kernel_img
 
 ```
+
 `procmgr`是一个自包含的`ELF`程序，其代码在`procmgr`中列出，其主要包含一个`ELF`执行器以及作为Chcore微内核的`init`程序启动，其构建主要依赖于`fsm.srv`以及`tmpfs.srv`，其中`fsm.srv`为文件系统管理器其扮演的是虚拟文件系统的角色用于桥接不同挂载点上的文件系统的实现，而`tmpfs.srv`则是`Chcore`的根文件系统其由`ramdisk`下面的所有文件以及构建好`libc.so`所打包好的`ramdisk.cpio`构成。当构建完`tmpfs.srv`后其会跟`libc.so`进行动态链接，最终`tmpfs.srv`以及`fsm.srv`会以incbin脚本的形式以二进制的方式被连接至`procmgr`的最后。在构建`procmgr`的最后一步，`cmake`会调用`read_procmgr_elf_tool`将`procmgr`这个`ELF`文件的缩略信息粘贴至`procmgr`之前。此后`procmgr`也会以二进制的方式进一步嵌套进入内核镜像之后，最终会在`create_root_thread`的阶段通过其`elf`符号得以加载。 最终，Chcore的Kernel镜像的拓扑结构如下
 
 ```mermaid
