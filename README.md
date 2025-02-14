@@ -8,7 +8,7 @@
 [![forthebadge](Assets/docs.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/)
 [![forthebadge cc-nc-sa](http://ForTheBadge.com/images/badges/cc-nc-sa.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 
-本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验位于独立的目录。
+本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验位于独立的目录，附有详细的[实验说明](https://sjtu-ipads.github.io/OS-Course-Lab/)和[源码解析](https://sjtu-ipads.github.io/OS-Course-Lab/Appendix/source-code/Lab1/booting.html)。
 
 课程教材:
 
