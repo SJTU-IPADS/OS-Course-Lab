@@ -24,4 +24,4 @@ jobs:
           submodules: true
           fetch-depth: 0
       - name: Build Lab1
-        run: Scripts/gendeps.sh && cd Lab1 && make
+        run: cd Lab1 && make
