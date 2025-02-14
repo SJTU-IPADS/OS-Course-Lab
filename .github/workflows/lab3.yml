@@ -1,0 +1,27 @@
+name: Lab3
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - Lab3/**
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: ipads/oslab:24.09
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build Lab3
+        run: Scripts/gendeps.sh && cd Lab3 && make

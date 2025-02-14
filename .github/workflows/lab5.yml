@@ -1,0 +1,27 @@
+name: Lab5
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - Lab5/**
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: ipads/oslab:24.09
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Build Lab5
+        run: Scripts/gendeps.sh && cd Lab5 && make
