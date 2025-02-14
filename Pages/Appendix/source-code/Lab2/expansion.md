@@ -14,7 +14,7 @@
 
 Slab 分配器的核心优势不仅在于高效地管理小内存块，还在于它能够**缓存常用对象**，使得对象在释放后能够被快速复用，而不需要每次重新初始化和分配。这个机制在内核中极为重要，因为许多数据结构需要频繁分配和释放，而初始化这些结构的开销可能**与分配内存本身的开销相当**，甚至更高。
 
-### 在 Slab 分配器中，对象缓存（Object Caching）指的是：
+### 在 Slab 分配器中，对象缓存（Object Caching）指的是
 
 - 释放的对象不会立即归还给**伙伴系统（Buddy System）**，而是被**保留在 Slab 的内部缓存中**。
 - 当同类型的对象再次需要分配时，**优先复用最近释放的对象**，而不是重新向伙伴系统申请内存并进行初始化。
@@ -26,11 +26,11 @@ Slab 分配器的核心优势不仅在于高效地管理小内存块，还在于
 - task_struct（进程描述符）
 - inode（文件索引节点）
 
-### 那么为什么需要对象缓存:
+### 那么为什么需要对象缓存
 
 **（1）减少初始化开销**
 
-某些数据结构的初始化开销**远远大于**分配它们的内存开销。例如，fs_struct 结构用于存储进程的文件系统信息，当一个进程创建时，内核必须为其分配 fs_struct，并初始化其中的多个字段。这个初始化过程可能包括：	
+某些数据结构的初始化开销**远远大于**分配它们的内存开销。例如，fs_struct 结构用于存储进程的文件系统信息，当一个进程创建时，内核必须为其分配 fs_struct，并初始化其中的多个字段。这个初始化过程可能包括：
 
 - 设置默认值
 - 复制文件系统信息
@@ -97,36 +97,36 @@ fs 并不会被立即释放，而是放入 fs_cachep 的**空闲对象列表。*
 SLAB 分配器通过以下几种方式优化 CPU 缓存的利用率：
 
 - **分配对齐（Cache Alignment）**
-    
+
     在 SLAB 分配对象时，内核会尝试让对象**按 CPU 缓存行（Cache Line）大小对齐**，从而减少**缓存行拆分（Cache Line Splitting）** 和 **伪共享（False Sharing）**。
-    
+
 - **减少缓存污染（Cache Pollution）**
-    
+
     如果内核频繁分配和释放对象，而这些对象的地址在物理内存中分散，那么 CPU 缓存可能会被无用的数据填满，导致缓存命中率下降。这种情况称为**缓存污染（Cache Pollution）**。
-    
+
      **SLAB 如何减少缓存污染？**
-    
+
     1. **优先复用最近释放的对象**，而不是重新分配新内存。
     2. **局部性优化（Locality Optimization）**，让同一类对象尽量存储在相邻的缓存行中，提高访问连续性。
 - **提高缓存命中率（Cache Hit Rate）**
-    
+
     SLAB 分配器通过**空间局部性（Spatial Locality）** 和 **时间局部性（Temporal Locality）** 机制，提高 CPU 缓存的命中率。
-    
+
     **空间局部性优化：**SLAB 让**相同类型的对象存储在连续的内存块中**，使得 CPU 在访问一个对象时，能够**预加载**相邻的对象，提高缓存命中率。
-    
+
     例如：
-    
+
     ```c
     struct task_struct *t1 = kmem_cache_alloc(task_cache, GFP_KERNEL);
     struct task_struct *t2 = kmem_cache_alloc(task_cache, GFP_KERNEL);
     ```
-    
+
     如果 t1 和 t2 被分配到**连续的物理地址**，那么当 CPU 读取 t1 时，很可能会**预加载** t2，提高缓存利用率。
-    
+
     **时间局部性优化：SLAB 让最近使用的对象尽可能留在缓存中**，如果短时间内需要再次使用相同的对象，就可以**避免重新加载主存**。
-    
+
     例如，当进程频繁创建/销毁 fs_struct，SLAB 会优先复用**最近释放**的 fs_struct，因为它仍然可能在 L1/L2 缓存中。
-    
+
 - **NUMA 亲和性优化（NUMA Affinity）**
 
 ## SLUB 简介
@@ -251,8 +251,8 @@ void *slub_alloc(struct kmem_cache *cache) {
 
 参考论文：
 
-- https://github.com/0voice/computer_expert_paper/blob/main/%E6%8E%A5%E8%BF%91%E5%8E%9F%E5%A7%8B%E7%9A%84LinuxOS/%E3%80%8ASlab%20allocators%20in%20the%20Linux%20KernelSLAB%2C%20SLOB%2C%20SLUB%E3%80%8B.pdf
-- https://github.com/0voice/computer_expert_paper/blob/main/%E6%8E%A5%E8%BF%91%E5%8E%9F%E5%A7%8B%E7%9A%84LinuxOS/%E3%80%8AThe%20Slab%20AllocatorAn%20Object-Caching%20Kernel%20Memory%20Allocator%E3%80%8B.pdf
+- <https://github.com/0voice/computer_expert_paper/blob/main/%E6%8E%A5%E8%BF%91%E5%8E%9F%E5%A7%8B%E7%9A%84LinuxOS/%E3%80%8ASlab%20allocators%20in%20the%20Linux%20KernelSLAB%2C%20SLOB%2C%20SLUB%E3%80%8B.pdf>
+- <https://github.com/0voice/computer_expert_paper/blob/main/%E6%8E%A5%E8%BF%91%E5%8E%9F%E5%A7%8B%E7%9A%84LinuxOS/%E3%80%8AThe%20Slab%20AllocatorAn%20Object-Caching%20Kernel%20Memory%20Allocator%E3%80%8B.pdf>
 
 # 用户态 VS 内核态
 
@@ -267,9 +267,9 @@ void *slub_alloc(struct kmem_cache *cache) {
 **内核内存管理**的关键：
 
 - **内核通过内存池、缓存优化时间局部性**
-    
+
     内核内存池和缓存的优化机制可以大大提升内存访问的效率。通过 **SLAB 分配器**，内核可以创建缓存池来存储常用的内存对象，以避免频繁的分配和回收。内存池还可以通过维护一些常用对象的缓存，提高内存的 **时间局部性**，从而减少内存访问的延迟。例如，SLAB 分配器通过将内存块组织成一个个对象的缓存池，可以有效地减少碎片，提高分配和回收的效率。
-    
+
     ```c
     struct kmem_cache *create_cache(const char *name, size_t size)
     {
@@ -278,13 +278,13 @@ void *slub_alloc(struct kmem_cache *cache) {
         return cache;
     }
     ```
-    
+
 - **页粒度管理内存，关注内存的局部性**
-    
+
     在内核中，内存的管理通常是基于 **页**（Page）来进行的，操作系统通过 **分页机制** 来将内存划分为一个个固定大小的页（通常为4KB），从而进行内存的管理。分页机制不仅可以提高内存分配的效率，还能实现 **内存保护**，防止不同进程之间的内存干扰。
-    
+
     内核关注 **空间局部性**，即在同一时间，程序对内存的访问通常会集中在一些相邻的内存区域，因此内核会尽量优化内存的页分配策略。例如，通过 **伙伴系统**（Buddy System）或 **SLAB 分配器** 来管理和回收内存，减少内存碎片并提高内存分配的速度。
-    
+
     ```c
     void *kmalloc(size_t size, gfp_t flags)
     {
@@ -299,15 +299,15 @@ void *slub_alloc(struct kmem_cache *cache) {
         return page_address(page);  // 返回实际的内存地址
     }
     ```
-    
+
     在这个代码中，kmalloc 函数通过 alloc_pages 按页分配内存，并通过 page_address 获取到实际的内存地址。
-    
+
 - **内存的分配与回收由内核控制，操作相对简单、直接**
-    
+
     在内核中，内存的分配与回收是由内核来管理的。为了减少内存分配时的复杂度和开销，内核采用了简化的分配策略，比如通过 **kmalloc** 进行内存分配，内存回收则使用 **kfree** 函数。在内核内存管理中，回收内存通常不需要依赖于垃圾回收机制，而是通过明确的函数调用进行。
-    
+
     内核空间的内存分配采用的策略是：通过 **伙伴系统**（Buddy System）进行物理内存块的管理，内核直接控制内存的分配与回收，因此操作简单、直接。
-    
+
 
 ### **用户态**
 
@@ -316,11 +316,11 @@ void *slub_alloc(struct kmem_cache *cache) {
 **用户内存管理**的关键：
 
 - **用户内存管理更加灵活，使用堆进行内存分配**
-    
+
     在用户空间，内存管理通常更加 **灵活**，最常见的方式就是通过 **堆**（Heap）来分配内存。堆内存的分配非常灵活，可以在程序运行时动态地申请和释放内存。与内核态的内存分配不同，用户空间通过标准库函数（如 malloc）来管理堆上的内存，并且可以在程序运行过程中对内存进行管理。malloc 提供了灵活的内存管理策略，例如通过 **内存池** 和 **缓存机制** 来避免频繁的分配与释放操作，优化程序的性能。
-    
+
     **相关代码（malloc 内存池）：**
-    
+
     ```c
     void *malloc(size_t size)
     {
@@ -329,13 +329,13 @@ void *slub_alloc(struct kmem_cache *cache) {
         return ptr;
     }
     ```
-    
+
     这里，malloc 通过 mmap 系统调用分配内存，mmap 可以提供更灵活的内存映射方式，同时允许分配大块内存。
-    
+
 - 使用如 malloc 等函数进行内存分配，通常会处理分配的生命周期和缓存等问题。
-    
+
     在用户空间，内存的生命周期管理通常由开发者或库函数来处理。malloc 和 free 等函数会自动管理内存的生命周期，开发者可以通过使用缓存机制来提升程序的性能(CSAPP 中的cache lab即考验此点)。
-    
+
 
 ## **内存分配的效率与策略**
 

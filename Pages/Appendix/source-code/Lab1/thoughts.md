@@ -77,7 +77,7 @@ main()
 }
 ```
 
-main.c代码的结构好像似曾相识，仔细一看，这不就是和Chcore 中CPU Core启动一样吗！到此我们发现了内核代码的 consistent design。而在真实世界中linux也如此但也更复杂（链接：https://xinqiu.gitbooks.io/linux-inside-zh/content/Initialization/linux-initialization-4.html，我也未明白linux 内核的mode change故未放上链接）。
+main.c代码的结构好像似曾相识，仔细一看，这不就是和Chcore 中CPU Core启动一样吗！到此我们发现了内核代码的 consistent design。而在真实世界中linux也如此但也更复杂（链接：<https://xinqiu.gitbooks.io/linux-inside-zh/content/Initialization/linux-initialization-4.html，我也未明白linux> 内核的mode change故未放上链接）。
 
 我们接着看 main.c 代码大体逻辑与Chcore相同 : 先初始化console (类比Chcore中的 uart_init),然后便开始启用MMU 并 初始化页表。这部分只拓展Lab1相关部分故不分析后面部分。
 
@@ -100,60 +100,60 @@ main.c代码的结构好像似曾相识，仔细一看，这不就是和Chcore �
 .extern init_c
 
 BEGIN_FUNC(_start)
-	mrs	x8, mpidr_el1
-	and	x8, x8,	#0xFF
-	cbz	x8, primary
+ mrs x8, mpidr_el1
+ and x8, x8, #0xFF
+ cbz x8, primary
 
-	/* Wait for bss clear */
+ /* Wait for bss clear */
 wait_for_bss_clear:
-	adr	x0, clear_bss_flag
-	ldr	x1, [x0]
-	cmp     x1, #0
-	bne	wait_for_bss_clear
+ adr x0, clear_bss_flag
+ ldr x1, [x0]
+ cmp     x1, #0
+ bne wait_for_bss_clear
 
-	/* Set cntkctl_el1 to enable cntvct_el0.
+ /* Set cntkctl_el1 to enable cntvct_el0.
          * Enable it when you need to get current tick
          * at EL0, e.g. Running aarch64 ROS2 demos
-	mov	x10, 0b11
-	msr	cntkctl_el1, x10 */
+ mov x10, 0b11
+ msr cntkctl_el1, x10 */
 
-	/* Turn to el1 from other exception levels. */
-	bl 	arm64_elX_to_el1
+ /* Turn to el1 from other exception levels. */
+ bl  arm64_elX_to_el1
 
-	/* Prepare stack pointer and jump to C. */
-	mov	x1, #0x1000
-	mul	x1, x8, x1
-	adr 	x0, boot_cpu_stack
-	add	x0, x0, x1
-	add	x0, x0, #0x1000
-        mov	sp, x0
+ /* Prepare stack pointer and jump to C. */
+ mov x1, #0x1000
+ mul x1, x8, x1
+ adr  x0, boot_cpu_stack
+ add x0, x0, x1
+ add x0, x0, #0x1000
+        mov sp, x0
 
 wait_until_smp_enabled:
-	/* CPU ID should be stored in x8 from the first line */
-	mov	x1, #8
-	mul	x2, x8, x1
-	ldr	x1, =secondary_boot_flag
-	add	x1, x1, x2
-	ldr	x3, [x1]
-	cbz	x3, wait_until_smp_enabled
+ /* CPU ID should be stored in x8 from the first line */
+ mov x1, #8
+ mul x2, x8, x1
+ ldr x1, =secondary_boot_flag
+ add x1, x1, x2
+ ldr x3, [x1]
+ cbz x3, wait_until_smp_enabled
 
-	/* Set CPU id */
-	mov	x0, x8
-	bl 	secondary_init_c
+ /* Set CPU id */
+ mov x0, x8
+ bl  secondary_init_c
 
 primary:
-	/* Turn to el1 from other exception levels. */
-	bl 	arm64_elX_to_el1
+ /* Turn to el1 from other exception levels. */
+ bl  arm64_elX_to_el1
 
-	/* Prepare stack pointer and jump to C. */
-	adr 	x0, boot_cpu_stack
-	add 	x0, x0, #0x1000
-	mov 	sp, x0
+ /* Prepare stack pointer and jump to C. */
+ adr  x0, boot_cpu_stack
+ add  x0, x0, #0x1000
+ mov  sp, x0
 
-	bl 	init_c
+ bl  init_c
 
-	/* Should never be here */
-	b	.
+ /* Should never be here */
+ b .
 END_FUNC(_start)
 
 ```
@@ -306,32 +306,32 @@ main()
 start.S:
 BEGIN_FUNC(_start)
 
-	/* Turn to el1 from other exception levels. */
-	bl 	arm64_elX_to_el1
+ /* Turn to el1 from other exception levels. */
+ bl  arm64_elX_to_el1
 
-	/* Prepare stack pointer and jump to C. */
-	adr 	x0, boot_cpu_stack
-	add 	x0, x0, #INIT_STACK_SIZE
-	mov 	sp, x0
+ /* Prepare stack pointer and jump to C. */
+ adr  x0, boot_cpu_stack
+ add  x0, x0, #INIT_STACK_SIZE
+ mov  sp, x0
 
-	b 	init_c
+ b  init_c
 
-	/* Should never be here */
-	b	.
+ /* Should never be here */
+ b .
 END_FUNC(_start)
 
 init.c:
 
 void init_c(void)
 {
-	//maybe some other initalize work
-	early_uart_init();
-	uart_send_string("boot: init_c\r\n");
+ //maybe some other initalize work
+ early_uart_init();
+ uart_send_string("boot: init_c\r\n");
 
-	uart_send_string("[BOOT] Jump to kernel main\r\n");
-	start_kernel(secondary_boot_flag);//jump to main
+ uart_send_string("[BOOT] Jump to kernel main\r\n");
+ start_kernel(secondary_boot_flag);//jump to main
 
-	/* Never reach here */
+ /* Never reach here */
 }
 
 main.c:
@@ -343,17 +343,17 @@ void
 main()
 {
   if(cpuid() == 0){
-	  clear_bss();
-		init_kernel_pt();
-		el1_mmu_activate();
-		//other work is not listed here 
+   clear_bss();
+  init_kernel_pt();
+  el1_mmu_activate();
+  //other work is not listed here 
     started = 1;
   } else {
     while(started == 0)
       ;
-	 	init_kernel_pt();
-		el1_mmu_activate();
-	  //other work is not listed here 
+   init_kernel_pt();
+  el1_mmu_activate();
+   //other work is not listed here 
   
   }
 ```
@@ -408,7 +408,7 @@ CS base     0xffff0000
 上面的公式中， `X` 是 kernel bootsector 被引导入内存的位置。在我的机器上， `X` 的值是 `0x10000`，到这里，引导程序完成它的使命，并将控制权移交给了 Linux kernel。
 
 > [!TIP]
-> 本节参考链接：https://xinqiu.gitbooks.io/linux-inside-zh/content/Booting/linux-bootstrap-1.html
+> 本节参考链接：<https://xinqiu.gitbooks.io/linux-inside-zh/content/Booting/linux-bootstrap-1.html>
 
 ## 文章末尾补充内容
 
@@ -490,7 +490,7 @@ kvmmap(pagetable_t kpgtbl, uint64 va, uint64 pa, uint64 sz, int perm)
 - `__sync_synchronize()`是一个编译器内置的内存屏障函数，主要用来确保在它之前的所有操作在它之后的操作之前完成。它可以帮助开发者避免一些由于内存重排引起的问题。在x86架构上，这个函数通常会被翻译成适当的内存屏障指令（如`mfence`或`sfence`）。然而，ARM架构可能会有不同的实现方式，依赖于不同的编译器（如GCC或Clang）以及ARM的具体实现（例如v7、v8或更高版本）来选择合适的指令（例如`dmb`、`dsb`）。
 - 如果编译器没有自动插入正确的同步原语，开发者可能需要手动插入ARM汇编指令来保证多线程同步。这就涉及到开发者对平台底层细节的了解，特别是在不同架构上实现内存屏障的细节。
 
-### Part 5:**核心映像**加载到内存的高地址的由来：
+### Part 5:**核心映像**加载到内存的高地址的由来
 
 #### Part 5.1:**内核映像加载位置的历史变化**
 
@@ -527,7 +527,7 @@ kvmmap(pagetable_t kpgtbl, uint64 va, uint64 pa, uint64 sz, int perm)
 
 在 **x86_64** 架构中，常见的加载地址是 `0x1000000`（16MB），而对于 **ARM64** 系统，内核加载的地址可能是 `0x40008000`（64MB）。但这也取决于引导加载程序和系统配置，具体情况可以通过内核的启动配置和引导程序的选项进行调整。
 
-### Part 6:自己动手！
+### Part 6:自己动手
 
 > [!TIP]
 > 如果你想要自己写boot sector 或 了解更多内容推荐[os-tutorial](https://github.com/cfenollosa/os-tutorial/tree/master/01-bootsector-barebones)，大概需要30mins - 45 mins。

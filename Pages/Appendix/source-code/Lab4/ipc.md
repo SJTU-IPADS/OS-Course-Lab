@@ -107,9 +107,9 @@ int ipc_register_server_with_destructor(server_handler server_handler,
 这里实际上做了两件事，调用了两个函数：
 
 - 创建Client注册回调线程：通过 `chcore_pthread_create_register_cb` 函数实现，返回值为创造的线程的能力
-    - 该线程是被动线程，负责处理Client端端IPC注册请求
-    - 线程类型为 `TYPE_REGISTER` ，平时不会被调度执行
-    - 只有当IPC客户端需要注册时该线程才运行，负责初始化IPC连接
+  - 该线程是被动线程，负责处理Client端端IPC注册请求
+  - 线程类型为 `TYPE_REGISTER` ，平时不会被调度执行
+  - 只有当IPC客户端需要注册时该线程才运行，负责初始化IPC连接
 - 通过系统调用注册Server端：即 `usys_register_server` 函数，它实际上就是系统调用
 
 下面分别展开讲解
@@ -628,15 +628,15 @@ out_fail: /* 可能返回EAGAIN */
 这个注册函数的大体流程即为
 
 - 在客户端映射共享内存
-    - 从当前thread的 `cap_group` 里面找到传入的 `server_cap` 对应的slot，进而得到server线程对象
-    - 从server获取它的 `ipc_config`
-    - 拿锁，避免并发问题
-    - 检查client声明的共享内存地址，并将之拷贝到内核态，再建立共享内存上的映射
+  - 从当前thread的 `cap_group` 里面找到传入的 `server_cap` 对应的slot，进而得到server线程对象
+  - 从server获取它的 `ipc_config`
+  - 拿锁，避免并发问题
+  - 检查client声明的共享内存地址，并将之拷贝到内核态，再建立共享内存上的映射
 - 创建 `ipc_connection` 对象，并把cap给到server和client
 - 切换到注册回调线程
-    - 设置好调用参数，栈寄存器，异常处理寄存器
-        - 这一部分用到了注册server时配置好的config
-    - 调用sched切换控制权给server的注册回调线程，并进入设置好的注册回调函数
+  - 设置好调用参数，栈寄存器，异常处理寄存器
+    - 这一部分用到了注册server时配置好的config
+  - 调用sched切换控制权给server的注册回调线程，并进入设置好的注册回调函数
 
 关于创建 `ipc_connection` 的过程，可以参考 `create_connection` 函数，配置好的结构体如下：
 
@@ -713,7 +713,7 @@ struct ipc_connection *conn = {
 ### 注册回调函数
 
 > 注册回调线程运行的入口函数为主线程调用`ipc_register_server`是提供的client_register_handler参数，一般会使用默认的`DEFAULT_CLIENT_REGISTER_HANDLER`宏定义的入口函数，即定义在`user/chcore-libc/musl-libc/src/chcore-port/ipc.c`中的`register_cb`
-> 
+>
 
 根据Lab文档的指引我们来到 `register_cb` 的地盘，还记得这个 `client_register_handler` 是干啥的不？它在服务端主线程创建注册回调线程的时候被设置为了注册回调线程的入口。那么在注册客户端函数将线程切换过来的时候（注意这里用的切换函数是 `sched_to_thread` ），便会执行 `register_cb` 的代码
 
@@ -772,7 +772,7 @@ void *register_cb(void *ipc_handler)
 忘记什么是服务线程了？回看Lab文档：
 
 > ChCore的IPC接口不是传统的send/recv接口。其更像客户端/服务器模型，其中IPC请求接收者是服务器，而IPC请求发送者是客户端。 服务器进程中包含三类线程:
-> 
+>
 > - 主线程：该线程与普通的线程一样，类型为`TYPE_USER`。该线程会调用`ipc_register_server`将自己声明为一个IPC的服务器进程，调用的时候会提供两个参数:服务连接请求的函数client_register_handler和服务真正IPC请求的函数server_handler（即图中的`ipc_dispatcher`），调用该函数会创建一个注册回调线程;
 > - 注册回调线程：该线程的入口函数为上文提到的client_register_handler，类型为`TYPE_REGISTER`。正常情况下该线程不会被调度执行，仅当有Client发起建立IPC连接的请求时，该线程运行并执行client_register_handler，为请求建立连接的Client创建一个服务线程（即图中的IPC handler thread）并在服务器进程的虚拟地址空间中分配一个可以用来映射共享内存的虚拟地址。
 > - 服务线程：当Client发起建立IPC连接请求时由注册回调线程创建，入口函数为上文提到的server_handler，类型为`TYPE_SHADOW`。正常下该线程不会被调度执行，仅当有Client端线程使用`ipc_call`发起IPC请求时，该线程运行并执行server_handler（即图中的`ipc_dispatcher`），执行结束之后会调用`ipc_return`回到Client端发起IPC请求的线程。
@@ -1136,7 +1136,7 @@ out_obj_put:
 整体上就是由cap找到具体的conn对象，随后以此发起线程迁移（LRPC中的技术），可参考Lab文档
 
 > 该系统调用将设置服务器端的服务线程的栈地址、入口地址、各个参数，然后迁移到该服务器端服务线程继续运行。由于当前的客户端线程需要等待服务器端的服务线程处理完毕，因此需要更新其状态为TS_WAITING，且不要加入等待队列
-> 
+>
 
 ```c
 static void ipc_thread_migrate_to_server(

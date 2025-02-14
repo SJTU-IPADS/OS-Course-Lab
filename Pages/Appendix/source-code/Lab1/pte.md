@@ -1,6 +1,7 @@
 # 页表映射
 
 ## 目录
+
 - [页表映射](#页表映射)
   - [复习：页表结构](#复习页表结构)
     - [页表基址寄存器](#页表基址寄存器)
@@ -295,7 +296,7 @@
 #define PHYSMEM_END     (0x40000000UL)
 ```
 
-这三行代码声明的宏将我们要映射的物理地址（一共1G）分为了两部分：普通的RAM内存区域与外设映射区域，其中 `UL`  表示 `unsigned long` 
+这三行代码声明的宏将我们要映射的物理地址（一共1G）分为了两部分：普通的RAM内存区域与外设映射区域，其中 `UL`  表示 `unsigned long`
 
 其中前者很好理解，就是内核自身的RAM内存，关于后者“外设映射”，可以理解为是在这部分地址开始映射各种硬件外设，例如：
 
@@ -450,9 +451,9 @@ u64 boot_ttbr0_l0[PTP_ENTRIES] ALIGN(PTP_SIZE);
 
 ```mermaid
 graph TD
-	 boot_ttbr0_l0 --> boot_ttbr0_l1
-	 boot_ttbr0_l1 --> boot_ttbr0_l2
-	 boot_ttbr0_l2 --> boot_ttbr0_l3
+  boot_ttbr0_l0 --> boot_ttbr0_l1
+  boot_ttbr0_l1 --> boot_ttbr0_l2
+  boot_ttbr0_l2 --> boot_ttbr0_l3
 ```
 
 这里完成了初始化工作后，后面便开始了具体的配置
@@ -541,7 +542,7 @@ graph TD
         /* BLANK BEGIN */
         vaddr = KERNEL_VADDR + PHYSMEM_START;
         
-					...
+     ...
 
         for (; vaddr < KERNEL_VADDR + PERIPHERAL_BASE; vaddr += SIZE_2M) {
                 /* No NG bit here since the kernel mappings are shared */
@@ -555,7 +556,7 @@ graph TD
                         | IS_VALID;
         }
 
-				...
+    ...
 ```
 
 以配置普通RAM内存这一段为例，这里初始化 `vaddr` 时即加上了对应的偏移量，在 `for` 循环中也有相应的体现，这便是高地址映射时不同的地方

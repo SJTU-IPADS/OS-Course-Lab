@@ -1,44 +1,49 @@
 [Buddy System 伙伴系统](#buddy-system-伙伴系统)
-  * [回顾：为什么需要伙伴系统](#为什么需要伙伴系统)
-    * [外部碎片与内部碎片](#外部碎片与内部碎片)
-    * [伙伴系统的设计理念](#伙伴系统的设计理念)
-  * [Chcore伙伴系统的设计](#chcore伙伴系统的设计)
-    * [核心数据结构](#核心数据结构)
-      * [page](#page)
-      * [phys_mem_pool](#phys_mem_pool)
-    * [核心函数接口](#核心函数接口)
-  * [Chcore源码对伙伴系统的具体实现](#chcore源码对伙伴系统的具体实现)
-    * [init_buddy](#init_buddy)
-    * [get_buddy_chunk](#get_buddy_chunk)
-    * [buddy_get_pages](#buddy_get_pages)
-    * [buddy_free_pages](#buddy_free_pages)
-    * [spilt_chunk](#spilt_chunk)
-    * [merge_chunk](#merge_chunk)
+
+* [回顾：为什么需要伙伴系统](#为什么需要伙伴系统)
+  * [外部碎片与内部碎片](#外部碎片与内部碎片)
+  * [伙伴系统的设计理念](#伙伴系统的设计理念)
+* [Chcore伙伴系统的设计](#chcore伙伴系统的设计)
+  * [核心数据结构](#核心数据结构)
+    * [page](#page)
+    * [phys_mem_pool](#phys_mem_pool)
+  * [核心函数接口](#核心函数接口)
+* [Chcore源码对伙伴系统的具体实现](#chcore源码对伙伴系统的具体实现)
+  * [init_buddy](#init_buddy)
+  * [get_buddy_chunk](#get_buddy_chunk)
+  * [buddy_get_pages](#buddy_get_pages)
+  * [buddy_free_pages](#buddy_free_pages)
+  * [spilt_chunk](#spilt_chunk)
+  * [merge_chunk](#merge_chunk)
 
 [SLab分配器](#slab分配器)
-  * [回顾：SLab分配器的设计理念](#slab分配器的设计理念)
-    * [基本结构](#基本结构)
-    * [SLab的内部组织](#slab的内部组织)
-  * [Chcore中SLab分配器的设计](#chcore中slab分配器的设计)
-    * [核心数据结构](#核心数据结构-1)
-      * [slab_pointer](#slab_pointer)
-      * [slab_header](#slab_header)
-      * [slab_slot_list](#slab_slot_list)
-    * [核心函数接口](#核心函数接口-1)
-  * [Chcore源码对SLab功能的具体实现](#chcore源码对slab功能的具体实现)
-    * [init_slab](#init_slab)
-    * [alloc_in_slab](#alloc_in_slab)
-    * [free_in_slab](#free_in_slab)
+
+* [回顾：SLab分配器的设计理念](#slab分配器的设计理念)
+  * [基本结构](#基本结构)
+  * [SLab的内部组织](#slab的内部组织)
+* [Chcore中SLab分配器的设计](#chcore中slab分配器的设计)
+  * [核心数据结构](#核心数据结构-1)
+    * [slab_pointer](#slab_pointer)
+    * [slab_header](#slab_header)
+    * [slab_slot_list](#slab_slot_list)
+  * [核心函数接口](#核心函数接口-1)
+* [Chcore源码对SLab功能的具体实现](#chcore源码对slab功能的具体实现)
+  * [init_slab](#init_slab)
+  * [alloc_in_slab](#alloc_in_slab)
+  * [free_in_slab](#free_in_slab)
 
 [Kmalloc & Kfree](#kmalloc与kfree)
-  * [kmalloc](#kmalloc)
-  * [kfree](#kfree)
+
+* [kmalloc](#kmalloc)
+* [kfree](#kfree)
+
 # Buddy System 伙伴系统
+
 Buddy System，即**伙伴系统**，被广泛应用于分配连续的物理内存页。本节内容将：
 
-- 回顾伙伴系统的基础知识与设计理念
-- 分析Chcore源码对伙伴系统的代码实现与架构
-- 解析Chcore源码对伙伴系统操作相关函数的具体实现
+* 回顾伙伴系统的基础知识与设计理念
+* 分析Chcore源码对伙伴系统的代码实现与架构
+* 解析Chcore源码对伙伴系统操作相关函数的具体实现
 
 ## 为什么需要伙伴系统
 
@@ -46,8 +51,8 @@ Buddy System，即**伙伴系统**，被广泛应用于分配连续的物理内�
 
 ### 外部碎片与内部碎片
 
-- 外部碎片：单个空闲内存部分小于分配请求的内存大小
-- 内部碎片：分配内存大于实际内存导致的内存碎片
+* 外部碎片：单个空闲内存部分小于分配请求的内存大小
+* 内部碎片：分配内存大于实际内存导致的内存碎片
 
 Buddy System将通过合并与级联的设计来避免这些困扰
 
@@ -55,9 +60,9 @@ Buddy System将通过合并与级联的设计来避免这些困扰
 
 伙伴系统设计理念即基于**伙伴块进行分裂与合并**，主要可概括为以下几点：
 
-- 物理内存划为块为单位分配内存，每个块由连续物理页组成，大小为2^n个物理页（便于分裂与合并）
-- 大块可根据分配需求分裂为小块，两个相同的小块可合并为大块，大块分裂出的两个小块即称作伙伴
-- 分配时根据需求选择块，若这样的空闲块不存在，则找大块分裂；释放内存时查看其伙伴，若伙伴也空闲则直接合并
+* 物理内存划为块为单位分配内存，每个块由连续物理页组成，大小为2^n个物理页（便于分裂与合并）
+* 大块可根据分配需求分裂为小块，两个相同的小块可合并为大块，大块分裂出的两个小块即称作伙伴
+* 分配时根据需求选择块，若这样的空闲块不存在，则找大块分裂；释放内存时查看其伙伴，若伙伴也空闲则直接合并
 
 如下图所示，相同颜色的块即表示伙伴块
 
@@ -165,10 +170,10 @@ extern struct phys_mem_pool global_mem[N_PHYS_MEM_POOLS];
 
 在chcore中，一个 `page` 结构体即表示一个实际的4KB大小的物理内存页，我们来看它的具体成员组成：
 
-- `struct list_head node`  ：是用于维护空闲链表的节点，当我们需要把这个页移入/移出空闲链表时，就会使用到这个节点
-- `int allocated` ：表示该页是否被分配
-- `int order` ：表示该页所属的块的阶数（即2^n的n）
-- `struct phys_mem_pool *pool` ：表示该页所隶属的内存池
+* `struct list_head node`  ：是用于维护空闲链表的节点，当我们需要把这个页移入/移出空闲链表时，就会使用到这个节点
+* `int allocated` ：表示该页是否被分配
+* `int order` ：表示该页所属的块的阶数（即2^n的n）
+* `struct phys_mem_pool *pool` ：表示该页所隶属的内存池
 
 另外还有slab，这个会在下文讲解slab分配器的时候具体解析
 
@@ -176,11 +181,11 @@ extern struct phys_mem_pool global_mem[N_PHYS_MEM_POOLS];
 
 chcore里的内存池即表示一整块连续的物理内存，也就是伙伴系统概念中所提到的整个空闲链表背后所属于的大的连续内存块。所以相应的，它就需要维护链表数组以及其所包含的所有页表元数据。我们还是来看看它的具体成员组成：
 
-- `vaddr_t pool_start_addr` ：内存池表示内存的起始地址
-- `unsigned long pool_mem_size` ：内存池表示的内存大小
-- `struct page *page_metadata` ：一个页表数组，包含了这个内存块里的所有页表
-- `struct lock buddy_lock` ：内存池的锁，用于并行化
-- `struct free_list free_lists[BUDDY_MAX_ORDER]` ：空闲链表数组，这里的order最大为14，故有14个这样的链表，可以依次表示4KB到32MB的内存
+* `vaddr_t pool_start_addr` ：内存池表示内存的起始地址
+* `unsigned long pool_mem_size` ：内存池表示的内存大小
+* `struct page *page_metadata` ：一个页表数组，包含了这个内存块里的所有页表
+* `struct lock buddy_lock` ：内存池的锁，用于并行化
+* `struct free_list free_lists[BUDDY_MAX_ORDER]` ：空闲链表数组，这里的order最大为14，故有14个这样的链表，可以依次表示4KB到32MB的内存
 
 ### 核心函数接口
 
@@ -213,16 +218,16 @@ unsigned long get_total_mem_size_from_buddy(struct phys_mem_pool *);
 
 从上到下的函数接口依次的功能为：
 
-- `init_buddy` ：初始化伙伴系统，包括其链表数组，页表元数据数组等
-- `get_buddy_chunk` ：根据指定内存池和内存块（的起始页表项）找到其伙伴块
-- `split_chunk` ：分裂内存块
-- `merge_chunk` ：合并伙伴内存块
-- `buddy_get_pages` ：查询并获取指定内存池和阶数的内存块
-- `buddy_free_pages` ：释放指定内存池的内存块
-- `page_to_virt` ：获取给定内存块（page_metadata）的虚拟地址，这是因为page类的指针指向的是 `page_metadata` 而非实际地址
-- `virt_to_page` ：根据给定虚拟地址找到相应的内存块（page_metadata），和上面的函数互为逆操作
-- `get_free_mem_size_from_buddy` ：获取给定内存池中当前可用的内存总量
-- `get_total_mem_size_from_buddy` ：获取给定内存池的总大小
+* `init_buddy` ：初始化伙伴系统，包括其链表数组，页表元数据数组等
+* `get_buddy_chunk` ：根据指定内存池和内存块（的起始页表项）找到其伙伴块
+* `split_chunk` ：分裂内存块
+* `merge_chunk` ：合并伙伴内存块
+* `buddy_get_pages` ：查询并获取指定内存池和阶数的内存块
+* `buddy_free_pages` ：释放指定内存池的内存块
+* `page_to_virt` ：获取给定内存块（page_metadata）的虚拟地址，这是因为page类的指针指向的是 `page_metadata` 而非实际地址
+* `virt_to_page` ：根据给定虚拟地址找到相应的内存块（page_metadata），和上面的函数互为逆操作
+* `get_free_mem_size_from_buddy` ：获取给定内存池中当前可用的内存总量
+* `get_total_mem_size_from_buddy` ：获取给定内存池的总大小
 
 ## Chcore源码对伙伴系统的具体实现
 
@@ -301,9 +306,9 @@ void init_buddy(struct phys_mem_pool *pool, struct page *start_page,
 
 源码的工作可以分成三个阶段：
 
-- 初始化物理内存池：根据传入的参数设置物理内存池的相应数据成员，这里的 `BUDDY_PAGE_SIZE` 是0x1000，也即4KB
-- 初始化空闲链表：用一个for循环将每个阶的空闲链表均初始化，这里首先将每个链表的空闲数设为0，同时用初始化函数 `init_list_head` 将这个链表节点的首尾都连到自己身上
-- 初始化页表元数据：先用 `memset` 将这块内存全部清零；再用for循环溜一遍，利用指针运算初始化每个页表相应数据；最后再依次free每个物理页表，这里自然会涉及到后面的merge操作，并最终得到一个全部空闲的内存池
+* 初始化物理内存池：根据传入的参数设置物理内存池的相应数据成员，这里的 `BUDDY_PAGE_SIZE` 是0x1000，也即4KB
+* 初始化空闲链表：用一个for循环将每个阶的空闲链表均初始化，这里首先将每个链表的空闲数设为0，同时用初始化函数 `init_list_head` 将这个链表节点的首尾都连到自己身上
+* 初始化页表元数据：先用 `memset` 将这块内存全部清零；再用for循环溜一遍，利用指针运算初始化每个页表相应数据；最后再依次free每个物理页表，这里自然会涉及到后面的merge操作，并最终得到一个全部空闲的内存池
 
 可以看见，chcore中实际的设计和书上提到的基本一致，不过书上的介绍做了一定的简化
 
@@ -710,36 +715,36 @@ Buddy System负责分配连续的物理内存页，但是如果系统遇到了�
 
 本节内容承接上文，为大家介绍Chcore中SLab分配器的设计与具体实现，主要还是包括三个部分：
 
-- 回顾SLab分配器的基础知识与设计理念
-- 分析Chcore源码对SLab的代码实现与架构
-- 解析Chcore源码对SLab操作相关函数的具体实现
+* 回顾SLab分配器的基础知识与设计理念
+* 分析Chcore源码对SLab的代码实现与架构
+* 解析Chcore源码对SLab操作相关函数的具体实现
 
 ## SLab分配器的设计理念
 
 SLab专用于小内存的分配。和伙伴系统不同，SLab本身不涉及对内存块的合并与分裂，而是通过一个个不同的SLab池，来分配不同固定大小的内存块，并且在SLab池内部使用链表结构串起一个个SLab，SLab内部又使用空闲链表的结构，便可以对所有的空闲内存块进行管理和分配
 
-#### 基本结构
+### 基本结构
 
-- SLab是一个内存分配器，主要用于分配小块内存（32字节到2048字节之间）
-- 整个系统维护了多个不同大小的 `slab_pool`  ，每个池对应特定大小的内存块
-- 内存大小按2的幂次方划分：32, 64, 128, 256, 512, 1024, 2048字节（从2^5到2^11）
+* SLab是一个内存分配器，主要用于分配小块内存（32字节到2048字节之间）
+* 整个系统维护了多个不同大小的 `slab_pool`  ，每个池对应特定大小的内存块
+* 内存大小按2的幂次方划分：32, 64, 128, 256, 512, 1024, 2048字节（从2^5到2^11）
 
 #### SLab的内部组织
 
 每个 `slab_pool` 由多个slab组成，每个slab又具有以下特点：
 
-- 固定大小为128KB（`SIZE_OF_ONE_SLAB`）
-- 包含一个 `slab_header`（位于slab开始处）
-- 剩余空间被划分为大小相等的对象槽（`slots`）
-- 使用空闲链表（`free_list`）管理未分配的对象槽
-- 每个 `slab_pool` 有current和partial指针，分别指向当前slab以及总的slab链表组
+* 固定大小为128KB（`SIZE_OF_ONE_SLAB`）
+* 包含一个 `slab_header`（位于slab开始处）
+* 剩余空间被划分为大小相等的对象槽（`slots`）
+* 使用空闲链表（`free_list`）管理未分配的对象槽
+* 每个 `slab_pool` 有current和partial指针，分别指向当前slab以及总的slab链表组
 
 #### **SLab的工作流程**
 
-- 当请求分配内存时，SLAB分配器会首先从**部分使用Slab链表**中查找是否有可用的对象
-- 如果没有，它会从**空闲Slab链表**中取出一个slot，并将其移动到**部分使用Slab链表**
-- 如果空闲链表也为空（即partial为空），则会从内存中（即伙伴系统）分配一个新的slab，然后进行上一步操作
-- 当释放内存块时，如果一个slab中的所有slots都被释放，则该slab会被移动到**空闲Slab链表**
+* 当请求分配内存时，SLAB分配器会首先从**部分使用Slab链表**中查找是否有可用的对象
+* 如果没有，它会从**空闲Slab链表**中取出一个slot，并将其移动到**部分使用Slab链表**
+* 如果空闲链表也为空（即partial为空），则会从内存中（即伙伴系统）分配一个新的slab，然后进行上一步操作
+* 当释放内存块时，如果一个slab中的所有slots都被释放，则该slab会被移动到**空闲Slab链表**
 
 有如下示意图以供参考
 
@@ -779,6 +784,7 @@ graph TD
 这里的对象即为内存块，在Chcore实现中用slot表示，下面会提到。实际的SLab分配器的设计可能用到full_slab链表也可能不会，具体根据其实现确定
 
 查看本机Slab示例：
+
 ```nasm
 sudo cat /proc/slabinfo
 
@@ -846,8 +852,8 @@ static struct lock slabs_locks[SLAB_MAX_ORDER + 1];
 
 Chcore中的SLab分配器设定大体服从书上的安排，以内存池为单元，先看宏定义：
 
-- `SLAB_MIN_ORDER & SLAB_MIN_ORDER` ：表示SLab分配器可以操作的内存块大小，从2^5到2^11字节
-- `SIZE_OF_ONE_SLAB` ：表示每个slab的大小，在Chcore中是128KB
+* `SLAB_MIN_ORDER & SLAB_MIN_ORDER` ：表示SLab分配器可以操作的内存块大小，从2^5到2^11字节
+* `SIZE_OF_ONE_SLAB` ：表示每个slab的大小，在Chcore中是128KB
 
 接下来我们再分析其核心数据结构的实现：
 
@@ -859,21 +865,21 @@ Chcore中的SLab分配器设定大体服从书上的安排，以内存池为单�
 
 是Chcore中代表一个个具体的slab的对象，其成员包含：
 
-- `void *free_list_head` ：内部空闲slot的链表
-- `struct list_head node` ：partial中表示自身的节点
+* `void *free_list_head` ：内部空闲slot的链表
+* `struct list_head node` ：partial中表示自身的节点
 
 如何由节点反过来得到其处于的slab？
 
 在chcore之中采用的是内存对齐+元数据的方式，具体而言，元数据为：
 
-- 在每一个slab块的开头，维护一个其中内存槽slot的free list head
-- 在每一个内存槽slot之中，存一个next_free的指针
-- slab由buddy sys分配，保证slab header地址按 page 对齐
+* 在每一个slab块的开头，维护一个其中内存槽slot的free list head
+* 在每一个内存槽slot之中，存一个next_free的指针
+* slab由buddy sys分配，保证slab header地址按 page 对齐
 
 这样，当我想要free addr时, 可以找到对应的page, 进而找到slab header, 进而得到free_list，最后在free_list之中插入这个slot, 然后由这个slab的空闲slot个数判断是否是 full → partial, partial→free, 从而进行插入partial list或者把slab空间归还给buddy sys的操作
 
-- `int order` ：该slab的阶数
-- `total_free_cnt & current_free_cnt` ：总的空闲块数 & 当前空闲块数
+* `int order` ：该slab的阶数
+* `total_free_cnt & current_free_cnt` ：总的空闲块数 & 当前空闲块数
 
 最后是slot自身
 
@@ -893,9 +899,9 @@ void free_in_slab(void *addr);
 
 从上到下函数接口的功能依次为：
 
-- `init_slab` ：初始化SLab分配器
-- `alloc_in_slab` ：在slab中申请分配内存
-- `free_in_slab` ：释放相应的内存
+* `init_slab` ：初始化SLab分配器
+* `alloc_in_slab` ：在slab中申请分配内存
+* `free_in_slab` ：释放相应的内存
 
 ## Chcore源码对SLab功能的具体实现
 
@@ -924,9 +930,9 @@ void init_slab(void)
 
 初始化函数和伙伴系统比起来简单了许多，直接用一个for循环去过一遍所有slab池即可：
 
-- 初始化 32~ 2048 字节为slot的各个slab, 每一个slab为 `SIZE_OF_ONE_SLAB=128K` 大小
-- 初始化对应的锁
-- 对全局变量的slab array的  `current_slab` `partial_slab_list` 初始化
+* 初始化 32~ 2048 字节为slot的各个slab, 每一个slab为 `SIZE_OF_ONE_SLAB=128K` 大小
+* 初始化对应的锁
+* 对全局变量的slab array的  `current_slab` `partial_slab_list` 初始化
 
 ### alloc_in_slab
 
@@ -1010,12 +1016,12 @@ static void choose_new_current_slab(struct slab_pointer *pool, int order)
 
 二者视作一起看，其核心逻辑如下：
 
-- 参数检查，确保order符合范围，太大则报错，太小则向上补到最小值
-- 加锁，确保并发安全性
-- 若current为空，则为首次分配，需要先init一下（注意这里是直接使用的内部接口，保持了外界的无感知，也简化了这里的代码逻辑）
-- 随后直接从current的slab的空闲链表中取出一块slot作为返回值，同时处理相应字段，如空闲块数量减一，修改list_head等
-- 若当前slab已满，则换新的slab，通过 choose_new_current_slab 进行操作，方式依然是通过定义好的list操作宏直接操作相应的链表
-- 解锁，完成分配
+* 参数检查，确保order符合范围，太大则报错，太小则向上补到最小值
+* 加锁，确保并发安全性
+* 若current为空，则为首次分配，需要先init一下（注意这里是直接使用的内部接口，保持了外界的无感知，也简化了这里的代码逻辑）
+* 随后直接从current的slab的空闲链表中取出一块slot作为返回值，同时处理相应字段，如空闲块数量减一，修改list_head等
+* 若当前slab已满，则换新的slab，通过 choose_new_current_slab 进行操作，方式依然是通过定义好的list操作宏直接操作相应的链表
+* 解锁，完成分配
 
 逻辑图可以作如下参考，便于理解阅读：
 
@@ -1094,16 +1100,17 @@ void free_in_slab(void *addr)
 
 梳理一下 `free_in_slab` 的实现逻辑：
 
-- 处理参数，通过地址转换拿到slot、page、slab等对象
-- 上锁
-- 检查现在的slab是否是full的，如果是，那么在free前还得把它放回partial
-- 进行free操作，即把链表头插回来、设置slab空闲链表、以及空闲数加一
-- 检查现在的slab是否是空的，如果是，那么物归原主——还给buddy大人
-- 解锁，完成free全部操作
+* 处理参数，通过地址转换拿到slot、page、slab等对象
+* 上锁
+* 检查现在的slab是否是full的，如果是，那么在free前还得把它放回partial
+* 进行free操作，即把链表头插回来、设置slab空闲链表、以及空闲数加一
+* 检查现在的slab是否是空的，如果是，那么物归原主——还给buddy大人
+* 解锁，完成free全部操作
 
 至此，SLab分配器源码解析结束
 
 # Kmalloc与Kfree
+
 有了Buddy System和SLab分配器，我们便能够去做真正的分配内存与释放内存的操作了——也即malloc和free。本部分源码解析即讲解Chcore的内核中kmalloc/kfree，这里的k表示kernel，即专用于内核空间分配/释放的函数
 
 直接上源码！
@@ -1135,7 +1142,7 @@ void *_kmalloc(size_t size, bool is_record, size_t *real_size)
 #if ENABLE_MEMORY_USAGE_COLLECTING == ON
                 if(is_record && collecting_switch) {
                         record_mem_usage(*real_size, addr);
-		}
+  }
 #endif
         } else {
                 if (size <= BUDDY_PAGE_SIZE)
@@ -1168,7 +1175,7 @@ void _kfree(void *ptr, bool is_revoke_record)
 #if ENABLE_MEMORY_USAGE_COLLECTING == ON
         if (collecting_switch && is_revoke_record) {
                 revoke_mem_usage(ptr);
-	}
+ }
 #endif
         if (page && page->slab)
                 free_in_slab(ptr);
@@ -1185,17 +1192,17 @@ void _kfree(void *ptr, bool is_revoke_record)
 
 ### kmalloc
 
-- 参数检查
-- 看需要分配的size大小，若小于 SLAB_MAX_SIZE 则使用SLab分配器的接口分配内存
-- 若大于，则使用伙伴系统的接口分配内存（包装在 get_pages 函数里的，这里没有列出）
-- 返回分配得到的地址指针
+* 参数检查
+* 看需要分配的size大小，若小于 SLAB_MAX_SIZE 则使用SLab分配器的接口分配内存
+* 若大于，则使用伙伴系统的接口分配内存（包装在 get_pages 函数里的，这里没有列出）
+* 返回分配得到的地址指针
 
 ### kfree
 
-- 参数检查
-- 根据地址拿到它所属的page
-- 看page的属性，如果它有slab，则说明是slab里的page，交由slab接口处理
-- 如果它有pool，则说明是伙伴系统的page，交由伙伴系统接口处理
+* 参数检查
+* 根据地址拿到它所属的page
+* 看page的属性，如果它有slab，则说明是slab里的page，交由slab接口处理
+* 如果它有pool，则说明是伙伴系统的page，交由伙伴系统接口处理
 
 ## 总结
 

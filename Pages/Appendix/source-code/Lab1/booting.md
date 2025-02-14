@@ -1,21 +1,22 @@
 # 内核启动
 
 ## 目录
+
 - [内核启动](#内核启动)
-	- [目录](#目录)
-	- [多内核启动及设置](#多内核启动及设置)
-		- [总览](#总览)
-		- [启动 CPU 0 号核](#启动-cpu-0-号核)
-		- [如何让内核依次启动？](#如何让内核依次启动)
-			- [0号核](#0号核)
-			- [非0号核](#非0号核)
-			- [后续操作](#后续操作)
-		- [内核启动时的设置](#内核启动时的设置)
-			- [关于栈的设置](#关于栈的设置)
-			- [bss段清零](#bss段清零)
-			- [切换内核异常级别](#切换内核异常级别)
-			- [启用MMU](#启用mmu)
-			- [初始化串口输出](#初始化串口输出)
+  - [目录](#目录)
+  - [多内核启动及设置](#多内核启动及设置)
+    - [总览](#总览)
+    - [启动 CPU 0 号核](#启动-cpu-0-号核)
+    - [如何让内核依次启动？](#如何让内核依次启动)
+      - [0号核](#0号核)
+      - [非0号核](#非0号核)
+      - [后续操作](#后续操作)
+    - [内核启动时的设置](#内核启动时的设置)
+      - [关于栈的设置](#关于栈的设置)
+      - [bss段清零](#bss段清零)
+      - [切换内核异常级别](#切换内核异常级别)
+      - [启用MMU](#启用mmu)
+      - [初始化串口输出](#初始化串口输出)
 
 > [!INFO]
 > QEMU模拟器中，当kernel映像文件被bootloader加载到内存中后，内核会被直接带到预先设置好的地址，即 `_start` 函数（0x80000），我们将从这里逐步启动CPU的核心，并做一些必要的设置
@@ -40,9 +41,9 @@
 
 ```nasm
 BEGIN_FUNC(_start)
-	mrs	x8, mpidr_el1
-	and	x8, x8,	#0xFF
-	cbz	x8, primary
+ mrs x8, mpidr_el1
+ and x8, x8, #0xFF
+ cbz x8, primary
 ```
 
 关于 `mpidr_el1` 这样的系统寄存器，可以在lab文档里给到的manual里查到相关信息（备注：更方便的手段是先询问llm，然后再在manual里面求证即可）：
@@ -68,18 +69,18 @@ BEGIN_FUNC(_start)
 ```nasm
 primary:
 
-	/* Turn to el1 from other exception levels. */
-	bl 	arm64_elX_to_el1
+ /* Turn to el1 from other exception levels. */
+ bl  arm64_elX_to_el1
 
-	/* Prepare stack pointer and jump to C. */
-	adr 	x0, boot_cpu_stack
-	add 	x0, x0, #INIT_STACK_SIZE
-	mov 	sp, x0
+ /* Prepare stack pointer and jump to C. */
+ adr  x0, boot_cpu_stack
+ add  x0, x0, #INIT_STACK_SIZE
+ mov  sp, x0
 
-	b 	init_c
+ b  init_c
 
-	/* Should never be here */
-	b	.
+ /* Should never be here */
+ b .
 ```
 
 关于**降低异常级别**的部分会在下面提到，我们现在只需要站在**宏观的视角**理解0号核干了什么：
@@ -94,41 +95,41 @@ primary:
 非0号核在cbz指令判断失败后，会按照顺序继续执行下面的代码，如下所示：
 
 ```nasm
-	/* Wait for bss clear */
+ /* Wait for bss clear */
 wait_for_bss_clear:
-	adr	x0, clear_bss_flag
-	ldr	x1, [x0]
-	cmp     x1, #0
-	bne	wait_for_bss_clear
+ adr x0, clear_bss_flag
+ ldr x1, [x0]
+ cmp     x1, #0
+ bne wait_for_bss_clear
 
 ...
 
-	/* Turn to el1 from other exception levels. */
-	bl 	arm64_elX_to_el1
+ /* Turn to el1 from other exception levels. */
+ bl  arm64_elX_to_el1
 
-	/* Prepare stack pointer and jump to C. */
-	mov	x1, #INIT_STACK_SIZE
-	mul	x1, x8, x1
-	adr 	x0, boot_cpu_stack
-	add	x0, x0, x1
-	add	x0, x0, #INIT_STACK_SIZE
-	mov	sp, x0
+ /* Prepare stack pointer and jump to C. */
+ mov x1, #INIT_STACK_SIZE
+ mul x1, x8, x1
+ adr  x0, boot_cpu_stack
+ add x0, x0, x1
+ add x0, x0, #INIT_STACK_SIZE
+ mov sp, x0
 
 wait_until_smp_enabled:
-	/* CPU ID should be stored in x8 from the first line */
-	mov	x1, #8
-	mul	x2, x8, x1
-	ldr	x1, =secondary_boot_flag
-	add	x1, x1, x2
-	ldr	x3, [x1]
-	cbz	x3, wait_until_smp_enabled
+ /* CPU ID should be stored in x8 from the first line */
+ mov x1, #8
+ mul x2, x8, x1
+ ldr x1, =secondary_boot_flag
+ add x1, x1, x2
+ ldr x3, [x1]
+ cbz x3, wait_until_smp_enabled
 
-	/* Set CPU id */
-	mov	x0, x8
-	b 	secondary_init_c
+ /* Set CPU id */
+ mov x0, x8
+ b  secondary_init_c
 
-	/* Should never be here */
-	b	.
+ /* Should never be here */
+ b .
 ```
 
 这里的代码采用了**轮询**的手段，通俗的讲，就是反复检查相关条件是否满足。CPU不断检查 `clear_bss_flag` 与 `secondary_boot_flag` 数组里的内容，若收到信号，则执行对应操作。
@@ -154,34 +155,34 @@ wait_until_smp_enabled:
 ```c
 void init_c(void)
 {
-	/* Clear the bss area for the kernel image */
-	clear_bss();
+ /* Clear the bss area for the kernel image */
+ clear_bss();
 
-	/* Initialize UART before enabling MMU. */
-	early_uart_init();
-	uart_send_string("boot: init_c\r\n");
+ /* Initialize UART before enabling MMU. */
+ early_uart_init();
+ uart_send_string("boot: init_c\r\n");
 
-	wakeup_other_cores();
+ wakeup_other_cores();
 
-	/* Initialize Kernell Page Table. */
-	uart_send_string("[BOOT] Install kernel page table\r\n");
-	init_kernel_pt();
+ /* Initialize Kernell Page Table. */
+ uart_send_string("[BOOT] Install kernel page table\r\n");
+ init_kernel_pt();
 
-	/* Enable MMU. */
-	el1_mmu_activate();
-	uart_send_string("[BOOT] Enable el1 MMU\r\n");
+ /* Enable MMU. */
+ el1_mmu_activate();
+ uart_send_string("[BOOT] Enable el1 MMU\r\n");
 
-	/* Call Kernel Main. */
-	uart_send_string("[BOOT] Jump to kernel main\r\n");
-	start_kernel(secondary_boot_flag);
+ /* Call Kernel Main. */
+ uart_send_string("[BOOT] Jump to kernel main\r\n");
+ start_kernel(secondary_boot_flag);
 
-	/* Never reach here */
+ /* Never reach here */
 }
 
 void secondary_init_c(int cpuid)
 {
-	el1_mmu_activate();
-	secondary_cpu_boot(cpuid);
+ el1_mmu_activate();
+ secondary_cpu_boot(cpuid);
 }
 ```
 
@@ -195,9 +196,9 @@ void secondary_init_c(int cpuid)
 
 ```nasm
 /* Prepare stack pointer and jump to C. */
-	adr 	x0, boot_cpu_stack
-	add 	x0, x0, #INIT_STACK_SIZE
-	mov 	sp, x0
+ adr  x0, boot_cpu_stack
+ add  x0, x0, #INIT_STACK_SIZE
+ mov  sp, x0
 ```
 
 代码中的设置部分是将栈指针的内容准备（获取栈的基地址，计算栈顶地址）好后，直接移动到sp寄存器中，即完成了栈的设置
@@ -220,60 +221,60 @@ void secondary_init_c(int cpuid)
 
 ```nasm
 BEGIN_FUNC(arm64_elX_to_el1)
-	mrs x9, CurrentEL
+ mrs x9, CurrentEL
 
-	// Check the current exception level.
-	cmp x9, CURRENTEL_EL1
-	beq .Ltarget
-	cmp x9, CURRENTEL_EL2
-	beq .Lin_el2
-	// Otherwise, we are in EL3.
+ // Check the current exception level.
+ cmp x9, CURRENTEL_EL1
+ beq .Ltarget
+ cmp x9, CURRENTEL_EL2
+ beq .Lin_el2
+ // Otherwise, we are in EL3.
 
-	// Set EL2 to 64bit and enable the HVC instruction.
+ // Set EL2 to 64bit and enable the HVC instruction.
 
-		...
+  ...
 
-	// Set the return address and exception level.
-	adr x9, .Ltarget
-	msr elr_el3, x9
-	mov x9, SPSR_ELX_DAIF | SPSR_ELX_EL1H
-	msr spsr_el3, x9
+ // Set the return address and exception level.
+ adr x9, .Ltarget
+ msr elr_el3, x9
+ mov x9, SPSR_ELX_DAIF | SPSR_ELX_EL1H
+ msr spsr_el3, x9
 
 .Lin_el2:
-	// Disable EL1 timer traps and the timer offset.
-	// Disable stage 2 translations.
-	// Disable EL2 coprocessor traps.
-	// Disable EL1 FPU traps.
+ // Disable EL1 timer traps and the timer offset.
+ // Disable stage 2 translations.
+ // Disable EL2 coprocessor traps.
+ // Disable EL1 FPU traps.
 
-		...
+  ...
 
-	// Check whether the GIC system registers are supported.
-	mrs x9, id_aa64pfr0_el1
-	and x9, x9, ID_AA64PFR0_EL1_GIC
-	cbz x9, .Lno_gic_sr
+ // Check whether the GIC system registers are supported.
+ mrs x9, id_aa64pfr0_el1
+ and x9, x9, ID_AA64PFR0_EL1_GIC
+ cbz x9, .Lno_gic_sr
 
-	// Enable the GIC system registers in EL2, and allow their use in EL1.
-	// Disable the GIC virtual CPU interface.
-	
-		...
-		
+ // Enable the GIC system registers in EL2, and allow their use in EL1.
+ // Disable the GIC virtual CPU interface.
+ 
+  ...
+  
 .Lno_gic_sr: // No GIC System Registers
 
-	// Set EL1 to 64bit.
+ // Set EL1 to 64bit.
 
-		...
+  ...
 
-	// Set the return address and exception level.
-	adr x9, .Ltarget
-	msr elr_el2, x9
-	mov x9, SPSR_ELX_DAIF | SPSR_ELX_EL1H
-	msr spsr_el2, x9
+ // Set the return address and exception level.
+ adr x9, .Ltarget
+ msr elr_el2, x9
+ mov x9, SPSR_ELX_DAIF | SPSR_ELX_EL1H
+ msr spsr_el2, x9
 
-	isb
-	eret
+ isb
+ eret
 
 .Ltarget:
-	ret
+ ret
 END_FUNC(arm64_elX_to_el1)
 ```
 
@@ -288,9 +289,9 @@ END_FUNC(arm64_elX_to_el1)
 
 ```mermaid
 graph TD;
-		判断当前级别-->el3
-		判断当前级别-->el2
-		判断当前级别-->el1
+  判断当前级别-->el3
+  判断当前级别-->el2
+  判断当前级别-->el1
     el3-->el2;
     el2-->el1;
     el1-->return;
@@ -320,38 +321,38 @@ graph TD;
 
 ```nasm
 BEGIN_FUNC(el1_mmu_activate)
-	stp     x29, x30, [sp, #-16]!
-	mov     x29, sp
+ stp     x29, x30, [sp, #-16]!
+ mov     x29, sp
 
-	bl	invalidate_cache_all
+ bl invalidate_cache_all
 
-	/* Invalidate TLB */
-	/* Initialize Memory Attribute Indirection Register */
-	/* Initialize TCR_EL1 */
-	/* set cacheable attributes on translation walk */
-	/* (SMP extensions) non-shareable, inner write-back write-allocate */
-	/* Write ttbr with phys addr of the translation table */
+ /* Invalidate TLB */
+ /* Initialize Memory Attribute Indirection Register */
+ /* Initialize TCR_EL1 */
+ /* set cacheable attributes on translation walk */
+ /* (SMP extensions) non-shareable, inner write-back write-allocate */
+ /* Write ttbr with phys addr of the translation table */
 
-		...
-	
-	mrs     x8, sctlr_el1
-	/* Enable MMU */
-	orr     x8, x8, #SCTLR_EL1_M
-	/* Disable alignment checking */
-	bic     x8, x8, #SCTLR_EL1_A
-	bic     x8, x8, #SCTLR_EL1_SA0
-	bic     x8, x8, #SCTLR_EL1_SA
-	orr     x8, x8, #SCTLR_EL1_nAA
-	/* Data accesses Cacheable */
-	orr     x8, x8, #SCTLR_EL1_C
-	/* Instruction access Cacheable */
-	orr     x8, x8, #SCTLR_EL1_I
-	/* Writable eXecute Never */
-	orr     x8, x8, #SCTLR_EL1_WXN
-	msr     sctlr_el1, x8
+  ...
+ 
+ mrs     x8, sctlr_el1
+ /* Enable MMU */
+ orr     x8, x8, #SCTLR_EL1_M
+ /* Disable alignment checking */
+ bic     x8, x8, #SCTLR_EL1_A
+ bic     x8, x8, #SCTLR_EL1_SA0
+ bic     x8, x8, #SCTLR_EL1_SA
+ orr     x8, x8, #SCTLR_EL1_nAA
+ /* Data accesses Cacheable */
+ orr     x8, x8, #SCTLR_EL1_C
+ /* Instruction access Cacheable */
+ orr     x8, x8, #SCTLR_EL1_I
+ /* Writable eXecute Never */
+ orr     x8, x8, #SCTLR_EL1_WXN
+ msr     sctlr_el1, x8
 
-	ldp     x29, x30, [sp], #16
-	ret
+ ldp     x29, x30, [sp], #16
+ ret
 END_FUNC(el1_mmu_activate)
 ```
 
@@ -386,13 +387,13 @@ END_FUNC(el1_mmu_activate)
    #endif
    
    void uart_send_string(char *str) {
-		int i;
-		for (i = 0; str[i] != '\0'; i++) {
-			if (str[i] == '\n')
-			early_uart_send('\r');
-		early_uart_send(str[i]);
-		}
-	}
+  int i;
+  for (i = 0; str[i] != '\0'; i++) {
+   if (str[i] == '\n')
+   early_uart_send('\r');
+  early_uart_send(str[i]);
+  }
+ }
 ```
 
 其中上半部分的代码内容涉及到硬件的操作，如设置引脚、波特率等，我们无需了解。而这里的条件编译结构则为我们提供了两种uart——`mini uart` 与 `主uart`，同时二者对外的字符串发送接口是一样的，对外部保持了统一与抽象屏障

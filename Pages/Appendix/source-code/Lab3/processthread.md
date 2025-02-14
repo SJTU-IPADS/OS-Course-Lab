@@ -16,7 +16,7 @@
 ### 能力组
 
 > 文档告诉我们：
-> 
+>
 > 1. 所有进程/线程都有一个独立的能力组，拥有一个全局唯一ID (**Badge**)
 > 2. 所有对象（包括进程或**能力组**本身）都属于一个或多个能力组当中，也就是说子进程与线程将属于父进程的能力组当中，在某个能力组的对象拥有一个能力组内的能力ID(**cap**)。
 > 3. 对象可以共享，即单个对象可以在多个能力组中共存，同时在不同cap_group中可以有不同的**cap**
@@ -29,9 +29,9 @@
 
 此事在Linux之中亦有记载……
 
-ref: https://www.cnblogs.com/sparkdev/p/11417781.html
+ref: <https://www.cnblogs.com/sparkdev/p/11417781.html>
 
-wiki上的简单名词介绍 https://en.wikipedia.org/wiki/Capability-based_operating_system
+wiki上的简单名词介绍 <https://en.wikipedia.org/wiki/Capability-based_operating_system>
 
 tl;dr 能力组是为安全而生的进程“部分root”的机制，例如你可以在用户态运行/bin/ping
 
@@ -123,8 +123,8 @@ classDiagram
     }
     
     class thread {
-		    +cap_group* cap_group
-		    +...其他字段
+      +cap_group* cap_group
+      +...其他字段
     }
 
     cap_group  *--  slot_table : 包含
@@ -230,7 +230,7 @@ struct cap_group *create_root_cap_group(char *name, size_t name_len)
 
 ```c
 const void *syscall_table[NR_SYSCALL] = {
-				// ...
+    // ...
         [CHCORE_SYS_create_cap_group] = sys_create_cap_group,
 ```
 
@@ -504,16 +504,16 @@ void create_root_thread(void)
 主要又分为几个小的步骤：
 
 - **创建根能力组**：
-    - 创建一个根能力组（`root_cap_group`），这是管理线程和进程的能力组
+  - 创建一个根能力组（`root_cap_group`），这是管理线程和进程的能力组
 - **获取初始化虚拟地址空间**：
-    - 从根能力组中获取初始化虚拟地址空间（`init_vmspace`）
+  - 从根能力组中获取初始化虚拟地址空间（`init_vmspace`）
 - **为根线程分配用户栈**：
-    - 分配一个物理内存对象（PMO）作为根线程的用户栈，并将其映射到初始化虚拟地址空间
+  - 分配一个物理内存对象（PMO）作为根线程的用户栈，并将其映射到初始化虚拟地址空间
 - **分配根线程**：
-    - 分配一个线程对象（`thread`）
+  - 分配一个线程对象（`thread`）
 - **映射程序头表项**：
-    - 遍历程序头表项，为每个段分配PMO，并将其映射到初始化虚拟地址空间
-    - 最后释放对初始化虚拟地址空间的引用
+  - 遍历程序头表项，为每个段分配PMO，并将其映射到初始化虚拟地址空间
+  - 最后释放对初始化虚拟地址空间的引用
 
 ```c
 for (int i = 0; i < meta.phnum; i++) {
@@ -557,18 +557,18 @@ graph LR
 同理分为如下小的步骤：
 
 - **准备环境**：
-    - 为根线程准备环境，包括栈和程序入口点
+  - 为根线程准备环境，包括栈和程序入口点
 - **初始化根线程**：
-    - 使用根能力组、栈地址、入口点和优先级初始化根线程
-    - 其中即包括初始化线程上下文的操作
+  - 使用根能力组、栈地址、入口点和优先级初始化根线程
+  - 其中即包括初始化线程上下文的操作
 - **将根线程添加到能力组的线程列表**：
-    - 将根线程添加到根能力组的线程列表中，并增加线程计数
+  - 将根线程添加到根能力组的线程列表中，并增加线程计数
 - **为根线程分配能力**：
-    - 为根线程分配一个能力（`thread_cap`）
+  - 为根线程分配一个能力（`thread_cap`）
 - **刷新缓存**：
-    - 刷新指令缓存和数据缓存，以确保新线程的指令和数据是最新的
+  - 刷新指令缓存和数据缓存，以确保新线程的指令和数据是最新的
 - **将根线程放入就绪队列**：
-    - 将根线程放入调度器的就绪队列，准备执行
+  - 将根线程放入调度器的就绪队列，准备执行
 
 ```mermaid
 graph LR

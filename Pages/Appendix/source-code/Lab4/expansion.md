@@ -1,4 +1,5 @@
 # Lab 4 的实验笔记
+
 # 目录
 
 - [说明](#说明)
@@ -57,6 +58,7 @@ struct task_struct {
     ...
 };
 ```
+
 相关注释：
 
 **state**: 进程的当前状态，调度器通过state来判断任务是否可以被调度（例如TASK_RUNNING表示进程可以调度）。
@@ -792,13 +794,13 @@ int main() {
 
 "**The Completely Fair Scheduler" - Ingo Molnar**
 
-https://dl.acm.org/doi/fullHtml/10.5555/1594371.1594375
+<https://dl.acm.org/doi/fullHtml/10.5555/1594371.1594375>
 
 ### 博客
 
-https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/
+<https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/>
 
-https://tldp.org/LDP/tlk/kernel/processes.html
+<https://tldp.org/LDP/tlk/kernel/processes.html>
 
 ## Linux的IPC 机制
 
@@ -810,6 +812,6 @@ https://tldp.org/LDP/tlk/kernel/processes.html
 
 ### 博客
 
-https://www.geeksforgeeks.org/inter-process-communication-ipc/
+<https://www.geeksforgeeks.org/inter-process-communication-ipc/>
 
-https://tldp.org/LDP/lpg/node7.html
+<https://tldp.org/LDP/lpg/node7.html>

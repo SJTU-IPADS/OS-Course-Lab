@@ -1,6 +1,9 @@
 # 多核支持
+
 本节内容负责解析ChCore关于多核支持方面的源码，包括多核原理，多核启动等部分
+
 ## 目录
+
 - [知识回顾](#知识回顾)
   - [CPU信息](#cpu信息)
   - [如何按需启动多核](#如何按需启动多核)
@@ -17,7 +20,7 @@
 我们在讲解系统调用的时候曾经提到：
 
 > `TPIDR_EL1`（Thread Process ID Register for EL1）是ARM架构中一个特殊的寄存器，**用于存储当前执行线程或进程的上下文信息**。在操作系统内核中，这个寄存器经常被用来存储指向`per_cpu_data`结构的指针，该结构包含了特定于CPU的数据，比如CPU的局部变量和栈指针
-> 
+>
 
 那么多核，自然就会有多个这样的CPU信息块，具体数量又依硬件设备而定，以树莓派3为例：
 
@@ -32,26 +35,26 @@
 好的知道了，是4个核心。至于CPU_info，我们在讲解系统调用的内核栈切换时候也讲过：以结构体形式存在，通过指针+偏移量的形式访问结构体成员
 
 ```c
-#define OFFSET_CURRENT_EXEC_CTX		0
-#define OFFSET_LOCAL_CPU_STACK		8
-#define OFFSET_CURRENT_FPU_OWNER	16
-#define OFFSET_FPU_DISABLE		24
+#define OFFSET_CURRENT_EXEC_CTX  0
+#define OFFSET_LOCAL_CPU_STACK  8
+#define OFFSET_CURRENT_FPU_OWNER 16
+#define OFFSET_FPU_DISABLE  24
 
 struct per_cpu_info {
-	/* The execution context of current thread */
-	u64 cur_exec_ctx;
+ /* The execution context of current thread */
+ u64 cur_exec_ctx;
 
-	/* Per-CPU stack */
-	char *cpu_stack;
+ /* Per-CPU stack */
+ char *cpu_stack;
 
-	/* struct thread *fpu_owner */
-	void *fpu_owner;
-	u32 fpu_disable;
+ /* struct thread *fpu_owner */
+ void *fpu_owner;
+ u32 fpu_disable;
 
-	char pad[pad_to_cache_line(sizeof(u64) +
-				   sizeof(char *) +
-				   sizeof(void *) +
-				   sizeof(u32))];
+ char pad[pad_to_cache_line(sizeof(u64) +
+       sizeof(char *) +
+       sizeof(void *) +
+       sizeof(u32))];
 } __attribute__((packed, aligned(64)));
 ```
 
@@ -66,24 +69,24 @@ struct per_cpu_info {
 ```nasm
 primary:
 
-	/* Turn to el1 from other exception levels. */
-	bl 	arm64_elX_to_el1
+ /* Turn to el1 from other exception levels. */
+ bl  arm64_elX_to_el1
 
-	/* Prepare stack pointer and jump to C. */
-	adr 	x0, boot_cpu_stack
-	add 	x0, x0, #INIT_STACK_SIZE
-	mov 	sp, x0
+ /* Prepare stack pointer and jump to C. */
+ adr  x0, boot_cpu_stack
+ add  x0, x0, #INIT_STACK_SIZE
+ mov  sp, x0
 
-	b 	init_c
+ b  init_c
 
-	/* Should never be here */
-	b	.
-	
-		/* Wait for bss clear */
+ /* Should never be here */
+ b .
+ 
+  /* Wait for bss clear */
 wait_for_bss_clear:
-	// ...
+ // ...
 wait_until_smp_enabled:
-	// ...
+ // ...
 ```
 
 主核在 `init_c` 初始化uart之后用 `sev` 指令唤醒其他核（树莓派真机需求，在QEMU模拟器中是直接启动的），之后主核进入 `start_kernel` ，初始化cpu内核栈、清空页表和TLB设置后进入 `main`
@@ -91,28 +94,28 @@ wait_until_smp_enabled:
 ```c
 void init_c(void)
 {
-	/* Clear the bss area for the kernel image */
-	clear_bss();
+ /* Clear the bss area for the kernel image */
+ clear_bss();
 
-	/* Initialize UART before enabling MMU. */
-	early_uart_init();
-	uart_send_string("boot: init_c\r\n");
+ /* Initialize UART before enabling MMU. */
+ early_uart_init();
+ uart_send_string("boot: init_c\r\n");
 
-	wakeup_other_cores();
+ wakeup_other_cores();
 
-	/* Initialize Kernell Page Table. */
-	uart_send_string("[BOOT] Install kernel page table\r\n");
-	init_kernel_pt();
+ /* Initialize Kernell Page Table. */
+ uart_send_string("[BOOT] Install kernel page table\r\n");
+ init_kernel_pt();
 
-	/* Enable MMU. */
-	el1_mmu_activate();
-	uart_send_string("[BOOT] Enable el1 MMU\r\n");
+ /* Enable MMU. */
+ el1_mmu_activate();
+ uart_send_string("[BOOT] Enable el1 MMU\r\n");
 
-	/* Call Kernel Main. */
-	uart_send_string("[BOOT] Jump to kernel main\r\n");
-	start_kernel(secondary_boot_flag);
+ /* Call Kernel Main. */
+ uart_send_string("[BOOT] Jump to kernel main\r\n");
+ start_kernel(secondary_boot_flag);
 
-	/* Never reach here */
+ /* Never reach here */
 }
 ```
 
@@ -137,24 +140,24 @@ void init_c(void)
  */
 void main(paddr_t boot_flag, void *info)
 {
-	// ...
-	/* Other cores are busy looping on the boot_flag, wake up those cores */
-	enable_smp_cores(boot_flag);
+ // ...
+ /* Other cores are busy looping on the boot_flag, wake up those cores */
+ enable_smp_cores(boot_flag);
 
-	// ...
+ // ...
 
-	smc_init();
+ smc_init();
 
-	// ...
+ // ...
 
-	/* Create initial thread here, which use the `init.bin` */
-	create_root_thread();
-	kinfo("[ChCore] create initial thread done\n");
-	
-	/* Leave the scheduler to do its job */
-	sched();
+ /* Create initial thread here, which use the `init.bin` */
+ create_root_thread();
+ kinfo("[ChCore] create initial thread done\n");
+ 
+ /* Leave the scheduler to do its job */
+ sched();
 
-	// ...
+ // ...
 }
 ```
 
@@ -166,7 +169,7 @@ void main(paddr_t boot_flag, void *info)
 
 答案是自己调度给自己，并且会有idle优化（空闲线程优化），这部分内容在Linux中亦有记载：
 
-(ref: https://www.cnblogs.com/doitjust/p/13307378.html)
+(ref: <https://www.cnblogs.com/doitjust/p/13307378.html>)
 
 我们以rr调度策略为例，来看看ChCore的实现（具体是哪种策略会在构建时决定，参考 `main` 函数的源代码）：
 
@@ -269,20 +272,20 @@ volatile u64 clear_bss_flag = NOT_BSS;
  */
 void main(paddr_t boot_flag, void *info)
 {
-	// ...
-	
-	/* Other cores are busy looping on the boot_flag, wake up those cores */
-	enable_smp_cores(boot_flag);
+ // ...
+ 
+ /* Other cores are busy looping on the boot_flag, wake up those cores */
+ enable_smp_cores(boot_flag);
 
-	// ...
+ // ...
 
-	/* Create initial thread here, which use the `init.bin` */
-	create_root_thread();
+ /* Create initial thread here, which use the `init.bin` */
+ create_root_thread();
 
-	/* Leave the scheduler to do its job */
-	sched();
-	
-	// ...
+ /* Leave the scheduler to do its job */
+ sched();
+ 
+ // ...
 }
 ```
 
@@ -351,8 +354,8 @@ void enable_smp_cores(paddr_t boot_flag)
 
 ```nasm
 BEGIN_FUNC(flush_dcache_area)
-	dcache_by_line_op civac, sy, x0, x1, x2, x3
-	ret
+ dcache_by_line_op civac, sy, x0, x1, x2, x3
+ ret
 END_FUNC(flush_dcache_area)
 ```
 

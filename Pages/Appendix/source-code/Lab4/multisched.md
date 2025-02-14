@@ -105,20 +105,20 @@ struct sched_ops {
 void main(paddr_t boot_flag, void *info)
 {
 
-	// ...
+ // ...
 
-	/* Init scheduler with specified policy */
+ /* Init scheduler with specified policy */
 #if defined(CHCORE_KERNEL_SCHED_PBFIFO)
-	sched_init(&pbfifo);
+ sched_init(&pbfifo);
 #elif defined(CHCORE_KERNEL_RT) || defined(CHCORE_OPENTRUSTEE)
-	sched_init(&pbrr);
+ sched_init(&pbrr);
 #else
-	sched_init(&rr);
+ sched_init(&rr);
 #endif
-	kinfo("[ChCore] sched init finished\n");
-	
-	// ...
-	
+ kinfo("[ChCore] sched init finished\n");
+ 
+ // ...
+ 
 }
 
 ```
@@ -169,7 +169,7 @@ int rr_sched_init(void)
 
         /* Initialize global variables */
         for (i = 0; i < PLAT_CPU_NUM; i++) {
-				        // 初始化队列链表头
+            // 初始化队列链表头
                 init_list_head(&(rr_ready_queue_meta[i].queue_head));
                 // 初始化锁
                 lock_init(&(rr_ready_queue_meta[i].queue_lock));
@@ -427,12 +427,12 @@ int rr_sched(void)
 
 - 若当前线程不存在，则直接快进到choose一个新的
 - 若当前线程存在，则继续做进一步检查与操作：
-    - 调度上下文检查：除了影子线程和寄存器线程外都必须有调度上下文
-    - 若当前线程状态是exited，则给它收尸（`thread_set_exited`）
-    - 否则进入时间片（`sc->budget`）检查（运行状态的线程）：
-        - 若时间片没用尽，线程也未被挂起，则继续运行
-        - 若时间片已经用尽，则重新设置其时间片，并再次入队
-    - 对非运行状态的线程作异常处理
+  - 调度上下文检查：除了影子线程和寄存器线程外都必须有调度上下文
+  - 若当前线程状态是exited，则给它收尸（`thread_set_exited`）
+  - 否则进入时间片（`sc->budget`）检查（运行状态的线程）：
+    - 若时间片没用尽，线程也未被挂起，则继续运行
+    - 若时间片已经用尽，则重新设置其时间片，并再次入队
+  - 对非运行状态的线程作异常处理
 - 最后的 `switch_to_thread` 是内核态的切换线程函数，它只负责 current_thread 等变量，并没有设置完整的上下文切换，所以需要搭配其他函数来完成(返回用户态的实例在 `sched_to_thread` ， 内部比较复杂，可能跨核调度，此时需要通过ipi（体系结构特定的处理器间中断）来等待目标cpu核处理好当前的中断等事件释放内核栈， 再进行体系结构特定的上下文切换（寄存器的save/load）和用户态返回)
 
 其中调度上下文是如下数据结构：
@@ -614,11 +614,11 @@ vaddr_t switch_context(void)
 
 void arch_switch_context(struct thread *target)
 {
-	struct per_cpu_info *info;
+ struct per_cpu_info *info;
 
-	info = get_per_cpu_info();
+ info = get_per_cpu_info();
 
-	info->cur_exec_ctx = (u64)target->thread_ctx; // 设置当前CPU信息
+ info->cur_exec_ctx = (u64)target->thread_ctx; // 设置当前CPU信息
 }
 ```
 
@@ -626,9 +626,9 @@ void arch_switch_context(struct thread *target)
 
 - `vmspace`  ：这个结构在thread里面(还记得这的核心数据机构是一个rbtree的root吗， 回看内存管理)，但是需要切换页表（页表的地址也在vmspace之中维护）
 - `tls` ：(thread local storage， 在arm架构的典型实现之中是TPIDR_EL0寄存器，它存着一个线程特定的标识符)
-    - OS其实不知道这里面存的是什么东西，他只是把这个寄存器当成线程特定的标识符，并在自己的线程实现之中维护而已。至于语言层面的tls如何实现，那是编译器开发者或者库开发者的事情，例如存一个特定的空间的指针（例如小的在栈上，大的在堆上）
-    - arm compiler的支持文档 https://developer.arm.com/documentation/dui0205/g/arm-compiler-reference/compiler-specific-features/thread-local-storage
-    - 对tls的一些讨论 https://forum.osdev.org/viewtopic.php?t=36597
+  - OS其实不知道这里面存的是什么东西，他只是把这个寄存器当成线程特定的标识符，并在自己的线程实现之中维护而已。至于语言层面的tls如何实现，那是编译器开发者或者库开发者的事情，例如存一个特定的空间的指针（例如小的在栈上，大的在堆上）
+  - arm compiler的支持文档 <https://developer.arm.com/documentation/dui0205/g/arm-compiler-reference/compiler-specific-features/thread-local-storage>
+  - 对tls的一些讨论 <https://forum.osdev.org/viewtopic.php?t=36597>
 - `fpu` 相关
 - 其他想要添加的机制，例如保存和清理TLB的一些数据（history）等
 - 把切换的线程相关的寄存器设置到cpu上，见 `arch_switch_context`
@@ -638,7 +638,7 @@ void arch_switch_context(struct thread *target)
 协作式调度需要用户态程序自己"体面地"让出CPU，那它要不体面怎么办？我们就来帮它体面，这便是抢占式调度，典型应用场景即如Lab文档所述：
 
 > ChCore启动的第一个用户态线程（执行`user/system-services/system-servers/procmgr/procmgr.c`的`main`函数）将创建一个"自旋线程"，该线程在获得CPU核心的控制权后便会执行无限循环，进而导致无论是该程序的主线程还是ChCore内核都无法重新获得CPU核心的控制权。就保护系统免受用户程序中的错误或恶意代码影响而言，这一情况显然并不理想，任何用户应用线程均可以如该"自旋线程"一样，通过进入无限循环来永久"霸占"整个CPU核心
-> 
+>
 
 而抢占式首先要支持的就是时钟中断。时钟中断的支持实际上和其他外设也没什么区别，抽象起来就是对寄存器的读和写，以及配置真正连接cpu引脚的发信号时间等硬件相关的操作
 
@@ -647,7 +647,7 @@ void arch_switch_context(struct thread *target)
 回归主线，Lab文档也说了相关寄存器的信息：
 
 > 我们需要处理的系统寄存器如下([Refer](https://developer.arm.com/documentation/102379/0101/The-processor-timers)):
-> 
+>
 > - CNTPCT_EL0: 它的值代表了当前的 system count。
 > - CNTFRQ_EL0: 它的值代表了物理时钟运行的频率，即每秒钟 system count 会增加多少。
 > - CNTP_CVAL_EL0: 是一个64位寄存器，操作系统可以向该寄存器写入一个值，当 system count 达到或超过该值时，物理时钟会触发中断。
@@ -691,7 +691,7 @@ void plat_timer_init(void)
          * ENABLE = 1: 使能定时器
          * cntp_ctl_el0: Counter-timer Physical Timer Control register
          */
-        timer_ctl = 0 << 1 | 1;	/* IMASK = 0 ENABLE = 1 */
+        timer_ctl = 0 << 1 | 1; /* IMASK = 0 ENABLE = 1 */
         asm volatile ("msr cntp_ctl_el0, %0"::"r" (timer_ctl));   // 设置控制寄存器
         asm volatile ("mrs %0, cntp_ctl_el0":"=r" (timer_ctl));   // 读回验证
         kdebug("timer init cntp_ctl_el0 = %lu\n", timer_ctl);
@@ -708,9 +708,9 @@ void plat_timer_init(void)
 /* Interrupt handler for interrupts happening when in EL0. */
 void handle_irq(void)
 {
-	plat_handle_irq();
-	sched_periodic(); // 在rr策略下即为调度函数，但其他策略下不一样，需要注意
-	eret_to_thread(switch_context());// 这个操作即为调度后返回用户态的标准
+ plat_handle_irq();
+ sched_periodic(); // 在rr策略下即为调度函数，但其他策略下不一样，需要注意
+ eret_to_thread(switch_context());// 这个操作即为调度后返回用户态的标准
 }
 ```
 
@@ -719,13 +719,13 @@ void handle_irq(void)
 ```c
 void plat_handle_irq(void)
 {
-	// ...	
-	switch (irq) {
-	case INT_SRC_TIMER1:
-		/* CNTPNSIRQ (Physical Non-Secure timer IRQ) */
-		handle_timer_irq();
-	// ...
-	return;
+ // ... 
+ switch (irq) {
+ case INT_SRC_TIMER1:
+  /* CNTPNSIRQ (Physical Non-Secure timer IRQ) */
+  handle_timer_irq();
+ // ...
+ return;
 }
 ```
 

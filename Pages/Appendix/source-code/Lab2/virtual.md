@@ -13,6 +13,7 @@
   - [VMR & PMO](#vmr--pmo)
 
 # 页表管理
+
 本节内容讲解Chcore页表管理部分的源码（不包括缺页管理，缺页管理单独讲解），我们将从Chcore页表管理的核心数据结构讲起，并进一步解析其页表管理的函数实际实现
 
 ## 核心数据结构
@@ -104,7 +105,7 @@ typedef union {
 
 /* page_table_page type */
 typedef struct {
-	pte_t ent[PTP_ENTRIES];
+ pte_t ent[PTP_ENTRIES];
 } ptp_t;
 ```
 
@@ -204,9 +205,9 @@ void update_pte(pte_t *dest, unsigned int level, struct common_pte_t *src)
 
 ```c
 int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags);
+         size_t len, vmr_prop_t flags);
 int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags, long *rss);
+         size_t len, vmr_prop_t flags, long *rss);
 int unmap_range_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, long *rss);
 int query_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t *pa, pte_t **entry);
 int mprotect_in_pgtbl(void *pgtbl, vaddr_t va, size_t len, vmr_prop_t prop);
@@ -251,17 +252,17 @@ int map_range_in_pgtbl(
 ```c
 /* Map vm range in kernel */
 int map_range_in_pgtbl_kernel(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags)
+         size_t len, vmr_prop_t flags)
 {
-	return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
+ return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
                                          KERNEL_PTE, NULL);
 }
 
 /* Map vm range in user */
 int map_range_in_pgtbl(void *pgtbl, vaddr_t va, paddr_t pa,
-		       size_t len, vmr_prop_t flags, long *rss)
+         size_t len, vmr_prop_t flags, long *rss)
 {
-	return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
+ return map_range_in_pgtbl_common(pgtbl, va, pa, len, flags,
                                          USER_PTE, rss);
 }
 ```
@@ -669,8 +670,8 @@ static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind)
         if (kind == KERNEL_PTE) {
                 // kernel PTE
                 if (!(flags & VMR_EXEC))
-			                  // 如果没有指定flags任意权限（读,写,...）或者此段虚拟内存没有执行权限
-			                  // pte权限设置为内核不可执行
+                     // 如果没有指定flags任意权限（读,写,...）或者此段虚拟内存没有执行权限
+                     // pte权限设置为内核不可执行
                         entry->l3_page.PXN = AARCH64_MMU_ATTR_PAGE_PXN;
                 // 内核kind下pte user不可执行
                 entry->l3_page.UXN = AARCH64_MMU_ATTR_PAGE_UXN;
@@ -720,7 +721,9 @@ static int set_pte_flags(pte_t *entry, vmr_prop_t flags, int kind)
 `query_in_pgtbl`、`map_range_in_pgtbl_common`、`unmap_range_in_pgtbl`
 
 就是软件遍历pagetable的n重循环（n=levels），在中间判断 valid 和是否 超级块（block/table） 即可
+
 # 缺页管理
+
 本节内容讲解Chcore中对缺页异常的处理，同时也会拓展ARM异常相关的知识。由于缺页异常会涉及到进程的虚拟地址区域 （VMR/VMA）和物理内存对象（PMO）的相关知识，所以我们也会对这部分作相应的解析，以帮助大家学习。本节内容顺序如下：
 
 - ARM异常基础知识
@@ -752,7 +755,7 @@ EL1t和EL1h分别用于实际内核和虚拟机hypervisor模式
 - **fiq**: 快速中断请求（FIQ），用于更高优先级的中断处理。
 - **error**: 处理其他类型的错误，如未定义指令或故障。
 
-linux ref: https://www.cnblogs.com/charliechen114514-blogs/p/18455517
+linux ref: <https://www.cnblogs.com/charliechen114514-blogs/p/18455517>
 
 ### 处理逻辑
 
@@ -761,18 +764,18 @@ linux ref: https://www.cnblogs.com/charliechen114514-blogs/p/18455517
 根据异常类型和当前的执行模式（内核态或用户态），设计相应的处理逻辑：
 
 - **同步异常处理逻辑**：
-    - **用户态（EL0）触发的同步异常**：
-        - **目标**：不能直接让内核崩溃，必须妥善处理
-        - **处理方式**：根据异常类型回调对应的处理逻辑。例如，对于页面错误，可以实现需求分页或COW机制
-    - **内核态（EL1）触发的同步异常**：
-        - **目标**：尝试修复一些提前设计的机制和可以处理的操作，其他情况应导致系统崩溃
-        - **处理方式**：对于可修复的异常，执行相应的修复逻辑；对于不可修复的异常，记录错误信息并触发系统崩溃
+  - **用户态（EL0）触发的同步异常**：
+    - **目标**：不能直接让内核崩溃，必须妥善处理
+    - **处理方式**：根据异常类型回调对应的处理逻辑。例如，对于页面错误，可以实现需求分页或COW机制
+  - **内核态（EL1）触发的同步异常**：
+    - **目标**：尝试修复一些提前设计的机制和可以处理的操作，其他情况应导致系统崩溃
+    - **处理方式**：对于可修复的异常，执行相应的修复逻辑；对于不可修复的异常，记录错误信息并触发系统崩溃
 - **中断处理逻辑**：
-    - **目标**：快速响应并处理外部设备的中断请求
-    - **处理方式**：调用中断处理逻辑，完成中断处理后返回到中断发生前的状态
+  - **目标**：快速响应并处理外部设备的中断请求
+  - **处理方式**：调用中断处理逻辑，完成中断处理后返回到中断发生前的状态
 - **错误处理逻辑**：
-    - **目标**：处理不可恢复的错误，确保系统稳定性
-    - **处理方式**：记录错误信息并触发系统崩溃（panic），以便进行后续的调试和分析
+  - **目标**：处理不可恢复的错误，确保系统稳定性
+  - **处理方式**：记录错误信息并触发系统崩溃（panic），以便进行后续的调试和分析
 
 落实到实现本身，则需要根据当前的异常级别寄存器（EL0或EL1）来区分内核态和用户态，并在异常发生时保存上下文信息。
 
@@ -791,7 +794,7 @@ void do_page_fault(u64 esr, u64 fault_ins_addr, int type, u64 *fix_addr)
         int fsc; // fault status code
         int wnr;
         int ret;
-				// 从far_el1寄存器读取汇编
+    // 从far_el1寄存器读取汇编
         fault_addr = get_fault_addr();
         // #define GET_ESR_EL1_FSC(esr_el1) (((esr_el1) >> ESR_EL1_FSC_SHIFT) & FSC_MASK)
         fsc = GET_ESR_EL1_FSC(esr);
@@ -800,7 +803,7 @@ void do_page_fault(u64 esr, u64 fault_ins_addr, int type, u64 *fix_addr)
         case DFSC_TRANS_FAULT_L1:
         case DFSC_TRANS_FAULT_L2:
         case DFSC_TRANS_FAULT_L3: {
-				// 地址转换错误，根据vma进行进一步处理，也就是缺页异常
+    // 地址转换错误，根据vma进行进一步处理，也就是缺页异常
                 ret = handle_trans_fault(current_thread->vmspace, fault_addr);
                 if (ret != 0) {
                 // 没有正确处理
@@ -809,7 +812,7 @@ void do_page_fault(u64 esr, u64 fault_ins_addr, int type, u64 *fix_addr)
                         // EL1 的 type, 表示内核态的异常，跳转到no_context标签
                                 goto no_context;
                         }
-												// 用户态的异常处理失败，打印信息后退出
+            // 用户态的异常处理失败，打印信息后退出
                         kinfo("do_page_fault: faulting ip is 0x%lx (real IP),"
                               "faulting address is 0x%lx,"
                               "fsc is trans_fault (0b%b),"
@@ -958,7 +961,7 @@ case DFSC_ACCESS_FAULT_L3:
 回顾Lab文档，我们知道：
 
 > 在 ChCore 中，一个进程的虚拟地址空间由多段“虚拟地址区域”（VMR，又称 VMA）组成，一段 VMR 记录了这段虚拟地址对应的“物理内存对象”（PMO），而 PMO 中则记录了物理地址相关信息。因此，想要处理缺页异常，首先需要找到当前进程发生页错误的虚拟地址所处的 VMR，进而才能得知其对应的物理地址，从而在页表中完成映射。
-> 
+>
 
 我们先来看看VMR的数据结构是如何设计的（已经添加了详细的注释）：
 
@@ -1073,7 +1076,7 @@ classDiagram
     
     vmregion "1" --> "1" vmspace : back_ref
     vmspace "1" --> "many" vmregion : has(both rbtree & list)
-		vmregion "1" --> "1" vmregion : list_node, tree_node
+  vmregion "1" --> "1" vmregion : list_node, tree_node
 ```
 
 观察其设计不难发现一个“奇怪”的现象，那就是它同时维护了双向链表和红黑树的数据结构
@@ -1082,7 +1085,7 @@ classDiagram
 
 举两个例子分别说明两种情况，以下代码均出自chcore中vma的操作函数的源码
 
-#### 链表的情况
+### 链表的情况
 
 ```c
 static void free_vmregion(struct vmregion *vmr)
@@ -1149,7 +1152,7 @@ struct pmobject {
 这里使用了start和size的结构，支持copy-on-writing和on demand paging。具体而言，声明时，只需要记录pmo 的start+size，在pmo之中维护访问过的/没访问的物理地址集合，在出现pagefault的时候分配，并更新这个集合就行。而对于如何维护这个集合的问题，chcore采用了radix-tree的形式，在Linux中也有相似应用
 
 > 在 Linux 内核中，radix tree（或其改进版本 xarray）被用于管理 page cache 和内存对象（如 PMO，Physical Memory Object）时的地址到页面映射。这种选择的背后是对性能、功能和扩展性的权衡
-> 
+>
 
 似乎只用bitmap也能达到一样的效果，那么为什么不用bitmap呢？这是因为radix tree管理的pmo的地址空间通常是**很大一段稀疏的**（启用on demand paging）。这对bitmap非常不友好，而radix tree对稀疏和懒分配有很好的支持。此外，bitmap只能标记存在与否，而radix tree可以存指针，从而达到更灵活的元数据管理
 
@@ -1322,11 +1325,11 @@ int handle_trans_fault(struct vmspace *vmspace, vaddr_t fault_addr)
 - 根据PMO的类型作进一步的处理：如匿名页面和共享内存  `PMO_ANONYM, PMO_SHM` 、文件映射   `PMO_FILE` 、禁止访问的内存  `PMO_FORBID`
 
 > 这里同时需要注意可能出现并发的pagefault,其语义处理根据不同type发生变化：如果是同个进程的多个线程，且类型为 `PMO_ANONYM` ，那只需要第一个线程更新radix即可; 如果是跨进程的线程，则需要各自更新
-> 
+>
 - 对于匿名/共享内存，需要查询其在radix tree中是否已经存在记录。如果存在，就只需要在自己的页表中设置页表映射; 否则为这个on demand paging的页面分配空间并更新
 
 > 在PHO_SHM共享内存的时候，多个进程的物理页面是相同的， 即各自的vma引用同一个pmo。所以并发场景下后来的线程会出现pa已经在radix之中存在的情况
-> 
+>
 - 刷新指令缓存，处理完毕
 
 至此，缺页管理部分的源码解析也到此结束，希望能对你的学习有所裨益！

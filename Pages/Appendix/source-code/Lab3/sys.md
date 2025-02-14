@@ -1,5 +1,5 @@
 > 系统调用是系统为用户程序提供的高特权操作接口。在本实验中，用户程序通过 `svc` 指令进入内核模式。在内核模式下，首先操作系统代码和硬件将保存用户程序的状态。操作系统根据系统调用号码执行相应的系统调用处理代码，完成系统调用的实际功能，并保存返回值。最后，操作系统和硬件将恢复用户程序的状态，将系统调用的返回值返回给用户程序，继续用户程序的执行
-> 
+>
 
 书接上回，在异常管理的部分已经讲了系统调用的整体流程。本部分内容将讲解其实现细节，并以printf函数为例探究一次系统调用的逻辑关系链
 
@@ -19,10 +19,10 @@
 
 ```nasm
 .macro switch_to_cpu_stack
-	mrs     x24, TPIDR_EL1
-	add	x24, x24, #OFFSET_LOCAL_CPU_STACK
-	ldr	x24, [x24]
-	mov	sp, x24
+ mrs     x24, TPIDR_EL1
+ add x24, x24, #OFFSET_LOCAL_CPU_STACK
+ ldr x24, [x24]
+ mov sp, x24
 .endm
 ```
 
@@ -38,20 +38,20 @@
 
 ```c
 struct per_cpu_info {
-	/* The execution context of current thread */
-	u64 cur_exec_ctx;
+ /* The execution context of current thread */
+ u64 cur_exec_ctx;
 
-	/* Per-CPU stack */
-	char *cpu_stack;
+ /* Per-CPU stack */
+ char *cpu_stack;
 
-	/* struct thread *fpu_owner */
-	void *fpu_owner;
-	u32 fpu_disable;
+ /* struct thread *fpu_owner */
+ void *fpu_owner;
+ u32 fpu_disable;
 
-	char pad[pad_to_cache_line(sizeof(u64) +
-				   sizeof(char *) +
-				   sizeof(void *) +
-				   sizeof(u32))];
+ char pad[pad_to_cache_line(sizeof(u64) +
+       sizeof(char *) +
+       sizeof(void *) +
+       sizeof(u32))];
 } __attribute__((packed, aligned(64)));
 ```
 
@@ -62,21 +62,21 @@ struct per_cpu_info {
 ```c
 void init_per_cpu_info(u32 cpuid)
 {
-	struct per_cpu_info *info;
+ struct per_cpu_info *info;
 
-	if (cpuid == 0)
-		ctr_el0 = read_ctr();
+ if (cpuid == 0)
+  ctr_el0 = read_ctr();
 
-	info = &cpu_info[cpuid];
+ info = &cpu_info[cpuid];
 
-	info->cur_exec_ctx = 0;
+ info->cur_exec_ctx = 0;
 
-	info->cpu_stack = (char *)(KSTACKx_ADDR(cpuid) + CPU_STACK_SIZE);
+ info->cpu_stack = (char *)(KSTACKx_ADDR(cpuid) + CPU_STACK_SIZE);
 
-	info->fpu_owner = NULL;
-	info->fpu_disable = 0;
-	// 寄存器在此处被初始化
-	asm volatile("msr tpidr_el1, %0"::"r" (info));
+ info->fpu_owner = NULL;
+ info->fpu_disable = 0;
+ // 寄存器在此处被初始化
+ asm volatile("msr tpidr_el1, %0"::"r" (info));
 }
 ```
 
@@ -90,10 +90,10 @@ void init_per_cpu_info(u32 cpuid)
  * IMPORTANT: modify the following offset values after
  * modifying struct per_cpu_info.
  */
-#define OFFSET_CURRENT_EXEC_CTX		0
-#define OFFSET_LOCAL_CPU_STACK		8
-#define OFFSET_CURRENT_FPU_OWNER	16
-#define OFFSET_FPU_DISABLE		24
+#define OFFSET_CURRENT_EXEC_CTX  0
+#define OFFSET_LOCAL_CPU_STACK  8
+#define OFFSET_CURRENT_FPU_OWNER 16
+#define OFFSET_FPU_DISABLE  24
 ```
 
 # 用户态libc支持
@@ -108,28 +108,28 @@ void init_per_cpu_info(u32 cpuid)
 // user/system-services/chcore-libc/musl-libc/src/stdio/__stdout_write.c
 size_t __stdout_write(FILE *f, const unsigned char *buf, size_t len)
 {
-	struct winsize wsz;
-	f->write = __stdio_write;
-	if (!(f->flags & F_SVB) && __syscall(SYS_ioctl, f->fd, TIOCGWINSZ, &wsz))
-		f->lbf = -1;
-	return __stdio_write(f, buf, len);
+ struct winsize wsz;
+ f->write = __stdio_write;
+ if (!(f->flags & F_SVB) && __syscall(SYS_ioctl, f->fd, TIOCGWINSZ, &wsz))
+  f->lbf = -1;
+ return __stdio_write(f, buf, len);
 }
 
 // user/system-services/chcore-libc/musl-libc/src/stdio/__stdio_write.c
 size_t __stdio_write(FILE *f, const unsigned char *buf, size_t len)
 {
-	struct iovec iovs[2] = {
-		{ .iov_base = f->wbase, .iov_len = f->wpos-f->wbase },
-		{ .iov_base = (void *)buf, .iov_len = len }
-	};
-	struct iovec *iov = iovs;
-	size_t rem = iov[0].iov_len + iov[1].iov_len;
-	int iovcnt = 2;
-	ssize_t cnt;
-	for (;;) {
-		// HERE!!!
-		cnt = syscall(SYS_writev, f->fd, iov, iovcnt);
-		// ...循环剩余内容
+ struct iovec iovs[2] = {
+  { .iov_base = f->wbase, .iov_len = f->wpos-f->wbase },
+  { .iov_base = (void *)buf, .iov_len = len }
+ };
+ struct iovec *iov = iovs;
+ size_t rem = iov[0].iov_len + iov[1].iov_len;
+ int iovcnt = 2;
+ ssize_t cnt;
+ for (;;) {
+  // HERE!!!
+  cnt = syscall(SYS_writev, f->fd, iov, iovcnt);
+  // ...循环剩余内容
 }
 ```
 
@@ -146,8 +146,8 @@ typedef long syscall_arg_t;
 #endif
 
 hidden long __syscall_ret(unsigned long),
-	__syscall_cp(syscall_arg_t, syscall_arg_t, syscall_arg_t, syscall_arg_t,
-	             syscall_arg_t, syscall_arg_t, syscall_arg_t);
+ __syscall_cp(syscall_arg_t, syscall_arg_t, syscall_arg_t, syscall_arg_t,
+              syscall_arg_t, syscall_arg_t, syscall_arg_t);
 
 #define __syscall1(n,a) __syscall1(n,__scc(a))
 #define __syscall2(n,a,b) __syscall2(n,__scc(a),__scc(b))
@@ -285,7 +285,7 @@ __attribute__((constructor(101))) void __libc_chcore_init(void)
         size_t i;
         elf_auxv_t *auxv;
 
-				// ......
+    // ......
 
         /* STDOUT */
         fd1 = alloc_fd();
@@ -294,7 +294,7 @@ __attribute__((constructor(101))) void __libc_chcore_init(void)
         fd_dic[fd1]->fd = fd1;
         fd_dic[fd1]->fd_op = &stdout_ops; // 这里！！！！！
 
-			  // ......
+     // ......
 }
 
 ```
@@ -309,32 +309,32 @@ FILE 是 一个等效于 `_IO_FILE` 结构体的宏，而后者在 `user/system-
 
 ```c
 struct _IO_FILE {
-	unsigned flags;
-	unsigned char *rpos, *rend;
-	int (*close)(FILE *);
-	unsigned char *wend, *wpos;
-	unsigned char *mustbezero_1;
-	unsigned char *wbase;
-	size_t (*read)(FILE *, unsigned char *, size_t);
-	size_t (*write)(FILE *, const unsigned char *, size_t);
-	off_t (*seek)(FILE *, off_t, int);
-	unsigned char *buf;
-	size_t buf_size;
-	FILE *prev, *next;
-	int fd;
-	int pipe_pid;
-	long lockcount;
-	int mode;
-	volatile int lock;
-	int lbf;
-	void *cookie;
-	off_t off;
-	char *getln_buf;
-	void *mustbezero_2;
-	unsigned char *shend;
-	off_t shlim, shcnt;
-	FILE *prev_locked, *next_locked;
-	struct __locale_struct *locale;
+ unsigned flags;
+ unsigned char *rpos, *rend;
+ int (*close)(FILE *);
+ unsigned char *wend, *wpos;
+ unsigned char *mustbezero_1;
+ unsigned char *wbase;
+ size_t (*read)(FILE *, unsigned char *, size_t);
+ size_t (*write)(FILE *, const unsigned char *, size_t);
+ off_t (*seek)(FILE *, off_t, int);
+ unsigned char *buf;
+ size_t buf_size;
+ FILE *prev, *next;
+ int fd;
+ int pipe_pid;
+ long lockcount;
+ int mode;
+ volatile int lock;
+ int lbf;
+ void *cookie;
+ off_t off;
+ char *getln_buf;
+ void *mustbezero_2;
+ unsigned char *shend;
+ off_t shlim, shcnt;
+ FILE *prev_locked, *next_locked;
+ struct __locale_struct *locale;
 };
 ```
 
@@ -343,54 +343,54 @@ struct _IO_FILE {
 ```c
 FILE *__fdopen(int fd, const char *mode)
 {
-	FILE *f;
-	struct winsize wsz;
+ FILE *f;
+ struct winsize wsz;
 
-	/* Check for valid initial mode character */
-	if (!strchr("rwa", *mode)) {
-		errno = EINVAL;
-		return 0;
-	}
+ /* Check for valid initial mode character */
+ if (!strchr("rwa", *mode)) {
+  errno = EINVAL;
+  return 0;
+ }
 
-	/* Allocate FILE+buffer or fail */
-	if (!(f=malloc(sizeof *f + UNGET + BUFSIZ))) return 0;
+ /* Allocate FILE+buffer or fail */
+ if (!(f=malloc(sizeof *f + UNGET + BUFSIZ))) return 0;
 
-	/* Zero-fill only the struct, not the buffer */
-	memset(f, 0, sizeof *f);
+ /* Zero-fill only the struct, not the buffer */
+ memset(f, 0, sizeof *f);
 
-	/* Impose mode restrictions */
-	if (!strchr(mode, '+')) f->flags = (*mode == 'r') ? F_NOWR : F_NORD;
+ /* Impose mode restrictions */
+ if (!strchr(mode, '+')) f->flags = (*mode == 'r') ? F_NOWR : F_NORD;
 
-	/* Apply close-on-exec flag */
-	if (strchr(mode, 'e')) __syscall(SYS_fcntl, fd, F_SETFD, FD_CLOEXEC);
+ /* Apply close-on-exec flag */
+ if (strchr(mode, 'e')) __syscall(SYS_fcntl, fd, F_SETFD, FD_CLOEXEC);
 
-	/* Set append mode on fd if opened for append */
-	if (*mode == 'a') {
-		int flags = __syscall(SYS_fcntl, fd, F_GETFL);
-		if (!(flags & O_APPEND))
-			__syscall(SYS_fcntl, fd, F_SETFL, flags | O_APPEND);
-		f->flags |= F_APP;
-	}
+ /* Set append mode on fd if opened for append */
+ if (*mode == 'a') {
+  int flags = __syscall(SYS_fcntl, fd, F_GETFL);
+  if (!(flags & O_APPEND))
+   __syscall(SYS_fcntl, fd, F_SETFL, flags | O_APPEND);
+  f->flags |= F_APP;
+ }
 
-	f->fd = fd;
-	f->buf = (unsigned char *)f + sizeof *f + UNGET;
-	f->buf_size = BUFSIZ;
+ f->fd = fd;
+ f->buf = (unsigned char *)f + sizeof *f + UNGET;
+ f->buf_size = BUFSIZ;
 
-	/* Activate line buffered mode for terminals */
-	f->lbf = EOF;
-	if (!(f->flags & F_NOWR) && !__syscall(SYS_ioctl, fd, TIOCGWINSZ, &wsz))
-		f->lbf = '\n';
+ /* Activate line buffered mode for terminals */
+ f->lbf = EOF;
+ if (!(f->flags & F_NOWR) && !__syscall(SYS_ioctl, fd, TIOCGWINSZ, &wsz))
+  f->lbf = '\n';
 
-	/* Initialize op ptrs. No problem if some are unneeded. */
-	f->read = __stdio_read;
-	f->write = __stdio_write;
-	f->seek = __stdio_seek;
-	f->close = __stdio_close;
+ /* Initialize op ptrs. No problem if some are unneeded. */
+ f->read = __stdio_read;
+ f->write = __stdio_write;
+ f->seek = __stdio_seek;
+ f->close = __stdio_close;
 
-	if (!libc.threaded) f->lock = -1;
+ if (!libc.threaded) f->lock = -1;
 
-	/* Add new FILE to open file list */
-	return __ofl_add(f);
+ /* Add new FILE to open file list */
+ return __ofl_add(f);
 }
 
 ```
@@ -402,24 +402,24 @@ FILE *__fdopen(int fd, const char *mode)
 ```c
 size_t __stdio_read(FILE *f, unsigned char *buf, size_t len)
 {
-	struct iovec iov[2] = {
-		{ .iov_base = buf, .iov_len = len - !!f->buf_size },
-		{ .iov_base = f->buf, .iov_len = f->buf_size }
-	};
-	ssize_t cnt;
+ struct iovec iov[2] = {
+  { .iov_base = buf, .iov_len = len - !!f->buf_size },
+  { .iov_base = f->buf, .iov_len = f->buf_size }
+ };
+ ssize_t cnt;
 
-	cnt = iov[0].iov_len ? syscall(SYS_readv, f->fd, iov, 2)
-		: syscall(SYS_read, f->fd, iov[1].iov_base, iov[1].iov_len);
-	if (cnt <= 0) {
-		f->flags |= cnt ? F_ERR : F_EOF;
-		return 0;
-	}
-	if (cnt <= iov[0].iov_len) return cnt;
-	cnt -= iov[0].iov_len;
-	f->rpos = f->buf;
-	f->rend = f->buf + cnt;
-	if (f->buf_size) buf[len-1] = *f->rpos++;
-	return len;
+ cnt = iov[0].iov_len ? syscall(SYS_readv, f->fd, iov, 2)
+  : syscall(SYS_read, f->fd, iov[1].iov_base, iov[1].iov_len);
+ if (cnt <= 0) {
+  f->flags |= cnt ? F_ERR : F_EOF;
+  return 0;
+ }
+ if (cnt <= iov[0].iov_len) return cnt;
+ cnt -= iov[0].iov_len;
+ f->rpos = f->buf;
+ f->rend = f->buf + cnt;
+ if (f->buf_size) buf[len-1] = *f->rpos++;
+ return len;
 }
 
 ```
@@ -429,29 +429,29 @@ size_t __stdio_read(FILE *f, unsigned char *buf, size_t len)
 ```c
 FILE *fopen(const char *restrict filename, const char *restrict mode)
 {
-	FILE *f;
-	int fd;
-	int flags;
+ FILE *f;
+ int fd;
+ int flags;
 
-	/* Check for valid initial mode character */
-	if (!strchr("rwa", *mode)) {
-		errno = EINVAL;
-		return 0;
-	}
+ /* Check for valid initial mode character */
+ if (!strchr("rwa", *mode)) {
+  errno = EINVAL;
+  return 0;
+ }
 
-	/* Compute the flags to pass to open() */
-	flags = __fmodeflags(mode);
+ /* Compute the flags to pass to open() */
+ flags = __fmodeflags(mode);
 
-	fd = sys_open(filename, flags, 0666);
-	if (fd < 0) return 0;
-	if (flags & O_CLOEXEC)
-		__syscall(SYS_fcntl, fd, F_SETFD, FD_CLOEXEC);
+ fd = sys_open(filename, flags, 0666);
+ if (fd < 0) return 0;
+ if (flags & O_CLOEXEC)
+  __syscall(SYS_fcntl, fd, F_SETFD, FD_CLOEXEC);
 
-	f = __fdopen(fd, mode);
-	if (f) return f;
+ f = __fdopen(fd, mode);
+ if (f) return f;
 
-	__syscall(SYS_close, fd);
-	return 0;
+ __syscall(SYS_close, fd);
+ return 0;
 }
 ```
 
@@ -464,15 +464,15 @@ FILE *fopen(const char *restrict filename, const char *restrict mode)
 ```c
 // user/system-services/chcore-libc/musl-libc/src/stdio/stdout.c
 hidden FILE __stdout_FILE = {
-	.buf = buf+UNGET,
-	.buf_size = sizeof buf-UNGET,
-	.fd = 1,
-	.flags = F_PERM | F_NORD,
-	.lbf = '\n',
-	.write = __stdout_write,
-	.seek = __stdio_seek,
-	.close = __stdio_close,
-	.lock = -1,
+ .buf = buf+UNGET,
+ .buf_size = sizeof buf-UNGET,
+ .fd = 1,
+ .flags = F_PERM | F_NORD,
+ .lbf = '\n',
+ .write = __stdout_write,
+ .seek = __stdio_seek,
+ .close = __stdio_close,
+ .lock = -1,
 };
 FILE *const stdout = &__stdout_FILE;
 ```
@@ -484,11 +484,11 @@ FILE *const stdout = &__stdout_FILE;
 
 size_t __stdout_write(FILE *f, const unsigned char *buf, size_t len)
 {
-	struct winsize wsz;
-	f->write = __stdio_write;
-	if (!(f->flags & F_SVB) && __syscall(SYS_ioctl, f->fd, TIOCGWINSZ, &wsz))
-		f->lbf = -1;
-	return __stdio_write(f, buf, len);
+ struct winsize wsz;
+ f->write = __stdio_write;
+ if (!(f->flags & F_SVB) && __syscall(SYS_ioctl, f->fd, TIOCGWINSZ, &wsz))
+  f->lbf = -1;
+ return __stdio_write(f, buf, len);
 }
 ```
 
@@ -498,7 +498,7 @@ size_t __stdout_write(FILE *f, const unsigned char *buf, size_t len)
 
 ```mermaid
 graph TD
-	  subgraph libc
+   subgraph libc
     printf --> vprintf
     vprintf --> printf-core
     printf-core --> out
