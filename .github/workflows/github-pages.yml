@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
       - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
-          globs: Pages/**.md
+          globs: Pages/**/*.md
 
   build:
     runs-on: ubuntu-latest

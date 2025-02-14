@@ -45,17 +45,18 @@ struct mount_point_info_node {
 
 
 > [!HINT] 提示：
->   * 完成 `user/system-services/system-servers/fsm/fsm_client_cap.c` 中的相关函数。
->   * 所有关于挂载点有关的helper函数都在 `user/system-services/system-servers/fsm/mount_info.c`
->   * IPC handler 返回的 IPC msg 的数据类型为 `struct fsm_request`，其有关的含义在 `user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/fs_defs.h` 有详细的解释。
->   * 使用 `user/system-services/system-servers/fsm/mount_info.h` 定义的函数来帮助你实现 IPC handler。
->   * 你应当回顾 Lab4 代码以查看 ChCore 是怎么将 cap 对象在进程间收发的，以及 ChCore 中是怎么使用共享内存完成 IPC 调用的。
->   * 由于 printf 并不经过FS所以你可以放心使用。
+>
+> * 完成 `user/system-services/system-servers/fsm/fsm_client_cap.c` 中的相关函数。
+> * 所有关于挂载点有关的helper函数都在 `user/system-services/system-servers/fsm/mount_info.c`
+> * IPC handler 返回的 IPC msg 的数据类型为 `struct fsm_request`，其有关的含义在 `user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/fs_defs.h` 有详细的解释。
+> * 使用 `user/system-services/system-servers/fsm/mount_info.h` 定义的函数来帮助你实现 IPC handler。
+> * 你应当回顾 Lab4 代码以查看 ChCore 是怎么将 cap 对象在进程间收发的，以及 ChCore 中是怎么使用共享内存完成 IPC 调用的。
+> * 由于 printf 并不经过FS所以你可以放心使用。
 
 
 > [!HINT]
 > 我们提供了所有需要实现的文件的 Obj 版本，你可以修改 CMakeLists.txt，将编译所需的源文件从未实现的 C 文件替换为包含了正确实现的 Obj 文件，以此验证某一部分练习的正确性。如果你需要调试某一个部分，你可以将 `Scripts/extras/lab5/cmake/` 下的CMakeLists对应复制到 `FSM` 以及 `FS_Base` 的目录下覆盖并重新编译，运行 `make qemu` 后你就可以查看到 printf 的调试信息。
-> 
+>
 > Part1: fsm-full.txt/fs_base-part1.txt  
 > Part2: fsm-part2.txt/fs_base-part2-vnode.txt  
 > Part3: fsm-part2.txt/fs_base-part2-server_entry.txt  
