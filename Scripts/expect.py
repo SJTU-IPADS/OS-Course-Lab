@@ -17,6 +17,7 @@ Better to use this script with Python 3.7 and later.
 
 import argparse
 import json
+import logging
 import sys
 from dataclasses import dataclass
 from enum import Enum
@@ -98,7 +99,7 @@ class RawExpect(TypedDict):
     userland: bool
 
 
-def load_captures(file: str) -> list[LineExpect]:
+def load_captures(file: str, in_kernel: bool) -> list[LineExpect]:
 
     captures: list[LineExpect] = list()
     try:
@@ -119,7 +120,7 @@ def load_captures(file: str) -> list[LineExpect]:
                     content=raw_capture["capture"],
                     msg=raw_capture["msg"],
                     proposed=raw_capture["proposed"],
-                    userland=raw_capture.get("userland", False),
+                    userland=raw_capture.get("userland", False) if in_kernel else True,
                 )
             )
         except KeyError:
@@ -131,34 +132,48 @@ def load_captures(file: str) -> list[LineExpect]:
 def main(args: argparse.Namespace):
     """Main grading function."""
 
-    captures = load_captures(args.file)
+    is_kernel_test = args.serial != ""
+
+    captures = load_captures(args.file, is_kernel_test)
+
     expect_lines = [
         (
-            f"{capture.content}.*{args.serial}"
+            f"{capture.content}: {args.serial}"
             if not capture.userland
-            else f"{capture.content}.*"
+            else f"{capture.content}"
         )
         for capture in captures
     ]
-    expect_lines += [f"End of Kernel Checkpoints: {args.serial}.*"]
+
+    if is_kernel_test:
+        expect_lines += [f"End of Kernel Checkpoints: {args.serial}.*"]
+
+    logging.debug(f"Expecting: {expect_lines}")
     process = pexpect.spawn(
         " ".join(args.command), timeout=args.timeout, encoding="utf-8"
     )
     process.logfile = sys.stdout if args.verbose else None
-    in_userland = False or args.serial == ""
-    scores = 0
     proposed_total = sum([capture.proposed for capture in captures])
+    in_userland = not is_kernel_test
+    scores = 0
 
     if len(expect_lines) > 0:
         while scores < proposed_total:
             try:
                 i = process.expect(expect_lines)
-                if i == len(expect_lines) - 1:
+
+                logging.debug(f"Matched: {expect_lines[i]}")
+                if i == len(expect_lines) - 1 and is_kernel_test:
+                    logging.debug("End of Kernel Checkpoints detected.")
                     in_userland = True
                 else:
                     if in_userland == captures[i].userland:
                         captures[i].actual = captures[i].proposed
                         scores += captures[i].actual
+                    else:
+                        logging.debug(
+                            f"Userland Mismatch: {in_userland} != {captures[i].userland}"
+                        )
             except (pexpect.EOF, pexpect.TIMEOUT, KeyboardInterrupt):
                 break
 
@@ -215,6 +230,12 @@ if __name__ == "__main__":
     _ = parser.add_argument(
         "command", nargs=argparse.REMAINDER, help="Real Command to grade."
     )
+
     args = parser.parse_args()
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    logging.basicConfig(
+        format=f"{Colors.GREEN.value}[EXPECT]: %(message)s{Colors.END.value}",
+        level=log_level,
+    )
     scores = main(args)
     sys.exit(scores)
