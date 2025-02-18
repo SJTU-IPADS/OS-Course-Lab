@@ -1,9 +1,10 @@
 ---
 name: 错误报告
 about: 针对某个版本OS Course Lab的错误报告
-title: "[BUG]"
-labels: ''
-assignees: ''
+title: "[BUG] "
+labels: ["bug"]
+assignees:
+    - "ToolmanP"
 
 ---
 
