@@ -1,0 +1,6 @@
+*.txt
+malloc_log
+nginx_build
+nginx_install
+redis_src
+redis_install
