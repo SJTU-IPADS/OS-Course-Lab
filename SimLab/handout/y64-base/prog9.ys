@@ -1,0 +1,9 @@
+# Exception handqing
+# /* $begin prog9-yo */
+   xorq %rax,%rax 
+   jne  Target      # Not taken
+   irmovq $1, %rax  # Fall through
+   halt
+Target:
+   .byte 0xFF       # Invalid instruction code
+# /* $end prog9-yo */
