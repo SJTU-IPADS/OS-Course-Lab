@@ -1,9 +1,10 @@
 ---
 name: 特性申请
 about: 对OS-Course-Lab增加新特性的申请
-title: "[Feature Request]"
-labels: ''
-assignees: ''
+title: "[Feature Request] "
+labels: ["enhancement"]
+assignees:
+    - "ToolmanP"
 
 ---
 
