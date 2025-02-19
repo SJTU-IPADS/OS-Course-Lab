@@ -10,3 +10,4 @@
 ## 实验内容
 
 1. SimLab
+Lab说明文档：https://ipads.feishu.cn/wiki/Ca0Nwh6L6ifXbfk86VfcWK6FnSd
