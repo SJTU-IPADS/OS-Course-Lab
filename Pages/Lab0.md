@@ -17,7 +17,7 @@
 - `make bomb`: 使用student-number.txt提供的学号，生成炸弹，如果您不是上海交通大学的学生可以自行随意填写。
 - `make qemu`: 使用qemu-aarch64二进制模拟运行炸弹
 - `make qemu-gdb`: 使用qemu-aarch64提供的gdb server进行调试
-- `make gdb`: 使用仓库目录自动生成的$(GDB)定义连接到qemu-aarch64的gdb-server进行调试
+- `make gdb`: 使用gdb连接到qemu-aarch64的gdb-server进行调试
 
 ## 评分与提交规则
 
