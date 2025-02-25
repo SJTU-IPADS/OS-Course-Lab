@@ -15,6 +15,11 @@
 
 <img src="Assets/os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
 
+完成系列实验后，你可以在树莓派上用自己DIY的ChCore内核，运行宝可梦游戏、调用DeepSeek、本地运行Qwen-1.5b等等。
+
+https://github.com/user-attachments/assets/00804575-bc97-4594-b09e-2d20e1d69509
+
+
 > [!NOTE]
 > 如果你有任何建议或更正意见，欢迎提交 Pull Requests 或 Issues。让我们一起合作改进实验
 
@@ -57,8 +62,3 @@ Tutorial: <https://www.bilibili.com/video/BV1AS421N7rU/>
 ## Lab6：GUI (Optional)
 
 该实验将详细介绍ChCore上基于Wayland的GUI系统的运行原理，包括Wayland通信协议和Wayland Compositor，并且要求读者在了解基于Wayland的GUI系统运行原理的基础上，基于ChCore的GUI框架编写自己的具有GUI界面的APP。
-
-完成实验后，你可以在ChCore上运行带GUI的宝可梦游戏
-
-https://github.com/user-attachments/assets/00804575-bc97-4594-b09e-2d20e1d69509
-
