@@ -58,3 +58,7 @@ Tutorial: <https://www.bilibili.com/video/BV1AS421N7rU/>
 
 该实验将详细介绍ChCore上基于Wayland的GUI系统的运行原理，包括Wayland通信协议和Wayland Compositor，并且要求读者在了解基于Wayland的GUI系统运行原理的基础上，基于ChCore的GUI框架编写自己的具有GUI界面的APP。
 
+完成实验后，你可以在ChCore上运行带GUI的宝可梦游戏
+
+https://github.com/user-attachments/assets/00804575-bc97-4594-b09e-2d20e1d69509
+
