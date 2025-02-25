@@ -26,7 +26,7 @@ else
 endif
 
 DOCKER ?= docker
-DOCKER_IMAGE ?= ipads/oslab:24.09
+DOCKER_IMAGE ?= ipads/oslab:25.03
 ifeq (,$(wildcard /docker.env))
 DOCKER_RUN ?= 
 else
@@ -39,8 +39,8 @@ DOCKER_RUN ?= $(DOCKER) run -it --rm \
 		-u $(shell id -u $(USER)):$(shell id -g $(USER)) \
 		-v $(LABROOT):$(LABROOT) -w $(CURDIR) \
 		--security-opt=seccomp:unconfined \
-    --platform=linux/amd64 \
-		ipads/oslab:24.09
+		--platform=linux/amd64 \
+		$(DOCKER_IMAGE)
 endif
 QEMU-SYS ?= qemu-system-aarch64
 QEMU-USER ?= qemu-aarch64
