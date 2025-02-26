@@ -21,9 +21,7 @@ import logging
 import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import TypedDict, Union
-
-from typing_extensions import Any
+from typing import TypedDict
 
 if sys.version_info[0] != 3 or sys.version_info[1] < 6:
     print(
