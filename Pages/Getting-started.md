@@ -20,6 +20,10 @@
 > 用户stu 密码为123456
 
 
+> [!IMPORTANT] CRLF
+> 由于bash/GNU Make强制需要使用LF作为换行符，当你尝试保存脚本时请确保换行符为LF，而非CRLF。
+
+
 > [!WARNING]
 > 小心使用sudo，请注意我们在编译的时候我们会同步的在编译文件夹时写入timestamp文件，如果你使用root权限，会导致后续普通的正常构建返回错误。
 

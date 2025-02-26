@@ -1,5 +1,4 @@
-* text=auto
+* text eol=lf
 
-*.sh text eol=lf
 *.obj binary
 *.dbg.obj binary
