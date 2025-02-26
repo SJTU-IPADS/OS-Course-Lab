@@ -14,7 +14,7 @@
 Expect script for grading lab assignments.
 Better to use this script with Python 3.7 and later.
 """
-
+from __future__ import annotations
 import argparse
 import json
 import logging
