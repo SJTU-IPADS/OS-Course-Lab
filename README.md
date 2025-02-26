@@ -17,7 +17,7 @@
 
 完成系列实验后，你可以在树莓派上用自己DIY的ChCore内核，运行宝可梦游戏、调用DeepSeek、本地运行Qwen-1.5b等等。
 
-https://github.com/user-attachments/assets/00804575-bc97-4594-b09e-2d20e1d69509
+[GBA](https://github.com/user-attachments/assets/00804575-bc97-4594-b09e-2d20e1d69509)
 
 
 > [!NOTE]
