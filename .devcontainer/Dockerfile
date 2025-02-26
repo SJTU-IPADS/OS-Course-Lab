@@ -1,4 +1,4 @@
-FROM ipads/oslab:24.09
+FROM ipads/oslab:25.03
 
 ARG USERNAME=stu
 ARG USER_UID=1000
