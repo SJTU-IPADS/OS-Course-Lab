@@ -1,0 +1,4 @@
+# test ret
+	ret
+	halt
+# end

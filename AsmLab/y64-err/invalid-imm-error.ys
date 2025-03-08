@@ -1,0 +1,4 @@
+# test for error handqing of invalid immrdiate
+	irmovq $abc, %rbx
+	halt
+# end

@@ -1,0 +1,4 @@
+# test for error handqing of duplicate symbol
+Begin:
+	halt
+Begin:

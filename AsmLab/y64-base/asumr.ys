@@ -1,0 +1,48 @@
+# Execution begins at address 0
+	.pos 0
+init:	irmovq Stack, %rsp  	# Set up Stack pointer
+	irmovq Stack, %rbp  	# Set up base pointer
+	jmp Main		# Execute main program
+
+# Array of 4 elements
+	.align 8
+array:	.quad 0xd
+	.quad 0xc0
+	.quad 0xb00
+	.quad 0xa000
+
+Main:	irmovq $4,%rax
+	pushq %rax	# Push 4
+	irmovq array,%rdx
+	pushq %rdx      # Push array
+	call rSum	# Sum(array, 4)
+	halt
+
+#/* $begin rsum-ys */
+	# int Sum(int *Start, int Count)
+rSum:	pushq %rbp
+	rrmovq %rsp,%rbp
+	pushq %rbx           # Save value of %rbx
+	mrmovq 16(%rbp),%rbx  # Get Start
+	mrmovq 24(%rbp),%rax # Get Count
+	andq %rax,%rax       # Test value of Count
+	jle L38              # If <= 0, goto zreturn
+	irmovq $-1,%rdx
+	addq %rdx,%rax       # Count--
+	pushq %rax           # Push Count
+	irmovq $8,%rdx
+	rrmovq %rbx,%rax
+	addq %rdx,%rax       
+	pushq %rax           # Push Start+1
+	call rSum            # Sum(Start+1, Count-1)
+	mrmovq (%rbx),%rdx
+	addq %rdx,%rax       # Add *Start
+	jmp L39              # goto done
+L38:	xorq %rax,%rax       # zreturn:
+L39:	mrmovq -8(%rbp),%rbx # done: Restore %rbx
+	rrmovq %rbp,%rsp     # Deallocate stack frame
+	popq %rbp            # Restore %rbp
+	ret
+#/* $end rsum-ys */
+	.pos 0x800
+Stack:	# The stack goes here

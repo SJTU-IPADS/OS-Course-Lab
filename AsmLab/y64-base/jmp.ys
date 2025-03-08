@@ -1,0 +1,5 @@
+# test jmp
+Loop:
+	jmp Loop
+	halt
+# end

@@ -11,3 +11,6 @@
 
 ### 1. SimLab (一个简易的Y86 CPU模拟器)
 Lab说明文档：https://ipads.feishu.cn/wiki/Ca0Nwh6L6ifXbfk86VfcWK6FnSd
+
+### 2. AsmLab
+Lab说明文档: https://ipads.feishu.cn/wiki/YOj3wJgg2i8jEFk6mfpc2s2UnRf

@@ -1,0 +1,4 @@
+# test andq
+	andq %rsi, %rdi
+	halt
+# end
