@@ -15,6 +15,6 @@ Lab说明文档：https://ipads.feishu.cn/wiki/Ca0Nwh6L6ifXbfk86VfcWK6FnSd
 ### 2. AsmLab
 Lab说明文档: https://ipads.feishu.cn/wiki/YOj3wJgg2i8jEFk6mfpc2s2UnRf
 
-### 3. ArchLab: 
+### 3. CpuLab
 Lab说明文档: https://ipads.feishu.cn/wiki/Hbe9wviW1iGDhWkzhoXcOAPEnPj
 
