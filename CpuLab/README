@@ -7,14 +7,3 @@
 # without permission.
 #
 ######################################################################
-
-This directory contains the files that you need for the CS:APP
-architecture lab.
-
-******
-Files:
-******
-
-README			This file
-sim/			Y86-64 tools
-simguide.pdf		CS:APP Guide to Simulators document
