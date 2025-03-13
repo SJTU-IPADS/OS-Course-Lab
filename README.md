@@ -16,5 +16,5 @@ Lab说明文档：https://ipads.feishu.cn/wiki/Ca0Nwh6L6ifXbfk86VfcWK6FnSd
 Lab说明文档: https://ipads.feishu.cn/wiki/YOj3wJgg2i8jEFk6mfpc2s2UnRf
 
 ### 3. ArchLab: 
-Lab说明文档: https://ipads.feishu.cn/wiki/YOj3wJgg2i8jEFk6mfpc2s2UnRf
+Lab说明文档: https://ipads.feishu.cn/wiki/Hbe9wviW1iGDhWkzhoXcOAPEnPj
 
