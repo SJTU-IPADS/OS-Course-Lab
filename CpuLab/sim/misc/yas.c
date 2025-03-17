@@ -11,8 +11,6 @@ void add_symbol(char *, int);
 int find_symbol(char *);
 int instr_size(char *);
 
-int gui_mode = 0;
-
 FILE *outfile;
 
 int verbose = 0;

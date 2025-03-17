@@ -22,21 +22,10 @@ ssim	std	seq-std.hcl	Standard SEQ simulator described in textbook.
 ssim	full	seq-full.hcl	For adding iaddq to SEQ.
 ssim+	std	seq+-std.hcl	Standard SEQ+ simulator described in textbook.
 
-The simulators run in either TTY or GUI mode:
-
-o TTY mode: A simulator running in TTY mode prints all information
-about its runtime behavior on the terminal.  It's hard to understand what's
+The simulator running in TTY mode prints all information about its
+runtime behavior on the terminal.  It's hard to understand what's
 going on, but useful for automated testing, and doesn't require any
 special installation features.
-
-o GUI mode: A simulator running in GUI mode uses a fancy graphical
-user interface.  Nice for visualizing and debugging, but requires
-installation of Tcl/Tk on your system.
-
-The Makefile has simple instructions for building TTY or GUI
-simulators. A TTY simulator runs in TTY mode only. A GUI
-simulator can run in either TTY mode or GUI mode, according to 
-a command line argument.
 
 Once you've configured the Makefile, you can build the different
 simulators with commands of the form
@@ -52,17 +41,14 @@ logic in seq-std.hcl, type
 To save typing, you can also set the Makefile's VERSION variable.
 
 ***********************
-2. Using the simulators
+1. Using the simulators
 ***********************
 
 The simulators take identical command line arguments:
 
 Usage: ssim [-htg] [-l m] [-v n] file.yo
 
-file.yo required in GUI mode, optional in TTY mode (default stdin)
-
    -h     Print this message
-   -g     Run in GUI mode instead of TTY mode (default TTY mode)
    -l m   Set instruction limit to m [TTY mode only] (default 10000)
    -v n   Set verbosity level to 0 <= n <= 2 [TTY mode only] (default 2)
    -t     Test result against the ISA simulator (yis) [TTY model only]
@@ -75,9 +61,6 @@ Makefile		Builds the SEQ and SEQ+ simulators
 Makefile-sim		Makefile for student distribution
 README			This file
 
-seq+.tcl		TCL script for GUI version of SEQ+
-seq.tcl			TCL script for GUI version of SEQ
-
 ssim.c			Base sequential simulator code and header file
 sim.h
 
@@ -87,5 +70,3 @@ seq-full.hcl		Template for the iaddq problem (4.34-35)
 
 seq-full-ans.hcl	Solution for the iaddq problems (4.34-35)
 			(Instructor distribution only)
-
-

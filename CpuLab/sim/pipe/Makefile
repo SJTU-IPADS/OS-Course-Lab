@@ -2,25 +2,7 @@
 
 VERSION=std
 
-# Comment this out if you don't have Tcl/Tk on your system
-
-#GUIMODE=-DHAS_GUI
-
-# Modify the following line so that gcc can find the libtcl.so and
-# libtk.so libraries on your system. You may need to use the -L option
-# to tell gcc which directory to look in. Comment this out if you
-# don't have Tcl/Tk.
-
-#TKLIBS=-L/usr/lib -ltk8.5 -ltcl8.5
-
-# Modify the following line so that gcc can find the tcl.h and tk.h
-# header files on your system. Comment this out if you don't have
-# Tcl/Tk.
-
-#TKINC=-isystem /usr/include/tcl8.5
-
-# Modify these two lines to choose your compiler and compile time
-# flags.
+# Modify these two lines to choose your compiler and compile time flags.
 
 CC=gcc
 CFLAGS=-Wall -O2 -fcommon
@@ -31,8 +13,8 @@ CFLAGS=-Wall -O2 -fcommon
 
 MISCDIR=../misc
 HCL2C=$(MISCDIR)/hcl2c
-INC=$(TKINC) -I$(MISCDIR) $(GUIMODE)
-LIBS=$(TKLIBS) -lm
+INC=-I$(MISCDIR)
+LIBS=-lm
 YAS = ../misc/yas
 
 all: psim drivers
@@ -59,5 +41,3 @@ drivers:
 
 clean:
 	rm -f psim pipe-*.c *.o *.exe *~ 
-
-

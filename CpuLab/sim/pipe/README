@@ -29,18 +29,7 @@ psim	btfnt		pipe-btfnt.hcl	  For implementing BTFNT branch pred.
 psim	1w		pipe-1w.hcl	  For implementing single write port
 psim	super		pipe-super.hcl	  Implements iaddq & load forwarding
 
-The Makefile can be configured to build simulators that support GUI
-and/or TTY interfaces. A simulator running in TTY mode prints all
-information about its runtime behavior on the terminal.  It's hard to
-understand what's going on, but useful for automated testing, and
-doesn't require any special installation features.  A simulator
-running in GUI mode uses a fancy graphical user interface.  Nice for
-visualizing and debugging, but requires installation of Tcl/Tk on your
-system.
-
-The Makefile has simple instructions for building the TTY and GUI
-forms. In either case, once you've configured the Makefile, you can
-build different versions of the simulators with different HCL files
+You can build different versions of the simulators with different HCL files
 with commands of the form:
 
 	unix> make clean; make psim VERSION=xxx
@@ -62,13 +51,10 @@ The simulator recognizes the following command line arguments:
 
 Usage: psim [-htg] [-l m] [-v n] file.yo
 
-file.yo required in GUI mode, optional in TTY mode (default stdin)
-
    -h     Print this message
-   -g     Run in GUI mode instead of TTY mode (default TTY mode)
-   -l m   Set instruction limit to m [TTY mode only] (default 10000)
-   -v n   Set verbosity level to 0 <= n <= 2 [TTY mode only] (default 2)
-   -t     Test result against the ISA simulator (yis) [TTY model only]
+   -l m   Set instruction limit to m (default 10000)
+   -v n   Set verbosity level to 0 <= n <= 2 (default 2)
+   -t     Test result against the ISA simulator (yis)
 
 ********
 3. Files
@@ -144,7 +130,3 @@ psim.c			Base simulator code
 sim.h			PIPE header files
 pipeline.h
 stages.h
-pipe.tcl		TCL script for the GUI version of PIPE
-
-
-

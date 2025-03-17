@@ -5,9 +5,6 @@
 
 #include "isa.h"
 
-/* YIS never runs in GUI mode */
-int gui_mode = 0;
-
 void usage(char *pname)
 {
     printf("Usage: %s code_file [max_steps]\n", pname);

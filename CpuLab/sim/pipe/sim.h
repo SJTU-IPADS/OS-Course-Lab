@@ -2,8 +2,14 @@
 /********** Typedefs ************/
 
 /* EX stage mux settings */
-typedef enum { MUX_NONE, MUX_EX_A, MUX_EX_B, MUX_MEM_E,
-	       MUX_WB_M, MUX_WB_E } mux_source_t;
+typedef enum {
+    MUX_NONE,
+    MUX_EX_A,
+    MUX_EX_B,
+    MUX_MEM_E,
+    MUX_WB_M,
+    MUX_WB_E
+} mux_source_t;
 
 /* Simulator operating modes */
 typedef enum { S_WEDGED, S_STALL, S_FORWARD } sim_mode_t;
@@ -18,7 +24,6 @@ typedef enum { IF_STAGE, ID_STAGE, EX_STAGE, MEM_STAGE, WB_STAGE } stage_id_t;
 
 /* Get rb out of one byte regid field */
 #define GET_RB(r) LO4(r)
-
 
 /************ Global state declaration ****************/
 
@@ -70,7 +75,6 @@ extern word_t mem_addr;
 extern word_t mem_data;
 extern bool_t mem_write;
 
-
 /* Intermdiate stage values that must be used by control functions */
 extern word_t f_pc;
 extern byte_t imem_icode;
@@ -116,7 +120,8 @@ void sim_reset();
   if statusp nonnull, then will be set to status of final instruction
   if ccp nonnull, then will be set to condition codes of final instruction
 */
-word_t sim_run_pipe(word_t max_instr, word_t max_cycle, byte_t *statusp, cc_t *ccp);
+word_t sim_run_pipe(word_t max_instr, word_t max_cycle, byte_t *statusp,
+                    cc_t *ccp);
 
 /* If dumpfile set nonNULL, lots of status info printed out */
 void sim_set_dumpfile(FILE *file);
@@ -125,29 +130,4 @@ void sim_set_dumpfile(FILE *file);
  * sim_log dumps a formatted string to the dumpfile, if it exists
  * accepts variable argument list
  */
-void sim_log( const char *format, ... );
-
- 
-/******************* GUI Interface Functions **********************/
-#ifdef HAS_GUI
-
-void signal_sources();
-
-void signal_register_clear();
-
-void report_pc(unsigned fpc, unsigned char fpcv,
-	       unsigned dpc, unsigned char dpcv,
-	       unsigned epc, unsigned char epcv,
-	       unsigned mpc, unsigned char mpcv,
-	       unsigned wpc, unsigned char wpcv);
-
-void report_state(char *id, word_t current, char *txt);
-
-void show_cc(cc_t cc);
-void show_cpi();
-void show_stat(stat_t stat);
-
-void create_memory_display();
-void set_memory(word_t addr, word_t val);
-#endif
-								       
+void sim_log(const char *format, ...);

@@ -20,47 +20,12 @@ psim		PIPE simulator
 1. Building the Y86-64 tools
 *************************
 
-The Y86-64 simulators can be configured to support TTY and GUI
-interfaces. A simulator running in TTY mode prints all information
-about its run-time behavior on the terminal.  It's harder to understand what's
-going on, but useful for automated testing, and doesn't require any
-special installation features.  A simulator running in GUI mode uses a
-fancy graphical user interface.  Nice for visualizing and debugging,
-but requires installation of Tcl/Tk on your system.
-
-To build the Y86-64 tools, perform the following steps:
-
-NOTE: If your instructor prepared this distribution for you, then you
-can skip Step 1 and proceed directly to Step 2. The Makefile will
-already have the proper values for GUIMODE, TKLIBS, and TKINC for your
-system.
-
-Step 1. Decide whether you want the TTY or GUI form of the simulators,
-and then modify ./Makefile in this directory accordingly. (The changes
-you make to the variables in this Makefile will override the values
-already assigned in the Makefiles in the seq and pipe directories.)
-
-Building the GUI simulators: If you have Tcl/Tk installed on your
-system, then you can build the GUI form by initializing the GUIMODE,
-TKLIBS, and TKINC variables, as appropriate for your system. (The
-default values work for Linux systems.) 
-
-Assigning GUIMODE=-DHAS_GUI causes the necessary GUI support code in
-the simulator sources to be included.  The TKLIBS variable tells gcc
-where to look for the libtcl.so and libtk.so libraries. And the TKINC
-variable tells gcc where to find the tcl.h and tk.h header files.
-
-Building the TTY simulators: If you don't have Tcl/Tk installed on
-your system, then build the TTY form by commenting out all three of
-these variables (GUIMODE, TKLIBS, and TKINC) in the Makefile.
-
-Step 2: Once you've modified the Makefile to build either the GUI or
-TTY form, then you can construct the entire set of Y86-64 tools by typing 
+To build the Y86-64 tools, then you can type
 
 	unix> make clean; make
 
 ********
-2. Files
+1. Files
 ********
 
 Makefile
