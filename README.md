@@ -18,3 +18,5 @@ Lab说明文档: https://ipads.feishu.cn/wiki/YOj3wJgg2i8jEFk6mfpc2s2UnRf
 ### 3. CpuLab
 Lab说明文档: https://ipads.feishu.cn/wiki/Hbe9wviW1iGDhWkzhoXcOAPEnPj
 
+### 4. MallocLab
+Lab说明文档: https://ipads.feishu.cn/wiki/OOluwIyMGipxrskUGUBcRFRon2A
