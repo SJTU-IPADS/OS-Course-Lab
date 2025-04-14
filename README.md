@@ -1,6 +1,6 @@
 # OS-Pre-Course-CSAPP
 
-本仓库是 OS-Course 的前置课程 ICS(Introduction to Computer Systems) 的实验仓库。
+本仓库是 OS-Course 的前置课程 ICS (Introduction to Computer Systems) 的实验仓库。
 
 ## 参考实验环境
 
