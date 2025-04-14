@@ -44,7 +44,7 @@ struct fs_vnode {
 
 FS_Base 的 IPC handler 在处理 IPC 请求时，会先把 IPC 消息中包含的文件 fd 转换为 fid，所以我们需要把进程的 fd 和实际所对应的文件表项的映射建立起来，而在 ChCore 中对应的就是 `server_mapping` 链表。每当处理 IPC 请求时，文件系统都会通过进程发起的 badge 号找到与之对应的映射表，最终得到文件表项的 ID。
 
-> [!CODING] 练习5
+> [!CODING] 练习题 5
 > 实现 `user/system-services/system-servers/fs_base/fs_wrapper.c` 中的 `fs_wrapper_set_server_entry` 和 `fs_wrapper_get_server_entry` 函数。
 
 > [!HINT] Tip
@@ -69,7 +69,7 @@ FS_Base 的 IPC handler 在处理 IPC 请求时，会先把 IPC 消息中包含�
 
 针对 mmap 操作，我们知道针对文件的 mmap 操作是采取 Demand Paging 的内存映射来实现的，当用户进程调用 `mmap` 时，FS 会首先为用户新增一个 `pmo` 即内存对象，并将其对应的类型设置为 `PMO_FILE`，并为其创建 `Page_Fault` 映射(`user/system-services/system-servers/fs_base/fs_page_fault.c`)，最后将该 `pmo` 对象发回用户进程并让其进行映射。当用户尝试访问该内存对象，并发生缺页异常时，内核会根据 pmo 的所有者(badge)将异常地址调用到对应FS处理函数进行处理，处理函数为每一个文件系统中的 `user_fault_handler`，此时 FS 服务器会根据缺页地址分配新的内存页，填充文件内容并完成缺页的处理，最终返回内核态，从而递交控制权到原来的用户进程。
 
-> [!CODING] 练习6
+> [!CODING] 练习题 6
 > 实现 `user/system-services/system-servers/fs_base/fs_wrapper_ops.c` 中的 `fs_wrapper_open`、`fs_wrapper_close`、`__fs_wrapper_read_core`、`__fs_wrapper_write_core`, `fs_wrapper_lseek`函数。
 
 > [!HINT] Tip
@@ -81,9 +81,9 @@ FS_Base 的 IPC handler 在处理 IPC 请求时，会先把 IPC 消息中包含�
 > - 你应当回顾 Lab2 的代码，去了解针对 PMO_FILE，内核是怎么处理缺页并将其转发到FS中的。同时你需要查看 `user/system-services/system-servers/fs_base/fs_page_fault.c` 中的 `page_fault` 处理函数，了解 FS 是如何处理 mmap 缺页异常的。
 
 > [!SUCCESS]
-> 完成练习6后，执行 `make grade`，可以得到 `Scores: 100/100`。
+> 完成练习题6后，执行 `make grade`，可以得到 `Scores: 100/100`。
 
-> [!QUESTION] 练习7
+> [!QUESTION] 思考题 7
 > 思考 ChCore 当前实现 VFS 的方式有何利弊？如果让你在微内核操作系统上实现 VFS 抽象，你会如何实现？
 
 ---
