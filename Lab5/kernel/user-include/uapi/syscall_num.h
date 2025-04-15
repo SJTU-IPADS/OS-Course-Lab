@@ -76,6 +76,8 @@
 /* - page fault */
 #define CHCORE_SYS_user_fault_register     41
 #define CHCORE_SYS_user_fault_map          42
+/* Only for Lab5 */
+#define CHCORE_SYS_user_fault_map_batched  60
 
 /* POSIX */
 /* - time */

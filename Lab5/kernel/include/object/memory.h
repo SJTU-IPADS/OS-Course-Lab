@@ -41,6 +41,8 @@ struct pmobject {
          */
         void *private;
         struct list_head mapping_list;
+        /* Lab5, counting page faults */
+        long page_faults;
 };
 
 /* kernel internal interfaces */

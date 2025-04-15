@@ -22,5 +22,23 @@
     "msg": "wrapper mmap",
     "proposed": 10,
     "userland": true
+  },
+  {
+    "capture": "llm page fault times <= 16",
+    "msg": "llm page fault 1",
+    "proposed": 2,
+    "userland": true
+  },
+  {
+    "capture": "llm page fault time <= 8",
+    "msg": "llm page fault 2",
+    "proposed": 5,
+    "userland": true
+  },
+  {
+    "capture": "llm page fault time <= 2",
+    "msg": "llm page fault 3",
+    "proposed": 3,
+    "userland": true
   }
 ]

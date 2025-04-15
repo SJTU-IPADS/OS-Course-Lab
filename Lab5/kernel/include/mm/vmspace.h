@@ -34,6 +34,15 @@ struct vmregion {
         vmr_prop_t perm;
         struct pmobject *pmo;
         struct list_head cow_private_pages;
+        /* for Lab5, llm page lru list */
+        struct list_head llm_pages;
+        int num_llm_pages;
+};
+
+#define MAX_LLM_PAGE_NUM 16
+struct llm_page {
+        struct list_head node;
+        vaddr_t vaddr;
 };
 
 /* This struct represents one virtual address space */
@@ -60,7 +69,6 @@ struct vmspace {
         unsigned char history_cpus[PLAT_CPU_NUM];
 
         struct vmregion *heap_boundary_vmr;
-
         /* Records size of memory mapped. Protected by pgtbl_lock. */
         long rss;
 };

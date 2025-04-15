@@ -36,6 +36,8 @@ cap_t notific_cap;
 struct list_head fmap_area_mappings;
 pthread_rwlock_t fmap_area_lock;
 
+#define MAX_LLM_PAGE_NUM 16
+
 /**
  * If page cache module is available,
  *      use addr of page cache page first.
@@ -70,6 +72,15 @@ vaddr_t fs_wrapper_fmap_get_page_addr(struct fs_vnode *vnode, off_t offset)
         return (vaddr_t)page_buf;
 }
 
+static int predict_prefetch_pages(int fault_page_id,
+                                  int prefetch_page_ids[MAX_LLM_PAGE_NUM]) 
+{
+	/* LAB7 TODO BEGIN */
+        prefetch_page_ids[0] = fault_page_id;
+        return 0;
+	/* LAB7 TODO END */
+}
+
 static int handle_one_fault(badge_t fault_badge, vaddr_t fault_va)
 {
         vaddr_t server_page_addr;
@@ -81,8 +92,14 @@ static int handle_one_fault(badge_t fault_badge, vaddr_t fault_va)
         bool copy = 0;
         int ret;
 
+        /* declared for prefetching */
+        int prefetch_page_ids[MAX_LLM_PAGE_NUM];
+        size_t prefetch_offset;
+        bool completed;
+
         fs_debug_trace_fswrapper(
                 "badge=0x%x, va=0x%lx\n", fault_badge, fault_va);
+        // printf("page fault at 0x%lx\n", fault_va);
 
         /* Find mapping area info */
         ret = fmap_area_find(fault_badge,
@@ -149,9 +166,42 @@ static int handle_one_fault(badge_t fault_badge, vaddr_t fault_va)
                 }
         }
 
-        /* Map client page table, and notify fault thread */
-        ret = usys_user_fault_map(
-                fault_badge, fault_va, server_page_addr, copy, map_perm);
+        if (flags & MAP_LLM) {
+                /* LAB7 TODO BEGIN */
+                /* predict prefetch pages and map them in one fault */
+                ret = predict_prefetch_pages(area_off / PAGE_SIZE, prefetch_page_ids);
+                if (ret < 0) {
+                        BUG_ON("this call should always be success here\n");
+                }
+                /* notify pending thread only when prefetch is completed */
+                completed = true;
+                prefetch_offset = prefetch_page_ids[0] * PAGE_SIZE;
+                server_page_addr = fs_wrapper_fmap_get_page_addr(
+                        vnode, file_offset + prefetch_offset);
+                if (!server_page_addr) {
+                        /* The file offset is out-of-range */
+                        fs_debug_warn("vnode->size=0x%lx, offset=0x%lx\n",
+                                      vnode->size,
+                                      file_offset + prefetch_offset);
+                }
+                ret = usys_user_fault_map_batched(
+                        fault_badge, 
+                        fault_va - area_off + prefetch_offset, 
+                        server_page_addr, 
+                        copy, 
+                        map_perm, 
+                        completed,
+                        fault_va);
+                if (ret < 0) {
+                        BUG_ON("this call should always be success here\n");
+                }
+				/* LAB7 TODO END */
+        }
+        else {
+                /* Map client page table, and notify fault thread */
+                ret = usys_user_fault_map(
+                        fault_badge, fault_va, server_page_addr, copy, map_perm);
+        }
         if (ret < 0) {
                 BUG_ON("this call should always be success here\n");
         }

@@ -83,6 +83,9 @@ void usys_top(void);
 int usys_user_fault_register(cap_t notific_cap, vaddr_t msg_buffer);
 int usys_user_fault_map(badge_t client_badge, vaddr_t fault_va,
                         vaddr_t remap_va, bool copy, vmr_prop_t perm);
+/* Only for Lab7 */
+int usys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va,
+                            vaddr_t remap_va, bool copy, vmr_prop_t perm, bool completed, vaddr_t orig_fault_va);
 int usys_map_pmo_with_length(cap_t pmo_cap, vaddr_t addr, unsigned long perm,
                              size_t length);
 int usys_unmap_pmo_with_length(cap_t pmo_cap, unsigned long addr, size_t size);

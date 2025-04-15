@@ -694,7 +694,7 @@ int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
                 return -EINVAL;
         }
 
-        if (flags & (~(MAP_SHARED | MAP_PRIVATE | MAP_FIXED_NOREPLACE))) {
+        if (flags & (~(MAP_SHARED | MAP_PRIVATE | MAP_FIXED_NOREPLACE | MAP_LLM))) {
                 fs_debug_trace_fswrapper("unsupported flags=%d\n", flags);
                 return -EINVAL;
         }
@@ -716,7 +716,11 @@ int fs_wrapper_fmap(badge_t client_badge, ipc_msg_t *ipc_msg,
 
         /* Step: Create a PMO_FILE for file, if not created */
         if (vnode->pmo_cap == -1) {
-                pmo_cap = usys_create_pmo(vnode->size, PMO_FILE);
+                if (flags & MAP_LLM) {
+                        pmo_cap = usys_create_pmo(vnode->size, PMO_FILE_LLM);
+                } else {
+                        pmo_cap = usys_create_pmo(vnode->size, PMO_FILE);
+                }
                 if (pmo_cap < 0) {
                         ret = pmo_cap;
                         goto out_remove_mapping;
@@ -740,8 +744,29 @@ out_fail:
 int fs_wrapper_funmap(badge_t client_badge, ipc_msg_t *ipc_msg,
                       struct fs_request *fr)
 {
-        return fmap_area_remove(
-                client_badge, (vaddr_t)fr->munmap.addr, fr->munmap.length);
+        int ret;
+        size_t area_off;
+        struct fs_vnode *vnode;
+        off_t file_offset;
+        u64 flags;
+        vmr_prop_t prot;
+
+        ret = fmap_area_find(client_badge,
+                             (vaddr_t)fr->munmap.addr,
+                             &area_off,
+                             &vnode,
+                             &file_offset,
+                             &flags,
+                             &prot);
+        if (ret < 0) {
+                return ret;
+        }
+        if (vnode->pmo_cap != -1 && (flags & MAP_LLM)) {
+                usys_revoke_cap(vnode->pmo_cap, false);
+                vnode->pmo_cap = -1;
+        }
+        ret = fmap_area_remove(client_badge, (vaddr_t)fr->munmap.addr, fr->munmap.length);
+        return ret;
 }
 
 int fs_wrapper_creat(ipc_msg_t *ipc_msg, struct fs_request *fr)

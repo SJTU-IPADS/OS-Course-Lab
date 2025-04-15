@@ -27,7 +27,7 @@ read(3, "", 131072)                     = 0
 
 撇去一些无关紧要的系统调用后，我们可以看到其首先调用了`openat`这个系统指令，其负责打开一个系统路径下的文件，并返回其一个文件描述符号。
 
-> [!CODING] 练习1
+> [!CODING] 练习题 1
 > 阅读 `user/chcore-libc/libchcore/porting/overrides/src/chcore-port/file.c` 的 `chcore_openat` 函数，分析 ChCore 是如何处理 `openat` 系统调用的，关注 IPC 的调用过程以及 IPC 请求的内容。
 
 Lab5 的所有代码都运行在用户态，不同应用间通过 IPC 进行通信，可调用的 IPC 相关函数定义在 `user/chcore-libc/libchcore/porting/overrides/include/chcore/ipc.h`。

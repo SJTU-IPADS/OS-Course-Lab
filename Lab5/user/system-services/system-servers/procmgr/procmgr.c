@@ -655,6 +655,16 @@ void boot_default_apps(void)
                                      COMMON_APP,
                                      NULL);
 
+        char *llm_test_argv = "test_llm.bin";
+        (void)procmgr_launch_process(1,
+                                     &llm_test_argv,
+                                     "llm_test",
+                                     true,
+                                     INIT_BADGE,
+                                     NULL,
+                                     COMMON_APP,
+                                     NULL);
+
         char *fs_test_argv= "fs_test_full.bin";
         (void)procmgr_launch_process(1,
                                      &fs_test_argv,

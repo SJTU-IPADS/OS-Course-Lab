@@ -27,7 +27,7 @@ typedef unsigned pmo_type_t;
 #define PMO_TZ_NS        7
 #define PMO_TZ_SHM       8
 #endif /* CHCORE_OPENTRUSTEE */
-
+#define PMO_FILE_LLM     9 /* Only for Lab5 test, temporary type for starting page fault counting */
 #define PMO_FORBID     10 /* Forbidden area: avoid overflow */
 
 /* vmr permissions */

@@ -2,7 +2,7 @@
   {
     "capture": "All fs tests passed",
     "msg": "FS_Base Vnode",
-    "proposed": 15,
+    "proposed": 10,
     "userland": true
   }
 ]
