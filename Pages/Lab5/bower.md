@@ -11,7 +11,7 @@
 > [!WARNING]
 > 这是一个我们制作的新Lab， 欢迎大家测试并提出意见。
 
-在 BowerAccess Lab 中，我们希望你参考 PowerInfer 的思想修改 chcore，进而在其上部署并优化一个与 LLM 类似的应用程序 `llm`（你可以在shell中通过`./llm`进行访问）。具体而言：
+在 BowerAccess Lab 中，我们希望你参考 PowerInfer 的思想修改 chcore，进而在其上部署并优化一个与 LLM 类似的应用程序 `llm`（你可以在shell中通过`./test_llm`进行访问）。具体而言：
 
 `llm` 是一个 CPU 内存开销极大的程序，它会使用 `mmap()` 映射一个 1MB 大小的**特殊内存空间**（用 `MAP_LLM` 进行标识）并访问其中的数据完成功能，这远远超过了 chcore 管理的 `MAP_LLM` 物理内存大小（出于题目设计考虑，我们将这种特殊内存空间的大小限制为 1MB），直接运行会产生大量的 Page Fault，引入了极大的运行时开销。
 
