@@ -87,14 +87,16 @@ int main() {
 > 我们只提供 `llm` 的二进制文件，并不提供源码文件。请自由发挥，判断出 `llm` 的具体访存模式。
 
 > [!QUESTION] 思考题 8  
->  阅读 `kernel/object/user_fault.c` 下的 `sys_user_fault_map_batched` 函数，并回答如下问题
->  -  “`MAP_LLM` 地址空间具有容量限制”这个特点在代码中是如何实现的？
->  - 对比它和 `sys_user_fault_map` 函数的区别，并回答我们为什么需要引入一个新的系统调用？
+> 阅读 `kernel/object/user_fault.c` 下的 `sys_user_fault_map_batched` 函数，并回答如下问题
+>
+> - “`MAP_LLM` 地址空间具有容量限制”这个特点在代码中是如何实现的？
+> - 对比它和 `sys_user_fault_map` 函数的区别，并回答我们为什么需要引入一个新的系统调用？
 
 > [!CODING]  练习题 9  
 > 为了实现在 page fault 的时候预取页面的功能，我们需要修改 `user/system-services/system-servers/fs_base/fs_page_fault.c` 文件：
->   - 实现 `predict_prefetch_pages` 函数。
->   - 实现 `handle_one_fault` 函数中针对 `MAP_LLM` 的预取（prefetch）功能，实现需要 `predict_prefetch_pages` 和 `usys_user_fault_map_batched` 函数的配合。
+>
+> - 实现 `predict_prefetch_pages` 函数。
+> - 实现 `handle_one_fault` 函数中针对 `MAP_LLM` 的预取（prefetch）功能，实现需要 `predict_prefetch_pages` 和 `usys_user_fault_map_batched` 函数的配合。
 
 ---
 
