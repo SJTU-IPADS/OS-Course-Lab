@@ -62,5 +62,8 @@ void handle_user_fault(struct pmobject *pmo, vaddr_t fault_va);
 int sys_user_fault_register(cap_t notific_cap, vaddr_t msg_buffer);
 int sys_user_fault_map(badge_t client_badge, vaddr_t fault_va, vaddr_t remap_va,
                        bool copy, unsigned long perm);
+/* Syscall for Lab5 only */
+int sys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va, vaddr_t remap_va,
+        bool copy, unsigned long perm, bool completed, vaddr_t orig_fault_va);
 
 #endif /* OBJECT_USER_FAULT_H */

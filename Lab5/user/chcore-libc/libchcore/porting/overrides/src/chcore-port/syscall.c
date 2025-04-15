@@ -267,6 +267,19 @@ int usys_user_fault_map(badge_t client_badge, vaddr_t fault_va,
                                perm);
 }
 
+int usys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va,
+                        vaddr_t remap_va, bool copy, vmr_prop_t perm, bool completed, vaddr_t orig_fault_va)
+{
+        return chcore_syscall7(CHCORE_SYS_user_fault_map_batched,
+                               client_badge,
+                               fault_va,
+                               remap_va,
+                               copy,
+                               perm,
+                               completed,
+                               orig_fault_va);
+}
+
 int usys_map_pmo_with_length(cap_t pmo_cap, vaddr_t addr, unsigned long perm,
                              size_t length)
 {
