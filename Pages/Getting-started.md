@@ -31,6 +31,15 @@
 
 如果你使用的是带有支持Microsoft规范下[Dev-Container](https://vscode.github.net.cn/docs/devcontainers/tutorial)插件的代码编辑器或者集成开发环境，亦或者你使用的是非Linux平台的开发环境，我们**强烈建议**你使用Dev-container直接进行开发，我们已经在其中已经预先安装好了你可能需要使用的所有工具链。并且针对vscode我们在每个Lab的分支目录下都已经配置好了合适的插件配置，简单安装即可以一键启用。安装完之后进入本实验的**根目录**，此时dev-container会识别到容器开发环境，重新进入后就可以直接使用了。
 
+> [!BUG] 关于Windows  
+> 在MacOS平台，使用dev-container能够保证兼容性。但在Windows上面由于文件系统并非POSIX兼容，你需要执行以下的方式来正确拉取repo.
+>
+> 1. 请在设置确保打开Windows 10/11 的开发者模式
+> 2. 运行git config --global core.autocrlf false
+> 3. 使用git clone -c core.symlinks true 进行clone
+> 4. 在完成lab3-5时请将`user/chcore-libc/libchcore/cmake/do_override_dir.sh`中所有的`ln -sf`替换成`cp -r`
+> 5. 对于所有`libchcore`下的所有文件，请都运行`make clean`确保其生效
+
 ### 本地手动安装
 
 如果你并不想要使用Dev-container，且你使用的是原生Linux平台或者自行创建的Linux虚拟机，我们在下方准备了所有流行发行版的工具链安装命令。同时我们也推荐安装`clangd`，其可以根据`CMake`生成的`compile_commands.json`即编译信息数据库提供增强的LSP的提示功能，用于支撑区分相同函数签名但是不同编译单元参与编译的重名跳转以及根据宏定义用于高显源文件。
