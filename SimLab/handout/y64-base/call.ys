@@ -1,5 +1,0 @@
-# test call
-Func1:
-	call Func1
-	halt
-# end

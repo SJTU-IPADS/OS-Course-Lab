@@ -1,4 +1,0 @@
-# test popq
-	popq %rbp
-	halt
-# end

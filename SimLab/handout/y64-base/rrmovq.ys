@@ -1,5 +1,0 @@
-# test rrmovq
-	rrmovq %rax, %rbx
-	rrmovq %rcx, %rsi
-	halt
-# end

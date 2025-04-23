@@ -1,5 +1,0 @@
-# test jg
-Loop:
-	jg Loop
-	halt
-# end

@@ -1,5 +1,0 @@
-# test jle
-Loop:
-	jle Loop
-	halt
-# end

@@ -1,4 +1,0 @@
-# test subq
-	subq %rsi, %rdi
-	halt
-# end

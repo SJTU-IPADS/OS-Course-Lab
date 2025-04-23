@@ -1,5 +1,0 @@
-# test jne
-Loop:
-	jne Loop
-	halt
-# end

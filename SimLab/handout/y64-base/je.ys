@@ -1,5 +1,0 @@
-# test je
-Loop:
-	je Loop
-	halt
-# end

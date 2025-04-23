@@ -1,7 +1,0 @@
-# test .word
-	halt
-Data:
-	.word 0x130A
-	.word 0xFF1B
-	.word 0x172C
-# end

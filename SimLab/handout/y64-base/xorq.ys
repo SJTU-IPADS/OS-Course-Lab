@@ -1,4 +1,0 @@
-# test xorq
-	xorq %rsi, %rdi
-	halt
-# end

@@ -1,4 +1,0 @@
-# test addq
-	addq %rsi, %rdi
-	halt
-# end

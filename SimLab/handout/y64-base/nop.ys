@@ -1,5 +1,0 @@
-# nop, nop and halt
-	nop
-	nop
-	halt			# Terminate program 
-# end

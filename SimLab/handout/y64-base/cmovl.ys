@@ -1,4 +1,0 @@
-# test cmovl
-	cmovl %rsi, %rdi
-	halt
-# end

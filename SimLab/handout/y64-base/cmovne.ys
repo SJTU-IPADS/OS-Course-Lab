@@ -1,4 +1,0 @@
-# test cmovne
-	cmovne %rsi, %rdi
-	halt
-# end

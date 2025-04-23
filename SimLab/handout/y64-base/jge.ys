@@ -1,5 +1,0 @@
-# test jge
-Loop:
-	jge Loop
-	halt
-# end

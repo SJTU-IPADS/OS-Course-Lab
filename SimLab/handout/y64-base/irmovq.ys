@@ -1,7 +1,0 @@
-# test irmovq
-	irmovq $123, %r9
-	irmovq $-123, %r13
-	irmovq $0x15df, %rax
-	irmovq $-0x15df, %r10
-	halt
-# end

@@ -1,6 +1,0 @@
-# test rmmovq
-	rmmovq %rcx, 4(%rcx)
-	rmmovq %rcx, (%rbx)
-	rmmovq %rax, 12(%rbp)
-	halt
-# end

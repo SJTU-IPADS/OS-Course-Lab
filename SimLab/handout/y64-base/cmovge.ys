@@ -1,4 +1,0 @@
-# test cmovge
-	cmovge %rax, %rbx
-	halt
-# end

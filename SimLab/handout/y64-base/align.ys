@@ -1,5 +1,0 @@
-# test .align
-.align 4
-	halt
-.align 8
-# end

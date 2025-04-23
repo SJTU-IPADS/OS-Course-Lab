@@ -1,4 +1,0 @@
-# test addq
-	pushq %rbp
-	halt
-# end
