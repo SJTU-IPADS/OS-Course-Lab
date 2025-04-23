@@ -1,6 +1,8 @@
 # OS-Pre-Course-CSAPP
 
-本仓库是 OS-Course 的前置课程 ICS (Introduction to Computer Systems) 的实验仓库。
+本仓库是操作系统课程的前置课程 ICS（计算机系统导论）的实验仓库。本实验由David O’Hallaron教授授权，基于《计算机系统：程序员的视角（第3版）》教材（CS:APP3e）进行改编。详细内容请参考教材官网：https://csapp.cs.cmu.edu/3e/labs.html。
+
+This repository is the lab repository for ICS (Introduction to Computer Systems), a prerequisite course for the Operating Systems course. The lab exercises are authorized by Prof. David O’Hallaron and adapted from the textbook Computer Systems: A Programmer’s Perspective, 3rd Edition (CS:APP3e). For more details, please refer to the official textbook website: https://csapp.cs.cmu.edu/3e/labs.html.
 
 ## 参考实验环境
 
