@@ -13,6 +13,13 @@
 import socket
 from message_model import SocketMessageModel
 
+################## Some Globals ###################
+
+host = "127.0.0.1"
+port = 12345
+
+################## Some Globals ###################
+
 
 def get_input() -> str:
     # empty message is not allowed
@@ -26,8 +33,8 @@ def main():
     # create a TCP/IP socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # connect to the specified server and port
-    client_socket.connect(("127.0.0.1", 12345))
-    print("Connected to 127.0.0.1:12345")
+    client_socket.connect((host, port))
+    print(f"Connected to {host}:{port}")
 
     try:
         while True:

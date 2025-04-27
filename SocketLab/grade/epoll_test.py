@@ -59,7 +59,7 @@ async def open_10_message_clients() -> None:
     loop = asyncio.get_event_loop()
 
     # send 10 messages to the server
-    tasks = [message_client("Hello", loop) for _ in range(10)]
+    tasks = [message_client(["Hello", "Hello"], loop) for _ in range(10)]
     _ = await asyncio.gather(*tasks)
 
 

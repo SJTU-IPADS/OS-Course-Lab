@@ -14,7 +14,15 @@ import asyncio
 import os
 import socket
 import subprocess
+from typing import List
 from message_model import SocketMessageModel
+
+################## Some Globals ###################
+
+host = "127.0.0.1"
+port = 12345
+
+################## Some Globals ###################
 
 
 def subprocess_server_ref() -> subprocess.Popen[bytes]:
@@ -67,41 +75,49 @@ async def silent_client(loop: asyncio.AbstractEventLoop) -> socket.socket:
     client_socket.setblocking(False)
 
     # connect to the server
-    await loop.sock_connect(client_socket, ("127.0.0.1", 12345))
-    print("Connected to 127.0.0.1:12345")
+    await loop.sock_connect(client_socket, (host, port))
+    print(f"Connected to {host}:{port}")
     return client_socket
 
 
-async def message_client(message: str, loop: asyncio.AbstractEventLoop) -> str:
+async def message_client(
+    messages: List[str], loop: asyncio.AbstractEventLoop
+) -> List[str]:
     # create non-blocking socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.setblocking(False)
 
     # connect to the server
-    await loop.sock_connect(client_socket, ("127.0.0.1", 12345))
-    print("Connected to 127.0.0.1:12345")
+    await loop.sock_connect(client_socket, (host, port))
+    print(f"Connected to {host}:{port}")
 
-    # send message to the server
-    await loop.sock_sendall(
-        client_socket, str(SocketMessageModel(token=message, eog=True)).encode()
-    )
+    received_messages = []
+    for message in messages:
+        # send message to the server
+        await loop.sock_sendall(
+            client_socket,
+            str(SocketMessageModel(token=message, eog=True)).encode(),
+        )
 
-    received_message = "> "
-    while True:
-        # receive the message from the server
-        data = await loop.sock_recv(client_socket, 1024)
-        if not data:
-            print("Server closed the connection.")
-            break
+        received_message = "> "
+        while True:
+            # receive the message from the server
+            data = await loop.sock_recv(client_socket, 1024)
+            if not data:
+                print("Server closed the connection.")
+                break
 
-        # decode the received message and check if it is the end of the text
-        current_message = SocketMessageModel(json_str=data.decode())
-        if current_message.eog:
-            break
+            # decode the received message and check if it is the end of the text
+            current_message = SocketMessageModel(json_str=data.decode())
+            if current_message.eog:
+                break
 
-        # append the received message to the final message
-        received_message += current_message.token
+            # append the received message to the final message
+            received_message += current_message.token
+
+        # append the received message to the list of received messages
+        received_messages.append(received_message)
 
     # close the client socket and return the received message
     client_socket.close()
-    return received_message
+    return received_messages

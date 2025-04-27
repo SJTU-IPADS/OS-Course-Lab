@@ -34,6 +34,14 @@ def increase_and_read_counter() -> int:
 ################ Atomic Operations ################
 
 
+################## Some Globals ###################
+
+host = "127.0.0.1"
+port = 12345
+
+################## Some Globals ###################
+
+
 def handle_client(conn: socket.socket, addr):
     # print the address of the client
     print(f"Client connected from: {addr}")
@@ -81,8 +89,6 @@ def main():
         print("Failed to initialize llama server.")
         sys.exit(1)
 
-    host = "0.0.0.0"
-    port = 12345
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 

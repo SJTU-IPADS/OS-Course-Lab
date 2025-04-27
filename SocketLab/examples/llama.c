@@ -28,18 +28,32 @@ void send_token(int conn, const char *token) {
 void send_eog_token(int conn) {
     // We only print the response to the console for simulation purposes.
     (void)conn;
-    printf("\nWe have sent:\n%s\n\n", buffer);
+    printf("\nThe current response has ended\n");
+    // Note: If you are interested, print the buffer here
     buffer_pos = 0; // Reset the buffer position
 }
 
-int main() {
-    // Example usage of the LLaMA CLI
-    int argc = 3;
-    char *argv[] = {"llama_chat", "-m", "models/model.gguf"};
+static void quest_wrapper(int conn, const char *client_name,
+                          const char *message) {
+    // Log the message to the console
+    printf("User %s asks: %s\n", client_name, message);
+    printf("Response: ");
 
-    if (initialize_llama_chat(argc, argv) != 0) {
+    // Call the quest function to get the response
+    quest_for_response(conn, client_name, message);
+    printf("\n");
+}
+
+int main(int argc, char *argv[]) {
+    // Parse command line arguments
+    if (argc != 3 || strcmp(argv[1], "-m") != 0) {
+        fprintf(stderr, "Usage: %s -m <model_path>\n", argv[0]);
         return 1;
     }
+
+    // Example usage of the LLaMA CLI
+    if (initialize_llama_chat(argc, argv) != 0)
+        return 1;
 
     // Add clients
     const char *client_names[] = {"llama_client_1", "llama_client_2"};
@@ -52,13 +66,12 @@ int main() {
     }
 
     // Execute the quest function for the client
-    quest_for_response(0, client_names[0], "你好！我是ICS助教。");
-    quest_for_response(0, client_names[0], "请问我是谁？");
-    quest_for_response(0, client_names[0], "请帮我写一段C++快速排序代码。");
+    quest_wrapper(0, client_names[0], "请记住我是ICS助教。");
+    quest_wrapper(0, client_names[0], "请问我是谁？");
 
     // Execute the quest function using another client
     // The second client will not be able to see the first client's messages
-    quest_for_response(0, client_names[1], "你好！请问我是谁？");
+    quest_wrapper(0, client_names[1], "请问我是谁？");
 
     // Free the llama chat resources
     for (int i = 0; i < sizeof(client_names) / sizeof(client_names[0]); ++i) {

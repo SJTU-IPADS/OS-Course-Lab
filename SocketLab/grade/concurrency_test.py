@@ -21,6 +21,7 @@ from common import (
     silent_client,
     message_client,
 )
+from typing import List
 from common_exceptions import ServerLaunchFailure, ClientLaunchFailure
 
 
@@ -48,6 +49,14 @@ def open_client(func: callable) -> subprocess.Popen[bytes]:
     raise ClientLaunchFailure("Client failed to connect to the server")
 
 
+async def one_client() -> List[str]:
+    # get the event loop
+    loop = asyncio.get_event_loop()
+
+    # create a message client
+    return await message_client(["Hello", "Hello"], loop)
+
+
 async def open_1024_silent_clients() -> list:
     # create 1024 silent clients
     loop = asyncio.get_event_loop()
@@ -55,12 +64,12 @@ async def open_1024_silent_clients() -> list:
     return await asyncio.gather(*tasks)
 
 
-async def open_10_message_clients(ref_output: str) -> bool:
+async def open_10_message_clients(ref_output: List[str]) -> bool:
     # get the event loop
     loop = asyncio.get_event_loop()
 
     # send 10 messages to the server
-    tasks = [message_client("Hello", loop) for _ in range(10)]
+    tasks = [message_client(["Hello", "Hello"], loop) for _ in range(10)]
     results = await asyncio.gather(*tasks)
 
     # check if the client output is the same as the reference output
@@ -112,7 +121,32 @@ def main() -> None:
         print(f"Final Score:       0")
         return
 
-    # terminate the client
+    # terminate the client and server
+    client_process.terminate()
+    server_process.terminate()
+
+    # wait for the server to stop completely
+    while server_process.poll() is None:
+        time.sleep(0.1)
+
+    # use message_client to get reference output
+    server_process = open_server(subprocess_server_ref)
+    client_process = open_client(subprocess_client_ref)
+    ref_output = asyncio.run(one_client())
+
+    # stop the server and client
+    client_process.terminate()
+    server_process.terminate()
+
+    # wait for the server to stop completely
+    while server_process.poll() is None:
+        time.sleep(0.1)
+
+    # open the C server
+    server_process = open_server(subprocess_server_epoll)
+    client_process = open_client(subprocess_client_ref)
+
+    # stop the client
     client_process.terminate()
 
     # test the time used to deal with 10 messages
