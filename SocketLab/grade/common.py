@@ -14,12 +14,12 @@ import asyncio
 import os
 import socket
 import subprocess
-from message_model import MessageModel
+from message_model import SocketMessageModel
 
 
 def subprocess_server_ref() -> subprocess.Popen[bytes]:
     return subprocess.Popen(
-        ["./ref/server", "-m", "models/model.gguf"],
+        ["python3", "./ref/server.py", "-m", "models/model.gguf"],
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
     )
@@ -43,7 +43,7 @@ def subprocess_server_epoll() -> subprocess.Popen[bytes]:
 
 def subprocess_client_ref() -> subprocess.Popen[bytes]:
     return subprocess.Popen(
-        ["./ref/client", "-m", "models/model.gguf"],
+        ["python3", "./ref/client.py", "-m", "models/model.gguf"],
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
     )
@@ -83,7 +83,7 @@ async def message_client(message: str, loop: asyncio.AbstractEventLoop) -> str:
 
     # send message to the server
     await loop.sock_sendall(
-        client_socket, str(MessageModel(token=message, eog=True)).encode()
+        client_socket, str(SocketMessageModel(token=message, eog=True)).encode()
     )
 
     received_message = "> "
@@ -95,7 +95,7 @@ async def message_client(message: str, loop: asyncio.AbstractEventLoop) -> str:
             break
 
         # decode the received message and check if it is the end of the text
-        current_message = MessageModel(json_str=data.decode())
+        current_message = SocketMessageModel(json_str=data.decode())
         if current_message.eog:
             break
 

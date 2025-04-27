@@ -92,7 +92,7 @@ def main() -> None:
         time.sleep(0.1)
 
     # open the C server
-    server_process = open_server(subprocess_server)
+    server_process = open_server(subprocess_server_epoll)
     client_process = open_client(subprocess_client_ref)
 
     # write "Hello" to stdin of the client

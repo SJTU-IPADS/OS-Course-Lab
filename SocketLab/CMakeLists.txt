@@ -17,6 +17,9 @@ project("ICS-Socket-Lab" VERSION 1.0.0 LANGUAGES C CXX)
 # Output compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Compile position independent code
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Add thirdparty/json/single_include/nlohmann directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/json/single_include/nlohmann)
@@ -32,5 +35,5 @@ set(LLAMA_BUILD_COMMON OFF)
 set(LLAMA_CURL OFF)
 set(LLAMA_BUILD_EXAMPLES OFF)
 set(LLAMA_BUILD_TESTS OFF)
-set(BUILD_SHARED_LIBS OFF)
+# set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(thirdparty/llama.cpp)

@@ -16,3 +16,11 @@ target_compile_features(simple_llama_chat PRIVATE cxx_std_17)
 target_include_directories(simple_llama_chat PUBLIC
     ${CMAKE_SOURCE_DIR}/thirdparty/llama.cpp/include
     ${CMAKE_SOURCE_DIR}/include)
+
+add_library(simple_llama_chat_shared SHARED simple_llama_chat.cpp)
+target_link_libraries(simple_llama_chat_shared PRIVATE
+    llama ${CMAKE_THREAD_LIBS_INIT})
+target_compile_features(simple_llama_chat_shared PRIVATE cxx_std_17)
+target_include_directories(simple_llama_chat_shared PUBLIC
+    ${CMAKE_SOURCE_DIR}/thirdparty/llama.cpp/include
+    ${CMAKE_SOURCE_DIR}/include)
