@@ -20,7 +20,7 @@ global execution_path
 
 def subprocess_server_ref() -> subprocess.Popen[bytes]:
     return subprocess.Popen(
-        ["./ref/server", "-m", "models/model.gguf"],
+        ["python3", "./ref/server.py", "-m", "models/model.gguf"],
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
         cwd=execution_path,
@@ -29,7 +29,7 @@ def subprocess_server_ref() -> subprocess.Popen[bytes]:
 
 def subprocess_client_ref() -> subprocess.Popen[bytes]:
     return subprocess.Popen(
-        ["./ref/client", "-m", "models/model.gguf"],
+        ["python3", "./ref/client.py"],
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
         cwd=execution_path,
