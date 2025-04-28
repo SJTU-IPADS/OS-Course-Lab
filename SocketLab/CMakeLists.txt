@@ -28,6 +28,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
 add_subdirectory(examples)
 add_subdirectory(lib)
 add_subdirectory(src)
+add_subdirectory(ref)
 
 # Build sub-project llama.cpp in thirdparty/llama.cpp
 # Set static linking for llama.cpp
