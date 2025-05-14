@@ -4,8 +4,8 @@ CFLAGS += -O3 -g -Wall -pthread
 
 all: gpt gpt_naive
 
-gpt: gpt.c task.c thread-sync.c kvcache.c
-	gcc $(CFLAGS) gpt.c task.c thread-sync.c kvcache.c -o gpt -lm -pthread
+gpt: gpt.c task.c kvcache.c
+	gcc $(CFLAGS) gpt.c task.c kvcache.c -o gpt -lm -pthread
 
 gpt_naive: gpt_naive.c
 	gcc $(CFLAGS) gpt_naive.c -o gpt_naive -lm -pthread
