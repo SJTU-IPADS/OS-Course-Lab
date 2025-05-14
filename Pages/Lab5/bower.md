@@ -97,6 +97,7 @@ int main() {
 >
 > - 实现 `predict_prefetch_pages` 函数。
 > - 实现 `handle_one_fault` 函数中针对 `MAP_LLM` 的预取（prefetch）功能，实现需要 `predict_prefetch_pages` 和 `usys_user_fault_map_batched` 函数的配合。
+> - `user_fault`中为处理用户地址缺页的Handler。
 
 ---
 
