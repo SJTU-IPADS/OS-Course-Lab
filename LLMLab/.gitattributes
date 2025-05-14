@@ -1,0 +1,1 @@
+gpt2_124M.bin filter=lfs diff=lfs merge=lfs -text
