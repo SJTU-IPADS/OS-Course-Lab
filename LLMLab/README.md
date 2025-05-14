@@ -1,4 +1,4 @@
----
+``` text
 CS:APP LLM Lab
 Handout files for students
 
@@ -15,7 +15,7 @@ IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT F
 PURPOSE.
 See the Mulan PSL v2 for more details.
 Original copyright notice retained above as required.
----
+```
 
 # GPT-2 Performance Benchmark
 

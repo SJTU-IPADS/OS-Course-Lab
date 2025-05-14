@@ -25,3 +25,6 @@ Lab说明文档: https://ipads.feishu.cn/wiki/OOluwIyMGipxrskUGUBcRFRon2A
 
 ### 5. SocketLab
 Lab说明文档: https://ipads.feishu.cn/wiki/Dl2rwMtxCip2tYkOGVNcItqVnVf
+
+### 6. LLMLab
+Lab说明文档: https://ipads.feishu.cn/wiki/FHNaw2DFaiwL2skOLMtciTGPnDe
