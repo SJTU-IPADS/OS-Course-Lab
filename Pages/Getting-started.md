@@ -40,54 +40,6 @@
 > 4. 在完成lab3-5时请将`user/chcore-libc/libchcore/cmake/do_override_dir.sh`中所有的`ln -sf`替换成`cp -r`
 > 5. 对于所有`libchcore`下的所有文件，请都运行`make clean`确保其生效
 
-### 本地手动安装
-
-如果你并不想要使用Dev-container，且你使用的是原生Linux平台或者自行创建的Linux虚拟机，我们在下方准备了所有流行发行版的工具链安装命令。同时我们也推荐安装`clangd`，其可以根据`CMake`生成的`compile_commands.json`即编译信息数据库提供增强的LSP的提示功能，用于支撑区分相同函数签名但是不同编译单元参与编译的重名跳转以及根据宏定义用于高显源文件。
-
-以下是本Lab最主要的依赖
-
-- Qemu-system-aarch64
-- Qemu-user
-- Python >= 3.7
-- Make
-
-以下是针对每个主流发行版的除去Docker以外的安装命令。
-
-- Ubuntu/Debian
-
-```console
-apt install qemu-system-aarch64 qemu-user python3 python3-pip python3-pexpect make gdb-multiarch
-
-```
-
-- Fedora
-
-```console
-dnf install qemu-system qemu-user python3 python3-pip python3-pexpect make gdb
-
-```
-
-- Arch Linux
-
-```console
-pacman -Sy qemu-user qemu-system-aarch64 python python-pip python-pexpect base-devel gdb
-
-```
-
-- Gentoo
-
-```console
-USE="qemu_mmu_targets_aarch64 qemu_user_targets_aarch64" emerge -1v qemu python dev-python/pexpect python-pip make gdb qemu
-
-```
-
-- OpenSuse Tumbleweed
-
-```console
-zypper install qemu qemu-linux-user python3 python3-pexpect make gdb
-
-```
-
 ## 文档说明
 
 各实验文档除开`lab0`为单独的实验内容，其他都包含了以下的几种习题，请根据下方的指示完成对应实验报告以及对应的编程题。
