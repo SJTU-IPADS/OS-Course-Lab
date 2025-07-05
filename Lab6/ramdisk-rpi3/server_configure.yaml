@@ -1,0 +1,19 @@
+- boot_time: eager
+  filename: /circle.srv
+  registration_method: active
+  services:
+  - hdmi
+  - usb_devmgr
+  type: driver
+- boot_time: eager
+  filename: /gui.srv
+  registration_method: passive
+  services:
+  - gui
+  type: driver
+- boot_time: lazy
+  filename: /posix_shm.srv
+  registration_method: passive
+  services:
+  - systemv_shmmgr
+  type: server

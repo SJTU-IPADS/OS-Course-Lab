@@ -1,0 +1,17 @@
+[submodule "sys-libs/bounds_checking_functions/libboundscheck"]
+	path = sys-libs/bounds_checking_functions/libboundscheck
+	url = https://gitee.com/openeuler/libboundscheck.git
+[submodule "sys-libs/libyaml"]
+	path = sys-libs/libyaml
+	url = git@ipads.se.sjtu.edu.cn:staros/libyaml.git
+[submodule "sys-libs/libcyaml"]
+	path = sys-libs/libcyaml
+	url = git@ipads.se.sjtu.edu.cn:staros/libcyaml.git
+[submodule "graphic/lvgl/lv_drivers"]
+	path = graphic/lvgl/lv_drivers
+	url = git@ipads.se.sjtu.edu.cn:staros/staros-lv_drivers.git
+	branch = master
+[submodule "graphic/lvgl/lvgl"]
+	path = graphic/lvgl/lvgl
+	url = git@ipads.se.sjtu.edu.cn:staros/staros-lvgl.git
+	branch = master

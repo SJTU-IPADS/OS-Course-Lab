@@ -1,0 +1,6 @@
+{
+    "clangd.arguments": [
+        "--compile-commands-dir=./"
+    ],
+    "debug.allowBreakpointsEverywhere": true
+}

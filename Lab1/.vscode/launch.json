@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "QEMU (cppdbg)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/kernel.img",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "stopAtEntry": true,
+            "stopAtConnect": true,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
+            "MIMode": "gdb",
+            // "miDebuggerPath": "/path/to/your gdb",
+            "targetArchitecture": "arm64",
+            "miDebuggerServerAddress": "localhost:1234",
+            "preLaunchTask": "Setup QEMU"
+        }
+    ]
+}

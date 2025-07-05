@@ -1,0 +1,63 @@
+[
+  {
+    "capture": "Allocate & free order 0: OK",
+    "msg": "Allocate & free order 0",
+    "proposed": 5
+  },
+  {
+    "capture": "Allocate & free each order: OK",
+    "msg": "Allocate & free each order",
+    "proposed": 5
+  },
+  {
+    "capture": "Allocate & free all orders: OK",
+    "msg": "Allocate & free all orders",
+    "proposed": 5
+  },
+  {
+    "capture": "Allocate & free all memory: OK",
+    "msg": "Allocate & free all memory",
+    "proposed": 5
+  },
+  {
+    "capture": "kmalloc: OK",
+    "msg": "kmalloc",
+    "proposed": 10
+  },
+  {
+    "capture": "Map & unmap one page: OK",
+    "msg": "Map & unmap one page",
+    "proposed": 10
+  },
+  {
+    "capture": "Map & unmap multiple pages: OK",
+    "msg": "Map & unmap multiple pages",
+    "proposed": 10
+  },
+  {
+    "capture": "Map & unmap huge range: OK",
+    "msg": "Map & unmap huge range",
+    "proposed": 20
+  },
+  {
+    "capture": "Compute physical memory-1: OK",
+    "msg": "Compute physical memory-1",
+    "proposed": 1
+  },
+  {
+    "capture": "Compute physical memory-2: OK",
+    "msg": "Compute physical memory-2",
+    "proposed": 1
+  },
+  {
+    "capture": "Compute physical memory-3: OK",
+    "msg": "Compute physical memory-3",
+    "proposed": 3
+  },
+  {
+    "capture": "Welcome to ChCore shell!",
+    "msg": "Page fault",
+    "proposed": 30,
+    "userland": true
+  }
+]

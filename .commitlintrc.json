@@ -1,0 +1,28 @@
+{
+  "extends": ["@commitlint/config-conventional"],
+  "rules": {
+    "type-enum": [
+      2,
+      "always",
+      [
+        "block",
+        "bot",
+        "build",
+        "chore",
+        "ci",
+        "docs",
+        "fix",
+        "minor",
+        "infra",
+        "feat",
+        "refactor",
+        "scripts",
+        "vcs"
+      ]
+    ],
+    "body-leading-blank": [2, "always"],
+    "footer-leading-blank": [2, "always"],
+    "subject-max-length": [2, "always", 72],
+    "body-max-line-length": [1, "always", 72]
+  }
+}

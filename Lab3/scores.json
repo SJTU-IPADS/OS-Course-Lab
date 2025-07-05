@@ -1,0 +1,30 @@
+[
+	{
+		"capture": "Cap_create Pretest Ok!",
+		"msg": "Cap Create Pretest",
+		"proposed": 20
+	},
+	{
+		"capture": "Thread_create Pretest Ok!" ,
+		"msg": "Root Thread Pretest",
+		"proposed": 20
+	},
+	{
+		"capture": "Hello Userland!",
+		"msg": "Userland",
+		"proposed": 20,
+		"userland": true
+	},
+	{
+		"capture": "Welcome to ChCore shell!",
+		"msg": "Printf", 
+		"proposed": 20,
+		"userland": true
+	},
+	{
+		"capture": "Hello ChCore!",
+		"msg": "Userland App",
+		"proposed": 20,
+		"userland": true
+	}
+] 

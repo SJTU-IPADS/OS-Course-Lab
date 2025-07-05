@@ -1,0 +1,20 @@
+- boot_time: eager
+  filename: /circle_qemu.srv
+  registration_method: active
+  services:
+  - usb_devmgr
+  - hdmi
+# - audio
+  type: driver
+- boot_time: eager
+  filename: /gui.srv
+  registration_method: passive
+  services:
+  - gui
+  type: driver
+- boot_time: lazy
+  filename: /posix_shm.srv
+  registration_method: passive
+  services:
+  - systemv_shmmgr
+  type: server

@@ -1,0 +1,19 @@
+{
+	"name": "OS-Course-Lab-Dev",
+	"build": { "dockerfile": "Dockerfile" },
+	"remoteUser": "stu",
+	"updateRemoteUserUID": true,
+	"runArgs": ["--hostname", "Chcore"],
+	"customizations": {
+		"vscode": {
+		"extensions": [
+			"ms-vscode.cpptools",
+			"ms-vscode.hexeditor",
+			"llvm-vs-code-extensions.vscode-clangd",
+			"ms-vscode.makefile-tools",
+			"twxs.cmake",
+			"dan-c-underwood.arm"
+		]
+	}
+  }
+}

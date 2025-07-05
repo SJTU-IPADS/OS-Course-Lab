@@ -1,0 +1,8 @@
+[
+  {
+    "capture": "All fs tests passed",
+    "msg": "FS_Base Vnode",
+    "proposed": 10,
+    "userland": true
+  }
+]

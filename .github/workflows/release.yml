@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  lab1_check:
+    uses: ./.github/workflows/lab1.yml
+  lab2_check:
+    uses: ./.github/workflows/lab2.yml
+  lab3_check:
+    uses: ./.github/workflows/lab3.yml
+  lab4_check:
+    uses: ./.github/workflows/lab4.yml
+  lab5_check:
+    uses: ./.github/workflows/lab5.yml
+  create_release:
+    runs-on: ubuntu-latest
+    needs: [lab1_check, lab2_check, lab3_check, lab4_check, lab5_check]
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v3
+      with:
+        submodules: true 
+        fetch-depth: 0
+
+    - name: Download git-archive-all.sh script
+      run: |
+        curl -o git-archive-all.sh https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
+        chmod +x git-archive-all.sh
+
+    - name: Create archive with submodules
+      run: |
+        ./git-archive-all.sh --prefix "${GITHUB_REPOSITORY##*/}/" --format tar.gz release.tar.gz
+
+    - name: Create release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+          body_path: ./CHANGELOG.md
+
+    - name: Upload archive to release
+      uses: actions/upload-release-asset@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release.tar.gz
+        asset_name: "${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz"
+        asset_content_type: application/gzip

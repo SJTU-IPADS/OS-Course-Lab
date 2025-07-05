@@ -1,0 +1,65 @@
+sourceUrl = "ssh://git@ipads.se.sjtu.edu.cn/staros/starkernel.git"
+destinationUrl = "https://gitee.com/opentrustee/opentrustee_os_kernel.git"
+
+commit_message = "Test message!"
+commit_author = "Copybara <example@example.com>"
+origin_branch = "oh-tee"
+dest_branch = "master"
+
+all_excludes = [
+    "**/CMakeLists.txt",
+    "**/*cmake*",
+    "**/*clang-tidy",
+    "**/*clang-format",
+    ".gitlab/**",
+    "CMakeLists.txt",
+    "*cmake*",
+    "*clang-tidy",
+    "*clang-format",
+    ".gitlab-ci.yml"
+]
+
+kernel_excludes = [
+    "arch/riscv64/**",
+    "arch/x86_64/**",
+    "arch/sparc/**",
+    "arch/aarch64/plat/ft2000/**",
+    "arch/aarch64/plat/hikey970/**",
+    "arch/aarch64/plat/raspi3/**",
+    "arch/aarch64/plat/raspi4/**",
+    "arch/aarch64/boot/ft2000/**",
+    "arch/aarch64/boot/hikey970/**",
+    "arch/aarch64/boot/raspi3/**",
+    "arch/aarch64/boot/raspi4/**",
+    "include/arch/riscv64/**",
+    "include/arch/x86_64/**",
+    "include/arch/sparc/**",
+    "include/arch/aarch64/plat/ft2000/**",
+    "include/arch/aarch64/plat/hikey970/**",
+    "include/arch/aarch64/plat/raspi3/**",
+    "include/arch/aarch64/plat/raspi4/**",
+    "tests/unit/arch/riscv64/**",
+    "tests/unit/arch/x86_64/**",
+    "tests/unit/arch/sparc/**",
+    ".gitmodules"
+    ]
+
+def set_commit_message(ctx):
+    ctx.set_message(commit_message)
+    return ctx.success()
+
+core.workflow(
+    name = "push",
+    origin = git.origin(
+        url = sourceUrl,
+        ref = origin_branch,
+    ),
+    destination = git.destination(
+        url = destinationUrl,
+        fetch = dest_branch,
+        push = dest_branch
+    ),
+    origin_files = glob(include = ["**"], exclude = all_excludes + kernel_excludes),
+    authoring = authoring.pass_thru(commit_author),
+    transformations = [set_commit_message]
+)

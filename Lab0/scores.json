@@ -1,0 +1,32 @@
+[
+  {
+    "capture": "5 phases to go",
+    "msg": "Phase 1",
+    "proposed": 15
+  },
+  {
+    "capture": "4 phases to go",
+    "msg": "Phase 2",
+    "proposed": 15
+  },
+  {
+    "capture": "3 phases to go",
+    "msg": "Phase 3",
+    "proposed": 15
+  },
+  {
+    "capture": "2 phases to go",
+    "msg": "Phase 4",
+    "proposed": 15
+  },
+  {
+    "capture": "1 phases to go",
+    "msg": "Phase 5",
+    "proposed": 20
+  },
+  {
+    "capture": "Congrats! You have defused all phases!",
+    "msg": "All phases defused",
+    "proposed": 20
+  }
+]
