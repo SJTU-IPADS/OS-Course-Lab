@@ -8,7 +8,7 @@
 请按照Docker官方指示为你运行的操作系统安装对应的Docker发行版。
 
 > [!IMPORTANT] 关于Docker
-> 由于中国大陆地区的网络限制，请确保你的docker能够连接到DockerHub，测试方法可以使用 `docker pull nginx:latest`，如果无法访问，您可以依照[该文档](https://docs.docker.com/engine/daemon/)为你的docker daemon添加代理规则。如果你缺少代理，你可以使用这个以下的几个链接：  [百度云(提取uwuv)](https://pan.baidu.com/s/1ipbMZ-C1Qk0S9PGDDMMy6w) [交大云(仅上海交通大学内部可以访问)](https://jbox.sjtu.edu.cn/l/l1Fe9X)。  
+> 由于中国大陆地区的网络限制，请确保你的docker能够连接到DockerHub，测试方法可以使用 `docker pull nginx:latest`，如果无法访问，您可以依照[该文档](https://docs.docker.com/engine/daemon/)为你的docker daemon添加代理规则。如果你缺少代理，你可以使用这个以下的几个链接：  [百度云(提取uwuv)](https://pan.baidu.com/s/1ipbMZ-C1Qk0S9PGDDMMy6w) [交大云(仅上海交通大学内部可以访问)](https://pan.sjtu.edu.cn/web/share/87b5f222c2b18c65cb2785be314b5e08)。  
 > 下载压缩好的Docker镜像，镜像使用`gzip`解压缩镜像文件到标准输出流之后再由docker进行导入（下方的yy.mm请以当前的大版本号替换，如版本tag为24.09.1则请将yy.mm替换成24.09）。
 >
 > ```
