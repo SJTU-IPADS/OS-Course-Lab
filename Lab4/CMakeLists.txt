@@ -14,6 +14,7 @@ project(ChCore)
 set(_cmake_script_dir ${CMAKE_CURRENT_SOURCE_DIR}/../Scripts/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_cmake_script_dir}/Modules)
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/user)
+set(MUSL_LIBC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Thirdparty/musl-libc)
 
 include(SubProject)
 include(CommonTools)
@@ -65,6 +66,7 @@ chcore_add_subproject(
         ${_common_args}
         ${_cache_args}
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+        -DMUSL_LIBC_DIR=${MUSL_LIBC_DIR}
     CMAKE_CACHE_ARGS ${_cache_args}
     INSTALL_COMMAND echo "Performed in CMake"
     BUILD_ALWAYS TRUE)

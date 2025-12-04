@@ -70,7 +70,7 @@ string(REPLACE ";" " " libc_defs "${libc_defs}")
 
 # Apply overrides and patches from libchcore
 
-set(_libc_target_dir ${CMAKE_CURRENT_SOURCE_DIR}/musl-libc)
+set(_libc_target_dir ${MUSL_LIBC_DIR})
 set(_libchcore_porting_dir ${CMAKE_CURRENT_SOURCE_DIR}/libchcore/porting)
 set(_libchcore_overrides_dir ${_libchcore_porting_dir}/overrides)
 set(_libchcore_patches_dir ${_libchcore_porting_dir}/patches)
