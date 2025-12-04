@@ -35,16 +35,18 @@ target=$1
 function traverse {
     for file in "$1"/*; do
         if [[ -d "$file" ]]; then
-            if [[ -L "$file" ]]; then
-                rm "$file"
-                echo "--- Cleanup ${file} symlink"
+            if [[ -f "$file.sym" ]]; then
+                rm -rf "$file"
+                rm "$file.sym"
+                echo "--- Cleanup ${file}"
             else
                 traverse "$file"
             fi
         elif [[ -f "$file" && "$file" != *.bak ]]; then
-            if [[ -L "$file" ]]; then
+            if [[ -f "$file.sym" ]]; then
+                rm "$file.sym"
                 rm "$file"
-                echo "--- Cleanup ${file} symlink"
+                echo "--- Cleanup ${file}"
             fi
             if [[ -f "$file.bak" ]]; then
                 mv "$file.bak" "$file"

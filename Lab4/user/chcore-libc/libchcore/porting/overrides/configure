@@ -832,6 +832,6 @@ test "x$cc_family" = xclang && echo 'WRAPCC_CLANG = $(CC)'
 test "x$pic_default" = xyes && echo 'AOBJS = $(LOBJS)'
 exec 1>&3 3>&-
 
-test "$srcdir" = "." || ln -sf $srcdir/Makefile .
+test "$srcdir" = "." || cp -r $srcdir/Makefile .
 
 printf "done\n"

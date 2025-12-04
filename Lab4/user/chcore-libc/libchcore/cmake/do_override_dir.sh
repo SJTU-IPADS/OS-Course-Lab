@@ -11,7 +11,7 @@
 
 set -e
 
-self=`basename "$0"`
+self=$(basename "$0")
 
 function usage {
     echo "Usage: $self [[overrides_absolute_path]] [[target_absolute_path]]"
@@ -65,12 +65,11 @@ function traverse {
 
         if [[ -d "$file" ]]; then
             if [[ ! -e "$target_file" ]]; then
-                ln -sf "$file" "$target_file"
-                echo "--- Overrided ${target_file} with ${file} symlink"
-            elif [[ ! -L "$target_file" ]]; then
-                traverse "$file"
+                cp -r "$file" "$target_file"
+                touch "$target_file.sym"
+                echo "--- Overrided ${target_file} with ${file}"
             else
-                echo "--- Target directory ${target_file} has been overrided, skipping..."
+                traverse "$file"
             fi
         elif [[ -f "$file" ]]; then
             if [[ "$file" == *.del ]]; then
@@ -83,14 +82,13 @@ function traverse {
                 fi
             else
                 if [[ ! -e "$target_file" ]]; then
-                    ln -sf "$file" "$target_file"
+                    cp "$file" "$target_file"
+                    touch "$target_file.sym"
                     echo "--- Overrided ${target_file} with ${file}"
-                elif [[ ! -L "$target_file" ]]; then
+                else 
                     mv "$target_file" "$target_file.bak"
-                    ln -sf "$file" "$target_file"
+                    cp "$file" "$target_file"
                     echo "--- Overrided ${target_file} with ${file}"
-                else
-                    echo "--- Target file ${target_file} is already a symlink, skipping..."
                 fi
             fi
         fi
