@@ -21,7 +21,7 @@
 
 `printf` 函数调用了 `vfprintf`，其中文件描述符参数为 `stdout`。这说明在 `vfprintf` 中将使用 `stdout` 的某些操作函数。
 
-在 `user/chcore-libc/musl-libc/src/stdio/stdout.c`中可以看到 `stdout` 的 `write` 操作被定义为 `__stdout_write`，之后调用到 `__stdio_write` 函数。
+在 `../Thirdparty/musl-libc/src/stdio/stdout.c`中可以看到 `stdout` 的 `write` 操作被定义为 `__stdout_write`，之后调用到 `__stdio_write` 函数。
 
 最终 `printf` 函数将调用到 `chcore_stdout_write`。
 
@@ -29,7 +29,7 @@
 > 尝试描述 `printf` 如何调用到 `chcore_stdout_write` 函数。
 
 > [!HINT]
-> `chcore_write` 中使用了文件描述符，`stdout` 描述符的设置在`user/chcore-libc/musl-libc/src/chcore-port/syscall_dispatcher.c` 中。
+> `chcore_write` 中使用了文件描述符，`stdout` 描述符的设置在`user/chcore-libc/libchcore/porting/overrides/src/chcore-port/syscall_dispatcher.c` 中。
 
 `chcore_stdout_write` 中的核心函数为 `put`，此函数的作用是向终端输出一个字符串。
 
