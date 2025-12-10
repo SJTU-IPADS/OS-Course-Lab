@@ -125,14 +125,14 @@ __maybe_unused static int cap_group_init_user(struct cap_group *cap_group, unsig
 
         cap_group->pid = args->pid;
 #ifdef CHCORE_OPENTRUSTEE
-        new_cap_group->heap_size_limit = args.heap_size;
+        cap_group->heap_size_limit = args.heap_size;
         /* pid used in OH-TEE */
         if (args.puuid) {
-                copy_from_user(&new_cap_group->uuid,
+                copy_from_user(&cap_group->uuid,
                                (void *)args.puuid,
                                sizeof(TEE_UUID));
         } else {
-                memset(&new_cap_group->uuid, 0, sizeof(TEE_UUID));
+                memset(&cap_group->uuid, 0, sizeof(TEE_UUID));
         }
 #endif /* CHCORE_OPENTRUSTEE */
 
