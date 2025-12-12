@@ -42,13 +42,13 @@ jobs:
           tag=$(curl 'https://api.github.com/repos/toolmanp/rs-mdbook-callouts/releases/latest' | jq -r '.tag_name')
           url="https://github.com/toolmanp/rs-mdbook-callouts/releases/download/${tag}/mdbook-callouts-${tag}-x86_64-unknown-linux-gnu.tar.gz"
           curl -sSL $url | tar -xz --directory=./mdbook
-          tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
+          tag=v0.4.40
           url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
           curl -sSL $url | tar -xz --directory=./mdbook
-          tag=$(curl 'https://api.github.com/repos/badboy/mdbook-toc/releases/latest' | jq -r '.tag_name')
+          tag=0.14.2
           url="https://github.com/badboy/mdbook-toc/releases/download/${tag}/mdbook-toc-${tag}-x86_64-unknown-linux-gnu.tar.gz"
           curl -sSL $url | tar -xz --directory=./mdbook
-          tag=$(curl 'https://api.github.com/repos/badboy/mdbook-last-changed/releases/latest' | jq -r '.tag_name')
+          tag=v0.1.4
           url="https://github.com/badboy/mdbook-last-changed/releases/download/${tag}/mdbook-last-changed-${tag}-x86_64-unknown-linux-gnu.tar.gz"
           curl -sSL $url | tar -xz --directory=./mdbook
           tag=$(curl 'https://api.github.com/repos/toolmanp/mdbook-mermaid/releases/latest' | jq -r '.tag_name')

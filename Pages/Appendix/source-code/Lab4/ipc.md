@@ -712,7 +712,7 @@ struct ipc_connection *conn = {
 
 ### 注册回调函数
 
-> 注册回调线程运行的入口函数为主线程调用`ipc_register_server`是提供的client_register_handler参数，一般会使用默认的`DEFAULT_CLIENT_REGISTER_HANDLER`宏定义的入口函数，即定义在`user/chcore-libc/musl-libc/src/chcore-port/ipc.c`中的`register_cb`
+> 注册回调线程运行的入口函数为主线程调用`ipc_register_server`是提供的client_register_handler参数，一般会使用默认的`DEFAULT_CLIENT_REGISTER_HANDLER`宏定义的入口函数，即定义在`../Thirdparty/musl-libc/src/chcore-port/ipc.c`中的`register_cb`
 >
 
 根据Lab文档的指引我们来到 `register_cb` 的地盘，还记得这个 `client_register_handler` 是干啥的不？它在服务端主线程创建注册回调线程的时候被设置为了注册回调线程的入口。那么在注册客户端函数将线程切换过来的时候（注意这里用的切换函数是 `sched_to_thread` ），便会执行 `register_cb` 的代码
