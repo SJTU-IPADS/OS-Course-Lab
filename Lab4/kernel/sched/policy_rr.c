@@ -265,10 +265,10 @@ int rr_sched(void)
                                         switch_to_thread(old);
                                         return 0; /* no schedule needed */
                                 }
-                        /* LAB 4 TODO BEGIN (exercise 4) */
-                        /* Refill budget for current running thread (old) and enqueue the current thread.*/
+                                /* LAB 4 TODO BEGIN (exercise 4) */
+                                /* Refill budget for current running thread (old) and enqueue the current thread.*/
 
-                        /* LAB 4 TODO END (exercise 4) */
+                                /* LAB 4 TODO END (exercise 4) */
 
                         } else if (!thread_is_ts_blocking(old)
                                    && !thread_is_ts_waiting(old)) {
