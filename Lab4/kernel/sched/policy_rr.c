@@ -266,7 +266,8 @@ int rr_sched(void)
                                         return 0; /* no schedule needed */
                                 }
                                 /* LAB 4 TODO BEGIN (exercise 4) */
-                                /* Refill budget for current running thread (old) and enqueue the current thread.*/
+                                /* Refill budget for current running thread (old)
+                                 * and enqueue the current thread.*/
 
                                 /* LAB 4 TODO END (exercise 4) */
 
