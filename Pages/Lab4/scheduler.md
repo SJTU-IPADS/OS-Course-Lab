@@ -30,7 +30,7 @@ ChCore用在 `kernel/include/sched/sched.h` 中定义的静态函数封装对cur
 
 内核初始化过程中会调用`sched_init`初始化调度相关的元数据，`sched_init`定义在`kernel/sched/sched.c`中，该函数首先初始化idle_thread(每个CPU核心拥有一个idle_thread，当调度器的就绪队列中没有等待线程时会切换到idle_thread运行)，然后会初始化`current_threads`数组，最后调用`struct sched_ops rr`中定义的sched_init函数，即`rr_sched_init`。
 > [!CODING] 练习题 1
-> 在 `kernel/sched/policy_rr.c` 中完善 `rr_sched_init` 函数，对 `rr_ready_queue_meta` 进行初始化。在完成填写之后，你可以看到输出“Scheduler metadata is successfully initialized!”并通过 Scheduler metadata initialization 测试点。
+> 在 `kernel/sched/policy_rr.c` 中完善 `rr_sched_init` 函数，对 `rr_ready_queue_meta` 进行初始化。在完成填写之后，你可以看到输出`"test_scheduler_meta: OK"`并通过 `Scheduler metadata initialization` 测试点。
 
 > [!HINT] Tip
 > sched_init 只会在主 CPU 初始化时调用，因此 rr_sched_init 需要对每个 CPU 核心的就绪队列都进行初始化。
@@ -43,7 +43,7 @@ ChCore用在 `kernel/include/sched/sched.h` 中定义的静态函数封装对cur
 > 在 kernel/sched/policy_rr.c 中完善 `__rr_sched_enqueue` 函数，将`thread`插入到`cpuid`对应的就绪队列中。
 
 > [!SUCCESS]
-> 在完成填写之后，你可以看到输出“Successfully enqueue root thread”并通过 Schedule Enqueue 测试点。
+> 在完成填写之后，你可以看到输出`“test_sched_enqueue: OK”`并通过 `Schedule Enqueue` 测试点。
 
 ## 调度队列出队
 
@@ -56,7 +56,7 @@ ChCore用在 `kernel/include/sched/sched.h` 中定义的静态函数封装对cur
 > 在 kernel/sched/sched.c 中完善 `find_runnable_thread` 函数，在就绪队列中找到第一个满足运行条件的线程并返回。 在 `kernel/sched/policy_rr.c` 中完善 `__rr_sched_dequeue` 函数，将被选中的线程从就绪队列中移除。
 
 > [!SUCCESS]
-> 在完成填写之后，运行 ChCore 将可以成功进入用户态，你可以看到输出“Enter Procmgr Root thread (userspace)”并通过 Schedule Enqueue 测试点。
+> 在完成填写之后，运行 ChCore 将可以成功进入用户态，你可以看到输出`"test_sched_dequeue: OK"`并通过 `Schedule Dequeue` 测试点。
 
 ## 协作式调度
 
@@ -98,7 +98,7 @@ ChCore启动的第一个用户态线程（执行`user/system-services/system-ser
 > * 根据上述说明配置控制寄存器CNTP_CTL_EL0。
 
 > [!HINT]
-> 由于启用了时钟中断，但目前还没有对中断进行处理，所以会影响评分脚本的评分，你可以通过运行ChCore观察是否有`"[TEST] Physical Timer was successfully initialized!: OK"`输出来判断是否正确对物理时钟进行初始化。
+> 由于启用了时钟中断，但目前还没有对中断进行处理，所以会影响评分脚本的评分，你可以通过运行ChCore观察是否有`"test_timer_init: OK"`输出来判断是否正确对物理时钟进行初始化。
 
 ### 物理时钟中断与抢占
 
@@ -107,7 +107,7 @@ ChCore启动的第一个用户态线程（执行`user/system-services/system-ser
 ChCore记录每个线程所拥有的时间片（`thread->thread_ctx->sc->budget`），为了能够让线程之间轮转运行，我们应当在处理时钟中断时递减当前运行线程的时间片，并在当前运行线程的时间片耗尽时进行调度，选取新的线程运行。
 
 > [!CODING] 练习 6
-> 请在`kernel/arch/aarch64/plat/raspi3/irq/irq.c`中完善`plat_handle_irq`函数，当中断号irq为INT_SRC_TIMER1（代表中断源为物理时钟）时调用`handle_timer_irq`并返回。 请在`kernel/irq/timer.c`中完善`handle_timer_irq`函数，递减当前运行线程的时间片budget，并调用sched函数触发调度。 请在`kernel/sched/policy_rr.c`中完善`rr_sched`函数，在将当前运行线程重新加入就绪队列之前，恢复其调度时间片budget为DEFAULT_BUDGET。
+> 请在`kernel/arch/aarch64/plat/raspi3/irq/irq.c`中完善`plat_handle_irq`函数，当中断号irq为INT_SRC_TIMER1（代表中断源为物理时钟）时调用`handle_timer_irq`并返回。 请在`kernel/irq/timer.c`中完善`handle_timer_irq`函数，递减当前运行线程的时间片budget。 请在`kernel/sched/policy_rr.c`中完善`rr_sched`函数，在将当前运行线程重新加入就绪队列之前，恢复其调度时间片budget为DEFAULT_BUDGET。
 
 > [!SUCCESS]
 > 在完成填写之后，运行 ChCore 将可以成功进入用户态并打断创建的“自旋线程”让内核和主线程可以拿回CPU核心的控制权，你可以看到输出`"Hello, I am thread 3. I'm spinning."`和`“Thread 1 successfully regains the control!”`并通过 `Preemptive Scheduling` 测试点。
