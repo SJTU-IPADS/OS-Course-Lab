@@ -1,0 +1,274 @@
+/* The demo drawer: where a command's output lands.
+
+   Deliberately not slide furniture. It is chrome over the deck — its own dark
+   terminal palette, its own type — because what it shows is not authored
+   content but whatever the machine said back, at whatever length. Keeping it
+   out of the slide's flow is what lets a compiler dump forty lines without
+   moving a single element of the page underneath.
+
+   Injected only by the live dev server (see dev_server.make_handler), so a
+   rendered bundle never carries it. */
+
+.lk-drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  max-height: 55vh;
+  background: #10171d;
+  color: #dfe6ec;
+  font-family: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas,
+    "Liberation Mono", Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.35);
+  /* Slid out of view rather than removed, so reopening does not reflow. */
+  transform: translateY(100%);
+  transition: transform 0.18s ease-out;
+}
+
+.lk-drawer[data-open="1"] {
+  transform: translateY(0);
+}
+
+/* One tab per run, up whenever the rack holds anything: the tab is where a run
+   is closed, so a run with no tab would be a run with no way out. */
+.lk-drawer-tabs {
+  display: none;
+  flex: none;
+  gap: 0.4em;
+  padding: 0.4em 0.9em 0;
+  overflow-x: auto;
+  background: #0c1217;
+  scrollbar-width: thin;
+}
+
+.lk-drawer[data-tabs="1"] .lk-drawer-tabs {
+  display: flex;
+}
+
+.lk-drawer-tab {
+  flex: none;
+  display: flex;
+  align-items: center;
+  max-width: 24em;
+  border: 1px solid #263039;
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  background: #141c23;
+  color: #7f94a5;
+  font-size: 0.9em;
+}
+
+.lk-drawer-tab[data-active="1"] {
+  background: #182028;
+  color: #dfe6ec;
+}
+
+/* Two controls in one tab: the body of it selects, the ✕ closes. */
+.lk-drawer-tab-pick {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+  padding: 0.3em 0.4em 0.3em 0.8em;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.lk-drawer-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lk-drawer-tab-close {
+  flex: none;
+  padding: 0.3em 0.6em 0.3em 0.3em;
+  border: 0;
+  background: none;
+  color: #6d8294;
+  font: inherit;
+  font-size: 0.95em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lk-drawer-tab-close:hover {
+  color: #ff9a8a;
+}
+
+.lk-drawer-tab[data-active="1"] .lk-drawer-tab-close {
+  color: #9fb3c2;
+}
+
+/* The dot is the tab's whole status report: still going, ended well, ended
+   badly. It pulses on the same beat as the head row's badge. */
+.lk-drawer-dot {
+  flex: none;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  background: #5d7386;
+}
+
+.lk-drawer-tab[data-state="running"] .lk-drawer-dot {
+  background: #8fd3ff;
+  animation: lk-drawer-pulse 1.4s ease-in-out infinite;
+}
+
+.lk-drawer-tab[data-state="ok"] .lk-drawer-dot {
+  background: #7ddc94;
+}
+
+.lk-drawer-tab[data-state="fail"] .lk-drawer-dot {
+  background: #ff9a8a;
+}
+
+.lk-drawer-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  flex: none;
+  padding: 0.5em 0.9em;
+  background: #182028;
+  border-bottom: 1px solid #263039;
+}
+
+.lk-drawer-cmd {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #8fd3ff;
+}
+
+.lk-drawer-cmd::before {
+  content: "$ ";
+  color: #5d7386;
+}
+
+/* Exit status, the one number worth reading at a glance from the back row. */
+.lk-drawer-status {
+  flex: none;
+  padding: 0.05em 0.6em;
+  border-radius: 999px;
+  font-size: 0.85em;
+  background: #23303a;
+  color: #9fb3c2;
+}
+
+.lk-drawer-status[data-ok="1"] {
+  background: #17331f;
+  color: #7ddc94;
+}
+
+.lk-drawer-status[data-ok="0"] {
+  background: #3a1c1c;
+  color: #ff9a8a;
+}
+
+/* Only offered while something is running: a demo with no natural end is
+   stopped from here, and dropping the connection is what kills it. */
+.lk-drawer-stop {
+  display: none;
+  flex: none;
+  padding: 0.05em 0.7em;
+  border: 1px solid #4a2a2a;
+  border-radius: 999px;
+  background: #2a1818;
+  color: #ff9a8a;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.lk-drawer[data-running="1"] .lk-drawer-stop {
+  display: block;
+}
+
+.lk-drawer-stop:hover {
+  background: #3a1c1c;
+  color: #ffc4ba;
+}
+
+/* A running command has no number to show yet, so the badge shows a pulse
+   instead — from the back row that is the difference between "working" and
+   "hung". */
+.lk-drawer[data-running="1"] .lk-drawer-status {
+  animation: lk-drawer-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes lk-drawer-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.lk-drawer-close {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: #7f94a5;
+  font: inherit;
+  font-size: 1.1em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lk-drawer-close:hover {
+  color: #dfe6ec;
+}
+
+.lk-drawer-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  margin: 0;
+  padding: 0.7em 0.9em 1em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Marked by the controller once the command is over, not by :empty — the body
+   holds text nodes from the first byte on, empty or not. */
+.lk-drawer[data-empty="1"] .lk-drawer-body::after {
+  content: "(no output)";
+  color: #5d7386;
+}
+
+/* Put away, still running. The drawer slides out of the way on ▾ without
+   stopping anything, so something has to say that a terminal is still up and
+   offer the way back to it. */
+.lk-drawer-peek {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 9001;
+  padding: 0.35em 0.9em;
+  border: 1px solid #263039;
+  border-radius: 999px;
+  background: #182028;
+  color: #8fd3ff;
+  font-family: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas,
+    "Liberation Mono", Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.lk-drawer-peek:hover {
+  color: #dfe6ec;
+}
+
+.lk-drawer-peek[hidden] {
+  display: none;
+}

@@ -1,0 +1,21 @@
+digraph runtime_layers {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.18, ranksep=0.18];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=16, width=4.2, height=0.58, margin="0.16,0.08"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.65];
+
+  c_app [label="C 程序\nprintf · fopen · malloc", fillcolor="#EAF3F7"];
+  cpp_app [label="C++ 程序\nstd::cout · std::vector", fillcolor="#EAF3F7"];
+  cpp [label="C++ 标准库实现\nlibstdc++.so", fillcolor="#E7F0F6"];
+  libc [label="C 标准库与常见 POSIX 封装\nlibc.so", fillcolor="#F3F5F6"];
+  kernel [label="Linux 内核服务\nI/O · 虚拟内存 · 调度", fillcolor="#FFF2E9", width=5.3];
+  hardware [label="硬件\nCPU · DRAM · 存储 · 设备", fillcolor="#FCE9DF", width=5.3];
+
+  { rank=same; c_app; cpp_app; }
+  c_app -> libc;
+  cpp_app -> cpp;
+  cpp -> libc [label=" 常会使用 ", fontname="PingFang SC", fontsize=12];
+  libc -> kernel [label=" 系统调用封装 ", fontname="PingFang SC", fontsize=12];
+  cpp -> kernel [label=" 操作系统服务 ", style=dashed, fontname="PingFang SC", fontsize=12];
+  kernel -> hardware;
+}

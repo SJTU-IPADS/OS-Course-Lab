@@ -1,0 +1,1351 @@
+/* @theme basic-office */
+
+/* Deck-wide aspect-ratio presets, selectable via the `size` directive. Anchored
+ * on 720px height so pixel sizes match PowerPoint (4:3 == 960x720 at 96dpi). */
+/* @size 16:9 1280px 720px */
+/* @size 4:3 960px 720px */
+/* @size 16:10 1152px 720px */
+/* @size 3:2 1080px 720px */
+
+/*
+ * Marp theme faithful to assets/basic.potx (Office 2021 default).
+ *
+ * Design tokens extracted from the .potx (ppt/theme/theme1.xml):
+ *   font (major + minor) : Lato
+ *   slide size           : 13.333in x 7.5in (16:9)
+ *   title size           : 44pt, color tx1 (black)
+ *   body sizes           : 28 / 24 / 20 / 18 pt
+ *   background (lt1)     : #FFFFFF
+ *   text (dk1/tx1)       : #000000
+ *   dk2 / lt2            : #0E2841 / #E8E8E8
+ *   accent1..3           : #156082 / #E97132 / #196B24
+ *   hyperlink / followed : #467886 / #96607D
+ *
+ * The look stays minimal like the source template: plain white background,
+ * black headings and body text, Lato throughout. accent1 (#156082) is used
+ * only for light structure (a thin title rule, bullet markers, code accent).
+ */
+
+/* Lato, served from the bundle rather than fonts.googleapis.com. A remote
+ * @import here is render-blocking on every deck load: with a network that is
+ * up but not reachable (VPN down, captive wifi) the browser stalls on it and
+ * keeps painting the previous slide, which reads as a slow live reload. The
+ * files sit beside theme.css in the bundle (see marp.py `_copy_theme`).
+ * `local()` first, so a system-installed Lato is used without loading them. */
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Lato Regular"), local("Lato"), url("Lato-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Lato Italic"), url("Lato-Italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Lato Bold"), url("Lato-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Lato Bold Italic"), url("Lato-BoldItalic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local("Lato Black"), url("Lato-Black.woff2") format("woff2");
+}
+
+:root {
+  --color-bg: #ffffff;       /* lt1 */
+  --color-fg: #000000;       /* dk1 / tx1 */
+  --color-dk2: #0e2841;
+  --color-lt2: #e8e8e8;
+  --color-accent1: #156082;
+  --color-accent2: #e97132;
+  --color-accent3: #196b24;
+  --color-accent4: #0f9ed5;
+  --color-link: #467886;     /* hlink */
+  --color-link-visited: #96607d;
+  --font-base: "Lato", "Helvetica Neue", Helvetica, Arial,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono",
+    Menlo, monospace;
+
+  /* PowerPoint carries one typeface per script and cannot walk a stack, so the
+     theme names the face it should take out of each: the CJK face the browser
+     would have fallen through to in --font-base, and a monospace PowerPoint
+     ships with (the head of --font-mono is a macOS system face it cannot
+     resolve). Each must be a member of its stack — a test checks. The CJK one
+     is overridable at export time with LECTUREKIT_PPTX_CJK_FONT. */
+  --pptx-font-cjk: "PingFang SC";
+  --pptx-font-mono: "Cascadia Code";
+
+  /* Code syntax colors, consumed by the `.hljs-*` rules further down (Marp
+     emits the classes; a custom theme has to supply the palette). Kept dark
+     enough to stay legible at the deck's small code size, and few enough that
+     a listing reads as text with accents rather than a coloured mosaic. */
+  --code-keyword: #1769c2;
+  --code-string: #417a28;
+  --code-comment: #6b7c8d;
+  --code-number: #b33f16;
+  --code-title: #0e2841;
+  --code-type: #0e4d93;
+
+  /* The three categories the `pseudo` language adds. Message and state are
+     figure colors on purpose: a message or a state name should be the same
+     color in the code block as in the diagram beside it. The keyword gets the
+     green — not the blue every other language's keywords take — because blue
+     is already spoken for by the message, and a keyword drawn in the body's
+     own navy is only bold, which at code size is no color at all. */
+  --pseudo-keyword: #417a28;
+  --pseudo-message: #1769c2;
+  --pseudo-state: #f15a24;
+
+  /* Sidenote color wheel: six soft pastels stepping around the hue circle.
+     The viewer renderer cycles a per-slide counter through these (--sidenote-1
+     is the default, later notes get an inline background of the next slot) so a
+     stack of callouts doesn't read as one monotonous block. All are kept light
+     (high lightness, low saturation) so the navy border, navy body text and
+     accent1 title stay readable on every one. */
+  --sidenote-1: #f7d6d4;  /* blush  */
+  --sidenote-2: #fae2cb;  /* peach  */
+  --sidenote-3: #f5efc4;  /* butter */
+  --sidenote-4: #d9ecd4;  /* sage   */
+  --sidenote-5: #d2e7ef;  /* sky    */
+  --sidenote-6: #e2ddf0;  /* lilac  */
+
+  /* Marker-pen strokes for `<mark>`: the figure palette's own colours, held at
+     low alpha. A stroke is thin, so it needs a saturated ink to register — the
+     pastel washes the sidenotes use go invisible at this height, and at full
+     line height they shout louder than the word they mark. */
+  --stroke-yellow: rgba(246, 197, 21, 0.45);
+  --stroke-orange: rgba(241, 90, 36, 0.28);
+  --stroke-green:  rgba(95, 175, 60, 0.28);
+  --stroke-blue:   rgba(23, 105, 194, 0.22);
+
+  /* Where the stroke sits on the word. The deck paints it as a gradient over
+     the inline box: from --mark-top (38%, about where an x-height begins) to
+     --mark-bottom (just past the baseline). The book draws the same stroke as
+     a LaTeX \rule, raised --mark-tex-raise above the baseline and
+     --mark-tex-height tall — a second coordinate system (ex, not % of a box),
+     because LaTeX has no inline box to take a fraction of, so the theme states
+     the geometry once per target and the code only carries it there. The two
+     are meant to describe one stroke: just under the baseline to the top of the
+     lowercase. See the `mark` rule below for why the top is where it is. */
+  --mark-top: 38%;
+  --mark-bottom: 99%;
+  --mark-tex-raise: -0.30ex;
+  --mark-tex-height: 1.28ex;
+
+  /* The cover title's ink. A token because the PPTX cover paints it too. */
+  --cover-accent: #bd3f55;
+
+  /* Two hairlines that outlive the deck: a sidenote's border and an
+     architecture module's. They are tokens rather than literals in the rules
+     below because PowerPoint draws these boxes too, and reads its palette from
+     here (lecturekit/tokens.py). */
+  --sidenote-border: #0d2332;
+  --box-border: #c9d3da;
+
+  /* Highlight chip ink: `p.highlight(tone=…)` colours its text with these
+     rather than sitting on a wash. */
+  --chip-yellow: #156082;
+  --chip-orange: #c2410c;
+  --chip-green:  #3f7a2a;
+  --chip-blue:   #1769c2;
+}
+
+section {
+  /* 16:9, matching the .potx 13.333in x 7.5in at 96dpi */
+  width: 1280px;
+  height: 720px;
+  padding: 44px 80px 70px;
+  box-sizing: border-box;
+
+  font-family: var(--font-base);
+  font-size: 20pt;          /* compact lecture body, ~ reference proportions */
+  line-height: 1.4;
+  color: var(--color-fg);
+  background: var(--color-bg);
+
+  -webkit-font-smoothing: antialiased;
+
+  /* lay the slide body out top-to-bottom so an image can claim the leftover
+     vertical space instead of overflowing the fixed-height slide */
+  display: flex;
+  flex-direction: column;
+}
+
+/* By default every block keeps its natural size... */
+section > * {
+  flex: 0 0 auto;
+}
+/* ...keep tables sized to their content, and center them on the slide */
+section > table {
+  align-self: center;
+}
+
+/* Page-level adaptive spacing between DSL blocks (`p.gap("auto")`). */
+section.lk-gap-auto > .lk-gap-flow {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.lk-gap-block {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.lk-gap-block > :last-child {
+  margin-bottom: 0;
+}
+
+.lk-gap-spacer {
+  flex: 1 0 var(--lk-gap-min);
+  min-height: var(--lk-gap-min);
+  max-height: var(--lk-gap-max);
+}
+
+section.lk-gap-auto .lk-gap-block > .lk-float {
+  display: flow-root;
+  margin: 0;
+}
+
+section.lk-gap-auto .lk-gap-block > figure.lk-figure,
+section.lk-gap-auto .lk-gap-block > figure.lk-row {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0;
+  text-align: center;
+}
+
+section.lk-gap-auto .lk-gap-block > figure.lk-row,
+section.lk-gap-auto .lk-gap-block > figure.lk-arch {
+  position: relative;
+}
+
+section.lk-gap-auto .lk-gap-block > figure.lk-row > figcaption {
+  margin-top: 0.4em;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.85em;
+  color: var(--color-dk2);
+}
+
+section.lk-gap-auto .lk-gap-block > figure.lk-arch {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+/* --- Headings (black, like the template's title placeholder) --- */
+
+h1 {
+  font-size: 26pt;
+  font-weight: 900;
+  color: var(--color-fg);
+  margin: 0 0 0.5em;
+  padding-bottom: 0.18em;
+  /* the one liberty over the bare template: a thin accent rule under the
+     slide title, for readability as lecture slides */
+  border-bottom: 1.5px solid var(--color-accent1);
+}
+
+/* --- Cover page --- */
+
+section.cover {
+  padding: 34px 72px 42px;
+}
+
+section.cover::after {
+  display: none;
+}
+
+section.cover > .lk-cover {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 88px 1fr;
+}
+
+section.cover > .lk-cover:not(:has(.lk-cover-logos)) {
+  grid-template-rows: 1fr;
+}
+
+.lk-cover-logos {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.lk-cover-logos--single {
+  justify-content: flex-end;
+}
+
+.lk-cover-logos--dual {
+  justify-content: space-between;
+}
+
+.lk-cover-logo {
+  display: block;
+  width: auto;
+  max-width: min(320px, 32%);
+  max-height: 70px;
+  object-fit: contain;
+  margin: 0;
+}
+
+.lk-cover-logo--center {
+  max-width: min(380px, 42%);
+}
+
+.lk-cover-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px 3% 8px;
+}
+
+.lk-cover-title {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--cover-accent);
+  font-size: 44pt;
+  font-weight: 400;
+  line-height: 1.18;
+}
+
+.lk-cover-meta {
+  margin-top: 76px;
+  color: #3a3a3a;
+  font-size: 23pt;
+  line-height: 1.35;
+}
+
+.lk-cover-author {
+  font-weight: 900;
+}
+
+.lk-cover-time {
+  margin-top: 0.32em;
+  color: #777;
+}
+
+/* --- An untranslated block (`--lang` with no overlay entry) --- */
+
+/* The block still shows the baseline text; the wash is what says so. Faint
+   enough to read through, obviously not part of any design — a rehearsal aid,
+   not a slide element. Only the deck draws it: the book and PPTX ignore
+   `Block.untranslated` entirely. */
+.lk-untranslated {
+  background: rgba(241, 90, 36, 0.12);
+  border-radius: 3px;
+}
+
+/* --- A held block: written after `p.frames(...)`, on a frame before the last --- */
+
+/* The animation's finished picture owns the block, so earlier frames only
+   reserve its space: invisible, but laid out — the figure and text above it sit
+   at identical positions on every frame, and the punchline appears in place on
+   the last one instead of pushing anything around. */
+.lk-held {
+  visibility: hidden;
+}
+
+/* --- Bridge page (`lec.bridge(...)`): a breath between topics --- */
+
+section.lk-bridge {
+  justify-content: center;
+}
+
+section.lk-bridge > .lk-bridge-body {
+  align-self: center;
+  max-width: 82%;
+  text-align: center;
+  /* above the slide title (26pt): the page holds one line, so it carries it */
+  font-size: 30pt;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--color-fg);
+}
+
+.title-parenthetical {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+h2 {
+  font-size: 22pt;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin: 0 0 0.4em;
+}
+
+h3 {
+  font-size: 20pt;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin: 0 0 0.3em;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 18pt;
+  font-weight: 700;
+  color: var(--color-dk2);
+  margin: 0 0 0.3em;
+}
+
+p {
+  margin: 0 0 0.6em;
+}
+
+/* A paragraph that introduces a list (e.g. `p.slide("lead\n- item")`) reads as
+   one unit with it, so give the lead line a subtle weight and drop the
+   inter-block gap down to the list's own item spacing instead of the full
+   paragraph margin. */
+p:has(+ ul),
+p:has(+ ol) {
+  font-weight: 600;
+  margin-bottom: 0.1em;
+}
+
+/* --- Lists with accent bullet markers --- */
+
+ul,
+ol {
+  margin: 0 0 0.6em;
+  padding-left: 1.2em;
+}
+
+li {
+  margin: 0.25em 0;
+}
+
+ul > li::marker {
+  color: var(--color-accent1);
+}
+
+ol > li::marker {
+  color: var(--color-accent1);
+  font-weight: 700;
+}
+
+/* --- Links --- */
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+a:visited {
+  color: var(--color-link-visited);
+}
+
+/* --- Inline + block code --- */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  color: var(--color-accent1);
+  background: var(--color-lt2);
+  padding: 0 0.32em;
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  border-radius: 3px;
+}
+
+pre {
+  font-size: 0.7em;
+  line-height: 1.45;
+  background: var(--color-lt2);
+  border-left: 4px solid var(--color-accent1);
+  border-radius: 4px;
+  padding: 0.7em 1em;
+  margin: 0 0 0.6em;
+  overflow: auto;
+}
+
+pre code {
+  color: var(--color-fg);
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: 1em;
+}
+
+/* Syntax highlighting.
+ *
+ * Marp runs fenced code through highlight.js and tags the result with `hljs-*`
+ * classes, but the colours normally come from Marp's own default theme — which
+ * this theme replaces. Without the rules below every code block on every deck
+ * renders flat black, highlighted markup and all. */
+.hljs-keyword,
+.hljs-built_in,
+.hljs-literal,
+.hljs-selector-tag {
+  color: var(--code-keyword);
+  font-weight: 700;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: var(--code-string);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-attr,
+.hljs-attribute {
+  color: var(--code-number);
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_,
+.hljs-section,
+.hljs-name {
+  color: var(--code-title);
+  font-weight: 700;
+}
+
+.hljs-type,
+.hljs-class,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params {
+  color: var(--code-type);
+}
+
+/* The `pseudo` language. Lecture pseudocode is lexed by lecturekit itself
+ * (`lecturekit/pseudo.py`) rather than highlight.js, because what wants colour
+ * there is not keyword/string/comment but the protocol's own vocabulary: the
+ * messages that cross the wire, and the state each node keeps. Those two get
+ * the figure palette's blue and orange, so a `<accept, N, V>` in the code and
+ * the same message drawn on the slide's diagram read as one thing. */
+pre.lk-pseudo .tok-kw {
+  font-weight: 700;
+  color: var(--pseudo-keyword);
+}
+
+pre.lk-pseudo .tok-msg {
+  color: var(--pseudo-message);
+}
+
+pre.lk-pseudo .tok-st {
+  color: var(--pseudo-state);
+  font-weight: 600;
+}
+
+pre.lk-pseudo .tok-cm {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+/* A marked line (`p.code(..., mark=[2, 7])`). The wash runs the height of the
+   line rather than through its lower half: the unit being marked is a whole
+   line of code, and a half-height stroke under one reads as an underline. It is
+   the same marker ink `<mark>` lays over a word — held at low alpha, so it
+   composites over the block's own grey and lands at the weight a mark does over
+   the white page. The negative left margin cancels the left padding exactly, so
+   a marked line's indentation still lines up with its neighbours. */
+pre.lk-pseudo .lk-codemark {
+  background: var(--stroke-yellow);
+  border-radius: 2px;
+  padding: 0.12em 0.35em;
+  margin-left: -0.35em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+pre.lk-pseudo .lk-codemark--orange { background: var(--stroke-orange); }
+pre.lk-pseudo .lk-codemark--green  { background: var(--stroke-green); }
+pre.lk-pseudo .lk-codemark--blue   { background: var(--stroke-blue); }
+
+/* --- Blockquote --- */
+
+blockquote {
+  margin: 0 0 0.6em;
+  padding: 0.2em 0 0.2em 1em;
+  border-left: 4px solid var(--color-lt2);
+  color: var(--color-dk2);
+  font-style: italic;
+}
+
+/* --- Highlight (`p.highlight`): the punchline line --- */
+
+/* The outer <p> centers; the inner <span> carries the type and the frame.
+   A filled wash under a sentence that wraps stops hugging its text and becomes
+   a band across the slide — the full-width backdrop the figure rules rule out.
+   A hairline frame in the same tone marks the same territory without painting
+   it: the chip reads as one object at a glance, and what is inside it is white
+   page, not a colour field. The tone therefore lands twice — the rule and the
+   ink — which is what carries it from across a lecture hall. */
+.lk-highlight {
+  text-align: center;
+  margin: 0.6em 0;
+}
+
+/* A chip carrying math is drawn on a <span> inside a markdown paragraph rather
+   than on a <p> of its own: Marp typesets a formula while parsing markdown and
+   never looks inside a raw HTML block. Blocked out, it is the same box — the
+   paragraph's own margins collapse into the chip's, so the rhythm is unchanged. */
+span.lk-highlight {
+  display: block;
+}
+
+.lk-highlight span {
+  display: inline-block;
+  color: var(--chip-yellow);
+  border: 1.5px solid var(--chip-yellow);
+  /* The same soft lift a framed figure gets (`.lk-figure--framed`), so the two
+     cards on a slide sit at one height. Neutral navy rather than the tone: a
+     coloured shadow reads as a second, blurred copy of the frame. */
+  box-shadow: 0 2px 8px rgba(13, 35, 50, 0.18);
+  font-weight: 700;
+  font-size: 26pt;          /* the slide title's size — big, but not louder than it */
+  line-height: 1.4;
+  padding: 0.28em 0.8em;    /* room for the frame to clear the descenders */
+  text-align: center;
+}
+
+/* yellow is the base above; the rest only swap the ink, rule included */
+.lk-highlight--orange span { color: var(--chip-orange); border-color: var(--chip-orange); }
+.lk-highlight--green span  { color: var(--chip-green);  border-color: var(--chip-green); }
+.lk-highlight--blue span   { color: var(--chip-blue);   border-color: var(--chip-blue); }
+
+/* `**bold**` inside a chip cannot get bolder — the chip is already at 700, and
+   the CJK face has no heavier cut to fall back on. Now that the tone colours
+   the ink, those words step back to the body's navy instead: against the tone
+   it is a clear second voice, and unlike the drop shadow it used to carry, it
+   does not thicken the strokes of a CJK glyph into a smudge. */
+.lk-highlight span strong,
+.lk-highlight span b {
+  color: var(--color-dk2);
+}
+
+/* --- Demo (`p.demo(...)`): the command the lecture runs on stage ---
+
+   Two shapes, chosen by the renderer from what the author wrote. A bare
+   one-liner is a chip: one row, the accent rule down its left. A command of
+   several lines, or one with its output recorded, is a transcript — deliberately
+   the same box as `pre`, because that is what it replaced on the page, and a
+   slide should not change shape just because its listing became runnable.
+
+   Either shape is a label first and a control second: it says what will run and
+   what the command is, and it reads the same in an exported PDF as on screen.
+   The button ships `disabled` (see `blocks._demo`) because only a live dev
+   server can actually run anything — `demo.js` arms it, and everything under
+   `[disabled]` here is the honest resting state of a printed deck. */
+.lk-demo {
+  margin: 0.4em 0 0.45em;
+}
+
+/* Two chips for two commands are one gesture, not two paragraphs. */
+.lk-demo + .lk-demo {
+  margin-top: 0.15em;
+}
+
+/* Only the chip and the head row carry the demo's own size. The transcript is
+   left to inherit the slide's, so `pre`'s 0.7em lands on the same number it
+   lands on for an ordinary code block. */
+.lk-demo[data-lk-demo-form="inline"] {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 0.5em;
+  padding: 0.3em 0.7em;
+  border-left: 4px solid var(--color-accent4);
+  background: var(--color-lt2);
+  font-size: 20pt;
+  line-height: 1.5;
+}
+
+/* The head is a caption over the transcript, not a line of body text: it says
+   whose command this is and offers the button, and costs the page as little
+   height as that takes. */
+.lk-demo-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 0.5em;
+  margin-bottom: 0.15em;
+  font-size: 17pt;
+  line-height: 1.2;
+}
+
+.lk-demo-run {
+  flex: none;
+  align-self: center;
+  width: 1.3em;
+  height: 1.3em;
+  padding: 0;
+  border: 1.5px solid var(--color-accent4);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-accent4);
+  font: inherit;
+  font-size: 0.85em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lk-demo-run[disabled] {
+  border-color: var(--color-lt2);
+  color: #9a9a9a;
+  cursor: default;
+}
+
+.lk-demo-name {
+  font-weight: 700;
+  color: var(--color-dk2);
+}
+
+.lk-demo-desc {
+  font-size: 0.75em;
+  color: var(--color-dk2);
+  opacity: 0.75;
+}
+
+.lk-demo[data-lk-demo-form="inline"] .lk-demo-desc {
+  flex-basis: 100%;
+}
+
+.lk-demo-cmd {
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+  color: var(--color-accent1);
+}
+
+.lk-demo[data-lk-demo-form="inline"] .lk-demo-cmd {
+  font-size: 0.85em;
+}
+
+/* The transcript box: `pre`'s own metrics, so a converted listing lands where
+   the listing did. The command keeps the accent colour it has in a chip; the
+   recorded output is body text, because that is what it is — what the machine
+   said, not what the author is asking for. */
+.lk-demo-term {
+  margin: 0;
+}
+
+.lk-demo-term .lk-demo-cmd,
+.lk-demo-out {
+  display: block;
+  font-size: 1em;
+}
+
+.lk-demo-out {
+  margin-top: 0.45em;
+  color: var(--color-fg);
+}
+
+/* Set by `demo.js` while a command is in flight, so the room can see that the
+   press landed on a command that takes a second to answer. */
+.lk-demo[data-lk-demo-state="running"] .lk-demo-run {
+  opacity: 0.45;
+}
+
+/* --- Mark (`<mark>` in slide text): the inline keyword highlight ---
+
+   A marker pen leaves a stroke over the body of the word, not a filled cell
+   around it — so the wash is a gradient that starts at the top of the
+   lowercase (`--mark-top` in :root, 38% of the inline box, about where an
+   x-height begins) and runs just past its floor. A full-height fill is a rectangle the
+   eye reads before the word inside it, and on a line that wraps mid-mark it
+   lands as a stray block at the start of the next line; the stroke has neither
+   problem, and still reads as highlighting rather than as an underline.
+
+   The top is where the geometry is decided, and it wants to sit on the
+   lowercase rather than through it: struck at the *middle* of the x-height the
+   stroke is half a stroke — the word's own weight above it reads as unmarked,
+   an ALL-CAPS or CJK run gets only its bottom third, and the whole gesture
+   goes quiet at projector distance. Ascenders and cap tops still stand clear
+   of it, which is what keeps it a stroke and not a badge.
+
+   `box-decoration-break: clone` is what gives a mark spanning two lines a
+   stroke on each; the default slices one gradient across both, leaving the
+   second line bare.
+
+   `color: inherit` keeps the navy the line already had — the browser default
+   repaints marked text black, which reads as a second, unintended emphasis.
+   Square ends, like a real stroke — a rounded wash reads as a badge.
+
+   The negative margin cancels the horizontal padding exactly, so a mark costs
+   no width: the stroke bleeds past the glyphs the way a marker pen does, while
+   the punctuation right after a marked word stays welded to it. Without it,
+   `<mark>Paxos</mark>:` renders as "Paxos :". */
+mark {
+  --stroke-ink: var(--stroke-yellow);
+  background: linear-gradient(transparent var(--mark-top),
+                              var(--stroke-ink) var(--mark-top),
+                              var(--stroke-ink) var(--mark-bottom),
+                              transparent var(--mark-bottom));
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  color: inherit;
+  padding: 0 0.14em;
+  margin: 0 -0.14em;
+  border-radius: 0;
+}
+
+/* yellow is the base above; the rest only swap the ink, so the height of the
+   stroke is set in one place */
+mark.orange { --stroke-ink: var(--stroke-orange); }
+mark.green  { --stroke-ink: var(--stroke-green); }
+mark.blue   { --stroke-ink: var(--stroke-blue); }
+
+/* --- Tables (minimalist: three horizontal rules, no fills, booktabs-style) --- */
+
+table {
+  border-collapse: collapse;
+  font-size: 0.85em;
+  margin: 0.2em 0 0.6em;
+  /* top and bottom rules frame the table; no vertical lines, no fills.
+     The navy --color-dk2 reads lighter than pure black for a softer look. */
+  border-top: 2px solid var(--color-dk2);
+  border-bottom: 2px solid var(--color-dk2);
+}
+
+th {
+  font-weight: 700;
+  color: var(--color-fg);
+  text-align: left;
+  padding: 0.45em 0.9em;
+  /* the rule separating the header from the body */
+  border-bottom: 1.5px solid var(--color-dk2);
+}
+
+td {
+  padding: 0.4em 0.9em;
+  /* a faint row separator keeps many-row tables scannable */
+  border-bottom: 1px solid var(--color-lt2);
+}
+
+/* --- Emphasis colors --- */
+
+strong {
+  font-weight: 700;
+  color: var(--color-dk2);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-lt2);
+  margin: 0.6em 0;
+}
+
+/* --- Images: scale to fit, never overflow the slide --- */
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 0.6em;
+}
+
+/* A small image floated beside a slide block's text (p.slide(...).image_right).
+   The section is a flex column, so a bare floated <img> would be a flex item
+   and ignore `float`; this wrapper is a flow-root block-formatting context, so
+   the image floats and the text wraps around it (and the float can't escape to
+   overlap the next block). The float itself is set inline on the <img>. */
+section > .lk-float {
+  display: flow-root;
+  margin: 0 0 0.4em;
+}
+
+/* A figure frames an image (and optional caption). It shrinks into whatever
+   vertical space is left after the title and text, so the image stays fully
+   visible, and it centers the image and caption. */
+section > figure.lk-figure {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0 0 0.6em;
+  text-align: center;
+}
+
+.lk-figure img {
+  margin: 0 auto;
+  max-height: 100%;
+  margin-bottom: 0;
+}
+
+/* When the author sets an explicit size, honor the width and let height stay
+   `auto` so the aspect ratio is always preserved. Dropping the height clamp
+   means a deliberately large image may overflow the slide — that's the author's
+   call. Unsized images keep the clamp above and fit-to-box. */
+.lk-figure--sized img {
+  max-height: none;
+}
+
+.lk-figure figcaption {
+  margin-top: 0.4em;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.85em;
+  color: var(--color-dk2);
+}
+
+/* Opt-in card: white matte, navy hairline, soft shadow. Off by default so
+   transparent line diagrams aren't boxed. */
+.lk-figure--framed img {
+  padding: 6px;
+  background: #fff;
+  border: 1px solid var(--color-lt2);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(13, 35, 50, 0.18);
+}
+
+/* A row of side-by-side images. Like figure.lk-figure, the row is a flex item
+   in the slide's flex column, so it must declare flex/min-height or it stretches
+   the column. The track is a flex row whose items are top-aligned, so per-image
+   captions at differing heights line up to the tops. Each item's share is set
+   inline (flex:1 1 0 unsized, flex:0 0 <width> sized); the .lk-figure classes
+   on each item carry the existing caption/frame/sized rules. */
+section > figure.lk-row {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0 0 0.6em;
+  text-align: center;
+}
+
+.lk-row-track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.2em;
+  min-height: 0;
+}
+
+.lk-row-item {
+  min-width: 0;       /* let a flex item shrink below its image's intrinsic width */
+  margin: 0;          /* the track gap owns the spacing */
+}
+
+.lk-row-item img {
+  max-width: 100%;
+}
+
+/* The row's own caption sits below the whole track, like an image caption. */
+section > figure.lk-row > figcaption {
+  margin-top: 0.4em;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.85em;
+  color: var(--color-dk2);
+}
+
+/* --- Pagination + footer --- */
+
+section::after {
+  /* page number, pushed toward the bottom edge */
+  position: absolute;
+  bottom: 14px;
+  right: 28px;
+  padding: 0;
+  color: var(--color-dk2);
+  font-size: 14pt;
+}
+
+footer {
+  color: var(--color-dk2);
+  font-size: 13pt;
+}
+
+header {
+  color: var(--color-accent1);
+  font-size: 14pt;
+  font-weight: 700;
+}
+
+/* --- Title / lead slide ( <!-- _class: lead --> ) --- */
+
+section.lead {
+  justify-content: center;
+  text-align: center;
+}
+
+section.lead h1 {
+  font-size: 34pt;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+section.lead h2 {
+  font-weight: 400;
+  color: var(--color-accent1);
+}
+
+/* --- Auto-generated 参考文献 page ( <!-- _class: lk-references --> ) --- */
+
+/* The trailing citation list is a record to look up later, not something to
+   read off the projector — so it runs well under body size, which also fits
+   more entries before the page overflows. Absolute pt, not em: an em here
+   would resolve against the slide's parent, not the section's own 20pt. The
+   h1 is absolute too, so the page title keeps its normal weight. */
+section.lk-references {
+  font-size: 14pt;
+}
+
+/* --- Inverted section ( <!-- _class: invert --> ) --- */
+
+section.invert {
+  background: var(--color-dk2);
+  color: #ffffff;
+}
+
+section.invert h1,
+section.invert h2,
+section.invert h3 {
+  color: #ffffff;
+}
+
+section.invert strong {
+  color: var(--color-accent2);
+}
+
+section.invert code {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+section.invert a {
+  color: var(--color-accent4, #0f9ed5);
+}
+
+section.invert blockquote {
+  color: var(--color-lt2);
+  border-left-color: var(--color-accent1);
+}
+
+/* --- Sidenote: boxed callout linking to external material --- */
+/* Default background is the first wheel slot; the renderer overrides later
+   notes with an inline background. The navy border is shared across the wheel
+   and the title still uses --color-accent1. */
+
+.sidenote {
+  background: var(--sidenote-1);
+  border: 1px solid var(--sidenote-border);
+  border-radius: 12px;
+  padding: 0.6em 0.9em;
+  margin: 0 0 0.6em;
+  /* contain the floated logo so the box always wraps its content */
+  overflow: hidden;
+}
+
+/* Float the logo so the body text wraps around it instead of leaving the
+   space below the logo empty. */
+.sidenote-logo {
+  float: left;
+  margin: 0.1em 0.5em 0.2em 0;
+  line-height: 1;
+}
+
+/* Emoji logo: size by the glyph itself. Setting an em width here would be
+   computed against the enlarged font-size, leaving a wide empty gap. */
+span.sidenote-logo {
+  font-size: 2.2em;
+}
+
+img.sidenote-logo {
+  width: 2.4em;
+  height: auto;
+  border: 1.5px solid var(--sidenote-border);
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(13, 35, 50, 0.35);
+}
+
+.sidenote--single-line .sidenote-logo {
+  margin: 0 0.5em 0 0;
+  line-height: inherit;
+  max-height: 1lh;
+}
+
+.sidenote--single-line span.sidenote-logo {
+  font-size: 1em;
+}
+
+.sidenote--single-line img.sidenote-logo {
+  width: auto;
+  max-width: 1lh;
+}
+
+.sidenote-body {
+  margin: 0;
+  color: var(--color-fg);
+}
+
+.sidenote-title,
+.sidenote-title:visited {
+  font-weight: 700;
+  color: var(--color-accent1);
+  text-decoration: underline;
+  border-bottom: none;
+}
+
+/* --- Footnotes --- */
+
+/* Small grey notes pinned to the slide's bottom-left, each numbered to match the
+   superscript on the block it annotates. The page number sits bottom-right
+   (section::after), so the left edge is free; the right margin clears it. The
+   block grows upward as notes are added, above the bottom rule. */
+.footnotes {
+  position: absolute;
+  left: 80px;
+  right: 80px;
+  bottom: 14px;
+  margin: 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-lt2);
+  /* Deliberately small: a source line is for the record, not for reading from
+     the back row. */
+  font-size: 0.5em;
+  line-height: 1.3;
+  color: var(--color-dk2);
+}
+
+.footnote-item {
+  margin: 0;
+}
+
+/* The in-text reference number on an annotated block. A block carrying several
+   footnotes prints them as one `1, 2` group, and that group is one marker: it
+   never breaks across lines (the zero-width `--hang` layout below would
+   otherwise wrap it inside itself, dropping `2` onto the next line). */
+.footnote-ref {
+  color: var(--color-accent1);
+  font-size: 0.7em;
+  padding: 0 0.1em;
+  white-space: nowrap;
+}
+
+/* A footnote marker riding the end of a text block's last line. Laid out at zero
+   width so it never competes for the line: a line that fills the column keeps
+   its wrap point, and the number hangs into the slide's right padding rather
+   than breaking onto a line of its own. (The word joiner emitted before it is
+   what stops a break at that seam — CJK text breaks between any two
+   characters.) `left` shifts the glyph off the last character without adding
+   layout width. */
+.footnote-ref--hang {
+  display: inline-block;
+  width: 0;
+  padding: 0;
+  position: relative;
+  left: 0.15em;
+}
+
+/* A footnote marker on a captionless figure: pinned to a top-right corner so it
+   takes no vertical space. A single image hugs the image itself via an
+   inline-block anchor (the image is centered and usually narrower than the
+   figure); a row / architecture diagram pins to the figure box. (A captioned
+   figure carries the marker on its caption and needs none of this.) */
+.lk-figure-anchor {
+  position: relative;
+  display: inline-block;
+}
+section > figure.lk-row,
+section > figure.lk-arch {
+  position: relative;
+}
+.footnote-ref--corner {
+  position: absolute;
+  top: -0.3em;
+  right: -0.7em;
+}
+
+/* A footnote marker on a code block or table: those end in a syntactic line (a
+   closing fence, a `| … |` row), so the marker cannot ride the block inline and
+   is emitted just after it. A zero-height, right-aligned wrapper parks it on the
+   block's bottom-right corner instead of letting it claim a line. */
+.footnote-ref-tuck {
+  height: 0;
+  margin: 0;
+  line-height: 1;
+  text-align: right;
+}
+
+.footnote-ref-tuck .footnote-ref {
+  position: relative;
+  top: -1.2em;
+}
+
+/* --- Annotation bubbles --- */
+
+/* A callout speech bubble floating over the slide, placed by author-given
+   anchor + dx/dy (resolved into inline left/top/transform). It sits above slide
+   content (z-index) and may overlap it — that's intended, so a note can land in
+   a full slide. The downward tail is a fixed, cosmetic speech-bubble cue: with
+   free placement it can't be guaranteed to point at the target. */
+.annotation {
+  position: absolute;
+  z-index: 10;
+  /* size to content, capped — without width:max-content an edge-anchored bubble
+     (left:100% + translate) gets ~0 available width and collapses to its
+     longest word. */
+  width: max-content;
+  max-width: 42%;
+  margin: 0;
+  padding: 0.5em 0.8em;
+  background: var(--sidenote-1);
+  border: 1.5px solid var(--sidenote-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(13, 35, 50, 0.25);
+  color: var(--color-fg);
+  font-size: 0.8em;
+  line-height: 1.35;
+}
+
+/* Tail: a small triangle below the bubble's lower-left, navy-outlined to match
+   the border. ::after is the fill, ::before the outline behind it. */
+.annotation::before,
+.annotation::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 1.4em;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.annotation::before {
+  border-width: 14px 12px 0 0;
+  border-color: var(--sidenote-border) transparent transparent transparent;
+}
+.annotation::after {
+  margin-top: -1.8px;
+  border-width: 12px 10px 0 0;
+  border-color: var(--sidenote-1) transparent transparent transparent;
+}
+
+/* Bottom-anchored bubble: flip the tail above the bubble, pointing up. */
+.annotation--tail-up::before,
+.annotation--tail-up::after {
+  top: auto;
+  bottom: 100%;
+}
+.annotation--tail-up::before {
+  border-width: 0 12px 14px 0;
+  border-color: transparent transparent var(--sidenote-border) transparent;
+}
+.annotation--tail-up::after {
+  margin-top: 0;
+  margin-bottom: -1.8px;
+  border-width: 0 10px 12px 0;
+  border-color: transparent transparent var(--sidenote-1) transparent;
+}
+
+/* --- Architecture diagram (p.architecture: layered + modular) --- */
+
+/* Stacked layer bands. A flex column so the bands and flow chevrons sit in
+   document order; shrinks into the slide's leftover vertical space like a
+   figure. The whole thing is structure-only — CSS does all the layout. */
+section > figure.lk-arch {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 0.6em;
+  font-size: 0.9em;
+}
+
+/* One layer is a single box: a bold black title on the left, sharing the row
+   with the white module boxes nested beside it. */
+.lk-arch-layer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--color-lt2);
+  border: 1px solid var(--box-border);
+  border-radius: 8px;
+}
+
+.lk-arch-label {
+  flex: 0 0 140px;          /* fixed gutter so module rows line up across layers */
+  font-weight: 700;
+  color: var(--color-fg);   /* black, no highlight band */
+}
+
+/* The nested module boxes share the remaining width evenly. */
+.lk-arch-modules {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.lk-arch-module {
+  flex: 1 1 0;
+  min-width: 0;             /* let the box shrink so long labels wrap, not overflow */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow-wrap: anywhere;  /* wrap module text onto multiple lines */
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid var(--box-border);
+  border-radius: 6px;
+}
+
+/* "More modules here, not drawn": a faded, dashed placeholder box. */
+.lk-arch-module--more {
+  flex: 0 1 auto;
+  padding: 8px 14px;
+  background: transparent;
+  border-style: dashed;
+  color: var(--color-dk2);
+  letter-spacing: 2px;
+}
+
+/* Direction-of-flow chevron between adjacent layers. Same font size as the rest
+   of the diagram — only the glyph differs, not the scale. */
+.lk-arch-flow {
+  text-align: center;
+  line-height: 1;
+  color: var(--color-accent1);
+}
+
+/* Caption keeps its italic / muted cue but stays the diagram's uniform size. */
+.lk-arch figcaption {
+  margin-top: 0.4em;
+  text-align: center;
+  font-style: italic;
+  color: var(--color-dk2);
+}

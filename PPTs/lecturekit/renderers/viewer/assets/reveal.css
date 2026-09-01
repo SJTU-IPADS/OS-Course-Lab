@@ -1,0 +1,92 @@
+/* Reveal-on-Enter — live preview only. Injected into slides.html by the dev
+   server at serve time; never written to disk, never on the export path. */
+
+/* The wrapper must be layout-transparent. The theme (basic-office.css) styles
+   the slide's blocks as DIRECT children of <section> (`section > *`,
+   `section > table`, `section > figure.lk-figure`, ...). A block wrapped in
+   .reveal-block becomes a grandchild and loses all of that. display:contents
+   drops the wrapper's own box so its child block becomes a real flex item of
+   the section again; the rules below re-apply the theme's `section > X`
+   declarations one level deeper, for wrapped blocks only. Keep in sync with the
+   `section > ` rules in themes/basic-office.css. */
+.reveal-block {
+  display: contents;
+}
+
+/* Except on a `p.gap("auto")` page, where the wrapper IS the layout unit: the
+   theme sizes `.lk-gap-block` as one unshrinkable flex item of .lk-gap-flow
+   (`flex: 0 0 auto`). Dropping its box would hand its children to the flow as
+   separate, shrinkable items, so the page lays out differently than the very
+   same page without reveal — and since only an animation's first frame steps,
+   frame 1 would sit at a different height than the rest and the figure would
+   jump on paging. Keep the box; the dim rules below already land on the
+   children. */
+.reveal-block.lk-gap-block {
+  display: block;
+}
+
+section > .reveal-block > * {
+  flex: 0 0 auto;
+}
+section > .reveal-block > table {
+  align-self: center;
+}
+section > .reveal-block > .lk-float {
+  display: flow-root;
+  margin: 0 0 0.4em;
+}
+section > .reveal-block > figure.lk-figure {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0 0 0.6em;
+  text-align: center;
+}
+section > .reveal-block > figure.lk-arch {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 0.6em;
+  font-size: 0.9em;
+}
+section > .reveal-block > figure.lk-row {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0 0 0.6em;
+  text-align: center;
+}
+section > .reveal-block > figure.lk-row > figcaption {
+  margin-top: 0.4em;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.85em;
+  color: var(--color-dk2);
+}
+
+/* Dim un-revealed blocks. A .reveal-block wrapper has no box (display:contents)
+   so its dim lands on its children; an annotation bubble carrying data-reveal is
+   a real box and is dimmed directly (the wrapper match below is a harmless
+   no-op on it). */
+.reveal-block > *,
+[data-reveal] {
+  transition: opacity 0.15s ease, filter 0.15s ease;
+}
+.reveal-block.reveal-dim > *,
+[data-reveal].reveal-dim {
+  opacity: 0.16;
+  filter: grayscale(1);
+}
+
+/* `p.slide(..., reveal="items")`. The step is the list item, so reveal.js dims
+   the <li> (and whatever else the block holds) one by one and never dims the
+   wrapper as a whole — the rules above would take the entire block down with
+   it. The list itself stays lit, so the bullets keep their positions and the
+   items arrive in place rather than reflowing. */
+.reveal-item {
+  transition: opacity 0.15s ease, filter 0.15s ease;
+}
+.reveal-item.reveal-dim {
+  opacity: 0.16;
+  filter: grayscale(1);
+}

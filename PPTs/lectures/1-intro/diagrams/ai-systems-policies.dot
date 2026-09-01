@@ -1,0 +1,26 @@
+digraph ai_systems_policies {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.34, ranksep=0.34];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=14, width=3.9, height=1.05, margin="0.18,0.10"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.68];
+
+  premise [label="经典系统机制 + 面向工作负载的运行策略",
+           fillcolor="#EAF3F7", width=8.25, height=0.72, fontsize=16];
+
+  memory [label="多级内存中的模型数据\n映射 · 缓存 · 量化\n放置 · 卸载", fillcolor="#FFF2E9"];
+  requests [label="并发生成请求\n队列 · 连续批处理\n准入控制 · 调度", fillcolor="#FCE9DF"];
+  kv [label="KV Cache 的容量与复用\n分配 · 局部性\n放置 · 淘汰", fillcolor="#E7F0F6"];
+  tools [label="Agent 工具执行\n最小权限 · 参数校验\n隔离 · 审计", fillcolor="#F3F5F6"];
+
+  { rank=same; memory; requests; }
+  { rank=same; kv; tools; }
+  memory -> requests [style=invis, weight=8];
+  kv -> tools [style=invis, weight=8];
+  memory -> kv [style=invis, weight=5];
+  requests -> tools [style=invis, weight=5];
+
+  premise -> memory;
+  premise -> requests;
+  memory -> kv;
+  requests -> tools;
+}

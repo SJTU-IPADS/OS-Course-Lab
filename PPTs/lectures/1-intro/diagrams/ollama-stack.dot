@@ -1,0 +1,14 @@
+digraph ollama_stack {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.12, ranksep=0.18];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=17, width=7.6, height=0.58, margin="0.16,0.09"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.65];
+
+  app [label="应用   ·   对话界面  |  Agent  |  API 客户端", fillcolor="#EAF3F7"];
+  runtime [label="Ollama 运行时   ·   模型加载  |  调度  |  推理", fillcolor="#E7F0F6"];
+  os [label="操作系统   ·   进程  |  文件  |  虚拟内存  |  驱动", fillcolor="#F3F5F6"];
+  isa [label="指令集体系结构   ·   软件可见的机器指令", fillcolor="#F8EFEA"];
+  hw [label="硬件   ·   CPU  |  DRAM  |  存储  |  GPU  |  网络", fillcolor="#FCE9DF"];
+
+  app -> runtime -> os -> isa -> hw;
+}

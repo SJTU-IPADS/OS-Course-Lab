@@ -1,0 +1,20 @@
+digraph agent_request {
+  graph [rankdir=LR, bgcolor="transparent", pad=0.10, nodesep=0.30, ranksep=0.55];
+  node [shape=rect, style="rounded,filled", fontname="PingFang SC", fontsize=15,
+        color="#9FB5C3", penwidth=1.3, height=0.85, margin="0.16,0.10"];
+  edge [color="#156082", penwidth=1.7, arrowsize=0.65,
+        fontname="PingFang SC", fontsize=12];
+
+  user    [label="用户\n提出问题", fillcolor="#F3F5F6"];
+  client  [label="客户端\n对话界面 / Agent", fillcolor="#EAF3F7"];
+  server  [label="推理服务\nOpenAI 兼容接口", fillcolor="#EAF3F7"];
+  model   [label="模型权重\nCPU / GPU 计算", fillcolor="#FCE9DF"];
+
+  user   -> client [label=" 输入 "];
+  client -> server [label=" HTTP 请求 "];
+  server -> model  [label=" 加载与计算 "];
+
+  model  -> server [label=" 结果 ", constraint=false, style=dashed, color="#E97132"];
+  server -> client [label=" token 流 ", constraint=false, style=dashed, color="#E97132"];
+  client -> user   [label=" 显示 ", constraint=false, style=dashed, color="#E97132"];
+}

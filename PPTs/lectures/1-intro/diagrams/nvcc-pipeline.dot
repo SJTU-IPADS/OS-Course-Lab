@@ -1,0 +1,25 @@
+digraph nvcc_pipeline {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.5, ranksep=0.38];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=14, height=0.64, margin="0.14,0.08"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.66, fontname="PingFang SC", fontsize=11];
+
+  hostsrc [label="主机 C++ 代码", fillcolor="#EAF3F7"];
+  devsrc [label="CUDA 设备代码", fillcolor="#EAF3F7"];
+  nvcc [label="nvcc\n负责协调", fillcolor="#FFF2E9", width=1.55];
+  hostcc [label="主机编译器", fillcolor="#F3F5F6"];
+  cudacc [label="CUDA 编译工具", fillcolor="#F3F5F6"];
+  hostbin [label="主机机器码", fillcolor="#FCE9DF"];
+  devicebin [label="PTX 和/或 cubin", fillcolor="#FCE9DF"];
+  cpu [label="CPU", fillcolor="#FFF2E9"];
+  gpu [label="NVIDIA GPU", fillcolor="#FFF2E9"];
+
+  {rank=same; hostsrc; devsrc;}
+  {rank=same; hostcc; cudacc;}
+  {rank=same; hostbin; devicebin;}
+  {rank=same; cpu; gpu;}
+  hostsrc -> nvcc; devsrc -> nvcc;
+  nvcc -> hostcc; nvcc -> cudacc;
+  hostcc -> hostbin -> cpu;
+  cudacc -> devicebin -> gpu;
+}
