@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.DS_Store
+build/
+*.egg-info/
+node_modules/
+package-lock.json
+package.json
+.superpowers/
+.claude/settings.local.json
+.claude/worktrees/
+
+# What a `p.demo(...)` leaves behind. The compile demos in lectures/1-intro
+# build in place, on purpose -- the point of the page is that you can look at
+# the .i, the .s and the .o afterwards -- so the products are ignored and the
+# sources beside them are not.
+lectures/*/examples/*.i
+lectures/*/examples/*.s
+lectures/*/examples/*.o
+lectures/*/examples/mini_ollama
+lectures/*/examples/cpp_demo

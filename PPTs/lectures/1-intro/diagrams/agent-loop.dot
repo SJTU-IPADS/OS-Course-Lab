@@ -1,0 +1,26 @@
+digraph agent_loop {
+  graph [rankdir=LR, bgcolor="transparent", pad=0.10, nodesep=0.30, ranksep=0.48,
+         fontname="PingFang SC", fontsize=16];
+  node [shape=rect, style="rounded,filled", fontname="PingFang SC", fontsize=15,
+        color="#9FB5C3", penwidth=1.3, width=2.15, height=0.70, margin="0.14,0.08"];
+  edge [color="#156082", penwidth=1.7, arrowsize=0.68, fontname="PingFang SC", fontsize=12];
+
+  subgraph cluster_pc {
+    label="用户 PC"; labelloc="t"; labeljust="l";
+    color="#9FB5C3"; penwidth=1.5; style="rounded";
+    request [label="组织请求\n与上下文", fillcolor="#EAF3F7"];
+    tool [label="校验并执行\n允许的工具", fillcolor="#EAF3F7"];
+  }
+
+  subgraph cluster_provider {
+    label="云端 AI 提供方"; labelloc="t"; labeljust="l";
+    color="#D7A98F"; penwidth=1.5; style="rounded";
+    inference [label="运行模型\n推理", fillcolor="#FFF2E9"];
+    response [label="返回文本或\n工具调用建议", fillcolor="#FFF2E9"];
+  }
+
+  request -> inference [label="HTTPS 请求"];
+  inference -> response [label="模型输出"];
+  response -> tool [label="宿主校验"];
+  tool -> inference [label="工具结果", constraint=false];
+}

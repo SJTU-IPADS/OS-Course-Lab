@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" width="880" height="300">
+  <defs>
+    <marker id="tip-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0e2841"/></marker>
+    <marker id="tip-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e97132"/></marker>
+  </defs>
+  <g opacity="0.35">
+    <rect x="60" y="50" width="300" height="200" rx="12" fill="#ffffff" stroke="#0e2841" stroke-width="2.5"/>
+    <rect x="60" y="50" width="300" height="46" rx="12" fill="#156082"/>
+    <rect x="60" y="84" width="300" height="12" fill="#156082"/>
+    <text x="210.0" y="81" text-anchor="middle" font-family="SFMono-Regular, Menlo, monospace" font-size="20" fill="#ffffff">bank</text>
+    <text x="94" y="158" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#0e2841">a</text>
+    <text x="326" y="158" text-anchor="end" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#0e2841">100</text>
+    <line x1="88" y1="178" x2="332" y2="178" stroke="#e8e8e8" stroke-width="2"/>
+    <text x="94" y="218" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#0e2841">b</text>
+    <text x="326" y="218" text-anchor="end" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#0e2841">100</text>
+  </g>
+  <g>
+    <line x1="500" y1="150.0" x2="380" y2="150.0" stroke="#e97132" stroke-width="3" marker-end="url(#tip-b)"/>
+    <text x="440.0" y="132.0" text-anchor="middle" font-family="SFMono-Regular, Menlo, monospace" font-size="20" fill="#e97132">rename</text>
+  </g>
+  <g>
+    <rect x="520" y="50" width="300" height="200" rx="12" fill="#ffffff" stroke="#0e2841" stroke-width="2.5"/>
+    <rect x="520" y="50" width="300" height="46" rx="12" fill="#156082"/>
+    <rect x="520" y="84" width="300" height="12" fill="#156082"/>
+    <text x="670.0" y="81" text-anchor="middle" font-family="SFMono-Regular, Menlo, monospace" font-size="20" fill="#ffffff">bank</text>
+    <text x="554" y="158" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#0e2841">a</text>
+    <text x="786" y="158" text-anchor="end" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#e97132">60</text>
+    <line x1="548" y1="178" x2="792" y2="178" stroke="#e8e8e8" stroke-width="2"/>
+    <text x="554" y="218" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#0e2841">b</text>
+    <text x="786" y="218" text-anchor="end" font-family="SFMono-Regular, Menlo, monospace" font-size="24" fill="#e97132">140</text>
+  </g>
+</svg>

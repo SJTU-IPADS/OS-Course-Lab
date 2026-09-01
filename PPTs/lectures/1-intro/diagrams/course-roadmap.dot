@@ -1,0 +1,13 @@
+digraph course_roadmap {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.18, ranksep=0.20];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.3,
+        fontname="PingFang SC", fontsize=14, width=7.4, height=0.60, margin="0.14,0.07"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.64];
+
+  p1 [label="1  数据表示  ·  位、整数、浮点数", fillcolor="#EAF3F7"];
+  p2 [label="2  机器级程序  ·  x86-64、控制流、栈", fillcolor="#EAF3F7"];
+  p3 [label="3  处理器体系结构  ·  数字逻辑、流水线、冒险", fillcolor="#FFF2E9"];
+  p4 [label="4  存储层次  ·  缓存、局部性、性能", fillcolor="#FFF2E9"];
+  p5 [label="5  操作系统与链接  ·  进程、虚拟内存、分配器", fillcolor="#F3F5F6"];
+  p1 -> p2 -> p3 -> p4 -> p5;
+}
