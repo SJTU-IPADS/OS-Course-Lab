@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 262" width="800" height="262">
+<text x="400.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">移位：移出的位丢弃，开口的一端补入新位</text>
+<text x="198.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="end">x</text>
+<rect x="210.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="228.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="246.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="264.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="282.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="300.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="318.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="336.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="354.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="372.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="390.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="408.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="426.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="444.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="462.0" y="54.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="480.0" y="73.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<text x="514.0" y="74.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">0xb2</text>
+<text x="198.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="end">x &lt;&lt; 2</text>
+<rect x="210.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="228.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="246.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="264.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="282.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="300.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="318.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="336.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="354.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="372.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="390.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="408.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="426.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="444.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="462.0" y="98.0" width="36.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="480.0" y="117.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<text x="514.0" y="118.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">0xc8</text>
+<text x="198.0" y="162.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="end">x &gt;&gt; 2  逻辑右移</text>
+<rect x="210.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="228.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="246.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="264.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="282.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="300.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="318.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="336.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="354.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="372.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="390.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="408.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="426.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="444.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="462.0" y="142.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="480.0" y="161.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<text x="514.0" y="162.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">0x2c</text>
+<text x="198.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="end">x &gt;&gt; 2  算术右移</text>
+<rect x="210.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="228.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="246.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="264.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="282.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="300.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="318.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="336.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="354.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="372.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="390.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="408.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="426.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="444.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="462.0" y="186.0" width="36.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="480.0" y="205.9" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">0</text>
+<text x="514.0" y="206.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">0xec</text>
+<text x="400.0" y="248.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">补入的位由类型决定：无符号数补 0，补码补符号位</text>
+</svg>

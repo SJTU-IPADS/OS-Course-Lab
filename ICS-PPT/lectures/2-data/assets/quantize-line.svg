@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 268" width="900" height="268">
+<text x="450.0" y="30" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">一组权重的取值范围被 16 个等距的值覆盖</text>
+<line x1="106" y1="150" x2="892" y2="150" stroke="#9fb5c3" stroke-width="1.6"/>
+<line x1="132.0" y1="141" x2="132.0" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="132.0" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">0</text>
+<line x1="180.9" y1="141" x2="180.9" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="180.93333333333334" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">1</text>
+<line x1="229.9" y1="141" x2="229.9" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="229.86666666666667" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">2</text>
+<line x1="278.8" y1="141" x2="278.8" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="278.79999999999995" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">3</text>
+<line x1="327.7" y1="141" x2="327.7" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="327.73333333333335" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">4</text>
+<line x1="376.7" y1="141" x2="376.7" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="376.66666666666663" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">5</text>
+<line x1="425.6" y1="141" x2="425.6" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="425.59999999999997" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">6</text>
+<line x1="474.5" y1="141" x2="474.5" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="474.5333333333333" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">7</text>
+<line x1="523.5" y1="141" x2="523.5" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="523.4666666666667" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">8</text>
+<line x1="572.4" y1="141" x2="572.4" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="572.4" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">9</text>
+<line x1="621.3" y1="141" x2="621.3" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="621.3333333333333" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">10</text>
+<line x1="670.3" y1="141" x2="670.3" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="670.2666666666667" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">11</text>
+<line x1="719.2" y1="141" x2="719.2" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="719.1999999999999" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">12</text>
+<line x1="768.1" y1="141" x2="768.1" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="768.1333333333333" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">13</text>
+<line x1="817.1" y1="141" x2="817.1" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="817.0666666666666" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">14</text>
+<line x1="866.0" y1="141" x2="866.0" y2="159" stroke="#156082" stroke-width="1.6"/>
+<text x="866.0" y="177" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#156082" text-anchor="middle">15</text>
+<text x="98" y="177" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">编码</text>
+<text x="98" y="155" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="end">可表示的值</text>
+<circle cx="200.5" cy="94" r="5.5" fill="#e97132"/>
+<path d="M 200.5 100 L 180.9 138" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="357.1" cy="94" r="5.5" fill="#e97132"/>
+<path d="M 357.1 100 L 376.7 138" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="435.4" cy="94" r="5.5" fill="#e97132"/>
+<path d="M 435.4 100 L 425.6 138" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="589.5" cy="94" r="5.5" fill="#e97132"/>
+<path d="M 589.5 100 L 572.4 138" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="709.4" cy="94" r="5.5" fill="#e97132"/>
+<path d="M 709.4 100 L 719.2 138" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<circle cx="782.8" cy="94" r="5.5" fill="#e97132"/>
+<path d="M 782.8 100 L 768.1 138" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="98" y="98" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="end">实际权重</text>
+<path d="M 572.4 204 L 596.9 204" stroke="#e97132" stroke-width="2"/>
+<line x1="572.4" y1="198" x2="572.4" y2="210" stroke="#e97132" stroke-width="2"/>
+<line x1="596.9" y1="198" x2="596.9" y2="210" stroke="#e97132" stroke-width="2"/>
+<text x="608.8666666666667" y="209" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="start">半个步长：格点之间的最大偏移</text>
+<text x="26" y="246" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">d = max / -8</text>
+<text x="148" y="246" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">max 是组内绝对值最大的权重，连同它的符号；组内动态范围越集中，误差越小</text>
+</svg>

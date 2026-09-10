@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 276" width="1000" height="276">
+<text x="500.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17.5" font-weight="bold" fill="#0e2841" text-anchor="middle">block_q4_K：一组 256 个权重占 144 字节</text>
+<rect x="66.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="119.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 0</text>
+<text x="119.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="71.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="94.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="121.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="144.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="176.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="229.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 1</text>
+<text x="229.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="181.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="204.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="231.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="254.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="286.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="339.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 2</text>
+<text x="339.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="291.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="314.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="341.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="364.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="396.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="449.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 3</text>
+<text x="449.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="401.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="424.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="451.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="474.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="506.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="559.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 4</text>
+<text x="559.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="511.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="534.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="561.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="584.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="616.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="669.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 5</text>
+<text x="669.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="621.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="644.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="671.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="694.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="726.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="779.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 6</text>
+<text x="779.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="731.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="754.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="781.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="804.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="836.0" y="58.0" width="106.0" height="44.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="889.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">子块 7</text>
+<text x="889.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<rect x="841.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="864.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">sc 6位</text>
+<rect x="891.0" y="110.0" width="46.0" height="18.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.1"/>
+<text x="914.0" y="123.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="normal" fill="#e97132" text-anchor="middle">m 6位</text>
+<rect x="66.0" y="182.0" width="12.0" height="38.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<rect x="78.0" y="182.0" width="12.0" height="38.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<rect x="90.0" y="182.0" width="72.0" height="38.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="126.0" y="206.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">scales</text>
+<rect x="162.0" y="182.0" width="768.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<text x="546.0" y="206.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">qs　128 字节　256 个 4 位编码</text>
+<line x1="72.0" y1="178.0" x2="72.0" y2="168.0" stroke="#e97132" stroke-width="1.1"/>
+<text x="68.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="end">d　2 字节</text>
+<line x1="84.0" y1="178.0" x2="84.0" y2="154.0" stroke="#e97132" stroke-width="1.1"/>
+<text x="84.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="start">dmin　2 字节</text>
+<text x="198.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">12 字节　8 个 6 位 scale 与 8 个 6 位 min</text>
+<line x1="119.0" y1="130.0" x2="198.0" y2="178.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="889.0" y1="130.0" x2="198.0" y2="178.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 4"/>
+<text x="500.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">144 字节 = 2 + 2 + 12 + 128</text>
+</svg>

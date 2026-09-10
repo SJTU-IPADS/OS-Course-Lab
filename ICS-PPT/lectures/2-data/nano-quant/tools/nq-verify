@@ -1,0 +1,53 @@
+#!/bin/sh
+# nq-verify —— 判定三：把产物挂到 ollama 上跑一次生成，报输出文本的 md5。
+#
+#   tools/nq-verify <model.gguf> <学号>
+#
+# 生成的文本走标准错误，md5 走标准输出，于是可以直接接管道：
+#   tools/nq-verify qwen3vl-2b-q4km.gguf 523030910000 | cut -c1-8
+#
+# 条件是定死的：贪心解码（temperature 0），128 个词，纯 CPU，上下文 4096。
+# 温度为 0 时采样不查随机数，种子给什么都一样，所以这里不设种子。
+# num_gpu 0 是关键的一条：换后端算出的浮点次序不同，输出可能不一样。
+
+set -e
+GGUF=$1
+SID=$2
+[ -n "$GGUF" ] && [ -n "$SID" ] || { echo "用法：nq-verify <model.gguf> <学号>" >&2; exit 2; }
+[ -f "$GGUF" ] || { echo "没有这个文件：$GGUF" >&2; exit 1; }
+
+# 名字里带上 GGUF 的文件名：同一个学号跑两个不同的产物时，
+# 两边各占一个名字，不会互相盖掉。
+NAME=nq-$(basename "$GGUF" .gguf)-$SID
+W=$(mktemp -d)
+trap 'rm -rf "$W"' EXIT
+
+printf 'FROM %s\n' "$(cd "$(dirname "$GGUF")" && pwd)/$(basename "$GGUF")" > "$W/Modelfile"
+ollama create "$NAME" -f "$W/Modelfile" >/dev/null
+
+# 提示词是三行，逐字节固定：一行 user 头，一行内容，一行 assistant 头。
+PROMPT=$(printf '<|im_start|>user\n把这串数字逐位用中文写出来：%s<|im_end|>\n<|im_start|>assistant\n' "$SID")
+
+python3 - "$NAME" "$PROMPT" > "$W/req.json" <<'PY'
+import json, sys
+print(json.dumps({
+    "model": sys.argv[1],
+    "prompt": sys.argv[2],
+    "raw": True,
+    "stream": False,
+    "options": {"temperature": 0, "num_predict": 128, "num_gpu": 0, "num_ctx": 4096},
+}, ensure_ascii=False))
+PY
+
+curl -sS http://localhost:11434/api/generate -d @"$W/req.json" > "$W/resp.json"
+python3 - "$W/resp.json" > "$W/out.txt" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+if "error" in d:
+    sys.exit("ollama: " + str(d["error"]))
+sys.stdout.write(d["response"])
+PY
+
+cat "$W/out.txt" >&2
+printf '\n' >&2
+md5sum < "$W/out.txt" | cut -d' ' -f1

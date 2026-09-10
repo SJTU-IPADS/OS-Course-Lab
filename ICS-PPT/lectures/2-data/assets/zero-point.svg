@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 268" width="1000" height="268">
+<text x="500.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17.5" font-weight="bold" fill="#0e2841" text-anchor="middle">同一个块的 32 个权重，两种格式给出的级</text>
+<text x="500.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">取自最后一个 RMSNorm 的第 0 块，取值在 1.539 与 2.625 之间</text>
+<rect x="775.7" y="52.0" width="154.3" height="52.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="775.7" y="160.0" width="154.3" height="52.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="152.0" y1="78.0" x2="962.0" y2="78.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="140.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="end">Q4_0</text>
+<text x="140.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">级关于 0 对称</text>
+<line x1="930.0" y1="65.0" x2="930.0" y2="91.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="883.4" y1="65.0" x2="883.4" y2="91.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="836.8" y1="65.0" x2="836.8" y2="91.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="790.1" y1="65.0" x2="790.1" y2="91.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="743.5" y1="65.0" x2="743.5" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="696.9" y1="65.0" x2="696.9" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="650.3" y1="65.0" x2="650.3" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="603.6" y1="65.0" x2="603.6" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="557.0" y1="65.0" x2="557.0" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="510.4" y1="65.0" x2="510.4" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="463.7" y1="65.0" x2="463.7" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="417.1" y1="65.0" x2="417.1" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="370.5" y1="65.0" x2="370.5" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="323.9" y1="65.0" x2="323.9" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="277.2" y1="65.0" x2="277.2" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="230.6" y1="65.0" x2="230.6" y2="91.0" stroke="#156082" stroke-width="1.4"/>
+<text x="852.9" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">16 个级里只有 4 个落在数据上</text>
+<line x1="152.0" y1="186.0" x2="962.0" y2="186.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="140.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="end">Q4_1</text>
+<text x="140.0" y="201.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">级覆盖 [min, max]</text>
+<line x1="775.7" y1="173.0" x2="775.7" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="786.0" y1="173.0" x2="786.0" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="796.3" y1="173.0" x2="796.3" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="806.6" y1="173.0" x2="806.6" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="816.9" y1="173.0" x2="816.9" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="827.1" y1="173.0" x2="827.1" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="837.4" y1="173.0" x2="837.4" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="847.7" y1="173.0" x2="847.7" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="858.0" y1="173.0" x2="858.0" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="868.3" y1="173.0" x2="868.3" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="878.6" y1="173.0" x2="878.6" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="888.9" y1="173.0" x2="888.9" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="899.2" y1="173.0" x2="899.2" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="909.4" y1="173.0" x2="909.4" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="919.7" y1="173.0" x2="919.7" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<line x1="930.0" y1="173.0" x2="930.0" y2="199.0" stroke="#e97132" stroke-width="2.0"/>
+<text x="852.9" y="152.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">16 个级全部落在数据上</text>
+<line x1="557.0" y1="48.0" x2="557.0" y2="108.0" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="557.0" y="122.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<text x="500.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">步长 0.328 与 0.0724：相差 4.5 倍，实测误差也相差 4.5 倍</text>
+</svg>

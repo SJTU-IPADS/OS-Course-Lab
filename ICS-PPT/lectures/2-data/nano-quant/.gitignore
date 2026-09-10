@@ -1,0 +1,10 @@
+tests/fixtures/
+nano-quant
+nano-quant-ref
+nq2gguf
+nq2gguf-ref
+nq-selftest
+nq-selftest-ref
+*.nq
+*.gguf
+meta.kv

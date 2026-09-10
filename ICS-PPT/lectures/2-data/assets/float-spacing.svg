@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 262" width="900" height="262">
+<text x="450.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">可表示的值在数轴上的分布（尾数 3 位的简化格式）</text>
+<line x1="66.0" y1="132.0" x2="882.0" y2="132.0" stroke="#9fb5c3" stroke-width="1.6"/>
+<line x1="90.1" y1="124.0" x2="90.1" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="90.8" y1="124.0" x2="90.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="91.6" y1="124.0" x2="91.6" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="92.4" y1="124.0" x2="92.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="93.1" y1="124.0" x2="93.1" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="93.9" y1="124.0" x2="93.9" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="94.6" y1="124.0" x2="94.6" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="95.4" y1="124.0" x2="95.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="96.2" y1="124.0" x2="96.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="97.7" y1="124.0" x2="97.7" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="99.2" y1="124.0" x2="99.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="100.7" y1="124.0" x2="100.7" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="102.2" y1="124.0" x2="102.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="103.8" y1="124.0" x2="103.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="105.3" y1="124.0" x2="105.3" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="106.8" y1="124.0" x2="106.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="108.3" y1="124.0" x2="108.3" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="111.4" y1="124.0" x2="111.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="114.4" y1="124.0" x2="114.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="117.4" y1="124.0" x2="117.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="120.5" y1="124.0" x2="120.5" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="123.5" y1="124.0" x2="123.5" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="126.5" y1="124.0" x2="126.5" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="129.6" y1="124.0" x2="129.6" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="132.6" y1="124.0" x2="132.6" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="138.7" y1="124.0" x2="138.7" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="144.8" y1="124.0" x2="144.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="150.9" y1="124.0" x2="150.9" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="156.9" y1="124.0" x2="156.9" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="163.0" y1="124.0" x2="163.0" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="169.1" y1="124.0" x2="169.1" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="175.2" y1="124.0" x2="175.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="181.2" y1="124.0" x2="181.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="193.4" y1="124.0" x2="193.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="205.6" y1="124.0" x2="205.6" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="217.7" y1="124.0" x2="217.7" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="229.9" y1="124.0" x2="229.9" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="242.0" y1="124.0" x2="242.0" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="254.2" y1="124.0" x2="254.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="266.3" y1="124.0" x2="266.3" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="278.5" y1="124.0" x2="278.5" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="302.8" y1="124.0" x2="302.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="327.1" y1="124.0" x2="327.1" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="351.4" y1="124.0" x2="351.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="375.8" y1="124.0" x2="375.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="400.1" y1="124.0" x2="400.1" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="424.4" y1="124.0" x2="424.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="448.7" y1="124.0" x2="448.7" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="473.0" y1="124.0" x2="473.0" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="521.6" y1="124.0" x2="521.6" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="570.2" y1="124.0" x2="570.2" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="618.9" y1="124.0" x2="618.9" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="667.5" y1="124.0" x2="667.5" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="716.1" y1="124.0" x2="716.1" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="764.8" y1="124.0" x2="764.8" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="813.4" y1="124.0" x2="813.4" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="862.0" y1="124.0" x2="862.0" y2="140.0" stroke="#156082" stroke-width="1.2"/>
+<line x1="84.0" y1="117.0" x2="84.0" y2="147.0" stroke="#0e2841" stroke-width="1.8"/>
+<text x="84.0" y="166.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<line x1="181.2" y1="117.0" x2="181.2" y2="147.0" stroke="#0e2841" stroke-width="1.8"/>
+<text x="181.2" y="166.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<line x1="278.5" y1="117.0" x2="278.5" y2="147.0" stroke="#0e2841" stroke-width="1.8"/>
+<text x="278.5" y="166.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">2</text>
+<line x1="473.0" y1="117.0" x2="473.0" y2="147.0" stroke="#0e2841" stroke-width="1.8"/>
+<text x="473.0" y="166.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">4</text>
+<line x1="862.0" y1="117.0" x2="862.0" y2="147.0" stroke="#0e2841" stroke-width="1.8"/>
+<text x="862.0" y="166.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">8</text>
+<path d="M 184.2 106.0 L 184.2 99.0 L 275.5 99.0 L 275.5 106.0" fill="none" stroke="#e97132" stroke-width="1.4"/>
+<text x="229.9" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="middle">步长 0.125</text>
+<path d="M 281.5 106.0 L 281.5 99.0 L 470.0 99.0 L 470.0 106.0" fill="none" stroke="#e97132" stroke-width="1.4"/>
+<text x="375.8" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="middle">步长 0.25</text>
+<path d="M 476.0 106.0 L 476.0 99.0 L 859.0 99.0 L 859.0 106.0" fill="none" stroke="#e97132" stroke-width="1.4"/>
+<text x="667.5" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="middle">步长 0.5</text>
+<text x="132.6" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">越靠近零，可表示的值越密</text>
+<text x="570.2" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">每跨过一个 2 的幂，步长加倍，相对精度不变</text>
+<text x="450.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="middle">阶码选定一个区间，尾数把这个区间等分；区间越大，同样的等分越粗</text>
+</svg>
