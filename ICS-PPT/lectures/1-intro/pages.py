@@ -1,9 +1,11 @@
-"""第一讲《计算机系统导论》的页面内容。
+"""第一讲《计算机系统基础（1）》的页面内容。
 
-组织方式：以一次 `ollama run` 请求为观察对象，将其分解为五个系统层次，
-自底向上逐层考察每一层承担的工作。操作系统是本讲的重点：进程、虚拟内存、
-mmap 加载、页缓存、设备访问与调度，均以同一次请求为例，使「操作系统在
-大模型推理过程中承担的职责」成为可以明确表述的结论。
+组织方式：先说明大模型时代学习本课程的原因与目标，再以一次 `ollama run`
+请求为观察对象，说明应用与系统的关系（系统抽象、层次化设计）。中间四个部分
+按各层的目标依次介绍硬件（计算的软件化）、汇编（快速开发程序）、工具链
+（消除程序绑定）与操作系统（多个程序共享硬件），每部分末尾一页列出本课程
+对应的章节与系统方法。最后回到这次请求，说明学完本课程之后能够分析、定位
+问题，并用本课程的方法改进程序。
 
 用语要求：面向本科课程教学，采用陈述性的技术表述；不使用比喻、口语化措辞。
 
@@ -53,14 +55,6 @@ CUDA_SAMPLE = """__global__ void dot_kernel(const float *w, const float *x, floa
 
 dot_kernel<<<blocks, 256>>>(d_w, d_x, d_out, n);     // tens of thousands of threads"""
 
-COMPILER_ROWS = [
-    ["**1 · 预处理**", "`gcc -E`", "`.c` → `.i`", "展开 `#include`、替换宏、移除注释"],
-    ["**2 · 编译**", "`gcc -S`", "`.i` → `.s`", "将 C 语句翻译为文本形式的汇编"],
-    ["**3 · 汇编**", "`gcc -c`", "`.s` → `.o`", "将汇编助记符翻译为二进制机器码"],
-    ["**4 · 链接**", "`gcc`", "`.o` + 库 → 可执行文件", "布局各节、解析符号、记录动态依赖"],
-]
-
-
 # ==============================================================================
 # 课程概览
 # ==============================================================================
@@ -69,10 +63,11 @@ def staff_and_textbooks(p):
     p.title("任课教师与课程教材")
     p.slide("""
 - **任课教师**：古金宇 · 陈榕
-- **联系方式**：gujinyu@sjtu.edu.cn · rongchen@sjtu.edu.cn
-- **办公室**：软件学院 3 号楼 2 楼 IPADS 实验室，答疑请提前约时间
-- **主要教材**：*Computer Systems: A Programmer's Perspective*（CS:APP 第 3 版）
-- **语言参考**：*The C Programming Language*（K&R 第 2 版）
+- **电子邮件**：gujinyu@sjtu.edu.cn · rongchen@sjtu.edu.cn
+- **办公电话**：18818214992 · 13661816826
+- **办公室**：软件大楼 3203 · 3401，答疑请提前预约
+- **教材**：*Computer Systems: A Programmer's Perspective*（CS:APP 第 3 版，2016）
+- **教材**：*Operating Systems: Three Easy Pieces*（OSTEP 1.10 版，2023）
 """).image_right("assets/instructors.png", width_px=260)
     p.sidenote(
         "第一讲建议阅读",
@@ -81,29 +76,102 @@ def staff_and_textbooks(p):
     )
     p.cite(title="Computer Systems: A Programmer's Perspective", author="Bryant & O'Hallaron",
            year="2016", venue="Prentice Hall, 3rd ed.", key="csapp")
-    p.cite(title="The C Programming Language", author="Kernighan & Ritchie",
-           year="1988", venue="Prentice Hall, 2nd ed.", key="knr")
+    p.cite(title="Operating Systems: Three Easy Pieces", author="Arpaci-Dusseau & Arpaci-Dusseau",
+           year="2023", venue="Version 1.10", url="https://pages.cs.wisc.edu/~remzi/OSTEP/",
+           key="ostep")
+
+
+def worth_taking(p):
+    p.title("AI 时代学习本课程的必要性")
+    p.slide("""
+AI 辅助编程（vibe coding）普及之后，需要回答三个问题：
+1. 是否仍有必要把自己训练成 power programmer？
+2. 程序员能否在某些方面胜过大模型？
+3. 本课程讲授的内容中，是否有大模型不知道的部分？
+""", autobold=False)
+    p.slide("""
+由大模型生成的代码，程序员往往没有读懂、没有掌握，也无法为其负责。
+- 这些代码的**性能**、**边界条件下的正确性**与**安全性**，仍然需要程序员来保证
+- 程序员承担的责任随生成代码的数量==同步增加==
+""")
+    p.highlight("代码由大模型生成，对代码行为负责的仍是程序员。", tone="orange")
+
+
+def coding_vs_constraints(p):
+    p.title("AI 辅助编程改变的内容与无法改变的系统约束")
+    p.table(
+        headers=["AI 辅助编程改变的内容", "AI 辅助编程无法改变的系统约束"],
+        rows=[
+            ["编写代码的方式", "局部性与存储层次"],
+            ["编写代码的效率", "并行与依赖"],
+            ["编写代码的成本", "有限的数值精度"],
+            ["编写代码的风险", "并发与一致性、隔离与故障"],
+        ],
+        align=["left", "left"],
+    )
+    p.slide("""
+本课程讲授编写程序时都需要的能力，借助大模型编程时同样适用：
+- **发现**代码中的问题
+- **设计**最合适的解决方案
+- **验证**问题确实已经解决
+""")
+    p.highlight("大模型降低了编写代码的成本，系统约束对生成的代码同样成立。", tone="blue")
+
+
+def course_features(p):
+    p.gap(52)
+    p.title("课程特点：2023 年与大模型时代的对比")
+    p.table(
+        headers=["", "2023 年（大模型出现之前）", "大模型时代"],
+        rows=[
+            ["持久的概念", "课程主线", "**重要性上升**"],
+            ["程序员视角", "课程主线", "**重要性下降**"],
+            ["学习方式", "主动学习", "主动学习**并加以运用**"],
+            ["培养目标", "少数的 power programmer", "少数的 power **system** programmer"],
+        ],
+        align=["right", "left", "left"],
+    )
+    p.slide("代码越来越多地由大模型编写，理解系统行为的能力在培养目标中的比重随之上升。")
 
 
 def course_goals(p):
     p.gap(52)
-    p.title("课程目标：建立程序执行的系统模型")
+    p.title("课程目标：学习本课程的原因与收获")
+    p.table(
+        headers=["", "大模型出现之前", "大模型时代"],
+        rows=[
+            ["应用程序的编写者", "程序员", "大模型完成，或辅助程序员完成"],
+            ["先修课程", "程序设计（C++）", "程序设计（C++）与 AI 辅助编程"],
+        ],
+        align=["right", "left", "left"],
+    )
     p.slide("""
-先修基础：C++ 的基本语法——`for` 循环、函数、类、指针与 `std::vector`，
-以及在终端中编译并运行一个程序。
+本课程的目标是成为少数的 power **system** programmer。学习本课程的收获：
+- 理解应用程序在系统中的执行过程，其中包括由大模型编写的程序
+- 能够分析、定位和解决程序中的问题，并掌握更多改进程序的方法
+""")
+    p.highlight("建立程序执行的系统模型，是达到这一目标的手段。", tone="blue")
+
+
+def course_questions(p):
+    p.title("本课程讨论的问题：应用程序如何在系统中执行")
+    p.slide("""
+- 「计算」是如何由 CPU 或 GPU 完成的？
+- 「数据」是如何存储到内存和外存上的？
+- 在新的硬件平台上，程序的性能会是什么样？
+- 如果对程序的性能不满意，可以从哪里优化？
+- 为什么这次运行时程序出错了？错误可能和什么相关？
+- 程序是否安全？会不会泄露我的信息？
 """, autobold=False)
     p.slide("""
-本课程讨论这些语法之下的执行机制：
-- `for` 循环如何被编译为处理器执行的机器指令？
-- `malloc` 返回的内存由谁分配？进程之间为何互相不可见？
-- 程序性能受限时，==数据移动==的开销为何常常超过算术运算？
+回答这些问题的基础，是理解程序在系统中执行的能力：
+- **系统建模**：对当前所处的系统建立模型，每个系统都不完全相同
+- **推断与诊断**：据此推断程序的行为，诊断程序的问题
 """)
-    p.highlight("从程序员视角建立系统模型，用于解释和诊断程序行为。", tone="blue")
-
 
 
 # ==============================================================================
-# 问题的提出：从 AI 应用到一次推理请求
+# AI 应用仍然通过程序执行实现
 # ==============================================================================
 
 def ai_app_request(p):
@@ -114,7 +182,19 @@ def ai_app_request(p):
 """, autobold=False)
     p.image("assets/agent-request.svg", width_px=980,
             caption="实线为请求路径，虚线为结果返回路径")
-    p.highlight("应用负责组织对话，计算发生在推理服务一侧。", tone="blue")
+    p.highlight("应用中的 AI 部分由推理服务完成，推理服务的工作仍是程序执行。", tone="blue")
+
+
+def agent_loop(p):
+    p.title("Agent：跨网络的请求与工具执行循环")
+    p.slide("""
+1. 客户端通过 HTTPS/TLS 向模型服务提交请求与上下文
+2. 模型返回文本，或返回一个==结构化的工具调用请求==
+3. 宿主检查权限与参数，在**本地**执行允许的工具，并将结果作为下一轮输入
+""")
+    p.image("assets/agent-loop.svg", width_px=470,
+            caption="一种常见部署方式：本地工具运行时与云端模型服务")
+    p.highlight("该循环复用了进程、网络、隔离机制，Agent 本身属于应用程序。", tone="blue")
 
 
 def openai_api(p):
@@ -135,6 +215,25 @@ def openai_api(p):
     p.aside("同一组接口下，后端可以是云端服务、集群上的 vLLM，或本机的 ollama。")
 
 
+def service_design(p):
+    p.gap(52)
+    p.title("推理服务沿用传统应用程序的设计")
+    p.table(
+        headers=["设计", "作用"],
+        rows=[
+            ["**客户端 / 服务器架构**", "前后端解耦：应用程序的写法与推理在远端还是本机执行无关"],
+            ["**HTTP 协议**", "兼容浏览器、命令行与各语言 SDK 等使用方式，便于开发与测试"],
+            ["**标准 API**", "推理引擎可以独立优化，引擎更新不影响应用程序"],
+        ],
+        align=["left", "left"],
+    )
+    p.slide("""
+推理服务本身由计算、存储与网络三部分工作组成。
+设计、实现与优化 AI 应用，仍然需要了解==程序在系统中如何执行==。
+""", autobold=False)
+    p.highlight("本节以「使用 Ollama 完成一次推理」为例考察这一过程。", tone="blue")
+
+
 def ollama_intro(p):
     p.gap(30)
     p.title("Ollama：运行在本机的推理服务")
@@ -147,7 +246,7 @@ Ollama 在本地提供的正是这组接口。
     p.demo("启动推理服务", "ollama serve", timeout=0)
     p.demo("下载模型权重", "ollama pull llama3.2", timeout=0)
     p.demo("提交一次请求", "ollama run llama3.2", timeout=0)
-    p.highlight("本节以 ollama 为例，可以自行在 PC 上尝试。", tone="blue")
+    p.highlight("下面的每一步都可以自行在 PC 上尝试。", tone="blue")
 
 
 def one_command(p):
@@ -160,9 +259,9 @@ far more strongly than longer ones, so blue light is redirected across the
 whole sky while red light passes through more directly.""",
            timeout=0)
     p.slide("""
-输出是逐 token 出现的。
-- 命令本身不包含==任何==关于计算过程的描述
+输出是逐 token 出现的，命令本身不包含==任何==关于计算过程的描述。
 - 权重的存放位置、使用 CPU 或 GPU、内存不足时的处理，均未指定
+- 这些工作由系统在应用背后完成：计算、存储、通信、异常处理与安全隔离
 """)
     p.highlight("本节将分解这一过程，确定上述决策由哪些系统层完成。", tone="orange")
     p.notes("可以在投影上实际执行一次该命令，在生成过程中展开讲解。")
@@ -182,6 +281,12 @@ def three_processes(p):
 """)
     p.highlight("进程可以理解为独立运行的程序实例在操作系统中的执行单元。", tone="blue")
     p.aside("进程划分方式随版本变化，但所依赖的系统资源保持不变。")
+    p.notes("""
+该命令在 Linux 与 macOS 上都可以执行，三个进程的对应关系一致；
+macOS 的 `comm` 列显示可执行文件的完整路径，列宽与此处的输出不同。
+Windows 上本课程使用 WSL2，命令与此处完全相同；直接运行 Windows 版 ollama 时，
+在 PowerShell 中用 `Get-Process ollama*` 观察同样的三个进程。
+""")
     p.cite(title="Ollama", author="Ollama", venue="github.com/ollama/ollama",
            url="https://github.com/ollama/ollama", key="ollama")
 
@@ -189,10 +294,9 @@ def three_processes(p):
 def weights_are_data(p):
     p.gap(26)
     p.title("观察二：模型权重是一个 1.9 GB 的数据文件")
-    p.demo("查看权重文件", """ls -lhS ~/.ollama/models/blobs | head -2
-file ~/.ollama/models/blobs/sha256-* | head -1""",
-           output="""total 1.9G
--rw-r--r-- 1 ollama ollama 1.9G Sep  1 19:50 sha256...
+    p.demo("查看权重文件", """ls -lhS ~/.ollama/models/blobs | sed -n '2p'
+file "$(ls -dS ~/.ollama/models/blobs/* | head -1)\"""",
+           output="""-rw-r--r-- 1 ollama ollama 1.9G Sep  1 19:50 sha256-...
 ...sha256-...: data""")
     p.slide("""
 `file` 无法识别其类型：文件内容是==一组数值参数==，不含任何可执行指令。
@@ -201,6 +305,12 @@ file ~/.ollama/models/blobs/sha256-* | head -1""",
 - 需要将生成结果传回终端
 """)
     p.highlight("模型只提供参数，而执行过程由系统栈完成。", tone="orange")
+    p.notes("""
+`sed -n '2p'` 跳过 `ls` 的 total 行（macOS 按 512 字节块计数），`ls -dS` 按大小排序
+取出最大的 blob，两条命令在 Linux 与 macOS 上输出一致。Windows 的 WSL2 中同样如此；
+Windows 版 ollama 把权重放在 `%USERPROFILE%/.ollama/models/blobs`，PowerShell 中用
+`Get-ChildItem <dir> | Sort-Object Length -Descending | Select-Object -First 1` 查看。
+""")
 
 
 def five_layers(p):
@@ -209,28 +319,80 @@ def five_layers(p):
     # gutter: a wrapped label makes every band taller and the stack overflows
     # the slide. They also match the summary diagram in `request_recap`.
     arch = p.architecture(caption="箭头表示依赖方向：每一层只使用下一层提供的接口", flow="down")
-    arch.layer("5 · 应用", ["Ollama CLI", "对话界面", "工具调用"])
-    arch.layer("4 · 运行时", ["模型加载", "张量算子", "libc / libstdc++", ...])
-    arch.layer("3 · 操作系统", ["进程", "虚拟内存", "文件与页缓存", "设备驱动", "调度"])
-    arch.layer("2 · 指令集", ["x86-64 指令", "SIMT / PTX"])
-    arch.layer("1 · 硬件", ["CPU", "DRAM", "GPU", "存储", "网络"])
+    arch.layer("应用", ["Ollama CLI", "对话界面", "工具调用"])
+    arch.layer("运行时", ["模型加载", "张量算子", "libc / libstdc++", ...])
+    arch.layer("操作系统", ["进程", "虚拟内存", "文件与页缓存", "设备驱动", "调度"])
+    arch.layer("指令集", ["x86-64 指令", "SIMT / PTX"])
+    arch.layer("硬件", ["CPU", "DRAM", "GPU", "存储", "网络"])
     p.notes("""
 每一层向上层提供确定的接口，并隐藏其实现细节。
 本图在本讲出现两次：此处自上而下介绍，末尾自下而上小结。
-本讲重点是第 3 层；第 1、2 层是理解第 3 层的前提。
+中间四个部分按各层要达到的目标依次介绍：硬件、汇编与指令集、工具链、操作系统。
+工具链（消除程序绑定）放在操作系统（多个程序共享硬件）之前，与 CS:APP 第 7、8 章的顺序一致。
 """)
 
 
+def system_abstraction(p):
+    p.title("系统抽象：应用与系统之间的分界线")
+    p.slide("""
+进程、虚拟内存与文件，是系统向应用提供的抽象。抽象的作用：
+- **简化开发**：应用程序通过抽象使用硬件，无需了解硬件细节
+- **独立演进**：抽象保持不变时，两侧的实现可以分别修改
+- **隔离问题**：一侧的故障被限制在分界线以内
+""")
+    p.slide("""
+抽象同时隐藏了实现，程序出现问题时，定位和解决问题因此==更困难==。
+大模型时代加剧了这种隐藏：代码由大模型编写，所依赖的系统也更复杂。
+""", autobold=False)
+    p.highlight("抽象隐藏了实现，定位问题时因此更需要了解系统。", tone="orange")
+
+
+def layered_design(p):
+    p.title("层次化设计：应用与系统是相对的")
+    p.slide("""
+相邻两层之间，上层是应用，下层是系统。理解复杂系统时，按层划分职责：
+- **各层**：通过层间接口完成本层的工作
+- **上层**：了解下层的行为，无需了解下层的具体实现
+- **下层**：了解上层的需求，据此设计抽象、优化实现
+""")
+    p.table(
+        headers=["上层（应用）", "层间接口", "下层（系统）"],
+        rows=[
+            ["Ollama CLI", "HTTP API", "Ollama 服务进程"],
+            ["Ollama 服务进程", "系统调用", "操作系统"],
+            ["操作系统", "指令集", "处理器"],
+        ],
+        align=["left", "center", "left"],
+    )
+    p.highlight("Ollama 服务进程对 CLI 是系统，对操作系统是应用。", tone="blue")
+
+
+def ics_scope(p):
+    p.gap(52)
+    p.title("了解系统的程度与本课程的定位")
+    p.slide("""
+了解系统总是有益的，借助 AI 编程时同样如此；了解到什么程度，取决于将来在哪一层工作。
+- **支持 AI**（构建系统）需要了解系统
+- **使用 AI**（AI 辅助编程）同样需要了解系统，以控制开销、确认结果可靠
+""")
+    p.slide("""
+本课程对各层做入门介绍，给出==一个典型系统==在各个方面的设计：
+- **学习知识**（理解）：知识可以向 AI 询问，前提是知道问什么、怎么问
+- **学习方法**（运用）：方法是本课程的目标，掌握知识是其必要前提
+""")
+    p.highlight("下面按硬件、汇编、工具链、操作系统的顺序介绍本课程的内容。", tone="blue")
+
+
 # ==============================================================================
-# 第 1 层 · 硬件
+# 第 1 部分 · 硬件
 # ==============================================================================
 
 def stored_program(p):
-    p.title("存储程序体系结构：指令与数据同存于内存")
+    p.title("硬件的目标是计算的软件化：存储程序体系结构")
     p.slide("""
-早期计算机更换程序需要==重新接线==。存储程序思想将指令与数据一同存放在内存中。
-- 处理器的执行过程统一为：取指 → 译码 → 执行
-- 更换程序即更换内存中的一段字节，无需改变硬件连接
+早期计算机更换程序需要==重新接线==。冯·诺依曼架构将程序与数据一同存放在内存中。
+- 程序 + 数据 → CPU + 内存：处理器的执行过程统一为取指 → 译码 → 执行
+- 更换计算任务即更换内存中的一段字节，计算因此**可重复**、**可编程**，无需改变硬件
 """)
     p.image("assets/early-computers-clean.png", width_px=520,
             caption="ENIAC 的插接板编程（左）；冯·诺依曼与《EDVAC 报告初稿》（右）"
@@ -279,14 +441,31 @@ LLM 逐 token 解码时，每生成一个 token 需==完整读取一遍模型参
            key="rubin")
 
 
+def hardware_in_ics(p):
+    p.gap(52)
+    p.title("本课程中的硬件：计算、存储与通信")
+    p.table(
+        headers=["方面", "讨论的内容", "CS:APP"],
+        rows=[
+            ["**计算**", "CPU：「计算」如何实现；GPU：不同的计算需求对处理器设计的影响", "第 4 章"],
+            ["**存储**", "层次化设计（内存、磁盘、HBM）；速度、容量与成本之间的取舍", "第 6 章"],
+            ["**通信**", "层次化设计（系统总线、内存总线、I/O 总线）；网络", "第 6、11 章"],
+        ],
+        align=["left", "left", "left"],
+    )
+    p.slide("""
+这些内容使用的系统方法：**设计取舍**、**流水线**、**数据依赖**、**局部性**（Cache / TLB）。
+""", autobold=False)
+
+
 # ==============================================================================
-# 第 2 层 · 指令集
+# 第 2 部分 · 汇编与指令集
 # ==============================================================================
 
 def isa_contract(p):
-    p.title("指令集体系结构：软件与硬件之间的接口规范")
+    p.title("汇编的目标是快速开发程序：指令集体系结构")
     p.slide("""
-ISA 规定了软件可见的机器状态：指令集合、寄存器组织与数据格式。
+汇编给出硬件的**模型**（寄存器、内存地址）与**接口**（指令集，ISA），简化程序开发。
 - **对编译器**：以 ISA 为目标生成代码，无需依赖具体的微体系结构实现
 - **对处理器**：缓存、流水线、乱序执行的实现方式可自由选择，只需保证==行为==符合规范
 """)
@@ -312,195 +491,51 @@ def x86_lineage(p):
     p.slide("""
 四十余年间每一代都保留了前一代的指令编码，代价是实现复杂度持续累积。
 - 向后兼容使已编译的程序可在不同世代的处理器上运行
-- **386 引入的分页与保护**，是下一节讨论的操作系统机制的硬件前提
+- **386 引入的分页与保护**，是虚拟内存与进程隔离的硬件前提
 """)
     p.aside("32 位程序能否运行，还取决于操作系统与运行库是否提供 32 位支持。")
 
 
-# ==============================================================================
-# 第 3 层 · 操作系统
-# ==============================================================================
-
-def why_os(p):
+def isa_in_ics(p):
     p.gap(52)
-    p.title("操作系统的必要性")
-    p.slide("浏览器、编辑器与 ollama 同时请求同一组处理器与内存资源，需要有机制完成分配与保护。")
-    p.slide("""
-若应用程序可以直接访问硬件：
-- **缺乏隔离**：一个程序的越界写入可以破坏另一程序的内存
-- **缺乏调度**：没有抢占机制时，单个程序可长期独占处理器
-- **缺乏统一接口**：更换设备需要修改应用程序
-""", reveal="items").image_right("assets/os-everywhere.png", width_px=280)
-    p.highlight("操作系统复用硬件资源，并实施保护边界。", tone="blue")
-
-
-def os_services(p):
-    p.title("操作系统提供的四类抽象")
-    p.slide("ollama 通过下列抽象访问硬件，不直接管理 CPU 时间、物理页、磁盘或网卡。")
-    arch = p.architecture(caption="每类抽象对应一类硬件资源，也对应本课程后续的一章", flow="down")
-    arch.layer("Ollama 服务与推理进程", ["提交请求", "加载模型", "调用计算后端"])
-    arch.layer("操作系统的四组抽象", ["进程与调度", "虚拟内存", "文件与页缓存", "设备与网络接口"])
-    arch.layer("硬件", ["CPU / GPU", "DRAM", "存储设备", "网卡"])
-    p.notes("""
-这四类抽象即接下来五页的顺序：进程 → 虚拟内存 → 文件与页缓存 → 设备与调度。
-每一页均以同一个 ollama 实例为例，保持例子一致。
-""")
-
-
-def process_isolation(p):
-    p.title("进程：执行与保护的基本单位")
-    p.slide("""
-前面 `ps` 输出中的 1832 / 1904 / 2077，各自拥有：
-- 独立的**虚拟地址空间**：同一虚拟地址 `0x7fff...` 在不同进程中映射到不同的物理内存
-- 独立的**打开文件表**与寄存器上下文
-- 可被内核==抢占==的执行流
-""")
-    p.sidenote(
-        "进程隔离限制故障传播范围",
-        "`ollama-runner` 因段错误退出时，`ollama serve` 收到子进程结束通知，"
-        "重新创建推理进程即可继续服务。**隔离的首要作用是把故障限制在一个进程之内；"
-        "在此基础上，它同时构成安全边界。**",
+    p.title("本课程中的汇编：编码设计、抽象分层与向后兼容")
+    p.table(
+        headers=["系统方法", "本课程中的例子"],
+        rows=[
+            ["**编码设计**", "整数与浮点数的二进制编码、指令的编码格式"],
+            ["**抽象分层**", "门电路 → 微指令 → 指令 → 函数 → 程序 → 任务"],
+            ["**向后兼容**", "x86 四十余年保留前一代的指令编码"],
+        ],
+        align=["left", "left"],
     )
-    p.highlight("进程是操作系统为一个运行中的程序划定的资源与保护边界。", tone="blue")
-
-
-def virtual_address_space(p):
-    p.title("进程虚拟地址空间的典型布局")
-    p.slide("""
-- **Text**：机器指令，通常映射为只读，写入将触发段错误
-- **Data / BSS**：全局变量与静态变量
-- **堆**：由 `malloc` / `new` 管理的动态内存，向高地址增长
-- **栈**：局部变量、返回地址与调用现场，向低地址增长
-- 两者之间：**共享库与内存映射区域**
-""").image_right("assets/address-space.svg", width_px=330)
-    p.highlight("下一节讨论的 1.9 GB 模型权重，映射在图中橙色区域。", tone="orange")
-    p.aside("实际排列还受 ABI、ASLR、动态链接与线程影响。后续章节中会进行讨论。")
-
-
-def loading_problem(p):
-    p.gap(26)
-    p.title("模型加载问题：1.9 GB 数据如何进入内存")
-    p.slide("最直接的实现是将整个文件读入一块用户态缓冲区：", autobold=False)
-    p.code("c", """void *buf = malloc(1900000000);          // ask for 1.9 GB of anonymous memory
-read(fd, buf, 1900000000);               // then copy 1.9 GB off the disk""")
-    p.slide("""
-这一实现存在两个问题：
-- 在物理内存为 8 GB 的机器上，该分配请求将失败
-- 即使分配成功，每个字节需经**两次拷贝**（磁盘 → 内核缓冲区 → 用户缓冲区），启动延迟显著
-""")
-    p.highlight("实际实现并未采用这一方式：`ollama run` 的重复执行启动延迟极低。", tone="orange")
-
-
-def model_loading(p):
-    p.title("mmap：由操作系统按需完成数据装入")
-    p.slide("""
-另一种做法是建立**映射**：把文件的一段区间对应到进程地址空间的一段区间。
-""", autobold=False)
-    p.image("assets/mmap-overview.svg", width_px=840)
-    p.highlight("模型加载的实质是一次地址空间映射与按需的缺页装入。", tone="orange")
-    p.notes("""
-本页只讲定性结论，虚拟内存一章会展开页表、缺页处理与回收策略。
-课堂上按三个编号讲：① 映射建立时不发生拷贝；② 访问映射区触发缺页；
-③ 内核装入所需的那一页。据此回答上一页的问题：物理内存为 8 GB 的机器
-之所以能运行 1.9 GB 的模型，是因为常驻内存量取决于实际访问到的页。
-""")
-
-
-def mmap_in_practice(p):
-    p.title("同一机制在实际系统中的效果：llama.cpp 的加载改动")
-    p.slide("""
-2023 年 llama.cpp 把权重加载从「读入用户缓冲区」改为 `mmap`，模型与算法均未变化。
-""", autobold=False)
-    p.image("assets/llama-cpp-mmap-pr.png", width_px=760, framed=True,
-            caption="标题与三条说明都描述同一次改动的效果：加载更快、可加载的模型更大、"
-                    "多个推理进程可并行")
-    p.highlight("这一量级的差别由所使用的操作系统机制决定。", tone="orange")
-    p.cite(title="Make loading weights 10-100x faster", author="Justine Tunney",
-           year="2023", venue="ggml-org/llama.cpp PR #613",
-           url="https://github.com/ggml-org/llama.cpp/pull/613",
-           key="llama-mmap-pr")
-    p.notes("""
-该提交同时给出三点效果：加载显著加快、可加载的模型规模提高、多个推理进程可共享同一份页缓存。
-三点都由同一个原因得到：权重页由内核的页缓存直接提供，不再复制到用户缓冲区。
-ollama 使用 llama.cpp 作为推理后端，沿用了这一加载方式。
-""")
-
-
-def page_cache(p):
-    p.gap(26)
-    p.title("页缓存：重复启动时的加载开销")
-    p.slide("""
-因缺页装入 DRAM 的权重页，在进程退出后==并不立即释放==；
-在内存充裕时，操作系统将其保留在**页缓存**中。
-- 第二次启动时这些页直接命中，无需磁盘 I/O
-- 内存压力上升时，内核按替换策略将其淘汰
-""")
-    p.slide("这解释了同一程序冷启动与热启动之间的性能差异。")
-    p.highlight("同一份数据可能同时存在于存储设备、页缓存与设备内存中。", tone="blue")
-    p.aside("多级存储中的数据副本问题，将在后续的存储层次一章继续讨论。")
-
-
-def devices_and_drivers(p):
-    p.gap(52)
-    p.title("设备访问：GPU 同样经由操作系统")
-    p.slide("""
-推理进程不能直接向 GPU 提交命令，其访问路径为：
-- 打开**设备文件**（Linux 上为 `/dev/nvidia*`）
-- 经**驱动程序**申请设备内存、提交核函数并等待完成
-- 由内核保证进程之间的设备内存互不可访问
-""")
-    p.slide("""
-将张量传输至设备内存，是一次**跨越三级存储的数据移动**：
-页缓存 → 进程地址空间 → 设备内存。
-""")
-    p.highlight("跨层数据移动的开销，是首 token 延迟的主要来源之一。", tone="orange")
-
-
-def scheduling(p):
-    p.gap(52)
-    p.title("并发请求下的调度")
-    p.slide("""
-服务进程可能同时处理多个请求。在处理器核数有限的条件下，操作系统提供两项机制：
-- **抢占式调度**：限制单个执行流连续占用处理器的时间
-- **阻塞式等待**：等待磁盘、GPU 或网络的进程让出处理器
-""")
-    p.slide("""
-推理服务在此之上实现自身的调度策略：
-请求排队、连续批处理（continuous batching）与准入控制。
-""")
-    p.highlight("操作系统提供机制，上层服务决定策略，这一特征贯穿本课程。", tone="blue")
-
-
-def os_evolution(p):
-    p.title("操作系统的演进与不变的核心职责")
-    p.image("assets/os-timeline.svg", width_px=610,
-            caption="选取的若干里程碑，不构成单一的继承关系")
-    p.slide("""
-- **Multics**（1960 年代）系统地实现了分时与保护机制
-- **Unix**（1969）强调紧凑接口与可组合的工具，1973 年以 C 重写，显著降低移植成本
-- **Linux**（1991 至今）为持续演进的宏内核；**Redox**（2015 至今）以 Rust 实现微内核结构
-- 实现语言与内核结构各不相同，需要解决的核心问题保持一致：==隔离、内存、文件与设备==
-""")
-    p.cite(title="Redox OS", venue="redox-os.org", url="https://www.redox-os.org/", key="redox")
-
-
-def os_evolution_people(p):
-    p.gap(52)
-    p.title("操作系统的演进与不变的核心职责")
-    p.slide("每一次结构性的改变，都伴随一组新的接口约定被确立下来。", autobold=False)
-    # Four separate portraits, not a collage: the stitched GNU/Linux picture put
-    # four subjects into one third of the row and read as a cramped strip.
-    p.row()\
-     .image("assets/corbato.jpg", height_px=225, caption="Corbató · Multics")\
-     .image("assets/unix-creators.jpg", height_px=225, caption="Thompson 与 Ritchie · Unix")\
-     .image("assets/stallman.jpg", height_px=225, caption="Stallman · GNU")\
-     .image("assets/torvalds.jpg", height_px=225, caption="Torvalds · Linux")
-    p.highlight("被广泛实现的接口，其存续时间长于实现它的具体系统。", tone="blue")
+    p.slide("这部分内容对应 CS:APP 第 2 章（信息的表示与处理）与第 3 章（程序的机器级表示）。")
 
 
 # ==============================================================================
-# 第 4 层 · 工具链与运行时
+# 第 3 部分 · 工具链与运行时
 # ==============================================================================
+
+def program_binding(p):
+    p.gap(26)
+    p.title("工具链的目标是消除程序绑定：四类绑定")
+    p.table(
+        headers=["绑定", "消除绑定的手段"],
+        rows=[
+            ["**硬件绑定**", "编程语言与应用：从汇编逐步上升到 Prompt / Agent（见下）"],
+            ["**实现绑定**", "函数库、算子库"],
+            ["**功能绑定**", "动态加载库、解释执行、系统框架、推理引擎"],
+            ["**性能绑定**", "性能分析、问题定位、优化方法"],
+        ],
+        align=["left", "left"],
+    )
+    p.slide("""
+消除硬件绑定的过程：
+1. **汇编**：绑定处理器架构
+2. **低级语言**（C）：便于学习系统
+3. **高级语言**：可移植、高效、安全
+4. **应用**（Excel、数据库、Photoshop）→ **Prompt / Agent**：智能化
+""", autobold=False)
+
 
 def source_is_bytes(p):
     p.title("源代码的表示：编码后的字节序列")
@@ -519,7 +554,7 @@ def why_c(p):
     p.slide("""
 C 的抽象层较薄，系统细节在源码层面==直接可见==：
 - 内存的申请与释放时机在代码中显式给出
-- 指针值即进程虚拟地址空间中的地址，可用 `%p` 输出并与上一节的布局图对应
+- 指针值即进程虚拟地址空间中的地址，可用 `%p` 直接输出
 - 结构体的对齐与填充可直接观察，`sizeof` 反映对象的实际大小
 - 多数操作系统接口与原生库以 C 兼容 ABI 对外，是跨语言互操作的公共边界
 """)
@@ -540,21 +575,7 @@ def mini_ollama_boundaries(p):
     p.slide("上一页中标记为 ①②③ 的三处调用，分别经过三条不同的执行路径。")
     p.image("assets/mini-boundaries.svg", width_px=760,
             caption="① 获取数据 · ② 执行运算 · ③ 输出结果")
-    p.aside("接下来两页考察路径 ②：C 语句到机器指令的翻译过程。")
-
-
-def compile_pipeline(p):
-    p.title("编译的四个阶段：从源文件到可执行文件")
-    p.table(headers=["阶段", "命令", "产物", "这一步做了什么"],
-            rows=COMPILER_ROWS, align=["left", "left", "left", "left"])
-    p.demo("gcc 编译的四个步骤", """cd examples
-gcc -E mini_ollama.c -o mini_ollama.i     # see what the macros expanded to
-gcc -S mini_ollama.i -o mini_ollama.s     # see what the assembly looks like
-gcc -c mini_ollama.s -o mini_ollama.o     # see which symbols the object file has
-gcc    mini_ollama.o -o mini_ollama       # link it into an executable
-ls -l mini_ollama.i mini_ollama.s mini_ollama.o mini_ollama""",
-           files=["examples/mini_ollama.c"])
-    p.aside("`gcc a.c` 默认一次完成四个阶段；本课程要求能够分别观察每一阶段的输出。")
+    p.aside("路径 ② 执行的机器指令，由编译器从 C 语句翻译得到。")
 
 
 def machine_code(p):
@@ -562,11 +583,18 @@ def machine_code(p):
     p.title("点积循环的一种 x86-64 指令实现")
     p.code("text", DISASSEMBLY)
     p.slide("""
-以下六条指令对应上一页 `infer()` 中的完整循环：
+以下六条指令对应 `mini_ollama.c` 中 `infer()` 的完整循环：
 - `movss` / `mulss` / `addss`：装载、相乘、累加，构成**乘加运算的基本形式**
 - `cmpq` / `jne`：实现循环条件判断与控制转移；机器层面不存在 `for` 这一结构
 """)
     p.aside("具体生成的指令取决于编译器、优化选项、ISA 扩展与目标处理器。")
+    p.notes("""
+在 arm64 的 Mac 上编译同一段代码，得到的是 AArch64 指令：装载用 `ldr`，
+乘加用 `fmul` / `fadd`（或合并为 `fmadd`），循环用 `cmp` 与 `b.ne`。
+指令名称随指令集变化，此处的六步结构保持一致。本课程的机器级程序部分使用 x86-64。
+x86 的 Windows 上指令集与此处相同，编译得到的指令序列一致；调用约定为 Microsoft x64，
+参数所用的寄存器与 System V 的约定不同，该差别在第 2 部分说明。
+""")
 
 
 def runtime_libraries(p):
@@ -575,37 +603,47 @@ def runtime_libraries(p):
 `ldd` 列出一个可执行文件在启动时需要装载的**共享库**，以及每个库在文件系统中的实际路径。
 """, autobold=False)
     p.demo("列出动态链接库", """cd examples && g++ cpp_demo.cpp -o cpp_demo
-ldd ./cpp_demo""",
-           output="""libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f...)
-libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f...)""",
+ldd ./cpp_demo 2>/dev/null || otool -L ./cpp_demo    # Linux: ldd; macOS: otool -L""",
+           output="""libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f...)
+libc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x00007f...)""",
            files=["examples/cpp_demo.cpp"])
     p.slide("""
 - 这两行说明 `cpp_demo` 的机器码==并不完整==：`printf` 等函数的实现在库文件中，装载时才补齐
 - `printf` 由 **libc** 实现，`std::cout` 由 **libstdc++** 实现，后者最终调用前者提供的底层接口
 - 库对输出进行**缓冲**：多次 `printf` 可能只产生一次 `write` 系统调用，两者不是一一对应
+- macOS 上同一程序列出的是 `libc++.1.dylib` 与 `libSystem.B.dylib`，层次关系相同
 """)
     p.highlight("共享库是装载进进程地址空间的、已编译的机器码。", tone="blue")
     p.notes("""
 `ldd` 的输出即动态链接器在启动时要完成的工作清单。可在课堂上对同一个程序
 分别执行 `ldd` 与 `gcc -static` 后的 `ldd`，说明静态链接与动态链接的差别。
+Windows 的 WSL2 中命令与此处相同；直接在 Windows 上编译时共享库是 DLL，
+MSYS2 中同样有 `ldd`，原生工具链用 `objdump -p` 或 `dumpbin /dependents`，
+列出的是 `libstdc++-6.dll`、`msvcrt.dll` 与 `KERNEL32.dll`。
 """)
 
 
 def python_and_pytorch(p):
-    p.gap(26)
     p.title("解释执行的程序同样由机器指令完成")
     p.slide("""
-- Python 源码由**解释器**执行；解释器本身是一个原生的 ELF 可执行文件
+- Python 源码由**解释器**执行；解释器本身是编译好的原生可执行文件（ELF、Mach-O 或 PE）
 - 在 PyTorch 中，Python 负责==组织==计算过程：构建模型并分派算子
 - 算子的实际执行位于编译好的原生库中：`libtorch_cpu.so` / `libtorch_cuda.so`
 """)
-    p.image("assets/interpreter-path.svg", width_px=780,
-            caption="Python 源码 → 解释器（原生可执行文件）→ 运行时与原生库 → CPU 机器指令")
+    p.image("assets/interpreter-path.svg", width_px=640)
     p.demo("查看 Python 解释器与 Torch 算子库", """file "$(command -v python3)"
-ls "$(python3 -c 'import torch;print(torch.__path__[0])')"/lib/libtorch_*.so""",
+ls "$(python3 -c 'import torch;print(torch.__path__[0])')"/lib | grep -E 'libtorch_(cpu|cuda)'""",
            output="""python3: ELF 64-bit LSB pie executable, x86-64, ...
-libtorch_cpu.so   libtorch_cuda.so""")
+libtorch_cpu.so
+libtorch_cuda.so""")
     p.highlight("解释执行改变的是计算的组织方式，而指令仍由处理器执行。", tone="orange")
+    p.notes("""
+两条命令在 Linux 与 macOS 上都可以执行。macOS 上 `file` 输出的是
+Mach-O arm64 可执行文件，算子库为 `libtorch_cpu.dylib`，其中没有 CUDA 版本。
+Windows 的 WSL2 中与 Linux 一致；Windows 版 Python 中没有 `file`，
+用 `Get-Command python` 定位解释器，算子库位于 `torch/lib` 下，
+名为 `torch_cpu.dll` 与 `torch_cuda.dll`，没有 `lib` 前缀。
+""")
     p.cite(title="The Python Language Reference: Execution model", author="Python Software Foundation",
            url="https://docs.python.org/3/reference/executionmodel.html", key="pyexec")
 
@@ -635,21 +673,192 @@ def nvcc_compilation(p):
            url="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html", key="nvcc")
 
 
+def toolchain_in_ics(p):
+    p.gap(52)
+    p.title("本课程中的工具链：模块化、语言设计与链接")
+    p.table(
+        headers=["系统方法", "本课程中的例子"],
+        rows=[
+            ["**模块化**", "分别编译的目标文件、函数库与算子库"],
+            ["**编程语言设计**", "表达能力与易用性之间的取舍"],
+            ["**灵活性**", "链接：静态链接与动态加载"],
+            ["**问题分析**", "性能分析与问题定位"],
+        ],
+        align=["left", "left"],
+    )
+    p.slide("这部分内容对应 CS:APP 第 7 章（链接）与第 5 章（优化程序性能）。")
+
+
 # ==============================================================================
-# 第 5 层 · 应用与 Agent
+# 第 4 部分 · 操作系统
 # ==============================================================================
 
-def agent_loop(p):
-    p.title("Agent：跨网络的请求与工具执行循环")
+def why_os(p):
+    p.gap(52)
+    p.title("操作系统的目标是多个程序共享硬件")
+    p.slide("浏览器、编辑器与 ollama 同时请求同一组处理器与内存资源，需要**调度**、**并发**与**隔离**机制。")
     p.slide("""
-1. 客户端通过 HTTPS/TLS 向模型服务提交请求与上下文
-2. 模型返回文本，或返回一个==结构化的工具调用请求==
-3. 宿主检查权限与参数，在**本地**执行允许的工具，并将结果作为下一轮输入
-""")
-    p.image("assets/agent-loop.svg", width_px=470,
-            caption="一种常见部署方式：本地工具运行时与云端模型服务")
-    p.highlight("该循环复用了进程、网络、权限与隔离机制\nAgent 本身只是应用程序，不构成操作系统。", tone="blue")
+若应用程序可以直接访问硬件：
+- **缺乏隔离**：一个程序的越界写入可以破坏另一程序的内存
+- **缺乏调度**：没有抢占机制时，单个程序可长期独占处理器
+- **缺乏统一接口**：更换设备需要修改应用程序
+""", reveal="items").image_right("assets/os-everywhere.png", width_px=280)
+    p.highlight("操作系统复用硬件资源，并实施保护边界。", tone="blue")
 
+
+def os_services(p):
+    p.title("操作系统提供的四类抽象")
+    p.slide("ollama 通过下列抽象访问硬件，不直接管理 CPU 时间、物理页、磁盘或网卡。")
+    arch = p.architecture(caption="每类抽象对应一类硬件资源，也对应本课程后续的一章", flow="down")
+    arch.layer("Ollama 服务与推理进程", ["提交请求", "加载模型", "调用计算后端"])
+    arch.layer("操作系统的四组抽象", ["进程与调度", "虚拟内存", "文件与页缓存", "设备与网络接口"])
+    arch.layer("硬件", ["CPU / GPU", "DRAM", "存储设备", "网卡"])
+    p.slide("这些抽象长期保持不变，它们的实现随硬件与需求持续变化。")
+    p.notes("""
+本部分按这四类抽象依次举例：进程隔离 → 模型加载（mmap）→ 设备访问 → 调度。
+每一页均以同一个 ollama 实例为例，保持例子一致。
+""")
+
+
+def exclusive_use(p):
+    p.gap(52)
+    p.title("操作系统的核心思想：每个程序独占使用硬件")
+    p.table(
+        headers=["资源", "独占使用的实现方式", "程序使用的抽象"],
+        rows=[
+            ["CPU", "时间片：内核轮流调度，切换时保存与恢复上下文", "进程"],
+            ["内存", "虚拟地址：每个进程拥有独立的地址空间", "虚拟内存"],
+            ["设备", "输入输出模式：统一的 `open` / `read` / `write`", "文件"],
+        ],
+        align=["left", "left", "left"],
+    )
+    p.slide("""
+- 程序按独占硬件的方式编写，**容易开发**；资源的实际分配由操作系统掌握，**容易监管**
+- **通用性**：操作系统以公共服务的形式提供这些抽象，设计上==机制与策略分离==
+""")
+
+
+def process_isolation(p):
+    p.title("进程：执行与保护的基本单位")
+    p.slide("""
+前面 `ps` 输出中的 1832 / 1904 / 2077，各自独占一份执行环境：
+- 独立的**虚拟地址空间**：同一虚拟地址 `0x7fff...` 在不同进程中映射到不同的物理内存
+- 独立的**打开文件表**与寄存器**上下文**
+- 可被内核==抢占==的执行流
+""")
+    p.sidenote(
+        "进程隔离限制故障传播范围",
+        "`ollama-runner` 因段错误退出时，`ollama serve` 收到子进程结束通知，"
+        "重新创建推理进程即可继续服务。**隔离的首要作用是把故障限制在一个进程之内；"
+        "在此基础上，它同时构成安全边界。**",
+    )
+    p.highlight("进程是操作系统为一个运行中的程序划定的资源与保护边界。", tone="blue")
+
+
+def mmap_in_practice(p):
+    p.title("操作系统影响应用性能：llama.cpp 的加载改动")
+    p.slide("""
+2023 年 llama.cpp 把 1.9 GB 权重的加载从「`malloc` 缓冲区再 `read` 整个文件」改为 `mmap`：文件映射进进程的地址空间，访问到哪一部分才装入哪一部分。模型与算法均未变化。
+""", autobold=False)
+    p.image("assets/llama-cpp-mmap-pr.png", width_px=680, framed=True,
+            caption="标题与三条说明都描述同一次改动的效果：加载更快、可加载的模型更大、"
+                    "多个推理进程可并行")
+    p.highlight("这一量级的差别由所使用的操作系统机制决定。", tone="orange")
+    p.cite(title="Make loading weights 10-100x faster", author="Justine Tunney",
+           year="2023", venue="ggml-org/llama.cpp PR #613",
+           url="https://github.com/ggml-org/llama.cpp/pull/613",
+           key="llama-mmap-pr")
+    p.notes("""
+`read` 的做法需要一块与文件同样大的缓冲区，每个字节经过两次拷贝（磁盘 → 内核缓冲区 → 用户缓冲区）；
+`mmap` 建立映射时不拷贝数据，访问映射区时由缺页处理装入对应的页。
+该提交同时给出三点效果：加载显著加快、可加载的模型规模提高、多个推理进程可共享同一份页缓存。
+三点都由同一个原因得到：权重页由内核的页缓存直接提供，不再复制到用户缓冲区。
+映射、页表与缺页处理在虚拟内存一章展开。
+ollama 使用 llama.cpp 作为推理后端，沿用了这一加载方式。
+""")
+
+
+def devices_and_drivers(p):
+    p.gap(52)
+    p.title("设备访问：GPU 同样经由操作系统")
+    p.slide("""
+推理进程不能直接向 GPU 提交命令，其访问路径为：
+- 打开**设备文件**（Linux 上为 `/dev/nvidia*`）
+- 经**驱动程序**申请设备内存、提交核函数并等待完成
+- 由内核保证进程之间的设备内存互不可访问
+""")
+    p.slide("""
+将张量传输至设备内存，是一次**跨越三级存储的数据移动**：
+存储设备 → 内存 → 设备内存。
+""")
+    p.highlight("跨层数据移动的开销，是首 token 延迟的主要来源之一。", tone="orange")
+
+
+def scheduling(p):
+    p.gap(26)
+    p.title("并发请求下的调度：机制与策略")
+    p.slide("""
+服务进程可能同时处理多个请求。在处理器核数有限的条件下，操作系统提供两项机制：
+- **抢占式调度**：限制单个执行流连续占用处理器的时间
+- **阻塞式等待**：等待磁盘、GPU 或网络的进程让出处理器
+""")
+    p.slide("""
+推理服务在此之上实现自身的调度策略与优化：
+- **批处理**：连续批处理（continuous batching）合并多个请求的计算
+- **负载均衡**：把请求分配到多个推理进程或多块 GPU
+- 请求排队与准入控制
+""")
+    p.highlight("操作系统决定程序能做什么，应用决定什么时候做、怎么做。", tone="blue")
+
+
+def os_evolution(p):
+    p.title("操作系统的演进与不变的核心职责")
+    p.image("assets/os-timeline.svg", width_px=610,
+            caption="选取的若干里程碑，不构成单一的继承关系")
+    p.slide("""
+- **Multics**（1960 年代）系统地实现了分时与保护机制
+- **Unix**（1969）强调紧凑接口与可组合的工具，1973 年以 C 重写，显著降低移植成本
+- **Linux**（1991 至今）为持续演进的宏内核；**Redox**（2015 至今）以 Rust 实现微内核结构
+- 实现语言与内核结构各不相同，需要解决的核心问题保持一致：==隔离、内存、文件与设备==
+""")
+    p.cite(title="Redox OS", venue="redox-os.org", url="https://www.redox-os.org/", key="redox")
+
+
+def os_evolution_people(p):
+    p.gap(52)
+    p.title("操作系统的演进与不变的核心职责")
+    p.slide("每一次结构性的改变，都伴随一组新的接口约定被确立下来。", autobold=False)
+    # Four separate portraits, not a collage: the stitched GNU/Linux picture put
+    # four subjects into one third of the row and read as a cramped strip.
+    p.row()\
+     .image("assets/corbato.jpg", height_px=225, caption="Corbató · Multics")\
+     .image("assets/unix-creators.jpg", height_px=225, caption="Thompson 与 Ritchie · Unix")\
+     .image("assets/stallman.jpg", height_px=225, caption="Stallman · GNU")\
+     .image("assets/torvalds.jpg", height_px=225, caption="Torvalds · Linux")
+    p.highlight("被广泛实现的接口，其存续时间长于实现它的具体系统。", tone="blue")
+
+
+def os_in_ics(p):
+    p.title("本课程中的操作系统：进程、虚拟内存、文件与并发")
+    p.table(
+        headers=["系统方法", "本课程中的例子", "CS:APP"],
+        rows=[
+            ["**并发**", "进程切换时保存与恢复上下文", "第 8 章"],
+            ["**软硬件协同**", "页表由操作系统维护，由 MMU 查询", "第 9 章"],
+            ["**分页与按需加载**", "以固定大小的页管理内存以减少碎片，缺页时装入数据", "第 9 章"],
+            ["**共享**", "页缓存、共享库、打开文件的引用计数", "第 9、10 章"],
+            ["**隔离**", "独立的地址空间与权限检查", "第 8、9 章"],
+            ["**有状态与无状态**", "文件偏移量由内核记录；HTTP 请求不依赖之前的请求", "第 10、11 章"],
+            ["**并行**", "线程、同步与并发编程", "第 12 章"],
+        ],
+        align=["left", "left", "left"],
+    )
+    p.slide("机制与策略分离贯穿上述设计：操作系统提供机制，应用决定策略。")
+
+
+# ==============================================================================
+# 回到例子：一次模型推理
+# ==============================================================================
 
 def ai_os_challenges(p):
     p.gap(26)
@@ -675,21 +884,21 @@ def ai_os_challenges(p):
 def request_recap(p):
     p.title("小结：一次请求在各层的执行过程")
     arch = p.architecture(flow="up", caption="各层在本次请求中承担的工作")
-    arch.layer("5 · 应用", ["API 收请求", "token 流式回传"])
-    arch.layer("4 · 运行时", ["解析 gguf", "张量算子", "libc 转系统调用"])
-    arch.layer("3 · 操作系统", ["进程隔离", "mmap 1.9 GB", "缺页装入", "页缓存", "驱动与显存"])
-    arch.layer("2 · 指令集", ["movss / mulss / addss", "PTX / cubin"])
-    arch.layer("1 · 硬件", ["CPU 执行", "DRAM 存页", "GPU 算矩阵", "HBM 供带宽"])
-    p.notes("第 3 层是本课程的教学重点，收尾时可再复述一遍该层的五项工作。")
+    arch.layer("应用", ["API 收请求", "token 流式回传"])
+    arch.layer("运行时", ["解析 gguf", "张量算子", "libc 转系统调用"])
+    arch.layer("操作系统", ["进程隔离", "mmap 1.9 GB", "缺页装入", "页缓存", "驱动与显存"])
+    arch.layer("指令集", ["movss / mulss / addss", "PTX / cubin"])
+    arch.layer("硬件", ["CPU 执行", "DRAM 存页", "GPU 算矩阵", "HBM 供带宽"])
+    p.notes("操作系统是本讲篇幅最长的部分，收尾时可再复述一遍该层的五项工作。")
 
 
 def failures_between_layers(p):
     p.gap(26)
-    p.title("模型的应用：从可观察现象定位系统层次")
+    p.title("分析、定位与解决问题：从可观察现象定位系统层次")
     p.table(
         headers=["观察到的现象", "首先考察的层次", "判断依据"],
         rows=[
-            ["模型无法加载", "操作系统 · 内存", "`free`、`dmesg`、设备内存占用"],
+            ["模型无法加载", "操作系统 · 内存", "`free` / `vm_stat`、内核日志、设备内存占用"],
             ["首 token 延迟偏高", "操作系统 · I/O", "冷启动与热启动对比、页缓存命中情况"],
             ["GPU 利用率偏低", "运行时 · 数据移动", "批大小、拷贝耗时、依赖关系"],
             ["程序段错误", "操作系统 · 虚拟内存", "出错地址、映射与权限"],
@@ -698,6 +907,32 @@ def failures_between_layers(p):
         align=["left", "left", "left"],
     )
     p.highlight("诊断的第一步是确定该现象由哪一层负责。", tone="orange")
+    p.notes("""
+表中的命令按平台取其一：内存用量在 Linux 上用 `free`，macOS 上用 `vm_stat`，
+Windows 上用任务管理器或 `Get-Counter` 的内存计数器；内核日志在 Windows 上是事件查看器。
+判断依据一列所指的现象与层次，在三个平台上相同。
+""")
+
+
+def ai_infra_from_ics(p):
+    p.gap(26)
+    p.title("改进程序的方法：AI 基础设施中的本课程内容")
+    p.table(
+        headers=["AI 基础设施中的技术", "对应的本课程内容", "CS:APP"],
+        rows=[
+            ["数据并行、张量并行、流水线并行（DP / TP / PP）", "程序性能优化与并行", "第 5 章"],
+            ["流水线并行中的气泡与依赖", "处理器流水线中的气泡与数据依赖", "第 4 章"],
+            ["KV Cache", "缓存与局部性", "第 6 章"],
+            ["PagedAttention", "分页式虚拟内存", "第 9 章"],
+            ["张量的数值格式（FP4 至 FP64）", "浮点数的表示", "第 2 章"],
+            ["Prompt 注入", "缓冲区溢出与代码注入攻击", "§3.10"],
+        ],
+        align=["left", "left", "center"],
+    )
+    p.highlight("本课程讲授的系统方法，同样用于设计与改进 AI 基础设施。", tone="green")
+    p.cite(title="Efficient Memory Management for Large Language Model Serving with PagedAttention",
+           author="Kwon et al.", year="2023", venue="SOSP", url="https://arxiv.org/abs/2309.06180",
+           key="pagedattention")
 
 
 def four_themes(p):

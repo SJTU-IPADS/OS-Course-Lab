@@ -1,4 +1,4 @@
-# ICS 第一讲 · 计算机系统导论
+# ICS 第一讲 · 计算机系统基础（1）
 
 以一次 `ollama run` 请求为例，自底向上考察计算机系统的各个层次。
 
@@ -6,27 +6,29 @@
 
 ## 结构
 
-引子将一次请求分解为五个层次，随后每一节考察一层，节与节之间用
-`lecture.bridge(...)` 过渡。**第 3 层（操作系统）为本讲重点**：篇幅最长，
-并贯穿使用同一组具体数据（三个进程、4.7 GB 权重、缺页装入、页缓存）。
+结构依照导师对第一讲的修改意见（`1-intro.pptx` 与批注 PDF）：先回答大模型时代
+为什么还要学本课程，再以一次 `ollama run` 请求说明 AI 应用仍然通过程序执行实现、
+应用与系统的关系，然后分四个部分介绍各层，最后回到这次请求。
 
 | 节 | 页数 | 落点 |
 | --- | --- | --- |
-| 课程概览 | 2 | 教师、教材、课程讨论的问题 |
-| 问题的提出 | 7 | AI 应用如何发出请求 · OpenAI 兼容 API · ollama · 三个进程与 4.7 GB 文件两项观察 · 五层框架 |
-| 第 1 层 · 硬件 | 3 | 存储程序体系结构、两条总线的互连拓扑、访存带宽的限制 |
-| 第 2 层 · 指令集 | 2 | ISA 作为软硬件接口；386 分页作为下一层的硬件前提 |
-| **第 3 层 · 操作系统** | **12** | 进程隔离 · 地址空间 · **mmap** 与 llama.cpp 的实测效果 · 页缓存 · 设备访问 · 调度 |
-| 第 4 层 · 工具链与运行时 | 10 | 字符编码 → 四阶段编译 → 机器指令 → 运行库 → Python → CUDA |
-| 第 5 层 · 应用与 Agent | 2 | Agent 执行循环；AI 负载复用的机制与新的策略问题 |
-| 总结 | 4 | 自底向上小结、故障定位表、四个主题、课程安排 |
+| 课程概览 | 6 | 教师与教材（CS:APP、OSTEP）· AI 辅助编程之后学习本课程的必要性 · 改变的内容与不变的系统约束 · 2023 与大模型时代的课程特点 · 课程目标（power **system** programmer）· 六个问题 |
+| AI 应用仍然通过程序执行实现 | 5 | AI 应用如何发出请求 · Agent 的请求与工具执行循环 · OpenAI 兼容 API · 推理服务沿用的传统设计（C/S、HTTP、标准 API）· ollama |
+| 应用与系统 | 7 | 一条命令背后的系统工作 · 三个进程与 1.9 GB 文件两项观察 · 系统抽象 · 五层框架 · 层次化设计 · 了解系统的程度与本课程的定位 |
+| 第 1 部分 · 硬件 | 4 | 目标：计算的软件化 · 存储程序体系结构 · 总线拓扑 · CPU 与 GPU |
+| 第 2 部分 · 汇编与指令集 | 3 | 目标：快速开发程序 · ISA · x86 的向后兼容 |
+| 第 3 部分 · 工具链与运行时 | 11 | 目标：消除程序绑定（四类绑定）· 字符编码 → 机器指令 → 运行库 → Python → CUDA |
+| 第 4 部分 · 操作系统 | 10 | 目标：多个程序共享硬件 · 四类抽象 · 独占使用 · 进程隔离 · llama.cpp 改用 **mmap** 的加载效果 · 设备访问 · 调度（机制与策略）· 演进 |
+| 回到例子 | 6 | AI 负载的策略问题 · 自底向上小结 · 分析定位问题 · AI 基础设施中的本课程内容 · 四个主题 · 课程安排 |
 
-开头三页先交代 AI 应用是怎么把请求发出去的（Agent → HTTP → 推理后端）、
-OpenAI 兼容 API 的端点，以及 ollama 在本机提供的正是这组接口；随后才是
-`ollama run` 那条命令和它的实际输出。学生在第一节课不需要预先知道 ollama 是什么。
+工具链放在操作系统之前，与 CS:APP 第 7、8 章的顺序一致。
 
-五页衔接页写成同一形式——层号与名称 + 该层涉及的对象——连起来就是一份
-自底向上的目录。
+四个部分的最后一页都是「本课程中的X」：一张「系统方法 | 本课程中的例子 | CS:APP 章节」
+的表。与导师原稿不同的两处章节号：总线归到第 6 章（CS:APP §6.1 讲总线），
+FP4–FP64 的数值格式归到第 2 章（浮点数表示）。
+
+衔接页写成同一形式——「第 N 部分 · 名称」+「目标：……」。五层框架图与小结图的
+层名不带层号。
 
 `p.cite(...)` 会自动生成末尾的参考文献页。讲稿写在 `p.notes(...)` 里，投影不显示，
 按 `p` 打开演讲者视图可见。
@@ -44,11 +46,43 @@ python3 -m lecturekit.cli view lectures/1-intro --watch
 用抽屉里的 ■ 停。每按一次 ▶ 都会新开一个运行标签页，同一页上的命令并排跑着，
 所以 `ollama serve` 占着一个标签页时，`ollama pull` / `ollama run` 在旁边照样能连上它；
 标签页上的 ✕ 关掉这一次运行（还在跑的会一并停掉），抽屉右上角的 ▾ 只是把抽屉收起来、
-什么都不停，翻到下一页才会把这一页跑着的东西全部停掉。`compile-pipeline` 与 `runtime-libraries` 两页会在 `examples/`
-下真的编译，产物（`.i` / `.s` / `.o` 与两个可执行文件）已在 `.gitignore` 里。
-这两页的 demo 还用 `files=[...]` 声明了各自编译的源文件，▶ 旁边多一个以文件名为标签的
+什么都不停，翻到下一页才会把这一页跑着的东西全部停掉。`runtime-libraries` 一页会在 `examples/`
+下真的编译，产物已在 `.gitignore` 里。
+这一页的 demo 还用 `files=[...]` 声明了编译的源文件，▶ 旁边多一个以文件名为标签的
 按钮，按下后在右侧展开该文件的全文，课上可以直接看代码。
 详见 [docs/usage.md](../../docs/usage.md#running-a-demo-from-the-deck)。
+
+## 跨平台：x86-64 Linux、arm64 macOS 与 x86-64 Windows
+
+课上演示与同学自己复现时的机器有三种：x86-64 的 Linux、arm64 的 Mac、x86-64 的
+Windows。本讲的命令统一写成前两者都能直接执行的形式，输出的**结构**一致；Windows
+以 WSL2（Ubuntu）为课程环境，命令与 x86-64 Linux 完全相同。平台之间确实不同的部分
+写在 `p.notes(...)` 里，讲的时候可以直接说明。
+
+| 页 | 命令 | macOS（arm64） | Windows（原生，不经 WSL2） |
+| --- | --- | --- | --- |
+| `ai-app-request` | `curl .../v1/chat/completions` | 相同 | `curl.exe` 相同；PowerShell 里 `curl` 是 `Invoke-WebRequest` 的别名，要写全 `curl.exe` |
+| `one-command` / `request-path` | `ollama serve` / `pull` / `run` | 相同 | 相同（有 Windows 版） |
+| `three-processes` | `ps -eo pid,comm,args \| grep '[o]llama'` | 进程一致；`comm` 列显示完整路径 | `Get-Process ollama*` |
+| `weights-are-data` | `ls -lhS ... \| sed -n '2p'` + `file "$(ls -dS ... \| head -1)"` | 相同 | 权重在 `%USERPROFILE%/.ollama/models/blobs`；`Get-ChildItem <dir> \| Sort-Object Length -Descending \| Select-Object -First 1` |
+| `machine-code` | 展示的是 x86-64 汇编 | `ldr` / `fmul` / `fadd`（或 `fmadd`）/ `cmp` + `b.ne`，六步结构一致 | 指令集相同；调用约定为 Microsoft x64，传参寄存器与 System V 不同 |
+| `runtime-libraries` | `ldd ./cpp_demo 2>/dev/null \|\| otool -L ./cpp_demo` | 没有 `ldd`，`otool -L` 承担同样作用；列出 `libc++.1.dylib` 与 `libSystem.B.dylib` | 共享库是 DLL；MSYS2 中同样有 `ldd`，原生工具链用 `objdump -p` 或 `dumpbin /dependents`，列出 `libstdc++-6.dll`、`msvcrt.dll`、`KERNEL32.dll` |
+| `python-and-pytorch` | `file "$(command -v python3)"` + `ls .../lib \| grep -E 'libtorch_(cpu\|cuda)'` | `file` 报 Mach-O arm64，算子库为 `libtorch_cpu.dylib`，没有 CUDA 版本 | 没有 `file`，用 `Get-Command python` 定位；算子库为 `torch_cpu.dll` / `torch_cuda.dll`（没有 `lib` 前缀） |
+| `failures-between-layers` | 表格里的排查手段 | 内存一栏取 `vm_stat` | 内存用任务管理器或 `Get-Counter` 的内存计数器，内核日志是事件查看器 |
+
+三条约定，改命令时一并维持：
+
+1. **不要依赖只在一个平台存在的命令。** 需要用到时写成 `linux_cmd 2>/dev/null || mac_cmd`，
+   并在同一行加英文注释说明谁是谁（见 `runtime-libraries`）。Windows 的等价写法放在
+   `p.notes(...)` 里：命令行里再加一层回退会让投影上的命令变得无法阅读。
+2. **不要依赖输出的行数与列宽。** 用 `sed -n '2p'`、`head -1`、`grep -E` 把要看的那一行挑出来，
+   而不是让听众去数行（`ls -l` 的 `total` 行在 Linux 与 macOS 上单位不同）。
+3. **不要依赖文件名后缀与排序。** 共享库在 Linux 上是 `.so`、macOS 上是 `.dylib`、
+   Windows 上是 `.dll`；`ls -dS` 按大小排序比按字母序稳定。
+
+录在 `output=` 里的输出来自 x86-64 Linux，投影上显示的是这一份；按 ▶ 在别的平台上真跑时，
+输出会按上表的差别变化。GPU 相关的 `cuda-kernel` 一页按内容本身就是 NVIDIA 平台的，
+不在跨平台之列。
 
 ## 构建
 
@@ -88,9 +122,7 @@ python3 -m lecturekit.cli render       lectures/1-intro --lang en --strict
 
    | 图 | 用在 |
    | --- | --- |
-   | `mmap-overview.svg` | `model-loading`（本讲最重要的一页） |
    | `hardware-bus.svg` | `machine-parts` |
-   | `address-space.svg` | `virtual-address-space` |
    | `agent-request.svg` | `ai-app-request` |
    | `os-timeline.svg` | `os-evolution` |
    | `mini-boundaries.svg` | `mini-ollama-boundaries` |
@@ -116,8 +148,7 @@ lectures/1-intro/diagrams/render.sh    # 重新生成全部图表
 
 - `*.dot` — graphviz 流程图（`agent-request.dot` 是开头那张请求路径图）
 - `*.py` — 手工排布的 SVG，各自写出自己的产物：
-  `mmap_figure.py`（mmap 的三条编号关系）、`hardware_bus.py`（内存总线与 I/O 总线的拓扑）、
-  `address_space.py`（进程虚拟地址空间，替换了原先英文的 CS:APP 截图）
+  `hardware_bus.py`（内存总线与 I/O 总线的拓扑）
 
 `isa-boundary.dot`、`os-services.dot`、`nvcc-pipeline.dot` 已经不再被幻灯片引用
 （改用 architecture 块了），留在目录里只是备份，可以随时删掉。
@@ -142,7 +173,7 @@ lectures/1-intro/diagrams/render.sh    # 重新生成全部图表
 - 版面偏空的页用 `p.gap(52)` 匀开；`p.gap("fill")` 在只有三四块的页上会撑出
   夸张的空洞，不要用。
 - **英文比中文长。** 改完中文记得跑一遍 `--lang en` 看有没有撑出边界 ——
-  已经因此把英文的层次图标签缩成了 `3 · OS` / `2 · ISA`。
+  已经因此把英文的层次图标签缩成了 `OS` / `ISA`。
 - **`i18n/en.toml` 里不要在一个列表项内部换行。** slide 文本中的换行会渲染成硬
   换行，而且自动加粗只作用于第一个物理行；一个 bullet 写成一行。
 

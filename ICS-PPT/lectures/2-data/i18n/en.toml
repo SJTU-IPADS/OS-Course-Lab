@@ -19,7 +19,7 @@ text = 'Representing data'
 # src: 数据的表示
 
 ['cover.cover.1.author']
-src_hash = 'ec8fd6d3'
+src_hash = '96947c04'
 text = 'Jinyu Gu · Rong Chen'
 # src: 古金宇 · 陈榕
 
@@ -30,7 +30,7 @@ text = 'IPADS, Shanghai Jiao Tong University'
 
 ['section.framing.title']
 src_hash = '6f88ed18'
-text = 'Recap, and the question for today'
+text = 'Recap, and the question of this lecture'
 # src: 回顾与本节的问题
 
 ['recap-weights.title']
@@ -61,23 +61,25 @@ Last lecture took one `ollama run` and worked up through the layers of the syste
 
 ['recap-weights.highlight.1']
 src_hash = 'd9de2048'
-text = "Today's question: by what rule are those 1.9 GB of bytes read?"
+text = 'The question of this lecture: by what rule is each of those 1.9 GB of bytes interpreted?'
 # src: 本节的问题：这 1.9 GB 中的每一个字节，按什么规则解释。
 
 ['recap-weights.notes.1']
-src_hash = 'f5270fa0'
+src_hash = 'a23c0f7f'
 text = '''
 
-Lecture 1 ended on "the model supplies parameters; the system stack performs the execution". Today unfolds the word "parameter": in what format the parameters are written to the file, what they become once read into memory, and why the file is 1.9 GB rather than 12.8 GB.
+Lecture 1 ended on "the model supplies only parameters; the execution is carried out by the system stack". This lecture unfolds the word "parameter": in what format the parameters are written to the file, what they are in memory once read, and why the file is 1.9 GB rather than 12.8 GB. The commands of this lecture run on x86-64 Linux, on arm64 macOS and in WSL2 on Windows, with the same results; the two pages that look at assembly follow the instruction set. The README has the differences page by page.
 '''
 # src:
 # 
 # 第一讲的落点是「模型只提供参数，执行过程由系统栈完成」。本节把「参数」这个词展开：
 # 参数以什么格式写在文件里，读出来之后在内存中是什么，为什么是 1.9 GB 而不是 12.8 GB。
+# 本讲的命令在 x86-64 的 Linux、arm64 的 macOS 与 Windows 的 WSL2 上都可以执行，
+# 结果一致；查看汇编的两页随指令集变化，逐条差别见 README 的「跨平台」一节。
 
 ['four-questions.title']
 src_hash = '2bb13cd8'
-text = 'Four questions for today'
+text = 'Four questions this lecture answers'
 # src: 本节回答四个问题
 
 ['four-questions.slide.1']
@@ -280,8 +282,7 @@ text = 'Hexadecimal and the other bases'
 src_hash = 'bde49257'
 text = '''
 
-Hexadecimal groups binary ==four bits at a time==, written with the sixteen symbols `0`–`9` and `a`–`f`.
-A byte is 8 bits, hence two hexadecimal digits, ranging from `0x00` to `0xff`.
+Hexadecimal groups binary <mark>four bits at a time</mark>, written with the sixteen symbols `0`–`9` and `a`–`f`. A byte is 8 bits, hence two hexadecimal digits, ranging from `0x00` to `0xff`.
 '''
 # src:
 # 
@@ -345,7 +346,7 @@ text = '`0x2a`'
 
 ['hexadecimal.table.1.cell.2.3']
 src_hash = 'dee479bd'
-text = 'every byte today is written this way'
+text = 'every byte in this lecture is written this way'
 # src: 本节的字节一律用它书写
 
 ['hexadecimal.table.1.cell.3.0']
@@ -455,10 +456,9 @@ text = 'The first 16 bytes of five files'
 ['other-formats.slide.1']
 src_hash = 'fbc78f5f'
 text = '''
-
-- **Magic number**: `47 47 55 46` for GGUF, `50 4b 03 04` for zip; `.pt` is a zip archive since 1.6
-- **Self-describing header**: safetensors' first 8 bytes are the header length `3e` (62), then JSON
-- **No identifier**: ONNX is protobuf, where `08` tags field 1; an old `.pt` is a pickle stream
+- **Magic number**: `47 47 55 46` is GGUF, `50 4b 03 04` is zip; `.pt` is zip since 1.6
+- **Self-describing header**: safetensors starts with an 8-byte length `3e` (62), then JSON `7b 22` = `{"`
+- **No identifier**: ONNX is protobuf (`08` tags field 1); old `.pt` is pickle (`80 02` is an opcode)
 '''
 # src:
 # 
@@ -468,7 +468,7 @@ text = '''
 
 ['other-formats.highlight.1']
 src_hash = '3d9a627b'
-text = "A file's type is a convention: magic number, header, or extension."
+text = 'A file type is a convention: magic number, header, or extension.'
 # src: 文件类型来自约定：魔数、自描述头部或扩展名。
 
 ['other-formats.notes.1']
@@ -492,11 +492,10 @@ text = 'The memory model: a byte-addressed array'
 ['memory-as-bytes.slide.1']
 src_hash = '2195cce6'
 text = '''
-
-The memory a program sees is an ==array addressed one byte at a time==: every address holds one byte.
-- Addresses are numbered consecutively from 0, and the whole set of them forms the **address space**
-- A multi-byte object occupies a contiguous run of addresses, and its address is the **smallest** of them
-- The virtual address space of last lecture is this model as the operating system realizes it
+A program sees memory as an <mark>array of bytes</mark>: each address holds one byte.
+- Addresses run from 0; together they form the **address space**
+- A multi-byte object uses consecutive addresses; its address is the **smallest**
+- Last lecture's virtual address space is this model in the operating system
 '''
 # src:
 # 
@@ -507,7 +506,7 @@ The memory a program sees is an ==array addressed one byte at a time==: every ad
 
 ['memory-as-bytes.aside.1']
 src_hash = 'e83c2a2d'
-text = 'The byte is the smallest addressable unit, so anything narrower than a byte has to be packed into one.'
+text = 'The byte is the smallest addressable unit; narrower data is packed into bytes.'
 # src: 字节是最小的可寻址单位，因此比字节更小的数据必须打包进一个字节。
 
 ['word-size.title']
@@ -749,15 +748,18 @@ text = 'Checking on this PC'
 # src: 在 PC 上核对
 
 ['c-data-sizes.notes.1']
-src_hash = '8fc9a362'
+src_hash = 'c56f3b67'
 text = '''
 
-When a fixed width is required, use int32_t / uint64_t from `<stdint.h>`; those are the same width everywhere. What is worth stressing in class is that long and pointers vary with the platform: code that stores a pointer in an int loses the high half on a 64-bit platform.
+When a fixed width is required, use int32_t / uint64_t from `<stdint.h>`; those are the same width everywhere. What is worth stressing in class is that long and pointers vary with the platform: code that stores a pointer in an int loses the high half on a 64-bit platform. 64-bit Linux and macOS are LP64, where `long` is 8 bytes; Windows is LLP64, where `long` is 4 bytes and a pointer is still 8, so the `long` row of the 64-bit column reads 4 there. Programs in WSL2 are Linux programs and match the table.
 '''
 # src:
 # 
 # 需要固定宽度时使用 `<stdint.h>` 中的 int32_t / uint64_t，它们在各平台上宽度一致。
 # 课堂上值得强调的是 long 与指针随平台变化：把指针存进 int 的代码在 64 位平台上会丢掉高位。
+# 64 位的 Linux 与 macOS 采用 LP64，`long` 为 8 字节；原生 Windows 采用 LLP64，
+# `long` 为 4 字节而指针为 8 字节，此时表中「64 位」一列的 `long` 应读作 4。
+# WSL2 中的程序是 Linux 程序，与表中的 64 位一列一致。
 
 ['bool-storage.title']
 src_hash = '732470c1'
@@ -769,7 +771,7 @@ src_hash = '6bf4dc51'
 text = '''
 
 C has no built-in boolean type; zero and non-zero integers carry falsity and truth. C99 introduced `_Bool`, and `<stdbool.h>` defines `bool` as an alias for it. In C++ `bool` is built in.
-- In both languages `sizeof(bool)` is ==one byte==: the byte is the smallest addressable unit
+- In both languages `sizeof(bool)` is <mark>one byte</mark>: the byte is the smallest addressable unit
 - A boolean needs only 1 bit of information; the other 7 take no part in its value
 - On assignment any non-zero value converts to 1, so `bool b = 17;` leaves the byte `0x01`
 '''
@@ -914,11 +916,10 @@ text = 'Byte order: the rule for laying out multi-byte objects'
 ['endianness.slide.1']
 src_hash = '1d60ac3f'
 text = '''
-
-A 4-byte integer takes four consecutive addresses; ==byte order== says which byte is lowest.
-- **Little-endian**: least significant byte at the lowest address, the default on x86-64 and ARM
-- **Big-endian**: least significant byte at the highest address, used by TCP/IP headers
-- Which one applies is fixed by the ==processor==: the order in which a load assembles bytes into a register is a hardware choice, and no program can change it
+**A 4-byte integer uses four consecutive addresses; the <mark>byte order</mark> fixes which byte comes first.**
+- **Little-endian**: least significant byte at the lowest address; x86-64 and ARM default
+- **Big-endian**: least significant byte at the highest address; TCP/IP headers
+- The processor fixes it: how a load assembles bytes into a register is a hardware choice
 '''
 # src:
 # 
@@ -929,7 +930,7 @@ A 4-byte integer takes four consecutive addresses; ==byte order== says which byt
 
 ['endianness.image.1.caption']
 src_hash = 'f88a2726'
-text = 'The same value occupies the same four addresses under both layouts, with the bytes in opposite order'
+text = 'Same value, same four addresses, bytes in opposite order'
 # src: 同一个值在两种排列下占用同样的四个地址，字节的次序相反
 
 ['endianness.notes.1']
@@ -957,7 +958,7 @@ text = 'Reading one field under each byte order'
 
 ['read-the-field.highlight.1']
 src_hash = '1e094235'
-text = 'Bytes have a determinate value only under an agreed byte order.'
+text = 'Byte order is a convention: reader and writer must agree.'
 # src: 字节序是一项约定：读写双方采用同一约定，字节才有确定的值。
 
 ['show-bytes.title']
@@ -1081,18 +1082,19 @@ text = 'What each of the two conversion functions compiles to'
 
 ['endianness-conversion-cost.highlight.1']
 src_hash = '857542a2'
-text = 'A conversion matching host order emits no instructions at all.'
+text = 'A conversion that matches host order emits no instructions, so it can be written unconditionally.'
 # src: 转换与本机序一致时不产生任何指令，因此可以无条件地写上它。
 
 ['endianness-conversion-cost.notes.1']
-src_hash = 'eab5fd27'
+src_hash = 'ee82a4ad'
 text = '''
 
-On a little-endian machine `htole32` is the identity and the function body is left with nothing but the return; the opposite `htobe32` compiles to a single `bswap`. The cost is fixed and tiny, which is why the kernel's rule is to convert everywhere and never to reason that "this machine is little-endian so it can be skipped" — omissions of that kind are exactly why code stops working on another platform.
+On a little-endian machine `htole32` is the identity and the function body is left with nothing but the return; the opposite `htobe32` compiles to a single `bswap`. The cost is fixed and tiny, which is why the kernel's rule is to convert everywhere and never to reason that "this machine is little-endian so it can be skipped" — omissions of that kind are exactly why code stops working on another platform. On arm64 that instruction is called `rev`; the conclusion is the same on both: one direction costs an instruction and the other costs none.
 '''
 # src:
 # 
 # `htole32` 在小端机器上是恒等变换，函数体里只剩返回；反向的 `htobe32` 编译成一条 `bswap`。
+# arm64 上这条指令叫 `rev`，两处结论相同：一个方向有一条指令，另一个方向没有指令。
 # 代价固定且极小，因此内核的规则是一律转换，不做「本机就是小端所以可以省略」的判断——
 # 这类省略正是代码换一个平台就失效的原因。
 
@@ -1124,7 +1126,7 @@ text = 'The UTF-8 encoding of a Chinese sentence'
 
 ['text-and-tokens.highlight.1']
 src_hash = '42e8b7eb'
-text = 'A model receives token ids; the encoding happened before that.'
+text = 'A model receives a sequence of token ids; characters are already encoded before they reach the model.'
 # src: 模型接收的是 token 编号序列，字符在进入模型之前已经完成编码。
 
 ['text-and-tokens.notes.1']
@@ -1144,14 +1146,14 @@ text = 'Part three · Integers'
 # src: 第三部分 · 整数
 
 ['bridge-3.bridge.1']
-src_hash = '02f6d8c1'
+src_hash = 'd8a59286'
 text = '''
 Part three · Integers
 Two interpretations of the same bits
 '''
 # src:
 # 第三部分 · 整数
-# 同一段位的两种解释
+# 用二进制表示整数
 
 ['section.integers.title']
 src_hash = 'afaa10b1'
@@ -1167,7 +1169,7 @@ text = 'Two interpretations of the same bits'
 src_hash = 'a46d4275'
 text = '''
 
-Two's complement, from *Digital Electronics*, is built by inverting and adding one. The same encoding can also be written by giving the top bit the weight $-2^{w-1}$ instead of $+2^{w-1}$.
+Two's complement as learned in *Digital Electronics* is constructed by "invert and add one". The following is another, equivalent way of writing the same encoding: change the weight of the top bit from $+2^{w-1}$ to $-2^{w-1}$, and leave the weights of the other bits unchanged.
 '''
 # src:
 # 
@@ -1300,7 +1302,7 @@ text = 'The two readings agree when the top bit is 0 and differ by $2^w$ when it
 src_hash = '02f670fb'
 text = '''
 
-In digital electronics two's complement is defined as "positives unchanged, negatives inverted and incremented", so that subtraction can be carried out by an adder. The weighted sum given here describes the same encoding and is more convenient when reading a run of bytes: no need to test the sign first and then decide how to compute — just add the weights. The equivalence can be checked on the spot: `1011` inverted is `0100`, plus one is `0101`, that is 5, so the value is −5.
+In digital electronics two's complement is defined as "positives unchanged, negatives inverted and incremented", so that subtraction can be carried out by an adder circuit. The weighted sum given here is another description of the same encoding and is more convenient when reading a run of bytes: there is no need to test the sign first and then decide how to compute; the weights are simply added. The equivalence can be checked on the spot: `1011` inverted is `0100`, plus one is `0101`, that is 5, so the original pattern represents −5.
 '''
 # src:
 # 
@@ -1398,22 +1400,6 @@ Two relations worth remembering:
 # - $|TMin| = TMax + 1$，负数比正数多一个，因此 `-TMin` 仍是 `TMin`
 # - `-1` 的补码位模式为全 1，与无符号的最大值位模式相同
 
-['numeric-range.highlight.1']
-src_hash = '4bebc5fd'
-text = "2048×2048×512 elements passes the 32-bit two's complement ceiling."
-# src: 2048×2048×512 个元素恰好超过 32 位补码的上限。
-
-['numeric-range.notes.1']
-src_hash = '415593c0'
-text = '''
-
-2048 × 2048 × 512 = 2147483648, exactly TMax + 1. Deep-learning code that keeps an element count or an offset in an int32 starts failing at this scale — a real and common class of defect.
-'''
-# src:
-# 
-# 2048 × 2048 × 512 = 2147483648，正好是 TMax + 1。深度学习框架里用 int32 存元素个数
-# 或偏移量的代码，在这个规模上开始出错，是一类真实且常见的缺陷。
-
 ['casting.title']
 src_hash = '5ef5ac63'
 text = 'Casts: the bits stay, the interpretation changes'
@@ -1422,11 +1408,10 @@ text = 'Casts: the bits stay, the interpretation changes'
 ['casting.slide.1']
 src_hash = '363978d0'
 text = '''
-
-C allows a variable of one type to be read as another, in two ways.
+**C can interpret a variable as another type, in two ways.**
 - **Explicit**: writing `(unsigned short) x`
-- **Implicit**: assignment, argument passing and promotion in an expression
-- Signed to unsigned ==changes no bit==; only the interpretation changes
+- **Implicit**: in assignment, argument passing and promotion
+- Signed/unsigned conversion <mark>changes no bit</mark>, only the interpretation
 '''
 # src:
 # 
@@ -1444,7 +1429,7 @@ text = 'Mixed comparisons: the signed operand is converted to unsigned'
 src_hash = 'd1904347'
 text = '''
 
-When signed and unsigned operands meet in one expression, ==the signed side is converted to unsigned==, and the comparison changes with it.
+When signed and unsigned operands meet in one expression, <mark>the signed side is converted to unsigned</mark>, and the comparison changes with it.
 '''
 # src:
 # 
@@ -1467,25 +1452,21 @@ text = 'Find the bug: summing the elements of an array'
 
 ['unsigned-bugs.slide.1']
 src_hash = 'd1b220d7'
-text = '''
-
-`sum_elements` adds the first `length` `float`s of `a`; the length is an `unsigned`.
-'''
+text = '`sum_elements` returns the sum of the first `length` `float` values of `a`; `length` is `unsigned`.'
 # src:
 # 
 # `sum_elements` 把数组 `a` 的前 `length` 个 `float` 相加并返回，长度以 `unsigned` 表示。
 
 ['unsigned-bugs.aside.1']
 src_hash = 'abdbc79e'
-text = 'The question: for what input does this function fail to do what its name says?'
+text = 'Question: for which input does it not do what its name says?'
 # src: 问题：在什么输入下，这个函数的行为与它的名字不符？
 
 ['unsigned-bugs.slide.2']
 src_hash = '33cb24ba'
 text = '''
-
-- When `length` is 0, `length - 1` is 4294967295 and the loop walks the address space
-- `strlen(s) - strlen(t) > 0` has the same shape, true even when `s` is **shorter**
+- With `length` 0, `length - 1` is 4294967295 and the loop walks the whole address space
+- Likewise `strlen(s) - strlen(t) > 0` holds when `s` is **shorter**
 '''
 # src:
 # 
@@ -1494,7 +1475,7 @@ text = '''
 
 ['unsigned-bugs.highlight.1']
 src_hash = '3a8ea7b6'
-text = 'Unsigned subtraction wraps modulo $2^w$ instead of going negative.'
+text = 'A negative unsigned difference wraps to a positive value modulo $2^w$.'
 # src: 无符号数的减法在结果为负时回绕到模 $2^w$ 的正数。
 
 ['unsigned-bugs.notes.1']
@@ -1517,28 +1498,23 @@ text = 'Find the bug: the kernel copying data out to a user program'
 # src: 找错误：内核向用户程序拷贝数据
 
 ['kernel-bug.slide.1']
-src_hash = 'a110b46a'
-text = '''
-
-The kernel and user programs are in separate address spaces, so the kernel copies on their behalf: `copy_from_kernel` copies `kbuf` to `user_dest`, at most `maxlen` bytes.
-'''
+src_hash = '03c064a5'
+text = 'The kernel copies data out for a user program: `copy_from_kernel` copies `kbuf` to `user_dest`, at most `maxlen` bytes.'
 # src:
 # 
-# 内核与用户程序在各自的地址空间中，用户程序取内核的数据需要内核代为拷贝。
-# `copy_from_kernel` 把内核缓冲区 `kbuf` 拷到用户给出的 `user_dest`，最多 `maxlen` 字节。
+# 内核代用户程序拷贝数据：`copy_from_kernel` 把 `kbuf` 拷到 `user_dest`，最多 `maxlen` 字节。
 
 ['kernel-bug.aside.1']
 src_hash = '9d426fe8'
-text = 'The question: can a caller make it copy out something beyond the 1024 bytes of `kbuf`?'
+text = 'Question: can a caller make it copy beyond the 1024 bytes of `kbuf`?'
 # src: 问题：调用方能否让它拷贝出 `kbuf` 这 1024 字节以外的内容？
 
 ['kernel-bug.slide.2']
 src_hash = '81a430ce'
 text = '''
-
-When the caller passes a negative `maxlen`:
-- `KSIZE < maxlen` is a signed comparison, is false, and `len` takes the negative value
-- `memcpy`'s third argument is a `size_t`, so `len` becomes enormous and the copy overruns
+**When the caller passes a negative `maxlen`:**
+- `KSIZE < maxlen` compares signed, is false, and `len` becomes that negative value
+- `memcpy` takes a `size_t`, so `len` becomes huge and the copy passes the buffer end
 '''
 # src:
 # 
@@ -1565,17 +1541,21 @@ text = 'Widening and truncation'
 # src: 扩展与截断
 
 ['expand-truncate.slide.1']
-src_hash = '2c53409b'
+src_hash = '14210a78'
 text = '''
 
 Changing the width of an integer goes in two directions, under different rules.
-- **Widening**: unsigned values are padded with zeros (zero extension), two's complement with the sign bit (sign extension); the value is unchanged
+- **Widening**: the goal is to keep the value unchanged, and that goal decides which bits are added
+  - Unsigned values are padded with 0 (zero extension): high 0 bits contribute nothing
+  - Two's complement is padded with the sign bit (sign extension): a negative value gains a 1; the old top bit's weight changes from $-2^{w-1}$ to $+2^{w-1}$, and adding the new top bit's $-2^{w}$ still gives $-2^{w-1}$; the same holds for each added 1, so padding with N ones leaves the value unchanged
 - **Truncation**: only the low bits are kept and the high bits are simply discarded; the value may change entirely
 '''
 # src:
 # 
 # **改变一个整数的宽度有两个方向，规则各不相同。**
-# - **扩展**：无符号数补 0（零扩展），补码补符号位（符号扩展），数值不变
+# - **扩展**：目的是保持数值不变，补入什么位由这个目的决定
+#   - 无符号数补 0（零扩展）：高位的 0 不贡献数值
+#   - 补码补符号位（符号扩展）：负数补一个 1，原最高位的权重由 $-2^{w-1}$ 变为 $+2^{w-1}$，与新最高位的 $-2^{w}$ 相加仍为 $-2^{w-1}$；每补一个 1 都是如此，因此补 N 个 1 不改变数值
 # - **截断**：只保留低位，高位直接丢弃，数值可能完全改变
 
 ['truncation-in-practice.title']
@@ -1592,7 +1572,7 @@ text = 'Watching both directions'
 src_hash = 'c3ffdb91'
 text = '''
 
-The last two lines are the number of bytes 3.21 B parameters need in BF16. Recorded in an `int`, the result 2130532352 ==still falls inside the range of a signed 32-bit integer==, so nothing goes wrong at run time — which is what makes this class of error hard to notice.
+The last two lines are the number of bytes 3.21 B parameters need in BF16. Recorded in an `int`, the result 2130532352 <mark>still falls inside the range of a signed 32-bit integer</mark>, so nothing goes wrong at run time — which is what makes this class of error hard to notice.
 '''
 # src:
 # 
@@ -1603,6 +1583,156 @@ src_hash = 'c1c9f29b'
 text = 'Ariane 5 flight 501 was lost on its maiden launch; the immediate cause was an overflow converting a 64-bit float to a 16-bit signed integer. Photograph of the debris from Wikimedia Commons, public domain.'
 # src: 阿丽亚娜 5 型 501 号首飞失利，直接原因是一个 64 位浮点数转 16 位有符号整数时溢出。残骸照片来自 Wikimedia Commons，公有领域。
 
+['mixed-width-comparison.title']
+src_hash = 'c05fa97d'
+text = 'Mixed comparisons: operands of different sizes'
+# src: 混合比较：大小不同的操作数进行比较
+
+['mixed-width-comparison.slide.1']
+src_hash = 'b52a872c'
+text = '''
+**A comparison takes two steps:**
+1. **Pick the target type**: first promote types narrower than `int` to `int`; after promotion, with different widths take the wider type, and with equal widths but different signedness take unsigned
+2. **Convert each operand**: <mark>the source type decides between zero and sign extension</mark>, and the resulting bits are read under the target type
+'''
+# src:
+# 
+# **比较分两步进行：**
+# 1. **确定目标类型**：先把窄于 `int` 的类型提升为 `int`；提升后宽度不同取较宽者，宽度相同、符号不同取无符号
+# 2. **逐个转换**：<mark>补 0 还是补符号位由原类型决定</mark>，得到的位模式按目标类型解释
+
+['mixed-width-comparison.table.1.cell.0.0']
+src_hash = 'fb8791a7'
+text = 'Comparison'
+# src: 比较
+
+['mixed-width-comparison.table.1.cell.0.1']
+src_hash = 'd04da279'
+text = 'Target type'
+# src: 目标类型
+
+['mixed-width-comparison.table.1.cell.0.2']
+src_hash = 'b21276fa'
+text = 'Converted operand'
+# src: 被转换的操作数
+
+['mixed-width-comparison.table.1.cell.0.3']
+src_hash = 'bb7ef734'
+text = 'Result'
+# src: 结果
+
+['mixed-width-comparison.table.1.cell.1.0']
+src_hash = 'f6e256aa'
+text = 'int −1 < unsigned short 1'
+# src: int −1 < unsigned short 1
+
+['mixed-width-comparison.table.1.cell.1.1']
+src_hash = '6da88c34'
+text = 'int'
+# src: int
+
+['mixed-width-comparison.table.1.cell.1.2']
+src_hash = 'd3840a84'
+text = '1 zero-extends to `0x00000001`, read as 1'
+# src: 1 补 0 得 `0x00000001`，读为 1
+
+['mixed-width-comparison.table.1.cell.1.3']
+src_hash = '6b86b273'
+text = '1'
+# src: 1
+
+['mixed-width-comparison.table.1.cell.2.0']
+src_hash = 'bf026b38'
+text = 'short −1 < unsigned short 1'
+# src: short −1 < unsigned short 1
+
+['mixed-width-comparison.table.1.cell.2.1']
+src_hash = '6da88c34'
+text = 'int'
+# src: int
+
+['mixed-width-comparison.table.1.cell.2.2']
+src_hash = '7c2dbcb8'
+text = 'both sides are promoted to `int`: −1 sign-extends, 1 zero-extends'
+# src: 两侧都提升为 `int`：−1 补符号位，1 补 0
+
+['mixed-width-comparison.table.1.cell.2.3']
+src_hash = '6b86b273'
+text = '1'
+# src: 1
+
+['mixed-width-comparison.table.1.cell.3.0']
+src_hash = '56d926fb'
+text = 'short −1 < unsigned 1'
+# src: short −1 < unsigned 1
+
+['mixed-width-comparison.table.1.cell.3.1']
+src_hash = 'ceffe727'
+text = 'unsigned'
+# src: unsigned
+
+['mixed-width-comparison.table.1.cell.3.2']
+src_hash = 'dc2993c9'
+text = '−1 sign-extends to `0xffffffff`, read as $2^{32}-1$'
+# src: −1 补符号位得 `0xffffffff`，读为 $2^{32}-1$
+
+['mixed-width-comparison.table.1.cell.3.3']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['mixed-width-comparison.table.1.cell.4.0']
+src_hash = 'cbf4fa09'
+text = 'int −1 < unsigned long long 1'
+# src: int −1 < unsigned long long 1
+
+['mixed-width-comparison.table.1.cell.4.1']
+src_hash = '4f637450'
+text = 'unsigned long long'
+# src: unsigned long long
+
+['mixed-width-comparison.table.1.cell.4.2']
+src_hash = '429857f3'
+text = '−1 sign-extends to 64 ones, read as $2^{64}-1$'
+# src: −1 补符号位得 64 个 1，读为 $2^{64}-1$
+
+['mixed-width-comparison.table.1.cell.4.3']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['mixed-width-comparison.table.1.cell.5.0']
+src_hash = '1e6bc2ec'
+text = 'long long −1 < unsigned 1'
+# src: long long −1 < unsigned 1
+
+['mixed-width-comparison.table.1.cell.5.1']
+src_hash = '61bc8614'
+text = 'long long'
+# src: long long
+
+['mixed-width-comparison.table.1.cell.5.2']
+src_hash = '529186ae'
+text = '1 zero-extends to a 64-bit 1, read as 1'
+# src: 1 补 0 得 64 位的 1，读为 1
+
+['mixed-width-comparison.table.1.cell.5.3']
+src_hash = '6b86b273'
+text = '1'
+# src: 1
+
+['mixed-width-comparison.notes.1']
+src_hash = '0d577d43'
+text = '''
+The source type decides zero or sign extension; the target type decides whether the comparison is signed or unsigned. These are separate decisions.
+The last row relies on `long long` representing every `unsigned` value, which holds on all three platforms. When the wider signed type cannot represent every value of the narrower unsigned type, both sides convert to the unsigned counterpart of that signed type.
+'''
+# src:
+# 
+# 决定补 0 还是补符号位的是操作数原来的类型，决定比较按有符号还是无符号进行的是目标类型，两件事分开。
+# 最后一行成立的前提是 `long long` 能表示 `unsigned` 的全部取值，在三种平台上都满足；
+# 若较宽的有符号类型不能表示较窄无符号类型的全部取值，两侧转为该有符号类型对应的无符号类型。
+
 ['truncation-and-endianness.title']
 src_hash = '43b508a3'
 text = 'Aside: truncation and byte order'
@@ -1610,10 +1740,7 @@ text = 'Aside: truncation and byte order'
 
 ['truncation-and-endianness.slide.1']
 src_hash = '5fc35df7'
-text = '''
-
-Truncation in C is defined on the ==value==; reading leading ==bytes== is another matter.
-'''
+text = "C truncation is defined on the <mark>value</mark>, independent of byte order; reading an object's first bytes is different."
 # src:
 # 
 # C 语言的截断定义在<mark>值</mark>上，与字节序无关；按<mark>字节</mark>读对象的前几个字节则是另一回事。
@@ -1626,9 +1753,8 @@ text = 'One 32-bit value, the first two bytes under each layout'
 ['truncation-and-endianness.slide.2']
 src_hash = 'cb5604da'
 text = '''
-
-- Little-endian puts low bytes first, so the two leading bytes are the truncated result
-- `*(short *) &x` matches `(short) x` on little-endian and stops matching on big-endian
+- On little-endian the first two bytes are the truncated value; on big-endian, the high half
+- So `*(short *) &x` equals `(short) x` on little-endian but not on big-endian
 '''
 # src:
 # 
@@ -1637,7 +1763,7 @@ text = '''
 
 ['truncation-and-endianness.highlight.1']
 src_hash = 'a763de5a'
-text = 'The language fixes truncation; byte order matters only for bytes.'
+text = 'The language fixes truncation; byte order matters only for raw bytes.'
 # src: 截断由语言规定，按字节读取时字节序才影响结果。
 
 ['truncation-and-endianness.notes.1']
@@ -1769,13 +1895,14 @@ text = 'Shift operations'
 # src: 移位运算
 
 ['shifts.slide.1']
-src_hash = '0a739465'
+src_hash = 'd214cd8b'
 text = '''
 
 - **Left shift** `x << k`: every bit moves left by $k$ places, zeros fill in on the right, and bits shifted off the top are discarded
 - **Logical right shift** `x >> k`: zeros fill in on the left; used for unsigned values
 - **Arithmetic right shift** `x >> k`: the sign bit fills in on the left, so a negative value stays negative
 - The C standard leaves the behaviour undefined once the shift count reaches the word size
+- Without overflow, `x << k` equals $x \times 2^k$ and `x >> k` equals $\lfloor x / 2^k \rfloor$; shifts are faster than multiplication and division, so a shift is usually used wherever it can express the operation
 '''
 # src:
 # 
@@ -1783,11 +1910,19 @@ text = '''
 # - **逻辑右移** `x >> k`：左侧补 0，用于无符号数
 # - **算术右移** `x >> k`：左侧补符号位，用于补码，使负数右移后仍为负数
 # - 移位位数达到或超过字长时，C 标准未定义其行为
+# - 不溢出时，`x << k` 等于 $x \times 2^k$，`x >> k` 等于 $\lfloor x / 2^k \rfloor$；移位比乘除法快，能用移位表示时通常使用移位
 
 ['shifts.notes.1']
-src_hash = 'cce94e7e'
-text = 'Shifts are often used in place of multiplying or dividing by a power of two, but compilers already perform that optimization; the reason to write bitwise operations is to extract fields.'
-# src: 移位常被用来代替乘除 2 的幂，但编译器已经会做这一优化；写位运算的目的应当是提取字段。
+src_hash = 'b14dc7e9'
+text = '''
+
+A right shift rounds down, while C integer division rounds toward zero; the two differ on negative values: `-7 >> 1` is −4 and `-7 / 2` is −3.
+When a compiler turns `x / 2^k` into a shift, it first adds a bias of $2^k - 1$ to negative values so the result matches division.
+'''
+# src:
+# 
+# 右移对应向下取整，C 的整数除法向零取整，两者在负数上结果不同：`-7 >> 1` 为 −4，`-7 / 2` 为 −3。
+# 编译器把 `x / 2^k` 换成移位时，会先给负数加上 $2^k - 1$ 的偏置，使结果与除法一致。
 
 ['shift-kinds.title']
 src_hash = 'd474991a'
@@ -1797,10 +1932,9 @@ text = 'How the two right shifts are written in C'
 ['shift-kinds.slide.1']
 src_hash = '18909697'
 text = '''
-
-C has one `>>`; which shift it performs follows the ==type of the left operand==.
-- Unsigned left operand: logical right shift, filling with zeros
-- Signed left operand: arithmetic right shift, filling the sign bit
+**C has one right shift, `>>`; the <mark>type of the left operand</mark> selects the kind.**
+- Unsigned: logical shift, fills with 0
+- Signed: arithmetic shift, fills with the sign bit
 '''
 # src:
 # 
@@ -1814,21 +1948,21 @@ text = 'The same bits, two types'
 # src: 同一段位，两种类型
 
 ['shift-kinds.aside.1']
-src_hash = '06bec46b'
-text = 'The two right shifts are two machine instructions, `sar` and `shr`, chosen at compile time.'
-# src: 两种右移对应两条不同的机器指令：`sar` 与 `shr`。类型在编译期就选定了其中之一。
+src_hash = '72bd5c11'
+text = 'Two instructions: `sar` and `shr` on x86-64, picked at compile time by the operand type.'
+# src: 两条不同的机器指令：x86-64 上是 `sar` 与 `shr`，由左操作数的类型在编译期选定。
 
 ['shift-kinds.notes.1']
-src_hash = 'cf5784cd'
+src_hash = '28a7ee42'
 text = '''
 
-The C standard leaves a right shift on a signed value to the implementation; compilers and platforms all use an arithmetic shift.
-Treating a right shift of a signed value as division by a power of two is inaccurate: an arithmetic shift rounds toward negative infinity, so `-1 >> 1` gives −1 rather than 0. Another common form converts to unsigned first and then shifts, to extract a high field — the same move as casting an address to `unsigned char *` at the start of this lecture: fix the rule of interpretation first, then take the value.
+The C standard leaves a right shift of a signed value to the implementation; actual compilers and platforms all use an arithmetic shift. Treating a right shift of a signed value as division by a power of two is inaccurate: an arithmetic shift rounds toward negative infinity, so `-1 >> 1` gives −1 rather than 0. Another common form converts to unsigned first and then shifts, to extract a high field; this is the same practice as casting an address to `unsigned char *` at the start of this lecture: fix the rule of interpretation first, then take the value. On arm64 the two instructions are `asr` and `lsr`; the command above selects the right one on either instruction set.
 '''
 # src:
 # 
 # C 标准把有符号数右移的行为留给实现，实际的编译器与平台一律采用算术右移。
 # 把有符号数右移当作除以 2 的幂是不准确的：算术右移向下取整，`-1 >> 1` 得 −1 而不是 0。
+# arm64 上这两条指令叫 `asr` 与 `lsr`，上面的命令在两种指令集上都能选出对应的那一条。
 # 另一处常见的写法是先转成无符号再右移，用于取出高位字段——这与本讲开头
 # 把地址转成 `unsigned char *` 是同一种做法：先选定解释规则，再取值。
 
@@ -1841,7 +1975,7 @@ text = 'The precedence of the bitwise operators'
 src_hash = '487278c0'
 text = '''
 
-The bitwise `&`, `^` and `|` bind ==less tightly== than the comparisons, and `<<` `>>` less tightly than addition. Both run against intuition and cause written errors.
+The bitwise operators `&`, `^` and `|` have <mark>lower</mark> precedence than the comparison operators, and the shift operators `<<` and `>>` have lower precedence than addition and subtraction. Both run against intuition and are a common source of written errors.
 '''
 # src:
 # 
@@ -2004,7 +2138,7 @@ text = 'The actual result of three expressions, and what the compiler says'
 
 ['precedence-in-practice.highlight.1']
 src_hash = '10eaded4'
-text = '`-Wall` catches all three; parentheses remain the recommendation.'
+text = '`-Wall` reports all three errors, but parenthesizing every expression that contains bitwise operators is still recommended.'
 # src: `-Wall` 能报出这三处错误，但建议含位运算的表达式一律加括号。
 
 ['precedence-in-practice.notes.1']
@@ -2050,7 +2184,7 @@ text = '`~(x & y) == ~x | ~y`'
 
 ['bit-identities.table.1.cell.1.2']
 src_hash = '05ce42e4'
-text = 'move a negation inside, or combine in reverse'
+text = 'move a negation inside or out'
 # src: 把取反移到括号内，或反向合并
 
 ['bit-identities.table.1.cell.2.1']
@@ -2065,7 +2199,7 @@ text = 'likewise'
 
 ['bit-identities.table.1.cell.3.0']
 src_hash = '63f5a538'
-text = 'Xor is self-inverse'
+text = 'Xor self-inverse'
 # src: 异或的自反性
 
 ['bit-identities.table.1.cell.3.1']
@@ -2075,7 +2209,7 @@ text = '`x ^ y ^ y == x`'
 
 ['bit-identities.table.1.cell.3.2']
 src_hash = '2a51c091'
-text = 'xoring twice restores the value; used in swaps'
+text = 'xor twice restores; swaps, checksums'
 # src: 同一个值异或两次还原，用于交换与校验
 
 ['bit-identities.table.1.cell.4.0']
@@ -2090,12 +2224,12 @@ text = '`~(x ^ y)`'
 
 ['bit-identities.table.1.cell.4.2']
 src_hash = 'c464039f'
-text = '1 where the bits agree; C has no operator'
+text = '1 where bits agree; no C operator'
 # src: 两位相同时得 1；C 无对应的运算符
 
 ['bit-identities.table.1.cell.5.0']
 src_hash = '4bad5bda'
-text = "Two's complement negation"
+text = 'Negation'
 # src: 补码取负
 
 ['bit-identities.table.1.cell.5.1']
@@ -2105,7 +2239,7 @@ text = '`-x == ~x + 1`'
 
 ['bit-identities.table.1.cell.5.2']
 src_hash = '8b40cf14'
-text = 'invert and add one, as in digital electronics'
+text = 'invert and add one'
 # src: 取反加一，与数字电子技术中的构造一致
 
 ['bit-identities.table.1.cell.6.0']
@@ -2120,7 +2254,7 @@ text = '`x & -x`'
 
 ['bit-identities.table.1.cell.6.2']
 src_hash = '88443f2c'
-text = 'keeps only the lowest 1, clearing the rest'
+text = 'keeps only the lowest 1'
 # src: 只保留最低的一位 1，其余清零
 
 ['bit-identities.table.1.cell.7.0']
@@ -2135,12 +2269,12 @@ text = '`x & (x - 1)`'
 
 ['bit-identities.table.1.cell.7.2']
 src_hash = '0d1349b4'
-text = 'in a loop, counts the number of 1 bits'
+text = 'loop counts the 1 bits'
 # src: 配合循环可数出 1 的个数
 
 ['bit-identities.highlight.1']
 src_hash = 'c15fae70'
-text = 'A law that holds for one bit holds for the whole word at once.'
+text = 'A law for one bit holds for the whole word.'
 # src: 位运算逐位独立，对一位成立的定律对整个字同时成立。
 
 ['bit-identities.notes.1']
@@ -2186,12 +2320,10 @@ text = 'The three fields of a floating-point number'
 ['float-structure.slide.1']
 src_hash = 'e755449a'
 text = '''
-
-A floating-point number is made of three fields — a **sign** $s$, an **exponent** $e$ and a **fraction** $f$ — with value
-$V = (-1)^s \times M \times 2^{E}$.
-- The exponent occupies $k$ bits and is read as $E = e - (2^{k-1}-1)$; the constant subtracted is called the **bias**
-- The fraction occupies $n$ bits, and when normalized $M = 1.f$, with the leading 1 fixed by the format and costing no bit
-- The two share a fixed total: the exponent width sets the ==range==, the fraction width the ==relative precision==
+A float has a **sign** $s$, an **exponent** $e$ and a **fraction** $f$: $V = (-1)^s \times M \times 2^{E}$.
+- The $k$-bit exponent gives $E = e - (2^{k-1}-1)$; the subtracted constant is the **bias**
+- The $n$-bit fraction gives $M = 1.f$ when normalized; the leading 1 costs no bit
+- Exponent width sets the <mark>range</mark>, fraction width the relative precision
 '''
 # src:
 # 
@@ -2203,7 +2335,7 @@ $V = (-1)^s \times M \times 2^{E}$.
 
 ['float-structure.aside.1']
 src_hash = 'f55e51d4'
-text = 'FP32 has a bias of 127; the 8-bit exponent field spans 0 to 255, which after the bias covers both directions.'
+text = "FP32's bias is 127; the 8-bit field 0–255 then covers both signs of $E$."
 # src: FP32 的偏置为 127，阶码字段的 8 位可以表示 0 到 255，减去偏置后覆盖正负两个方向。
 
 ['binary-scientific.title']
@@ -2214,11 +2346,10 @@ text = 'From binary scientific notation to the three fields'
 ['binary-scientific.slide.1']
 src_hash = 'a4aff951'
 text = '''
-
-Decimal scientific notation writes $d.ddd \times 10^{k}$; in binary it is $1.bbb \times 2^{E}$: write the number in binary and move the point past the leading 1.
-- The bits after the point are the fraction field $f$; the leading 1 costs no bit
-- $E$ plus the bias 127 goes into the exponent field $e$, so $e$ is never negative
-- Moving the point does not change the value, only how it is recorded
+**Binary scientific notation is $1.bbb \times 2^{E}$: write the number in binary and move the point after the highest 1; the shift is $E$.**
+- The bits after the point are the fraction $f$; the leading 1 costs no bit
+- $E$ plus bias 127 is stored in $e$, so $e$ is never negative
+- Moving the point changes only the record, not the value
 '''
 # src:
 # 
@@ -2229,13 +2360,13 @@ Decimal scientific notation writes $d.ddd \times 10^{k}$; in binary it is $1.bbb
 # - 移动小数点不改变数值，改变的只是记录方式
 
 ['binary-scientific.demo.1.name']
-src_hash = '5a0aabc7'
+src_hash = '66f14d3b'
 text = 'Four numbers, each through the three steps'
-# src: 四个数各自走一遍这三步
+# src: 四个数各自进行这三步
 
 ['binary-scientific.aside.1']
 src_hash = '158f469c'
-text = 'Check it: $6.5 = 110.1_2$, and moving the point two places gives $1.101_2 \times 2^2$, $e = 129$.'
+text = 'Check: $6.5 = 110.1_2 = 1.101_2 \times 2^2$, so $e = 127+2 = 129$.'
 # src: 可自行验算：$6.5 = 110.1_2$，小数点左移两位得 $1.101_2 \times 2^2$，$e = 127+2 = 129$。
 
 ['binary-scientific.notes.1']
@@ -2283,7 +2414,7 @@ text = 'What it covers'
 
 ['float-encoding.table.1.cell.1.0']
 src_hash = '74314b5b'
-text = 'neither all 0 nor all 1'
+text = 'not all 0 or all 1'
 # src: 非全 0 且非全 1
 
 ['float-encoding.table.1.cell.1.1']
@@ -2303,7 +2434,7 @@ text = '$1.f$'
 
 ['float-encoding.table.1.cell.1.4']
 src_hash = '9a1d9cb8'
-text = 'the vast majority of values'
+text = 'most values'
 # src: 绝大多数数值
 
 ['float-encoding.table.1.cell.2.0']
@@ -2328,7 +2459,7 @@ text = '$0.f$'
 
 ['float-encoding.table.1.cell.2.4']
 src_hash = 'edb8e373'
-text = 'zero, and values very close to it'
+text = 'zero and values near it'
 # src: 零，以及接近零的极小数
 
 ['float-encoding.table.1.cell.3.0']
@@ -2378,16 +2509,15 @@ text = '—'
 
 ['float-encoding.table.1.cell.4.4']
 src_hash = '384f3e3b'
-text = 'undefined results such as $0/0$'
+text = 'undefined, such as $0/0$'
 # src: $0/0$ 一类无定义的结果
 
 ['float-encoding.slide.1']
 src_hash = 'c95979b5'
 text = '''
-
-- Denormalized values drop the leading 1, keeping the representable values evenly spaced near zero and letting underflow happen gradually
-- $+0$ and $-0$ are two distinct bit patterns that compare equal as floating point
-- NaN compares false under `<`, `<=`, `>`, `>=` and `==`, and true under `!=`, so `x != x` is a test
+- Denormalized values drop the leading 1, so values near zero stay evenly spaced
+- $+0$ and $-0$ are distinct bit patterns that compare equal
+- NaN is false under `<` `<=` `>` `>=` `==` and true under `!=`, so `x != x` tests it
 '''
 # src:
 # 
@@ -2397,7 +2527,7 @@ text = '''
 
 ['float-encoding.highlight.1']
 src_hash = '723e2322'
-text = 'Both reserved codes taken, the 8-bit exponent spans −126 to 127.'
+text = 'Reserving all 0s and all 1s leaves exponents −126 to 127.'
 # src: 全 0 与全 1 被保留，8 位阶码的实际指数范围是 −126 到 127。
 
 ['float-encoding.notes.1']
@@ -2454,7 +2584,7 @@ text = 'The next representable value above several numbers'
 
 ['float-spacing-measured.highlight.1']
 src_hash = '330bbef4'
-text = 'Absolute precision falls with size; relative precision holds.'
+text = 'Absolute precision falls as the value grows, while relative precision stays constant.'
 # src: 绝对精度随数值增大而下降，相对精度保持不变。
 
 ['float-spacing-measured.notes.1']
@@ -2485,7 +2615,7 @@ src_hash = '6fef9ceb'
 text = '''
 
 - Above $2^{24}$ adjacent FP32 values differ by 2, so an odd number falls exactly midway between two representable values
-- At the midpoint the value whose last fraction bit is even is chosen, which is called ==round to nearest even==, so that error does not accumulate in one direction
+- At the midpoint the value whose last fraction bit is even is chosen, which is called <mark>round to nearest even</mark>, so that error does not accumulate in one direction
 - `0.1` is a repeating fraction in binary, and a finite format can only store an approximation
 '''
 # src:
@@ -2517,28 +2647,25 @@ text = 'A finite representation does not obey the laws of real arithmetic'
 # src: 有限位的表示不满足实数的运算律
 
 ['float-not-real.demo.1.name']
-src_hash = '1f80c1ff'
-text = 'Four examples'
-# src: 四个例子
+src_hash = '481bbba1'
+text = 'Three examples'
+# src: 三个例子
 
 ['float-not-real.slide.1']
-src_hash = 'd728473c'
+src_hash = '2a8f6c28'
 text = '''
-
-- An overflowed integer is still an integer; two positive values can multiply to a negative
-- Floating-point addition ==is not associative==: the order of the additions changes the result
+- Floating-point addition <mark>is not associative</mark>: the order of the additions changes the result
 - A finite decimal fraction may repeat in binary, and `0.1` and `0.2` are both rounded
 '''
 # src:
 # 
-# - 整数溢出后仍是一个整数，正数相乘可以得到负数
 # - 浮点加法<mark>不满足结合律</mark>：改变加法次序会改变结果
 # - 十进制的有限小数在二进制下可能是无限循环，`0.1` 与 `0.2` 都需要舍入
 
 ['float-not-real.highlight.1']
-src_hash = '3ec56d30'
-text = '`int` and `float` are finite approximations of infinite sets.'
-# src: `int`/`float` 都是有限位的近似，其运算不满足整数/实数的运算律。
+src_hash = 'd7d0fc75'
+text = '`float` is a finite-width approximation, and its operations do not obey the laws of real arithmetic.'
+# src: `float` 是有限位的近似，其运算不满足实数的运算律。
 
 ['precision-formats.title']
 src_hash = '5b35a562'
@@ -2548,11 +2675,10 @@ text = 'Low-precision floating-point formats'
 ['precision-formats.slide.1']
 src_hash = '49b7eaaa'
 text = '''
-
-The formats differ only in how the three fields divide the bits.
-- **BF16** has the same 8-bit exponent as FP32, hence the same range, with 16 fewer fraction bits
-- **FP16** has a 5-bit exponent and a maximum of 65504, so larger values overflow
-- **FP8** comes in E4M3 and E5M2, the first favouring precision and the second range
+The formats differ only in how the fields split the bits.
+- **BF16**: FP32's 8-bit exponent and range, 16 fewer fraction bits
+- **FP16**: 5-bit exponent, maximum 65504, large values overflow
+- **FP8**: E4M3 favours precision, E5M2 range
 '''
 # src:
 # 
@@ -2563,10 +2689,7 @@ The formats differ only in how the three fields divide the bits.
 
 ['precision-formats.slide.2']
 src_hash = '731c750a'
-text = '''
-
-Low precision discards the last few fraction bits, buying storage and memory traffic that fall in proportion to the bit width, along with higher multiply-add throughput. The premise is that the model's output quality is insensitive to the last fraction bits.
-'''
+text = 'Dropping low fraction bits cuts storage and memory traffic in proportion and speeds multiply-add, if output quality tolerates it.'
 # src:
 # 
 # 低精度舍弃尾数末尾的若干位，换来存储与访存量按位数同比例下降，以及更高的乘加吞吐。
@@ -2598,7 +2721,7 @@ text = 'Watching that truncation'
 src_hash = 'd47c0dea'
 text = '''
 
-The sign bit and exponent of the two lines are identical; the only difference is the 16 fraction bits that were cut. Converting between FP32 and BF16 therefore ==needs nothing but a shift==, with no recomputation of the exponent.
+The sign bit and exponent of the two lines are identical; the only difference is the 16 fraction bits that were cut. Converting between FP32 and BF16 therefore <mark>needs nothing but a shift</mark>, with no recomputation of the exponent.
 '''
 # src:
 # 
@@ -2616,6 +2739,45 @@ This also explains BF16's role in training: it has the same range as FP32, so ex
 # 这也解释了 BF16 在训练中的作用：与 FP32 范围一致，因此不需要 loss scaling
 # 一类的额外处理；代价是相对精度下降到约三位十进制有效数字。
 
+['fp16-classes.title']
+src_hash = '98eba115'
+text = 'FP16 encoding and subnormal numbers'
+# src: FP16 的编码与次规格化数
+
+['fp16-classes.demo.1.name']
+src_hash = 'aecc0495'
+text = 'Several bit patterns read as FP16'
+# src: 对若干个位模式按 FP16 解释
+
+['fp16-classes.slide.1']
+src_hash = 'c75f9a29'
+text = '''
+
+- 1 sign bit, 5 exponent bits, 10 fraction bits, bias 15; a normal value is $(-1)^s \times 1.f \times 2^{e-15}$
+- An all-zero exponent gives a <mark>subnormal number</mark> with no leading 1: $(-1)^s \times 0.f \times 2^{-14}$, i.e. $f \times 2^{-24}$
+- `0x03ff` is $1023 \times 2^{-24}$ and `0x0400` is $1024 \times 2^{-24}$, so neighbouring values still differ by $2^{-24}$ across the step from subnormal to normal; if an all-zero exponent used $-15$ instead, subnormals would reach only about $2^{-15}$ and $[2^{-15}, 2^{-14})$ would contain no representable value
+'''
+# src:
+# 
+# - 1 位符号、5 位阶码、10 位尾数，偏置为 15；规格化数的值为 $(-1)^s \times 1.f \times 2^{e-15}$
+# - 阶码全 0 为<mark>次规格化数</mark>，尾数不带前导的 1，值为 $(-1)^s \times 0.f \times 2^{-14}$，即 $f \times 2^{-24}$
+# - `0x03ff` 为 $1023 \times 2^{-24}$，`0x0400` 为 $1024 \times 2^{-24}$，从次规格化数到规格化数，相邻两值仍相差 $2^{-24}$；若阶码全 0 时指数取 $-15$，次规格化数最大只到约 $2^{-15}$，$[2^{-15}, 2^{-14})$ 内将没有可表示的值
+
+['fp16-classes.notes.1']
+src_hash = '6ca90cab'
+text = '''
+
+Subnormal numbers are the denormalized values with an all-zero exponent from the earlier table; the two names refer to the same class. The rules are those of FP32 with narrower fields: with an all-zero exponent $E$ is $1-15=-14$ rather than $-15$, so the last subnormal value meets the first normal value. The subnormal step is a fixed $2^{-24}$, so these values are evenly spaced in $[0, 2^{-14})$. The two classes with an all-one exponent match FP32: a zero fraction means infinity and a non-zero fraction means NaN. The program copies each bit pattern into a GCC `_Float16` variable and prints it as a float, so the decoding is done by the compiler.
+'''
+# src:
+# 
+# 次规格化数即前面表格中阶码全 0 的非规格化数，两个名称指同一类值。
+# 与 FP32 的规则相同，只是字段宽度不同：阶码全 0 时 $E$ 取 $1-15=-14$ 而非 $-15$，
+# 使次规格化数的最后一个值与规格化数的第一个值首尾相接。次规格化数的步长是固定的
+# $2^{-24}$，因此它们在 $[0, 2^{-14})$ 内等距分布。
+# 阶码全 1 的两类与 FP32 相同：尾数为 0 表示无穷，尾数非 0 表示 NaN。
+# 程序把位模式复制进 GCC 的 `_Float16` 变量再按浮点数输出，解码由编译器完成。
+
 ['range-and-precision.title']
 src_hash = 'ee384c82'
 text = 'Range and precision are independent'
@@ -2629,10 +2791,9 @@ text = 'One value in three formats'
 ['range-and-precision.slide.1']
 src_hash = 'b97b203a'
 text = '''
-
-- 100000 exceeds the range of FP16 and gives `inf`; BF16's wider exponent represents it
-- $1/3$ is closer to its true value in FP16, which has 3 more fraction bits than BF16
-- Training gradients span a wide range, favouring BF16; inference is narrower, FP16 usable
+- 100000 exceeds FP16 and gives `inf`; BF16's wider exponent holds it
+- $1/3$ is closer in FP16, which has 3 more fraction bits
+- Training gradients span a wide range and favour BF16; inference fits FP16
 '''
 # src:
 # 
@@ -2642,7 +2803,7 @@ text = '''
 
 ['range-and-precision.highlight.1']
 src_hash = 'dd379ce6'
-text = 'Exponent width sets the range; fraction width the precision.'
+text = 'Exponent bits set range; fraction bits set precision.'
 # src: 阶码位数决定范围，尾数位数决定相对精度。
 
 ['range-and-precision.notes.1']
@@ -2766,8 +2927,8 @@ text = 'the common choice for local inference'
 src_hash = '8f39efc8'
 text = '''
 
-- 4-bit quantization costs ==4.5== bits per weight rather than 4: the 4 bits are the code itself, and the other 0.5 is each weight's share of the FP16 scale shared by every 32 weights (2 bytes ÷ 32 weights = 0.5 bits)
-- Generating one token requires reading every parameter once, so the bit width of the format sets the ==memory traffic== in proportion
+- 4-bit quantization costs <mark>4.5</mark> bits per weight rather than 4: the 4 bits are the code itself, and the other 0.5 is each weight's share of the FP16 scale shared by every 32 weights (2 bytes ÷ 32 weights = 0.5 bits)
+- Generating one token requires reading every parameter once, so the bit width of the format sets the <mark>memory traffic</mark> in proportion
 '''
 # src:
 # 
@@ -2816,10 +2977,7 @@ text = 'Why quantize: memory traffic per token'
 
 ['why-quantize.slide.1']
 src_hash = '345743a0'
-text = '''
-
-Autoregressive generation reads every weight into the compute units once per token produced. The bits a weight occupies set what that read costs.
-'''
+text = 'Each generated token reads all weights into the compute units once; the bits per weight set the bytes read.'
 # src:
 # 
 # 自回归生成每产生一个 token，都要把全部权重读进运算单元一次。权重用多少位存放，直接决定这一次读多少字节。
@@ -2831,17 +2989,17 @@ text = 'Format'
 
 ['why-quantize.table.1.cell.0.1']
 src_hash = '961276bb'
-text = 'Size at 1.24 B parameters'
+text = 'Size, 1.24 B params'
 # src: 1.24 B 参数的体积
 
 ['why-quantize.table.1.cell.0.2']
 src_hash = '75b451e3'
-text = 'Ceiling at 89.6 GB/s'
+text = 'At 89.6 GB/s'
 # src: 89.6 GB/s 下的上限
 
 ['why-quantize.table.1.cell.0.3']
 src_hash = '79fa0b2a'
-text = 'Ceiling at 1008 GB/s'
+text = 'At 1008 GB/s'
 # src: 1008 GB/s 下的上限
 
 ['why-quantize.table.1.cell.1.0']
@@ -2907,9 +3065,8 @@ text = '1450 token/s'
 ['why-quantize.slide.2']
 src_hash = 'c8b3ce18'
 text = '''
-
-- 89.6 GB/s is dual-channel DDR5-5600 at peak; 1008 GB/s is the RTX 4090's memory
-- Serving one request at a time, each weight takes part in a single multiply-add: about one operation per byte read
+- 89.6 GB/s is dual-channel DDR5-5600; 1008 GB/s is RTX 4090 video memory
+- With one request, each weight joins one multiply-add: about one operation per byte read
 '''
 # src:
 # 
@@ -2918,7 +3075,7 @@ text = '''
 
 ['why-quantize.highlight.1']
 src_hash = '7a574224'
-text = 'Bound by memory traffic, the bit width sets the token rate.'
+text = 'Single-request inference is memory-bound: weight width sets the speed.'
 # src: 单请求推理的瓶颈在访存，权重的位数几乎线性地决定生成速度。
 
 ['why-quantize.notes.1']
@@ -2943,16 +3100,15 @@ text = 'Memory-bound behaviour measured: encoder against decoder'
 
 ['memory-bound-measured.image.1.footnote.1']
 src_hash = '9f236d01'
-text = 'Figure from Gholami et al., AI and Memory Wall (IEEE Micro 2024), panels 3(b) and 3(d), CC BY 4.0; the two panels were joined side by side after removing their titles.'
+text = 'From Gholami et al., AI and Memory Wall (IEEE Micro 2024), panels 3(b), 3(d), CC BY 4.0; titles removed, joined.'
 # src: 图片来自 Gholami et al., AI and Memory Wall（IEEE Micro 2024）图 3(b)(d)，CC BY 4.0；裁去两幅子图的标题后横向拼合。
 
 ['memory-bound-measured.slide.1']
 src_hash = '906302df'
 text = '''
-
-- The left panel is the memory traffic of one forward pass, the right the latency of the same pass, both measured on a single request
-- From 128 to 4096, GPT-2's memory traffic grows 45.7× and its latency 52.1×
-- At the same length 4096, BERT-Base and GPT-2 do comparable amounts of arithmetic, yet the latencies are 84 and 2344
+- Left: memory traffic of one forward pass; right: its latency, single request
+- From 128 to 4096, GPT-2 traffic grows 45.7×, latency 52.1×
+- At 4096, BERT-Base and GPT-2 compute similar amounts; latency 84 vs 2344
 '''
 # src:
 # 
@@ -2962,7 +3118,7 @@ text = '''
 
 ['memory-bound-measured.highlight.1']
 src_hash = '939e9d8a'
-text = 'Comparable arithmetic, 28× the latency: latency follows traffic.'
+text = 'Similar compute, 28× latency gap: latency follows memory traffic.'
 # src: 计算量相近而时延相差 28 倍，时延跟随的是访存量。
 
 ['memory-bound-measured.notes.1']
@@ -2987,10 +3143,7 @@ text = 'What gets quantized: weights, activations and the KV cache'
 
 ['what-to-quantize.slide.1']
 src_hash = '9a7c42d4'
-text = '''
-
-==Activations== are what each layer computes in a forward pass, changing with every input; the ==KV cache== holds the key and value stored for each token already generated.
-'''
+text = '<mark>Activations</mark> are per-layer intermediate results that change with each input; the KV cache stores attention keys and values per token and grows with the context.'
 # src:
 # 
 # <mark>激活值</mark>是前向计算中每一层算出的中间结果，随每次输入而变；<mark>KV 缓存</mark>是注意力为已生成的每个 token 保存的一份键与值，供后续 token 反复读取，随上下文增长。
@@ -3002,17 +3155,17 @@ text = 'Object'
 
 ['what-to-quantize.table.1.cell.0.1']
 src_hash = 'a22bb45b'
-text = 'When it is fixed'
+text = 'Fixed when'
 # src: 何时确定
 
 ['what-to-quantize.table.1.cell.0.2']
 src_hash = '6f673d09'
-text = 'When it is quantized'
+text = 'Quantized when'
 # src: 量化的时机
 
 ['what-to-quantize.table.1.cell.0.3']
 src_hash = '5c9e570a'
-text = 'Common width'
+text = 'Width'
 # src: 常见位宽
 
 ['what-to-quantize.table.1.cell.1.0']
@@ -3022,12 +3175,12 @@ text = 'Weights'
 
 ['what-to-quantize.table.1.cell.1.1']
 src_hash = '3a44b532'
-text = 'unchanged once training ends'
+text = 'after training'
 # src: 训练结束后不再变化
 
 ['what-to-quantize.table.1.cell.1.2']
 src_hash = 'e2f977d7'
-text = 'once, offline, and stored in the file'
+text = 'offline, in the file'
 # src: 离线做一次，存进文件
 
 ['what-to-quantize.table.1.cell.1.3']
@@ -3042,12 +3195,12 @@ text = 'Activations'
 
 ['what-to-quantize.table.1.cell.2.1']
 src_hash = 'b524838d'
-text = 'changes with every input'
+text = 'per input'
 # src: 随每次输入变化
 
 ['what-to-quantize.table.1.cell.2.2']
 src_hash = '44748fa1'
-text = 'at run time, tensor by tensor'
+text = 'run time, per tensor'
 # src: 运行时逐张量做
 
 ['what-to-quantize.table.1.cell.2.3']
@@ -3062,26 +3215,25 @@ text = 'KV cache'
 
 ['what-to-quantize.table.1.cell.3.1']
 src_hash = 'cfb1d078'
-text = 'grows with the context'
+text = 'grows with context'
 # src: 随上下文增长
 
 ['what-to-quantize.table.1.cell.3.2']
 src_hash = 'a2984025'
-text = 'at run time, token by token'
+text = 'run time, per token'
 # src: 运行时逐 token 做
 
 ['what-to-quantize.table.1.cell.3.3']
 src_hash = '8c18154a'
-text = 'mostly 8 bits'
+text = 'often 8 bits'
 # src: 8 位居多
 
 ['what-to-quantize.slide.2']
 src_hash = '68553151'
 text = '''
-
-- Weights are static: quantize once, and an error affects only that one conversion
-- Activation ranges vary with the input: coefficients found at run time, errors accumulate
-- `W4A16` means 4-bit weights and 16-bit activations, the most common local combination
+- Weights are static: one conversion, error once, so they reached 4 bits first
+- Activation ranges vary, so coefficients are computed at run time and error accumulates
+- `W4A16` means 4-bit weights, 16-bit activations, common for local inference
 '''
 # src:
 # 
@@ -3091,7 +3243,7 @@ text = '''
 
 ['what-to-quantize.highlight.1']
 src_hash = '3d130c06'
-text = 'Today covers weights only, which is also all the file holds.'
+text = 'This lecture quantizes weights only.'
 # src: 本节只讨论权重的量化，文件里存的也只有权重。
 
 ['what-to-quantize.notes.1']
@@ -3114,11 +3266,10 @@ text = 'Quantization: approximating a set of floats with integer codes'
 ['quantization-idea.slide.1']
 src_hash = '8a852c60'
 text = '''
-
-Divide the range of a group of weights into equally spaced levels, and record for each weight ==the index of the level nearest to it==.
-- A 4-bit code gives 16 levels, and one group shares a single scale $d$
-- Reconstruction computes $w \approx (q - 8) \cdot d$, where $q$ is the code
-- Away from the saturating end, a single weight errs by no more than half a step, and the step is proportional to the group's range
+Split a group's range into equal levels and store <mark>the index of the nearest level</mark>.
+- A 4-bit code gives 16 levels; a group shares one scale $d$
+- Reconstruction: $w \approx (q - 8) \cdot d$, with code $q$
+- Except at saturation, error is at most half a step, proportional to the range
 '''
 # src:
 # 
@@ -3147,10 +3298,7 @@ text = 'Quantization is an affine map'
 
 ['quantization-map.slide.1']
 src_hash = '8a423c08'
-text = '''
-
-A group of weights shares two floating-point parameters: a step $d$ and an offset $m$. The code $q$ is a 4-bit unsigned integer, and reconstruction computes $\hat{w} = d \cdot q + m$.
-'''
+text = 'A group shares a step $d$ and offset $m$; the 4-bit unsigned code $q$ gives $\hat{w} = d \cdot q + m$.'
 # src:
 # 
 # 一组权重共用两个浮点参数：步长 $d$ 与偏移 $m$。编码 $q$ 是一个 4 位无符号整数，还原时按 $\hat{w} = d \cdot q + m$ 计算。
@@ -3158,10 +3306,9 @@ A group of weights shares two floating-point parameters: a step $d$ and an offse
 ['quantization-map.slide.2']
 src_hash = '6ead2820'
 text = '''
-
-- **Group**: how many weights share one pair $d$ and $m$ — the granularity
-- **Levels**: how many bits the code occupies; 4 bits give 16 levels
-- **Offset**: $m = 0$ is ==symmetric quantization==; $m$ at the group's minimum is ==affine==
+- **Group**: how many weights share $d$ and $m$, the granularity
+- **Levels**: code bits; 4 bits give 16 levels
+- **Offset**: $m = 0$ is <mark>symmetric</mark>; $m$ = group minimum is affine quantization
 '''
 # src:
 # 
@@ -3171,20 +3318,14 @@ text = '''
 
 ['quantization-map.slide.3']
 src_hash = '4ed3697a'
-text = '''
-
-Once those three are settled, quantization is one division and one rounding, with an error of no more than half a step.
-'''
+text = 'Then quantization is a division and a rounding, error at most half a step.'
 # src:
 # 
 # 在这三项都定下来之后，量化本身只是一次除法与一次舍入，误差不超过半个步长。
 
 ['quantization-map.aside.1']
 src_hash = '5f48c6ab'
-text = '''
-
-Symmetric quantization needs no separate formula: with $m = -8d$, codes 0 through 15 denote $-8$ through $7$ steps. The difference is only whether $m$ is stored separately and chosen independently.
-'''
+text = 'Symmetric is $m = -8d$: codes 0–15 mean $-8$ to $7$ steps; only whether $m$ is stored differs.'
 # src:
 # 
 # 对称量化并不需要另一套式子：$m$ 取 $-8d$ 时，编码 0 到 15 就表示 $-8$ 到 $7$ 个步长，
@@ -3192,7 +3333,7 @@ Symmetric quantization needs no separate formula: with $m = -8d$, codes 0 throug
 
 ['quantization-map.highlight.1']
 src_hash = '5ceaa647'
-text = 'Every difference between formats lies in those three choices.'
+text = 'Every quantization choice, and every format difference, is in these three.'
 # src: 量化的全部选择都在这三项上，格式之间的差别也在这三项上。
 
 ['quantization-map.notes.1']
@@ -3220,7 +3361,7 @@ text = '''
 - Every 32 weights form a group sharing one FP16 scale, occupying 2 bytes
 - The 32 four-bit codes pack into 16 bytes, two weights to a byte
 - The 16 codes denote $-8$ through $7$, asymmetric at the two ends just like two's complement
-- 18 bytes in all, an average of ==4.5 bits== per weight; 3.21 B parameters come to about 1.8 GB
+- 18 bytes in all, an average of <mark>4.5 bits</mark> per weight; 3.21 B parameters come to about 1.8 GB
 '''
 # src:
 # 
@@ -3262,7 +3403,7 @@ text = 'Reading and writing 4-bit data: masks and shifts'
 src_hash = '12325d7c'
 text = '''
 
-The byte is the smallest addressable unit, so 4-bit data has no address of its own and ==must be packed two to a byte==.
+The byte is the smallest addressable unit, so 4-bit data has no address of its own and <mark>must be packed two to a byte</mark>.
 '''
 # src:
 # 
@@ -3289,10 +3430,7 @@ text = 'Arithmetic after packing: each field needs its own overflow'
 
 ['nibble-add.slide.1']
 src_hash = '2fc039a1'
-text = '''
-
-The two 4-bit fields in a byte are each a number of their own. Adding directly lets the carry out of the low field cross bit 3 into the high field.
-'''
+text = 'Two 4-bit fields share a byte; direct addition carries from the low field across bit 3 into the high one.'
 # src:
 # 
 # 一个字节里的两个 4 位字段各自是一个数。直接相加时，低位字段的进位会越过第 3 位加到高位字段上。
@@ -3300,10 +3438,9 @@ The two 4-bit fields in a byte are each a number of their own. Adding directly l
 ['nibble-add.slide.2']
 src_hash = 'd9fe3b78'
 text = '''
-
-- `& 0x77` clears each field's top bit, so the carry stops inside the field
-- `(a ^ b) & 0x88` restores the two cleared bits with an xor, which produces no carry
-- An overflow of the high field's bit 3 is discarded at the byte boundary
+- `& 0x77` clears each field's top bit; the low three bits carry at most into bit 3
+- `(a ^ b) & 0x88` restores those bits by xor, which does not carry
+- Overflow out of the high field's bit 3 is dropped and stays in the byte
 '''
 # src:
 # 
@@ -3313,7 +3450,7 @@ text = '''
 
 ['nibble-add.highlight.1']
 src_hash = '7985373d'
-text = 'The carry out of the low field must stop at the field boundary.'
+text = "The low field's carry must stay out of the high field."
 # src: 低位字段的进位必须停在字段边界内，不能计入高位字段。
 
 ['nibble-add.notes.1']
@@ -3336,10 +3473,7 @@ text = 'Aside: hardware support for 4-bit arithmetic'
 
 ['int4-hardware.slide.1']
 src_hash = 'efb5b99f'
-text = '''
-
-Matrix multiplication has dedicated units: each 4-bit number is taken out separately to be multiplied, and the products are added one by one into a single 32-bit register called the ==accumulator==.
-'''
+text = 'Matrix multiply units take each 4-bit number out to multiply and add the products into a 32-bit <mark>accumulator</mark>.'
 # src:
 # 
 # 矩阵乘有专门的运算单元：每个 4 位数单独取出来参与乘法，乘积逐个加进同一个 32 位寄存器，这个寄存器称为<mark>累加器</mark>（accumulator）。
@@ -3347,8 +3481,9 @@ Matrix multiplication has dedicated units: each 4-bit number is taken out separa
 ['int4-hardware.slide.2']
 src_hash = 'e78f6381'
 text = '''
-
-- The two 4-bit numbers no longer share a byte; each goes into the multiplier on its own, and a carry has nowhere to cross to
+- The numbers no longer share a byte, so no carry can cross
+- 4-bit products reach 64; 32 of them sum to at most 2048, which fits in 32 bits
+- Turing (2018) Tensor Cores provide these; element-wise 4-bit add uses the previous page
 '''
 # src:
 # 
@@ -3358,7 +3493,7 @@ text = '''
 
 ['int4-hardware.highlight.1']
 src_hash = '8677febd'
-text = 'Weights are stored in 4 bits; the accumulator is 32 bits wide.'
+text = '4 bits is storage; arithmetic uses a 32-bit accumulator.'
 # src: 4 位是权重的存放格式，运算在 32 位的累加器里完成。
 
 ['int4-hardware.notes.1']
@@ -3388,9 +3523,8 @@ text = 'Granularity: how many weights share one scale'
 ['granularity.slide.1']
 src_hash = 'c8197254'
 text = '''
-
-- The coefficient occupies space of its own: the extra bits per weight = the bits of the coefficient ÷ the size of the group, and an fp16 spread over 32 weights comes to 0.5 bits
-- The smaller the group, the narrower the range within it and the smaller the step; the cost is a larger share for the coefficient
+- Coefficients cost bits: extra bits per weight = coefficient bits ÷ group size; fp16 over 32 is 0.5
+- Smaller groups give narrower ranges and smaller steps, but coefficients cost more
 '''
 # src:
 # 
@@ -3436,7 +3570,7 @@ The weights are the 4096 values of `ffn_down` in layer 0 of Llama-3.2-1B. `rel.r
 
 ['granularity-measured.highlight.1']
 src_hash = '318aaeef'
-text = 'Half a bit more takes the relative error from 13.5% to 8.4%.'
+text = 'Spending 0.5 more bits to narrow the granularity to 32 lowers the relative error from 13.5% to 8.4%.'
 # src: 多花 0.5 位把粒度收到 32，相对误差从 13.5% 降到 8.4%。
 
 ['granularity-measured.notes.1']
@@ -3480,10 +3614,9 @@ text = 'Q4_1: the levels need not be symmetric about 0'
 ['zero-point.slide.1']
 src_hash = '165a42cb'
 text = '''
-
-- The step of symmetric quantization is set by the weight of largest absolute value in the group, so the further a group lies from 0 the larger the step
-- Q4_1 stores an fp16 minimum as well, so the step follows the width of the data itself and all 16 levels land on the data
-- 20 bytes per block, an average of ==5.0 bits==
+- The symmetric step follows the largest magnitude, so groups far from 0 get large steps
+- Q4_1 also stores an fp16 minimum, so all 16 levels span the data
+- 20 bytes per block, <mark>5.0 bits</mark> on average
 '''
 # src:
 # 
@@ -3493,7 +3626,7 @@ text = '''
 
 ['zero-point.highlight.1']
 src_hash = '7af696f7'
-text = 'Symmetric quantization may leave half its 16 levels unused.'
+text = 'Symmetric levels span [−max, max]; half may hold no data.'
 # src: 对称量化把 16 个级摊在 [−max, max] 上，其中一半可能没有数据。
 
 ['zero-point.notes.1']
@@ -3532,7 +3665,7 @@ These 2048 values are all positive with a mean of 2.35. Half a bit more to recor
 
 ['q4-1-measured.highlight.1']
 src_hash = 'b1b03f52'
-text = 'Here granularity hardly helps; releasing the offset does.'
+text = 'On this data, finer granularity barely helps; allowing an offset does.'
 # src: 这组数据上，缩小粒度几乎没有用，把偏移放开才有用。
 
 ['q4-1-measured.notes.1']
@@ -3556,10 +3689,9 @@ text = 'Q4_K: two-level scaling and the superblock'
 ['superblock.slide.1']
 src_hash = 'fc1a3845'
 text = '''
-
-- Each of the 8 sub-blocks has its own step and offset, 16 coefficients in all, which preserves how closely Q4_1 fits
-- Each of those 16 coefficients is quantized to 6 bits, occupying 12 bytes in total
-- Reconstruction computes $\hat{w} = d \cdot sc \cdot q - d_{min} \cdot m$, where $sc$ and $m$ are that sub-block's two 6-bit coefficients
+- 8 sub-blocks each keep a step and offset, 16 coefficients, fitting like Q4_1
+- Each coefficient takes 6 bits, 12 bytes in total
+- $\hat{w} = d \cdot sc \cdot q - d_{min} \cdot m$, with the sub-block's 6-bit $sc$ and $m$
 '''
 # src:
 # 
@@ -3569,7 +3701,7 @@ text = '''
 
 ['superblock.highlight.1']
 src_hash = '30aba1f3'
-text = 'Work it out: how many bits per weight does Q4_K average?'
+text = 'Exercise: average bits per weight of Q4_K, compared with Q4_1?'
 # src: 算一算：Q4_K 布局下平均每权重占用多少位，与 Q4_1 相差多少？
 
 ['superblock.notes.1']
@@ -3627,7 +3759,7 @@ text = '`scales`'
 
 ['q4-k-budget.table.1.cell.2.1']
 src_hash = '7d58277e'
-text = '8 six-bit steps and 8 six-bit offsets, 16 × 6 = 96 bits'
+text = '8 steps and 8 offsets, 16 × 6 = 96 bits'
 # src: 8 个 6 位步长与 8 个 6 位偏移，16 × 6 = 96 位
 
 ['q4-k-budget.table.1.cell.2.2']
@@ -3642,7 +3774,7 @@ text = '`d`, `dmin`'
 
 ['q4-k-budget.table.1.cell.3.1']
 src_hash = '1b01e785'
-text = 'two fp16 values, the common scales of the 16 six-bit coefficients'
+text = 'two fp16 scales for the 6-bit coefficients'
 # src: 两个 fp16，16 个 6 位系数的公共缩放
 
 ['q4-k-budget.table.1.cell.3.2']
@@ -3668,10 +3800,9 @@ text = '144'
 ['q4-k-budget.slide.1']
 src_hash = '99555f28'
 text = '''
-
-- 144 × 8 ÷ 256 = ==4.5 bits per weight==, the same as Q4_0
-- Storing those 16 coefficients as fp16 would make the superblock 128 + 32 = 160 bytes, or 5.0 bits per weight, the same as Q4_1
-- The 16-byte difference comes entirely from compressing the 16 coefficients from 16 bits to 6
+- 144 × 8 ÷ 256 = <mark>4.5 bits per weight</mark>, as in Q4_0
+- With fp16 coefficients: 128 + 32 = 160 bytes, 5.0 bits, as in Q4_1
+- The 16-byte gap comes from 16-bit → 6-bit coefficients
 '''
 # src:
 # 
@@ -3681,7 +3812,7 @@ text = '''
 
 ['q4-k-budget.highlight.1']
 src_hash = 'ea4ef826'
-text = "Quantizing the coefficients fits Q4_1's fit into Q4_0's size."
+text = "Quantized coefficients give Q4_1's fit at Q4_0's size."
 # src: 系数本身也被量化，Q4_1 的贴合程度因此落进了 Q4_0 的体积。
 
 ['q4-k-budget.notes.1']
@@ -3704,10 +3835,9 @@ text = 'Q4_K: the byte representation of the 6-bit coefficients'
 ['k-scales-layout.slide.1']
 src_hash = 'a2672433'
 text = '''
-
-16 × 6 = 96 bits, exactly 12 bytes. The first 8 bytes each hold one complete 6-bit value, and the two bits left over are lent to the upper halves of the last 4 values.
-- 6 does not divide 8, so filling 12 bytes requires storing some values across a byte boundary
-- The last 4 scales and the last 4 minimums are therefore each split in two, with the upper 2 bits and the lower 4 bits in different bytes
+16 × 6 = 96 bits = 12 bytes. The first 8 bytes hold one 6-bit value each; their spare 2 bits hold the tops of the last 4 values.
+- 6 does not divide 8, so some values straddle bytes
+- The last 4 scales and 4 minimums split: upper 2 bits and lower 4 in different bytes
 '''
 # src:
 # 
@@ -3752,7 +3882,7 @@ text = '''
 
 ['k-scales-code.highlight.1']
 src_hash = 'ae961c97'
-text = '`& 63` takes the low six bits, `>> 6` the two lent bits.'
+text = '`& 63` takes the low six bits, `>> 6` takes the two lent bits, and `<< 4` moves them back to the upper half.'
 # src: `& 63` 取低六位，`>> 6` 取借出的两位，`<< 4` 把它移回高半段。
 
 ['k-scales-code.notes.1']
@@ -3912,10 +4042,7 @@ text = 'Q4_K_M: several formats in one weight file'
 
 ['mixed-recipe.slide.1']
 src_hash = '34416661'
-text = '''
-
-The table is the actual composition of the 1.9 GB file `ollama pull llama3.2` fetched in lecture 1.
-'''
+text = 'The composition of the 1.9 GB file from `ollama pull llama3.2` in lecture 1.'
 # src:
 # 
 # 下表是第一讲用 `ollama pull llama3.2` 取到的那个 1.9 GB 文件的实际组成。
@@ -3927,7 +4054,7 @@ text = 'Tensor'
 
 ['mixed-recipe.table.1.cell.0.1']
 src_hash = 'aecccf8b'
-text = 'Share of parameters'
+text = 'Parameters'
 # src: 占参数量
 
 ['mixed-recipe.table.1.cell.0.2']
@@ -3937,7 +4064,7 @@ text = 'Format'
 
 ['mixed-recipe.table.1.cell.0.3']
 src_hash = 'f4ebc329'
-text = 'Bits per weight'
+text = 'Bits'
 # src: 位/权重
 
 ['mixed-recipe.table.1.cell.1.0']
@@ -3962,7 +4089,7 @@ text = '6.56'
 
 ['mixed-recipe.table.1.cell.2.0']
 src_hash = 'c83d2edb'
-text = '`attn_v` and `ffn_down` of some layers'
+text = 'some `attn_v`, `ffn_down`'
 # src: 部分层的 `attn_v`、`ffn_down`
 
 ['mixed-recipe.table.1.cell.2.1']
@@ -3982,12 +4109,12 @@ text = '6.56'
 
 ['mixed-recipe.table.1.cell.3.0']
 src_hash = '32410f85'
-text = 'the remaining weight matrices'
+text = 'other matrices'
 # src: 其余权重矩阵
 
 ['mixed-recipe.table.1.cell.3.1']
 src_hash = 'e255759f'
-text = 'the great majority'
+text = 'most'
 # src: 绝大多数
 
 ['mixed-recipe.table.1.cell.3.2']
@@ -4002,7 +4129,7 @@ text = '4.50'
 
 ['mixed-recipe.table.1.cell.4.0']
 src_hash = '70c68903'
-text = 'normalization coefficients'
+text = 'normalization'
 # src: 归一化系数
 
 ['mixed-recipe.table.1.cell.4.1']
@@ -4023,9 +4150,8 @@ text = '32'
 ['mixed-recipe.slide.2']
 src_hash = '73cf44d6'
 text = '''
-
-- A weighted average of ==5.01 bits==: 2.02 GB = 1.88 GiB, the 1.9G of lecture 1
-- The tensors raised to 6 bits are those where the error matters most; the rest stay at 4
+- Average <mark>5.01 bits</mark>: 3.21 B params → 2.02 GB = 1.88 GiB, the 1.9G of `ls -lh`
+- Tensors most sensitive to error get 6 bits; the rest stay at 4
 '''
 # src:
 # 
@@ -4034,7 +4160,7 @@ text = '''
 
 ['mixed-recipe.highlight.1']
 src_hash = '26426f7a'
-text = "A recipe's freedom is choosing a format for each tensor."
+text = 'A recipe chooses a format per tensor.'
 # src: 配方的自由度在于为每个张量单独选择格式。
 
 ['mixed-recipe.notes.1']
@@ -4091,7 +4217,7 @@ text = 'Extension: linear quantization and what lies beyond it'
 src_hash = '5a639673'
 text = '''
 
-The Q4_0 of this section is the most basic form: the levels are evenly spaced over the range and one group shares a single scale, which is called ==linear quantization==. The methods used in practice are more elaborate in four directions.
+The Q4_0 of this section is the most basic form: the levels are evenly spaced over the range and one group shares a single scale, which is called <mark>linear quantization</mark>. The methods used in practice are more elaborate in four directions.
 '''
 # src:
 # 
@@ -4101,10 +4227,10 @@ The Q4_0 of this section is the most basic form: the levels are evenly spaced ov
 src_hash = 'c39b0bb9'
 text = '''
 
-- **Zero point**: Q4_0's levels are symmetric about 0, while Q4_1 stores a minimum and the levels shift toward the interval the weights occupy
-- **Grouping**: Q4_K divides 256 weights into 8 sub-blocks with their own scale and minimum, themselves quantized
-- **Calibration**: GPTQ chooses levels from a layer-wise second-order error, AWQ scales by activation importance first
-- **Non-uniform**: NF4 takes its levels at the quantiles of a normal distribution, unevenly spaced
+- **Zero point**: Q4_0's levels are symmetric about 0, while Q4_1 stores a minimum as well, so the levels can shift toward the interval the weights actually occupy
+- **Grouping**: Q4_K divides every 256 weights into 8 sub-blocks, each with its own scale and minimum, and these coefficients are themselves quantized
+- **Calibration**: GPTQ chooses levels by a layer-wise second-order error, and AWQ first scales by activation importance and then quantizes
+- **Non-uniform**: NF4 takes its levels at the quantiles of a normal distribution, unevenly spaced, for weights that are close to normal
 '''
 # src:
 # 
@@ -4115,7 +4241,7 @@ text = '''
 
 ['quantization-methods.highlight.1']
 src_hash = '82a989db'
-text = 'Linear quantization uses one scale; the rest relax that.'
+text = 'Linear quantization divides the range evenly with a single scale; the other methods each relax this rule.'
 # src: 线性量化只用一个缩放系数把区间等分，其余方法都在放宽这一条。
 
 ['quantization-methods.notes.1']
@@ -4166,7 +4292,7 @@ text = '''
 
 ['lab-preview.highlight.1']
 src_hash = 'e3e13d0e'
-text = 'The framework is given; reading, packing and quantizing are not.'
+text = 'The framework is provided by the TAs; what students write themselves is reading bits, assembling bits, and quantizing.'
 # src: 框架由助教提供，需要自己写的是读位、拼位与量化这几步。
 
 ['lab-preview.notes.1']
@@ -4185,7 +4311,7 @@ The lab instructions are distributed separately. The model file is 4.25 GB under
 
 ['summary.title']
 src_hash = '1f7f8405'
-text = 'Summary of this lecture'
+text = 'Summary'
 # src: 本节小结
 
 ['summary.slide.1']
@@ -4222,10 +4348,7 @@ text = 'Before reading a run of bytes, settle which rule to read them by.'
 
 ['summary.notes.1']
 src_hash = '8cc177b2'
-text = '''
-
-These four together are all the conventions needed to read 1.9 GB of bytes as a model. One more sentence can connect them to what follows: in machine-level programs immediate values and addresses are likewise stored little-endian; in the memory hierarchy the bit width of the data directly sets the memory traffic per token; and the object files that linking and dynamic loading handle are equally byte sequences with a specification, approached the same way.
-'''
+text = 'These four together are all the conventions needed to read 1.9 GB of bytes as a model. One more sentence can connect them to what follows: in machine-level programs immediate values and addresses are likewise stored little-endian; in the memory hierarchy the bit width of the data directly sets the memory traffic per token; and the object files that linking and dynamic loading handle are equally byte sequences with a specification, approached the same way.'
 # src:
 # 
 # 这四条合起来就是把 1.9 GB 字节读成一个模型所需的全部约定。

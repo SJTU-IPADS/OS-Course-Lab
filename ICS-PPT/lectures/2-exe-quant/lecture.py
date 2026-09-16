@@ -1,12 +1,12 @@
-"""ICS 习题课一：把 Q4_0 写出来。
+"""ICS 习题课一：实现 Q4_0 量化。
 
-结构安排：一次课的时间写完 `nano-quant` 的 A 部分与 Q4_0。第一部分把实验
-对象打开——第二讲的正课只说过这个权重文件有多大，本节把它的 625 个张量、
-一层的形状与字节账目逐项读出来，作为后面所有讨论的对象；第二部分说明框架
-的分工；第三、四部分逐个写完六个函数；第五部分对自查的六行输出。
+结构安排：一次课的时间写完 `nano-quant` 的 A 部分与 Q4_0。第一部分介绍实验
+对象：第二讲的正课只给出了这个权重文件的大小，本节把它的 625 个张量、
+一层的形状与字节数逐项读出，作为后面所有讨论的对象；第二部分说明框架
+的分工；第三、四部分逐个写完六个函数；第五部分核对自查的六行输出。
 
-配套材料：题面 ../2-data/EXERCISE-q4_0.md，实验说明 ../2-data/LAB-quantize.md，
-框架 ../2-data/nano-quant/。演示里的命令都在这两个目录下真跑。
+配套材料：题面 EXERCISE-nano-quant.md，框架 ../nano-quant/。
+演示里的命令都在框架目录下实际运行。
 """
 
 from lecturekit.dsl import Lecture
@@ -16,13 +16,13 @@ import pages
 
 lecture = Lecture(
     id="ics-exe-quant",
-    title="把 Q4_0 写出来",
+    title="实现 Q4_0 量化",
     subtitle="习题课一 · nano-quant 的 A 部分与第一种块格式",
     ratio="16:9",
 )
 
 lecture.cover(
-    "把 Q4_0 写出来",
+    "实现 Q4_0 量化",
     author="古金宇 · 陈榕",
     time="上海交通大学 IPADS",
 )
@@ -32,7 +32,7 @@ with lecture.section("本节的安排", id="framing") as s:
     s.page("session-scope", body=pages.session_scope)
     s.page("session-outline", body=pages.session_outline)
 
-lecture.bridge("第一部分 · 实验对象\n这个文件里装着什么")
+lecture.bridge("第一部分 · 实验对象\n权重文件包含的内容")
 
 with lecture.section("第一部分 · 实验对象", id="model") as s:
     s.page("one-file", body=pages.one_file)
@@ -75,7 +75,7 @@ with lecture.section("第三部分 · 四个转换函数", id="part-a") as s:
     s.page("f32-to-fp16-sub", body=pages.f32_to_fp16_sub)
     s.page("f32-to-fp16-checks", body=pages.f32_to_fp16_checks)
 
-lecture.bridge("第四部分 · Q4_0\n三十二个权重压成十八个字节")
+lecture.bridge("第四部分 · Q4_0\n三十二个权重编码为十八个字节")
 
 with lecture.section("第四部分 · Q4_0 的十八个字节", id="q4-0") as s:
     s.page("q4-0-layout", body=pages.q4_0_layout)

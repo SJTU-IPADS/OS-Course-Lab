@@ -53,7 +53,9 @@ static float sum_elements(const float *a, unsigned length) {
     return result;
 }"""
 
-KERNEL_BUG = """#define KSIZE 1024
+KERNEL_BUG = """void *memcpy(void *dest, const void *src, size_t n);   /* <string.h> */
+
+#define KSIZE 1024
 char kbuf[KSIZE];                       /* kernel memory the user may read */
 
 int copy_from_kernel(void *user_dest, int maxlen) {
@@ -115,10 +117,9 @@ uint16_t bf16 = (uint16_t) (f32 >> 16);        /* this is the whole conversion *
 def recap_weights(p):
     p.gap(40)
     p.title("模型文件 llama3.2")
-    p.demo("上一讲跑过的两条命令", """ls -lhS ~/.ollama/models/blobs | head -2
-file ~/.ollama/models/blobs/sha256-* | head -1""",
-           output="""total 1.9G
--rw-r--r-- 1 ollama ollama 1.9G Sep  1 19:50 sha256...
+    p.demo("上一讲跑过的两条命令", """ls -lhS ~/.ollama/models/blobs | sed -n '2p'
+file "$(ls -dS ~/.ollama/models/blobs/* | head -1)\"""",
+           output="""-rw-r--r-- 1 ollama ollama 1.9G Sep  1 19:50 sha256-...
 ...sha256-...: data""")
     p.slide("""
 上一讲以一次 `ollama run` 为例，自底向上考察了系统各层，其中一项观察当时没有回答。
@@ -130,6 +131,8 @@ file ~/.ollama/models/blobs/sha256-* | head -1""",
     p.notes("""
 第一讲的落点是「模型只提供参数，执行过程由系统栈完成」。本节把「参数」这个词展开：
 参数以什么格式写在文件里，读出来之后在内存中是什么，为什么是 1.9 GB 而不是 12.8 GB。
+本讲的命令在 x86-64 的 Linux、arm64 的 macOS 与 Windows 的 WSL2 上都可以执行，
+结果一致；查看汇编的两页随指令集变化，逐条差别见 README 的「跨平台」一节。
 """)
 
 
@@ -310,6 +313,9 @@ float 4  double 8  size_t 8  int32_t 4  int64_t 8""",
     p.notes("""
 需要固定宽度时使用 `<stdint.h>` 中的 int32_t / uint64_t，它们在各平台上宽度一致。
 课堂上值得强调的是 long 与指针随平台变化：把指针存进 int 的代码在 64 位平台上会丢掉高位。
+64 位的 Linux 与 macOS 采用 LP64，`long` 为 8 字节；原生 Windows 采用 LLP64，
+`long` 为 4 字节而指针为 8 字节，此时表中「64 位」一列的 `long` 应读作 4。
+WSL2 中的程序是 Linux 程序，与表中的 64 位一列一致。
 """)
 
 
@@ -340,7 +346,7 @@ def vector_bool(p):
     p.title("拓展：C++ 中 bitset 与 vector 的 bool 特化")
     p.demo("一百万个布尔值，两种存法", """cd examples
 g++ -O1 -std=c++17 -o bitset_demo bitset_demo.cpp && ./bitset_demo
-g++ -fsyntax-only vector_bool_bad.cpp 2>&1 | grep -o 'cannot convert.*'""",
+g++ -fsyntax-only vector_bool_bad.cpp 2>&1 | grep -oE 'cannot (convert|initialize).*'""",
            output="""1000000 bools  vector<bool> 125000  bitset 125000  deque 1000000  (bytes)
 cannot convert ‘std::vector<bool>::reference*’ to ‘bool*’ in initialization""",
            files=["examples/bitset_demo.cpp", "examples/vector_bool_bad.cpp"])
@@ -470,7 +476,7 @@ def endianness_conversion_cost(p):
 两个方向的转换写成同样形式的函数，编译到 x86-64（小端）后的指令并不相同。
 """, autobold=False)
     p.demo("两个转换函数各自编译成什么", """cd examples
-gcc -O2 -S endian_calls.c -o - | grep -oE '^to_[a-z]+:|bswap|ret'""",
+gcc -O2 -S endian_calls.c -o - | grep -oE '^_?to_[a-z]+:|bswap|rev|ret'""",
            output="""to_be:
 bswap
 ret
@@ -480,6 +486,7 @@ ret""",
     p.highlight("转换与本机序一致时不产生任何指令，因此可以无条件地写上它。", tone="blue")
     p.notes("""
 `htole32` 在小端机器上是恒等变换，函数体里只剩返回；反向的 `htobe32` 编译成一条 `bswap`。
+arm64 上这条指令叫 `rev`，两处结论相同：一个方向有一条指令，另一个方向没有指令。
 代价固定且极小，因此内核的规则是一律转换，不做「本机就是小端所以可以省略」的判断——
 这类省略正是代码换一个平台就失效的原因。
 """)
@@ -552,11 +559,6 @@ def numeric_range(p):
 - $|TMin| = TMax + 1$，负数比正数多一个，因此 `-TMin` 仍是 `TMin`
 - `-1` 的补码位模式为全 1，与无符号的最大值位模式相同
 """)
-    p.highlight("2048×2048×512 个元素恰好超过 32 位补码的上限。", tone="orange")
-    p.notes("""
-2048 × 2048 × 512 = 2147483648，正好是 TMax + 1。深度学习框架里用 int32 存元素个数
-或偏移量的代码，在这个规模上开始出错，是一类真实且常见的缺陷。
-""")
 
 
 def casting(p):
@@ -612,8 +614,7 @@ def unsigned_bugs(p):
 def kernel_bug(p):
     p.title("找错误：内核向用户程序拷贝数据")
     p.slide("""
-内核与用户程序在各自的地址空间中，用户程序取内核的数据需要内核代为拷贝。
-`copy_from_kernel` 把内核缓冲区 `kbuf` 拷到用户给出的 `user_dest`，最多 `maxlen` 字节。
+内核代用户程序拷贝数据：`copy_from_kernel` 把 `kbuf` 拷到 `user_dest`，最多 `maxlen` 字节。
 """, autobold=False)
     p.code("c", KERNEL_BUG)
     p.aside("问题：调用方能否让它拷贝出 `kbuf` 这 1024 字节以外的内容？")
@@ -636,7 +637,9 @@ def expand_truncate(p):
     p.title("扩展与截断")
     p.slide("""
 改变一个整数的宽度有两个方向，规则各不相同。
-- **扩展**：无符号数补 0（零扩展），补码补符号位（符号扩展），数值不变
+- **扩展**：目的是保持数值不变，补入什么位由这个目的决定
+  - 无符号数补 0（零扩展）：高位的 0 不贡献数值
+  - 补码补符号位（符号扩展）：负数补一个 1，原最高位的权重由 $-2^{w-1}$ 变为 $+2^{w-1}$，与新最高位的 $-2^{w}$ 相加仍为 $-2^{w-1}$；每补一个 1 都是如此，因此补 N 个 1 不改变数值
 - **截断**：只保留低位，高位直接丢弃，数值可能完全改变
 """)
     p.image("assets/expand-truncate.svg", width_px=940)
@@ -656,6 +659,31 @@ bytes  as int      2130532352""",
 最后两行是 3.21 B 参数按 BF16 存放所需的字节数。用 `int` 记录它，得到的 2130532352 ==仍落在有符号 32 位整数的取值范围内==，运行时不产生任何异常，这使这类错误难以被发现。
 """, autobold=False).image_right("assets/ext/ariane-501.jpg", width_px=250
     ).footnote("阿丽亚娜 5 型 501 号首飞失利，直接原因是一个 64 位浮点数转 16 位有符号整数时溢出。残骸照片来自 Wikimedia Commons，公有领域。")
+
+
+def mixed_width_comparison(p):
+    p.title("混合比较：大小不同的操作数进行比较")
+    p.slide("""
+比较分两步进行：
+1. **确定目标类型**：先把窄于 `int` 的类型提升为 `int`；提升后宽度不同取较宽者，宽度相同、符号不同取无符号
+2. **逐个转换**：==补 0 还是补符号位由原类型决定==，得到的位模式按目标类型解释
+""")
+    p.table(
+        headers=["比较", "目标类型", "被转换的操作数", "结果"],
+        rows=[
+            ["int −1 < unsigned short 1", "int", "1 补 0 得 `0x00000001`，读为 1", "1"],
+            ["short −1 < unsigned short 1", "int", "两侧都提升为 `int`：−1 补符号位，1 补 0", "1"],
+            ["short −1 < unsigned 1", "unsigned", "−1 补符号位得 `0xffffffff`，读为 $2^{32}-1$", "0"],
+            ["int −1 < unsigned long long 1", "unsigned long long", "−1 补符号位得 64 个 1，读为 $2^{64}-1$", "0"],
+            ["long long −1 < unsigned 1", "long long", "1 补 0 得 64 位的 1，读为 1", "1"],
+        ],
+        align=["left", "left", "left", "center"],
+    )
+    p.notes("""
+决定补 0 还是补符号位的是操作数原来的类型，决定比较按有符号还是无符号进行的是目标类型，两件事分开。
+最后一行成立的前提是 `long long` 能表示 `unsigned` 的全部取值，在三种平台上都满足；
+若较宽的有符号类型不能表示较窄无符号类型的全部取值，两侧转为该有符号类型对应的无符号类型。
+""")
 
 
 def truncation_and_endianness(p):
@@ -708,9 +736,13 @@ def shifts(p):
 - **逻辑右移** `x >> k`：左侧补 0，用于无符号数
 - **算术右移** `x >> k`：左侧补符号位，用于补码，使负数右移后仍为负数
 - 移位位数达到或超过字长时，C 标准未定义其行为
+- 不溢出时，`x << k` 等于 $x \\times 2^k$，`x >> k` 等于 $\\lfloor x / 2^k \\rfloor$；移位比乘除法快，能用移位表示时通常使用移位
 """, reveal="items")
     p.image("assets/shifts.svg", width_px=900)
-    p.notes("移位常被用来代替乘除 2 的幂，但编译器已经会做这一优化；写位运算的目的应当是提取字段。")
+    p.notes("""
+右移对应向下取整，C 的整数除法向零取整，两者在负数上结果不同：`-7 >> 1` 为 −4，`-7 / 2` 为 −3。
+编译器把 `x / 2^k` 换成移位时，会先给负数加上 $2^k - 1$ 的偏置，使结果与除法一致。
+""")
 
 
 def shift_kinds(p):
@@ -722,7 +754,7 @@ C 只有一个右移运算符 `>>`。执行哪一种，由==左操作数的类�
 """)
     p.demo("同一段位，两种类型", """cd examples
 gcc -O1 -o shift_kind shift_kind.c && ./shift_kind
-gcc -O2 -S shift_kind.c -o - | grep -oE '^(arithmetic|logical):|sar.|shr.'""",
+gcc -O2 -S shift_kind.c -o - | grep -oE '^_?(arithmetic|logical):|sar.|shr.|asr|lsr'""",
            output="""bits        0xfffffff8
 int32_t  >> 1            -4   0xfffffffc   sign bit copied in
 uint32_t >> 1    2147483644   0x7ffffffc   zero shifted in
@@ -731,10 +763,11 @@ sarl
 logical:
 shrl""",
            files=["examples/shift_kind.c"])
-    p.aside("两种右移对应两条不同的机器指令：`sar` 与 `shr`。类型在编译期就选定了其中之一。")
+    p.aside("两条不同的机器指令：x86-64 上是 `sar` 与 `shr`，由左操作数的类型在编译期选定。")
     p.notes("""
 C 标准把有符号数右移的行为留给实现，实际的编译器与平台一律采用算术右移。
 把有符号数右移当作除以 2 的幂是不准确的：算术右移向下取整，`-1 >> 1` 得 −1 而不是 0。
+arm64 上这两条指令叫 `asr` 与 `lsr`，上面的命令在两种指令集上都能选出对应的那一条。
 另一处常见的写法是先转成无符号再右移，用于取出高位字段——这与本讲开头
 把地址转成 `unsigned char *` 是同一种做法：先选定解释规则，再取值。
 """)
@@ -842,7 +875,7 @@ def binary_scientific(p):
 - $E$ 加上偏置 127 之后写入阶码字段 $e$，因此 $e$ 始终是非负整数
 - 移动小数点不改变数值，改变的只是记录方式
 """)
-    p.demo("四个数各自走一遍这三步", """cd examples
+    p.demo("四个数各自进行这三步", """cd examples
 gcc -O1 -o binary_point binary_point.c && ./binary_point""",
            output="""value     in binary        point moved           stored
 6.5       110.1             1.101 x 2^2            e 129 = 127+2
@@ -945,19 +978,17 @@ gcc -O1 -o rounding rounding.c && ./rounding""",
 
 def float_not_real(p):
     p.title("有限位的表示不满足实数的运算律")
-    p.demo("四个例子", """cd examples
+    p.demo("三个例子", """cd examples
 gcc -O1 -o float_law float_law.c && ./float_law""",
-           output="""200*300*400*500 as int    -884901888
-(3.14+1e20)-1e20          0
+           output="""(3.14+1e20)-1e20          0
 3.14+(1e20-1e20)          3.14
 0.1 + 0.2 == 0.3          0""",
            files=["examples/float_law.c"])
     p.slide("""
-- 整数溢出后仍是一个整数，正数相乘可以得到负数
 - 浮点加法==不满足结合律==：改变加法次序会改变结果
 - 十进制的有限小数在二进制下可能是无限循环，`0.1` 与 `0.2` 都需要舍入
 """)
-    p.highlight("`int`/`float` 都是有限位的近似，其运算不满足整数/实数的运算律。", tone="orange")
+    p.highlight("`float` 是有限位的近似，其运算不满足实数的运算律。", tone="orange")
 
 
 def precision_formats(p):
@@ -999,6 +1030,33 @@ FP32 与 BF16 之间的转换因此==只需要移位==，不需要重新计算�
     p.notes("""
 这也解释了 BF16 在训练中的作用：与 FP32 范围一致，因此不需要 loss scaling
 一类的额外处理；代价是相对精度下降到约三位十进制有效数字。
+""")
+
+
+def fp16_classes(p):
+    p.title("FP16 的编码与次规格化数")
+    p.demo("对若干个位模式按 FP16 解释", """cd examples
+gcc -O1 -o fp16_classes fp16_classes.c && ./fp16_classes""",
+           output="""0x0001   0 00000 0000000001   5.96046448e-08
+0x03ff   0 00000 1111111111   6.09755516e-05
+0x0400   0 00001 0000000000   6.10351562e-05
+0x3c00   0 01111 0000000000   1
+0x7bff   0 11110 1111111111   65504
+0x7c00   0 11111 0000000000   inf
+0x7e00   0 11111 1000000000   nan""",
+           files=["examples/fp16_classes.c"])
+    p.slide("""
+- 1 位符号、5 位阶码、10 位尾数，偏置为 15；规格化数的值为 $(-1)^s \\times 1.f \\times 2^{e-15}$
+- 阶码全 0 为==次规格化数==，尾数不带前导的 1，值为 $(-1)^s \\times 0.f \\times 2^{-14}$，即 $f \\times 2^{-24}$
+- `0x03ff` 为 $1023 \\times 2^{-24}$，`0x0400` 为 $1024 \\times 2^{-24}$，从次规格化数到规格化数，相邻两值恰好相差 $2^{-24}$
+""")
+    p.notes("""
+次规格化数即前面表格中阶码全 0 的非规格化数，两个名称指同一类值。
+与 FP32 的规则相同，只是字段宽度不同：阶码全 0 时 $E$ 取 $1-15=-14$ 而非 $-15$，
+使次规格化数的最后一个值与规格化数的第一个值首尾相接。次规格化数的步长是固定的
+$2^{-24}$，因此它们在 $[0, 2^{-14})$ 内等距分布。
+阶码全 1 的两类与 FP32 相同：尾数为 0 表示无穷，尾数非 0 表示 NaN。
+程序把位模式复制进 GCC 的 `_Float16` 变量再按浮点数输出，解码由编译器完成。
 """)
 
 
@@ -1286,7 +1344,7 @@ def int4_hardware(p):
     p.slide("""
 矩阵乘有专门的运算单元：每个 4 位数单独取出来参与乘法，乘积逐个加进同一个 32 位寄存器，这个寄存器称为==累加器==（accumulator）。
 """, autobold=False)
-    p.image("assets/int4-accumulate.svg", width_px=780)
+    p.image("assets/int4-accumulate.svg", width_px=680)
     p.slide("""
 - 两个 4 位数不再共用一个字节，各自单独送进乘法器，进位无处可越
 - 4 位数相乘最多得 64，32 个乘积相加不超过 2048，32 位的累加器装得下

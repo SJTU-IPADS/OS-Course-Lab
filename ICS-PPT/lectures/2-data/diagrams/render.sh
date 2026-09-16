@@ -15,7 +15,7 @@ for dot in "$here"/*.dot; do
     echo "$assets/$name.svg"
 done
 
-# svgkit.py is a module and check_bounds.py is the checker, not a generator
+# svgkit.py is a module and check_bounds.py is the checker
 for py in "$here"/*.py; do
     [ -e "$py" ] || continue
     case $(basename "$py") in svgkit.py|check_bounds.py) continue ;; esac

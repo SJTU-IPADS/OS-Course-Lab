@@ -52,7 +52,7 @@ with lecture.section("第二部分 · 字节序", id="byte-order") as s:
     s.page("endianness-conversion-cost", body=pages.endianness_conversion_cost)
     s.page("text-and-tokens", body=pages.text_and_tokens)
 
-lecture.bridge("第三部分 · 整数\n同一段位的两种解释")
+lecture.bridge("第三部分 · 整数\n用二进制表示整数")
 
 with lecture.section("第三部分 · 整数", id="integers") as s:
     s.page("two-readings", body=pages.two_readings)
@@ -63,6 +63,7 @@ with lecture.section("第三部分 · 整数", id="integers") as s:
     s.page("kernel-bug", body=pages.kernel_bug)
     s.page("expand-truncate", body=pages.expand_truncate)
     s.page("truncation-in-practice", body=pages.truncation_in_practice)
+    s.page("mixed-width-comparison", body=pages.mixed_width_comparison)
     s.page("truncation-and-endianness", body=pages.truncation_and_endianness)
     s.page("bit-operations", body=pages.bit_operations)
     s.page("shifts", body=pages.shifts)
@@ -83,6 +84,7 @@ with lecture.section("第四部分 · 浮点数与低精度格式", id="float") 
     s.page("float-not-real", body=pages.float_not_real)
     s.page("precision-formats", body=pages.precision_formats)
     s.page("bf16-truncation", body=pages.bf16_truncation)
+    s.page("fp16-classes", body=pages.fp16_classes)
     s.page("range-and-precision", body=pages.range_and_precision)
     s.page("model-size", body=pages.model_size)
 
