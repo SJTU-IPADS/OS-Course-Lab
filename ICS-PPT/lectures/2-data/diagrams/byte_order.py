@@ -71,7 +71,7 @@ def build():
     out.append(text(LABEL_X - 158, y + 28, "tiny.gguf 的第 5 到第 8 个字节", 14, INK,
                     "bold", "start"))
     out.append(text(LABEL_X - 158, y + 54,
-                    "03 00 00 00　按小端读出 3，按大端读出 50331648", 14.5, INK,
+                    "03 00 00 00　按小端读出 0x3，按大端读出 0x03000000", 14.5, INK,
                     "normal", "start", font=MONO))
     out.append(text(LABEL_X - 158, y + 76,
                     "GGUF 规定小端，因此这一字段的值是 3", 13, MUTED, "normal", "start"))

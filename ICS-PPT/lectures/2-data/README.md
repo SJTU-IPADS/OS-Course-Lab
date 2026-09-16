@@ -16,13 +16,13 @@
 | --- | --- | --- |
 | 回顾与本节的问题 | 2 | 第一讲的权重文件 · 四个问题 |
 | 第一部分 · 位与字节 | 9 | 位串到值 · 十六进制与 C 的进制写法 · `xxd` · 模型格式如何标识自己 · 内存即字节 · 字长与地址范围 · C 数据类型的宽度 · 布尔值的存储 · bitset 与 vector<bool> |
-| 第二部分 · 字节序 | 7 | 大端与小端 · 读一个字段 · `show_bytes` · 在本机上看见字节序 · Linux 中的处理方式 · 转换的编译结果 · 文本与 token |
+| 第二部分 · 字节序 | 7 | 内存即字节 · 字长 · 大端与小端 · 读一个字段 · `show_bytes` · 在本机上看见字节序 · 文本与 token |
 | **第三部分 · 整数** | **16** | 无符号与补码 · 取值范围 · 强制转换 · 比较陷阱 · 越界与内核缺陷 · 扩展与截断 · 一次真实的截断 · 大小不同的操作数比较 · 截断与字节序 · 位运算 · 移位 · 逻辑与算术右移 · 运算符优先级与实例 · 位运算恒等式 |
 | 第四部分 · 浮点数与低精度格式 | 12 | 三段结构与偏置 · 二进制科学计数法 · 规格化/非规格化/inf/NaN · 值在数轴上的分布与实测间距 · 舍入 · 浮点不是实数 · FP32/BF16/FP16/TF32/FP8/FP4 · BF16 即截断 · FP16 的编码与次规格化数 · 范围与精度 · 模型尺寸 |
 | 第五部分 · 量化：原理与 Q4_0 | 12 | 为什么要量化 · 访存瓶颈的实测 · 量化谁 · 量化的想法 · 仿射映射的三个自由度 · Q4_0 的块结构 · 量化代码 · 4 位打包 · 打包加法 · 硬件上的 4 位运算单元 · 粒度 · 三种粒度的实测 |
 | 第六部分 · 量化格式：Q4_1 与 Q4_K | 11 | 偏移与 Q4_1 · Q4_1 的实测 · Q4_K 的超块 · 超块的字节账 · 12 字节里的 16 个 6 位数 · 取出子块系数的代码 · Q4_K 的实测 · 文件里的混合配方 · 量化的代价 · 线性量化以及它之外的做法 · 实验预告 |
 
-共 71 个编号页（含末页的本节小结与自动生成的参考文献页）、6 个衔接页与 1 个封面。
+共 69 个编号页（含末页的本节小结与自动生成的参考文献页）、6 个衔接页与 1 个封面。
 
 量化占两节，按 1.5–2 次课的讲解时长安排：第五部分讲解一个 4 位格式的设计，
 第六部分讲解真实文件中存在多种格式的原因。两节之间的衔接页适合作为下课的分界。
@@ -36,7 +36,7 @@
 
 ## 课上运行命令
 
-本讲有 24 个 `p.demo(...)`，全部在 `examples/` 下实际运行：
+本讲有 22 个 `p.demo(...)`，全部在 `examples/` 下实际运行：
 
 ```bash
 python3 -m lecturekit.cli view lectures/2-data --watch
@@ -61,14 +61,13 @@ arm64 的 macOS，以及 Windows 的 WSL2（Ubuntu，命令与 Linux 完全相�
 | --- | --- | --- |
 | `recap-weights` | `ls -lhS ... \| sed -n '2p'` + `file "$(ls -dS ... \| head -1)"` | macOS 的 `ls -l` 按 512 字节块打印 `total` 行；`sha256-*` 按字母序会先匹配到 JSON manifest。与第一讲的同一条命令保持一致 |
 | `vector-bool` | `grep -oE 'cannot (convert\|initialize).*'` | 同一处错误 gcc 说 cannot convert，clang 说 cannot initialize |
-| `shift-kinds`、`endianness-conversion-cost` | grep 的字母表加上 `asr` / `lsr` / `rev`，标号加 `^_?` | arm64 的助记符与 x86-64 不同，Mach-O 的符号名前多一个下划线 |
+| `shift-kinds` | grep 的字母表加上 `asr` / `lsr` / `rev`，标号加 `^_?` | arm64 的助记符与 x86-64 不同，Mach-O 的符号名前多一个下划线 |
 
 随平台变化、需要在课上说明的三点（都写在对应页的 `p.notes` 里）：
 
 - **`long` 的宽度**：64 位 Linux 与 macOS 是 LP64（8 字节），原生 Windows 是 LLP64（4 字节，
   指针仍是 8 字节）。`c-data-sizes` 表中「64 位」一列按 LP64 写。WSL2 中是 Linux 程序，与表一致。
 - **右移的指令名**：x86-64 是 `sar` / `shr`，arm64 是 `asr` / `lsr`。
-- **字节序转换的指令名**：x86-64 是 `bswap`，arm64 是 `rev`；两处的结论（一个方向零指令）相同。
 
 三种平台都是小端，本讲字节序部分的全部输出一致。`p.demo` 里录的输出来自 x86-64 Linux。
 
@@ -100,8 +99,6 @@ python3 -m lecturekit.cli view   lectures/2-data --watch --lang en   # 英文
 | `bool_size.c` | `bool-storage` | 同一份代码按 C 与 C++ 编译，比较 `bool` 的宽度与取值（需要 g++） |
 | `compare.c` | `comparison-trap` | 有符号与无符号混用的四个比较 |
 | `truncate.c` | `truncation-in-practice` | 扩展、截断与同一段字节的两种读法 |
-| `endian_host.c` | `endianness-in-linux` | `__BYTE_ORDER__` 与 `htole32` / `htobe32` 各自的结果 |
-| `endian_calls.c` | `endianness-conversion-cost` | 两个转换函数编译出的指令（配合 `gcc -S`） |
 | `truncate_endian.c` | `truncation-and-endianness` | 按值截断与按字节取前缀，在两种排列下的结果 |
 | `shift_kind.c` | `shift-kinds` | 有符号与无符号右移，以及编译出的 `sar` / `shr` |
 | `precedence.c` | `precedence-in-practice` | 三个缺少括号的表达式与 `-Wall` 的三条警告 |

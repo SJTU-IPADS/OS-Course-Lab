@@ -26,6 +26,6 @@
 <text x="214" y="188" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14.5" font-weight="normal" fill="#0e2841" text-anchor="start">int x = 0x01234567;　橙色是最低有效字节</text>
 <rect x="20" y="216" width="840" height="88" rx="8" fill="none" stroke="#9fb5c3" stroke-width="1.3" stroke-dasharray="5 4"/>
 <text x="38" y="244" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">tiny.gguf 的第 5 到第 8 个字节</text>
-<text x="38" y="270" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="14.5" font-weight="normal" fill="#0e2841" text-anchor="start">03 00 00 00　按小端读出 3，按大端读出 50331648</text>
+<text x="38" y="270" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="14.5" font-weight="normal" fill="#0e2841" text-anchor="start">03 00 00 00　按小端读出 0x3，按大端读出 0x03000000</text>
 <text x="38" y="292" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">GGUF 规定小端，因此这一字段的值是 3</text>
 </svg>

@@ -344,7 +344,7 @@ def endianness(p):
     p.notes("""
 字节内部的位序不由程序观察，因此不涉及这一问题；讨论的对象始终是字节的次序。
 x86-64 只有小端一种。ARM、RISC-V、PowerPC 是双端序处理器，两种次序都能执行，
-实际使用哪一种在启动时由控制寄存器固定，Linux 在这些平台上通常运行于小端。
+实际使用哪一种在启动时由控制寄存器固定，Linux 在这些平台上通常运行于小端
 文件格式与网络协议是另一类约定：它们自行规定字节序，与运行它们的处理器无关。
 """)
 
@@ -391,52 +391,6 @@ def endianness_visible(p):
 - **反汇编输出**：指令编码中的立即数与地址按小端存放
 """, reveal="items")
     p.aside("单字节序列不受影响：ASCII 字符串与 UTF-8 文本在任何平台上的字节次序都一致。")
-
-
-def endianness_in_linux(p):
-    p.gap(30)
-    p.title("拓展：Linux 中字节序的处理方式")
-    p.slide("""
-处理的位置固定在数据跨越机器边界处：读入时转换为本机序，写出时转换回约定的次序。
-- **应用层**：`<endian.h>` 的 `le32toh` / `htole32` / `be32toh` / `htobe32`
-- **内核**：字段声明为 `__le32` / `__be32`，取值须经 `le32_to_cpu()`，遗漏由 sparse 报出
-- **编译期**：`__BYTE_ORDER__` 由编译器定义，两种实现的选择在预处理阶段完成
-""", reveal="items")
-    p.demo("本机序，以及两个方向的转换各自得到什么", """cd examples
-gcc -O1 -o endian_host endian_host.c && ./endian_host""",
-           output="""__BYTE_ORDER__ little
-host           0x01020304   bytes 04 03 02 01
-htole32        0x01020304   bytes 04 03 02 01
-htobe32        0x04030201   bytes 01 02 03 04""",
-           files=["examples/endian_host.c"])
-    p.notes("""
-`__le32` 只是加了 `__bitwise` 注记的 `__u32`，编译器本身不区分，检查由 sparse 完成
-（`make C=1`）。网络序的 `htons` / `htonl` 在 `<arpa/inet.h>` 中，是同一组转换的另一套名字。
-在小端机器上 `htole32` 是恒等变换，输出与 `host` 一行相同；`htobe32` 把四个字节倒过来。
-""")
-
-
-def endianness_conversion_cost(p):
-    p.gap(50)
-    p.title("拓展：字节序转换的编译结果")
-    p.slide("""
-两个方向的转换写成同样形式的函数，编译到 x86-64（小端）后的指令并不相同。
-""", autobold=False)
-    p.demo("两个转换函数各自编译成什么", """cd examples
-gcc -O2 -S endian_calls.c -o - | grep -oE '^_?to_[a-z]+:|bswap|rev|ret'""",
-           output="""to_be:
-bswap
-ret
-to_le:
-ret""",
-           files=["examples/endian_calls.c"])
-    p.highlight("转换与本机序一致时不产生任何指令，因此可以无条件地写上它。", tone="blue")
-    p.notes("""
-`htole32` 在小端机器上是恒等变换，函数体里只剩返回；反向的 `htobe32` 编译成一条 `bswap`。
-arm64 上这条指令叫 `rev`，两处结论相同：一个方向有一条指令，另一个方向没有指令。
-代价固定且极小，因此内核的规则是一律转换，不做「本机就是小端所以可以省略」的判断——
-这类省略正是代码换一个平台就失效的原因。
-""")
 
 
 def text_and_tokens(p):

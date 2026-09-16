@@ -46,8 +46,6 @@ with lecture.section("第二部分 · 字节序", id="byte-order") as s:
     s.page("read-the-field", body=pages.read_the_field)
     s.page("show-bytes", body=pages.show_bytes_page)
     s.page("endianness-visible", body=pages.endianness_visible)
-    s.page("endianness-in-linux", body=pages.endianness_in_linux)
-    s.page("endianness-conversion-cost", body=pages.endianness_conversion_cost)
     s.page("text-and-tokens", body=pages.text_and_tokens)
 
 lecture.bridge("第三部分 · 整数\n用二进制表示整数")
