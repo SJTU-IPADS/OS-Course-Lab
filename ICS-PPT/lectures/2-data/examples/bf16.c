@@ -1,4 +1,4 @@
-/* BF16 keeps FP32's exponent, so converting one to the other is a cut. */
+/* BF16 keeps FP32's exponent; this cut shows the top 16 bits without rounding (see bf16_round.c). */
 #include <stdio.h>
 #include <stdint.h>
 
@@ -17,7 +17,7 @@ static void print_bits(const char *label, uint32_t b, int width) {
 int main(void) {
     float x = 3.1415927f;
     uint32_t f32 = bits(x);
-    uint16_t bf16 = (uint16_t) (f32 >> 16);     /* the whole conversion */
+    uint16_t bf16 = (uint16_t) (f32 >> 16);     /* truncation only */
 
     print_bits("fp32", f32, 32);
     print_bits("bf16", bf16, 16);

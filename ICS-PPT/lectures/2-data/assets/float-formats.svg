@@ -61,5 +61,5 @@
 <text x="154.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">4 位</text>
 <text x="200.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">1 · 2 · 1</text>
 <path d="M 264.0 57 L 264.0 112" stroke="#e97132" stroke-width="1.8" stroke-dasharray="5 4"/>
-<text x="274.0" y="50" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="start">BF16 就是 FP32 的前 16 位</text>
+<text x="274.0" y="50" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="start">BF16 取 FP32 的前 16 位，再舍入</text>
 </svg>

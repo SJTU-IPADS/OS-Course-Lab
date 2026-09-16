@@ -39,50 +39,29 @@ text = 'Course information'
 # src: 课程信息
 
 ['course-info.slide.1']
-src_hash = '89714f5a'
+src_hash = 'abdcc429'
 text = '''
-
 1. **Slides**: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
    Live updates; built together by the staff and with students
+2. **How to use the slides**: ask an AI; other uses are welcome
+3. **WeChat group**
 '''
 # src:
 # 
 # 1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
 #    便于实时更新、团队共建、师生共建
-
-['course-info.slide.2']
-src_hash = '5d189453'
-text = '''
-
-2. **How to use the slides**: ask an AI; other uses are welcome
-'''
-# src:
-# 
 # 2. **课件使用**：问 AI 即可；欢迎丰富使用方式
-
-['course-info.slide.3']
-src_hash = 'f51ded69'
-text = '''
-
-3. **WeChat group**
-'''
-# src:
-# 
 # 3. **微信群**
 
-['course-schedule.title']
-src_hash = '4da04dfe'
-text = 'Course information'
-# src: 课程信息
-
-['course-schedule.slide.1']
-src_hash = 'f111554e'
+['course-info.slide.2']
+src_hash = '96eafae5'
 text = '''
-
 4. **Schedule**
    - Saturday lectures: from merging courses to a shorter timetable
    - Mid-week exercise sessions become discussion sessions
    - From A1 / A2 to A0, then B / C: ICS back toward the top of the ranking, with popular TAs
+   - **Prof. Binyu Zang**　founder of the ICS course in China
+     **Great Teacher · Great Helmsman · Great Founder · Great Guide**
 '''
 # src:
 # 
@@ -90,49 +69,30 @@ text = '''
 #    - 周六上课：从课程融合到实际课时压缩
 #    - 周中习题课改为讨论课
 #    - 从 A1 / A2 到 A0，再到 B / C：ICS 重回兵器谱前 XX，打造人气 TA
+#    - **臧斌宇老师**　ICS 课程在中国的创始人
+#      **伟大导师　·　伟大舵手　·　伟大奠基人　·　伟大引路人**
 
-['course-schedule.slide.2']
-src_hash = '65bc6fd6'
-text = '''
-
-**Prof. Binyu Zang**　founder of the ICS course in China
-
-**Great Teacher · Great Helmsman**
-**Great Founder · Great Guide**
-'''
-# src:
-# 
-# **臧斌宇老师**　ICS 课程在中国的创始人
-# 
-# **伟大导师　·　伟大舵手**
-# **伟大奠基人　·　伟大引路人**
-
-['course-schedule.slide.2.footnote.1']
+['course-info.slide.2.footnote.1']
 src_hash = '709c2960'
 text = 'Photo from the IPADS members page, Shanghai Jiao Tong University.'
 # src: 照片来自上海交通大学并行与分布式系统研究所（IPADS）成员页。
 
-['course-schedule.slide.3']
-src_hash = '0d2d4b9f'
-text = '''
-
-5. **Assessment**: quiz + final + lab, about 20 + 50 + 30
-   Honor code: on the use of AI
-'''
+['course-info.slide.3']
+src_hash = 'cf5606ea'
+text = '5. **Assessment**: quiz + final + lab, about 20 + 50 + 30; honor code: on the use of AI'
 # src:
 # 
-# 5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30
-#    君子协定：对于 AI 的使用
+# 5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30；君子协定：对于 AI 的使用
 
 ['ollama-intro.title']
-src_hash = '4ed20f6e'
-text = 'Ollama: an inference service running on the local machine'
-# src: Ollama：运行在本机的推理服务
+src_hash = 'b33d30e2'
+text = 'Recap: local inference with Ollama'
+# src: 回顾：用 Ollama 执行本地推理
 
 ['ollama-intro.slide.1']
 src_hash = '6ca7a27d'
 text = '''
-Ollama is an inference service that runs on the local machine and provides an OpenAI-compatible HTTP interface.
+**Ollama is an inference service running on the local machine, providing an OpenAI-compatible HTTP interface.**
 - Once started it listens on `http://localhost:11434`; the `/v1/...` paths match those of a cloud service
 - The model weights are stored as a file on the local disk
 - That whole path — request, load, compute, return — can be observed on your own machine
@@ -160,9 +120,9 @@ text = 'Submit one request'
 # src: 提交一次请求
 
 ['recap-weights.title']
-src_hash = '4e3ed0b5'
-text = 'The model file of llama3.2'
-# src: 模型文件 llama3.2
+src_hash = '1e27316d'
+text = 'Recap: the llama3.2 model file'
+# src: 回顾：llama3.2 模型文件
 
 ['recap-weights.demo.1.name']
 src_hash = 'cede741f'
@@ -170,24 +130,24 @@ text = 'View the model file'
 # src: 查看模型文件
 
 ['recap-weights.slide.1']
-src_hash = 'cd24cd24'
+src_hash = '39de2758'
 text = '''
-Last lecture took one `ollama run` and worked up through the layers of the system
+**We took one `ollama run` and examined the layers of the system from the bottom up**
 - The weights are a 1.9 GB file, and `file` reports `data` — it cannot identify the type
 - The file holds no executable instructions; all of its content is data
 - The operating system pages it into memory on demand, without interpreting a single byte
 '''
 # src:
 # 
-# **上一讲以一次 `ollama run` 为例，自底向上考察了系统各层**
+# **我们以一次 `ollama run` 为例，自底向上考察了系统各层**
 # - 模型权重是一个 1.9 GB 的文件，`file` 给出的结果是 `data`，即未能识别其类型
 # - 文件中不含任何可执行指令，全部内容是数据
 # - 操作系统按需把其中的页装入内存，但没有解释过任何一个字节的含义
 
 ['recap-weights.highlight.1']
-src_hash = 'd9de2048'
-text = 'The question of this lecture: by what rule is each of those 1.9 GB of bytes interpreted?'
-# src: 本节的问题：这 1.9 GB 中的每一个字节，按什么规则解释。
+src_hash = '640599e1'
+text = 'By what rule is each byte of these 1.9 GB interpreted?'
+# src: 这 1.9 GB 中的每一个字节，按什么规则解释？
 
 ['recap-weights.notes.1']
 src_hash = 'a23c0f7f'
@@ -208,24 +168,50 @@ text = 'Four questions this lecture answers'
 # src: 本节回答四个问题
 
 ['four-questions.slide.1']
-src_hash = 'ffd24a96'
-text = '1. What a byte is'
-# src: 1. 什么是字节
+src_hash = '8ed5a64c'
+text = '''
+1. **What a byte is**:
+   bits and bytes · binary and hexadecimal · widths of C data types · how booleans are stored
+'''
+# src:
+# 
+# 1. **什么是字节**：
+#    位与字节 · 二进制与十六进制 · C 数据类型的宽度 · 布尔值的存储
 
 ['four-questions.slide.2']
-src_hash = '02a51dfc'
-text = '2. How bytes form data objects'
-# src: 2. 多字节组成数据对象
+src_hash = 'ae6a3d86'
+text = '''
+2. **How bytes form data objects**:
+   byte-addressed memory · word size and address range · byte order
+'''
+# src:
+# 
+# 2. **多字节组成数据对象**：
+#    内存按字节编址 · 字长与地址范围 · 字节序
 
 ['four-questions.slide.3']
-src_hash = 'e5169761'
-text = '3. Integer and floating-point encodings'
-# src: 3. 整形与浮点编码
+src_hash = '970956cb'
+text = '''
+3. **Integer and floating-point encodings**:
+   unsigned and signed numbers · casts and comparison pitfalls · bit operations and shifts
+   IEEE 754 normalized, denormalized and special values · rounding · low-precision floating-point formats
+'''
+# src:
+# 
+# 3. **整型与浮点编码**：
+#    无符号数与有符号数 · 强制转换与比较陷阱 · 位运算与移位
+#    IEEE 754 的规格化、非规格化与特殊值 · 舍入 · 低精度浮点格式
 
 ['four-questions.slide.4']
-src_hash = '182a8cfc'
-text = '4. How floating-point numbers are quantized'
-# src: 4. 如何对浮点数进行量化
+src_hash = 'a9b632eb'
+text = '''
+4. **How floating-point numbers are quantized**:
+   Q4_0 block layout and 4-bit packing · quantization granularity · the Q4_1 offset · two-level scaling in Q4_K
+'''
+# src:
+# 
+# 4. **如何对浮点数进行量化**：
+#    Q4_0 的块结构与 4 位打包 · 量化粒度 · Q4_1 的偏移 · Q4_K 的两级缩放
 
 ['bridge-1.title']
 src_hash = '0bceabde'
@@ -1366,9 +1352,9 @@ text = 'Question: can a caller make it copy beyond the 1024 bytes of `kbuf`?'
 # src: 问题：调用方能否让它拷贝出 `kbuf` 这 1024 字节以外的内容？
 
 ['kernel-bug-answer.title']
-src_hash = '35c8cf76'
-text = 'Find the bug: the kernel copying data out to a user program (answer)'
-# src: 找错误：内核向用户程序拷贝数据（解答）
+src_hash = '9a68c676'
+text = 'Find the bug: the kernel copying data out to a user program'
+# src: 找错误：内核向用户程序拷贝数据
 
 ['kernel-bug-answer.slide.1']
 src_hash = '03c064a5'
@@ -1392,10 +1378,7 @@ text = '''
 
 ['kernel-bug-answer.notes.1']
 src_hash = '5db925dd'
-text = '''
-
-This code is modelled on a defect that appeared in FreeBSD's getpeername implementation. `maxlen` comes from the caller, and the return value is the number of bytes actually copied. Worth pointing out in class: this class of error produces no diagnostic at compile time and does not necessarily crash at run time, surfacing only on particular inputs. When reviewing generated code, mixing signed and unsigned is one of the first things to check.
-'''
+text = "This code is modelled on a defect that appeared in FreeBSD's getpeername implementation. `maxlen` comes from the caller, and the return value is the number of bytes actually copied. Worth pointing out in class: this class of error produces no diagnostic at compile time and does not necessarily crash at run time, surfacing only on particular inputs. When reviewing generated code, mixing signed and unsigned is one of the first things to check."
 # src:
 # 
 # 这段代码源自 FreeBSD 的 getpeername 实现中出现过的缺陷。`maxlen` 由调用方给出，
@@ -1404,9 +1387,9 @@ This code is modelled on a defect that appeared in FreeBSD's getpeername impleme
 # 审查生成的代码时，有符号与无符号的混用是需要优先检查的一类。
 
 ['mixed-width-comparison.title']
-src_hash = 'c05fa97d'
-text = 'Mixed comparisons: operands of different sizes'
-# src: 混合比较：大小不同的操作数进行比较
+src_hash = 'c374fae7'
+text = 'Mixed comparisons: comparing operands of different widths'
+# src: 混合比较：宽度不同的操作数进行比较
 
 ['mixed-width-comparison.slide.1']
 src_hash = 'b52a872c'
@@ -1858,9 +1841,9 @@ Every form in the last three rows has appeared in real code. The ordering has a 
 # 把这一点列为遗留的缺陷。记忆规则不如括号可靠。
 
 ['precedence-in-practice.title']
-src_hash = '734859bc'
-text = 'What actually happens without parentheses'
-# src: 缺少括号时的实际结果
+src_hash = '553bbf12'
+text = 'What missing parentheses can lead to'
+# src: 缺少括号可能造成的结果
 
 ['precedence-in-practice.demo.1.name']
 src_hash = '4c63f056'
@@ -1884,99 +1867,697 @@ text = '''
 # 但警告只覆盖它认得的组合，加括号是更可靠的做法。
 
 ['bridge-4.title']
-src_hash = 'f68883fc'
-text = 'Part four · Floating point and low-precision formats'
-# src: 第四部分 · 浮点数与低精度格式
+src_hash = '21735655'
+text = 'Part four · Floating-point encoding'
+# src: 第四部分 · 浮点数的编码
 
 ['bridge-4.bridge.1']
-src_hash = 'f311df9c'
+src_hash = '05a0e640'
 text = '''
-Part four · Floating point and low-precision formats
+Part four · Floating-point encoding
 Approximating the reals with a finite number of bits
 '''
 # src:
-# 第四部分 · 浮点数与低精度格式
+# 第四部分 · 浮点数的编码
 # 有限位对实数的近似
 
 ['section.float.title']
-src_hash = 'f68883fc'
-text = 'Part four · Floating point and low-precision formats'
-# src: 第四部分 · 浮点数与低精度格式
+src_hash = '21735655'
+text = 'Part four · Floating-point encoding'
+# src: 第四部分 · 浮点数的编码
 
-['binary-scientific.title']
-src_hash = 'c2c7d269'
-text = 'From binary scientific notation to the three fields'
-# src: 从二进制的科学计数法到三段位
+['fractional-binary.title']
+src_hash = 'e863579f'
+text = 'From decimal fractions to binary fractions'
+# src: 从十进制小数到二进制小数
 
-['binary-scientific.slide.1']
-src_hash = 'a4aff951'
+['fractional-binary.slide.1']
+src_hash = '7b670d07'
 text = '''
-**Binary scientific notation is $1.bbb \times 2^{E}$: write the number in binary and move the point after the highest 1; the shift is $E$.**
-- The bits after the point are the fraction $f$; the leading 1 costs no bit
-- $E$ plus bias 127 is stored in $e$, so $e$ is never negative
-- Moving the point changes only the record, not the value
+In a decimal fraction $d_m \cdots d_1 d_0 . d_{-1} \cdots d_{-n}$, digit $i$ has weight $10^{i}$.
+Scientific notation writes it as $d.dd\ldots \times 10^{k}$, e.g. $12.375 = 1.2375 \times 10^{1}$.
+Binary fractions follow the same rule with weight $2^{i}$: $12.375 = 1100.011_2 = 1.100011_2 \times 2^{3}$.
 '''
 # src:
 # 
-# **十进制的科学计数法把数写成 $d.ddd \times 10^{k}$。二进制照此写成 $1.bbb \times 2^{E}$：**
-# **先把数写成二进制，再把小数点移到最高位的 1 之后，移动的位数就是 $E$。**
-# - 小数点后的位构成尾数字段 $f$，最高位的那个 1 由格式规定，不占位
-# - $E$ 加上偏置 127 之后写入阶码字段 $e$，因此 $e$ 始终是非负整数
-# - 移动小数点不改变数值，改变的只是记录方式
+# 十进制小数 $d_m \cdots d_1 d_0 . d_{-1} \cdots d_{-n}$ 的第 $i$ 位权重为 $10^{i}$。
+# 科学计数法把它写成 $d.dd\ldots \times 10^{k}$，例如 $12.375 = 1.2375 \times 10^{1}$。
+# 二进制小数按同样的规则书写，第 $i$ 位权重为 $2^{i}$：$12.375 = 1100.011_2 = 1.100011_2 \times 2^{3}$。
 
-['binary-scientific.demo.1.name']
-src_hash = '66f14d3b'
-text = 'Four numbers, each through the three steps'
-# src: 四个数各自进行这三步
+['fractional-binary.table.1.cell.0.0']
+src_hash = '620c14e4'
+text = '$b_m$'
+# src: $b_m$
 
-['binary-scientific.aside.1']
-src_hash = '158f469c'
-text = 'Check: $6.5 = 110.1_2 = 1.101_2 \times 2^2$, so $e = 127+2 = 129$.'
-# src: 可自行验算：$6.5 = 110.1_2$，小数点左移两位得 $1.101_2 \times 2^2$，$e = 127+2 = 129$。
+['fractional-binary.table.1.cell.0.1']
+src_hash = '204e726a'
+text = '$b_{m-1}$'
+# src: $b_{m-1}$
 
-['binary-scientific.notes.1']
-src_hash = '008307ff'
+['fractional-binary.table.1.cell.0.2']
+src_hash = 'd9beab8c'
+text = '$\cdots$'
+# src: $\cdots$
+
+['fractional-binary.table.1.cell.0.3']
+src_hash = '0289c8dd'
+text = '$b_2$'
+# src: $b_2$
+
+['fractional-binary.table.1.cell.0.4']
+src_hash = '8ed5c725'
+text = '$b_1$'
+# src: $b_1$
+
+['fractional-binary.table.1.cell.0.5']
+src_hash = '66e17f40'
+text = '$b_0$'
+# src: $b_0$
+
+['fractional-binary.table.1.cell.0.6']
+src_hash = 'cdb4ee2a'
+text = '.'
+# src: .
+
+['fractional-binary.table.1.cell.0.7']
+src_hash = '112f188b'
+text = '$b_{-1}$'
+# src: $b_{-1}$
+
+['fractional-binary.table.1.cell.0.8']
+src_hash = '526ff57a'
+text = '$b_{-2}$'
+# src: $b_{-2}$
+
+['fractional-binary.table.1.cell.0.9']
+src_hash = 'ca9fc894'
+text = '$b_{-3}$'
+# src: $b_{-3}$
+
+['fractional-binary.table.1.cell.0.10']
+src_hash = 'd9beab8c'
+text = '$\cdots$'
+# src: $\cdots$
+
+['fractional-binary.table.1.cell.0.11']
+src_hash = 'a4ec39c5'
+text = '$b_{-n}$'
+# src: $b_{-n}$
+
+['fractional-binary.table.1.cell.1.0']
+src_hash = '49ed7220'
+text = '$2^m$'
+# src: $2^m$
+
+['fractional-binary.table.1.cell.1.1']
+src_hash = '57047b2e'
+text = '$2^{m-1}$'
+# src: $2^{m-1}$
+
+['fractional-binary.table.1.cell.1.2']
+src_hash = 'd9beab8c'
+text = '$\cdots$'
+# src: $\cdots$
+
+['fractional-binary.table.1.cell.1.3']
+src_hash = '4b227777'
+text = '4'
+# src: 4
+
+['fractional-binary.table.1.cell.1.4']
+src_hash = 'd4735e3a'
+text = '2'
+# src: 2
+
+['fractional-binary.table.1.cell.1.5']
+src_hash = '6b86b273'
+text = '1'
+# src: 1
+
+['fractional-binary.table.1.cell.1.6']
+src_hash = 'cdb4ee2a'
+text = '.'
+# src: .
+
+['fractional-binary.table.1.cell.1.7']
+src_hash = 'd939926f'
+text = '1/2'
+# src: 1/2
+
+['fractional-binary.table.1.cell.1.8']
+src_hash = 'f70b94ae'
+text = '1/4'
+# src: 1/4
+
+['fractional-binary.table.1.cell.1.9']
+src_hash = '52e90ae2'
+text = '1/8'
+# src: 1/8
+
+['fractional-binary.table.1.cell.1.10']
+src_hash = 'd9beab8c'
+text = '$\cdots$'
+# src: $\cdots$
+
+['fractional-binary.table.1.cell.1.11']
+src_hash = 'd34d446f'
+text = '$2^{-n}$'
+# src: $2^{-n}$
+
+['fractional-binary.slide.2']
+src_hash = '91527e96'
 text = '''
-
-This is a good page to have students work two examples. Take $2.5$ first ($10.1_2$, $E=1$, $e=128$, $f = 0100\ldots$), then $0.375$ ($0.011_2$, $E=-2$, $e=125$, $f = 1000\ldots$). The integer part comes from repeated division by two and the fractional part from repeated multiplication by two, both covered in part one. The $0.1$ on the last line repeats forever, and still repeats forever after the point is moved, so only an approximation can be stored.
+- Bits to the right of the binary point represent fractional powers of 2
+- Represents the rational number $\sum_{i=-n}^{m} b_i \times 2^{i}$
 '''
 # src:
 # 
-# 课堂上适合让学生自己算两个：先取 $2.5$（$10.1_2$，$E=1$，$e=128$，$f = 0100\ldots$），
-# 再取 $0.375$（$0.011_2$，$E=-2$，$e=125$，$f = 1000\ldots$）。
-# 整数部分按除二取余，小数部分按乘二取整，两个方向都在第一部分讲过。
-# 最后一行的 $0.1$ 是无限循环的，小数点移动之后仍然是无限循环，因此只能存一个近似值。
+# - 二进制小数点右侧的位表示 2 的负次幂
+# - 表示的有理数为 $\sum_{i=-n}^{m} b_i \times 2^{i}$
 
-['float-structure.title']
-src_hash = '665fe9d7'
-text = 'The three fields of a floating-point number'
-# src: 浮点数的三段结构
-
-['float-structure.slide.1']
-src_hash = 'e755449a'
+['fractional-binary.notes.1']
+src_hash = '78d5928f'
 text = '''
-A float has a **sign** $s$, an **exponent** $e$ and a **fraction** $f$: $V = (-1)^s \times M \times 2^{E}$.
-- The $k$-bit exponent gives $E = e - (2^{k-1}-1)$; the subtracted constant is the **bias**
-- The $n$-bit fraction gives $M = 1.f$ when normalized; the leading 1 costs no bit
-- Exponent width sets the <mark>range</mark>, fraction width the relative precision
+The header row lists the bits and the row below gives each bit's weight. Moving one place left doubles the weight; moving one place right halves it.
+The integer part of $12.375$ is $12 = 8 + 4$ and the fraction is $0.375 = \frac{1}{4} + \frac{1}{8}$, together $1100.011_2$.
+Scientific notation moves the point to just after the leading digit: 1 place in decimal gives $10^{1}$, 3 places in binary give $2^{3}$.
 '''
 # src:
 # 
-# 一个浮点数由**符号** $s$、**阶码** $e$、**尾数** $f$ 三段位组成，其值为
-# **$V = (-1)^s \times M \times 2^{E}$。**
-# - 阶码占 $k$ 位，按 $E = e - (2^{k-1}-1)$ 解释，减去的常数称为**偏置**
-# - 尾数占 $n$ 位，规格化时 $M = 1.f$，前导的 1 由格式规定，不占位
-# - 两段共用固定的总位数：阶码位数决定<mark>范围</mark>，尾数位数决定<mark>相对精度</mark>
+# 表头是各位，下一行是该位的权重。小数点左侧每向左一位权重乘 2，右侧每向右一位权重除以 2。
+# $12.375$ 的整数部分 $12 = 8 + 4$，小数部分 $0.375 = \frac{1}{4} + \frac{1}{8}$，合起来是 $1100.011_2$。
+# 科学计数法中小数点移到最高位之后：十进制移动 1 位得到 $10^{1}$，二进制移动 3 位得到 $2^{3}$。
 
-['float-structure.aside.1']
-src_hash = 'f55e51d4'
-text = "FP32's bias is 127; the 8-bit field 0–255 then covers both signs of $E$."
-# src: FP32 的偏置为 127，阶码字段的 8 位可以表示 0 到 255，减去偏置后覆盖正负两个方向。
+['frac-examples.title']
+src_hash = '7992cabf'
+text = 'Multiply by two: converting to a binary fraction'
+# src: 乘二取整法：转换到二进制小数
+
+['frac-examples.slide.1']
+src_hash = '28a3730b'
+text = 'The fraction part converts by <mark>multiplying by two</mark>: double repeatedly and take each integer part as the next bit after the point. For 0.2:'
+# src:
+# 
+# 小数部分按<mark>乘二取整</mark>转换：反复乘以 2，依次取出整数部分作为小数点后的各位。以 0.2 为例：
+
+['frac-examples.table.1.cell.0.0']
+src_hash = '172dddb7'
+text = 'Times 2'
+# src: 乘以 2
+
+['frac-examples.table.1.cell.0.1']
+src_hash = 'dbdfb47f'
+text = 'Bit taken'
+# src: 取出的位
+
+['frac-examples.table.1.cell.0.2']
+src_hash = 'eba82837'
+text = 'Remaining fraction'
+# src: 剩余的小数部分
+
+['frac-examples.table.1.cell.1.0']
+src_hash = '4c345c90'
+text = '$0.2 \times 2 = 0.4$'
+# src: $0.2 \times 2 = 0.4$
+
+['frac-examples.table.1.cell.1.1']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['frac-examples.table.1.cell.1.2']
+src_hash = 'f3e360d8'
+text = '0.4'
+# src: 0.4
+
+['frac-examples.table.1.cell.2.0']
+src_hash = 'c9d264cf'
+text = '$0.4 \times 2 = 0.8$'
+# src: $0.4 \times 2 = 0.8$
+
+['frac-examples.table.1.cell.2.1']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['frac-examples.table.1.cell.2.2']
+src_hash = '1e9d7c27'
+text = '0.8'
+# src: 0.8
+
+['frac-examples.table.1.cell.3.0']
+src_hash = 'e31aa640'
+text = '$0.8 \times 2 = 1.6$'
+# src: $0.8 \times 2 = 1.6$
+
+['frac-examples.table.1.cell.3.1']
+src_hash = '6b86b273'
+text = '1'
+# src: 1
+
+['frac-examples.table.1.cell.3.2']
+src_hash = 'b4af4e0d'
+text = '0.6'
+# src: 0.6
+
+['frac-examples.table.1.cell.4.0']
+src_hash = 'd9692a31'
+text = '$0.6 \times 2 = 1.2$'
+# src: $0.6 \times 2 = 1.2$
+
+['frac-examples.table.1.cell.4.1']
+src_hash = '6b86b273'
+text = '1'
+# src: 1
+
+['frac-examples.table.1.cell.4.2']
+src_hash = '44896b09'
+text = '0.2'
+# src: 0.2
+
+['frac-examples.slide.2']
+src_hash = '748788bb'
+text = '''
+- The remainder returns to 0.2 and the cycle repeats: $0.2 = 0.00110011[0011]\ldots_2$
+- Numbers of the form $0.111\ldots1_2$ lie just below 1.0, written $1.0-\varepsilon$
+- Binary fractions can only exactly represent $x/2^{k}$; other numbers have repeating bit patterns
+'''
+# src:
+# 
+# - 剩余部分回到 0.2，此后循环：$0.2 = 0.00110011[0011]\ldots_2$
+# - $0.111\ldots1_2$ 形式的数略小于 1.0，记作 $1.0-\varepsilon$
+# - 二进制小数只能精确表示 $x/2^{k}$ 形式的数，其余的数的位模式无限循环
+
+['frac-examples.notes.1']
+src_hash = '280c9291'
+text = '''
+$0.2 = 1/5$ has a factor of 5 in the denominator, and the bracketed 0011 repeats forever.
+Students can work out $0.375$ on the spot: $0.75$ gives 0, $1.5$ gives 1 leaving $0.5$, $1.0$ gives 1 leaving 0, so $0.011_2$.
+'''
+# src:
+# 
+# $0.2 = 1/5$，分母含因子 5，方括号内的 0011 无限重复。
+# 可以让学生当场算 $0.375$：$0.75$ 取 0，$1.5$ 取 1 剩 $0.5$，$1.0$ 取 1 剩 0 结束，得 $0.011_2$。
+
+['frac-to-bits.title']
+src_hash = '84038ade'
+text = 'Fractional numbers to binary bits'
+# src: 小数转换为二进制位
+
+['frac-to-bits.demo.1.name']
+src_hash = '4914ba07'
+text = 'Converting three fractions'
+# src: 转换三个小数
+
+['frac-to-bits.notes.1']
+src_hash = 'b6b987c0'
+text = '''
+This loop is the multiply-by-two method from the previous page.
+Whenever doubling makes the integer part 1, the current bit is set and 1 is subtracted; `current_bit` shifts right by one each round to point at the next bit.
+If doubling gives exactly 1, the fraction is used up and the loop stops early; 0.2 never runs out within 32 rounds.
+'''
+# src:
+# 
+# 这段循环就是上一页的乘二取整。
+# 每次乘 2 后整数部分为 1，就在当前位写 1 并减去 1；`current_bit` 每轮右移一位，指向下一位。
+# 乘 2 后恰好等于 1 时小数已经取尽，提前结束；0.2 在 32 轮内始终取不尽。
+
+['ieee-history.title']
+src_hash = 'f810cbef'
+text = 'Where IEEE 754 came from'
+# src: IEEE 754 标准的由来
+
+['ieee-history.slide.1']
+src_hash = '03cb78b4'
+text = '''
+- Until the 1980s
+  - Many idiosyncratic formats: fast, easy to implement, less accurate
+- IEEE 754
+  - Designed by W. Kahan for Intel processors; Kahan received the 1989 Turing Award
+  - Based on a small and consistent set of principles: elegant, understandable, hard to make go fast
+'''
+# src:
+# 
+# - 20 世纪 80 年代以前
+#   - 浮点格式各不相同：速度快，实现简单，精度较低
+# - IEEE 754
+#   - 由 W. Kahan 为 Intel 处理器设计，Kahan 于 1989 年获得图灵奖
+#   - 建立在一小组一致的原则之上：简洁，易于理解，难以高效实现
+
+['ieee-history.slide.1.footnote.1']
+src_hash = '1a254c1c'
+text = 'William Kahan was the principal designer of IEEE 754 and the 1989 Turing Award laureate. Photograph from Wikimedia Commons by George Bergman, CC BY-SA 4.0.'
+# src: William Kahan 是 IEEE 754 的主要设计者，1989 年图灵奖得主。照片来自 Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0。
+
+['ieee-history.notes.1']
+src_hash = '8dabad4f'
+text = '''
+Before the standard, the same numerical program could give different results on machines from different vendors.
+IEEE 754 fixes the formats, rounding and special values, and mainstream processors have followed it since.
+'''
+# src:
+# 
+# 标准出现以前，不同厂商的机器上同一段数值程序可能得到不同的结果。
+# IEEE 754 规定了格式、舍入与特殊值，此后主流处理器都遵循它。
+
+['ieee-form.title']
+src_hash = '7b81ab6c'
+text = 'The numeric form and encoding of IEEE floating point'
+# src: IEEE 浮点表示的数值形式与编码
+
+['ieee-form.slide.1']
+src_hash = 'd5780006'
+text = '''
+Numeric form $V = (-1)^{s} \times M \times 2^{E}$, encoded in three fields $s$, $exp$ and $frac$:
+- The sign bit $s$ determines whether the number is negative or positive
+- The $exp$ field encodes the exponent $E$, which weights the value by a power of two
+- The $frac$ field encodes the significand $M$, normally a fractional value in $[1.0, 2.0)$
+'''
+# src:
+# 
+# **数值形式为 $V = (-1)^{s} \times M \times 2^{E}$，编码分为 $s$、$exp$、$frac$ 三个字段：**
+# - 符号位 $s$ 决定数的正负
+# - $exp$ 字段编码阶码 $E$，$E$ 以 2 的幂对数值加权
+# - $frac$ 字段编码尾数 $M$，$M$ 通常是区间 $[1.0, 2.0)$ 内的小数
+
+['ieee-form.table.1.cell.0.0']
+src_hash = '408ce7a7'
+text = 'Precision'
+# src: 精度
+
+['ieee-form.table.1.cell.0.1']
+src_hash = '01c9288d'
+text = 'Total bits'
+# src: 总位数
+
+['ieee-form.table.1.cell.0.2']
+src_hash = '5a1da9bb'
+text = 'exp bits'
+# src: exp 位数
+
+['ieee-form.table.1.cell.0.3']
+src_hash = '26701643'
+text = 'frac bits'
+# src: frac 位数
+
+['ieee-form.table.1.cell.1.0']
+src_hash = '7aa87027'
+text = 'Single'
+# src: 单精度
+
+['ieee-form.table.1.cell.1.1']
+src_hash = 'e29c9c18'
+text = '32'
+# src: 32
+
+['ieee-form.table.1.cell.1.2']
+src_hash = '2c624232'
+text = '8'
+# src: 8
+
+['ieee-form.table.1.cell.1.3']
+src_hash = '535fa30d'
+text = '23'
+# src: 23
+
+['ieee-form.table.1.cell.2.0']
+src_hash = '9a83651e'
+text = 'Double'
+# src: 双精度
+
+['ieee-form.table.1.cell.2.1']
+src_hash = 'a68b412c'
+text = '64'
+# src: 64
+
+['ieee-form.table.1.cell.2.2']
+src_hash = '4fc82b26'
+text = '11'
+# src: 11
+
+['ieee-form.table.1.cell.2.3']
+src_hash = '41cfc0d1'
+text = '52'
+# src: 52
+
+['ieee-form.notes.1']
+src_hash = '6805ff9f'
+text = '''
+The figure is the FP32 encoding of 3.1415927: sign bit 0, exponent field 128, significand $M = 1.5708$, $E = 1$.
+This matches binary scientific notation $1.bb\ldots \times 2^{E}$: the sign is taken out and $M$ is confined to $[1.0, 2.0)$,
+so every nonzero number has exactly one way of being written. The fields run from the high bits to the low bits, with the sign as the top bit.
+In C, `float` is single precision and `double` is double precision. The next pages give the rules for encoding the two fields.
+'''
+# src:
+# 
+# 图中是 3.1415927 的 FP32 编码：符号位 0，阶码字段 128，尾数 $M = 1.5708$，$E = 1$。
+# 这与二进制科学计数法 $1.bb\ldots \times 2^{E}$ 的写法一致：符号单独拿出来，$M$ 限定在 $[1.0, 2.0)$ 内，
+# 每个非零数因此只有一种写法。三个字段从高位到低位依次排列，符号位是最高位。
+# C 语言中 `float` 对应单精度，`double` 对应双精度。两个字段的编码规则在后面几页讲。
+
+['normalized-exp.title']
+src_hash = '7214b6aa'
+text = 'Normalized values: the exponent'
+# src: 规格化值：阶码
+
+['normalized-exp.slide.1']
+src_hash = '67a821aa'
+text = '''
+- Condition: $exp \neq 000\ldots0$ and $exp \neq 111\ldots1$
+- The exponent is coded as a biased value: $E = Exp - Bias$
+  - $Exp$: the unsigned value of the $exp$ field
+  - $Bias$: the bias, in general $2^{m-1}-1$, where $m$ is the number of $exp$ bits
+'''
+# src:
+# 
+# - 条件：$exp \neq 000\ldots0$ 且 $exp \neq 111\ldots1$
+# - 阶码按偏置值编码：$E = Exp - Bias$
+#   - $Exp$：$exp$ 字段表示的无符号数
+#   - $Bias$：偏置值，一般为 $2^{m-1}-1$，$m$ 为 $exp$ 的位数
+
+['normalized-exp.table.1.cell.0.0']
+src_hash = '408ce7a7'
+text = 'Precision'
+# src: 精度
+
+['normalized-exp.table.1.cell.0.1']
+src_hash = '93216e80'
+text = '$Bias$'
+# src: $Bias$
+
+['normalized-exp.table.1.cell.0.2']
+src_hash = '0eb2598c'
+text = 'Range of $Exp$'
+# src: $Exp$ 的范围
+
+['normalized-exp.table.1.cell.0.3']
+src_hash = 'c6764390'
+text = 'Range of $E$'
+# src: $E$ 的范围
+
+['normalized-exp.table.1.cell.1.0']
+src_hash = '7aa87027'
+text = 'Single'
+# src: 单精度
+
+['normalized-exp.table.1.cell.1.1']
+src_hash = '922c7954'
+text = '127'
+# src: 127
+
+['normalized-exp.table.1.cell.1.2']
+src_hash = '68a68e58'
+text = '1 … 254'
+# src: 1 … 254
+
+['normalized-exp.table.1.cell.1.3']
+src_hash = 'b1ad7bc4'
+text = '−126 … 127'
+# src: −126 … 127
+
+['normalized-exp.table.1.cell.2.0']
+src_hash = '9a83651e'
+text = 'Double'
+# src: 双精度
+
+['normalized-exp.table.1.cell.2.1']
+src_hash = '6629ddae'
+text = '1023'
+# src: 1023
+
+['normalized-exp.table.1.cell.2.2']
+src_hash = 'f52cc020'
+text = '1 … 2046'
+# src: 1 … 2046
+
+['normalized-exp.table.1.cell.2.3']
+src_hash = '3b9443c1'
+text = '−1022 … 1023'
+# src: −1022 … 1023
+
+['normalized-exp.notes.1']
+src_hash = '4a3e4fc4'
+text = '''
+The all-zeros and all-ones values of $exp$ are reserved for denormalized and special values; normalized values use the range in between.
+$Exp$ is unsigned, and subtracting the bias lets $E$ cover both directions; exponents of two numbers can be compared directly as unsigned values.
+'''
+# src:
+# 
+# $exp$ 全 0 与全 1 两种取值留给非规格化值和特殊值，规格化值只用中间的部分。
+# $Exp$ 是无符号数，减去偏置后 $E$ 覆盖正负两个方向，比较两个数的阶码时可以直接按无符号数比较。
+
+['normalized-frac.title']
+src_hash = '8a92f627'
+text = 'Normalized values: the significand'
+# src: 规格化值：尾数
+
+['normalized-frac.slide.1']
+src_hash = '63e2f607'
+text = '''
+- The significand is coded with an implied leading 1: $M = 1.xxx\ldots x_2$
+  - $xxx\ldots x$: the bits of the $frac$ field
+  - Minimum when $frac = 000\ldots0$: $M = 1.0$
+  - Maximum when $frac = 111\ldots1$: $M = 2.0 - \varepsilon$
+  - The leading 1 takes no space, which gives an extra bit for free
+'''
+# src:
+# 
+# - 尾数带有隐含的前导 1：$M = 1.xxx\ldots x_2$
+#   - $xxx\ldots x$：$frac$ 字段的各位
+#   - $frac = 000\ldots0$ 时取最小值，$M = 1.0$
+#   - $frac = 111\ldots1$ 时取最大值，$M = 2.0 - \varepsilon$
+#   - 前导的 1 不占位，相当于多得到一位
+
+['normalized-frac.notes.1']
+src_hash = 'b3459427'
+text = '''
+The top bit of a normalized number is always 1, so storing it carries no information and the format leaves it implied.
+The 23 $frac$ bits of single precision are therefore the last 23 of 24 significant bits.
+'''
+# src:
+# 
+# 规格化的数最高位总是 1，存下来不携带信息，因此格式规定它隐含存在。
+# 单精度的 23 位 $frac$ 因此表示的是 24 位有效数字中的后 23 位。
+
+['normalized-example.title']
+src_hash = '6ea23a73'
+text = 'A normalized encoding example'
+# src: 规格化编码的例子
+
+['normalized-example.demo.1.name']
+src_hash = '18d577d4'
+text = 'Encoding 12345 as a single-precision float'
+# src: 把 12345 编码为单精度浮点数
+
+['normalized-example.slide.1']
+src_hash = '5b2e96fc'
+text = '''
+- The point moves left by 13 places: $E = 13$, $Exp = 13 + 127 = 140$
+- Drop the leading 1 and pad the 13 bits after the point with zeros to 23 bits to get $frac$
+- Concatenating $s = 0$, $exp$ and $frac$ gives `0x4640E400`
+'''
+# src:
+# 
+# - 小数点左移 13 位，$E = 13$，$Exp = 13 + 127 = 140$
+# - 去掉前导 1，小数点后的 13 位补 0 到 23 位，得到 $frac$
+# - 依次拼接 $s = 0$、$exp$、$frac$，得到 `0x4640E400`
+
+['normalized-example.notes.1']
+src_hash = 'fac9f64d'
+text = "The program uses `memcpy` to copy the float's 4 bytes into an unsigned, then extracts the three fields bit by bit; each line of output matches a step of the hand calculation."
+# src:
+# 
+# 程序用 `memcpy` 把 float 的 4 个字节拷进 unsigned，再按位取出三个字段，输出与手算的每一步对应。
+
+['denormalized.title']
+src_hash = '60d93cbf'
+text = 'Denormalized values'
+# src: 非规格化值
+
+['denormalized.slide.1']
+src_hash = '09ff0d54'
+text = '''
+- Condition: $exp = 000\ldots0$
+- Exponent $E = 1 - Bias$, significand $M = 0.xxx\ldots x_2$, where $xxx\ldots x$ are the bits of $frac$
+- $frac = 000\ldots0$: represents 0; $+0$ and $-0$ are distinct values
+- $frac \neq 000\ldots0$: numbers very close to 0.0
+'''
+# src:
+# 
+# - 条件：$exp = 000\ldots0$
+# - 阶码 $E = 1 - Bias$，尾数 $M = 0.xxx\ldots x_2$，$xxx\ldots x$ 为 $frac$ 字段的各位
+# - $frac = 000\ldots0$：表示 0，$+0$ 与 $-0$ 是两个不同的值
+# - $frac \neq 000\ldots0$：非常接近 0.0 的数
+
+['denormalized.demo.1.name']
+src_hash = 'df6f4480'
+text = 'Decoding three single-precision bit patterns with an all-zero exp field'
+# src: 解码三个阶码字段全 0 的单精度位模式
+
+['denormalized.notes.1']
+src_hash = '5134bf8a'
+text = '''
+$E$ is $1 - Bias$ rather than $0 - Bias$ so that the largest denormalized number sits right next to the smallest normalized one, with no gap.
+In single precision a denormalized number has $E = -126$ and $M < 1$.
+The three demo rows: sign bit 1 with everything else 0 is $-0$; with only the top bit of $frac$ set, $M = 0.5$ and the value is $2^{-127}$;
+with only the lowest bit of $frac$ set, $M = 2^{-23}$ and the value is $2^{-149}$, the smallest positive number.
+'''
+# src:
+# 
+# $E$ 取 $1 - Bias$ 而非 $0 - Bias$，使最大的非规格化数与最小的规格化数相邻，中间不出现间隙。
+# 单精度中非规格化数的 $E = -126$，$M < 1$。
+# demo 的三行：符号位为 1、其余全 0 是 $-0$；$frac$ 最高位为 1 时 $M = 0.5$，值为 $2^{-127}$；
+# $frac$ 只有最低位为 1 时 $M = 2^{-23}$，值为 $2^{-149}$，是最小的正数。
+
+['special-values.title']
+src_hash = '5c096fe6'
+text = 'Special values'
+# src: 特殊值
+
+['special-values.slide.1']
+src_hash = 'cea2655a'
+text = '''
+
+- Condition: $exp = 111\ldots1$
+- $frac = 000\ldots0$: represents infinity $\infty$
+  - Produced by an operation that overflows
+  - Comes in $+\infty$ and $-\infty$
+  - E.g. $1.0/0.0 = -1.0/{-0.0} = +\infty$, $1.0/{-0.0} = -\infty$
+- $frac \neq 000\ldots0$: Not-a-Number (NaN)
+  - Represents the result of an operation with no determinable numeric value
+  - E.g. $\sqrt{-1}$, $\infty - \infty$, $\infty \times 0$
+- A NaN compared with any value is false under `<`, `<=`, `>`, `>=` and `==` and true under `!=`, so `x != x` tests for NaN
+'''
+# src:
+# 
+# - 条件：$exp = 111\ldots1$
+# - $frac = 000\ldots0$：表示无穷 $\infty$
+#   - 运算溢出时得到
+#   - 分为 $+\infty$ 与 $-\infty$
+#   - 例：$1.0/0.0 = -1.0/{-0.0} = +\infty$，$1.0/{-0.0} = -\infty$
+# - $frac \neq 000\ldots0$：非数（NaN，Not-a-Number）
+#   - 表示无法确定数值的运算结果
+#   - 例：$\sqrt{-1}$，$\infty - \infty$，$\infty \times 0$
+# - NaN 与任何值的 `<`、`<=`、`>`、`>=`、`==` 均为假，`!=` 为真，`x != x` 因此可用于判断 NaN
+
+['special-values.notes.1']
+src_hash = '56c436c1'
+text = '''
+
+In single precision the bit pattern of $+\infty$ is `0x7F800000` and that of $-\infty$ is `0xFF800000`.
+The $frac$ of a NaN can be any nonzero value, so $2 \times (2^{23} - 1)$ bit patterns are NaN.
+$1.0/{-0.0} = -\infty$ shows that $+0$ and $-0$ compare equal as floating-point values yet give results of different sign in division.
+'''
+# src:
+# 
+# 单精度中 $+\infty$ 的位模式是 `0x7F800000`，$-\infty$ 是 `0xFF800000`。
+# NaN 的 $frac$ 可以取任意非零值，因此 NaN 对应的位模式有 $2 \times (2^{23} - 1)$ 个。
+# $1.0/{-0.0} = -\infty$ 说明 $+0$ 与 $-0$ 按浮点比较相等，参与除法时结果的符号不同。
 
 ['float-encoding.title']
-src_hash = '3856fab8'
-text = 'The three cases of the exponent field'
-# src: 阶码字段的三类取值
+src_hash = 'ff15a2c5'
+text = 'Summary of floating-point encoding'
+# src: 浮点数编码小结
 
 ['float-encoding.table.1.cell.0.0']
 src_hash = '8b5e2158'
@@ -2103,35 +2684,41 @@ src_hash = '384f3e3b'
 text = 'undefined, such as $0/0$'
 # src: $0/0$ 一类无定义的结果
 
-['float-encoding.slide.1']
-src_hash = 'c95979b5'
-text = '''
-- Denormalized values drop the leading 1, so values near zero stay evenly spaced
-- $+0$ and $-0$ are distinct bit patterns that compare equal
-- NaN is false under `<` `<=` `>` `>=` `==` and true under `!=`, so `x != x` tests it
-'''
-# src:
-# 
-# - 非规格化数取消前导的 1，使零附近的可表示值保持均匀间隔，并让下溢逐步发生
-# - $+0$ 与 $-0$ 是两个不同的位模式，按浮点比较相等
-# - NaN 与任何值的 `<`、`<=`、`>`、`>=`、`==` 均为假，`!=` 为真，`x != x` 因此可用于判断
-
-['float-encoding.highlight.1']
-src_hash = '723e2322'
-text = 'Reserving all 0s and all 1s leaves exponents −126 to 127.'
-# src: 全 0 与全 1 被保留，8 位阶码的实际指数范围是 −126 到 127。
-
 ['float-encoding.notes.1']
-src_hash = '8650683b'
+src_hash = '51812e49'
 text = '''
 
+The all-zeros and all-ones exponent values are reserved, so the usable exponent range of an 8-bit exponent is −126 to 127.
+Denormalized values drop the leading 1, which keeps the representable values near zero evenly spaced, so underflow happens gradually.
 Denormalized values take $E = -126$ rather than $-127$ so that the largest denormalized value meets the smallest normalized one with no gap between them. The low-precision formats follow the same rules: among the representable values of FP8 E4M3, a substantial share are denormalized.
 '''
 # src:
 # 
+# 全 0 与全 1 被保留，8 位阶码的实际指数范围是 −126 到 127。
+# 非规格化数取消前导的 1，使零附近的可表示值保持均匀间隔，下溢因此逐步发生。
 # 非规格化数的 $E$ 取 $-126$ 而非 $-127$，是为了让最大的非规格化数与最小的
 # 规格化数首尾相接，中间不出现间隙。低精度格式沿用同一套规则：FP8 E4M3 的
 # 可表示值里，非规格化数占了相当一部分。
+
+['bridge-5.title']
+src_hash = '5ea00915'
+text = 'Part five · Floating-point precision and low-precision formats'
+# src: 第五部分 · 浮点数的精度与低精度格式
+
+['bridge-5.bridge.1']
+src_hash = '24d2c1b8'
+text = '''
+Part five · Floating-point precision and low-precision formats
+The distribution of representable values, rounding, and floating-point formats with fewer bits
+'''
+# src:
+# 第五部分 · 浮点数的精度与低精度格式
+# 可表示值的分布、舍入，以及更少位的浮点格式
+
+['section.float-formats.title']
+src_hash = '5ea00915'
+text = 'Part five · Floating-point precision and low-precision formats'
+# src: 第五部分 · 浮点数的精度与低精度格式
 
 ['float-distribution.title']
 src_hash = 'c02d1dd6'
@@ -2139,57 +2726,92 @@ text = 'How floating-point values are distributed on the real line'
 # src: 浮点数在实数轴上的分布
 
 ['float-distribution.slide.1']
-src_hash = '9cd2e9f1'
+src_hash = '3bd9fd07'
 text = '''
-
-- The exponent selects an interval $[2^E, 2^{E+1})$, and the fraction divides that interval into $2^n$ equal parts
-- Each time a power of two is crossed the interval doubles, the step doubles with it, and the representable values thin out
-- The step is proportional to the value itself, so the relative precision stays essentially constant across the whole range
+- The exponent selects an interval $[2^E, 2^{E+1})$ and the fraction divides it into $2^n$ equal parts; each power of two crossed doubles the step
+- The step is proportional to the value: absolute precision falls as values grow, while <mark>relative precision</mark> stays constant
 '''
 # src:
 # 
-# - 阶码选定一个区间 $[2^E, 2^{E+1})$，尾数把这个区间等分为 $2^n$ 份
-# - 每跨过一个 2 的幂，区间长度加倍，步长随之加倍，可表示的值随之变稀
-# - 步长与数值本身成比例，因此相对精度在整个范围内基本不变
+# - 阶码选定区间 $[2^E, 2^{E+1})$，尾数把它等分为 $2^n$ 份；每跨过一个 2 的幂，步长加倍
+# - 步长与数值成比例：绝对精度随数值增大而下降，<mark>相对精度</mark>保持不变
+
+['float-distribution.table.1.cell.0.0']
+src_hash = 'e68795ed'
+text = 'FP32 interval'
+# src: FP32 的区间
+
+['float-distribution.table.1.cell.0.1']
+src_hash = '3ce58068'
+text = 'Step $2^{E-23}$'
+# src: 步长 $2^{E-23}$
+
+['float-distribution.table.1.cell.0.2']
+src_hash = '78072acc'
+text = 'Step / interval start'
+# src: 步长 / 区间起点
+
+['float-distribution.table.1.cell.1.0']
+src_hash = '9d20b5d5'
+text = '$[1, 2)$'
+# src: $[1, 2)$
+
+['float-distribution.table.1.cell.1.1']
+src_hash = 'f4701a0e'
+text = '$2^{-23} \approx 1.2 \times 10^{-7}$'
+# src: $2^{-23} \approx 1.2 \times 10^{-7}$
+
+['float-distribution.table.1.cell.1.2']
+src_hash = 'feb83cc3'
+text = '$2^{-23}$'
+# src: $2^{-23}$
+
+['float-distribution.table.1.cell.2.0']
+src_hash = 'd96a20c0'
+text = '$[2^{10}, 2^{11})$'
+# src: $[2^{10}, 2^{11})$
+
+['float-distribution.table.1.cell.2.1']
+src_hash = '3eec6ea8'
+text = '$2^{-13} \approx 1.2 \times 10^{-4}$'
+# src: $2^{-13} \approx 1.2 \times 10^{-4}$
+
+['float-distribution.table.1.cell.2.2']
+src_hash = 'feb83cc3'
+text = '$2^{-23}$'
+# src: $2^{-23}$
+
+['float-distribution.table.1.cell.3.0']
+src_hash = 'c6272995'
+text = '$[2^{24}, 2^{25})$'
+# src: $[2^{24}, 2^{25})$
+
+['float-distribution.table.1.cell.3.1']
+src_hash = '5aa1ba5b'
+text = '$2^{1} = 2$'
+# src: $2^{1} = 2$
+
+['float-distribution.table.1.cell.3.2']
+src_hash = 'feb83cc3'
+text = '$2^{-23}$'
+# src: $2^{-23}$
 
 ['float-distribution.notes.1']
-src_hash = '5ce97198'
+src_hash = '4d76ea39'
 text = '''
-
-The figure uses a simplified format with only 3 fraction bits; FP32 divides each interval into $2^{23}$ parts on the same principle. The denormalized values near zero are the one evenly spaced stretch, filling the gap between the smallest normalized value and zero.
+The figure uses a simplified format with only 3 fraction bits; FP32 divides each interval into $2^{23}$ parts on the same principle.
+Each interval in the table has length $2^E$; dividing by $2^{23}$ gives the step $2^{E-23}$, and dividing the step by the interval start $2^E$ always gives $2^{-23}$.
+Absolute precision falls as values grow: above $2^{24}$ neighbouring FP32 values differ by 2, so odd integers are no longer representable;
+near $10^9$ the step is 64, so a counter kept in a float stops changing when 1 is added once it reaches a billion.
+The denormalized values near zero are the one evenly spaced stretch, filling the gap between the smallest normalized value and zero.
 '''
 # src:
 # 
 # 图中用的是尾数只有 3 位的简化格式，FP32 的每个区间被等分成 $2^{23}$ 份，道理相同。
-# 零附近的非规格化数是唯一一段等距区域，它填补了最小规格化数与零之间的空隙。
-
-['float-spacing-measured.title']
-src_hash = '094a8a10'
-text = 'The distance between two adjacent FP32 values'
-# src: 相邻两个 FP32 之间的距离
-
-['float-spacing-measured.demo.1.name']
-src_hash = 'cb193dd6'
-text = 'The next representable value above several numbers'
-# src: 对若干个数值取它的下一个可表示值
-
-['float-spacing-measured.highlight.1']
-src_hash = '330bbef4'
-text = 'Absolute precision falls as the value grows, while relative precision stays constant.'
-# src: 绝对精度随数值增大而下降，相对精度保持不变。
-
-['float-spacing-measured.notes.1']
-src_hash = '1f2e46f8'
-text = '''
-
-The last column is the step divided by the value, and it is essentially the same on every row — that is what constant relative precision means. Near $10^9$ the step is 64, so a counter kept in a float stops changing when incremented past a billion. The same reasoning explains "above $2^{24}$ adjacent FP32 values differ by 2": the step in the interval containing $2^{24}$ is $2^{24-23} = 2$. The program takes the next representable value with `nextafterf` and performs no bit manipulation.
-'''
-# src:
-# 
-# 最后一列是步长与数值之比，各行基本相同，这就是相对精度不变的含义。
+# 表中每个区间的长度是 $2^E$，除以 $2^{23}$ 得到步长 $2^{E-23}$；步长除以区间起点 $2^E$，结果总是 $2^{-23}$。
+# 绝对精度随数值增大而下降：$2^{24}$ 以上相邻两个 FP32 相差 2，奇数已经无法表示；
 # $10^9$ 附近的步长是 64，一个用 float 记录的计数器数到十亿之后，加一不再改变它的值。
-# 同样的道理解释了「$2^{24}$ 以上相邻两个 FP32 相差 2」：$2^{24}$ 所在区间的步长是
-# $2^{24-23} = 2$。程序用 `nextafterf` 取下一个可表示值，不做任何位运算。
+# 零附近的非规格化数是唯一一段等距区域，它填补了最小规格化数与零之间的空隙。
 
 ['float-rounding.title']
 src_hash = '225a5686'
@@ -2215,22 +2837,268 @@ text = '''
 # - 中点处取尾数末位为偶的那个，称为<mark>舍入到最近的偶数</mark>，使误差不朝一个方向累积
 # - `0.1` 在二进制下是无限循环小数，有限位的格式只能存一个近似值
 
-['float-rounding.slide.1.footnote.1']
-src_hash = '1a254c1c'
-text = 'William Kahan was the principal designer of IEEE 754 and the 1989 Turing Award laureate. Photograph from Wikimedia Commons by George Bergman, CC BY-SA 4.0.'
-# src: William Kahan 是 IEEE 754 的主要设计者，1989 年图灵奖得主。照片来自 Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0。
-
 ['float-rounding.notes.1']
-src_hash = '78e57ed6'
+src_hash = '6259ac85'
 text = '''
 
-Round to nearest even is the IEEE 754 default; toward zero, up and down are the other three modes. Both rules guarantee that a single rounding errs by no more than half a step, which is the basis of the quantization error bound; the section on quantization shows how that bound fails once the two ends of the coding interval are asymmetric.
+Round to nearest even is the IEEE 754 default; the next page lists all four modes.
+Both rules guarantee that a single rounding errs by no more than half a step, which is the basis of the quantization error bound;
+the section on quantization shows how that bound fails once the two ends of the coding interval are asymmetric.
 '''
 # src:
 # 
-# 舍入到最近的偶数是 IEEE 754 的默认模式，另有向零、向上、向下三种模式。
+# 舍入到最近的偶数是 IEEE 754 的默认模式，下一页列出全部四种模式。
 # 两种规则都保证单次舍入的误差不超过半个步长，这是量化误差上界的依据；
 # 量化那一节会说明编码区间两端不对称时这个上界如何失效。
+
+['rounding-modes.title']
+src_hash = 'aeec42f4'
+text = 'The four IEEE 754 rounding modes'
+# src: IEEE 754 的四种舍入模式
+
+['rounding-modes.demo.1.name']
+src_hash = '5b89f925'
+text = 'Rounding five values to integers in four modes'
+# src: 五个值在四种模式下取整
+
+['rounding-modes.slide.1']
+src_hash = '9dbcd780'
+text = '''
+
+- **Downward** takes the nearest value not above the true value, **upward** the nearest not below it, **toward zero** drops the fractional part
+- **Round to nearest even** is the default; it differs from round-half-up only at midpoints, where both 1.50 and 2.50 give 2
+- The other three modes always err toward the same side, so a sum over many values comes out systematically too large or too small
+'''
+# src:
+# 
+# - **向下**取不大于真值的最近值，**向上**取不小于真值的最近值，**向零**丢弃小数部分
+# - **舍入到最近的偶数**是默认模式；只在中点处与四舍五入不同，1.50 与 2.50 都得到 2
+# - 其余三种模式的误差总是偏向同一侧，对大量数值求和时结果会系统性地偏大或偏小
+
+['rounding-modes.notes.1']
+src_hash = 'ae5c5a98'
+text = '''
+
+The program switches modes with `fesetround`, and `nearbyint` rounds in the current mode.
+Round to nearest even goes up at half of the midpoints and down at the other half, so the expected error of a sum is zero.
+A decimal example, rounding to two places: 1.2349999 gives 1.23, 1.2350001 gives 1.24,
+1.2350000 gives 1.24 (midpoint, up), and 1.2450000 gives 1.24 (midpoint, down).
+'''
+# src:
+# 
+# 程序用 `fesetround` 切换模式，`nearbyint` 按当前模式取整。
+# 舍入到最近的偶数在中点处一半向上、一半向下，因此求和时误差的期望为零。
+# 十进制下的例子：保留两位小数时，1.2349999 得 1.23，1.2350001 得 1.24，
+# 1.2350000 得 1.24（中点，向上），1.2450000 得 1.24（中点，向下）。
+
+['binary-rounding.title']
+src_hash = '87d9ba1f'
+text = 'Rounding binary fractions'
+# src: 二进制小数的舍入
+
+['binary-rounding.slide.1']
+src_hash = '8b14d25b'
+text = 'Rounding to 2 bits after the binary point (a step of 1/4):'
+# src: 以保留到小数点后 2 位（步长 1/4）为例：
+
+['binary-rounding.table.1.cell.0.0']
+src_hash = 'cda1d55c'
+text = 'Value'
+# src: 值
+
+['binary-rounding.table.1.cell.0.1']
+src_hash = 'd9b89d61'
+text = 'Binary'
+# src: 二进制
+
+['binary-rounding.table.1.cell.0.2']
+src_hash = '7da3ee30'
+text = 'Rounded'
+# src: 舍入结果
+
+['binary-rounding.table.1.cell.0.3']
+src_hash = 'be37d841'
+text = 'Action'
+# src: 动作
+
+['binary-rounding.table.1.cell.0.4']
+src_hash = '151ae4c3'
+text = 'Rounded value'
+# src: 舍入后的值
+
+['binary-rounding.table.1.cell.1.0']
+src_hash = '4339fd0f'
+text = '$2\frac{3}{32}$'
+# src: $2\frac{3}{32}$
+
+['binary-rounding.table.1.cell.1.1']
+src_hash = 'e046bcea'
+text = '`10.00011`'
+# src: `10.00011`
+
+['binary-rounding.table.1.cell.1.2']
+src_hash = '3a49e90f'
+text = '`10.00`'
+# src: `10.00`
+
+['binary-rounding.table.1.cell.1.3']
+src_hash = '967a206e'
+text = 'Down'
+# src: 向下
+
+['binary-rounding.table.1.cell.1.4']
+src_hash = 'b71be43b'
+text = '$2$'
+# src: $2$
+
+['binary-rounding.table.1.cell.2.0']
+src_hash = 'b12b5065'
+text = '$2\frac{3}{16}$'
+# src: $2\frac{3}{16}$
+
+['binary-rounding.table.1.cell.2.1']
+src_hash = 'd507ce4e'
+text = '`10.00110`'
+# src: `10.00110`
+
+['binary-rounding.table.1.cell.2.2']
+src_hash = '99bfd9ed'
+text = '`10.01`'
+# src: `10.01`
+
+['binary-rounding.table.1.cell.2.3']
+src_hash = '0ad9fc2d'
+text = 'Up'
+# src: 向上
+
+['binary-rounding.table.1.cell.2.4']
+src_hash = '9ef75220'
+text = '$2\frac{1}{4}$'
+# src: $2\frac{1}{4}$
+
+['binary-rounding.table.1.cell.3.0']
+src_hash = '5cfb5291'
+text = '$2\frac{7}{8}$'
+# src: $2\frac{7}{8}$
+
+['binary-rounding.table.1.cell.3.1']
+src_hash = 'cc55b365'
+text = '`10.11100`'
+# src: `10.11100`
+
+['binary-rounding.table.1.cell.3.2']
+src_hash = '53f409a5'
+text = '`11.00`'
+# src: `11.00`
+
+['binary-rounding.table.1.cell.3.3']
+src_hash = '0ad9fc2d'
+text = 'Up'
+# src: 向上
+
+['binary-rounding.table.1.cell.3.4']
+src_hash = '4744619e'
+text = '$3$'
+# src: $3$
+
+['binary-rounding.table.1.cell.4.0']
+src_hash = '466d2d3a'
+text = '$2\frac{5}{8}$'
+# src: $2\frac{5}{8}$
+
+['binary-rounding.table.1.cell.4.1']
+src_hash = '2c8c0648'
+text = '`10.10100`'
+# src: `10.10100`
+
+['binary-rounding.table.1.cell.4.2']
+src_hash = '67fe8574'
+text = '`10.10`'
+# src: `10.10`
+
+['binary-rounding.table.1.cell.4.3']
+src_hash = '967a206e'
+text = 'Down'
+# src: 向下
+
+['binary-rounding.table.1.cell.4.4']
+src_hash = '017a886e'
+text = '$2\frac{1}{2}$'
+# src: $2\frac{1}{2}$
+
+['binary-rounding.slide.2']
+src_hash = '5fcffc9a'
+text = '''
+
+- When the bits after the rounding position are `100…0`, the value is a <mark>midpoint</mark> and goes to the side whose last bit is 0; above the midpoint it rounds up, below it rounds down
+- Rounding row 3 up produces a carry, and the integer part changes from `10` to `11`
+'''
+# src:
+# 
+# - 舍入位置之后为 `100…0` 时是<mark>中点</mark>，取末位为 0 的一侧；大于中点向上，小于中点向下
+# - 第 3 行向上时产生进位，整数部分由 `10` 变为 `11`
+
+['binary-rounding.notes.1']
+src_hash = '182d1881'
+text = '''
+
+Row 1 drops `011`, below the midpoint `100`; row 2 drops `110`, above the midpoint.
+Rows 3 and 4 both drop exactly `100`: `10.11` ends in 1 and goes up to `11.00`; `10.10` already ends in 0 and stays.
+Floating-point fractions are rounded by the same rule, and the FP32-to-BF16 conversion later uses exactly this rule.
+'''
+# src:
+# 
+# 第 1 行舍去的是 `011`，小于中点 `100`；第 2 行舍去 `110`，大于中点；
+# 第 3 行与第 4 行舍去的都恰好是 `100`：`10.11` 末位为 1，向上到 `11.00`；`10.10` 末位已是 0，保持不变。
+# 浮点数的尾数按同样的规则舍入，后面 FP32 转换为 BF16 时用的就是这条规则。
+
+['patriot-missile.title']
+src_hash = 'caaa3d66'
+text = 'The Patriot missile: rounding error in 0.1 accumulates over time'
+# src: 爱国者导弹：0.1 的舍入误差随时间累积
+
+['patriot-missile.demo.1.name']
+src_hash = 'ff840035'
+text = 'Computing the clock error after 100 hours'
+# src: 计算 100 小时后的时钟误差
+
+['patriot-missile.slide.1']
+src_hash = '8d30167b'
+text = '''
+
+- On 25 February 1991, a Patriot battery failed to intercept a Scud missile; 28 people died
+- The clock ticked every 0.1 s; the program approximated 0.1 with a 24-bit binary fraction
+- Each tick lost about $10^{-7}$ s; after 100 hours of operation the error was 0.343 s
+
+'''
+# src:
+# 
+# - 1991 年 2 月 25 日，爱国者导弹未能拦截飞毛腿导弹，28 人死亡
+# - 时钟每 0.1 秒计数一次，程序用 24 位二进制小数近似 0.1
+# - 每次计数少约 $10^{-7}$ 秒，连续运行 100 小时后误差 0.343 秒
+
+['patriot-missile.slide.1.footnote.1']
+src_hash = 'b8f44ff9'
+text = 'A Patriot missile launch. Photo from Wikimedia Commons, taken by the U.S. Army, public domain.'
+# src: 爱国者导弹发射。照片来自 Wikimedia Commons，美国陆军拍摄，公有领域。
+
+['patriot-missile.notes.1']
+src_hash = '099444d1'
+text = '''
+
+$0.1 = 0.0\overline{0011}_2$; truncating after 23 bits gives $x = 0.00011001100110011001100_2$,
+and $0.1 - x = 0.00000000000000000000000[1100]\ldots_2 \approx 2^{-20} \times 0.1$.
+100 hours is $100 \times 3600 \times 10 = 3.6 \times 10^6$ ticks; times the per-tick error this gives 0.343 s.
+A Scud travels at about 2000 m/s and covers about 687 m in 0.343 s, which put it outside the radar's tracking window.
+Part of the software had already been changed to compute time precisely while another part still used the old approximation, so the errors did not cancel when the two were subtracted.
+'''
+# src:
+# 
+# $0.1 = 0.0\overline{0011}_2$，截断到小数点后 23 位得到 $x = 0.00011001100110011001100_2$，
+# $0.1 - x = 0.00000000000000000000000[1100]\ldots_2 \approx 2^{-20} \times 0.1$。
+# 100 小时共 $100 \times 3600 \times 10 = 3.6 \times 10^6$ 次计数，乘以单次误差得到 0.343 秒。
+# 飞毛腿导弹的速度约 2000 m/s，0.343 秒内飞行约 687 米，超出了雷达的跟踪窗口。
+# 当时软件的部分代码已改用精确的时间计算，另一部分仍使用旧的近似值，两者相减后误差没有抵消。
 
 ['float-not-real.title']
 src_hash = 'd3103535'
@@ -2257,6 +3125,46 @@ text = '''
 src_hash = 'd7d0fc75'
 text = '`float` is a finite-width approximation, and its operations do not obey the laws of real arithmetic.'
 # src: `float` 是有限位的近似，其运算不满足实数的运算律。
+
+['float-casts.title']
+src_hash = 'f000c308'
+text = 'Conversions between integers and floating point in C'
+# src: C 中整数与浮点数之间的转换
+
+['float-casts.demo.1.name']
+src_hash = '0872ce94'
+text = 'x = 2^24 + 1, f = 0.1f, d = 0.1'
+# src: x = 2^24 + 1，f = 0.1f，d = 0.1
+
+['float-casts.slide.1']
+src_hash = '3c2ffffc'
+text = '''
+
+- `int` to `double` is exact; `int` to `float` must round values above $2^{24}$
+- Floating point to integer <mark>truncates toward zero</mark>; out of `int` range the C standard leaves the result undefined, and x86-64 gives $-2^{31}$
+- `2/3` is integer division and yields 0; `2/3.0` is floating-point division
+'''
+# src:
+# 
+# - `int` 转 `double` 是精确的；转 `float` 时超过 $2^{24}$ 的值需要舍入
+# - 浮点转整数<mark>向零截断</mark>小数部分；超出 `int` 范围时 C 标准未定义结果，x86-64 上得到 $-2^{31}$
+# - `2/3` 是整数除法，结果为 0；`2/3.0` 是浮点除法
+
+['float-casts.notes.1']
+src_hash = 'ef845cf9'
+text = '''
+
+`float` to `double` loses nothing, and converting back to `float` returns the original value; `double` to `float` drops the last 29 fraction bits, so the approximation of 0.1 changes.
+On x86-64 an out-of-range conversion is done by the `cvttsd2si` instruction, which always returns `0x80000000`, the integer indefinite value; other platforms may saturate to the largest or smallest value.
+Quantization must round explicitly when converting floats to integers: `(int)` truncates toward zero, so errors on both sides lean toward 0;
+this lecture's `quant_compare.c` uses `lrintf`, which rounds in the current mode (round to nearest even by default).
+'''
+# src:
+# 
+# `float` 转 `double` 不丢失信息，再转回 `float` 得到原值；`double` 转 `float` 丢掉尾数的后 29 位，0.1 的近似值因此改变。
+# x86-64 上越界的转换由 `cvttsd2si` 指令完成，结果固定为 `0x80000000`，称为 integer indefinite；其他平台可能饱和到最大或最小值。
+# 量化时把浮点数转为整数必须显式舍入：`(int)` 向零截断，正负两侧的误差都偏向 0；
+# 本讲的 `quant_compare.c` 用 `lrintf`，它按当前舍入模式（默认舍入到最近的偶数）取整。
 
 ['precision-formats.title']
 src_hash = '5b35a562'
@@ -2299,74 +3207,90 @@ FP64 divides its bits 1 · 11 · 52 and is used in scientific computing; it rare
 # 加速器上低精度乘加单元的吞吐高于高精度单元。
 
 ['bf16-truncation.title']
-src_hash = '742cec10'
-text = 'BF16 is the first 16 bits of FP32'
-# src: BF16 是 FP32 的前 16 位
+src_hash = '6157818b'
+text = 'Converting FP32 to BF16: keep the top 16 bits, then round'
+# src: FP32 转换为 BF16：保留前 16 位再舍入
 
 ['bf16-truncation.demo.1.name']
-src_hash = 'c6123838'
-text = 'Watching that truncation'
-# src: 观察这一次截断
+src_hash = '7932a759'
+text = 'Converting three values'
+# src: 三个值的转换
 
 ['bf16-truncation.slide.1']
-src_hash = 'd47c0dea'
+src_hash = '54e7a581'
 text = '''
 
-The sign bit and exponent of the two lines are identical; the only difference is the 16 fraction bits that were cut. Converting between FP32 and BF16 therefore <mark>needs nothing but a shift</mark>, with no recomputation of the exponent.
+- The conversion keeps the sign bit, the exponent and the first 7 fraction bits, then rounds on the 16 dropped bits
+- Adding one to an all-ones fraction <mark>carries into the exponent</mark>: 1.99999988 converts with the exponent going from 127 to 128, value 2
 '''
 # src:
 # 
-# 两行的符号位与阶码完全相同，差别只在尾数被截去的 16 位。
-# FP32 与 BF16 之间的转换因此<mark>只需要移位</mark>，不需要重新计算阶码。
+# - 转换保留符号位、阶码与尾数的前 7 位，再按被舍去的 16 位舍入
+# - 尾数全 1 时加一会<mark>进位到阶码</mark>：1.99999988 转换后阶码由 127 变为 128，值为 2
 
 ['bf16-truncation.notes.1']
-src_hash = '45d48451'
+src_hash = 'c7607d82'
 text = '''
 
-This also explains BF16's role in training: it has the same range as FP32, so extra measures such as loss scaling are unnecessary; the cost is a relative precision of about three decimal digits.
+In row 1 the highest dropped bit is 0, so rounding and truncation agree; in row 2 the dropped part exceeds one half and the fraction gains one;
+in row 3 the fraction was all ones, and adding one clears it and increments the exponent. All three rows match the compiler's conversion to `__bf16`.
+The test is the rule from the binary rounding page: `rest` above `0x8000` is more than half, equal to `0x8000` is a midpoint, and the midpoint goes to the even side.
+Carrying from `0x7f7f` gives `0x7f80`, infinity, which agrees with how round-to-nearest overflows; this code does not handle NaN.
+`examples/bf16.c` only truncates and prints the part of π that is dropped, for comparison.
+BF16's role in training: it has the same range as FP32, so extra measures such as loss scaling are unnecessary;
+the cost is a relative precision of about three decimal digits.
 '''
 # src:
 # 
-# 这也解释了 BF16 在训练中的作用：与 FP32 范围一致，因此不需要 loss scaling
-# 一类的额外处理；代价是相对精度下降到约三位十进制有效数字。
+# 第一行被舍去的最高位是 0，舍入与截断的结果相同；第二行被舍去的部分大于一半，尾数加一；
+# 第三行尾数本来全 1，加一后尾数清零、阶码加一。三行都与编译器对 `__bf16` 的转换一致。
+# 判断条件就是前面二进制舍入那一页的规则：`rest` 大于 `0x8000` 时超过一半，等于 `0x8000` 时是中点，取末位为偶。
+# `0x7f7f` 再进位得到 `0x7f80`，即无穷，与舍入到最近值时溢出的规定一致；NaN 的情形这段代码没有处理。
+# `examples/bf16.c` 只做截断，打印 π 被舍去的部分，可以对照阅读。
+# BF16 在训练中的作用：与 FP32 范围一致，因此不需要 loss scaling 一类的额外处理；
+# 代价是相对精度下降到约三位十进制有效数字。
 
-['fp16-classes.title']
-src_hash = '98eba115'
-text = 'FP16 encoding and subnormal numbers'
-# src: FP16 的编码与次规格化数
+['bf16-classes.title']
+src_hash = 'da25a32a'
+text = 'Normalized and denormalized values in BF16'
+# src: BF16 的规格化数与非规格化数
 
-['fp16-classes.demo.1.name']
-src_hash = 'aecc0495'
-text = 'Several bit patterns read as FP16'
-# src: 对若干个位模式按 FP16 解释
+['bf16-classes.demo.1.name']
+src_hash = 'adf4251b'
+text = 'Interpret several bit patterns as BF16'
+# src: 对若干个位模式按 BF16 解释
 
-['fp16-classes.slide.1']
-src_hash = '24b36d16'
+['bf16-classes.slide.1']
+src_hash = '2e0d2ef7'
 text = '''
-- 1 sign bit, 5 exponent bits, 10 fraction bits, bias 15; a normal value is $(-1)^s \times 1.f \times 2^{e-15}$
-- An all-zero exponent gives a <mark>subnormal number</mark> with no leading 1: $(-1)^s \times 0.f \times 2^{-14}$, i.e. $f \times 2^{-24}$
-- `0x03ff` is $1023 \times 2^{-24}$ and `0x0400` is $1024 \times 2^{-24}$; across the step from subnormal to normal, neighbouring values differ by exactly $2^{-24}$
+
+- 1 sign bit, 8 exponent bits, 7 fraction bits, bias 127; a normalized value is $(-1)^s \times 1.f \times 2^{e-127}$
+- An all-zero exponent gives a <mark>denormalized value</mark> $(-1)^s \times 0.f \times 2^{-126}$, which joins the normalized range without a gap
+- An all-ones exponent is a special value: a zero fraction means infinity, a nonzero fraction means NaN
 '''
 # src:
 # 
-# - 1 位符号、5 位阶码、10 位尾数，偏置为 15；规格化数的值为 $(-1)^s \times 1.f \times 2^{e-15}$
-# - 阶码全 0 为<mark>次规格化数</mark>，尾数不带前导的 1，值为 $(-1)^s \times 0.f \times 2^{-14}$，即 $f \times 2^{-24}$
-# - `0x03ff` 为 $1023 \times 2^{-24}$，`0x0400` 为 $1024 \times 2^{-24}$，从次规格化数到规格化数，相邻两值恰好相差 $2^{-24}$
+# - 1 位符号、8 位阶码、7 位尾数，偏置 127；规格化数为 $(-1)^s \times 1.f \times 2^{e-127}$
+# - 阶码全 0 为<mark>非规格化数</mark>，值为 $(-1)^s \times 0.f \times 2^{-126}$，与规格化数首尾相接
+# - 阶码全 1 为特殊值：尾数为 0 表示无穷，尾数非 0 表示 NaN
 
-['fp16-classes.notes.1']
-src_hash = '6ca90cab'
+['bf16-classes.notes.1']
+src_hash = '932d4497'
 text = '''
 
-Subnormal numbers are the denormalized values with an all-zero exponent from the earlier table; the two names refer to the same class. The rules are those of FP32 with narrower fields: with an all-zero exponent $E$ is $1-15=-14$ rather than $-15$, so the last subnormal value meets the first normal value. The subnormal step is a fixed $2^{-24}$, so these values are evenly spaced in $[0, 2^{-14})$. The two classes with an all-one exponent match FP32: a zero fraction means infinity and a non-zero fraction means NaN. The program copies each bit pattern into a GCC `_Float16` variable and prints it as a float, so the decoding is done by the compiler.
+BF16 follows exactly the same rules as FP32; only the fraction shrinks from 23 bits to 7, while the 8 exponent bits stay the same.
+With an all-zero exponent, $E$ is $1-127=-126$ rather than $-127$: the largest denormalized value `0x007f` is $127 \times 2^{-133}$,
+and the smallest normalized value `0x0080` is $128 \times 2^{-133} = 2^{-126}$, one step $2^{-133}$ apart.
+`0x0080` equals the smallest normalized FP32 value, and `0x7f7f` is of the same order as the FP32 maximum; both follow from the shared exponent.
+The program copies each bit pattern into a GCC `__bf16` variable and prints it as a float, so the compiler does the decoding.
 '''
 # src:
 # 
-# 次规格化数即前面表格中阶码全 0 的非规格化数，两个名称指同一类值。
-# 与 FP32 的规则相同，只是字段宽度不同：阶码全 0 时 $E$ 取 $1-15=-14$ 而非 $-15$，
-# 使次规格化数的最后一个值与规格化数的第一个值首尾相接。次规格化数的步长是固定的
-# $2^{-24}$，因此它们在 $[0, 2^{-14})$ 内等距分布。
-# 阶码全 1 的两类与 FP32 相同：尾数为 0 表示无穷，尾数非 0 表示 NaN。
-# 程序把位模式复制进 GCC 的 `_Float16` 变量再按浮点数输出，解码由编译器完成。
+# BF16 的规则与 FP32 完全相同，只是尾数从 23 位减到 7 位，阶码的 8 位保持不变。
+# 阶码全 0 时 $E$ 取 $1-127=-126$ 而非 $-127$：最大的非规格化数 `0x007f` 为 $127 \times 2^{-133}$，
+# 最小的规格化数 `0x0080` 为 $128 \times 2^{-133} = 2^{-126}$，两者相差一个步长 $2^{-133}$。
+# `0x0080` 的值与 FP32 最小的规格化数相同，`0x7f7f` 也与 FP32 的最大值在同一数量级，这是阶码相同的结果。
+# 程序把位模式复制进 GCC 的 `__bf16` 变量再按浮点数输出，解码由编译器完成。
 
 ['range-and-precision.title']
 src_hash = 'ee384c82'
@@ -2540,25 +3464,25 @@ The table uses decimal GB: 3.21 B × 4.5 bits ÷ 8 = 1.81 GB. That row describes
 # 加权平均 5.01 位，合 2.02 GB。第一讲 `ls -lh` 显示的 1.9G 是 GiB，2.02 GB 即 1.88 GiB。
 # 有学生追问对得上对不上时可以给这组数；`examples/gguf_bits.py` 能把整个文件统计一遍。
 
-['bridge-5.title']
-src_hash = 'ca941f23'
-text = 'Part five · Quantization'
-# src: 第五部分 · 量化
+['bridge-6.title']
+src_hash = '679a7586'
+text = 'Part six · Quantization'
+# src: 第六部分 · 量化
 
-['bridge-5.bridge.1']
-src_hash = '306264cc'
+['bridge-6.bridge.1']
+src_hash = '90001505'
 text = '''
-Part five · Quantization
+Part six · Quantization
 Storing the same weights in fewer bits
 '''
 # src:
-# 第五部分 · 量化
+# 第六部分 · 量化
 # 用更少的位存放同一组权重
 
 ['section.quantization.title']
-src_hash = '79491811'
-text = 'Part five · Quantization: principles and Q4_0'
-# src: 第五部分 · 量化：原理与 Q4_0
+src_hash = '7f85763b'
+text = 'Part six · Quantization: principles and Q4_0'
+# src: 第六部分 · 量化：原理与 Q4_0
 
 ['why-quantize.title']
 src_hash = '2971d217'
@@ -3175,25 +4099,25 @@ This set of data is approximately symmetric about 0, so Q4_0 and Q4_1 differ lit
 # 课上可以先只看前三行；`quant_compare.c` 的源码在按钮里，五种做法都在同一个文件中。
 # 样本文件与它的授权说明见 `examples/ext/`。
 
-['bridge-6.title']
-src_hash = '5a8d50e2'
-text = 'Part six · Quantization formats'
-# src: 第六部分 · 量化格式
+['bridge-7.title']
+src_hash = '856dc198'
+text = 'Part seven · Quantization formats'
+# src: 第七部分 · 量化格式
 
-['bridge-6.bridge.1']
-src_hash = 'e233de6c'
+['bridge-7.bridge.1']
+src_hash = 'bedf6984'
 text = '''
-Part six · Quantization formats
+Part seven · Quantization formats
 Offsets, two-level scaling, and mixed quantization
 '''
 # src:
-# 第六部分 · 量化格式
+# 第七部分 · 量化格式
 # 偏移、两级缩放，以及混合量化
 
 ['section.quant-formats.title']
-src_hash = '0892864c'
-text = 'Part six · Quantization formats: Q4_1 and Q4_K'
-# src: 第六部分 · 量化格式：Q4_1 与 Q4_K
+src_hash = '22e67b8c'
+text = 'Part seven · Quantization formats: Q4_1 and Q4_K'
+# src: 第七部分 · 量化格式：Q4_1 与 Q4_K
 
 ['zero-point.title']
 src_hash = '1aa6e029'
@@ -3848,9 +4772,9 @@ The Q4_K_M measured on the previous page is a product of the grouping direction:
 # 代价是要重新训练，本节不展开。
 
 ['lab-preview.title']
-src_hash = 'e8a7e0c0'
-text = 'Lab: quantizing a BF16 model to 4 bits'
-# src: 实验：把一个 BF16 模型量化到 4 位
+src_hash = 'dfd5a8ad'
+text = 'Exercise: quantizing a BF16 model to 4 bits'
+# src: 练习：把一个 BF16 模型量化到 4 位
 
 ['lab-preview.slide.1']
 src_hash = '4ff99f97'
@@ -3864,18 +4788,18 @@ Fetch `Qwen/Qwen3-VL-2B-Instruct` from Hugging Face, read its safetensors file, 
 # 把其中 310 个 BF16 张量按本节的三种格式量化，度量误差，最后跑一次生成。
 
 ['lab-preview.slide.2']
-src_hash = '1bbb4813'
+src_hash = '787c4d2e'
 text = '''
 
 - **Read**: the 8-byte header length is assembled little-endian, and the JSON header gives each tensor's type, shape and byte range
-- **Convert**: BF16 to FP32 is one left shift of 16 bits, covered in part four of this lecture
+- **Convert**: BF16 to FP32 is one left shift of 16 bits, covered in part five of this lecture
 - **Quantize**: write a `quantize` and a `dequantize` for each of Q4_0, Q4_1 and Q4_K
 - **Verify**: the accounting matches `ls -l` exactly, the error meets its bound, and a passage is generated from the student ID as input
 '''
 # src:
 # 
 # - **读**：8 字节的头长度按小端合成，JSON 头给出每个张量的类型、形状与字节区间
-# - **转**：BF16 到 FP32 是一次左移 16 位，本讲第四部分讲过
+# - **转**：BF16 到 FP32 是一次左移 16 位，本讲第五部分讲过
 # - **量化**：Q4_0、Q4_1、Q4_K 各写一个 `quantize` 与 `dequantize`
 # - **验**：账目与 `ls -l` 精确相等，误差满足上界，最后以学号为输入生成一段文字
 
@@ -3885,10 +4809,10 @@ text = 'The framework is provided by the TAs; what students write themselves is 
 # src: 框架由助教提供，需要自己写的是读位、拼位与量化这几步。
 
 ['lab-preview.notes.1']
-src_hash = '7b9e542d'
+src_hash = '9821f93a'
 text = '''
 
-The lab instructions are distributed separately. The model file is 4.25 GB under the Apache-2.0 licence with no application required, and on the campus network there is an internal mirror. The file holds 625 tensors, of which 315 belong to the vision tower, and the lab handles only the 310 of the language model. The product is about 1.10 GB. Generation uses greedy decoding, and the md5 of the output text is one per student, for self-checking. Every section of this lecture lands somewhere in the lab: little-endian assembly for part two, the bit layout of BF16 for part four, and masks and shifts for this section.
+The lab instructions are distributed separately. The model file is 4.25 GB under the Apache-2.0 licence with no application required, and on the campus network there is an internal mirror. The file holds 625 tensors, of which 315 belong to the vision tower, and the lab handles only the 310 of the language model. The product is about 1.10 GB. Generation uses greedy decoding, and the md5 of the output text is one per student, for self-checking. Every section of this lecture lands somewhere in the lab: little-endian assembly for part two, the bit layout of BF16 for part five, and masks and shifts for this section.
 '''
 # src:
 # 
@@ -3896,7 +4820,7 @@ The lab instructions are distributed separately. The model file is 4.25 GB under
 # 文件里 625 个张量，其中 315 个属于视觉塔，实验只处理语言模型的那 310 个。
 # 产物约 1.10 GB。生成用贪心解码，输出文本的 md5 每人一个，用来自查。
 # 这一讲的每一节在实验里都有一次落地：
-# 小端合成对应第二部分，BF16 的位布局对应第四部分，掩码与移位对应本节。
+# 小端合成对应第二部分，BF16 的位布局对应第五部分，掩码与移位对应本节。
 
 ['summary.title']
 src_hash = '1f7f8405'

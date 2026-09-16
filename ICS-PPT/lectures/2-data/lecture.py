@@ -25,7 +25,6 @@ lecture.cover(
 
 with lecture.section("回顾与本节的问题", id="framing") as s:
     s.page("course-info", body=pages.course_info)
-    s.page("course-schedule", body=pages.course_schedule)
     s.page("ollama-intro", body=pages.ollama_intro)
     s.page("recap-weights", body=pages.recap_weights)
     s.page("four-questions", body=pages.four_questions)
@@ -66,25 +65,40 @@ with lecture.section("第三部分 · 整数", id="integers") as s:
     s.page("operator-precedence", body=pages.operator_precedence)
     s.page("precedence-in-practice", body=pages.precedence_in_practice)
 
-lecture.bridge("第四部分 · 浮点数与低精度格式\n有限位对实数的近似")
+lecture.bridge("第四部分 · 浮点数的编码\n有限位对实数的近似")
 
-with lecture.section("第四部分 · 浮点数与低精度格式", id="float") as s:
-    s.page("binary-scientific", body=pages.binary_scientific)
-    s.page("float-structure", body=pages.float_structure)
+with lecture.section("第四部分 · 浮点数的编码", id="float") as s:
+    s.page("fractional-binary", body=pages.fractional_binary)
+    s.page("frac-examples", body=pages.frac_examples)
+    s.page("frac-to-bits", body=pages.frac_to_bits)
+    s.page("ieee-history", body=pages.ieee_history)
+    s.page("ieee-form", body=pages.ieee_form)
+    s.page("normalized-exp", body=pages.normalized_exp)
+    s.page("normalized-frac", body=pages.normalized_frac)
+    s.page("normalized-example", body=pages.normalized_example)
+    s.page("denormalized", body=pages.denormalized)
+    s.page("special-values", body=pages.special_values)
     s.page("float-encoding", body=pages.float_encoding)
+
+lecture.bridge("第五部分 · 浮点数的精度与低精度格式\n可表示值的分布、舍入，以及更少位的浮点格式")
+
+with lecture.section("第五部分 · 浮点数的精度与低精度格式", id="float-formats") as s:
     s.page("float-distribution", body=pages.float_distribution)
-    s.page("float-spacing-measured", body=pages.float_spacing_measured)
     s.page("float-rounding", body=pages.float_rounding)
+    s.page("rounding-modes", body=pages.rounding_modes)
+    s.page("binary-rounding", body=pages.binary_rounding)
+    s.page("patriot-missile", body=pages.patriot_missile)
     s.page("float-not-real", body=pages.float_not_real)
+    s.page("float-casts", body=pages.float_casts)
     s.page("precision-formats", body=pages.precision_formats)
     s.page("bf16-truncation", body=pages.bf16_truncation)
-    s.page("fp16-classes", body=pages.fp16_classes)
+    s.page("bf16-classes", body=pages.bf16_classes)
     s.page("range-and-precision", body=pages.range_and_precision)
     s.page("model-size", body=pages.model_size)
 
-lecture.bridge("第五部分 · 量化\n用更少的位存放同一组权重")
+lecture.bridge("第六部分 · 量化\n用更少的位存放同一组权重")
 
-with lecture.section("第五部分 · 量化：原理与 Q4_0", id="quantization") as s:
+with lecture.section("第六部分 · 量化：原理与 Q4_0", id="quantization") as s:
     s.page("why-quantize", body=pages.why_quantize)
     s.page("memory-bound-measured", body=pages.memory_bound_measured)
     s.page("what-to-quantize", body=pages.what_to_quantize)
@@ -98,9 +112,9 @@ with lecture.section("第五部分 · 量化：原理与 Q4_0", id="quantization
     s.page("granularity", body=pages.granularity)
     s.page("granularity-measured", body=pages.granularity_measured)
 
-lecture.bridge("第六部分 · 量化格式\n偏移、两级缩放，以及混合量化")
+lecture.bridge("第七部分 · 量化格式\n偏移、两级缩放，以及混合量化")
 
-with lecture.section("第六部分 · 量化格式：Q4_1 与 Q4_K", id="quant-formats") as s:
+with lecture.section("第七部分 · 量化格式：Q4_1 与 Q4_K", id="quant-formats") as s:
     s.page("zero-point", body=pages.zero_point)
     s.page("q4-1-measured", body=pages.q4_1_measured)
     s.page("superblock", body=pages.superblock)

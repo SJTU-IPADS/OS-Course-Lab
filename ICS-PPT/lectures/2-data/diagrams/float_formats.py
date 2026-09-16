@@ -4,7 +4,7 @@
 Every format is the same three fields in the same order; what a format
 chooses is how many bits each field gets. Drawing them to a common bit scale
 makes that the only visible difference — and makes it visible that BF16 is
-exactly FP32's leading half, which is why the conversion is a truncation.
+FP32's leading half: the conversion keeps those 16 bits and rounds on the rest.
 FP64 is left out: at this scale it is twice as wide as anything else on the
 slide, and this lecture never uses it. Run it to refresh
 ../assets/float-formats.svg.
@@ -84,7 +84,7 @@ def build():
     y_bot = TOP + (ROW_H + ROW_GAP) + ROW_H + 5
     out.append(f'<path d="M {cut} {y_top} L {cut} {y_bot}" stroke="{ORANGE}" '
                f'stroke-width="1.8" stroke-dasharray="5 4"/>')
-    out.append(text(cut + 10, TOP - 12, "BF16 就是 FP32 的前 16 位", 12.5, ORANGE,
+    out.append(text(cut + 10, TOP - 12, "BF16 取 FP32 的前 16 位，再舍入", 12.5, ORANGE,
                     "bold", "start"))
 
     out.append("</svg>")

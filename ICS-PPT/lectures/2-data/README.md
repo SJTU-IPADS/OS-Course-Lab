@@ -7,28 +7,32 @@
 ## 结构
 
 引言把问题分为四个：一段位如何表示一个值、多字节对象如何排列、同一段位有几种解释、
-1.9 GB 如何计算。随后六节各回答一部分，节与节之间用 `lecture.bridge(...)` 过渡。
+1.9 GB 如何计算。随后七节各回答一部分，节与节之间用 `lecture.bridge(...)` 过渡。
 每一节的结论都应用于同一个文件，最后一页总结为四个答案。第一讲中 1.9 GB 的来源
 在「精度决定模型的体积」一页按单一 4 位格式计算为 1.81 GB；实际文件是 Q4_K_M 混合配方，
 平均 5.01 位/权重、2.02 GB = 1.88 GiB，这组数据放在该页的备注中，课上按需使用。
 
 | 节 | 页数 | 内容 |
 | --- | --- | --- |
-| 回顾与本节的问题 | 5 | 课程信息 · 课程安排 · Ollama：本机的推理服务 · 第一讲的权重文件 · 四个问题 |
+| 回顾与本节的问题 | 4 | 课程信息与课程安排 · Ollama：本机的推理服务 · 第一讲的权重文件 · 四个问题 |
 | 第一部分 · 位与字节 | 6 | `xxd` 的二进制与十六进制视图 · 位串到值 · 十六进制与 C 的进制写法 · 模型格式如何标识自己 · C 数据类型的宽度 · 布尔值的存储 |
 | 第二部分 · 字节序 | 7 | 内存即字节 · 字长与地址范围 · 大端与小端 · 读一个字段 · `show_bytes` · 字节序在什么场合可见 · 文本与 token |
-| **第三部分 · 整数** | **12** | 无符号数与有符号数 · 取值范围 · 强制转换 · 比较陷阱 · 内核缺陷（题 / 答） · 大小不同的操作数比较 · 位运算 · 移位 · 运算符优先级与实例 |
-| 第四部分 · 浮点数与低精度格式 | 12 | 三段结构与偏置 · 二进制科学计数法 · 规格化/非规格化/inf/NaN · 值在数轴上的分布与实测间距 · 舍入 · 浮点不是实数 · FP32/BF16/FP16/TF32/FP8/FP4 · BF16 即截断 · FP16 的编码与次规格化数 · 范围与精度 · 模型尺寸 |
-| 第五部分 · 量化：原理与 Q4_0 | 12 | 为什么要量化 · 访存瓶颈的实测 · 量化谁 · 量化的想法 · 仿射映射的三个自由度 · Q4_0 的块结构 · 量化代码 · 4 位打包 · 打包加法 · 硬件上的 4 位运算单元 · 粒度 · 三种粒度的实测 |
-| 第六部分 · 量化格式：Q4_1 与 Q4_K | 11 | 偏移与 Q4_1 · Q4_1 的实测 · Q4_K 的超块 · 超块的字节账 · 12 字节里的 16 个 6 位数 · 取出子块系数的代码 · Q4_K 的实测 · 文件里的混合配方 · 量化的代价 · 线性量化以及它之外的做法 · 实验预告 |
+| **第三部分 · 整数** | **11** | 两种整型数的表示 · 取值范围 · 强制转换 · 比较陷阱 · 越界与内核缺陷及其答案 · 大小不同的操作数比较 · 位运算 · 移位 · 运算符优先级与实例 |
+| 第四部分 · 浮点数的编码 | 11 | 从十进制小数到二进制小数 · 乘二取整与例子 · 小数转换为二进制位 · IEEE 754 的由来 · 数值形式与三段编码 · 规格化值的阶码与尾数 · 12345 的规格化编码 · 非规格化值 · 特殊值 · 规格化/非规格化/inf/NaN 一览表 |
+| 第五部分 · 浮点数的精度与低精度格式 | 12 | 值在数轴上的分布与相对精度 · 舍入 · 四种舍入模式 · 二进制小数的舍入 · 爱国者导弹的时钟误差 · 浮点不是实数 · C 中整数与浮点的转换 · FP32/BF16/FP16/TF32/FP8/FP4 · FP32 转 BF16 的舍入 · BF16 的规格化数与非规格化数 · 范围与精度 · 模型尺寸 |
+| 第六部分 · 量化：原理与 Q4_0 | 12 | 为什么要量化 · 访存瓶颈的实测 · 量化谁 · 量化的想法 · 仿射映射的三个自由度 · Q4_0 的块结构 · 量化代码 · 4 位打包 · 打包加法 · 硬件上的 4 位运算单元 · 粒度 · 三种粒度的实测 |
+| 第七部分 · 量化格式：Q4_1 与 Q4_K | 11 | 偏移与 Q4_1 · Q4_1 的实测 · Q4_K 的超块 · 超块的字节账 · 12 字节里的 16 个 6 位数 · 取出子块系数的代码 · Q4_K 的实测 · 文件里的混合配方 · 量化的代价 · 线性量化以及它之外的做法 · 实验预告 |
 
-共 68 个编号页（含末页的本节小结与自动生成的参考文献页）、6 个衔接页与 1 个封面。
+共 75 个编号页（含末页的本节小结与自动生成的参考文献页）、7 个衔接页与 1 个封面。
 
-量化占两节，按 1.5–2 次课的讲解时长安排：第五部分讲解一个 4 位格式的设计，
-第六部分讲解真实文件中存在多种格式的原因。两节之间的衔接页适合作为下课的分界。
+浮点数占两节：第四部分讲解 IEEE 754 的编码规则，第五部分讲解可表示值的精度与低精度格式。
+两节之间的衔接页作为课次的分界。
+
+量化占两节，按 1.5–2 次课的讲解时长安排：第六部分讲解一个 4 位格式的设计，
+第七部分讲解真实文件中存在多种格式的原因。两节之间的衔接页适合作为下课的分界。
 
 浮点数只在本讲讲解，课程中没有单独的浮点专题，因此 IEEE 754 的编码规则、
-非规格化数、特殊值与舍入模式都在第四部分讲解完毕。
+非规格化数与特殊值在第四部分、舍入模式在第五部分讲解完毕。
 
 第三部分保留了 CS:APP 的完整基线（无符号数与有符号数、强制转换、`copy_from_kernel`
 的越界缺陷、扩展与截断、位运算与移位），并在此基础上增加了
@@ -36,7 +40,7 @@
 
 ## 课上运行命令
 
-本讲有 27 个 `p.demo(...)`。`ollama-intro` 与 `recap-weights` 两页的命令操作本机的 Ollama 及其权重文件，其余全部在 `examples/` 下实际运行：
+本讲有 28 个 `p.demo(...)`。`ollama-intro` 与 `recap-weights` 两页的命令操作本机的 Ollama 及其权重文件，其余全部在 `examples/` 下实际运行：
 
 ```bash
 python3 -m lecturekit.cli view lectures/2-data --watch
@@ -104,14 +108,19 @@ python3 -m lecturekit.cli view   lectures/2-data --watch --lang en   # 英文
 | `endian_host.c` | `endianness-in-linux` | `__BYTE_ORDER__` 与 `htole32` / `htobe32` 各自的结果 |
 | `endian_calls.c` | `endianness-conversion-cost` | 两个转换函数编译出的指令（配合 `gcc -S`） |
 | `precedence.c` | `precedence-in-practice` | 三个缺少括号的表达式与 `-Wall` 的三条警告 |
-| `binary_point.c` | `binary-scientific` | 十进制值写为二进制并移动小数点，得到阶码与尾数 |
-| `float_spacing.c` | `float-spacing-measured` | 用 `nextafterf` 取相邻 FP32，输出步长与相对步长（需要 `-lm`） |
+| `frac_bits.c` | `frac-to-bits` | 幻灯片上的乘二取整循环，转换 0.75、0.625、0.2 |
+| `normalized.c` | `normalized-example` | 把 12345 编码为单精度浮点数，逐步输出二进制、阶码、尾数与 `0x4640E400` |
+| `denormalized.c` | `denormalized` | 解码三个阶码字段全 0 的位模式：$-0$、$2^{-127}$ 与最小正数 $2^{-149}$ |
 | `gguf_bits.py` | —（不占幻灯片） | 读整个权重文件，按张量类型统计位数与字节数；`model-size` 的备注引用了它的结论 |
 | `float_law.c` | `float-not-real` | 浮点结合律失效与 `0.1 + 0.2` 的舍入 |
+| `float_casts.c` | `float-casts` | `int` / `float` / `double` 之间的转换、向零截断与越界转换 |
 | `rounding.c` | `float-rounding` | 舍入到最近的偶数，以及 `0.1` 的近似值 |
+| `rounding_modes.c` | `rounding-modes` | 用 `fesetround` 切换四种舍入模式，对五个值取整（链接时需要 `-lm`） |
+| `patriot.c` | `patriot-missile` | 0.1 截断到 23 位小数后的误差，以及 100 小时后的累积误差与距离 |
 | `fp16_range.c` | `range-and-precision` | 实际的 `_Float16` / `__bf16` 转换（需要 gcc 12+，x86-64） |
-| `bf16.c` | `bf16-truncation` | 逐位打印 FP32 与 BF16 |
-| `fp16_classes.c` | `fp16-classes` | 把七个位模式复制进 `_Float16` 输出，覆盖次规格化、规格化、无穷与 NaN（需要 gcc 12+，x86-64） |
+| `bf16_round.c` | `bf16-truncation` | 保留前 16 位再舍入到最近的偶数，与编译器的 `__bf16` 转换逐个对照，含进位到阶码的情形（需要 gcc 12+，x86-64） |
+| `bf16.c` | `bf16-truncation` | 只截断、不舍入，逐位打印 π 的 FP32 与 BF16 以及被舍去的部分 |
+| `bf16_classes.c` | `bf16-classes` | 把八个位模式复制进 `__bf16` 输出，覆盖非规格化、规格化、无穷与 NaN（需要 gcc 12+，x86-64） |
 | `int4.c` | —（不占幻灯片） | 打包加法，穷举 65536 对输入；`nibble-add` 的备注中引用了它的结论 |
 | `quantize.c` | `quantize-code` | Q4_0 的量化与反量化，输出误差 |
 | `quant_compare.c` | `granularity-measured`、`q4-1-measured` | 五种方案（per-tensor / per-256 / Q4_0 / Q4_1 / Q4_K）在真实权重上的字节数与误差；`q4-k-measured` 的对照表数据也来自它（需要 gcc 12+，x86-64） |
@@ -119,7 +128,7 @@ python3 -m lecturekit.cli view   lectures/2-data --watch --lang en   # 英文
 | `make_sample.py` | — | 用两次 HTTP Range 请求获取下面两段权重；也是 safetensors 头的最小读法示例 |
 | `ext/w-down-proj.bf16`、`ext/w-final-norm.bf16` | 同 `quant_compare.c` | Llama-3.2-1B 的两段真实权重，各数 KB，出处与授权见 `ext/PROVENANCE.md` |
 
-`fp16_range.c`、`fp16_classes.c` 用了 `_Float16`（前者还用了 `__bf16`），这两个类型在旧编译器上不存在，
+`fp16_range.c` 用了 `_Float16` 与 `__bf16`，`bf16_classes.c`、`bf16_round.c` 用了 `__bf16`，这两个类型在旧编译器上不存在，
 源文件头部已注明。其余例子只用 C99。
 
 ## 图表
@@ -139,7 +148,7 @@ lectures/2-data/diagrams/render.sh    # 重新生成全部图表
 | `address_space.py` | `address-space.svg` | `word-size`，4 GB 的横条与占用近一半空间的权重文件 |
 | `same_bits.py` | `same-bits.svg` | `casting`，同一串 16 位的两种解释 |
 | `shifts.py` | `shifts.svg` | `shifts`，一个位串的三种移位与补入的位 |
-| `bit_fields.py` | `bit-fields.svg` | `float-structure`，3.1415927 的 FP32 三段分解 |
+| `bit_fields.py` | `bit-fields.svg` | `ieee-form`，3.1415927 的 FP32 三段分解 |
 | `float_formats.py` | `float-formats.svg` | `precision-formats`，七种格式的三段分配 |
 | `float_spacing.py` | `float-spacing.svg` | `float-distribution`，可表示的值在 0–8 上随阶码增大而变稀疏 |
 | `quantize_line.py` | `quantize-line.svg` | `quantization-idea`，16 个等距级与半步长误差 |
@@ -151,7 +160,7 @@ lectures/2-data/diagrams/render.sh    # 重新生成全部图表
 | `k_scales.py` | `k-scales.svg` | `k-scales-layout`，16 个 6 位数在 12 字节中的位置 |
 
 `float-formats.svg` 有意不绘制 FP64（它在深度学习中很少使用，改由页上的 `p.aside` 简要说明），
-并把 FP32 与 BF16 排在相邻两行，以便绘制 bit 16 处的截断线。
+并把 FP32 与 BF16 排在相邻两行，以便绘制 bit 16 处的分界线（转换保留左侧 16 位，再按右侧舍入）。
 
 编写这类生成器时注意四点：SVG 文本中的 `&`、`<`、`>` 必须转义，否则整张图会因为
 不是良构 XML 而被静默丢弃（`svgkit.py` 中的 `esc()` 用于此目的）；CJK 字符的
@@ -171,9 +180,10 @@ lectures/2-data/diagrams/render.sh    # 重新生成全部图表
 
 | 文件 | 使用页 | 来源与授权 |
 | --- | --- | --- |
-| `zang-binyu.jpg` | `course-schedule` | 上海交通大学并行与分布式系统研究所成员页，https://ipads.se.sjtu.edu.cn/zh/pub/members/binyu_zang/ |
+| `zang-binyu.jpg` | `course-info` | 上海交通大学并行与分布式系统研究所成员页，https://ipads.se.sjtu.edu.cn/zh/pub/members/binyu_zang/ |
 | `core-memory.jpg` | `why-binary` | Wikimedia Commons，摄影 Mister rf，CC BY-SA 4.0 |
-| `kahan.jpg` | `float-rounding` | Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0 |
+| `kahan.jpg` | `ieee-history` | Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0 |
+| `patriot-launch.jpg` | `patriot-missile` | Wikimedia Commons（File:Patriot_missile_launch_b.jpg），美国陆军拍摄，公有领域 |
 | `llm-int8-fig2.svg` | `quantization-cost` | Dettmers et al., LLM.int8()（NeurIPS 2022）图 2，CC BY 4.0 |
 | `memory-wall-profile.png` | `memory-bound-measured` | Gholami et al., AI and Memory Wall（IEEE Micro 2024）图 3(b)(d)，CC BY 4.0；裁去两幅子图的标题后横向拼合 |
 
@@ -225,7 +235,7 @@ python3 -m lecturekit.cli i18n check   lectures/2-data --lang en   # 上课前�
 框架不翻译三类内容，因此本讲的英文版中仍有中文：
 
 1. **代码清单**（`p.code` 的正文，含注释）。本讲的注释一律写英文，中英两版共用，
-   `examples/` 下 30 个源文件中没有中文。唯一的例外是十六进制页的
+   `examples/` 下 34 个源文件中没有中文。唯一的例外是十六进制页的
    `HEX_GROUPS`：它是一张对照表，两行标签「十六进制 / 二进制」
    在英文版中仍是中文。demo 的 `name` 与 `description` 是普通文本，照常翻译。
 2. **图片路径**（`p.image` 的 `src`）。`assets/` 下 16 张手写 SVG 的标注是中文，
