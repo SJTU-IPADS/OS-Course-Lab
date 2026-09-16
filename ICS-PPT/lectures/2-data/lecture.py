@@ -68,8 +68,8 @@ with lecture.section("第三部分 · 整数", id="integers") as s:
 lecture.bridge("第四部分 · 浮点数与低精度格式\n有限位对实数的近似")
 
 with lecture.section("第四部分 · 浮点数与低精度格式", id="float") as s:
-    s.page("float-structure", body=pages.float_structure)
     s.page("binary-scientific", body=pages.binary_scientific)
+    s.page("float-structure", body=pages.float_structure)
     s.page("float-encoding", body=pages.float_encoding)
     s.page("float-distribution", body=pages.float_distribution)
     s.page("float-spacing-measured", body=pages.float_spacing_measured)
