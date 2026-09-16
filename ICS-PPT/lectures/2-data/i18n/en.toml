@@ -33,6 +33,38 @@ src_hash = '6f88ed18'
 text = 'Recap, and the question of this lecture'
 # src: 回顾与本节的问题
 
+['course-info.title']
+src_hash = '4da04dfe'
+text = 'Course information'
+# src: 课程信息
+
+['course-info.slide.1']
+src_hash = 'e3d6dc2c'
+text = '''
+
+1. **Slides**: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
+   Live updates; built together by the staff and with students
+2. **How to use the slides**: ask an AI; other uses are welcome
+3. **WeChat group**
+4. **Schedule**
+   - Saturday lectures: from merging courses to a shorter timetable
+   - Mid-week exercise sessions become discussion sessions
+   - From A1 / A2 to A0, then B / C: ICS back toward the top of the ranking, with popular TAs
+5. **Assessment**: quiz + final + lab, about 20 + 50 + 30
+   Honor code: on the use of AI
+'''
+# src:
+# 1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
+#    便于实时更新、团队共建、师生共建
+# 2. **课件使用**：问 AI 即可；欢迎丰富使用方式
+# 3. **微信群**
+# 4. **课程安排**
+#    - 周六上课：从课程融合到实际课时压缩
+#    - 周中习题课改为讨论课
+#    - 从 A1 / A2 到 A0，再到 B / C：ICS 重回兵器谱前 XX，打造人气 TA
+# 5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30
+#    君子协定：对于 AI 的使用
+
 ['recap-weights.title']
 src_hash = '4e3ed0b5'
 text = 'The model file of llama3.2'

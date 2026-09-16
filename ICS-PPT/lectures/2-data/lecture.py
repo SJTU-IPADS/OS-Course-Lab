@@ -24,6 +24,7 @@ lecture.cover(
 )
 
 with lecture.section("回顾与本节的问题", id="framing") as s:
+    s.page("course-info", body=pages.course_info)
     s.page("recap-weights", body=pages.recap_weights)
     s.page("four-questions", body=pages.four_questions)
 

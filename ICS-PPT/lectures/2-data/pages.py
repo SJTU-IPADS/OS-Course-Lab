@@ -114,6 +114,22 @@ uint16_t bf16 = (uint16_t) (f32 >> 16);        /* this is the whole conversion *
 # 回顾与本节的问题
 # ==============================================================================
 
+def course_info(p):
+    p.title("课程信息")
+    p.slide("""
+1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
+   便于实时更新、团队共建、师生共建
+2. **课件使用**：问 AI 即可；欢迎丰富使用方式
+3. **微信群**
+4. **课程安排**
+   - 周六上课：从课程融合到实际课时压缩
+   - 周中习题课改为讨论课
+   - 从 A1 / A2 到 A0，再到 B / C：ICS 重回兵器谱前 XX，打造人气 TA
+5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30
+   君子协定：对于 AI 的使用
+""")
+
+
 def recap_weights(p):
     p.gap(40)
     p.title("模型文件 llama3.2")
