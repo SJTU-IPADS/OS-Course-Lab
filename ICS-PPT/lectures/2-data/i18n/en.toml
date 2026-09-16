@@ -39,29 +39,88 @@ text = 'Course information'
 # src: 课程信息
 
 ['course-info.slide.1']
-src_hash = 'e3d6dc2c'
+src_hash = '89714f5a'
 text = '''
 
 1. **Slides**: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
    Live updates; built together by the staff and with students
+'''
+# src:
+# 
+# 1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
+#    便于实时更新、团队共建、师生共建
+
+['course-info.slide.2']
+src_hash = '5d189453'
+text = '''
+
 2. **How to use the slides**: ask an AI; other uses are welcome
+'''
+# src:
+# 
+# 2. **课件使用**：问 AI 即可；欢迎丰富使用方式
+
+['course-info.slide.3']
+src_hash = 'f51ded69'
+text = '''
+
 3. **WeChat group**
+'''
+# src:
+# 
+# 3. **微信群**
+
+['course-schedule.title']
+src_hash = '4da04dfe'
+text = 'Course information'
+# src: 课程信息
+
+['course-schedule.slide.1']
+src_hash = 'f111554e'
+text = '''
+
 4. **Schedule**
    - Saturday lectures: from merging courses to a shorter timetable
    - Mid-week exercise sessions become discussion sessions
    - From A1 / A2 to A0, then B / C: ICS back toward the top of the ranking, with popular TAs
-5. **Assessment**: quiz + final + lab, about 20 + 50 + 30
-   Honor code: on the use of AI
 '''
 # src:
-# 1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
-#    便于实时更新、团队共建、师生共建
-# 2. **课件使用**：问 AI 即可；欢迎丰富使用方式
-# 3. **微信群**
+# 
 # 4. **课程安排**
 #    - 周六上课：从课程融合到实际课时压缩
 #    - 周中习题课改为讨论课
 #    - 从 A1 / A2 到 A0，再到 B / C：ICS 重回兵器谱前 XX，打造人气 TA
+
+['course-schedule.slide.2']
+src_hash = '65bc6fd6'
+text = '''
+
+**Prof. Binyu Zang**　founder of the ICS course in China
+
+**Great Teacher · Great Helmsman**
+**Great Founder · Great Guide**
+'''
+# src:
+# 
+# **臧斌宇老师**　ICS 课程在中国的创始人
+# 
+# **伟大导师　·　伟大舵手**
+# **伟大奠基人　·　伟大引路人**
+
+['course-schedule.slide.2.footnote.1']
+src_hash = '709c2960'
+text = 'Photo from the IPADS members page, Shanghai Jiao Tong University.'
+# src: 照片来自上海交通大学并行与分布式系统研究所（IPADS）成员页。
+
+['course-schedule.slide.3']
+src_hash = '0d2d4b9f'
+text = '''
+
+5. **Assessment**: quiz + final + lab, about 20 + 50 + 30
+   Honor code: on the use of AI
+'''
+# src:
+# 
 # 5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30
 #    君子协定：对于 AI 的使用
 
@@ -1844,32 +1903,6 @@ src_hash = 'f68883fc'
 text = 'Part four · Floating point and low-precision formats'
 # src: 第四部分 · 浮点数与低精度格式
 
-['float-structure.title']
-src_hash = '665fe9d7'
-text = 'The three fields of a floating-point number'
-# src: 浮点数的三段结构
-
-['float-structure.slide.1']
-src_hash = 'e755449a'
-text = '''
-A float has a **sign** $s$, an **exponent** $e$ and a **fraction** $f$: $V = (-1)^s \times M \times 2^{E}$.
-- The $k$-bit exponent gives $E = e - (2^{k-1}-1)$; the subtracted constant is the **bias**
-- The $n$-bit fraction gives $M = 1.f$ when normalized; the leading 1 costs no bit
-- Exponent width sets the <mark>range</mark>, fraction width the relative precision
-'''
-# src:
-# 
-# 一个浮点数由**符号** $s$、**阶码** $e$、**尾数** $f$ 三段位组成，其值为
-# **$V = (-1)^s \times M \times 2^{E}$。**
-# - 阶码占 $k$ 位，按 $E = e - (2^{k-1}-1)$ 解释，减去的常数称为**偏置**
-# - 尾数占 $n$ 位，规格化时 $M = 1.f$，前导的 1 由格式规定，不占位
-# - 两段共用固定的总位数：阶码位数决定<mark>范围</mark>，尾数位数决定<mark>相对精度</mark>
-
-['float-structure.aside.1']
-src_hash = 'f55e51d4'
-text = "FP32's bias is 127; the 8-bit field 0–255 then covers both signs of $E$."
-# src: FP32 的偏置为 127，阶码字段的 8 位可以表示 0 到 255，减去偏置后覆盖正负两个方向。
-
 ['binary-scientific.title']
 src_hash = 'c2c7d269'
 text = 'From binary scientific notation to the three fields'
@@ -1913,6 +1946,32 @@ This is a good page to have students work two examples. Take $2.5$ first ($10.1_
 # 再取 $0.375$（$0.011_2$，$E=-2$，$e=125$，$f = 1000\ldots$）。
 # 整数部分按除二取余，小数部分按乘二取整，两个方向都在第一部分讲过。
 # 最后一行的 $0.1$ 是无限循环的，小数点移动之后仍然是无限循环，因此只能存一个近似值。
+
+['float-structure.title']
+src_hash = '665fe9d7'
+text = 'The three fields of a floating-point number'
+# src: 浮点数的三段结构
+
+['float-structure.slide.1']
+src_hash = 'e755449a'
+text = '''
+A float has a **sign** $s$, an **exponent** $e$ and a **fraction** $f$: $V = (-1)^s \times M \times 2^{E}$.
+- The $k$-bit exponent gives $E = e - (2^{k-1}-1)$; the subtracted constant is the **bias**
+- The $n$-bit fraction gives $M = 1.f$ when normalized; the leading 1 costs no bit
+- Exponent width sets the <mark>range</mark>, fraction width the relative precision
+'''
+# src:
+# 
+# 一个浮点数由**符号** $s$、**阶码** $e$、**尾数** $f$ 三段位组成，其值为
+# **$V = (-1)^s \times M \times 2^{E}$。**
+# - 阶码占 $k$ 位，按 $E = e - (2^{k-1}-1)$ 解释，减去的常数称为**偏置**
+# - 尾数占 $n$ 位，规格化时 $M = 1.f$，前导的 1 由格式规定，不占位
+# - 两段共用固定的总位数：阶码位数决定<mark>范围</mark>，尾数位数决定<mark>相对精度</mark>
+
+['float-structure.aside.1']
+src_hash = 'f55e51d4'
+text = "FP32's bias is 127; the 8-bit field 0–255 then covers both signs of $E$."
+# src: FP32 的偏置为 127，阶码字段的 8 位可以表示 0 到 255，减去偏置后覆盖正负两个方向。
 
 ['float-encoding.title']
 src_hash = '3856fab8'
