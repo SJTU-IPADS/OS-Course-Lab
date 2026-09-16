@@ -882,6 +882,9 @@ def serve(
     marp = subprocess.Popen(
         watch_command(output_dir),
         cwd=output_dir,
+        # marp reads stdin whenever it is not a TTY and waits for EOF before
+        # converting; an inherited pipe or socket never closes, so it hangs.
+        stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,

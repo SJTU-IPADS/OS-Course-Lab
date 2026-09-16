@@ -132,7 +132,8 @@ def render_pages_pdf(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> Path:
     pdf_theme = _write_pdf_theme(output_dir, theme_dir)
     if pdf_theme is not None:
         command += ["--theme", pdf_theme]
-    subprocess.run(command, cwd=output_dir, check=True)
+    # marp waits for EOF on a non-TTY stdin; an inherited pipe would hang it.
+    subprocess.run(command, cwd=output_dir, check=True, stdin=subprocess.DEVNULL)
     return output_dir / "pages.pdf"
 
 
@@ -150,7 +151,7 @@ def render_pages_png(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> None:
     pdf_theme = _write_pdf_theme(output_dir, theme_dir)
     if pdf_theme is not None:
         command += ["--theme", pdf_theme]
-    subprocess.run(command, cwd=output_dir, check=True)
+    subprocess.run(command, cwd=output_dir, check=True, stdin=subprocess.DEVNULL)
 
 
 def inject_svg_scope(html: str) -> str:
@@ -216,7 +217,7 @@ def build_deck(
         ]
         if _copy_theme(output_dir, theme_dir):
             command += ["--theme", "theme.css"]
-        subprocess.run(command, cwd=output_dir, check=True)
+        subprocess.run(command, cwd=output_dir, check=True, stdin=subprocess.DEVNULL)
         slides_html = output_dir / "slides.html"
         if slides_html.exists():
             slides_html.write_text(
