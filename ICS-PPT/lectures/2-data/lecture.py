@@ -30,20 +30,18 @@ with lecture.section("回顾与本节的问题", id="framing") as s:
 lecture.bridge("第一部分 · 位与字节\n信息的最小单位与它的书写方式")
 
 with lecture.section("第一部分 · 位与字节", id="bits") as s:
-    s.page("why-binary", body=pages.why_binary)
+    s.page("hexdump", body=pages.hexdump)
     s.page("bits-to-value", body=pages.bits_to_value)
     s.page("hexadecimal", body=pages.hexadecimal)
-    s.page("hexdump", body=pages.hexdump)
     s.page("other-formats", body=pages.other_formats)
-    s.page("memory-as-bytes", body=pages.memory_as_bytes)
-    s.page("word-size", body=pages.word_size)
     s.page("c-data-sizes", body=pages.c_data_sizes)
     s.page("bool-storage", body=pages.bool_storage)
-    s.page("vector-bool", body=pages.vector_bool)
 
 lecture.bridge("第二部分 · 字节序\n多字节对象在内存中的排列")
 
 with lecture.section("第二部分 · 字节序", id="byte-order") as s:
+    s.page("memory-as-bytes", body=pages.memory_as_bytes)
+    s.page("word-size", body=pages.word_size)
     s.page("endianness", body=pages.endianness)
     s.page("read-the-field", body=pages.read_the_field)
     s.page("show-bytes", body=pages.show_bytes_page)

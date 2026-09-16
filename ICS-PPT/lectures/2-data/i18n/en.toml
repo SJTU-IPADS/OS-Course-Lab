@@ -83,20 +83,24 @@ text = 'Four questions this lecture answers'
 # src: 本节回答四个问题
 
 ['four-questions.slide.1']
-src_hash = 'c75f8668'
-text = '''
+src_hash = 'ffd24a96'
+text = '1. What is a byte'
+# src: 1. 什么是字节
 
-- **What a byte is**: bits, hexadecimal, and the byte-addressed model of memory
-- **How multi-byte objects are laid out**: byte order, and where it becomes visible in file formats and network traffic
-- **How the same bits yield different values**: unsigned, two's complement, and the errors that arise at conversions
-- **How real numbers are encoded**: FP32 / BF16 / FP8 and 4-bit quantization, which fix the size of a model
-'''
-# src:
-# 
-# - **一个字节是什么**：位、十六进制，以及以字节为单位编址的内存模型
-# - **多字节的对象如何排列**：字节序，以及它在文件格式与网络传输中何时可见
-# - **同一段位如何得到不同的值**：无符号数、补码，以及类型转换处的错误
-# - **实数如何编码**：FP32 / BF16 / FP8 与 4 位量化，模型体积由此确定
+['four-questions.slide.2']
+src_hash = '02a51dfc'
+text = '2. Multi-byte data objects'
+# src: 2. 多字节组成数据对象
+
+['four-questions.slide.3']
+src_hash = 'e5169761'
+text = '3. Integer and floating-point encodings'
+# src: 3. 整形与浮点编码
+
+['four-questions.slide.4']
+src_hash = '182a8cfc'
+text = '4. How to quantize floating-point numbers'
+# src: 4. 如何对浮点数进行量化
 
 ['four-questions.aside.1']
 src_hash = '0a8455d1'
@@ -122,42 +126,6 @@ The smallest unit of information and how it is written
 src_hash = '0bceabde'
 text = 'Part one · Bits and bytes'
 # src: 第一部分 · 位与字节
-
-['why-binary.title']
-src_hash = '88fa38d3'
-text = 'Information in a modern computer is carried by two-valued signals'
-# src: 现代计算机中信息以两值信号表示
-
-['why-binary.slide.1']
-src_hash = 'bc3a9112'
-text = '''
-
-Information inside a computer is carried by **two-valued signals**: two distinguishable states of a physical quantity.
-- A two-valued signal need only separate two levels, so storage, transmission and regeneration stay reliable in the presence of noise
-- Multi-valued signals are harder to tell apart under the same noise, and the engineering cost rises sharply
-- Boolean algebra supplies a complete set of rules for two-valued signals, realizable directly in logic gates
-'''
-# src:
-# 
-# 计算机中的信息由**两值信号**承载：一个物理量的两个可区分状态。
-# - 两值信号只需区分两个电平，存储、传输与再生在噪声下仍然可靠
-# - 多值信号在同样的噪声条件下更难分辨，工程代价显著上升
-# - 布尔代数为两值信号提供完整的运算规则，可直接由逻辑门实现
-
-['why-binary.slide.1.footnote.1']
-src_hash = '0f21ad30'
-text = 'Core memory: the magnetization direction of each ring is one bit. Image from Wikimedia Commons, photograph by Mister rf, CC BY-SA 4.0.'
-# src: 磁芯存储器：每个环的磁化方向就是一位。图片来自 Wikimedia Commons，摄影 Mister rf，CC BY-SA 4.0。
-
-['why-binary.aside.1']
-src_hash = 'ecf8f7fe'
-text = 'Decimal suits people and binary suits machines; the conversion between them is done by programs.'
-# src: 十进制便于人使用，二进制便于机器实现，两者之间的转换由程序完成。
-
-['why-binary.notes.1']
-src_hash = '21b9d697'
-text = 'This page only needs to establish that a bit is a two-valued signal; the digital-logic realization is developed in Chapter 3.'
-# src: 这一页只需要建立「一位就是一个两值信号」的概念，数字逻辑的实现细节在第三章展开。
 
 ['bits-to-value.title']
 src_hash = '1cf4c71a'
@@ -304,11 +272,6 @@ src_hash = '18137995'
 text = '42 written out'
 # src: 写成 42
 
-['hexadecimal.table.1.cell.0.3']
-src_hash = '4262c45d'
-text = 'Notes'
-# src: 说明
-
 ['hexadecimal.table.1.cell.1.0']
 src_hash = '0258c5e3'
 text = 'Decimal'
@@ -323,11 +286,6 @@ text = 'no prefix'
 src_hash = 'b46a2c1b'
 text = '`42`'
 # src: `42`
-
-['hexadecimal.table.1.cell.1.3']
-src_hash = '0ee5e56f'
-text = 'the first digit may not be `0`'
-# src: 首位不能是 `0`
 
 ['hexadecimal.table.1.cell.2.0']
 src_hash = 'c7ea10c9'
@@ -344,11 +302,6 @@ src_hash = 'a59a0a3d'
 text = '`0x2a`'
 # src: `0x2a`
 
-['hexadecimal.table.1.cell.2.3']
-src_hash = 'dee479bd'
-text = 'every byte in this lecture is written this way'
-# src: 本节的字节一律用它书写
-
 ['hexadecimal.table.1.cell.3.0']
 src_hash = 'c78932b6'
 text = 'Octal'
@@ -364,11 +317,6 @@ src_hash = '111d4d74'
 text = '`052`'
 # src: `052`
 
-['hexadecimal.table.1.cell.3.3']
-src_hash = '25c1b796'
-text = '`010` has the value 8, not 10'
-# src: `010` 的值是 8，不是 10
-
 ['hexadecimal.table.1.cell.4.0']
 src_hash = 'd9b89d61'
 text = 'Binary'
@@ -383,11 +331,6 @@ text = '`0b` / `0B`'
 src_hash = '83f09211'
 text = '`0b101010`'
 # src: `0b101010`
-
-['hexadecimal.table.1.cell.4.3']
-src_hash = '2b32edd2'
-text = 'standard since C23; a compiler extension before that'
-# src: C23 起写入标准，此前是编译器扩展
 
 ['hexadecimal.notes.1']
 src_hash = '950d4f4a'

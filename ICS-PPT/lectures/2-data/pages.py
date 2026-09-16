@@ -122,7 +122,7 @@ file "$(ls -dS ~/.ollama/models/blobs/* | head -1)\"""",
            output="""-rw-r--r-- 1 ollama ollama 1.9G Sep  1 19:50 sha256-...
 ...sha256-...: data""")
     p.slide("""
-上一讲以一次 `ollama run` 为例，自底向上考察了系统各层，其中一项观察当时没有回答。
+上一讲以一次 `ollama run` 为例，自底向上考察了系统各层
 - 模型权重是一个 1.9 GB 的文件，`file` 给出的结果是 `data`，即未能识别其类型
 - 文件中不含任何可执行指令，全部内容是数据
 - 操作系统按需把其中的页装入内存，但没有解释过任何一个字节的含义
@@ -137,33 +137,35 @@ file "$(ls -dS ~/.ollama/models/blobs/* | head -1)\"""",
 
 
 def four_questions(p):
-    p.gap(140)
+    p.gap(36)
     p.title("本节回答四个问题")
-    p.slide("""
-- **一个字节是什么**：位、十六进制，以及以字节为单位编址的内存模型
-- **多字节的对象如何排列**：字节序，以及它在文件格式与网络传输中何时可见
-- **同一段位如何得到不同的值**：无符号数、补码，以及类型转换处的错误
-- **实数如何编码**：FP32 / BF16 / FP8 与 4 位量化，模型体积由此确定
-""", reveal="items")
-    p.aside("接下来我们按顺序解读这四个问题，最后在浮点的基础上引入量化。")
+    p.slide("1. 什么是字节")
+    p.slide("2. 多字节组成数据对象")
+    p.slide("3. 整形与浮点编码")
+    p.slide("4. 如何对浮点数进行量化")
 
 
 # ==============================================================================
 # 第一部分 · 位与字节
 # ==============================================================================
 
-def why_binary(p):
-    p.gap(50)
-    p.title("现代计算机中信息以两值信号表示")
+def hexdump(p):
+    p.title("读一个模型文件的前 32 个字节")
+    p.demo("查看文件头", """cd examples
+xxd -l 32 tiny.gguf""",
+           output="""00000000: 4747 5546 0300 0000 0100 0000 0000 0000  GGUF............
+00000010: 0200 0000 0000 0000 1400 0000 0000 0000  ................""",
+           description="左侧是偏移，中间是十六进制，右侧是可打印字符")
     p.slide("""
-计算机中的信息由**两值信号**承载：一个物理量的两个可区分状态。
-- 两值信号只需区分两个电平，存储、传输与再生在噪声下仍然可靠
-- 多值信号在同样的噪声条件下更难分辨，工程代价显著上升
-- 布尔代数为两值信号提供完整的运算规则，可直接由逻辑门实现
-""", reveal="items").image_right("assets/ext/core-memory.jpg", width_px=300
-    ).footnote("磁芯存储器：每个环的磁化方向就是一位。图片来自 Wikimedia Commons，摄影 Mister rf，CC BY-SA 4.0。")
-    p.aside("十进制便于人使用，二进制便于机器实现，两者之间的转换由程序完成。")
-    p.notes("这一页只需要建立「一位就是一个两值信号」的概念，数字逻辑的实现细节在第三章展开。")
+`tiny.gguf` 按 GGUF 格式写出，与 ollama 下载的权重文件采用同一种格式，只是规模很小，仅用作示例。
+- 前四个字节 `47 47 55 46` 按 ASCII 解释为 `GGUF`，用于标识文件类型
+- 其后的每一段字节表示什么，由格式规范逐字段规定
+- 同一段字节脱离规范则没有确定的含义
+""")
+    p.notes("""
+tiny.gguf 由 examples/make_gguf.py 生成，共 224 字节，含一个 8×4 的 fp16 张量与两条元数据。
+课堂上可以让学生把这条命令换成自己机器上的真实权重文件，前 16 个字节的结构完全一致。
+""")
 
 
 def bits_to_value(p):
@@ -192,18 +194,18 @@ def hexadecimal(p):
     p.title("十六进制等多种进制")
     p.slide("""
 十六进制以 ==4 位二进制为一组==，用 `0`–`9` 与 `a`–`f` 共 16 个符号书写。
-一个字节是 8 位，即两位十六进制，取值 `0x00` 到 `0xff`。
+一个字节有 8 位，对应十六进制有 2 位，取值 `0x00` 到 `0xff`。
 """, autobold=False)
     p.code("text", HEX_GROUPS)
     p.table(
-        headers=["进制", "C 的写法", "写成 42", "说明"],
+        headers=["进制", "C 的写法", "表示 42"],
         rows=[
-            ["十进制", "无前缀", "`42`", "首位不能是 `0`"],
-            ["十六进制", "`0x` / `0X`", "`0x2a`", "本节的字节一律用它书写"],
-            ["八进制", "前导 `0`", "`052`", "`010` 的值是 8，不是 10"],
-            ["二进制", "`0b` / `0B`", "`0b101010`", "C23 起写入标准，此前是编译器扩展"],
+            ["十进制", "无前缀", "`42`"],
+            ["十六进制", "`0x` / `0X`", "`0x2a`"],
+            ["八进制", "前导 `0`", "`052`"],
+            ["二进制", "`0b` / `0B`", "`0b101010`"],
         ],
-        align=["left", "left", "left", "left"],
+        align=["left", "left", "left"],
     )
     p.notes("""
 八进制的前导零是一类真实的缺陷来源：文件权限写 `0644` 是对的，把某个十进制常量
@@ -211,24 +213,6 @@ def hexadecimal(p):
 C23 还允许用 `'` 分组数字，如 `0b1111'1111`。输出侧只有 `%x` 与 `%o`，没有二进制的转换说明符。
 """)
 
-
-def hexdump(p):
-    p.title("读一个模型文件的前 32 个字节")
-    p.demo("查看文件头", """cd examples
-xxd -l 32 tiny.gguf""",
-           output="""00000000: 4747 5546 0300 0000 0100 0000 0000 0000  GGUF............
-00000010: 0200 0000 0000 0000 1400 0000 0000 0000  ................""",
-           description="左侧是偏移，中间是十六进制，右侧是可打印字符")
-    p.slide("""
-`tiny.gguf` 按 GGUF 格式写出，与 ollama 下载的权重文件采用同一种格式，只是规模很小，仅用作示例。
-- 前四个字节 `47 47 55 46` 按 ASCII 解释为 `GGUF`，用于标识文件类型
-- 其后的每一段字节表示什么，由格式规范逐字段规定
-- 同一段字节脱离规范则没有确定的含义
-""")
-    p.notes("""
-tiny.gguf 由 examples/make_gguf.py 生成，共 224 字节，含一个 8×4 的 fp16 张量与两条元数据。
-课堂上可以让学生把这条命令换成自己机器上的真实权重文件，前 16 个字节的结构完全一致。
-""")
 
 
 def other_formats(p):
@@ -252,42 +236,6 @@ tiny.zip          504b 0304 1400 0000 0000 0000 2158 77a0 PK..........!Xw.""",
 安全上的差别值得一提：pickle 在反序列化时执行任意代码，safetensors 只读取一段 JSON 与
 一片连续数据，不含可执行内容，这是它被提出的直接原因。
 五个样例由 examples/make_formats.py 生成，都按各自格式的规则写出，不是手工拼的字节。
-""")
-
-
-def memory_as_bytes(p):
-    p.title("内存模型：以字节为单位编址的数组")
-    p.slide("""
-程序看到的内存是一个==以字节为单位编址的数组==：每个地址对应一个字节。
-- 地址从 0 开始连续编号，全体地址构成**地址空间**
-- 一个多字节对象占用一段连续地址，其地址取这段地址中的**最小值**
-- 上一讲的虚拟地址空间就是这一模型在操作系统中的实现
-""", reveal="items")
-    p.image("assets/memory-bytes.svg", width_px=900)
-    p.aside("字节是最小的可寻址单位，因此比字节更小的数据必须打包进一个字节。")
-
-
-def word_size(p):
-    p.title("字长：指针的宽度与地址空间的上限")
-    p.slide(r"""
-**字长**指一个指针占用的位数。$n$ 位的指针能表示 $2^n$ 个不同的地址，
-每个地址对应一个字节，地址空间的大小因此就是 $2^n$ 字节。字长由硬件与操作系统共同确定，
-是一个不能由程序选择的系统参数。
-""", autobold=False)
-    p.table(
-        headers=["字长", "地址范围", "地址个数", "地址空间大小"],
-        rows=[
-            ["32 位", "`0x00000000` – `0xffffffff`",
-             "$2^{32}$", "$4\\,294\\,967\\,296$ 字节 = 4 GB"],
-            ["64 位", "`0x0000000000000000` – `0xffffffffffffffff`",
-             "$2^{64}$", "约 $1.8 \\times 10^{19}$ 字节 = 16 EB"],
-        ],
-        align=["center", "left", "center", "left"],
-    )
-    p.image("assets/address-space.svg", width_px=700)
-    p.notes("""
-上一讲的 mmap 把整个权重文件映射进地址空间。这一步在 32 位系统上做不到，
-32 位系统上可用的地址数量不足，与物理内存的容量无关——这是「地址」与「内存」的区别。
 """)
 
 
@@ -342,47 +290,46 @@ C 里按位存放的写法是位域：`struct { unsigned a : 1, b : 1; }`，位�
 """)
 
 
-def vector_bool(p):
-    p.title("拓展：C++ 中 bitset 与 vector 的 bool 特化")
-    p.demo("一百万个布尔值，两种存法", """cd examples
-g++ -O1 -std=c++17 -o bitset_demo bitset_demo.cpp && ./bitset_demo
-g++ -fsyntax-only vector_bool_bad.cpp 2>&1 | grep -oE 'cannot (convert|initialize).*'""",
-           output="""1000000 bools  vector<bool> 125000  bitset 125000  deque 1000000  (bytes)
-cannot convert ‘std::vector<bool>::reference*’ to ‘bool*’ in initialization""",
-           files=["examples/bitset_demo.cpp", "examples/vector_bool_bad.cpp"])
-    p.table(
-        headers=["时间", "事件"],
-        rows=[
-            ["1998", "AFNOR 提出 LWG issue 96：`vector<bool>` 不满足容器要求"],
-            ["1999", "Sutter 的 N1185：它不符合标准，且把一种空间优化变成了强制"],
-            ["2007", "Meredith 的 N2204：提议把它移入弃用附录"],
-            ["至今", "标准中保留，LWG issue 96 以 NAD（不算缺陷）关闭"],
-        ],
-        align=["center", "left"],
-    )
-    p.slide("""
-长度在编译期确定时用 `std::bitset`：`test` / `set` / `count` 就是按位操作的名字。
-""", autobold=False)
-    p.cite(title="`vector<bool>` Is Nonconforming, and Forces Optimization Choice",
-           author="Herb Sutter", year="1999", venue="WG21 N1185 (J16/99-0008)",
-           url="http://www.gotw.ca/publications/N1185.pdf", key="n1185")
-    p.cite(title="A Specification to deprecate `vector<bool>`", author="Alisdair Meredith",
-           year="2007", venue="WG21 N2204",
-           url="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2204",
-           key="n2204")
-    p.notes("""
-争议的核心是命名：它看上去是 `vector`，行为却不是——`&v[0]` 得不到 `bool*`，
-`auto x = v[0]` 得到的是代理对象而不是 `bool`。Meyers 的《Effective STL》条款 18
-直接写作「避免使用 vector<bool>」。委员会讨论过弃用与替换，最后都没有落地：
-既有代码量太大，LWG issue 96 于是以 NAD 关闭。运行期才知道长度时，
-可用 `std::deque<bool>`（每个值一个字节）或 Boost 的 `dynamic_bitset`。
-"""
-    )
-
-
 # ==============================================================================
 # 第二部分 · 字节序
 # ==============================================================================
+
+
+
+def memory_as_bytes(p):
+    p.title("内存模型：以字节为单位编址的数组")
+    p.slide("""
+程序看到的内存是一个==以字节为单位编址的数组==：每个地址对应一个字节。
+- 地址从 0 开始连续编号，全体地址构成**地址空间**
+- 一个多字节对象占用一段连续地址，其地址取这段地址中的**最小值**
+""", reveal="items")
+    p.image("assets/memory-bytes.svg", width_px=900)
+    p.aside("字节是最小的可寻址单位，因此比字节更小的数据必须打包进一个字节。")
+
+
+def word_size(p):
+    p.title("字长：指针的宽度与地址空间的上限")
+    p.slide(r"""
+**字长**指一个指针占用的位数。$n$ 位的指针能表示 $2^n$ 个不同的地址，
+每个地址对应一个字节，地址空间的大小因此就是 $2^n$ 字节。字长由硬件与操作系统共同确定，
+是一个不能由程序选择的系统参数。
+""", autobold=False)
+    p.table(
+        headers=["字长", "地址范围", "地址个数", "地址空间大小"],
+        rows=[
+            ["32 位", "`0x00000000` – `0xffffffff`",
+             "$2^{32}$", "$4\\,294\\,967\\,296$ 字节 = 4 GB"],
+            ["64 位", "`0x0000000000000000` – `0xffffffffffffffff`",
+             "$2^{64}$", "约 $1.8 \\times 10^{19}$ 字节 = 16 EB"],
+        ],
+        align=["center", "left", "center", "left"],
+    )
+    p.image("assets/address-space.svg", width_px=700)
+    p.notes("""
+上一讲的 mmap 把整个权重文件映射进地址空间。这一步在 32 位系统上做不到，
+32 位系统上可用的地址数量不足，与物理内存的容量无关——这是「地址」与「内存」的区别。
+""")
+
 
 def endianness(p):
     p.title("字节序：多字节对象的排列规则")
