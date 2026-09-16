@@ -14,6 +14,38 @@
   var lastSlide = null; // previous slide number, to detect direction
   var cursor = {};      // slide number -> next step index to reveal
 
+  // A reload (live-reload after an edit, or the reader pressing F5) rebuilds the
+  // deck and would dim the slide being read. What the slide shows is recorded
+  // per tab as the page unloads and put back on load. It is read off the DOM,
+  // since bespoke's arrow paging uses replaceState and fires no hashchange, so
+  // the cursor alone does not know which slide is on screen. The viewer shell
+  // drops the record when the reader opens a page from the outline, so that
+  // entry starts dimmed.
+  var STORAGE_KEY = "lecturekit:reveal:" + location.pathname;
+
+  function shownSteps(seq) {
+    var n = 0;
+    while (n < seq.length && !seq[n].some(function (el) { return el.classList.contains(DIM); })) { n++; }
+    return n;
+  }
+
+  function saveProgress() {
+    var slide = activeSlide();
+    if (!slide) { return; }
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ slide: slideNumber(), step: shownSteps(steps(slide)) }));
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function savedProgress(num) {
+    try {
+      var saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "null");
+      return saved && saved.slide === num ? saved.step : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function slideNumber() {
     var n = parseInt((location.hash || "").replace(/^#/, ""), 10);
     return isNaN(n) ? 1 : n;
@@ -103,24 +135,30 @@
     group.forEach(function (el) { el.classList.remove(DIM); });
   }
 
-  function enterSlide(num, forward) {
+  function enterSlide(num, forward, restored) {
     var slide = activeSlide();
     if (!slide) { return; }
-    if (forward) {
+    var seq = steps(slide);
+    if (restored !== null) {
+      setDim(slide, true);
+      cursor[num] = Math.min(restored, seq.length);
+      seq.slice(0, cursor[num]).forEach(revealStep);
+    } else if (forward) {
       setDim(slide, true);
       cursor[num] = 0;
     } else {
       setDim(slide, false);
-      cursor[num] = steps(slide).length;
+      cursor[num] = seq.length;
     }
   }
 
   function onHashChange() {
     var num = slideNumber();
+    var restored = lastSlide === null ? savedProgress(num) : null;
     var forward = lastSlide === null || num >= lastSlide;
     lastSlide = num;
     // Defer a tick so bespoke has applied the active-slide class.
-    setTimeout(function () { enterSlide(num, forward); }, 0);
+    setTimeout(function () { enterSlide(num, forward, restored); }, 0);
   }
 
   document.addEventListener(
@@ -145,6 +183,7 @@
   );
 
   window.addEventListener("hashchange", onHashChange);
+  window.addEventListener("pagehide", saveProgress);
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", onHashChange);
   } else {

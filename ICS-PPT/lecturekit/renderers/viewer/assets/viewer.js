@@ -110,6 +110,11 @@
   window.addEventListener("beforeunload", persistState);
 
   function showPage(pageId) {
+    // Opening a page from the outline starts its reveal steps over; only a
+    // reload keeps them (see reveal.js).
+    try {
+      sessionStorage.removeItem("lecturekit:reveal:" + new URL("slides.html", location.href).pathname);
+    } catch (e) { /* storage unavailable */ }
     state.mode = "slide";
     state.currentPageId = pageId;
     render();
@@ -249,6 +254,9 @@
     frame.className = "slide-frame";
     // Pages map 1:1 onto deck slides; page index i is deck slide i + 1.
     frame.src = "slides.html#" + (idx + 1);
+    // Keys go to the focused document. Without this the shell keeps focus after
+    // a reload or an outline click, and the deck never sees the arrow keys.
+    frame.addEventListener("load", function () { frame.contentWindow.focus(); });
     stage.appendChild(frame);
 
     var back = document.createElement("button");
@@ -271,15 +279,40 @@
     }
   }
 
+  // Keys the deck pages or reveals with. Marp and reveal.js read only `key` and
+  // the modifier flags, so a re-dispatched event behaves like the original.
+  var DECK_KEYS = {
+    ArrowLeft: 1, ArrowRight: 1, ArrowUp: 1, ArrowDown: 1,
+    PageUp: 1, PageDown: 1, Home: 1, End: 1, " ": 1, Enter: 1,
+  };
+
   document.addEventListener("keydown", function (event) {
     // Marp owns paging inside the focused iframe; this only fires when the
-    // shell itself has focus, as a best-effort return to the outline.
-    if (
-      state.mode === "slide" &&
-      (event.key === "Escape" || event.key === "o" || event.key === "O")
-    ) {
+    // shell itself has focus (the "outline" button was clicked, or focus never
+    // reached the iframe). Escape and o return to the outline; paging keys are
+    // handed to the deck and focus moves there for the keys that follow.
+    if (state.mode !== "slide") { return; }
+    if (event.key === "Escape" || event.key === "o" || event.key === "O") {
       showOutline();
+      return;
     }
+    var frame = document.querySelector(".slide-frame");
+    if (!DECK_KEYS[event.key] || !frame) { return; }
+    var doc;
+    try { doc = frame.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.body) { return; }
+    event.preventDefault();
+    frame.contentWindow.focus();
+    (doc.activeElement || doc.body).dispatchEvent(new KeyboardEvent("keydown", {
+      key: event.key,
+      code: event.code,
+      shiftKey: event.shiftKey,
+      altKey: event.altKey,
+      ctrlKey: event.ctrlKey,
+      metaKey: event.metaKey,
+      bubbles: true,
+      cancelable: true,
+    }));
   });
 
   render();

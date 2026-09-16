@@ -478,6 +478,10 @@ slide. Paging back shows a slide fully. The reveal unit is the block — a `slid
 block reveals in one Enter, not line by line; a `side_image` background is always
 visible, and a block's callout bubbles reveal with it.
 
+A reload keeps what the current slide shows: a live-reload after an edit, or
+F5, comes back with the same blocks revealed. Opening a page from the outline
+starts it dimmed again.
+
 One slide can ask for a finer unit:
 [`p.slide(..., reveal="items")`](dsl.md#revealing-a-slides-bullets-one-at-a-time)
 steps through that block's bullets one Enter at a time. Everything else on the
