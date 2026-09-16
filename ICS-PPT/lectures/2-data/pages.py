@@ -45,14 +45,6 @@ unsigned short ux = (unsigned short) x;    /* 0x3039, reads as 12345 */
 short          y  = -12345;                /* 0xcfc7 */
 unsigned short uy = (unsigned short) y;    /* 0xcfc7, reads as 53191 */"""
 
-BUGGY_LOOP = """/* Sum an array. length is unsigned, as a size usually is. */
-static float sum_elements(const float *a, unsigned length) {
-    float result = 0.0f;
-    for (unsigned i = 0; i <= length - 1; i++)   /* every index up to the last */
-        result += a[i];
-    return result;
-}"""
-
 KERNEL_BUG = """void *memcpy(void *dest, const void *src, size_t n);   /* <string.h> */
 
 #define KSIZE 1024
@@ -526,27 +518,6 @@ strlonger("ab", "abcd")        1""",
     p.aside("规则写在 C 标准里，编译器默认不为此报警，如需要检查可在编译时加上 `-Wsign-compare` 参数。")
 
 
-def unsigned_bugs(p):
-    p.title("找错误：求数组元素之和")
-    p.slide("""
-`sum_elements` 把数组 `a` 的前 `length` 个 `float` 相加并返回，长度以 `unsigned` 表示。
-""", autobold=False)
-    p.code("c", BUGGY_LOOP)
-    p.aside("问题：在什么输入下，这个函数的行为与它的名字不符？")
-    p.slide("""
-- `length` 为 0 时，`length - 1` 得到 4294967295，循环遍历整个地址空间
-- 同类写法：`strlen(s) - strlen(t) > 0` 在 `s` 比 `t` **短**时同样成立
-""")
-    p.highlight("无符号数的减法在结果为负时回绕到模 $2^w$ 的正数。", tone="orange")
-    p.notes("""
-留一段时间让学生自己找。多数人会先检查 `i <= length - 1` 的边界是否差一，
-而问题在于 `length - 1` 这个表达式本身：它是无符号减法，0 减 1 不产生负数。
-改法有两种：把 `length` 改成有符号，或者把循环条件写成 `i < length`。后者更好，
-因为它连减法都不做。`length` 用 `unsigned` 本身是合理的，与 `sizeof` 一类的接口一致；
-出问题的是拿它去做减法。`strlen` 返回 `size_t`，差值为负时回绕成一个极大的无符号数。
-""")
-
-
 def kernel_bug(p):
     p.title("找错误：内核向用户程序拷贝数据")
     p.slide("""
@@ -554,11 +525,19 @@ def kernel_bug(p):
 """, autobold=False)
     p.code("c", KERNEL_BUG)
     p.aside("问题：调用方能否让它拷贝出 `kbuf` 这 1024 字节以外的内容？")
+
+
+def kernel_bug_answer(p):
+    p.title("找错误：内核向用户程序拷贝数据（解答）")
+    p.slide("""
+内核代用户程序拷贝数据：`copy_from_kernel` 把 `kbuf` 拷到 `user_dest`，最多 `maxlen` 字节。
+""", autobold=False)
+    p.code("c", KERNEL_BUG)
     p.slide("""
 调用方传入负的 `maxlen` 时：
 - `KSIZE < maxlen` 是有符号比较，结果为假，`len` 取到那个负值
 - `memcpy` 的第三个参数是 `size_t`，`len` 转换成极大的无符号数，越过缓冲区边界
-""", reveal="items")
+""")
     p.cite(title="Computer Systems: A Programmer's Perspective", author="Bryant, O'Hallaron",
            year="2015", venue="3rd edition, §2.2.6", key="csapp")
     p.notes("""
@@ -567,34 +546,6 @@ def kernel_bug(p):
 运行时也不一定立刻崩溃，只有在特定输入下才暴露。
 审查生成的代码时，有符号与无符号的混用是需要优先检查的一类。
 """)
-
-
-def expand_truncate(p):
-    p.title("扩展与截断")
-    p.slide("""
-改变一个整数的宽度有两个方向，规则各不相同。
-- **扩展**：目的是保持数值不变，补入什么位由这个目的决定
-  - 无符号数补 0（零扩展）：高位的 0 不贡献数值
-  - 有符号数补符号位（符号扩展）：负数补一个 1，原最高位的权重由 $-2^{w-1}$ 变为 $+2^{w-1}$，与新最高位的 $-2^{w}$ 相加仍为 $-2^{w-1}$；每补一个 1 都是如此，因此补 N 个 1 不改变数值
-- **截断**：只保留低位，高位直接丢弃，数值可能完全改变
-""")
-    p.image("assets/expand-truncate.svg", width_px=940)
-
-
-def truncation_in_practice(p):
-    p.title("扩展与截断")
-    p.demo("观察两个方向", """cd examples
-gcc -O1 -o truncate truncate.c && ./truncate""",
-           output="""short  12345    0x3039 -> int  0x00003039
-short -12345    0xcfc7 -> int  0xffffcfc7
-int    53191    0x0000cfc7 -> short 0xcfc7 = -12345
-bytes  as size_t   6425499648
-bytes  as int      2130532352""",
-           files=["examples/truncate.c"])
-    p.slide("""
-最后两行是 3.21 B 参数按 BF16 存放所需的字节数。用 `int` 记录它，得到的 2130532352 ==仍落在有符号 32 位整数的取值范围内==，运行时不产生任何异常，这使这类错误难以被发现。
-""", autobold=False).image_right("assets/ext/ariane-501.jpg", width_px=250
-    ).footnote("阿丽亚娜 5 型 501 号首飞失利，直接原因是一个 64 位浮点数转 16 位有符号整数时溢出。残骸照片来自 Wikimedia Commons，公有领域。")
 
 
 def mixed_width_comparison(p):
@@ -619,33 +570,6 @@ def mixed_width_comparison(p):
 决定补 0 还是补符号位的是操作数原来的类型，决定比较按有符号还是无符号进行的是目标类型，两件事分开。
 最后一行成立的前提是 `long long` 能表示 `unsigned` 的全部取值，在三种平台上都满足；
 若较宽的有符号类型不能表示较窄无符号类型的全部取值，两侧转为该有符号类型对应的无符号类型。
-""")
-
-
-def truncation_and_endianness(p):
-    p.title("拓展：截断与字节序的关系")
-    p.slide("""
-C 语言的截断定义在==值==上，与字节序无关；按==字节==读对象的前几个字节则是另一回事。
-""", autobold=False)
-    p.demo("同一个 32 位值，两种排列各取前两个字节", """cd examples
-gcc -O1 -o truncate_endian truncate_endian.c && ./truncate_endian""",
-           output="""x                        0x12345678
-(uint16_t) x             0x5678
-bytes, little endian     78 56 34 12
-bytes, big endian        12 34 56 78
-first two bytes, LE      0x5678
-first two bytes, BE      0x1234""",
-           files=["examples/truncate_endian.c"])
-    p.slide("""
-- 小端下低有效字节在低地址，起始处两个字节正好是截断的结果；大端下得到的是高半部分
-- `*(short *) &x` 一类的写法在小端机器上与 `(short) x` 相同，换到大端机器上不再相同
-""", reveal="items")
-    p.highlight("截断由语言规定，按字节读取时字节序才影响结果。", tone="orange")
-    p.notes("""
-这类代码在只有小端平台的项目里可以长期不出错，移植时才暴露。Solaris 与 IA-64 的
-移植文档都把它列为需要逐处检查的一类写法。反过来，小端把「取低位」与「取前几个字节」
-统一成了同一个操作，多精度算术中第 $i$ 个字节就是第 $i$ 个数位，这是它在实现上的便利之处。
-按值转换的写法不受影响，因此规则很简单：改变宽度用类型转换，不要用指针转换。
 """)
 
 
@@ -678,34 +602,6 @@ def shifts(p):
     p.notes("""
 右移对应向下取整，C 的整数除法向零取整，两者在负数上结果不同：`-7 >> 1` 为 −4，`-7 / 2` 为 −3。
 编译器把 `x / 2^k` 换成移位时，会先给负数加上 $2^k - 1$ 的偏置，使结果与除法一致。
-""")
-
-
-def shift_kinds(p):
-    p.title("逻辑右移与算术右移在 C 中的表示")
-    p.slide("""
-C 只有一个右移运算符 `>>`。执行哪一种，由==左操作数的类型==决定，与写法无关。
-- 左操作数为无符号类型：逻辑右移，左侧补 0
-- 左操作数为有符号类型：算术右移，左侧补符号位
-""")
-    p.demo("同一段位，两种类型", """cd examples
-gcc -O1 -o shift_kind shift_kind.c && ./shift_kind
-gcc -O2 -S shift_kind.c -o - | grep -oE '^_?(arithmetic|logical):|sar.|shr.|asr|lsr'""",
-           output="""bits        0xfffffff8
-int32_t  >> 1            -4   0xfffffffc   sign bit copied in
-uint32_t >> 1    2147483644   0x7ffffffc   zero shifted in
-arithmetic:
-sarl
-logical:
-shrl""",
-           files=["examples/shift_kind.c"])
-    p.aside("两条不同的机器指令：x86-64 上是 `sar` 与 `shr`，由左操作数的类型在编译期选定。")
-    p.notes("""
-C 标准把有符号数右移的行为留给实现，实际的编译器与平台一律采用算术右移。
-把有符号数右移当作除以 2 的幂是不准确的：算术右移向下取整，`-1 >> 1` 得 −1 而不是 0。
-arm64 上这两条指令叫 `asr` 与 `lsr`，上面的命令在两种指令集上都能选出对应的那一条。
-另一处常见的写法是先转成无符号再右移，用于取出高位字段——这与本讲开头
-把地址转成 `unsigned char *` 是同一种做法：先选定解释规则，再取值。
 """)
 
 
@@ -756,32 +652,6 @@ x & 3 | 4       6      parses as (x & 3) | 4""",
     p.notes("""
 `x` 取 6。三处警告与三处错误一一对应，因此这类问题只要打开 `-Wall` 就不会漏掉；
 但警告只覆盖它认得的组合，加括号是更可靠的做法。
-""")
-
-
-def bit_identities(p):
-    p.title("常用的位运算恒等式")
-    p.table(
-        headers=["名称", "写法", "用途"],
-        rows=[
-            ["德摩根律", "`~(x & y) == ~x | ~y`", "把取反移到括号内，或反向合并"],
-            ["", "`~(x | y) == ~x & ~y`", "同上"],
-            ["异或的自反性", "`x ^ y ^ y == x`", "同一个值异或两次还原，用于交换与校验"],
-            ["同或", "`~(x ^ y)`", "两位相同时得 1；C 无对应的运算符"],
-            ["有符号数取负", "`-x == ~x + 1`", "取反加一，与数字电子技术中的构造一致"],
-            ["取最低位的 1", "`x & -x`", "只保留最低的一位 1，其余清零"],
-            ["清除最低位的 1", "`x & (x - 1)`", "配合循环可数出 1 的个数"],
-        ],
-        align=["left", "left", "left"],
-    )
-    p.highlight("位运算逐位独立，对一位成立的定律对整个字同时成立。", tone="blue")
-    p.notes("""
-这些规则在数字电子技术中按门电路给出，在这里按整数的每一位同时成立：
-一条 `&` 指令就是 32 或 64 个与门并列。
-同或在数电里写作 ⊙，C 里用 `~(x ^ y)` 表示，常见于比较两个位模式有多少位相同。
-`x & (x - 1)` 每次消掉一位 1，循环执行到 0 的次数就是 1 的个数，这是 popcount 的经典写法。
-`examples/bit_rules.c` 把这七条对两个字节的全部 65536 种取值逐一比对过，
-有学生问起可以当场跑一遍，它不占一页幻灯片。
 """)
 
 

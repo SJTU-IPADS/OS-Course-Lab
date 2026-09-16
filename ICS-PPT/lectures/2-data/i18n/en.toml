@@ -1289,53 +1289,6 @@ src_hash = '1f16977b'
 text = 'The rule is in the C standard, and compilers do not warn about it by default; `-Wsign-compare` turns the check on.'
 # src: 规则写在 C 标准里，编译器默认不为此报警，如需要检查可在编译时加上 `-Wsign-compare` 参数。
 
-['unsigned-bugs.title']
-src_hash = '3f0e678b'
-text = 'Find the bug: summing the elements of an array'
-# src: 找错误：求数组元素之和
-
-['unsigned-bugs.slide.1']
-src_hash = 'd1b220d7'
-text = '`sum_elements` returns the sum of the first `length` `float` values of `a`; `length` is `unsigned`.'
-# src:
-# 
-# `sum_elements` 把数组 `a` 的前 `length` 个 `float` 相加并返回，长度以 `unsigned` 表示。
-
-['unsigned-bugs.aside.1']
-src_hash = 'abdbc79e'
-text = 'Question: for which input does it not do what its name says?'
-# src: 问题：在什么输入下，这个函数的行为与它的名字不符？
-
-['unsigned-bugs.slide.2']
-src_hash = '33cb24ba'
-text = '''
-- With `length` 0, `length - 1` is 4294967295 and the loop walks the whole address space
-- Likewise `strlen(s) - strlen(t) > 0` holds when `s` is **shorter**
-'''
-# src:
-# 
-# - `length` 为 0 时，`length - 1` 得到 4294967295，循环遍历整个地址空间
-# - 同类写法：`strlen(s) - strlen(t) > 0` 在 `s` 比 `t` **短**时同样成立
-
-['unsigned-bugs.highlight.1']
-src_hash = '3a8ea7b6'
-text = 'A negative unsigned difference wraps to a positive value modulo $2^w$.'
-# src: 无符号数的减法在结果为负时回绕到模 $2^w$ 的正数。
-
-['unsigned-bugs.notes.1']
-src_hash = 'ffae815c'
-text = '''
-
-Leave time for students to find it. Most first check whether `i <= length - 1` is off by one, when the trouble is the expression `length - 1` itself: it is unsigned subtraction, and 0 minus 1 does not produce a negative number. There are two fixes: make `length` signed, or write the loop condition as `i < length`. The second is better because it performs no subtraction at all. Declaring `length` as `unsigned` is reasonable in itself and consistent with interfaces like `sizeof`; the trouble comes from subtracting with it. `strlen` returns `size_t`, and a negative difference wraps to an enormous unsigned value.
-'''
-# src:
-# 
-# 留一段时间让学生自己找。多数人会先检查 `i <= length - 1` 的边界是否差一，
-# 而问题在于 `length - 1` 这个表达式本身：它是无符号减法，0 减 1 不产生负数。
-# 改法有两种：把 `length` 改成有符号，或者把循环条件写成 `i < length`。后者更好，
-# 因为它连减法都不做。`length` 用 `unsigned` 本身是合理的，与 `sizeof` 一类的接口一致；
-# 出问题的是拿它去做减法。`strlen` 返回 `size_t`，差值为负时回绕成一个极大的无符号数。
-
 ['kernel-bug.title']
 src_hash = '9a68c676'
 text = 'Find the bug: the kernel copying data out to a user program'
@@ -1353,7 +1306,19 @@ src_hash = '9d426fe8'
 text = 'Question: can a caller make it copy beyond the 1024 bytes of `kbuf`?'
 # src: 问题：调用方能否让它拷贝出 `kbuf` 这 1024 字节以外的内容？
 
-['kernel-bug.slide.2']
+['kernel-bug-answer.title']
+src_hash = '35c8cf76'
+text = 'Find the bug: the kernel copying data out to a user program (answer)'
+# src: 找错误：内核向用户程序拷贝数据（解答）
+
+['kernel-bug-answer.slide.1']
+src_hash = '03c064a5'
+text = 'The kernel copies data out for a user program: `copy_from_kernel` copies `kbuf` to `user_dest`, at most `maxlen` bytes.'
+# src:
+# 
+# 内核代用户程序拷贝数据：`copy_from_kernel` 把 `kbuf` 拷到 `user_dest`，最多 `maxlen` 字节。
+
+['kernel-bug-answer.slide.2']
 src_hash = '81a430ce'
 text = '''
 **When the caller passes a negative `maxlen`:**
@@ -1366,7 +1331,7 @@ text = '''
 # - `KSIZE < maxlen` 是有符号比较，结果为假，`len` 取到那个负值
 # - `memcpy` 的第三个参数是 `size_t`，`len` 转换成极大的无符号数，越过缓冲区边界
 
-['kernel-bug.notes.1']
+['kernel-bug-answer.notes.1']
 src_hash = '5db925dd'
 text = '''
 
@@ -1378,53 +1343,6 @@ This code is modelled on a defect that appeared in FreeBSD's getpeername impleme
 # 返回值是实际拷贝的字节数。课堂上可以指出：这类错误在编译时没有任何提示，
 # 运行时也不一定立刻崩溃，只有在特定输入下才暴露。
 # 审查生成的代码时，有符号与无符号的混用是需要优先检查的一类。
-
-['expand-truncate.title']
-src_hash = '3d9f867b'
-text = 'Widening and truncation'
-# src: 扩展与截断
-
-['expand-truncate.slide.1']
-src_hash = 'a3af6209'
-text = '''
-**Changing the width of an integer goes in two directions, under different rules.**
-- **Widening**: the goal is to keep the value unchanged, and that goal decides which bits are added
-  - Unsigned numbers are padded with 0 (zero extension): high 0 bits contribute nothing
-  - Signed numbers are padded with the sign bit (sign extension): a negative value gains a 1; the old top bit's weight changes from $-2^{w-1}$ to $+2^{w-1}$, and adding the new top bit's $-2^{w}$ still gives $-2^{w-1}$; the same holds for each added 1, so padding with N ones leaves the value unchanged
-- **Truncation**: only the low bits are kept and the high bits are simply discarded; the value may change entirely
-'''
-# src:
-# 
-# **改变一个整数的宽度有两个方向，规则各不相同。**
-# - **扩展**：目的是保持数值不变，补入什么位由这个目的决定
-#   - 无符号数补 0（零扩展）：高位的 0 不贡献数值
-#   - 有符号数补符号位（符号扩展）：负数补一个 1，原最高位的权重由 $-2^{w-1}$ 变为 $+2^{w-1}$，与新最高位的 $-2^{w}$ 相加仍为 $-2^{w-1}$；每补一个 1 都是如此，因此补 N 个 1 不改变数值
-# - **截断**：只保留低位，高位直接丢弃，数值可能完全改变
-
-['truncation-in-practice.title']
-src_hash = '3d9f867b'
-text = 'Widening and truncation'
-# src: 扩展与截断
-
-['truncation-in-practice.demo.1.name']
-src_hash = 'c0d5389d'
-text = 'Watching both directions'
-# src: 观察两个方向
-
-['truncation-in-practice.slide.1']
-src_hash = 'c3ffdb91'
-text = '''
-
-The last two lines are the number of bytes 3.21 B parameters need in BF16. Recorded in an `int`, the result 2130532352 <mark>still falls inside the range of a signed 32-bit integer</mark>, so nothing goes wrong at run time — which is what makes this class of error hard to notice.
-'''
-# src:
-# 
-# 最后两行是 3.21 B 参数按 BF16 存放所需的字节数。用 `int` 记录它，得到的 2130532352 <mark>仍落在有符号 32 位整数的取值范围内</mark>，运行时不产生任何异常，这使这类错误难以被发现。
-
-['truncation-in-practice.slide.1.footnote.1']
-src_hash = 'c1c9f29b'
-text = 'Ariane 5 flight 501 was lost on its maiden launch; the immediate cause was an overflow converting a 64-bit float to a 16-bit signed integer. Photograph of the debris from Wikimedia Commons, public domain.'
-# src: 阿丽亚娜 5 型 501 号首飞失利，直接原因是一个 64 位浮点数转 16 位有符号整数时溢出。残骸照片来自 Wikimedia Commons，公有领域。
 
 ['mixed-width-comparison.title']
 src_hash = 'c05fa97d'
@@ -1576,52 +1494,6 @@ The last row relies on `long long` representing every `unsigned` value, which ho
 # 最后一行成立的前提是 `long long` 能表示 `unsigned` 的全部取值，在三种平台上都满足；
 # 若较宽的有符号类型不能表示较窄无符号类型的全部取值，两侧转为该有符号类型对应的无符号类型。
 
-['truncation-and-endianness.title']
-src_hash = '43b508a3'
-text = 'Aside: truncation and byte order'
-# src: 拓展：截断与字节序的关系
-
-['truncation-and-endianness.slide.1']
-src_hash = '5fc35df7'
-text = "C truncation is defined on the <mark>value</mark>, independent of byte order; reading an object's first bytes is different."
-# src:
-# 
-# C 语言的截断定义在<mark>值</mark>上，与字节序无关；按<mark>字节</mark>读对象的前几个字节则是另一回事。
-
-['truncation-and-endianness.demo.1.name']
-src_hash = 'bc8297d2'
-text = 'One 32-bit value, the first two bytes under each layout'
-# src: 同一个 32 位值，两种排列各取前两个字节
-
-['truncation-and-endianness.slide.2']
-src_hash = 'cb5604da'
-text = '''
-- On little-endian the first two bytes are the truncated value; on big-endian, the high half
-- So `*(short *) &x` equals `(short) x` on little-endian but not on big-endian
-'''
-# src:
-# 
-# - 小端下低有效字节在低地址，起始处两个字节正好是截断的结果；大端下得到的是高半部分
-# - `*(short *) &x` 一类的写法在小端机器上与 `(short) x` 相同，换到大端机器上不再相同
-
-['truncation-and-endianness.highlight.1']
-src_hash = 'a763de5a'
-text = 'The language fixes truncation; byte order matters only for raw bytes.'
-# src: 截断由语言规定，按字节读取时字节序才影响结果。
-
-['truncation-and-endianness.notes.1']
-src_hash = 'e5aa472c'
-text = '''
-
-Code like this can go years without failing in a project that only ever runs little-endian, and surfaces on the first port. The porting guides for Solaris and IA-64 both list it as a form to be checked line by line. Conversely, little-endian unifies "take the low bits" and "take the first few bytes" into one operation: in multiple-precision arithmetic the $i$-th byte is the $i$-th digit, which is where its implementation convenience lies. Conversions written on the value are unaffected, so the rule is simple: change width with a cast, not with a pointer.
-'''
-# src:
-# 
-# 这类代码在只有小端平台的项目里可以长期不出错，移植时才暴露。Solaris 与 IA-64 的
-# 移植文档都把它列为需要逐处检查的一类写法。反过来，小端把「取低位」与「取前几个字节」
-# 统一成了同一个操作，多精度算术中第 $i$ 个字节就是第 $i$ 个数位，这是它在实现上的便利之处。
-# 按值转换的写法不受影响，因此规则很简单：改变宽度用类型转换，不要用指针转换。
-
 ['bit-operations.title']
 src_hash = 'ee0cb00c'
 text = 'Bitwise operations'
@@ -1765,48 +1637,6 @@ When a compiler turns `x / 2^k` into a shift, it first adds a bias of $2^k - 1$ 
 # 
 # 右移对应向下取整，C 的整数除法向零取整，两者在负数上结果不同：`-7 >> 1` 为 −4，`-7 / 2` 为 −3。
 # 编译器把 `x / 2^k` 换成移位时，会先给负数加上 $2^k - 1$ 的偏置，使结果与除法一致。
-
-['shift-kinds.title']
-src_hash = 'd474991a'
-text = 'How the two right shifts are written in C'
-# src: 逻辑右移与算术右移在 C 中的表示
-
-['shift-kinds.slide.1']
-src_hash = '18909697'
-text = '''
-**C has one right shift, `>>`; the <mark>type of the left operand</mark> selects the kind.**
-- Unsigned: logical shift, fills with 0
-- Signed: arithmetic shift, fills with the sign bit
-'''
-# src:
-# 
-# **C 只有一个右移运算符 `>>`。执行哪一种，由<mark>左操作数的类型</mark>决定，与写法无关。**
-# - 左操作数为无符号类型：逻辑右移，左侧补 0
-# - 左操作数为有符号类型：算术右移，左侧补符号位
-
-['shift-kinds.demo.1.name']
-src_hash = 'ddafaf6a'
-text = 'The same bits, two types'
-# src: 同一段位，两种类型
-
-['shift-kinds.aside.1']
-src_hash = '72bd5c11'
-text = 'Two instructions: `sar` and `shr` on x86-64, picked at compile time by the operand type.'
-# src: 两条不同的机器指令：x86-64 上是 `sar` 与 `shr`，由左操作数的类型在编译期选定。
-
-['shift-kinds.notes.1']
-src_hash = '28a7ee42'
-text = '''
-
-The C standard leaves a right shift of a signed value to the implementation; actual compilers and platforms all use an arithmetic shift. Treating a right shift of a signed value as division by a power of two is inaccurate: an arithmetic shift rounds toward negative infinity, so `-1 >> 1` gives −1 rather than 0. Another common form converts to unsigned first and then shifts, to extract a high field; this is the same practice as casting an address to `unsigned char *` at the start of this lecture: fix the rule of interpretation first, then take the value. On arm64 the two instructions are `asr` and `lsr`; the command above selects the right one on either instruction set.
-'''
-# src:
-# 
-# C 标准把有符号数右移的行为留给实现，实际的编译器与平台一律采用算术右移。
-# 把有符号数右移当作除以 2 的幂是不准确的：算术右移向下取整，`-1 >> 1` 得 −1 而不是 0。
-# arm64 上这两条指令叫 `asr` 与 `lsr`，上面的命令在两种指令集上都能选出对应的那一条。
-# 另一处常见的写法是先转成无符号再右移，用于取出高位字段——这与本讲开头
-# 把地址转成 `unsigned char *` 是同一种做法：先选定解释规则，再取值。
 
 ['operator-precedence.title']
 src_hash = '9bc41dfd'
@@ -1993,146 +1823,6 @@ text = '''
 # 
 # `x` 取 6。三处警告与三处错误一一对应，因此这类问题只要打开 `-Wall` 就不会漏掉；
 # 但警告只覆盖它认得的组合，加括号是更可靠的做法。
-
-['bit-identities.title']
-src_hash = 'ddbec6de'
-text = 'Useful bitwise identities'
-# src: 常用的位运算恒等式
-
-['bit-identities.table.1.cell.0.0']
-src_hash = 'd44e9b3d'
-text = 'Name'
-# src: 名称
-
-['bit-identities.table.1.cell.0.1']
-src_hash = 'cbe3e430'
-text = 'Form'
-# src: 写法
-
-['bit-identities.table.1.cell.0.2']
-src_hash = '05b36669'
-text = 'Use'
-# src: 用途
-
-['bit-identities.table.1.cell.1.0']
-src_hash = 'e064b71a'
-text = "De Morgan's laws"
-# src: 德摩根律
-
-['bit-identities.table.1.cell.1.1']
-src_hash = 'f28f162d'
-text = '`~(x & y) == ~x | ~y`'
-# src: `~(x & y) == ~x | ~y`
-
-['bit-identities.table.1.cell.1.2']
-src_hash = '05ce42e4'
-text = 'move a negation inside or out'
-# src: 把取反移到括号内，或反向合并
-
-['bit-identities.table.1.cell.2.1']
-src_hash = '215d2ba5'
-text = '`~(x | y) == ~x & ~y`'
-# src: `~(x | y) == ~x & ~y`
-
-['bit-identities.table.1.cell.2.2']
-src_hash = '15552b13'
-text = 'likewise'
-# src: 同上
-
-['bit-identities.table.1.cell.3.0']
-src_hash = '63f5a538'
-text = 'Xor self-inverse'
-# src: 异或的自反性
-
-['bit-identities.table.1.cell.3.1']
-src_hash = '34a0399d'
-text = '`x ^ y ^ y == x`'
-# src: `x ^ y ^ y == x`
-
-['bit-identities.table.1.cell.3.2']
-src_hash = '2a51c091'
-text = 'xor twice restores; swaps, checksums'
-# src: 同一个值异或两次还原，用于交换与校验
-
-['bit-identities.table.1.cell.4.0']
-src_hash = '7c563951'
-text = 'Xnor'
-# src: 同或
-
-['bit-identities.table.1.cell.4.1']
-src_hash = '6655318c'
-text = '`~(x ^ y)`'
-# src: `~(x ^ y)`
-
-['bit-identities.table.1.cell.4.2']
-src_hash = 'c464039f'
-text = '1 where bits agree; no C operator'
-# src: 两位相同时得 1；C 无对应的运算符
-
-['bit-identities.table.1.cell.5.0']
-src_hash = '3e6aa389'
-text = 'Signed negation'
-# src: 有符号数取负
-
-['bit-identities.table.1.cell.5.1']
-src_hash = '1e9e60d7'
-text = '`-x == ~x + 1`'
-# src: `-x == ~x + 1`
-
-['bit-identities.table.1.cell.5.2']
-src_hash = '8b40cf14'
-text = 'invert and add one'
-# src: 取反加一，与数字电子技术中的构造一致
-
-['bit-identities.table.1.cell.6.0']
-src_hash = '8031d8f5'
-text = 'Lowest set bit'
-# src: 取最低位的 1
-
-['bit-identities.table.1.cell.6.1']
-src_hash = '3dcda117'
-text = '`x & -x`'
-# src: `x & -x`
-
-['bit-identities.table.1.cell.6.2']
-src_hash = '88443f2c'
-text = 'keeps only the lowest 1'
-# src: 只保留最低的一位 1，其余清零
-
-['bit-identities.table.1.cell.7.0']
-src_hash = '4b31cebb'
-text = 'Clear the lowest 1'
-# src: 清除最低位的 1
-
-['bit-identities.table.1.cell.7.1']
-src_hash = 'cff5bccf'
-text = '`x & (x - 1)`'
-# src: `x & (x - 1)`
-
-['bit-identities.table.1.cell.7.2']
-src_hash = '0d1349b4'
-text = 'loop counts the 1 bits'
-# src: 配合循环可数出 1 的个数
-
-['bit-identities.highlight.1']
-src_hash = 'c15fae70'
-text = 'A law for one bit holds for the whole word.'
-# src: 位运算逐位独立，对一位成立的定律对整个字同时成立。
-
-['bit-identities.notes.1']
-src_hash = '48fd63f2'
-text = '''
-
-These rules are given as gate circuits in digital electronics; here they hold simultaneously on every bit of an integer: one `&` instruction is 32 or 64 and-gates side by side. Xnor is written ⊙ in digital electronics and as `~(x ^ y)` in C, and comes up when counting how many bits two patterns share. `x & (x - 1)` removes one 1 bit each time, so the number of iterations before reaching 0 is the number of 1 bits — the classic form of popcount. `examples/bit_rules.c` checks all seven against all 65536 values of a two-byte word; it can be run on the spot if a student asks, and takes no slide of its own.
-'''
-# src:
-# 
-# 这些规则在数字电子技术中按门电路给出，在这里按整数的每一位同时成立：
-# 一条 `&` 指令就是 32 或 64 个与门并列。
-# 同或在数电里写作 ⊙，C 里用 `~(x ^ y)` 表示，常见于比较两个位模式有多少位相同。
-# `x & (x - 1)` 每次消掉一位 1，循环执行到 0 的次数就是 1 的个数，这是 popcount 的经典写法。
-# `examples/bit_rules.c` 把这七条对两个字节的全部 65536 种取值逐一比对过，
-# 有学生问起可以当场跑一遍，它不占一页幻灯片。
 
 ['bridge-4.title']
 src_hash = 'f68883fc'

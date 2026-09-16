@@ -17,12 +17,12 @@
 | 回顾与本节的问题 | 4 | 课程信息 · Ollama：本机的推理服务 · 第一讲的权重文件 · 四个问题 |
 | 第一部分 · 位与字节 | 6 | `xxd` 的二进制与十六进制视图 · 位串到值 · 十六进制与 C 的进制写法 · 模型格式如何标识自己 · C 数据类型的宽度 · 布尔值的存储 |
 | 第二部分 · 字节序 | 7 | 内存即字节 · 字长与地址范围 · 大端与小端 · 读一个字段 · `show_bytes` · 字节序在什么场合可见 · 文本与 token |
-| **第三部分 · 整数** | **16** | 无符号数与有符号数 · 取值范围 · 强制转换 · 比较陷阱 · 越界与内核缺陷 · 扩展与截断 · 一次真实的截断 · 大小不同的操作数比较 · 截断与字节序 · 位运算 · 移位 · 逻辑与算术右移 · 运算符优先级与实例 · 位运算恒等式 |
+| **第三部分 · 整数** | **12** | 无符号数与有符号数 · 取值范围 · 强制转换 · 比较陷阱 · 内核缺陷（题 / 答） · 大小不同的操作数比较 · 位运算 · 移位 · 运算符优先级与实例 |
 | 第四部分 · 浮点数与低精度格式 | 12 | 三段结构与偏置 · 二进制科学计数法 · 规格化/非规格化/inf/NaN · 值在数轴上的分布与实测间距 · 舍入 · 浮点不是实数 · FP32/BF16/FP16/TF32/FP8/FP4 · BF16 即截断 · FP16 的编码与次规格化数 · 范围与精度 · 模型尺寸 |
 | 第五部分 · 量化：原理与 Q4_0 | 12 | 为什么要量化 · 访存瓶颈的实测 · 量化谁 · 量化的想法 · 仿射映射的三个自由度 · Q4_0 的块结构 · 量化代码 · 4 位打包 · 打包加法 · 硬件上的 4 位运算单元 · 粒度 · 三种粒度的实测 |
 | 第六部分 · 量化格式：Q4_1 与 Q4_K | 11 | 偏移与 Q4_1 · Q4_1 的实测 · Q4_K 的超块 · 超块的字节账 · 12 字节里的 16 个 6 位数 · 取出子块系数的代码 · Q4_K 的实测 · 文件里的混合配方 · 量化的代价 · 线性量化以及它之外的做法 · 实验预告 |
 
-共 71 个编号页（含末页的本节小结与自动生成的参考文献页）、6 个衔接页与 1 个封面。
+共 67 个编号页（含末页的本节小结与自动生成的参考文献页）、6 个衔接页与 1 个封面。
 
 量化占两节，按 1.5–2 次课的讲解时长安排：第五部分讲解一个 4 位格式的设计，
 第六部分讲解真实文件中存在多种格式的原因。两节之间的衔接页适合作为下课的分界。
@@ -66,14 +66,11 @@ arm64 的 macOS，以及 Windows 的 WSL2（Ubuntu，命令与 Linux 完全相�
 | --- | --- | --- |
 | `recap-weights` | `ls -lhS ... \| sed -n '2p'` + `file "$(ls -dS ... \| head -1)"` | macOS 的 `ls -l` 按 512 字节块打印 `total` 行；`sha256-*` 按字母序会先匹配到 JSON manifest。与第一讲的同一条命令保持一致 |
 | `vector-bool` | `grep -oE 'cannot (convert\|initialize).*'` | 同一处错误 gcc 说 cannot convert，clang 说 cannot initialize |
-| `shift-kinds`、`endianness-conversion-cost` | grep 的字母表加上 `asr` / `lsr` / `rev`，标号加 `^_?` | arm64 的助记符与 x86-64 不同，Mach-O 的符号名前多一个下划线 |
 
-随平台变化、需要在课上说明的三点（都写在对应页的 `p.notes` 里）：
+随平台变化、需要在课上说明的一点（写在对应页的 `p.notes` 里）：
 
 - **`long` 的宽度**：64 位 Linux 与 macOS 是 LP64（8 字节），原生 Windows 是 LLP64（4 字节，
   指针仍是 8 字节）。`c-data-sizes` 表中「64 位」一列按 LP64 写。WSL2 中是 Linux 程序，与表一致。
-- **右移的指令名**：x86-64 是 `sar` / `shr`，arm64 是 `asr` / `lsr`。
-- **字节序转换的指令名**：x86-64 是 `bswap`，arm64 是 `rev`；两处的结论（一个方向零指令）相同。
 
 三种平台都是小端，本讲字节序部分的全部输出一致。`p.demo` 里录的输出来自 x86-64 Linux。
 
@@ -104,13 +101,9 @@ python3 -m lecturekit.cli view   lectures/2-data --watch --lang en   # 英文
 | `vector_bool_bad.cpp` | `vector-bool` | 有意无法编译：`&v[0]` 的类型不是 `bool *` |
 | `bool_size.c` | `bool-storage` | 同一份代码按 C 与 C++ 编译，比较 `bool` 的宽度与取值（需要 g++） |
 | `compare.c` | `comparison-trap` | 有符号与无符号混用的四个比较 |
-| `truncate.c` | `truncation-in-practice` | 扩展、截断与同一段字节的两种读法 |
 | `endian_host.c` | `endianness-in-linux` | `__BYTE_ORDER__` 与 `htole32` / `htobe32` 各自的结果 |
 | `endian_calls.c` | `endianness-conversion-cost` | 两个转换函数编译出的指令（配合 `gcc -S`） |
-| `truncate_endian.c` | `truncation-and-endianness` | 按值截断与按字节取前缀，在两种排列下的结果 |
-| `shift_kind.c` | `shift-kinds` | 有符号与无符号右移，以及编译出的 `sar` / `shr` |
 | `precedence.c` | `precedence-in-practice` | 三个缺少括号的表达式与 `-Wall` 的三条警告 |
-| `bit_rules.c` | —（不占幻灯片） | 穷举 65536 组字节验证 `bit-identities` 那页的恒等式，课上有提问时可以当场运行 |
 | `binary_point.c` | `binary-scientific` | 十进制值写为二进制并移动小数点，得到阶码与尾数 |
 | `float_spacing.c` | `float-spacing-measured` | 用 `nextafterf` 取相邻 FP32，输出步长与相对步长（需要 `-lm`） |
 | `gguf_bits.py` | —（不占幻灯片） | 读整个权重文件，按张量类型统计位数与字节数；`model-size` 的备注引用了它的结论 |
@@ -145,7 +138,6 @@ lectures/2-data/diagrams/render.sh    # 重新生成全部图表
 | `memory_bytes.py` | `memory-bytes.svg` | `memory-as-bytes`，12 个地址格与跨 4 格的 `int` |
 | `address_space.py` | `address-space.svg` | `word-size`，4 GB 的横条与占用近一半空间的权重文件 |
 | `same_bits.py` | `same-bits.svg` | `casting`，同一串 16 位的两种解释 |
-| `expand_truncate.py` | `expand-truncate.svg` | `expand-truncate`，补入的字节与丢弃的字节 |
 | `shifts.py` | `shifts.svg` | `shifts`，一个位串的三种移位与补入的位 |
 | `bit_fields.py` | `bit-fields.svg` | `float-structure`，3.1415927 的 FP32 三段分解 |
 | `float_formats.py` | `float-formats.svg` | `precision-formats`，七种格式的三段分配 |
@@ -180,7 +172,6 @@ lectures/2-data/diagrams/render.sh    # 重新生成全部图表
 | 文件 | 使用页 | 来源与授权 |
 | --- | --- | --- |
 | `core-memory.jpg` | `why-binary` | Wikimedia Commons，摄影 Mister rf，CC BY-SA 4.0 |
-| `ariane-501.jpg` | `truncation-in-practice` | Wikimedia Commons，阿丽亚娜 501 残骸，公有领域 |
 | `kahan.jpg` | `float-rounding` | Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0 |
 | `llm-int8-fig2.svg` | `quantization-cost` | Dettmers et al., LLM.int8()（NeurIPS 2022）图 2，CC BY 4.0 |
 | `memory-wall-profile.png` | `memory-bound-measured` | Gholami et al., AI and Memory Wall（IEEE Micro 2024）图 3(b)(d)，CC BY 4.0；裁去两幅子图的标题后横向拼合 |
@@ -238,7 +229,7 @@ python3 -m lecturekit.cli i18n check   lectures/2-data --lang en   # 上课前�
    在英文版中仍是中文。demo 的 `name` 与 `description` 是普通文本，照常翻译。
 2. **图片路径**（`p.image` 的 `src`）。`assets/` 下 16 张手写 SVG 的标注是中文，
    英文版中仍显示中文：`memory-bytes`、`byte-order`、`same-bits`、`shifts`、
-   `expand-truncate`、`bit-fields`、`float-formats`、`float-spacing`、
+   `bit-fields`、`float-formats`、`float-spacing`、
    `quantize-line`、`q4-block`、`zero-point`、`q4-k-block`、`k-scales`、
    `granularity`、`int4-accumulate`、`address-space`。
    与第一讲同样的限制：要让英文版彻底英文，需要框架支持按语言选图。

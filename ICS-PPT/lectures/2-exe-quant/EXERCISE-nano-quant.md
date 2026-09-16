@@ -448,7 +448,7 @@ CPU 上约十几秒，200 人约一小时，可以装载一次模型后循环生
 
 | 编号 | 现象 | 第一处分歧 | 讲义页 |
 | --- | --- | --- | --- |
-| q1 | 小模型结果正常，`big.safetensors` 的偏移变为一个很小的数 | `rd_u64le` 写成 `p[i] << (8 * i)`，`uint8_t` 提升为 `int` 后移位越界 | `endianness`、`expand-truncate` |
+| q1 | 小模型结果正常，`big.safetensors` 的偏移变为一个很小的数 | `rd_u64le` 写成 `p[i] << (8 * i)`，`uint8_t` 提升为 `int` 后移位越界 | `endianness`、`shifts` |
 | q2 | 所有权重都偏小，误差约为正确值的 256 倍 | BF16 被当作 FP16 解释 | `precision-formats`、`range-and-precision` |
 | q3 | Q4_0 的误差比 Q4_1 大得多，且总有一个编码从不出现 | `d` 取 `absmax / 7`，16 个编码只用到 15 个 | `quantize-code`、`granularity-measured` |
 | q4 | 每个权重单独检查误差正常，但整块的顺序错误 | `qs` 的两个半字节对应第 `j` 与第 `j+1` 个权重 | `nibble-packing` |
@@ -598,7 +598,7 @@ Apache-2.0 的权重，可以把两段样本替换为 Qwen 的对应张量，代
 | 实验内容 | 讲义页 |
 | --- | --- |
 | 小端组合与显式宽度 | `endianness`、`read-the-field`、`show-bytes` |
-| 整数提升与移位越界 | `expand-truncate`、`shifts` |
+| 整数提升与移位越界 | `shifts` |
 | BF16 / FP16 的字段与精度 | `precision-formats`、`bf16-truncation`、`range-and-precision` |
 | FP16 的次规格化数与舍入规则 | `fp16-classes`、`float-rounding` |
 | 为什么要量化、带宽估算 | `why-quantize`、`memory-bound-measured`、`what-to-quantize` |
