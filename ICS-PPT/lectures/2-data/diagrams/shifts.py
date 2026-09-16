@@ -41,7 +41,7 @@ def build():
         out.append(text(X0 + 8 * CW + 16, y + CH / 2 + 5, hexv, 13, MUTED,
                         anchor="start", font=MONO))
     out.append(text(W / 2, H - 14,
-                    "补入的位由类型决定：无符号数补 0，补码补符号位", 13, MUTED))
+                    "补入的位由类型决定：无符号数补 0，有符号数补符号位", 13, MUTED))
     return svg(W, H, out)
 
 

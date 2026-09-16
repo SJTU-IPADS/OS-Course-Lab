@@ -33,28 +33,62 @@ src_hash = '6f88ed18'
 text = 'Recap, and the question of this lecture'
 # src: 回顾与本节的问题
 
+['ollama-intro.title']
+src_hash = '4ed20f6e'
+text = 'Ollama: an inference service running on the local machine'
+# src: Ollama：运行在本机的推理服务
+
+['ollama-intro.slide.1']
+src_hash = '6ca7a27d'
+text = '''
+Ollama is an inference service that runs on the local machine and provides an OpenAI-compatible HTTP interface.
+- Once started it listens on `http://localhost:11434`; the `/v1/...` paths match those of a cloud service
+- The model weights are stored as a file on the local disk
+- That whole path — request, load, compute, return — can be observed on your own machine
+'''
+# src:
+# 
+# **Ollama 是运行在本机的推理服务，提供 OpenAI 兼容的 HTTP 接口。**
+# - 启动后监听 `http://localhost:11434`，`/v1/...` 路径与云端服务一致
+# - 模型权重以文件形式存放在本机磁盘上
+# - 请求、加载、计算、返回这条完整路径，都可以在自己的机器上观察
+
+['ollama-intro.demo.1.name']
+src_hash = 'b6e55979'
+text = 'Start the inference service'
+# src: 启动推理服务
+
+['ollama-intro.demo.2.name']
+src_hash = '4276c983'
+text = 'Download the weights'
+# src: 下载模型权重
+
+['ollama-intro.demo.3.name']
+src_hash = 'eb435629'
+text = 'Submit one request'
+# src: 提交一次请求
+
 ['recap-weights.title']
 src_hash = '4e3ed0b5'
 text = 'The model file of llama3.2'
 # src: 模型文件 llama3.2
 
 ['recap-weights.demo.1.name']
-src_hash = 'cf48b44f'
-text = 'The two commands from last lecture'
-# src: 上一讲跑过的两条命令
+src_hash = 'cede741f'
+text = 'View the model file'
+# src: 查看模型文件
 
 ['recap-weights.slide.1']
-src_hash = '22eca991'
+src_hash = 'cd24cd24'
 text = '''
-
-Last lecture took one `ollama run` and worked up through the layers of the system. One observation was left unanswered.
+Last lecture took one `ollama run` and worked up through the layers of the system
 - The weights are a 1.9 GB file, and `file` reports `data` — it cannot identify the type
 - The file holds no executable instructions; all of its content is data
 - The operating system pages it into memory on demand, without interpreting a single byte
 '''
 # src:
 # 
-# **上一讲以一次 `ollama run` 为例，自底向上考察了系统各层，其中一项观察当时没有回答。**
+# **上一讲以一次 `ollama run` 为例，自底向上考察了系统各层**
 # - 模型权重是一个 1.9 GB 的文件，`file` 给出的结果是 `data`，即未能识别其类型
 # - 文件中不含任何可执行指令，全部内容是数据
 # - 操作系统按需把其中的页装入内存，但没有解释过任何一个字节的含义
@@ -84,12 +118,12 @@ text = 'Four questions this lecture answers'
 
 ['four-questions.slide.1']
 src_hash = 'ffd24a96'
-text = '1. What is a byte'
+text = '1. What a byte is'
 # src: 1. 什么是字节
 
 ['four-questions.slide.2']
 src_hash = '02a51dfc'
-text = '2. Multi-byte data objects'
+text = '2. How bytes form data objects'
 # src: 2. 多字节组成数据对象
 
 ['four-questions.slide.3']
@@ -99,13 +133,8 @@ text = '3. Integer and floating-point encodings'
 
 ['four-questions.slide.4']
 src_hash = '182a8cfc'
-text = '4. How to quantize floating-point numbers'
+text = '4. How floating-point numbers are quantized'
 # src: 4. 如何对浮点数进行量化
-
-['four-questions.aside.1']
-src_hash = '0a8455d1'
-text = 'We take these four in order, and close by building quantization on top of floating point.'
-# src: 接下来我们按顺序解读这四个问题，最后在浮点的基础上引入量化。
 
 ['bridge-1.title']
 src_hash = '0bceabde'
@@ -126,6 +155,57 @@ The smallest unit of information and how it is written
 src_hash = '0bceabde'
 text = 'Part one · Bits and bytes'
 # src: 第一部分 · 位与字节
+
+['hexdump.title']
+src_hash = 'afa8ddde'
+text = 'Reading the first 32 bytes of a model file'
+# src: 读一个模型文件的前 32 个字节
+
+['hexdump.demo.1.name']
+src_hash = 'f9c8ea1a'
+text = 'View in binary'
+# src: 按二进制查看
+
+['hexdump.demo.1.description']
+src_hash = '27ee340b'
+text = 'Each byte written as 8 binary digits, 8 bytes per line'
+# src: 每个字节写成 8 位二进制，一行 8 个字节
+
+['hexdump.demo.2.name']
+src_hash = '04898d3b'
+text = 'View in hexadecimal'
+# src: 按十六进制查看
+
+['hexdump.demo.2.description']
+src_hash = '2159c339'
+text = 'Each byte written as 2 hexadecimal digits'
+# src: 每个字节写成 2 位十六进制
+
+['hexdump.slide.1']
+src_hash = '9c05c8f4'
+text = '''
+`tiny.gguf` is written in the GGUF format; it is merely very small, and serves only as an example.
+- The first four bytes `47 47 55 46` read as `GGUF` in ASCII, identifying the file type
+- What each subsequent run of bytes denotes is fixed field by field by the format specification
+- The same bytes have no determinate meaning apart from that specification
+'''
+# src:
+# 
+# **`tiny.gguf` 按 GGUF 格式写出，只是规模很小，仅用作示例。**
+# - 前四个字节 `47 47 55 46` 按 ASCII 解释为 `GGUF`，用于标识文件类型
+# - 其后的每一段字节表示什么，由格式规范逐字段规定
+# - 同一段字节脱离规范则没有确定的含义
+
+['hexdump.notes.1']
+src_hash = '3a42326a'
+text = '''
+
+tiny.gguf is produced by examples/make_gguf.py and is 224 bytes long, holding one 8×4 fp16 tensor and two metadata entries. In class this command can be pointed at a real weight file on a student's own machine; the structure of the first 16 bytes is identical.
+'''
+# src:
+# 
+# tiny.gguf 由 examples/make_gguf.py 生成，共 224 字节，含一个 8×4 的 fp16 张量与两条元数据。
+# 课堂上可以让学生把这条命令换成自己机器上的真实权重文件，前 16 个字节的结构完全一致。
 
 ['bits-to-value.title']
 src_hash = '1cf4c71a'
@@ -247,15 +327,15 @@ text = 'Hexadecimal and the other bases'
 # src: 十六进制等多种进制
 
 ['hexadecimal.slide.1']
-src_hash = 'bde49257'
+src_hash = 'e60f460d'
 text = '''
-
-Hexadecimal groups binary <mark>four bits at a time</mark>, written with the sixteen symbols `0`–`9` and `a`–`f`. A byte is 8 bits, hence two hexadecimal digits, ranging from `0x00` to `0xff`.
+Hexadecimal groups binary <mark>four bits at a time</mark>, written with the sixteen symbols `0`–`9` and `a`–`f`.
+A byte is 8 bits, hence two hexadecimal digits, ranging from `0x00` to `0xff`.
 '''
 # src:
 # 
 # 十六进制以 <mark>4 位二进制为一组</mark>，用 `0`–`9` 与 `a`–`f` 共 16 个符号书写。
-# 一个字节是 8 位，即两位十六进制，取值 `0x00` 到 `0xff`。
+# 一个字节有 8 位，对应十六进制有 2 位，取值 `0x00` 到 `0xff`。
 
 ['hexadecimal.table.1.cell.0.0']
 src_hash = '0ad77174'
@@ -268,9 +348,9 @@ text = 'Written in C'
 # src: C 的写法
 
 ['hexadecimal.table.1.cell.0.2']
-src_hash = '18137995'
-text = '42 written out'
-# src: 写成 42
+src_hash = 'e7fd3008'
+text = 'Writing 42'
+# src: 表示 42
 
 ['hexadecimal.table.1.cell.1.0']
 src_hash = '0258c5e3'
@@ -344,48 +424,6 @@ The octal leading zero is a genuine source of defects: writing file permissions 
 # 误写成 `010` 就会变成 8。C2y 增加了 `0o` 前缀，gcc 15 已作为扩展支持，C23 及以前无效。
 # C23 还允许用 `'` 分组数字，如 `0b1111'1111`。输出侧只有 `%x` 与 `%o`，没有二进制的转换说明符。
 
-['hexdump.title']
-src_hash = 'afa8ddde'
-text = 'Reading the first 32 bytes of a model file'
-# src: 读一个模型文件的前 32 个字节
-
-['hexdump.demo.1.name']
-src_hash = 'b6ed85cd'
-text = 'Looking at the file header'
-# src: 查看文件头
-
-['hexdump.demo.1.description']
-src_hash = '009f3729'
-text = 'Offset on the left, hexadecimal in the middle, printable characters on the right'
-# src: 左侧是偏移，中间是十六进制，右侧是可打印字符
-
-['hexdump.slide.1']
-src_hash = '9202caa6'
-text = '''
-
-`tiny.gguf` is written in the GGUF format, the same format as the weight files ollama downloads; it is merely very small, and serves only as an example.
-- The first four bytes `47 47 55 46` read as `GGUF` in ASCII, identifying the file type
-- What each subsequent run of bytes denotes is fixed field by field by the format specification
-- The same bytes have no determinate meaning apart from that specification
-'''
-# src:
-# 
-# **`tiny.gguf` 按 GGUF 格式写出，与 ollama 下载的权重文件采用同一种格式，只是规模很小，仅用作示例。**
-# - 前四个字节 `47 47 55 46` 按 ASCII 解释为 `GGUF`，用于标识文件类型
-# - 其后的每一段字节表示什么，由格式规范逐字段规定
-# - 同一段字节脱离规范则没有确定的含义
-
-['hexdump.notes.1']
-src_hash = '3a42326a'
-text = '''
-
-tiny.gguf is produced by examples/make_gguf.py and is 224 bytes long, holding one 8×4 fp16 tensor and two metadata entries. In class this command can be pointed at a real weight file on a student's own machine; the structure of the first 16 bytes is identical.
-'''
-# src:
-# 
-# tiny.gguf 由 examples/make_gguf.py 生成，共 224 字节，含一个 8×4 的 fp16 张量与两条元数据。
-# 课堂上可以让学生把这条命令换成自己机器上的真实权重文件，前 16 个字节的结构完全一致。
-
 ['other-formats.title']
 src_hash = 'eae80161'
 text = 'How other model formats identify themselves'
@@ -426,119 +464,6 @@ The `file` command decides from a table of magic numbers, which is why it recogn
 # 安全上的差别值得一提：pickle 在反序列化时执行任意代码，safetensors 只读取一段 JSON 与
 # 一片连续数据，不含可执行内容，这是它被提出的直接原因。
 # 五个样例由 examples/make_formats.py 生成，都按各自格式的规则写出，不是手工拼的字节。
-
-['memory-as-bytes.title']
-src_hash = '7dc64c3f'
-text = 'The memory model: a byte-addressed array'
-# src: 内存模型：以字节为单位编址的数组
-
-['memory-as-bytes.slide.1']
-src_hash = '2195cce6'
-text = '''
-A program sees memory as an <mark>array of bytes</mark>: each address holds one byte.
-- Addresses run from 0; together they form the **address space**
-- A multi-byte object uses consecutive addresses; its address is the **smallest**
-- Last lecture's virtual address space is this model in the operating system
-'''
-# src:
-# 
-# **程序看到的内存是一个<mark>以字节为单位编址的数组</mark>：每个地址对应一个字节。**
-# - 地址从 0 开始连续编号，全体地址构成**地址空间**
-# - 一个多字节对象占用一段连续地址，其地址取这段地址中的**最小值**
-# - 上一讲的虚拟地址空间就是这一模型在操作系统中的实现
-
-['memory-as-bytes.aside.1']
-src_hash = 'e83c2a2d'
-text = 'The byte is the smallest addressable unit; narrower data is packed into bytes.'
-# src: 字节是最小的可寻址单位，因此比字节更小的数据必须打包进一个字节。
-
-['word-size.title']
-src_hash = '5cb3fe29'
-text = 'Word size: pointer width and the ceiling on the address space'
-# src: 字长：指针的宽度与地址空间的上限
-
-['word-size.slide.1']
-src_hash = '3bd1f101'
-text = '''
-
-**Word size** is the number of bits a pointer occupies. An $n$-bit pointer can name $2^n$ distinct addresses, each holding one byte, so the address space is $2^n$ bytes. Word size is fixed jointly by the hardware and the operating system; it is a system parameter no program can choose.
-'''
-# src:
-# 
-# **字长**指一个指针占用的位数。$n$ 位的指针能表示 $2^n$ 个不同的地址，
-# 每个地址对应一个字节，地址空间的大小因此就是 $2^n$ 字节。字长由硬件与操作系统共同确定，
-# 是一个不能由程序选择的系统参数。
-
-['word-size.table.1.cell.0.0']
-src_hash = 'f0b568e6'
-text = 'Word size'
-# src: 字长
-
-['word-size.table.1.cell.0.1']
-src_hash = 'ccb04909'
-text = 'Address range'
-# src: 地址范围
-
-['word-size.table.1.cell.0.2']
-src_hash = '0aa4821d'
-text = 'Number of addresses'
-# src: 地址个数
-
-['word-size.table.1.cell.0.3']
-src_hash = '32e3acd6'
-text = 'Size of the address space'
-# src: 地址空间大小
-
-['word-size.table.1.cell.1.0']
-src_hash = '57951dea'
-text = '32-bit'
-# src: 32 位
-
-['word-size.table.1.cell.1.1']
-src_hash = '27f0deb1'
-text = '`0x00000000` – `0xffffffff`'
-# src: `0x00000000` – `0xffffffff`
-
-['word-size.table.1.cell.1.2']
-src_hash = 'b7ced870'
-text = '$2^{32}$'
-# src: $2^{32}$
-
-['word-size.table.1.cell.1.3']
-src_hash = 'da53f8a7'
-text = '$4\,294\,967\,296$ bytes = 4 GB'
-# src: $4\,294\,967\,296$ 字节 = 4 GB
-
-['word-size.table.1.cell.2.0']
-src_hash = 'e5e18ca5'
-text = '64-bit'
-# src: 64 位
-
-['word-size.table.1.cell.2.1']
-src_hash = 'b1247875'
-text = '`0x0000000000000000` – `0xffffffffffffffff`'
-# src: `0x0000000000000000` – `0xffffffffffffffff`
-
-['word-size.table.1.cell.2.2']
-src_hash = '26501df9'
-text = '$2^{64}$'
-# src: $2^{64}$
-
-['word-size.table.1.cell.2.3']
-src_hash = 'baf81bf2'
-text = 'about $1.8 \times 10^{19}$ bytes = 16 EB'
-# src: 约 $1.8 \times 10^{19}$ 字节 = 16 EB
-
-['word-size.notes.1']
-src_hash = '7b1557ae'
-text = '''
-
-Last lecture's mmap mapped the entire weight file into the address space. That is impossible on a 32-bit system: there are not enough addresses available, regardless of how much physical memory is installed — which is the difference between an address and memory.
-'''
-# src:
-# 
-# 上一讲的 mmap 把整个权重文件映射进地址空间。这一步在 32 位系统上做不到，
-# 32 位系统上可用的地址数量不足，与物理内存的容量无关——这是「地址」与「内存」的区别。
 
 ['c-data-sizes.title']
 src_hash = '48b60b7a'
@@ -747,90 +672,6 @@ The bitwise form in C is the bit field: `struct { unsigned a : 1, b : 1; }`. The
 # C 里按位存放的写法是位域：`struct { unsigned a : 1, b : 1; }`，位的排列次序由实现决定，
 # 因此位域不适合用来描述文件格式，跨编译器读同一段字节会得到不同结果。
 
-['vector-bool.title']
-src_hash = '12111941'
-text = 'Aside: bitset and the bool specialization of vector in C++'
-# src: 拓展：C++ 中 bitset 与 vector 的 bool 特化
-
-['vector-bool.demo.1.name']
-src_hash = 'e902ee5f'
-text = 'A million booleans, stored two ways'
-# src: 一百万个布尔值，两种存法
-
-['vector-bool.table.1.cell.0.0']
-src_hash = '8b6ff498'
-text = 'Year'
-# src: 时间
-
-['vector-bool.table.1.cell.0.1']
-src_hash = 'c560201b'
-text = 'Event'
-# src: 事件
-
-['vector-bool.table.1.cell.1.0']
-src_hash = 'd54123de'
-text = '1998'
-# src: 1998
-
-['vector-bool.table.1.cell.1.1']
-src_hash = '2e1f09b4'
-text = 'AFNOR raises LWG issue 96: `vector<bool>` does not meet the container requirements'
-# src: AFNOR 提出 LWG issue 96：`vector<bool>` 不满足容器要求
-
-['vector-bool.table.1.cell.2.0']
-src_hash = 'ce8457d5'
-text = '1999'
-# src: 1999
-
-['vector-bool.table.1.cell.2.1']
-src_hash = 'dd01b506'
-text = "Sutter's N1185: it does not conform, and it turns a space optimization into a mandate"
-# src: Sutter 的 N1185：它不符合标准，且把一种空间优化变成了强制
-
-['vector-bool.table.1.cell.3.0']
-src_hash = 'f1cfa5eb'
-text = '2007'
-# src: 2007
-
-['vector-bool.table.1.cell.3.1']
-src_hash = '84bde8fe'
-text = "Meredith's N2204: a proposal to move it into the deprecated annex"
-# src: Meredith 的 N2204：提议把它移入弃用附录
-
-['vector-bool.table.1.cell.4.0']
-src_hash = 'fe985eaf'
-text = 'today'
-# src: 至今
-
-['vector-bool.table.1.cell.4.1']
-src_hash = '76a09172'
-text = 'retained in the standard; LWG issue 96 closed as NAD (not a defect)'
-# src: 标准中保留，LWG issue 96 以 NAD（不算缺陷）关闭
-
-['vector-bool.slide.1']
-src_hash = 'af1974eb'
-text = '''
-
-When the length is known at compile time, use `std::bitset`: `test` / `set` / `count` are the names of bitwise operations.
-'''
-# src:
-# 
-# 长度在编译期确定时用 `std::bitset`：`test` / `set` / `count` 就是按位操作的名字。
-
-['vector-bool.notes.1']
-src_hash = '503957b8'
-text = '''
-
-The controversy is really about the name: it looks like a `vector` and does not behave like one — `&v[0]` does not yield a `bool*`, and `auto x = v[0]` yields a proxy object rather than a `bool`. Item 18 of Meyers's *Effective STL* is titled "Avoid using vector<bool>". The committee discussed deprecating and replacing it, and neither happened: too much code depends on it, so LWG issue 96 was closed as NAD. When the length is known only at run time, `std::deque<bool>` (one byte per value) or Boost's `dynamic_bitset` will serve.
-'''
-# src:
-# 
-# 争议的核心是命名：它看上去是 `vector`，行为却不是——`&v[0]` 得不到 `bool*`，
-# `auto x = v[0]` 得到的是代理对象而不是 `bool`。Meyers 的《Effective STL》条款 18
-# 直接写作「避免使用 vector<bool>」。委员会讨论过弃用与替换，最后都没有落地：
-# 既有代码量太大，LWG issue 96 于是以 NAD 关闭。运行期才知道长度时，
-# 可用 `std::deque<bool>`（每个值一个字节）或 Boost 的 `dynamic_bitset`。
-
 ['bridge-2.title']
 src_hash = '083b94d5'
 text = 'Part two · Byte order'
@@ -850,6 +691,117 @@ How multi-byte objects are arranged in memory
 src_hash = '083b94d5'
 text = 'Part two · Byte order'
 # src: 第二部分 · 字节序
+
+['memory-as-bytes.title']
+src_hash = '7dc64c3f'
+text = 'The memory model: a byte-addressed array'
+# src: 内存模型：以字节为单位编址的数组
+
+['memory-as-bytes.slide.1']
+src_hash = '2cf11e4e'
+text = '''
+A program sees memory as an <mark>array addressed in bytes</mark>: each address holds one byte.
+- Addresses run consecutively from 0; together they form the **address space**
+- A multi-byte object occupies consecutive addresses; its address is the **smallest** of them
+'''
+# src:
+# 
+# **程序看到的内存是一个<mark>以字节为单位编址的数组</mark>：每个地址对应一个字节。**
+# - 地址从 0 开始连续编号，全体地址构成**地址空间**
+# - 一个多字节对象占用一段连续地址，其地址取这段地址中的**最小值**
+
+['memory-as-bytes.aside.1']
+src_hash = 'e83c2a2d'
+text = 'The byte is the smallest addressable unit; narrower data is packed into bytes.'
+# src: 字节是最小的可寻址单位，因此比字节更小的数据必须打包进一个字节。
+
+['word-size.title']
+src_hash = '5cb3fe29'
+text = 'Word size: pointer width and the ceiling on the address space'
+# src: 字长：指针的宽度与地址空间的上限
+
+['word-size.slide.1']
+src_hash = '3bd1f101'
+text = '''
+
+**Word size** is the number of bits a pointer occupies. An $n$-bit pointer can name $2^n$ distinct addresses, each holding one byte, so the address space is $2^n$ bytes. Word size is fixed jointly by the hardware and the operating system; it is a system parameter no program can choose.
+'''
+# src:
+# 
+# **字长**指一个指针占用的位数。$n$ 位的指针能表示 $2^n$ 个不同的地址，
+# 每个地址对应一个字节，地址空间的大小因此就是 $2^n$ 字节。字长由硬件与操作系统共同确定，
+# 是一个不能由程序选择的系统参数。
+
+['word-size.table.1.cell.0.0']
+src_hash = 'f0b568e6'
+text = 'Word size'
+# src: 字长
+
+['word-size.table.1.cell.0.1']
+src_hash = 'ccb04909'
+text = 'Address range'
+# src: 地址范围
+
+['word-size.table.1.cell.0.2']
+src_hash = '0aa4821d'
+text = 'Number of addresses'
+# src: 地址个数
+
+['word-size.table.1.cell.0.3']
+src_hash = '32e3acd6'
+text = 'Size of the address space'
+# src: 地址空间大小
+
+['word-size.table.1.cell.1.0']
+src_hash = '57951dea'
+text = '32-bit'
+# src: 32 位
+
+['word-size.table.1.cell.1.1']
+src_hash = '27f0deb1'
+text = '`0x00000000` – `0xffffffff`'
+# src: `0x00000000` – `0xffffffff`
+
+['word-size.table.1.cell.1.2']
+src_hash = 'b7ced870'
+text = '$2^{32}$'
+# src: $2^{32}$
+
+['word-size.table.1.cell.1.3']
+src_hash = 'da53f8a7'
+text = '$4\,294\,967\,296$ bytes = 4 GB'
+# src: $4\,294\,967\,296$ 字节 = 4 GB
+
+['word-size.table.1.cell.2.0']
+src_hash = 'e5e18ca5'
+text = '64-bit'
+# src: 64 位
+
+['word-size.table.1.cell.2.1']
+src_hash = 'b1247875'
+text = '`0x0000000000000000` – `0xffffffffffffffff`'
+# src: `0x0000000000000000` – `0xffffffffffffffff`
+
+['word-size.table.1.cell.2.2']
+src_hash = '26501df9'
+text = '$2^{64}$'
+# src: $2^{64}$
+
+['word-size.table.1.cell.2.3']
+src_hash = 'baf81bf2'
+text = 'about $1.8 \times 10^{19}$ bytes = 16 EB'
+# src: 约 $1.8 \times 10^{19}$ 字节 = 16 EB
+
+['word-size.notes.1']
+src_hash = '7b1557ae'
+text = '''
+
+Last lecture's mmap mapped the entire weight file into the address space. That is impossible on a 32-bit system: there are not enough addresses available, regardless of how much physical memory is installed — which is the difference between an address and memory.
+'''
+# src:
+# 
+# 上一讲的 mmap 把整个权重文件映射进地址空间。这一步在 32 位系统上做不到，
+# 32 位系统上可用的地址数量不足，与物理内存的容量无关——这是「地址」与「内存」的区别。
 
 ['endianness.title']
 src_hash = 'c48ecc42'
@@ -877,7 +829,7 @@ text = 'Same value, same four addresses, bytes in opposite order'
 # src: 同一个值在两种排列下占用同样的四个地址，字节的次序相反
 
 ['endianness.notes.1']
-src_hash = 'af73af7b'
+src_hash = '1f70c9a1'
 text = '''
 
 The order of bits within a byte is never observed by a program, so it does not arise; the subject throughout is the order of bytes. x86-64 is little-endian only. ARM, RISC-V and PowerPC are bi-endian processors: both orders can execute, and which one is in force is fixed at boot by a control register, with Linux normally running little-endian on all of them. File formats and network protocols are a separate kind of convention: they fix their own byte order, independent of the processor running them.
@@ -886,7 +838,7 @@ The order of bits within a byte is never observed by a program, so it does not a
 # 
 # 字节内部的位序不由程序观察，因此不涉及这一问题；讨论的对象始终是字节的次序。
 # x86-64 只有小端一种。ARM、RISC-V、PowerPC 是双端序处理器，两种次序都能执行，
-# 实际使用哪一种在启动时由控制寄存器固定，Linux 在这些平台上通常运行于小端。
+# 实际使用哪一种在启动时由控制寄存器固定，Linux 在这些平台上通常运行于小端
 # 文件格式与网络协议是另一类约定：它们自行规定字节序，与运行它们的处理器无关。
 
 ['read-the-field.title']
@@ -1028,19 +980,16 @@ text = 'Part three · Integers'
 # src: 第三部分 · 整数
 
 ['two-readings.title']
-src_hash = '897f4669'
-text = 'Two interpretations of the same bits'
-# src: 同一段位的两种解释
+src_hash = '37b564c3'
+text = 'Two representations of integers'
+# src: 两种整型数的表示
 
 ['two-readings.slide.1']
-src_hash = 'a46d4275'
-text = '''
-
-Two's complement as learned in *Digital Electronics* is constructed by "invert and add one". The following is another, equivalent way of writing the same encoding: change the weight of the top bit from $+2^{w-1}$ to $-2^{w-1}$, and leave the weights of the other bits unchanged.
-'''
+src_hash = 'f7977cf8'
+text = 'Every bit of an unsigned number has a positive weight; a signed number changes the weight of the top bit from $+2^{w-1}$ to $-2^{w-1}$ and leaves the weights of the other bits unchanged.'
 # src:
 # 
-# 在《数字电子技术》课程中学过的补码由「取反加一」构造。以下是同一编码的另一种等价写法：把最高位的权重由 $+2^{w-1}$ 改为 $-2^{w-1}$，其余各位的权重不变。
+# 无符号数各位的权重都为正；有符号数把最高位的权重由 $+2^{w-1}$ 改为 $-2^{w-1}$，其余各位的权重不变。
 
 ['two-readings.slide.2']
 src_hash = 'a080d9c4'
@@ -1071,9 +1020,9 @@ text = 'Unsigned $B2U$'
 # src: 无符号 $B2U$
 
 ['two-readings.table.1.cell.0.2']
-src_hash = '311d91ca'
-text = "Two's complement $B2T$"
-# src: 补码 $B2T$
+src_hash = '2cb98270'
+text = 'Signed $B2T$'
+# src: 有符号 $B2T$
 
 ['two-readings.table.1.cell.0.3']
 src_hash = '3450ec27'
@@ -1166,22 +1115,19 @@ text = 'The two readings agree when the top bit is 0 and differ by $2^w$ when it
 # src: 最高位为 0 时两种解释一致，为 1 时相差 $2^w$。
 
 ['two-readings.notes.1']
-src_hash = '02f670fb'
-text = '''
-
-In digital electronics two's complement is defined as "positives unchanged, negatives inverted and incremented", so that subtraction can be carried out by an adder circuit. The weighted sum given here is another description of the same encoding and is more convenient when reading a run of bytes: there is no need to test the sign first and then decide how to compute; the weights are simply added. The equivalence can be checked on the spot: `1011` inverted is `0100`, plus one is `0101`, that is 5, so the original pattern represents −5.
-'''
+src_hash = 'cde32148'
+text = 'In digital electronics a signed number is defined as "positives unchanged, negatives inverted and incremented", so that subtraction can be carried out by an adder circuit. The weighted sum given here is another description of the same encoding and is more convenient when reading a run of bytes: there is no need to test the sign first and then decide how to compute; the weights are simply added. The equivalence can be checked on the spot: `1011` inverted is `0100`, plus one is `0101`, that is 5, so the original pattern represents −5.'
 # src:
 # 
-# 数字电子技术里补码的定义是「正数不变，负数取反加一」，用于让减法由加法电路完成。
+# 数字电子技术里有符号数的定义是「正数不变，负数取反加一」，用于让减法由加法电路完成。
 # 这里给出的按位权求和是同一套编码的另一种描述，在读一段字节时更好用：
 # 不需要先判断符号再决定怎么算，直接按权重相加即可。
 # 两者等价可以当场验证：`1011` 取反得 `0100`，加一得 `0101` 即 5，所以原码表示 −5。
 
 ['numeric-range.title']
-src_hash = 'ded680a0'
-text = "The ranges of unsigned and two's complement"
-# src: 无符号数与补码的取值范围
+src_hash = 'a8a1c4b4'
+text = 'The ranges of unsigned and signed numbers'
+# src: 无符号数与有符号数的取值范围
 
 ['numeric-range.table.1.cell.0.1']
 src_hash = 'b2dcdcfa'
@@ -1229,9 +1175,9 @@ text = 'about $1.8\times10^{19}$'
 # src: 约 $1.8\times10^{19}$
 
 ['numeric-range.table.1.cell.2.0']
-src_hash = '2c18ea6a'
-text = "Two's complement"
-# src: 补码
+src_hash = 'b110190b'
+text = 'Signed'
+# src: 有符号
 
 ['numeric-range.table.1.cell.2.1']
 src_hash = 'a7d1fc20'
@@ -1254,18 +1200,17 @@ text = 'about $9.2\times10^{18}$'
 # src: 约 $9.2\times10^{18}$
 
 ['numeric-range.slide.1']
-src_hash = '9581c5c7'
+src_hash = '5ff3d7c0'
 text = '''
-
-Two relations worth remembering:
-- $|TMin| = TMax + 1$: there is one more negative than positive, so `-TMin` is still `TMin`
-- The two's complement pattern for `-1` is all ones, the same pattern as the largest unsigned value
+**Two relations worth remembering:**
+- $|TMin| = TMax + 1$: there is one more negative than positive
+- The signed pattern for `-1` is all ones, the same pattern as the largest unsigned value
 '''
 # src:
 # 
 # **两条需要记住的关系：**
-# - $|TMin| = TMax + 1$，负数比正数多一个，因此 `-TMin` 仍是 `TMin`
-# - `-1` 的补码位模式为全 1，与无符号的最大值位模式相同
+# - $|TMin| = TMax + 1$，负数比正数多一个
+# - `-1` 有符号数的位模式为全 1，与无符号的最大值位模式相同
 
 ['casting.title']
 src_hash = '5ef5ac63'
@@ -1408,13 +1353,12 @@ text = 'Widening and truncation'
 # src: 扩展与截断
 
 ['expand-truncate.slide.1']
-src_hash = '14210a78'
+src_hash = 'a3af6209'
 text = '''
-
-Changing the width of an integer goes in two directions, under different rules.
+**Changing the width of an integer goes in two directions, under different rules.**
 - **Widening**: the goal is to keep the value unchanged, and that goal decides which bits are added
-  - Unsigned values are padded with 0 (zero extension): high 0 bits contribute nothing
-  - Two's complement is padded with the sign bit (sign extension): a negative value gains a 1; the old top bit's weight changes from $-2^{w-1}$ to $+2^{w-1}$, and adding the new top bit's $-2^{w}$ still gives $-2^{w-1}$; the same holds for each added 1, so padding with N ones leaves the value unchanged
+  - Unsigned numbers are padded with 0 (zero extension): high 0 bits contribute nothing
+  - Signed numbers are padded with the sign bit (sign extension): a negative value gains a 1; the old top bit's weight changes from $-2^{w-1}$ to $+2^{w-1}$, and adding the new top bit's $-2^{w}$ still gives $-2^{w-1}$; the same holds for each added 1, so padding with N ones leaves the value unchanged
 - **Truncation**: only the low bits are kept and the high bits are simply discarded; the value may change entirely
 '''
 # src:
@@ -1422,7 +1366,7 @@ Changing the width of an integer goes in two directions, under different rules.
 # **改变一个整数的宽度有两个方向，规则各不相同。**
 # - **扩展**：目的是保持数值不变，补入什么位由这个目的决定
 #   - 无符号数补 0（零扩展）：高位的 0 不贡献数值
-#   - 补码补符号位（符号扩展）：负数补一个 1，原最高位的权重由 $-2^{w-1}$ 变为 $+2^{w-1}$，与新最高位的 $-2^{w}$ 相加仍为 $-2^{w-1}$；每补一个 1 都是如此，因此补 N 个 1 不改变数值
+#   - 有符号数补符号位（符号扩展）：负数补一个 1，原最高位的权重由 $-2^{w-1}$ 变为 $+2^{w-1}$，与新最高位的 $-2^{w}$ 相加仍为 $-2^{w-1}$；每补一个 1 都是如此，因此补 N 个 1 不改变数值
 # - **截断**：只保留低位，高位直接丢弃，数值可能完全改变
 
 ['truncation-in-practice.title']
@@ -1762,20 +1706,19 @@ text = 'Shift operations'
 # src: 移位运算
 
 ['shifts.slide.1']
-src_hash = 'd214cd8b'
+src_hash = '42aa7024'
 text = '''
-
 - **Left shift** `x << k`: every bit moves left by $k$ places, zeros fill in on the right, and bits shifted off the top are discarded
-- **Logical right shift** `x >> k`: zeros fill in on the left; used for unsigned values
-- **Arithmetic right shift** `x >> k`: the sign bit fills in on the left, so a negative value stays negative
-- The C standard leaves the behaviour undefined once the shift count reaches the word size
+- **Logical right shift** `x >> k`: zeros fill in on the left; used for unsigned numbers
+- **Arithmetic right shift** `x >> k`: the sign bit fills in on the left; used for signed numbers, so a negative value stays negative
+- The C standard leaves the behaviour undefined once the shift count reaches or exceeds the word size
 - Without overflow, `x << k` equals $x \times 2^k$ and `x >> k` equals $\lfloor x / 2^k \rfloor$; shifts are faster than multiplication and division, so a shift is usually used wherever it can express the operation
 '''
 # src:
 # 
 # - **左移** `x << k`：各位左移 $k$ 位，右侧补 0，高位移出后丢弃
 # - **逻辑右移** `x >> k`：左侧补 0，用于无符号数
-# - **算术右移** `x >> k`：左侧补符号位，用于补码，使负数右移后仍为负数
+# - **算术右移** `x >> k`：左侧补符号位，用于有符号数，使负数右移后仍为负数
 # - 移位位数达到或超过字长时，C 标准未定义其行为
 # - 不溢出时，`x << k` 等于 $x \times 2^k$，`x >> k` 等于 $\lfloor x / 2^k \rfloor$；移位比乘除法快，能用移位表示时通常使用移位
 
@@ -2095,9 +2038,9 @@ text = '1 where bits agree; no C operator'
 # src: 两位相同时得 1；C 无对应的运算符
 
 ['bit-identities.table.1.cell.5.0']
-src_hash = '4bad5bda'
-text = 'Negation'
-# src: 补码取负
+src_hash = '3e6aa389'
+text = 'Signed negation'
+# src: 有符号数取负
 
 ['bit-identities.table.1.cell.5.1']
 src_hash = '1e9e60d7'
@@ -2617,18 +2560,17 @@ text = 'Several bit patterns read as FP16'
 # src: 对若干个位模式按 FP16 解释
 
 ['fp16-classes.slide.1']
-src_hash = 'c75f9a29'
+src_hash = '24b36d16'
 text = '''
-
 - 1 sign bit, 5 exponent bits, 10 fraction bits, bias 15; a normal value is $(-1)^s \times 1.f \times 2^{e-15}$
 - An all-zero exponent gives a <mark>subnormal number</mark> with no leading 1: $(-1)^s \times 0.f \times 2^{-14}$, i.e. $f \times 2^{-24}$
-- `0x03ff` is $1023 \times 2^{-24}$ and `0x0400` is $1024 \times 2^{-24}$, so neighbouring values still differ by $2^{-24}$ across the step from subnormal to normal; if an all-zero exponent used $-15$ instead, subnormals would reach only about $2^{-15}$ and $[2^{-15}, 2^{-14})$ would contain no representable value
+- `0x03ff` is $1023 \times 2^{-24}$ and `0x0400` is $1024 \times 2^{-24}$; across the step from subnormal to normal, neighbouring values differ by exactly $2^{-24}$
 '''
 # src:
 # 
 # - 1 位符号、5 位阶码、10 位尾数，偏置为 15；规格化数的值为 $(-1)^s \times 1.f \times 2^{e-15}$
 # - 阶码全 0 为<mark>次规格化数</mark>，尾数不带前导的 1，值为 $(-1)^s \times 0.f \times 2^{-14}$，即 $f \times 2^{-24}$
-# - `0x03ff` 为 $1023 \times 2^{-24}$，`0x0400` 为 $1024 \times 2^{-24}$，从次规格化数到规格化数，相邻两值仍相差 $2^{-24}$；若阶码全 0 时指数取 $-15$，次规格化数最大只到约 $2^{-15}$，$[2^{-15}, 2^{-14})$ 内将没有可表示的值
+# - `0x03ff` 为 $1023 \times 2^{-24}$，`0x0400` 为 $1024 \times 2^{-24}$，从次规格化数到规格化数，相邻两值恰好相差 $2^{-24}$
 
 ['fp16-classes.notes.1']
 src_hash = '6ca90cab'
@@ -3222,19 +3164,18 @@ text = 'The Q4_0 block: 32 weights in 18 bytes'
 # src: Q4_0 的块结构：18 字节存放 32 个权重
 
 ['q4-block.slide.1']
-src_hash = '40ab094f'
+src_hash = '14de2aa0'
 text = '''
-
 - Every 32 weights form a group sharing one FP16 scale, occupying 2 bytes
 - The 32 four-bit codes pack into 16 bytes, two weights to a byte
-- The 16 codes denote $-8$ through $7$, asymmetric at the two ends just like two's complement
+- The 16 codes denote $-8$ through $7$, asymmetric at the two ends just like signed numbers
 - 18 bytes in all, an average of <mark>4.5 bits</mark> per weight; 3.21 B parameters come to about 1.8 GB
 '''
 # src:
 # 
 # - 每 32 个权重为一组，共用一个 FP16 的缩放系数，占 2 字节
 # - 32 个 4 位编码打包进 16 字节，每字节存放两个权重
-# - 16 个编码表示 $-8$ 到 $7$，与补码一样两端不对称
+# - 16 个编码表示 $-8$ 到 $7$，与有符号数一样两端不对称
 # - 合计 18 字节，平均每个权重 <mark>4.5 位</mark>；3.21 B 参数据此约为 1.8 GB
 
 ['quantize-code.title']
@@ -4182,19 +4123,18 @@ text = 'Summary'
 # src: 本节小结
 
 ['summary.slide.1']
-src_hash = '4eb7c363'
+src_hash = 'b7745a59'
 text = '''
-
 - **What a byte is**: 8 two-valued signals, written as two hexadecimal digits, the smallest addressable unit
 - **How a multi-byte object is arranged**: settled by byte order; GGUF and x86-64 both use little-endian
-- **How the same bits yield different values**: unsigned and two's complement differ in the weight of the top bit, and conversions are where mistakes happen
+- **How the same bits yield different values**: unsigned and signed numbers differ in the weight of the top bit, and conversions are where mistakes happen
 - **How real numbers are encoded**: bits divided among sign, exponent and fraction; quantization compresses a weight to around 4 bits
 '''
 # src:
 # 
 # - **一个字节是什么**：8 个两值信号，写作两位十六进制，是最小的可寻址单位
 # - **多字节对象如何排列**：由字节序规定；GGUF 与 x86-64 都采用小端
-# - **同一段位如何得到不同的值**：无符号与补码的差别在最高位的权重，转换处最易出错
+# - **同一段位如何得到不同的值**：无符号数与有符号数的差别在最高位的权重，转换处最易出错
 # - **实数如何编码**：符号、阶码、尾数三段分配位数；量化把一个权重压到 4 位上下
 
 ['summary.slide.2']

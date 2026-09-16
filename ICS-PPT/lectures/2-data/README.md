@@ -14,10 +14,10 @@
 
 | 节 | 页数 | 内容 |
 | --- | --- | --- |
-| 回顾与本节的问题 | 2 | 第一讲的权重文件 · 四个问题 |
-| 第一部分 · 位与字节 | 9 | 位串到值 · 十六进制与 C 的进制写法 · `xxd` · 模型格式如何标识自己 · 内存即字节 · 字长与地址范围 · C 数据类型的宽度 · 布尔值的存储 · bitset 与 vector<bool> |
-| 第二部分 · 字节序 | 7 | 内存即字节 · 字长 · 大端与小端 · 读一个字段 · `show_bytes` · 在本机上看见字节序 · 文本与 token |
-| **第三部分 · 整数** | **16** | 无符号与补码 · 取值范围 · 强制转换 · 比较陷阱 · 越界与内核缺陷 · 扩展与截断 · 一次真实的截断 · 大小不同的操作数比较 · 截断与字节序 · 位运算 · 移位 · 逻辑与算术右移 · 运算符优先级与实例 · 位运算恒等式 |
+| 回顾与本节的问题 | 3 | Ollama：本机的推理服务 · 第一讲的权重文件 · 四个问题 |
+| 第一部分 · 位与字节 | 6 | `xxd` 的二进制与十六进制视图 · 位串到值 · 十六进制与 C 的进制写法 · 模型格式如何标识自己 · C 数据类型的宽度 · 布尔值的存储 |
+| 第二部分 · 字节序 | 7 | 内存即字节 · 字长与地址范围 · 大端与小端 · 读一个字段 · `show_bytes` · 字节序在什么场合可见 · 文本与 token |
+| **第三部分 · 整数** | **16** | 无符号数与有符号数 · 取值范围 · 强制转换 · 比较陷阱 · 越界与内核缺陷 · 扩展与截断 · 一次真实的截断 · 大小不同的操作数比较 · 截断与字节序 · 位运算 · 移位 · 逻辑与算术右移 · 运算符优先级与实例 · 位运算恒等式 |
 | 第四部分 · 浮点数与低精度格式 | 12 | 三段结构与偏置 · 二进制科学计数法 · 规格化/非规格化/inf/NaN · 值在数轴上的分布与实测间距 · 舍入 · 浮点不是实数 · FP32/BF16/FP16/TF32/FP8/FP4 · BF16 即截断 · FP16 的编码与次规格化数 · 范围与精度 · 模型尺寸 |
 | 第五部分 · 量化：原理与 Q4_0 | 12 | 为什么要量化 · 访存瓶颈的实测 · 量化谁 · 量化的想法 · 仿射映射的三个自由度 · Q4_0 的块结构 · 量化代码 · 4 位打包 · 打包加法 · 硬件上的 4 位运算单元 · 粒度 · 三种粒度的实测 |
 | 第六部分 · 量化格式：Q4_1 与 Q4_K | 11 | 偏移与 Q4_1 · Q4_1 的实测 · Q4_K 的超块 · 超块的字节账 · 12 字节里的 16 个 6 位数 · 取出子块系数的代码 · Q4_K 的实测 · 文件里的混合配方 · 量化的代价 · 线性量化以及它之外的做法 · 实验预告 |
@@ -30,13 +30,13 @@
 浮点数只在本讲讲解，课程中没有单独的浮点专题，因此 IEEE 754 的编码规则、
 非规格化数、特殊值与舍入模式都在第四部分讲解完毕。
 
-第三部分保留了 CS:APP 的完整基线（无符号与补码、强制转换、`copy_from_kernel`
+第三部分保留了 CS:APP 的完整基线（无符号数与有符号数、强制转换、`copy_from_kernel`
 的越界缺陷、扩展与截断、位运算与移位），并在此基础上增加了
 4 位量化所需的打包与双通道加法。
 
 ## 课上运行命令
 
-本讲有 22 个 `p.demo(...)`，全部在 `examples/` 下实际运行：
+本讲有 27 个 `p.demo(...)`。`ollama-intro` 与 `recap-weights` 两页的命令操作本机的 Ollama 及其权重文件，其余全部在 `examples/` 下实际运行：
 
 ```bash
 python3 -m lecturekit.cli view lectures/2-data --watch
@@ -51,6 +51,11 @@ python3 -m lecturekit.cli view lectures/2-data --watch
 文件名为标签的按钮，按下后在右侧展开该文件的全文（带行号），课上可以直接查看代码。
 文件在按下时才读取，修改源文件后再按一次即显示新的内容。
 
+`ollama-intro` 一页由第一讲移来。`ollama serve` / `ollama pull` / `ollama run` 写了 `timeout=0`，
+不会自行结束，用抽屉里的 ■ 停止。每按一次 ▶ 新开一个运行标签页，`ollama serve` 占着一个
+标签页时，`ollama pull` / `ollama run` 在旁边的标签页中可以连上它。页面右侧的
+`assets/ollama-logo.png` 随这一页一起从第一讲移来。
+
 ## 跨平台：x86-64 Linux、arm64 macOS 与 x86-64 Windows
 
 本讲讲的是数据表示，命令在三种机器上都能直接执行、结果一致：x86-64 的 Linux、
@@ -61,13 +66,14 @@ arm64 的 macOS，以及 Windows 的 WSL2（Ubuntu，命令与 Linux 完全相�
 | --- | --- | --- |
 | `recap-weights` | `ls -lhS ... \| sed -n '2p'` + `file "$(ls -dS ... \| head -1)"` | macOS 的 `ls -l` 按 512 字节块打印 `total` 行；`sha256-*` 按字母序会先匹配到 JSON manifest。与第一讲的同一条命令保持一致 |
 | `vector-bool` | `grep -oE 'cannot (convert\|initialize).*'` | 同一处错误 gcc 说 cannot convert，clang 说 cannot initialize |
-| `shift-kinds` | grep 的字母表加上 `asr` / `lsr` / `rev`，标号加 `^_?` | arm64 的助记符与 x86-64 不同，Mach-O 的符号名前多一个下划线 |
+| `shift-kinds`、`endianness-conversion-cost` | grep 的字母表加上 `asr` / `lsr` / `rev`，标号加 `^_?` | arm64 的助记符与 x86-64 不同，Mach-O 的符号名前多一个下划线 |
 
 随平台变化、需要在课上说明的三点（都写在对应页的 `p.notes` 里）：
 
 - **`long` 的宽度**：64 位 Linux 与 macOS 是 LP64（8 字节），原生 Windows 是 LLP64（4 字节，
   指针仍是 8 字节）。`c-data-sizes` 表中「64 位」一列按 LP64 写。WSL2 中是 Linux 程序，与表一致。
 - **右移的指令名**：x86-64 是 `sar` / `shr`，arm64 是 `asr` / `lsr`。
+- **字节序转换的指令名**：x86-64 是 `bswap`，arm64 是 `rev`；两处的结论（一个方向零指令）相同。
 
 三种平台都是小端，本讲字节序部分的全部输出一致。`p.demo` 里录的输出来自 x86-64 Linux。
 
@@ -99,6 +105,8 @@ python3 -m lecturekit.cli view   lectures/2-data --watch --lang en   # 英文
 | `bool_size.c` | `bool-storage` | 同一份代码按 C 与 C++ 编译，比较 `bool` 的宽度与取值（需要 g++） |
 | `compare.c` | `comparison-trap` | 有符号与无符号混用的四个比较 |
 | `truncate.c` | `truncation-in-practice` | 扩展、截断与同一段字节的两种读法 |
+| `endian_host.c` | `endianness-in-linux` | `__BYTE_ORDER__` 与 `htole32` / `htobe32` 各自的结果 |
+| `endian_calls.c` | `endianness-conversion-cost` | 两个转换函数编译出的指令（配合 `gcc -S`） |
 | `truncate_endian.c` | `truncation-and-endianness` | 按值截断与按字节取前缀，在两种排列下的结果 |
 | `shift_kind.c` | `shift-kinds` | 有符号与无符号右移，以及编译出的 `sar` / `shr` |
 | `precedence.c` | `precedence-in-practice` | 三个缺少括号的表达式与 `-Wall` 的三条警告 |
@@ -171,6 +179,7 @@ lectures/2-data/diagrams/render.sh    # 重新生成全部图表
 
 | 文件 | 使用页 | 来源与授权 |
 | --- | --- | --- |
+| `core-memory.jpg` | `why-binary` | Wikimedia Commons，摄影 Mister rf，CC BY-SA 4.0 |
 | `ariane-501.jpg` | `truncation-in-practice` | Wikimedia Commons，阿丽亚娜 501 残骸，公有领域 |
 | `kahan.jpg` | `float-rounding` | Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0 |
 | `llm-int8-fig2.svg` | `quantization-cost` | Dettmers et al., LLM.int8()（NeurIPS 2022）图 2，CC BY 4.0 |
