@@ -4,9 +4,10 @@ on:
     branches:
       - 'main'
     paths:
-      - "Pages/**"
-      - "README.md"
-      - "CHANGELOG.md"
+      - "OS-Labs/Pages/**"
+      - "OS-Labs/book.toml"
+      - "OS-Labs/.markdownlint.json"
+      - ".github/workflows/github-pages.yml"
   workflow_dispatch:
 
 concurrency:
@@ -27,7 +28,8 @@ jobs:
           fetch-depth: 0
       - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
-          globs: Pages/**/*.md
+          config: OS-Labs/.markdownlint.json
+          globs: OS-Labs/Pages/**/*.md
 
   build:
     runs-on: ubuntu-latest
@@ -37,27 +39,35 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install mdbook and its preprocessors
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -o pipefail
           mkdir mdbook
-          tag=$(curl 'https://api.github.com/repos/toolmanp/rs-mdbook-callouts/releases/latest' | jq -r '.tag_name')
+          latest_tag() {
+            curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" \
+              "https://api.github.com/repos/$1/releases/latest" | jq -er '.tag_name'
+          }
+          tag=$(latest_tag toolmanp/rs-mdbook-callouts)
           url="https://github.com/toolmanp/rs-mdbook-callouts/releases/download/${tag}/mdbook-callouts-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-          curl -sSL $url | tar -xz --directory=./mdbook
+          curl -fsSL $url | tar -xz --directory=./mdbook
           tag=v0.4.40
           url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-          curl -sSL $url | tar -xz --directory=./mdbook
+          curl -fsSL $url | tar -xz --directory=./mdbook
           tag=0.14.2
           url="https://github.com/badboy/mdbook-toc/releases/download/${tag}/mdbook-toc-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-          curl -sSL $url | tar -xz --directory=./mdbook
+          curl -fsSL $url | tar -xz --directory=./mdbook
           tag=v0.1.4
           url="https://github.com/badboy/mdbook-last-changed/releases/download/${tag}/mdbook-last-changed-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-          curl -sSL $url | tar -xz --directory=./mdbook
-          tag=$(curl 'https://api.github.com/repos/toolmanp/mdbook-mermaid/releases/latest' | jq -r '.tag_name')
+          curl -fsSL $url | tar -xz --directory=./mdbook
+          tag=$(latest_tag toolmanp/mdbook-mermaid)
           url="https://github.com/toolmanp/mdbook-mermaid/releases/download/${tag}/mdbook-mermaid-${tag}-x86_64-unknown-linux-gnu.tar.gz"
-          curl -sSL $url | tar -xz --directory=./mdbook
+          curl -fsSL $url | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build Book
+        working-directory: OS-Labs
         run: |
           mdbook-mermaid install ./
           mdbook build
@@ -65,7 +75,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "book"
+          path: "OS-Labs/book"
   deploy:
     environment:
       name: github-pages
