@@ -1,0 +1,15 @@
+digraph request_recap {
+  graph [rankdir=BT, bgcolor="transparent", pad=0.08, nodesep=0.18, ranksep=0.22];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=15, width=7.5, height=0.62, margin="0.15,0.08"];
+  edge [color="#156082", penwidth=2.0, arrowsize=0.70, fontname="PingFang SC", fontsize=11];
+
+  hardware [label="硬件执行：CPU / GPU · DRAM · 存储 · 网络", fillcolor="#FCE9DF"];
+  isa [label="机器接口编码工作：x86-64 指令 · PTX / 设备代码", fillcolor="#FFF2E9"];
+  os [label="操作系统管理资源：进程 · 虚拟内存 · 文件 · 驱动", fillcolor="#EAF3F7"];
+  runtime [label="运行时组织计算：模型加载 · 张量算子 · 语言库", fillcolor="#E7F0F6"];
+  service [label="Ollama 服务协调请求：API · 推理进程 · 流式输出", fillcolor="#F3F5F6"];
+  prompt [label="用户命令：ollama run llama3.2 ...", fillcolor="#EAF3F7"];
+
+  hardware -> isa -> os -> runtime -> service -> prompt;
+}

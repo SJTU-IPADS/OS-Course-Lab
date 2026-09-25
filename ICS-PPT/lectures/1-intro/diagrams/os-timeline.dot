@@ -1,0 +1,15 @@
+digraph os_timeline {
+  graph [rankdir=LR, bgcolor="transparent", pad=0.08, nodesep=0.24, ranksep=0.30];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.3,
+        fontname="PingFang SC", fontsize=14, width=1.85, height=0.90, margin="0.12,0.08"];
+  edge [color="#156082", penwidth=1.7, arrowsize=0.62];
+
+  multics [label="1960 年代\nMultics\n分时 · 保护", fillcolor="#EAF3F7"];
+  unix [label="1969–1973\nUnix\n小工具 · C 可移植性", fillcolor="#EAF3F7"];
+  gnu [label="1984\nGNU\n自由系统工具", fillcolor="#F3F5F6"];
+  linux [label="1991 至今\nLinux\n持续演进的内核", fillcolor="#FFF2E9"];
+  redox [label="2015 至今\nRedox\nRust · 微内核", fillcolor="#FFF2E9"];
+
+  multics -> unix -> gnu -> linux;
+  unix -> redox [style=dashed];
+}

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 212" width="900" height="212">
+<text x="212.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">传统四舍五入：中点一律向上</text>
+<line x1="60.0" y1="147.1" x2="372.0" y2="147.1" stroke="#0e2841" stroke-width="1.3"/>
+<line x1="60.0" y1="170.0" x2="60.0" y2="44.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<line x1="56.0" y1="147.1" x2="60.0" y2="147.1" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="52.0" y="151.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">0</text>
+<line x1="56.0" y1="124.2" x2="60.0" y2="124.2" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="52.0" y="128.2" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">1</text>
+<line x1="56.0" y1="101.3" x2="60.0" y2="101.3" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="52.0" y="105.3" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">2</text>
+<line x1="56.0" y1="78.4" x2="60.0" y2="78.4" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="52.0" y="82.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">3</text>
+<line x1="56.0" y1="55.5" x2="60.0" y2="55.5" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="52.0" y="59.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">4</text>
+<rect x="71.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="79.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1.5</text>
+<rect x="109.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="117.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">2.5</text>
+<rect x="147.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="155.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">3.5</text>
+<rect x="185.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="193.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">4.5</text>
+<rect x="223.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="231.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">5.5</text>
+<rect x="261.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="269.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">6.5</text>
+<rect x="299.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="307.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">7.5</text>
+<rect x="337.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#f6cfca" stroke="#c0392b" stroke-width="1"/>
+<text x="345.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">8.5</text>
+<polyline points="79.0,135.6 117.0,124.2 155.0,112.7 193.0,101.3 231.0,89.8 269.0,78.4 307.0,66.9 345.0,55.5" fill="none" stroke="#c0392b" stroke-width="2.2"/>
+<circle cx="79.0" cy="135.6" r="3.2" fill="#c0392b"/>
+<circle cx="117.0" cy="124.2" r="3.2" fill="#c0392b"/>
+<circle cx="155.0" cy="112.7" r="3.2" fill="#c0392b"/>
+<circle cx="193.0" cy="101.3" r="3.2" fill="#c0392b"/>
+<circle cx="231.0" cy="89.8" r="3.2" fill="#c0392b"/>
+<circle cx="269.0" cy="78.4" r="3.2" fill="#c0392b"/>
+<circle cx="307.0" cy="66.9" r="3.2" fill="#c0392b"/>
+<circle cx="345.0" cy="55.5" r="3.2" fill="#c0392b"/>
+<text x="357.0" y="59.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#c0392b" text-anchor="start">累积 +4.0</text>
+<text x="672.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#196b24" text-anchor="middle">向最近偶数舍入：中点一半向上、一半向下</text>
+<line x1="520.0" y1="147.1" x2="832.0" y2="147.1" stroke="#0e2841" stroke-width="1.3"/>
+<line x1="520.0" y1="170.0" x2="520.0" y2="44.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<line x1="516.0" y1="147.1" x2="520.0" y2="147.1" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="512.0" y="151.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">0</text>
+<line x1="516.0" y1="124.2" x2="520.0" y2="124.2" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="512.0" y="128.2" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">1</text>
+<line x1="516.0" y1="101.3" x2="520.0" y2="101.3" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="512.0" y="105.3" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">2</text>
+<line x1="516.0" y1="78.4" x2="520.0" y2="78.4" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="512.0" y="82.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">3</text>
+<line x1="516.0" y1="55.5" x2="520.0" y2="55.5" stroke="#5a6b78" stroke-width="1.1"/>
+<text x="512.0" y="59.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">4</text>
+<rect x="531.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="539.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1.5</text>
+<rect x="569.0" y="147.1" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="577.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">2.5</text>
+<rect x="607.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="615.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">3.5</text>
+<rect x="645.0" y="147.1" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="653.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">4.5</text>
+<rect x="683.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="691.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">5.5</text>
+<rect x="721.0" y="147.1" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="729.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">6.5</text>
+<rect x="759.0" y="135.6" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="767.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">7.5</text>
+<rect x="797.0" y="147.1" width="16.0" height="11.5" rx="1.5" fill="#cfe8d2" stroke="#196b24" stroke-width="1"/>
+<text x="805.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">8.5</text>
+<polyline points="539.0,135.6 577.0,147.1 615.0,135.6 653.0,147.1 691.0,135.6 729.0,147.1 767.0,135.6 805.0,147.1" fill="none" stroke="#196b24" stroke-width="2.2"/>
+<circle cx="539.0" cy="135.6" r="3.2" fill="#196b24"/>
+<circle cx="577.0" cy="147.1" r="3.2" fill="#196b24"/>
+<circle cx="615.0" cy="135.6" r="3.2" fill="#196b24"/>
+<circle cx="653.0" cy="147.1" r="3.2" fill="#196b24"/>
+<circle cx="691.0" cy="135.6" r="3.2" fill="#196b24"/>
+<circle cx="729.0" cy="147.1" r="3.2" fill="#196b24"/>
+<circle cx="767.0" cy="135.6" r="3.2" fill="#196b24"/>
+<circle cx="805.0" cy="147.1" r="3.2" fill="#196b24"/>
+<text x="672.0" y="110.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">累积误差在 0 与 0.5 之间振荡</text>
+<text x="450.0" y="204.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">横轴：依次舍入的 8 个中点　柱：单次舍入的误差（±0.5）　折线：累积误差</text>
+</svg>

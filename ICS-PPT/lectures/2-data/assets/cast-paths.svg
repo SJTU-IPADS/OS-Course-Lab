@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 262" width="900" height="262">
+<rect x="40.0" y="103.0" width="150.0" height="56.0" rx="8" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="115.0" y="127.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">int</text>
+<text x="115.0" y="147.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 位，含 31 位数值</text>
+<rect x="560.0" y="16.0" width="150.0" height="56.0" rx="8" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="635.0" y="40.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">float</text>
+<text x="635.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">24 位有效精度</text>
+<rect x="560.0" y="190.0" width="150.0" height="56.0" rx="8" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="635.0" y="214.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">double</text>
+<text x="635.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">53 位有效精度</text>
+<line x1="188.6" y1="114.1" x2="549.8" y2="42.9" stroke="#b8860b" stroke-width="2.4"/>
+<polygon points="558.6,41.1 550.8,47.7 548.9,38.0" fill="#b8860b"/>
+<line x1="561.4" y1="54.9" x2="200.2" y2="126.1" stroke="#c0392b" stroke-width="2.4"/>
+<polygon points="191.4,127.9 199.2,121.3 201.1,131.0" fill="#c0392b"/>
+<line x1="188.6" y1="147.9" x2="549.8" y2="219.1" stroke="#196b24" stroke-width="2.4"/>
+<polygon points="558.6,220.9 548.9,224.0 550.8,214.3" fill="#196b24"/>
+<line x1="561.4" y1="207.1" x2="200.2" y2="135.9" stroke="#c0392b" stroke-width="2.4"/>
+<polygon points="191.4,134.1 201.1,131.0 199.2,140.7" fill="#c0392b"/>
+<line x1="623.0" y1="72.0" x2="623.0" y2="181.0" stroke="#196b24" stroke-width="2.4"/>
+<polygon points="623.0,190.0 618.0,181.0 628.0,181.0" fill="#196b24"/>
+<line x1="647.0" y1="190.0" x2="647.0" y2="81.0" stroke="#b8860b" stroke-width="2.4"/>
+<polygon points="647.0,72.0 652.0,81.0 642.0,81.0" fill="#b8860b"/>
+<text x="360.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#b8860b" text-anchor="middle">int → float：超过 2²⁴ 时舍入</text>
+<text x="360.0" y="236.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#196b24" text-anchor="middle">int → double：精确</text>
+<text x="661.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#196b24" text-anchor="start">float → double：精确</text>
+<text x="661.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#b8860b" text-anchor="start">double → float：</text>
+<text x="661.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#b8860b" text-anchor="start">舍入或溢出</text>
+<rect x="356.0" y="104.0" width="214.0" height="60.0" rx="6" fill="#fbe3e0" stroke="#c0392b" stroke-width="1.6"/>
+<text x="463.0" y="124.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="middle">浮点 → int：向零截断</text>
+<text x="463.0" y="142.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#c0392b" text-anchor="middle">越界：x86-64 的 cvttsd2si</text>
+<text x="463.0" y="157.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="normal" fill="#c0392b" text-anchor="middle">输出 0x80000000</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 150" width="1000" height="150">
+<text x="300.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">尾数 3 位的简化格式：每个区间等分为 8 份</text>
+<line x1="28.0" y1="74.0" x2="574.0" y2="74.0" stroke="#9fb5c3" stroke-width="1.6"/>
+<line x1="40.0" y1="63.0" x2="40.0" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="49.3" y1="67.0" x2="49.3" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="58.6" y1="67.0" x2="58.6" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="67.9" y1="67.0" x2="67.9" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="77.1" y1="67.0" x2="77.1" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="86.4" y1="67.0" x2="86.4" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="95.7" y1="67.0" x2="95.7" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="105.0" y1="67.0" x2="105.0" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<path d="M 40.0 92.0 L 40.0 99.0 L 114.3 99.0 L 114.3 92.0" fill="none" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="77.1" y="114.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#5a6b78" text-anchor="middle">[0.5, 1)</text>
+<text x="77.1" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#156082" text-anchor="middle">间距 1/16</text>
+<line x1="114.3" y1="63.0" x2="114.3" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="132.9" y1="67.0" x2="132.9" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="151.4" y1="67.0" x2="151.4" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="170.0" y1="67.0" x2="170.0" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="188.6" y1="67.0" x2="188.6" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="207.1" y1="67.0" x2="207.1" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="225.7" y1="67.0" x2="225.7" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="244.3" y1="67.0" x2="244.3" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<path d="M 114.3 92.0 L 114.3 99.0 L 262.9 99.0 L 262.9 92.0" fill="none" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="188.6" y="114.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#5a6b78" text-anchor="middle">[1, 2)</text>
+<text x="188.6" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#156082" text-anchor="middle">间距 1/8</text>
+<line x1="262.9" y1="63.0" x2="262.9" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="300.0" y1="67.0" x2="300.0" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="337.1" y1="67.0" x2="337.1" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="374.3" y1="67.0" x2="374.3" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="411.4" y1="67.0" x2="411.4" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="448.6" y1="67.0" x2="448.6" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="485.7" y1="67.0" x2="485.7" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<line x1="522.9" y1="67.0" x2="522.9" y2="81.0" stroke="#156082" stroke-width="1.1"/>
+<path d="M 262.9 92.0 L 262.9 99.0 L 560.0 99.0 L 560.0 92.0" fill="none" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="411.4" y="114.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#5a6b78" text-anchor="middle">[2, 4)</text>
+<text x="411.4" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#156082" text-anchor="middle">间距 1/4</text>
+<line x1="560.0" y1="63.0" x2="560.0" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<text x="40.0" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.5</text>
+<text x="114.3" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="262.9" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="560.0" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<line x1="606.0" y1="12.0" x2="606.0" y2="138.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="805.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">FP32 在 [2²⁴, 2²⁵) 内：间距为 2</text>
+<line x1="640.0" y1="74.0" x2="970.0" y2="74.0" stroke="#9fb5c3" stroke-width="1.6"/>
+<line x1="660.0" y1="63.0" x2="660.0" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<text x="660.0" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">2²⁴</text>
+<circle cx="708.3" cy="74" r="4.5" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="708.3" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#c0392b" text-anchor="middle">+1</text>
+<line x1="756.7" y1="63.0" x2="756.7" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<text x="756.7" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">+2</text>
+<circle cx="805.0" cy="74" r="4.5" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="805.0" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#c0392b" text-anchor="middle">+3</text>
+<line x1="853.3" y1="63.0" x2="853.3" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<text x="853.3" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">+4</text>
+<circle cx="901.7" cy="74" r="4.5" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="901.7" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#c0392b" text-anchor="middle">+5</text>
+<line x1="950.0" y1="63.0" x2="950.0" y2="85.0" stroke="#156082" stroke-width="1.4"/>
+<text x="950.0" y="57.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">+6</text>
+<path d="M 660.0 92.0 L 660.0 99.0 L 756.7 99.0 L 756.7 92.0" fill="none" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="708.3" y="114.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#5a6b78" text-anchor="middle">间距 2</text>
+<text x="805.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#c0392b" text-anchor="middle">空心圆：奇数整数落在缝隙中，无法表示</text>
+</svg>

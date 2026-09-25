@@ -1,0 +1,7 @@
+# test .byte
+	halt
+Data:
+	.byte 0x0A
+	.byte 0x1B
+	.byte 0x2C
+# end

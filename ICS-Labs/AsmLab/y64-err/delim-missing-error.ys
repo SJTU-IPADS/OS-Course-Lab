@@ -1,0 +1,4 @@
+# test for error-handqing for missing delimiter
+	rrmovq %rsp %rbp
+	halt
+# end

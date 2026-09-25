@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420">
+<text x="293.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14.5" font-weight="bold" fill="#0e2841" text-anchor="middle">Roofline 示意：算术强度决定受限于带宽还是算力</text>
+<line x1="78.0" y1="340.0" x2="508.0" y2="340.0" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="78.0" y1="340.0" x2="78.0" y2="66.0" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="78.0" y1="340.0" x2="78.0" y2="345.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="78.0" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.1</text>
+<line x1="185.5" y1="340.0" x2="185.5" y2="345.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="185.5" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<line x1="185.5" y1="66.0" x2="185.5" y2="340.0" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="293.0" y1="340.0" x2="293.0" y2="345.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="293.0" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<line x1="293.0" y1="66.0" x2="293.0" y2="340.0" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="400.5" y1="340.0" x2="400.5" y2="345.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="400.5" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">100</text>
+<line x1="400.5" y1="66.0" x2="400.5" y2="340.0" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="508.0" y1="340.0" x2="508.0" y2="345.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="508.0" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1000</text>
+<line x1="508.0" y1="66.0" x2="508.0" y2="340.0" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="73.0" y1="340.0" x2="78.0" y2="340.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="68.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">0.1</text>
+<line x1="73.0" y1="271.5" x2="78.0" y2="271.5" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="68.0" y="275.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">1</text>
+<line x1="78.0" y1="271.5" x2="508.0" y2="271.5" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="73.0" y1="203.0" x2="78.0" y2="203.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="68.0" y="207.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">10</text>
+<line x1="78.0" y1="203.0" x2="508.0" y2="203.0" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="73.0" y1="134.5" x2="78.0" y2="134.5" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="68.0" y="138.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">100</text>
+<line x1="78.0" y1="134.5" x2="508.0" y2="134.5" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<line x1="73.0" y1="66.0" x2="78.0" y2="66.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="68.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">1000</text>
+<line x1="78.0" y1="66.0" x2="508.0" y2="66.0" stroke="#e4ebef" stroke-width="1.0" stroke-dasharray="3 5"/>
+<text x="293.0" y="380.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">算术强度 I (FLOP/Byte，对数)</text>
+<text x="64.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="start">可达算力 (TFLOP/s，对数)</text>
+<line x1="78.0" y1="340.0" x2="400.5" y2="134.5" stroke="#156082" stroke-width="2.6"/>
+<line x1="400.5" y1="134.5" x2="508.0" y2="134.5" stroke="#156082" stroke-width="2.6"/>
+<text x="215.0" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#156082" text-anchor="middle">显存带宽斜顶</text>
+<text x="472.5" y="160.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#156082" text-anchor="middle">算力平顶</text>
+<circle cx="217.9" cy="250.9" r="13" fill="#c0392b" fill-opacity="0.18"/>
+<circle cx="217.9" cy="250.9" r="6.5" fill="#c0392b"/>
+<text x="211.9" y="280.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#c0392b" text-anchor="start">GPT-2 Decode</text>
+<line x1="407.8" y1="134.5" x2="446.2" y2="134.5" stroke="#196b24" stroke-width="9.0"/>
+<text x="427.0" y="116.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">BERT</text>
+<text x="760.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14.5" font-weight="bold" fill="#0e2841" text-anchor="middle">端到端相对时延（序列长 4096）</text>
+<line x1="600.0" y1="340.0" x2="940.0" y2="340.0" stroke="#5a6b78" stroke-width="1.4"/>
+<rect x="622.0" y="298.0" width="76.0" height="42.0" rx="2" fill="#dce8ef" stroke="#156082" stroke-width="1.8"/>
+<text x="660.0" y="286.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">84</text>
+<text x="660.0" y="362.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">BERT-Base</text>
+<text x="660.0" y="380.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">Encoder 整段并行</text>
+<rect x="782.0" y="96.0" width="76.0" height="244.0" rx="2" fill="#fbe6e2" stroke="#c0392b" stroke-width="1.8"/>
+<path d="M 776.0 220 L 820.0 208 L 864.0 220" fill="none" stroke="#ffffff" stroke-width="7"/>
+<path d="M 776.0 220 L 820.0 208 L 864.0 220" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+<text x="820.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">2344</text>
+<text x="820.0" y="362.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">GPT-2</text>
+<text x="820.0" y="380.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">Decoder 自回归</text>
+<text x="820.0" y="246.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#c0392b" text-anchor="middle">纵轴截断</text>
+<line x1="660.0" y1="72.0" x2="820.0" y2="72.0" stroke="#b8860b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="740.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#b8860b" text-anchor="middle">×28 时延鸿沟</text>
+</svg>

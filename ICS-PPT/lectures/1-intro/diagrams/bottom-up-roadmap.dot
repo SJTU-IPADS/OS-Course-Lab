@@ -1,0 +1,14 @@
+digraph bottom_up_roadmap {
+  graph [rankdir=BT, bgcolor="transparent", pad=0.08, nodesep=0.20, ranksep=0.22];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=16, width=7.4, height=0.65, margin="0.16,0.08"];
+  edge [color="#156082", penwidth=2.0, arrowsize=0.72];
+
+  hardware [label="1  硬件资源\nCPU · GPU · DRAM · 存储 · 网络", fillcolor="#FCE9DF"];
+  isa [label="2  机器接口\nx86-64 指令 · SIMT 执行", fillcolor="#FFF2E9"];
+  os [label="3  操作系统服务\n进程 · 虚拟内存 · 文件 · 驱动", fillcolor="#EAF3F7"];
+  runtime [label="4  原生代码与运行时\n编译器 · libc / libstdc++ · Python · 张量库", fillcolor="#E7F0F6"];
+  app [label="5  Ollama 与 AI 应用\n本机服务 · 推理后端 · Agent / 网络扩展", fillcolor="#F3F5F6"];
+
+  hardware -> isa -> os -> runtime -> app;
+}

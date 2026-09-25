@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 208" width="800" height="208">
+<text x="86.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x0</text>
+<text x="142.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x1</text>
+<text x="198.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x2</text>
+<text x="254.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x3</text>
+<text x="310.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x4</text>
+<text x="366.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x5</text>
+<text x="422.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x6</text>
+<text x="478.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x7</text>
+<text x="534.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x8</text>
+<text x="590.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x9</text>
+<text x="646.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0xa</text>
+<text x="702.0" y="60.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">0xb</text>
+<rect x="58.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.3"/>
+<rect x="114.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<rect x="170.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<rect x="226.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<rect x="282.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<rect x="338.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<rect x="394.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<rect x="450.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<rect x="506.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<rect x="562.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<rect x="618.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<rect x="674.0" y="72.0" width="56.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.3"/>
+<text x="746.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="start">…</text>
+<path d="M 58.0 114.0 L 58.0 121.0 L 114.0 121.0 L 114.0 114.0" fill="none" stroke="#156082" stroke-width="1.4"/>
+<text x="86.0" y="136.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#156082" text-anchor="middle">char c</text>
+<path d="M 282.0 114.0 L 282.0 121.0 L 506.0 121.0 L 506.0 114.0" fill="none" stroke="#e97132" stroke-width="1.4"/>
+<text x="394.0" y="136.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#e97132" text-anchor="middle">int x · 4 个连续字节</text>
+<text x="400.0" y="188.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">&amp;x = 0x4：多字节对象的地址，取它占用的最小的那一个</text>
+</svg>

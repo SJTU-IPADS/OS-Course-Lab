@@ -1,0 +1,21 @@
+digraph os_services {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.18, ranksep=0.30];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=15, height=0.62, margin="0.14,0.08"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.66];
+
+  ollama [label="Ollama 服务与推理进程", fillcolor="#EAF3F7", width=5.0];
+  proc [label="进程与\n调度", fillcolor="#F3F5F6"];
+  vm [label="虚拟\n内存", fillcolor="#F3F5F6"];
+  files [label="文件与\n页缓存", fillcolor="#F3F5F6"];
+  dev [label="设备与\n网络接口", fillcolor="#F3F5F6"];
+  cpu [label="CPU / GPU", fillcolor="#FCE9DF"];
+  dram [label="DRAM", fillcolor="#FCE9DF"];
+  storage [label="存储设备", fillcolor="#FCE9DF"];
+  nic [label="设备 / 网卡", fillcolor="#FCE9DF"];
+
+  {rank=same; proc; vm; files; dev;}
+  {rank=same; cpu; dram; storage; nic;}
+  ollama -> proc; ollama -> vm; ollama -> files; ollama -> dev;
+  proc -> cpu; vm -> dram; files -> storage; dev -> nic;
+}

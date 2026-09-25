@@ -1,0 +1,21 @@
+digraph ollama_processes {
+  graph [rankdir=LR, bgcolor="transparent", pad=0.10, nodesep=0.30, ranksep=0.44,
+         fontname="PingFang SC", fontsize=15];
+  node [shape=rect, style="rounded,filled", fontname="PingFang SC", fontsize=15,
+        color="#9FB5C3", penwidth=1.4, height=0.72, margin="0.15,0.08"];
+  edge [color="#156082", penwidth=1.8, arrowsize=0.68, fontname="PingFang SC", fontsize=11];
+
+  terminal [label="终端\nollama run ...", fillcolor="#EAF3F7"];
+  service [label="本机 Ollama 服务\nAPI · 模型选择", fillcolor="#EAF3F7", width=2.35];
+  runner [label="推理进程 / 后端\n模型加载 · 推理", fillcolor="#FFF2E9", width=2.45];
+  compute [label="CPU 或 GPU\n张量运算", fillcolor="#FCE9DF", width=1.85];
+  store [label="本地模型存储\n权重 · 元数据", fillcolor="#F3F5F6", width=2.05];
+  registry [label="模型仓库\n按需下载", fillcolor="#F3F5F6", width=1.95];
+
+  terminal -> service [label=" 本地请求 "];
+  service -> runner [label=" 调度 "];
+  runner -> compute [label=" 算子 "];
+  compute -> terminal [label=" 生成结果 ", constraint=false];
+  store -> runner [label=" 模型数据 "];
+  registry -> store [label=" 首次使用 / 拉取 "];
+}

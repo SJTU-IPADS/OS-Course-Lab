@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 90" width="1100" height="90">
+<rect x="496.2" y="24.0" width="562.5" height="66.0" rx="0" fill="#fdf1e8" stroke="none" stroke-width="0"/>
+<text x="777.5" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">数据范围 [−0.4, 1.4]</text>
+<line x1="90.0" y1="56.0" x2="1090.0" y2="56.0" stroke="#9fb5c3" stroke-width="1.5"/>
+<text xml:space="preserve" x="78.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end"><tspan>实数 </tspan><tspan font-family="Latin Modern Math, STIX Two Math, Cambria Math, Times New Roman, serif" font-style="italic" font-size="16.8">w</tspan></text>
+<line x1="121.2" y1="51.0" x2="121.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="121.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−1.6</text>
+<line x1="183.8" y1="51.0" x2="183.8" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="183.8" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−1.4</text>
+<line x1="246.2" y1="51.0" x2="246.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="246.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−1.2</text>
+<line x1="308.8" y1="51.0" x2="308.8" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="308.8" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−1.0</text>
+<line x1="371.2" y1="51.0" x2="371.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="371.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−0.8</text>
+<line x1="433.8" y1="51.0" x2="433.8" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="433.8" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−0.6</text>
+<line x1="496.2" y1="51.0" x2="496.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="496.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−0.4</text>
+<line x1="558.8" y1="51.0" x2="558.8" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="558.8" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">−0.2</text>
+<line x1="621.2" y1="51.0" x2="621.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="621.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">0.0</text>
+<line x1="683.7" y1="51.0" x2="683.7" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="683.7" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.2</text>
+<line x1="746.2" y1="51.0" x2="746.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="746.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.4</text>
+<line x1="808.7" y1="51.0" x2="808.7" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="808.7" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.6</text>
+<line x1="871.2" y1="51.0" x2="871.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="871.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.8</text>
+<line x1="933.8" y1="51.0" x2="933.8" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="933.8" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1.0</text>
+<line x1="996.2" y1="51.0" x2="996.2" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="996.2" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1.2</text>
+<line x1="1058.8" y1="51.0" x2="1058.8" y2="61.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="1058.8" y="45.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">1.4</text>
+<circle cx="496.2" cy="56" r="6.5" fill="#e97132"/>
+<text x="496.2" y="83.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">−0.40</text>
+<circle cx="621.2" cy="56" r="6.5" fill="#e97132"/>
+<text x="621.2" y="83.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">0.00</text>
+<circle cx="718.1" cy="56" r="6.5" fill="#e97132"/>
+<text x="718.1" y="83.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">0.31</text>
+<circle cx="802.5" cy="56" r="6.5" fill="#e97132"/>
+<text x="802.5" y="83.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">0.58</text>
+<circle cx="893.1" cy="56" r="6.5" fill="#e97132"/>
+<text x="893.1" y="83.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">0.87</text>
+<circle cx="1058.8" cy="56" r="6.5" fill="#e97132"/>
+<text x="1058.8" y="83.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">1.40</text>
+</svg>

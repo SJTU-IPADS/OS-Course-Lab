@@ -1,0 +1,7 @@
+# test .long
+	halt
+Data:
+	.long 0xfffff70A
+	.long 0x0000001B
+	.long 0xfff9062C
+# end

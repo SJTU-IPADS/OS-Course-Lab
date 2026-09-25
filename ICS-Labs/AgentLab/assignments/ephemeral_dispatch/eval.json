@@ -1,0 +1,18 @@
+{
+  "name": "ephemeral_dispatch",
+  "prompt": "Handle the emergency dispatch notice and make sure the user is notified.",
+  "extra_tool_dirs": [
+    "tools"
+  ],
+  "skill_source_dirs": [
+    "skills"
+  ],
+  "expect_files_contains": {
+    "dispatch_receipt.txt": "router C-17"
+  },
+  "limits": {
+    "max_requests": 3,
+    "max_tool_calls": 2,
+    "max_estimated_total_tokens": 4000
+  }
+}

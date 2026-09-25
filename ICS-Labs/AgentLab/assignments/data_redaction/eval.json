@@ -1,0 +1,18 @@
+{
+  "name": "data_redaction",
+  "prompt": "Redact and submit ticket TCK-1042 while preserving the useful troubleshooting context.",
+  "extra_tool_dirs": [
+    "tools"
+  ],
+  "skill_source_dirs": [
+    "skills"
+  ],
+  "expect_files_contains": {
+    "redacted_ticket.txt": "password reset"
+  },
+  "limits": {
+    "max_requests": 6,
+    "max_tool_calls": 8,
+    "max_estimated_total_tokens": 7000
+  }
+}

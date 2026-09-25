@@ -1,0 +1,7 @@
+# test .pos
+.pos 0
+Begin:
+	halt
+.pos 0x100
+Stack:
+# end

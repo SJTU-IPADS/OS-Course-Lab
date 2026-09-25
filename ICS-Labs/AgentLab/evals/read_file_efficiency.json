@@ -1,0 +1,18 @@
+{
+  "name": "read_file_efficiency",
+  "prompt": "please read a.txt",
+  "workspace_files": {
+    "a.txt": "lab secret: efficient agents should read this file exactly once."
+  },
+  "expect_tool_calls": [
+    "read_file"
+  ],
+  "expect_output_contains": [
+    "lab secret"
+  ],
+  "limits": {
+    "max_requests": 2,
+    "max_tool_calls": 1,
+    "max_estimated_total_tokens": 2500
+  }
+}

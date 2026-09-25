@@ -1,0 +1,3 @@
+# test for symbol error handqing
+addq 10, %rax
+# end

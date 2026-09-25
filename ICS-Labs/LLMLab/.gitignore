@@ -1,0 +1,10 @@
+*
+!.gitignore
+!*.py
+!*.c
+!*.h
+!*.sh
+!*.md
+!Makefile
+!ground_truth.txt
+!*.lfsconfig

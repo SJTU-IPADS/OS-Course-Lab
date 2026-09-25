@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 290" width="800" height="290">
+<line x1="160.0" y1="238.0" x2="660.0" y2="238.0" stroke="#5a6b78" stroke-width="1.3"/>
+<line x1="160.0" y1="238.0" x2="160.0" y2="18.0" stroke="#5a6b78" stroke-width="1.3"/>
+<line x1="285.0" y1="238.0" x2="285.0" y2="243.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="285.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">4.5</text>
+<line x1="535.0" y1="238.0" x2="535.0" y2="243.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="535.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">5.0</text>
+<line x1="155.0" y1="238.0" x2="160.0" y2="238.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="151.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">0%</text>
+<line x1="155.0" y1="195.2" x2="160.0" y2="195.2" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="151.0" y="199.2" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">1%</text>
+<line x1="155.0" y1="152.4" x2="160.0" y2="152.4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="151.0" y="156.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">2%</text>
+<line x1="155.0" y1="109.6" x2="160.0" y2="109.6" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="151.0" y="113.6" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">3%</text>
+<line x1="155.0" y1="66.8" x2="160.0" y2="66.8" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="151.0" y="70.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">4%</text>
+<line x1="155.0" y1="24.0" x2="160.0" y2="24.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="151.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">5%</text>
+<text x="410.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">每个权重占用的位数</text>
+<text x="112.0" y="123.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">相对均方根误差</text>
+<text x="112.0" y="141.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">实测数据</text>
+<text x="112.0" y="157.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">norm 权重，全为正</text>
+<circle cx="285.0" cy="56.1" r="7" fill="#c0392b"/>
+<text x="301.0" y="53.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="start">Q4_0：4.50 位，4.25%</text>
+<text x="301.0" y="71.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">每 32 个权重 18 字节，只有步长</text>
+<circle cx="535.0" cy="197.8" r="7" fill="#196b24"/>
+<text x="551.0" y="194.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#196b24" text-anchor="start">Q4_1：5.00 位，0.94%</text>
+<text x="551.0" y="212.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">每 32 个权重 20 字节，多存一个偏移 m</text>
+<circle cx="285.0" cy="197.8" r="19" fill="#fbf2dc" stroke="#b8860b" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="285.0" y="205.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="24" font-weight="bold" fill="#b8860b" text-anchor="middle">?</text>
+<text x="255.0" y="194.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#b8860b" text-anchor="end">Q4_0 的体积</text>
+<text x="255.0" y="212.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#b8860b" text-anchor="end">Q4_1 的精度</text>
+<line x1="285.0" y1="68.1" x2="285.0" y2="167.8" stroke="#b8860b" stroke-width="1.8" stroke-dasharray="6 5"/>
+<polygon points="285.0,174.8 280.8,167.8 289.2,167.8" fill="#b8860b"/>
+<line x1="523.0" y1="197.8" x2="315.0" y2="197.8" stroke="#b8860b" stroke-width="1.8" stroke-dasharray="6 5"/>
+<polygon points="308.0,197.8 315.0,193.6 315.0,202.0" fill="#b8860b"/>
+</svg>

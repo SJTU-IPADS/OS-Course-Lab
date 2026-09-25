@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lecturekit"
+version = "0.1.0"
+description = "Python-native lecture DSL and renderer experiments"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+  { name = "wxd" }
+]
+dependencies = ["pypdf>=4", "python-pptx>=1", "watchfiles>=1,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+lecture = "lecturekit.cli:main"
+
+[tool.setuptools]
+packages = [
+  "lecturekit",
+  "lecturekit.renderers",
+  "lecturekit.renderers.viewer",
+  "lecturekit.renderers.pptx",
+  "lecturekit.renderers.latex",
+  "lecturekit.renderers.transcript",
+]
+
+# pytest is the runner: a few tests need its fixtures and are written as bare
+# `def test_*` functions, which `unittest discover` does not collect.
+[tool.pytest.ini_options]
+testpaths = ["tests"]

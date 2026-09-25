@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 214" width="560" height="214">
+<line x1="10.0" y1="190.0" x2="550.0" y2="190.0" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="40.0" y1="22.0" x2="430.0" y2="176.0" stroke="#0e2841" stroke-width="1.6" stroke-dasharray="7 5"/>
+<text x="46.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="start">飞毛腿导弹的轨迹</text>
+<rect x="132.4" y="45.4" width="96.0" height="64.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="2" stroke-dasharray="6 4"/>
+<circle cx="180.4" cy="77.4" r="4.5" fill="#156082"/>
+<text x="124.4" y="69.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#156082" text-anchor="end">雷达计算出的</text>
+<text x="124.4" y="87.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#156082" text-anchor="end">跟踪窗口</text>
+<circle cx="313.0" cy="129.8" r="7" fill="#c0392b"/>
+<text x="311.0" y="159.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#c0392b" text-anchor="middle">导弹的实际位置</text>
+<line x1="183.8" y1="68.9" x2="199.8" y2="28.2" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="316.4" y1="121.2" x2="332.4" y2="80.6" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="197.3" y1="34.7" x2="322.5" y2="84.1" stroke="#c0392b" stroke-width="2.2"/>
+<polygon points="329.9,87.0 319.7,88.4 323.4,79.1" fill="#c0392b"/>
+<text x="271.8" y="40.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#c0392b" text-anchor="start">ΔS ≈ 1676 m/s × 0.3433 s</text>
+<text x="271.8" y="58.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="start">≈ 575 米</text>
+<line x1="500.0" y1="184.0" x2="228.4" y2="45.4" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<line x1="500.0" y1="184.0" x2="228.4" y2="109.4" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<path d="M 486.0 184.0 A 14 14 0 0 1 514.0 184.0 Z" fill="#0e2841"/>
+<text x="500.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">雷达</text>
+</svg>

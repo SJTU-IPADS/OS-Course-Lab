@@ -1,0 +1,56 @@
+/***********************************************************************
+ * Y86-64 Tools (Student Distribution)
+ *
+ * Copyright (c) 2002, 2010, 2015, R. Bryant and D. O'Hallaron,
+ * All rights reserved. May not be used, modified, or copied
+ * without permission.
+ ***********************************************************************/ 
+
+This directory contains the student distribution of the Y86-64 tools.  It
+is a proper subset of the master distribution, minus the solution
+files found in the master distribution.
+
+yas		Y86-64 assembler
+yis		Y86-64 instruction (ISA) simulator 
+ssim		SEQ simulator
+ssim+		SEQ+ simulator
+psim		PIPE simulator
+
+*************************
+1. Building the Y86-64 tools
+*************************
+
+To build the Y86-64 tools, then you can type
+
+	unix> make clean; make
+
+********
+1. Files
+********
+
+Makefile
+	Builds the Y86-64 tools
+
+README
+	This file
+
+misc/	
+	Source files for the Y86-64 assembler yas, the Y86-64 instruction
+	simulator yis, and the isa.c file that is used by the -t option
+	of the processor simulators to check the results against the
+	ISA simulation.
+
+seq/	
+	Code for the SEQ and SEQ+ simulators.  Contains HCL files for
+	labs and homework problems that involve modifying SEQ.
+
+pipe/	
+	Code for the PIPE simulator.  Contains HCL files for labs and
+	homework problems that involve modifying PIPE.
+
+y86-code/
+	Example .ys files from CS:APP and scripts for conducting
+	automated benchmark teseting of the new processor designs.
+
+ptest/
+	Automated regression testing scripts for testing processor designs.

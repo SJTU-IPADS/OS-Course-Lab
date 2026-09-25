@@ -1,0 +1,28 @@
+{
+  "name": "memory_persistent_recall",
+  "prompt": "unused when sessions is present",
+  "sessions": [
+    [
+      "Please remember for future sessions: my preferred name is Lin."
+    ],
+    [
+      "Please remember for future sessions: the current project is AtlasLab."
+    ],
+    [
+      "What is my preferred name and what project are we working on? Include both values."
+    ]
+  ],
+  "expect_output_contains": [
+    "Lin",
+    "AtlasLab"
+  ],
+  "expect_tool_calls": [
+    "save_memory",
+    "read_memory"
+  ],
+  "limits": {
+    "max_requests": 7,
+    "max_tool_calls": 4,
+    "max_estimated_total_tokens": 8000
+  }
+}

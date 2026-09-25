@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 262" width="940" height="262">
+<text x="270.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#196b24" text-anchor="middle">FP32 → BF16：高 16 位直通，一次加法完成舍入</text>
+<rect x="64.0" y="40.0" width="240.0" height="34.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="184.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">高 16 位：符号 · 阶码 · 尾数前 7 位</text>
+<rect x="318.0" y="40.0" width="186.0" height="34.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="411.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">低 16 位</text>
+<text x="58.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="end">FP32</text>
+<line x1="411.0" y1="74.0" x2="411.0" y2="104.0" stroke="#0e2841" stroke-width="2.0"/>
+<polygon points="411.0,112.0 406.2,104.0 415.8,104.0" fill="#0e2841"/>
+<rect x="331.0" y="112.0" width="160.0" height="44.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="411.0" y="131.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">16 位加法</text>
+<text x="411.0" y="148.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">+ 0x7FFF + LSB</text>
+<line x1="298.0" y1="74.0" x2="298.0" y2="90.0" stroke="#e97132" stroke-width="1.4"/>
+<line x1="298.0" y1="90.0" x2="465.0" y2="90.0" stroke="#e97132" stroke-width="1.4"/>
+<line x1="465.0" y1="90.0" x2="465.0" y2="106.0" stroke="#e97132" stroke-width="1.4"/>
+<polygon points="465.0,112.0 461.4,106.0 468.6,106.0" fill="#e97132"/>
+<text x="312.0" y="87.0" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="bold" fill="#e97132" text-anchor="start">LSB</text>
+<line x1="411.0" y1="156.0" x2="411.0" y2="176.0" stroke="#5a6b78" stroke-width="1.4"/>
+<polygon points="411.0,182.0 407.4,176.0 414.6,176.0" fill="#5a6b78"/>
+<text x="411.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">低 16 位丢弃</text>
+<line x1="184.0" y1="74.0" x2="184.0" y2="108.0" stroke="#156082" stroke-width="5"/>
+<polygon points="184.0,119.0 177.4,108.0 190.6,108.0" fill="#156082"/>
+<circle cx="184.0" cy="134.0" r="15" fill="#fff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="184.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">+</text>
+<line x1="331.0" y1="134.0" x2="207.0" y2="134.0" stroke="#c0392b" stroke-width="2.2"/>
+<polygon points="199.0,134.0 207.0,129.2 207.0,138.8" fill="#c0392b"/>
+<text x="265.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#c0392b" text-anchor="middle">进位</text>
+<line x1="184.0" y1="149.0" x2="184.0" y2="195.0" stroke="#156082" stroke-width="5"/>
+<polygon points="184.0,206.0 177.4,195.0 190.6,195.0" fill="#156082"/>
+<rect x="64.0" y="206.0" width="240.0" height="34.0" rx="3" fill="#cfe8d2" stroke="#196b24" stroke-width="1.6"/>
+<text x="184.0" y="228.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">BF16 结果</text>
+<text x="745.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">FP32 → FP16：逐项改写</text>
+<line x1="540.0" y1="10.0" x2="540.0" y2="252.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<rect x="600.0" y="34.0" width="290.0" height="30.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="745.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">拆出符号、阶码、尾数三个字段</text>
+<rect x="600.0" y="76.0" width="290.0" height="30.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="745.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">阶码重偏置：E − 127 + 15</text>
+<line x1="745.0" y1="64.0" x2="745.0" y2="70.0" stroke="#5a6b78" stroke-width="1.4"/>
+<polygon points="745.0,76.0 741.4,70.0 748.6,70.0" fill="#5a6b78"/>
+<rect x="600.0" y="118.0" width="290.0" height="30.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="745.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">多路选择：上溢 / 下溢 / 非规格化</text>
+<line x1="745.0" y1="106.0" x2="745.0" y2="112.0" stroke="#5a6b78" stroke-width="1.4"/>
+<polygon points="745.0,118.0 741.4,112.0 748.6,112.0" fill="#5a6b78"/>
+<rect x="600.0" y="160.0" width="290.0" height="30.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="745.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">尾数移位器阵列：23 位 → 10 位</text>
+<line x1="745.0" y1="148.0" x2="745.0" y2="154.0" stroke="#5a6b78" stroke-width="1.4"/>
+<polygon points="745.0,160.0 741.4,154.0 748.6,154.0" fill="#5a6b78"/>
+<rect x="600.0" y="202.0" width="290.0" height="30.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="745.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">舍入，再拼装为 FP16</text>
+<line x1="745.0" y1="190.0" x2="745.0" y2="196.0" stroke="#5a6b78" stroke-width="1.4"/>
+<polygon points="745.0,202.0 741.4,196.0 748.6,196.0" fill="#5a6b78"/>
+</svg>

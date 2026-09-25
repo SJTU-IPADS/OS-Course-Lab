@@ -1,0 +1,120 @@
+/* The file panel: where a demo's source lands.
+
+   Chrome over the deck, like the demo drawer, and for the same reason — what it
+   shows is a file on disk at whatever length that file happens to be, not
+   authored slide content. It takes the right-hand side rather than the bottom
+   because source is read down the page: a screen's worth of lines at the size a
+   back row can read them, with the slide still visible beside it.
+
+   Injected only by the live dev server (see dev_server.inject_source), so a
+   rendered bundle never carries it. */
+
+.lk-file {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9100;
+  width: min(46vw, 720px);
+  display: flex;
+  flex-direction: column;
+  background: #10171d;
+  color: #dfe6ec;
+  font-family: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas,
+    "Liberation Mono", Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.35);
+  /* Slid out of view rather than removed, so reopening does not reflow. */
+  transform: translateX(100%);
+  transition: transform 0.18s ease-out;
+}
+
+.lk-file[data-open="1"] {
+  transform: translateX(0);
+}
+
+.lk-file-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  flex: none;
+  padding: 0.5em 0.9em;
+  background: #182028;
+  border-bottom: 1px solid #263039;
+}
+
+/* The path in full, because the button that opened it showed only a name and
+   two directories can hold the same one. */
+.lk-file-path {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #8fd3ff;
+}
+
+/* `margin-right: auto` keeps the whole row to the left and leaves the corner
+   empty: the viewer shell's own floating control sits over that corner, from a
+   document this one cannot be drawn above. Nothing to press goes under it. */
+.lk-file-status {
+  flex: none;
+  margin-right: auto;
+  padding: 0.05em 0.6em;
+  border-radius: 999px;
+  font-size: 0.85em;
+  background: #23303a;
+  color: #9fb3c2;
+}
+
+/* Leads the head row; see the note in source.js. */
+.lk-file-close {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: #7f94a5;
+  font: inherit;
+  font-size: 1.1em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lk-file-close:hover {
+  color: #dfe6ec;
+}
+
+.lk-file-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.7em 0 1em;
+}
+
+/* A row is a number and a line. The line is not wrapped: a wrapped line under a
+   gutter stops lining up with its own number, and code that runs off the right
+   is code the panel can be scrolled to. */
+.lk-file-row {
+  display: flex;
+  gap: 0.9em;
+  /* Sized to the widest line, floored at the panel, so every row's gutter is
+     in the same column however far the body is scrolled. */
+  width: max-content;
+  min-width: 100%;
+  padding-right: 0.9em;
+  white-space: pre;
+}
+
+.lk-file-no {
+  flex: none;
+  width: 3.2em;
+  padding-right: 0.6em;
+  text-align: right;
+  color: #4e6272;
+  user-select: none;
+}
+
+.lk-file-code {
+  flex: none;
+  min-width: 0;
+}

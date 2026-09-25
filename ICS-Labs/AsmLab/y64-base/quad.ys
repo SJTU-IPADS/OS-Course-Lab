@@ -1,0 +1,7 @@
+# test .quad
+	halt
+Data:
+	.quad 0x13fffff70A123fda
+	.quad 0x0000001Bff112233
+	.quad 0xfff1342809062Cac
+# end

@@ -1,0 +1,21 @@
+# Expected values for Qwen/Qwen3-VL-2B-Instruct, measured on x86-64.
+# Source: model/model.safetensors, 4255140312 bytes, 625 tensors, all BF16.
+#
+#   ./nano-quant quant model/model.safetensors --recipe <recipe> -o out.nq
+# prints one line on stdout: the md5 of the data area of out.nq (the
+# container header is not included), the output file, and the data bytes.
+# The md5 and the data bytes are the nq_md5 and nq_bytes below.
+
+q4_0_nq_bytes    968249344
+q4_0_nq_md5      fa4f64a2e2be8d8bdb7dad8c0ed06e27
+q4_0_gguf_bytes  974196320
+
+q4_k_m_nq_bytes    1101457408
+q4_k_m_nq_md5      6b7031b4ff51880111226bca94d681da
+q4_k_m_gguf_bytes  1107404384
+
+# Each GGUF has a 5946976-byte header (key-value pairs and tensor directory).
+# The key-value pairs come from
+#   python3 tools/mkmeta.py model -o model/meta.kv
+# which reads model/config.json and model/tokenizer.json and writes 24 pairs;
+# nq2gguf adds 2 more.

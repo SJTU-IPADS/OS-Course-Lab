@@ -1,0 +1,8 @@
+tests/fixtures/
+nano-quant
+nq2gguf
+nq-selftest
+*.nq
+*.gguf
+meta.kv
+*.exe

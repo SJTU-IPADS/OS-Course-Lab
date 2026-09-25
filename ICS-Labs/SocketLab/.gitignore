@@ -1,0 +1,19 @@
+# python cache
+__pycache__/
+
+# build binaries
+client
+server
+
+# clangd
+.cache/
+compile_commands.json
+
+# CMake
+build/
+
+# node_modules
+node_modules/
+
+# npm install
+.npm-prepare

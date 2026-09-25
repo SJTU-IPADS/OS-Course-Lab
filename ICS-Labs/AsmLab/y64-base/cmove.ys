@@ -1,0 +1,4 @@
+# test cmove
+	cmove %rsi, %rdi
+	halt
+# end

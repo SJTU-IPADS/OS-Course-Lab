@@ -1,0 +1,22 @@
+{
+  "name": "list_files_nested",
+  "prompt": "Use the list_files tool on the workspace root and report every file path you find.",
+  "workspace_files": {
+    "src/main.py": "print('hello')\n",
+    "notes/todo.md": "- check list_files\n",
+    "data/input.csv": "id,value\n1,alpha\n"
+  },
+  "expect_tool_calls": [
+    "list_files"
+  ],
+  "expect_output_contains": [
+    "src/main.py",
+    "notes/todo.md",
+    "data/input.csv"
+  ],
+  "limits": {
+    "max_requests": 3,
+    "max_tool_calls": 2,
+    "max_estimated_total_tokens": 4000
+  }
+}

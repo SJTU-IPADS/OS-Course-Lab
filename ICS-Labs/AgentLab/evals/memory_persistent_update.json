@@ -1,0 +1,30 @@
+{
+  "name": "memory_persistent_update",
+  "prompt": "unused when sessions is present",
+  "sessions": [
+    [
+      "Please remember for future sessions: my preferred name is Lin."
+    ],
+    [
+      "Update your memory: my preferred name is now Ada, not Lin."
+    ],
+    [
+      "What is my current preferred name? Answer with only the current name."
+    ]
+  ],
+  "expect_output_contains": [
+    "Ada"
+  ],
+  "expect_output_not_contains": [
+    "Lin"
+  ],
+  "expect_tool_calls": [
+    "save_memory",
+    "read_memory"
+  ],
+  "limits": {
+    "max_requests": 6,
+    "max_tool_calls": 3,
+    "max_estimated_total_tokens": 8000
+  }
+}

@@ -1,0 +1,36 @@
+# OS-Pre-Course-CSAPP
+
+本仓库是操作系统课程的前置课程 ICS（CSAPP）的实验仓库。部分实验来自于David O’Hallaron教授（已获授权）。本仓库原始实验框架版权归R. Bryant和D. O'Hallaron所有，修改部分采用木兰宽松许可证(Mulan PSL v2)。
+
+This repository is the lab repository for Introduction to Computer Systems (ICS/CSAPP), a prerequisite course for the Operating Systems course. Some lab exercises are from and authorized by Prof. David O’Hallaron. Original lab framework Copyright (c) R. Bryant and D. O'Hallaron, Modifications are licensed under Mulan PSL v2.
+
+## 参考实验环境
+
+- 操作系统: OpenEuler 24.03、Ubuntu 22.04
+- 实验工具: Docker
+
+## 实验内容
+
+### 0. DataLab
+Lab说明：熟悉位操作的小练习，具体使用说明见文件夹内的Readme以及代码注释
+
+### 1. SimLab
+Lab说明文档：https://ipads.feishu.cn/wiki/Ca0Nwh6L6ifXbfk86VfcWK6FnSd
+
+### 2. AsmLab
+Lab说明文档: https://ipads.feishu.cn/wiki/YOj3wJgg2i8jEFk6mfpc2s2UnRf
+
+### 3. CpuLab
+Lab说明文档: https://ipads.feishu.cn/wiki/Hbe9wviW1iGDhWkzhoXcOAPEnPj
+
+### 4. MallocLab
+Lab说明文档: https://ipads.feishu.cn/wiki/OOluwIyMGipxrskUGUBcRFRon2A
+
+### 5. SocketLab
+Lab说明文档: https://ipads.feishu.cn/wiki/Dl2rwMtxCip2tYkOGVNcItqVnVf
+
+### 6. LLMLab
+Lab说明文档: https://ipads.feishu.cn/wiki/FHNaw2DFaiwL2skOLMtciTGPnDe
+
+### 7. AgentLab
+Lab说明见AgentLab/docs目录

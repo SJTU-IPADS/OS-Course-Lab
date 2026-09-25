@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 230" width="920" height="230">
+<text x="82.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">FP32</text>
+<rect x="96.0" y="44.0" width="22.0" height="30.0" rx="3" fill="#cfe3ec" stroke="#156082" stroke-width="1.5"/>
+<text x="107.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="118.0" y="44.0" width="176.0" height="30.0" rx="3" fill="#f8d5c0" stroke="#e97132" stroke-width="1.5"/>
+<text x="206.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">阶码 8</text>
+<rect x="294.0" y="44.0" width="506.0" height="30.0" rx="3" fill="#cfe8d2" stroke="#196b24" stroke-width="1.5"/>
+<text x="547.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">尾数 23</text>
+<text x="812.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">32 位</text>
+<text x="82.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">FP16</text>
+<rect x="96.0" y="110.0" width="22.0" height="30.0" rx="3" fill="#cfe3ec" stroke="#156082" stroke-width="1.5"/>
+<text x="107.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="118.0" y="110.0" width="110.0" height="30.0" rx="3" fill="#f8d5c0" stroke="#e97132" stroke-width="1.5"/>
+<text x="173.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">阶码 5</text>
+<rect x="228.0" y="110.0" width="220.0" height="30.0" rx="3" fill="#cfe8d2" stroke="#196b24" stroke-width="1.5"/>
+<text x="338.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">尾数 10</text>
+<text x="460.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">16 位</text>
+<text x="82.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">BF16</text>
+<rect x="96.0" y="170.0" width="22.0" height="30.0" rx="3" fill="#cfe3ec" stroke="#156082" stroke-width="1.5"/>
+<text x="107.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="118.0" y="170.0" width="176.0" height="30.0" rx="3" fill="#f8d5c0" stroke="#e97132" stroke-width="1.5"/>
+<text x="206.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">阶码 8</text>
+<rect x="294.0" y="170.0" width="154.0" height="30.0" rx="3" fill="#cfe8d2" stroke="#196b24" stroke-width="1.5"/>
+<text x="371.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">尾数 7</text>
+<text x="460.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">16 位</text>
+<text x="107.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">31</text>
+<text x="283.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">23</text>
+<text x="437.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">16</text>
+<text x="789.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<rect x="114.0" y="106.0" width="118.0" height="38.0" rx="4" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+<text x="240.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">阶码仅 5 位：最大值 65504</text>
+<line x1="96.0" y1="74.0" x2="96.0" y2="170.0" stroke="#156082" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="448.0" y1="74.0" x2="448.0" y2="170.0" stroke="#156082" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="272.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">与 FP32 的高 16 位（位 31 至位 16）逐位对齐</text>
+</svg>

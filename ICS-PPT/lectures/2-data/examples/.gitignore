@@ -1,0 +1,7 @@
+# Every .c/.cpp here compiles to a bare binary with the same name and no
+# extension. Ignore every extensionless file, keep everything with one:
+# sources, scripts, and the sample data (tiny.*, ext/*.bf16).
+*
+!*.*
+!*/
+__pycache__/

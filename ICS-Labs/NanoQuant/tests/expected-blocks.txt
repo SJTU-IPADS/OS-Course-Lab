@@ -1,0 +1,13 @@
+bf16_to_f32 ok
+f32_to_fp16 ok
+fp16_to_f32 ok
+q4_0_back f444b647e38b04afee71056cd0b1acac
+q4_0_bytes 942530b9c1c6ec1c41790c63de4317f8
+q4_1_back 1e65bc8b77ea1e01fd40455a75a296cf
+q4_1_bytes 9e20c961eb0564692175f5f2b8d7db46
+q4_k_back aab19de64bfccc43634a070e81e8156a
+q4_k_bytes 4fe9681da776cdb44f9fa193fc093854
+q6_k_back 667fb37f788ba9bcd17461c88f78ec32
+q6_k_bytes 835eae1f3ff64c38ebd1fce7c280faa5
+rd_u64le ok
+scale_min ok

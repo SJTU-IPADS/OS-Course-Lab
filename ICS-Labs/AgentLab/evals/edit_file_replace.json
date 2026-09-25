@@ -1,0 +1,18 @@
+{
+  "name": "edit_file_replace",
+  "prompt": "Use the edit_file tool to replace feature=off with feature=on in config/app.cfg. Do not rewrite the whole file.",
+  "workspace_files": {
+    "config/app.cfg": "mode=debug\nfeature=off\nowner=lab\n"
+  },
+  "expect_tool_calls": [
+    "edit_file"
+  ],
+  "expect_files_contains": {
+    "config/app.cfg": "feature=on"
+  },
+  "limits": {
+    "max_requests": 4,
+    "max_tool_calls": 3,
+    "max_estimated_total_tokens": 4500
+  }
+}

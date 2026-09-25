@@ -1,0 +1,13 @@
+digraph course_outcomes {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.08, nodesep=0.16, ranksep=0.20];
+  node [shape=rect, style="rounded,filled", color="#9FB5C3", penwidth=1.4,
+        fontname="PingFang SC", fontsize=14, width=8.4, height=0.92, margin="0.20,0.10"];
+  edge [color="#156082", penwidth=1.9, arrowsize=0.70];
+
+  observe [label="从可观察的程序行为出发", fillcolor="#EAF3F7", height=0.64, fontsize=16];
+  trace [label="1  追踪执行路径\nC/C++ 源码 → 编译 · 链接 · 装载 → 机器指令", fillcolor="#E7F0F6"];
+  locate [label="2  定位负责该现象的层次\n运行时 · 操作系统 · 存储层次 · 处理器", fillcolor="#FFF2E9"];
+  evidence [label="3  用证据作出判断\n诊断内存错误与性能瓶颈 · 评估优化方法", fillcolor="#FCE9DF"];
+
+  observe -> trace -> locate -> evidence;
+}

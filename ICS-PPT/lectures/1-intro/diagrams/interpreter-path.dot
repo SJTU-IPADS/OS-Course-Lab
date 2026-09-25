@@ -1,0 +1,15 @@
+digraph interpreter_path {
+  graph [rankdir=LR, bgcolor="transparent", pad=0.08, nodesep=0.24, ranksep=0.18];
+  node [shape=rect, style="rounded,filled", fontname="PingFang SC", fontsize=16,
+        color="#9FB5C3", penwidth=1.3, width=1.72, height=0.82, margin="0.14,0.09"];
+  edge [color="#156082", penwidth=1.7, arrowsize=0.65];
+
+  source [label="Python 源代码\n程序描述", fillcolor="#EAF3F7"];
+  interpreter [label="解释器\n已编译的可执行文件", fillcolor="#FFF2E9", color="#E97132"];
+  runtime [label="运行时与\n原生库", fillcolor="#F3F5F6"];
+  cpu [label="CPU\n机器指令", fillcolor="#FCE9DF"];
+
+  source -> interpreter [label=" 读取 ", fontname="PingFang SC", fontsize=12];
+  interpreter -> runtime [label=" 调用 ", fontname="PingFang SC", fontsize=12];
+  runtime -> cpu [label=" 执行于 ", fontname="PingFang SC", fontsize=12];
+}

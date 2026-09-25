@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 300" width="940" height="300">
+<rect x="92" y="34" width="200" height="68" rx="7" fill="#eaf3f7" stroke="#156082" stroke-width="1.5"/>
+<text x="192.0" y="61" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">CPU</text>
+<text x="192.0" y="82" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">控制单元 · ALU · 寄存器 · 缓存</text>
+<rect x="512" y="34" width="200" height="68" rx="7" fill="#eaf3f7" stroke="#156082" stroke-width="1.5"/>
+<text x="612.0" y="61" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">DRAM 主存</text>
+<text x="612.0" y="82" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">当前使用的代码与数据</text>
+<rect x="292" y="63.0" width="220" height="10" rx="5" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="402.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">内存总线</text>
+<text x="402.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">数量级 100 GB/s</text>
+<line x1="192.0" y1="102" x2="192.0" y2="176" stroke="#9fb5c3" stroke-width="1.6"/>
+<line x1="612.0" y1="102" x2="612.0" y2="176" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="4 4"/>
+<text x="620.0" y="148" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="start">DMA：设备直接读写主存</text>
+<rect x="60" y="170" width="820" height="12" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="470.0" y="162" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">I/O 总线（PCIe）　数量级 64 GB/s</text>
+<line x1="155.0" y1="176" x2="155.0" y2="214" stroke="#9fb5c3" stroke-width="1.6"/>
+<rect x="60" y="214" width="190" height="66" rx="7" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.5"/>
+<text x="155.0" y="241" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">GPU 加速器</text>
+<text x="155.0" y="262" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">并行执行单元 + HBM 显存</text>
+<line x1="367.0" y1="176" x2="367.0" y2="214" stroke="#9fb5c3" stroke-width="1.6"/>
+<rect x="272" y="214" width="190" height="66" rx="7" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.5"/>
+<text x="367.0" y="241" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">存储设备</text>
+<text x="367.0" y="262" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">NVMe SSD · 权重文件在此</text>
+<line x1="579.0" y1="176" x2="579.0" y2="214" stroke="#9fb5c3" stroke-width="1.6"/>
+<rect x="484" y="214" width="190" height="66" rx="7" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.5"/>
+<text x="579.0" y="241" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#0e2841" text-anchor="middle">网络接口</text>
+<text x="579.0" y="262" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">NIC · 接收推理请求</text>
+<line x1="791.0" y1="176" x2="791.0" y2="214" stroke="#9fb5c3" stroke-width="1.6"/>
+<rect x="696" y="214" width="190" height="66" rx="7" fill="#f2f5f7" stroke="#9fb5c3" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="791.0" y="241" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15.5" font-weight="bold" fill="#5a6b78" text-anchor="middle">其他外设</text>
+<text x="791.0" y="262" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">USB · 显示输出</text>
+</svg>

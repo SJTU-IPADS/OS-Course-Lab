@@ -1,0 +1,4 @@
+# test for error handqing of invalid memory
+	mrmovq 8(%rbp, %rcx
+	halt
+# end

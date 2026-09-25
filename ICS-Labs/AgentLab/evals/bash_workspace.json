@@ -1,0 +1,16 @@
+{
+  "name": "bash_workspace",
+  "prompt": "Use the bash tool to create shell_result.txt in the workspace containing the exact text BASH_TOOL_OK.",
+  "workspace_files": {},
+  "expect_tool_calls": [
+    "bash"
+  ],
+  "expect_files_contains": {
+    "shell_result.txt": "BASH_TOOL_OK"
+  },
+  "limits": {
+    "max_requests": 6,
+    "max_tool_calls": 5,
+    "max_estimated_total_tokens": 4500
+  }
+}

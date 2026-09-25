@@ -1,0 +1,17 @@
+[project]
+name = "icsagentlab"
+version = "0.1.0"
+description = "Teaching scaffold for a manual JSON tool-calling agent lab"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "black>=26.3.1",
+    "isort>=8.0.1",
+    "openai>=2.32.0",
+    "prompt-toolkit>=3.0.52",
+    "python-dotenv>=1.2.2",
+    "socksio>=1.0.0",
+]
+
+[tool.isort]
+profile = "black"

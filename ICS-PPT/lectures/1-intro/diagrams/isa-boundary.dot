@@ -1,0 +1,16 @@
+digraph isa_boundary {
+  graph [rankdir=TB, bgcolor="transparent", pad=0.10, nodesep=0.35, ranksep=0.34];
+  node [shape=rect, style="rounded,filled", fontname="PingFang SC", fontsize=17,
+        color="#9FB5C3", penwidth=1.4, margin="0.18,0.10"];
+  edge [color="#156082", penwidth=1.7, arrowsize=0.7];
+
+  software [label="已编译的软件", fillcolor="#EAF3F7", width=3.2];
+  isa [label="x86-64 ISA\n寄存器 · 指令 · 寻址 · 特权", fillcolor="#FFF2E9", color="#E97132", width=6.8];
+  amd [label="AMD 处理器\n一种微体系结构", fillcolor="#F3F5F6", width=3.0];
+  intel [label="Intel 处理器\n另一种微体系结构", fillcolor="#F3F5F6", width=3.0];
+
+  software -> isa;
+  isa -> amd;
+  isa -> intel;
+  {rank=same; amd; intel;}
+}
