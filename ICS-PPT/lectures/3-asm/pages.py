@@ -188,7 +188,7 @@ def register_slices_fig(p):
 
 
 def effective_address(p):
-    p.title('有效地址：数组下标与基址步长的数学映射')
+    p.title('数组下标与基址步长的数学映射')
     slide(p, r"""
 **高级语言表达**：`w[i]`
 
@@ -197,7 +197,7 @@ def effective_address(p):
 - 下标 `i` 为元素逻辑偏移。
 - 每个 `int` 元素占用 4 个字节（Scale Factor = 4）。
 
-**有效地址计算公式**：
+**计算公式**：
  $$\text{Address}(w[i]) = \text{Base}(w) + i \times 4$$
 """)
     p.notes('高级语言中的数组下标表达式如何映射为内存虚拟地址。')
