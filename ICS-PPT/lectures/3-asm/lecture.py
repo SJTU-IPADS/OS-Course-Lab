@@ -70,7 +70,6 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
         ss.page("xor-strength-2", body=pages.xor_strength_2)
         ss.page("mac-exercise", body=pages.mac_exercise)
         ss.page("mac-exercise-2", body=pages.mac_exercise_2)
-        ss.page("memory-operand", body=pages.memory_operand)
         ss.page("memory-operand-2", body=pages.memory_operand_2)
 
 lecture.bridge('第二部分：循环控制与状态机推进', id="bridge-part2")
