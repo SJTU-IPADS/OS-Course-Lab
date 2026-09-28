@@ -19,6 +19,7 @@ from svgkit import (BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK, LINE,
 W, H = 1120, 440
 CW, SH, Y0 = 140, 56, 120          # column width, slot height, top of column
 MID = [Y0 + SH * k + SH / 2 for k in range(3)]
+EDGE = [Y0 + SH * (k + 1) for k in range(3)]  # low edge of each slot, where %rsp points
 
 
 def column(x, top):
@@ -39,10 +40,10 @@ def column(x, top):
 
 def rsp(x, row, old, sign):
     """%rsp now (solid) and before the step (dashed), with the move between."""
-    out = [arrow(x + CW + 56, MID[old], x + CW + 6, MID[old], LINE, 1.8, dash="5 4"),
-           arrow(x + CW + 56, MID[row], x + CW + 6, MID[row], BLUE, 2.4),
-           mono(x + CW + 62, MID[row] + 6, "%rsp", 16, BLUE, "bold")]
-    y0, y1 = MID[old], MID[row]
+    out = [arrow(x + CW + 56, EDGE[old], x + CW + 6, EDGE[old], LINE, 1.8, dash="5 4"),
+           arrow(x + CW + 56, EDGE[row], x + CW + 6, EDGE[row], BLUE, 2.4),
+           mono(x + CW + 62, EDGE[row] + 6, "%rsp", 16, BLUE, "bold")]
+    y0, y1 = EDGE[old], EDGE[row]
     step = 6 if y1 > y0 else -6
     out.append(arrow(x + CW + 34, y0 + step, x + CW + 34, y1 - step, BLUE, 1.8))
     out.append(mono(x + CW + 42, (y0 + y1) / 2 + 5, sign, 15, BLUE, "bold"))
@@ -50,8 +51,8 @@ def rsp(x, row, old, sign):
 
 
 def rsp_still(x, row):
-    return [arrow(x + CW + 56, MID[row], x + CW + 6, MID[row], BLUE, 2.4),
-            mono(x + CW + 62, MID[row] + 6, "%rsp", 16, BLUE, "bold")]
+    return [arrow(x + CW + 56, EDGE[row], x + CW + 6, EDGE[row], BLUE, 2.4),
+            mono(x + CW + 62, EDGE[row] + 6, "%rsp", 16, BLUE, "bold")]
 
 
 def step_title(x, s):

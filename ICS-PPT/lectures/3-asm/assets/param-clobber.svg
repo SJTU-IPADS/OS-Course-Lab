@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 452" width="1120" height="452">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="85.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%rdi</text>
+<text x="85.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%rsi</text>
+<text x="85.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%rdx</text>
+<text x="85.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%rcx</text>
+<text x="85.0" y="371.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%rax</text>
+<text x="120.1" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">① 进入 </text>
+<text x="174.9" y="28.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">dot_sum</text>
+<text x="179.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">参数 w, x, y, n</text>
+<rect x="97.0" y="74.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="179.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">w</text>
+<rect x="97.0" y="140.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="179.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">x</text>
+<rect x="97.0" y="206.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="179.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">y</text>
+<rect x="97.0" y="272.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="179.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">n</text>
+<rect x="97.0" y="338.0" width="164.0" height="54.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="179.0" y="371.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">—</text>
+<text x="374.1" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">② 进入 </text>
+<text x="428.9" y="28.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">dot_product</text>
+<text x="451.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">第一次调用：w, x, n</text>
+<rect x="369.0" y="74.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="451.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">w</text>
+<rect x="369.0" y="140.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="451.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">x</text>
+<rect x="369.0" y="206.0" width="164.0" height="54.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="451.0" y="229.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">n</text>
+<text x="451.0" y="250.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="middle">覆盖了 y</text>
+<rect x="369.0" y="272.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="451.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">n</text>
+<rect x="369.0" y="338.0" width="164.0" height="54.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="451.0" y="371.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">—</text>
+<text x="664.1" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">③ 返回 </text>
+<text x="718.9" y="28.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">dot_sum</text>
+<text x="723.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">第一次调用返回时</text>
+<rect x="641.0" y="74.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="723.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">w</text>
+<rect x="641.0" y="140.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="723.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">x</text>
+<rect x="641.0" y="206.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="723.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">n</text>
+<rect x="641.0" y="272.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="723.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">n</text>
+<rect x="641.0" y="338.0" width="164.0" height="54.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="723.0" y="361.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">第一次结果</text>
+<text x="723.0" y="382.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">返回值</text>
+<text x="918.1" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">④ 进入 </text>
+<text x="972.9" y="28.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">dot_product</text>
+<text x="995.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">第二次调用：w, y, n</text>
+<rect x="913.0" y="74.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="995.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">w</text>
+<rect x="913.0" y="140.0" width="164.0" height="54.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="995.0" y="163.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">y</text>
+<text x="995.0" y="184.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="middle">已丢失</text>
+<rect x="913.0" y="206.0" width="164.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="995.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">n</text>
+<rect x="913.0" y="272.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="995.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">n</text>
+<rect x="913.0" y="338.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="995.0" y="371.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">第一次结果</text>
+<line x1="275.0" y1="22.0" x2="355.0" y2="22.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<text x="315.0" y="158.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">dot_sum</text>
+<text x="315.0" y="178.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">准备参数</text>
+<line x1="547.0" y1="22.0" x2="627.0" y2="22.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<text x="587.0" y="158.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">dot_product</text>
+<text x="587.0" y="178.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">执行并返回</text>
+<text x="587.0" y="214.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">假定不改写</text>
+<text x="587.0" y="234.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">%rdi, %rsi,</text>
+<text x="587.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">%rdx, %rcx</text>
+<line x1="819.0" y1="22.0" x2="899.0" y2="22.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<text x="859.0" y="158.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">dot_sum</text>
+<text x="859.0" y="178.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">准备参数</text>
+<path d="M 265 299.0 C 325.0 299.0, 305.0 233.0, 365 233.0" fill="none" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
+<rect x="316.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="348.3" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">本次调用的参数</text>
+<rect x="472.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="504.3" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">返回值</text>
+<rect x="572.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="604.3" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">y 被覆盖而丢失</text>
+<rect x="729.7" y="421.0" width="24.0" height="16.0" rx="2" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="761.7" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">其他值</text>
+</svg>

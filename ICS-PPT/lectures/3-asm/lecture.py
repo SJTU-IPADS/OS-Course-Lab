@@ -2,7 +2,7 @@
 
 以向量内积 dot_product 为唯一主线，按 PPTContents.md 的大纲分四部分推进：
 单次乘加（寄存器、寻址、数据传送与算术指令），循环控制（%rip、标志位、条件跳转、循环结构），
-过程调用（运行时栈与栈帧、call/ret、ABI、红区、金丝雀），向量化（YMM、AVX2、perf 实测、OpenMP、CUDA）。
+过程调用（运行时栈与栈帧、call/ret、ABI、缓冲区溢出、金丝雀），向量化（YMM、AVX2、perf 实测、OpenMP、CUDA）。
 页面文案逐字取自 PPTContents.md，见 pages.py 开头的说明。
 """
 
@@ -111,40 +111,42 @@ lecture.bridge('第三部分：函数的硬件实现\n从代码组织到过程�
 
 with lecture.section('第三部分：函数的硬件实现——从代码组织到过程调用', id="part3") as s:
     s.page("procedure-need", body=pages.procedure_need)
-    s.page("local-state", body=pages.local_state)
-    s.page("local-state-2", body=pages.local_state_2)
-    s.page("runtime-stack", body=pages.runtime_stack)
-    s.page("runtime-stack-2", body=pages.runtime_stack_2)
-    s.page("stack-frame", body=pages.stack_frame)
-    s.page("stack-frame-2", body=pages.stack_frame_2)
-    s.page("return-address", body=pages.return_address)
-    s.page("call-ret", body=pages.call_ret)
-    s.page("push-pop", body=pages.push_pop)
-    s.page("push-pop-fig", body=pages.push_pop_fig)
-    s.page("sysv-abi", body=pages.sysv_abi)
-    s.page("sysv-abi-fig", body=pages.sysv_abi_fig)
-    s.page("win-abi", body=pages.win_abi)
-    s.page("win-abi-2", body=pages.win_abi_2)
-    s.page("dot-params", body=pages.dot_params)
-    s.page("dot-params-fig", body=pages.dot_params_fig)
-    s.page("saved-regs", body=pages.saved_regs)
-    s.page("saved-regs-fig", body=pages.saved_regs_fig)
-    s.page("stack-align", body=pages.stack_align)
-    s.page("stack-align-fig", body=pages.stack_align_fig)
-    s.page("red-zone", body=pages.red_zone)
-    s.page("red-zone-2", body=pages.red_zone_2)
-    s.page("red-zone-fig", body=pages.red_zone_fig)
-    s.page("dot-function", body=pages.dot_function)
-    s.page("dot-function-2", body=pages.dot_function_2)
-    s.page("dot-function-fig", body=pages.dot_function_fig)
-    s.page("callee-example", body=pages.callee_example)
-    s.page("callee-example-2", body=pages.callee_example_2)
-    s.page("recursion", body=pages.recursion)
-    s.page("recursion-3", body=pages.recursion_3)
-    s.page("canary-plt", body=pages.canary_plt)
-    s.page("canary-plt-2", body=pages.canary_plt_2)
 
-lecture.bridge('第四部分：\n性能瓶颈与向量化——从标量计算到向量与并发', id="bridge-part4")
+    s.bridge('内存中局部状态的布局', id="bridge-part3-layout")
+    with s.section('内存中局部状态的布局', id="part3-layout") as ss:
+        ss.page("local-state", body=pages.local_state)
+        ss.page("local-state-2", body=pages.local_state_2)
+        ss.page("runtime-stack", body=pages.runtime_stack)
+        ss.page("stack-frame", body=pages.stack_frame)
+        ss.page("stack-frame-2", body=pages.stack_frame_2)
+
+    s.bridge('函数调用产生的局部状态', id="bridge-part3-call")
+    with s.section('函数调用产生的局部状态', id="part3-call") as ss:
+        ss.page("return-address", body=pages.return_address)
+        ss.page("call-ret", body=pages.call_ret)
+        ss.page("param-state", body=pages.param_state)
+        ss.page("sysv-abi", body=pages.sysv_abi)
+        ss.page("sysv-abi-fig", body=pages.sysv_abi_fig)
+        ss.page("dot-params", body=pages.dot_params)
+        ss.page("dot-params-fig", body=pages.dot_params_fig)
+        ss.page("param-clobber", body=pages.param_clobber)
+        ss.page("param-clobber-fig", body=pages.param_clobber_fig)
+
+    s.bridge('寄存器的调用约定，及与内存的取舍', id="bridge-part3-abi")
+    with s.section('寄存器的调用约定，及与内存的取舍', id="part3-abi") as ss:
+        ss.page("saved-regs", body=pages.saved_regs)
+        ss.page("saved-regs-fig", body=pages.saved_regs_fig)
+        ss.page("push-pop", body=pages.push_pop)
+        ss.page("push-pop-fig", body=pages.push_pop_fig)
+        ss.page("callee-example", body=pages.callee_example)
+        ss.page("soft-hard", body=pages.soft_hard)
+        ss.page("win-abi", body=pages.win_abi)
+        ss.page("buffer-overflow", body=pages.buffer_overflow)
+        ss.page("buffer-overflow-fig", body=pages.buffer_overflow_fig)
+        ss.page("canary", body=pages.canary)
+        ss.page("canary-fig", body=pages.canary_fig)
+
+lecture.bridge('第四部分：性能瓶颈与向量化\n从标量计算到向量与并发', id="bridge-part4")
 
 
 with lecture.section('第四部分：性能瓶颈与向量化——从标量计算到向量与并发', id="part4") as s:

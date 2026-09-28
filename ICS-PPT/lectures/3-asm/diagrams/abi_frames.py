@@ -14,7 +14,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN,
-                    INK, LINE, MUTED, ORANGE, RED, WHITE, arrow, line, mono, rect,
+                    INK, LINE, MUTED, ORANGE, RED, arrow, line, mono, rect,
                     save, text, vbrace)
 
 W, H = 1120, 400
@@ -54,7 +54,7 @@ def column(x0, title, regs, shadow, saved):
             y += SH
         out += vbrace(sx - 10, top + 2, y - 2, GREEN, "影子空间 32 字节", 15, right=False)
     out += slot(sx, y, "返回地址", "0(%rsp)", FILL_ORANGE, ORANGE)
-    ry = y + SH / 2
+    ry = y + SH                     # %rsp is the low edge of the return address
     out.append(arrow(sx + SW + 60, ry, sx + SW + 6, ry, BLUE, 2.4))
     out.append(mono(sx + SW + 66, ry + 6, "%rsp", 16, BLUE, "bold"))
     who, color = saved

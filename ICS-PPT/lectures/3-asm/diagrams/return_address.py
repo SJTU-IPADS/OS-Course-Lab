@@ -11,11 +11,10 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, GREEN, INK, LINE,
-                    MUTED, ORANGE, RED, WHITE, arrow, box, mono, path, rect,
-                    save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, GREEN, INK, MUTED, ORANGE, RED,
+                    WHITE, mono, path, rect, save, text)
 
-W, H = 1120, 250
+W, H = 1120, 220
 
 ROWS = [(0x4010, "call dot_product", "调用点 A", BLUE),
         (0x4015, "下一条指令", None, BLUE),
@@ -25,7 +24,7 @@ ROWS = [(0x4010, "call dot_product", "调用点 A", BLUE),
 
 def build():
     out = []
-    ys = [20, 64, 140, 184]
+    ys = [8, 52, 128, 172]
     for (addr, ins, tag, color), y in zip(ROWS, ys):
         call = tag is not None
         out.append(rect(130, y, 280, 40, FILL_BLUE if call else WHITE, color, rx=4,
@@ -36,20 +35,21 @@ def build():
             out.append(text(420, y + 26, tag, 15, color, "bold", anchor="start"))
         else:
             out.append(text(146, y + 26, ins, 16, MUTED, anchor="start"))
-    out.append(text(270, 124, "⋮", 18, MUTED))
+    out.append(text(270, 112, "⋮", 18, MUTED))
 
-    out += box(640, 40, 250, 150, "dot_product", FILL_ORANGE, ORANGE, 19,
-               font="monospace", sub=None)
-    out.append(rect(660, 140, 210, 36, WHITE, RED, rx=4, width=1.6))
-    out.append(text(765, 164, "ret：回到哪里？", 16, RED, "bold"))
-    out.append(path("M 500 40 C 560 40, 580 70, 636 74", BLUE, 2))
-    out.append(path("M 500 160 C 560 160, 580 110, 636 102", GREEN, 2))
-    out.append(path("M 660 158 C 560 158, 520 84, 414 84", BLUE, 1.8, dash="6 4"))
-    out.append(path("M 660 170 C 560 170, 520 204, 414 204", GREEN, 1.8, dash="6 4"))
-    out.append(text(910, 90, "0x4015 还是 0x4085，", 16, INK, anchor="start"))
-    out.append(text(910, 116, "取决于这次是谁调用的", 16, INK, anchor="start"))
-    out.append(text(910, 152, "固定目标的 jmp 只能", 16, MUTED, anchor="start"))
-    out.append(text(910, 178, "写死其中一个", 16, MUTED, anchor="start"))
+    # the function: its name at the top, the ret at the bottom
+    out.append(rect(640, 68, 250, 98, FILL_ORANGE, ORANGE, rx=6, width=1.6))
+    out.append(text(765, 98, "dot_product", 19, INK, "bold", font="monospace"))
+    out.append(rect(660, 116, 210, 36, WHITE, RED, rx=4, width=1.6))
+    out.append(text(765, 140, "ret：回到哪里？", 16, RED, "bold"))
+    out.append(path("M 500 28 C 560 28, 580 78, 636 84", BLUE, 2))
+    out.append(path("M 500 148 C 560 148, 580 112, 636 106", GREEN, 2))
+    out.append(path("M 660 134 C 560 134, 520 72, 414 72", BLUE, 1.8, dash="6 4"))
+    out.append(path("M 660 146 C 560 146, 520 192, 414 192", GREEN, 1.8, dash="6 4"))
+    out.append(text(910, 78, "0x4015 还是 0x4085，", 16, INK, anchor="start"))
+    out.append(text(910, 104, "取决于这次是谁调用的", 16, INK, anchor="start"))
+    out.append(text(910, 140, "固定目标的 jmp 只能", 16, MUTED, anchor="start"))
+    out.append(text(910, 166, "写死其中一个", 16, MUTED, anchor="start"))
     return out
 
 

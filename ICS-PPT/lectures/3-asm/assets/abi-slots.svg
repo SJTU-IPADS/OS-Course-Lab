@@ -38,8 +38,8 @@
 <rect x="838.0" y="346.0" width="260.0" height="44.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
 <text x="852.0" y="374.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">返回地址</text>
 <text x="1084.0" y="374.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">0(%rsp)</text>
-<line x1="768.0" y1="368.0" x2="832.0" y2="368.0" stroke="#156082" stroke-width="2.4" marker-end="url(#ah-156082)"/>
-<text x="762.0" y="374.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#156082" text-anchor="end">%rsp</text>
+<line x1="768.0" y1="390.0" x2="832.0" y2="390.0" stroke="#156082" stroke-width="2.4" marker-end="url(#ah-156082)"/>
+<text x="762.0" y="396.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#156082" text-anchor="end">%rsp</text>
 <text x="968.0" y="420.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">由调用者在 call 之前从右向左压入</text>
 <text x="456.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">返回值：%rax 体系，按宽度取</text>
 <rect x="232.0" y="218.0" width="448.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>

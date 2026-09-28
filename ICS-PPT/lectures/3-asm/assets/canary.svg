@@ -28,6 +28,6 @@
 <line x1="724.0" y1="256.0" x2="756.0" y2="256.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <rect x="760.0" y="206.0" width="320.0" height="100.0" rx="6" fill="#ffffff" stroke="#c0392b" stroke-width="1.6"/>
 <text x="776.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">③ 不相等则终止</text>
-<text x="776.0" y="262.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">jne .L4</text>
+<text x="776.0" y="262.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">jne .L8</text>
 <text x="776.0" y="288.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">call __stack_chk_fail@PLT</text>
 </svg>

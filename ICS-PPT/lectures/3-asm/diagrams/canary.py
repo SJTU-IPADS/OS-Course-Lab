@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The stack canary in main's frame and the three steps that use it.
 
-Offsets are main.s's (gcc -Og -fcf-protection=none): the arrays at 0..31, the
+Offsets are overflow.s's (gcc -Og -fcf-protection=none): the arrays at 0..31, the
 canary at 40(%rsp), the return address at 56(%rsp). An overflow of the arrays
 writes toward higher addresses and reaches the canary before the return
 address; the exit check then fails.
@@ -51,7 +51,7 @@ def build():
     # the three steps
     steps = [("① 入口写入", ["movq %fs:40, %rax", "movq %rax, 40(%rsp)"]),
              ("② 返回前检验", ["movq 40(%rsp), %rdx", "subq %fs:40, %rdx"]),
-             ("③ 不相等则终止", ["jne .L4", "call __stack_chk_fail@PLT"])]
+             ("③ 不相等则终止", ["jne .L8", "call __stack_chk_fail@PLT"])]
     for k, (title, lines) in enumerate(steps):
         x = 40 + k * 360
         out.append(rect(x, 206, 320, 100, WHITE, RED if k == 2 else LINE, rx=6, width=1.6))

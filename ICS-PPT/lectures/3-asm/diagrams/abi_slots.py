@@ -52,7 +52,7 @@ def stack():
         out.append(text(x + 14, y + 28, name, 15, INK if off else MUTED, anchor="start"))
         if off:
             out.append(mono(x + w - 14, y + 28, off, 15, INK, "bold", anchor="end"))
-    ry = 214 + 3 * sh + sh / 2
+    ry = 214 + 4 * sh               # %rsp is the low edge of the return address
     out.append(arrow(x - 70, ry, x - 6, ry, BLUE, 2.4))
     out.append(mono(x - 76, ry + 6, "%rsp", 16, BLUE, "bold", anchor="end"))
     out.append(text(x + w / 2, 420, "由调用者在 call 之前从右向左压入", 14, MUTED))

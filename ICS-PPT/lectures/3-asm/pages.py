@@ -55,6 +55,11 @@ def system_view(p):
     p.notes('现代计算机整机系统执行模型——以大模型推理引擎（Ollama）的运行过程为例。')
 
 
+def system_view_fig(p):
+    p.title('系统执行：大模型推理的端到端硬件协同')
+    figure(p, "system-view", 1120).footnote('照片从左到右来自 Wikimedia Commons 的 Evan-Amos（CC BY-SA 3.0）、D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。')
+
+
 def system_view_2(p):
     p.title('系统执行：大模型推理的端到端硬件协同')
     slide(p, r"""
@@ -64,11 +69,6 @@ def system_view_2(p):
 3. **数据加载**：操作系统响应系统调用，驱动总线将权重数据从 Disk 读入 DRAM 数据缓存区。
 4. **运算产出**：结合输入 Token 向量 $x$ 与模型权重 $w$，CPU 循环将数据加载到内部寄存器，ALU 完成计算并输出预测 Token。
 """)
-
-
-def system_view_fig(p):
-    p.title('系统执行：大模型推理的端到端硬件协同')
-    figure(p, "system-view", 1120).footnote('照片从左到右来自 Wikimedia Commons 的 Evan-Amos（CC BY-SA 3.0）、D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。')
 
 
 def compile_mapping(p):
@@ -231,6 +231,11 @@ def visible_state(p):
     p.notes('程序员可见状态的定义，以及 CPU 内部通用寄存器数量受到硬件严格限制的原因。')
 
 
+def visible_state_fig(p):
+    p.title('硬件状态：程序员可见状态与寄存器堆设计约束')
+    figure(p, "visible-state", 1120)
+
+
 def visible_state_2(p):
     p.title('硬件状态：程序员可见状态与寄存器堆设计约束')
     slide(p, r"""
@@ -239,11 +244,6 @@ def visible_state_2(p):
 - **指令编码字段限制**：指令中寄存器字段的位数有限，在定长字段中指定一个寄存器，16 个寄存器只需 4 位二进制（$2^4 = 16$），若扩展到上千个，指令编码将急剧膨胀；
 - **硬件布线与延迟瓶颈**：多端口读写逻辑（如超标量 CPU 需要多个读写端口），寄存器堆面积主要随端口数平方增长；寄存器数量过多会导致内部走线与多路选择器延迟增大，降低最高工作频率。
 """)
-
-
-def visible_state_fig(p):
-    p.title('硬件状态：程序员可见状态与寄存器堆设计约束')
-    figure(p, "visible-state", 1120)
 
 
 def register_slices(p):
@@ -282,77 +282,6 @@ def register_slices_2(p):
 def register_slices_fig(p):
     p.title('寄存器切片：16 个通用寄存器及其命名规则')
     figure(p, "register-table", 1120)
-
-
-def width_write(p):
-    p.title('数据加载：movl 指令的内存读取语义与约束')
-    slide(p, r"""
-**写入不同子寄存器的硬件行为规则**：
-1. **写 32 位子寄存器（如 `%eax`, `%r8d`）**：
-   - **硬件行为**：CPU 在写入低 32 位的同时，**自动将高 32 位全部清零**。
-   - 例如：若 `%rax` 原为 `0xFFFFFFFFFFFFFFFF`，执行 `movl $1, %eax` 后，`%rax` 的值变为 `0x0000000000000001`。
-2. **写 8 位或 16 位子寄存器（如 `%al`, `%ax`）**：
-   - **硬件行为**：CPU 只改变目标所在的低 8 位或低 16 位，**高位剩余的所有比特保留原值不变**。
-   - 例如：若 `%rax` 原为 `0xFFFFFFFFFFFFFFFF`，执行 `movb $1, %al` 后，`%rax` 的值变为 `0xFFFFFFFFFFFFFF01`。
-""")
-    p.notes('向子寄存器写入数据时，x86-64 硬件对待高位部分截然不同的处理规则。')
-
-
-def load_example_state(p):
-    """课堂示例三张幻灯片共用的内存与寄存器初值。"""
-    p.table([
-        ['字节', '`0x78`', '`0x56`', '`0x34`', '`0x12`', '`0xF0`', '`0xFF`', '`0xFF`', '`0xFF`'],
-    ], headers=['地址', '`0x100`', '`0x101`', '`0x102`', '`0x103`', '`0x104`', '`0x105`', '`0x106`', '`0x107`'])
-    slide(p, r"""
-寄存器初值：`%rax = 0x100`，`%rcx = 0x1`，`%rdx = 0xFFFFFFFFFFFFFFFF`。
-""")
-
-
-def load_example(p):
-    p.title('练习：内存字节、寻址与数据加载')
-    slide(p, r"""
-**已知**：x86-64 采用小端序，多字节数据的低位字节存放在低地址。从地址 `0x100` 开始的 8 个字节为：
-""")
-    load_example_state(p)
-    slide(p, r"""
-**问题一**：按 32 位读取操作数 `$0x104`，`0x104`，`(%rax)`，`2(%rax)`，`(%rax,%rcx,4)` 的值。
-
-**问题二**：从上述初值出发，分别执行下列指令，写出每条指令执行后 `%rdx` 的值：
-- `movl (%rax), %edx`
-- `movb (%rax), %dl`
-- `movw 2(%rax), %dx`
-- `movq (%rax), %rdx`
-""")
-    p.notes('按小端序由字节序列读出多字节数值，结合寻址模式与位宽规则计算操作数与寄存器的值。')
-
-
-def load_example_2(p):
-    p.title('练习：内存字节、寻址与数据加载')
-    load_example_state(p)
-    slide(p, r"""
-**问题一解答**：
-""")
-    p.table([
-        ['`$0x104`', '立即数寻址', '无', '`0x104`'],
-        ['`0x104`', '绝对寻址', '`0x104`', '`0xFFFFFFF0`'],
-        ['`(%rax)`', '间接寻址', '`0x100`', '`0x12345678`'],
-        ['`2(%rax)`', '基址+偏移寻址', '`0x100 + 2 = 0x102`', '`0xFFF01234`'],
-        ['`(%rax,%rcx,4)`', '比例变址寻址', '`0x100 + 1 × 4 = 0x104`', '`0xFFFFFFF0`'],
-    ], headers=['操作数', '寻址类型', '有效地址', '值'])
-
-
-def load_example_3(p):
-    p.title('练习：内存字节、寻址与数据加载')
-    load_example_state(p)
-    slide(p, r"""
-**问题二解答**：
-""")
-    p.table([
-        ['`movl (%rax), %edx`', '`78 56 34 12`', '`0x0000000012345678`', '写 32 位，高 32 位清零'],
-        ['`movb (%rax), %dl`', '`78`', '`0xFFFFFFFFFFFFFF78`', '写 8 位，其余位保留'],
-        ['`movw 2(%rax), %dx`', '`34 12`', '`0xFFFFFFFFFFFF1234`', '写 16 位，其余位保留'],
-        ['`movq (%rax), %rdx`', '`78 56 34 12 F0 FF FF FF`', '`0xFFFFFFF012345678`', '写满 64 位'],
-    ], headers=['指令', '读取的字节', '执行后 `%rdx`', '依据'])
 
 
 def effective_address(p):
@@ -467,6 +396,77 @@ def movl_load_2(p):
 """)
     p.code('assembly', """movl	(%rsi), %eax""")
     figure(p, "load-path", 1120)
+
+
+def width_write(p):
+    p.title('数据加载：movl 指令的内存读取语义与约束')
+    slide(p, r"""
+**写入不同子寄存器的硬件行为规则**：
+1. **写 32 位子寄存器（如 `%eax`, `%r8d`）**：
+   - **硬件行为**：CPU 在写入低 32 位的同时，**自动将高 32 位全部清零**。
+   - 例如：若 `%rax` 原为 `0xFFFFFFFFFFFFFFFF`，执行 `movl $1, %eax` 后，`%rax` 的值变为 `0x0000000000000001`。
+2. **写 8 位或 16 位子寄存器（如 `%al`, `%ax`）**：
+   - **硬件行为**：CPU 只改变目标所在的低 8 位或低 16 位，**高位剩余的所有比特保留原值不变**。
+   - 例如：若 `%rax` 原为 `0xFFFFFFFFFFFFFFFF`，执行 `movb $1, %al` 后，`%rax` 的值变为 `0xFFFFFFFFFFFFFF01`。
+""")
+    p.notes('向子寄存器写入数据时，x86-64 硬件对待高位部分截然不同的处理规则。')
+
+
+def load_example_state(p):
+    """课堂示例三张幻灯片共用的内存与寄存器初值。"""
+    p.table([
+        ['字节', '`0x78`', '`0x56`', '`0x34`', '`0x12`', '`0xF0`', '`0xFF`', '`0xFF`', '`0xFF`'],
+    ], headers=['地址', '`0x100`', '`0x101`', '`0x102`', '`0x103`', '`0x104`', '`0x105`', '`0x106`', '`0x107`'])
+    slide(p, r"""
+寄存器初值：`%rax = 0x100`，`%rcx = 0x1`，`%rdx = 0xFFFFFFFFFFFFFFFF`。
+""")
+
+
+def load_example(p):
+    p.title('练习：内存字节、寻址与数据加载')
+    slide(p, r"""
+**已知**：x86-64 采用小端序，多字节数据的低位字节存放在低地址。从地址 `0x100` 开始的 8 个字节为：
+""")
+    load_example_state(p)
+    slide(p, r"""
+**问题一**：按 32 位读取操作数 `$0x104`，`0x104`，`(%rax)`，`2(%rax)`，`(%rax,%rcx,4)` 的值。
+
+**问题二**：从上述初值出发，分别执行下列指令，写出每条指令执行后 `%rdx` 的值：
+- `movl (%rax), %edx`
+- `movb (%rax), %dl`
+- `movw 2(%rax), %dx`
+- `movq (%rax), %rdx`
+""")
+    p.notes('按小端序由字节序列读出多字节数值，结合寻址模式与位宽规则计算操作数与寄存器的值。')
+
+
+def load_example_2(p):
+    p.title('练习：内存字节、寻址与数据加载')
+    load_example_state(p)
+    slide(p, r"""
+**问题一解答**：
+""")
+    p.table([
+        ['`$0x104`', '立即数寻址', '无', '`0x104`'],
+        ['`0x104`', '绝对寻址', '`0x104`', '`0xFFFFFFF0`'],
+        ['`(%rax)`', '间接寻址', '`0x100`', '`0x12345678`'],
+        ['`2(%rax)`', '基址+偏移寻址', '`0x100 + 2 = 0x102`', '`0xFFF01234`'],
+        ['`(%rax,%rcx,4)`', '比例变址寻址', '`0x100 + 1 × 4 = 0x104`', '`0xFFFFFFF0`'],
+    ], headers=['操作数', '寻址类型', '有效地址', '值'])
+
+
+def load_example_3(p):
+    p.title('练习：内存字节、寻址与数据加载')
+    load_example_state(p)
+    slide(p, r"""
+**问题二解答**：
+""")
+    p.table([
+        ['`movl (%rax), %edx`', '`78 56 34 12`', '`0x0000000012345678`', '写 32 位，高 32 位清零'],
+        ['`movb (%rax), %dl`', '`78`', '`0xFFFFFFFFFFFFFF78`', '写 8 位，其余位保留'],
+        ['`movw 2(%rax), %dx`', '`34 12`', '`0xFFFFFFFFFFFF1234`', '写 16 位，其余位保留'],
+        ['`movq (%rax), %rdx`', '`78 56 34 12 F0 FF FF FF`', '`0xFFFFFFF012345678`', '写满 64 位'],
+    ], headers=['指令', '读取的字节', '执行后 `%rdx`', '依据'])
 
 
 def extension(p):
@@ -947,14 +947,7 @@ def runtime_stack(p):
 2. **数据段（.data / .bss）**：存放已初始化/未初始化全局变量；
 3. **堆（Heap）**：由 `malloc` / `new` 动态分配，向高地址生长；
 4. **运行时栈（Stack）**：存放各次调用的栈帧，**向低地址生长**。
-""")
-    p.notes('进程虚拟内存全景、运行时栈（Stack）的生长方向与栈顶指针 %rsp。')
 
-
-def runtime_stack_2(p):
-    p.title('运行时栈：进程内存结构与向低地址生长')
-    p.side_image("assets/address-space.svg", width="30%", alt="contain")
-    slide(p, r"""
 **栈顶指针 `%rsp`**：
 - `%rsp` 保存栈顶地址，即栈中已使用部分的最低地址；
 - 分配栈帧时减小 `%rsp`，释放栈帧时增大 `%rsp`。
@@ -962,6 +955,7 @@ def runtime_stack_2(p):
 **为什么栈要向低地址生长**：
 - 历史设计：堆和栈分别置于虚拟地址空间的两端，彼此相对生长，最大化利用有限的地址空间而不必预先划分死边界。
 """)
+    p.notes('进程虚拟内存全景、运行时栈（Stack）的生长方向与栈顶指针 %rsp。')
 
 
 def stack_frame(p):
@@ -994,15 +988,14 @@ def stack_frame(p):
 
 def stack_frame_2(p):
     p.title('栈帧实例：main 的局部数组')
+    p.side_image("assets/main-stack.svg", width="42%", alt="contain")
     slide(p, r"""
-- 清单由 `gcc -Og -fcf-protection=none -fno-stack-protector -S main.c` 生成，注释中的 C 代码与各条指令等价；`-fno-stack-protector` 关闭栈保护，栈保护与调用 `dot_product` 的 4 条指令将在后续介绍。
-
 **栈帧的分配、使用与释放**：
 1. **分配**：`subq $40, %rsp` 把 `%rsp` 减 40，从 `%rsp` 开始的 40 字节成为 `main` 的栈帧；
 2. **使用**：局部变量按相对 `%rsp` 的偏移访问，`x[i]` 位于偏移 $4i$，`w[i]` 位于偏移 $16 + 4i$。偏移在编译时确定，每次调用的 `%rsp` 不同，同一段指令因此访问本次调用的局部变量；
 3. **释放**：返回前 `addq $40, %rsp` 把 `%rsp` 加回 40，栈帧随之释放，其中的数据不需要清除。
 """)
-    p.aside("栈帧中偏移 32 ~ 39 的 8 字节未被使用，原因将在后续介绍。")
+    p.aside("偏移 32 ~ 39 未被使用：ABI 要求 `call` 前 `%rsp` 是 16 的倍数，40 字节栈帧加 8 字节返回地址共 48 字节。")
 
 
 def return_address(p):
@@ -1014,47 +1007,55 @@ def return_address(p):
 - 函数执行完毕时，硬件无法仅凭固定操作数的 `jmp` 确定应跳转的目标返回地址。
 
 **硬件机制**：
-- 调用发生时必须动态保存调用点下一条指令的地址（返回地址 Return Address）。
+- 调用发生时必须动态保存调用点下一条指令的地址（返回地址 Return Address）；
+- 返回地址每次调用各有一份，因此也属于一次函数调用的局部状态。
 """)
     p.notes('过程调用的硬件困境与简单 `jmp` 的局限。')
     figure(p, "return-address", 1120)
 
 
 def call_ret(p):
-    p.title('复合指令：x86-64 的 call 与 ret 指令')
-    p.side_image("assets/call-ret.svg", width="32%", alt="contain")
+    p.title('函数调用：x86-64 的 call 与 ret 指令')
+    p.side_image("assets/call-ret.svg", width="42%", alt="contain")
     slide(p, r"""
-**x86-64 的专用指令设计**：
-- 为过程调用提供了专用指令。
+**返回地址的存放位置**：
+- 返回地址属于一次调用的局部状态，最直接的做法是与局部变量一样保存在栈帧中，x86-64 采用这种做法。
 
 **`call Label` 的硬件微操作**：
-1. 把 `call` 指令的下一条指令的地址（返回地址）压栈；
+1. `%rsp` 减 8，把 `call` 的下一条指令的地址（返回地址）写到 `%rsp` 所指处；
 2. 跳转到 `Label`。
 
 **`ret` 的硬件微操作**：
-1. 从栈顶弹出地址写入 `%rip`；
+1. 把 `%rsp` 所指处的返回地址读入 `%rip`，`%rsp` 加 8；
 2. 从调用点的下一条指令继续执行。
 """)
-    p.notes('x86-64 为过程调用提供的专用复合指令。')
-
-
-def push_pop(p):
-    p.title('指令分解：push 与 pop 的等价微操作')
-    slide(p, r"""
-**`pushq Src` 的等价指令分解**：
-1. 步进指针：`subq $8, %rsp`（栈顶指针向低地址延伸 8 个字节，开辟槽位）；
-2. 数据存入：`movq Src, (%rsp)`（将 64 位源操作数写入新栈顶）。
-
-**`popq Dest` 的等价指令分解**：
-1. 数据读出：`movq (%rsp), Dest`（从当前栈顶读取 64 位数据到目标寄存器）；
-2. 回退指针：`addq $8, %rsp`（栈指针自增 8 字节，收缩释放栈顶槽位）。
+    p.notes("""
+返回地址是局部状态，最直接的做法是与局部变量一样放在栈帧中，x86-64 的 call 与 ret 负责它的写入与读出。
+call 的第 1 步与 pushq 相同，ret 的第 1 步与 popq 到 %rip 相同；push 与 pop 在寄存器保存时介绍。
 """)
-    p.notes('栈操作基础指令 `push` 与 `pop` 向底层指针算术与内存访存的等价指令拆解。')
 
 
-def push_pop_fig(p):
-    p.title('指令分解：push 与 pop 的等价微操作')
-    figure(p, "push-pop", 1120)
+def param_state(p):
+    p.title('参数传递：参数也是局部状态')
+    slide(p, r"""
+**参数随调用变化**：
+- 同一函数每次被调用时，传入的实参可以不同，例如 `dot_product(w, x, 4)` 与 `dot_product(w, y, 8)`；
+- C 语言的形参是函数的局部变量：调用开始时取得实参的值，调用返回时释放；
+- 因此参数同样属于一次函数调用的局部状态。
+
+**最直接的做法：参数全部放在栈中**：
+- 与局部变量和返回地址一样，调用者在 `call` 之前把实参写入栈，被调用者按相对 `%rsp` 的偏移读取。
+
+**访存开销与寄存器传参**：
+- 寄存器在单周期内完成访问；访存要经过地址转换再访问缓存，延迟高于寄存器；
+- 被调用者几乎一定会读取自己的参数，参数全部放在栈中，每次调用都要先写入再读出；
+- 因此 x86-64 的调用规约用寄存器传递前几个参数，寄存器不够时才使用栈。
+""")
+    p.notes("""
+参数与局部变量、返回地址一样随调用分配与释放，最直接的做法是全部放在栈中。
+32 位 x86 的 cdecl 约定即把全部参数放在栈中；x86-64 改为寄存器传参，减少每次调用的访存。
+即使命中 L1 数据缓存，一次访存的延迟也有数个周期。
+""")
 
 
 def sysv_abi(p):
@@ -1081,31 +1082,6 @@ def sysv_abi_fig(p):
     figure(p, "abi-slots", 1120)
 
 
-def win_abi(p):
-    p.title('跨平台 ABI：Linux 与 Windows x64 调用约定对比')
-    slide(p, r"""
-**跨平台 ABI 的三处核心差异**：
-1. **整型参数寄存器集合不同**：
-   - Linux (System V)：前 6 个使用 `%rdi, %rsi, %rdx, %rcx, %r8, %r9`；
-   - Windows (MS x64)：前 4 个使用 `%rcx, %rdx, %r8, %r9`。
-2. **影子空间（Shadow Store / Home Space）**：
-   - Windows 规范要求：调用者在发起 `call` 前，**必须在栈顶预留 32 字节（4 个 8 字节槽）的空闲空间**，供被调用者在必要时将前 4 个寄存器参数溢写存入栈中。
-3. **寄存器保护职责差异**：
-   - 在 Linux 下，`%rsi` 与 `%rdi` 属于调用者保存（Caller-saved）；
-   - 在 Windows 下，`%rsi` 与 `%rdi` 属于**被调用者保存（Callee-saved）**。
-""")
-    p.notes('Linux (System V) 与 Windows (Microsoft x64) 在寄存器分配、影子空间与保护责任上的核心差异。')
-
-
-def win_abi_2(p):
-    p.title('跨平台 ABI：Linux 与 Windows x64 调用约定对比')
-    slide(p, r"""
-**实验意义**：
-- 学生在原生 Windows（MinGW）下反汇编 `dot_product` 时，参数 `w, x, n` 分别在 `%rcx, %rdx, %r8d` 中，此现象源于调用约定的跨平台分歧。
-""")
-    figure(p, "abi-frames", 1120)
-
-
 def dot_params(p):
     p.title('参数映射：dot_product 的形参和返回值绑定')
     slide(p, r"""
@@ -1130,6 +1106,38 @@ def dot_params_fig(p):
     figure(p, "param-binding", 1120)
 
 
+def param_clobber(p):
+    p.title('参数传递：连续调用时寄存器中的参数被覆盖')
+    slide(p, r"""
+**例子**：`dot_sum` 计算两个点积之和，连续两次调用 `dot_product`：
+""")
+    p.code('c', """int dot_sum(const int *w, const int *x, const int *y, int n) {
+    return dot_product(w, x, n) + dot_product(w, y, n);
+}""")
+    slide(p, r"""
+**参数被覆盖**（先假定 `dot_product` 不改写 `%rdi, %rsi, %rdx, %rcx`）：
+1. 进入 `dot_sum` 时，`w, x, y, n` 依次位于 `%rdi, %rsi, %rdx, %ecx`；
+2. 第一次调用的第 3 个参数 `n` 须放入 `%edx`，覆盖了第二次调用还要使用的 `y`；
+3. 第一次调用返回后，`w` 与 `n` 仍在寄存器中，`y` 已丢失，第二次调用缺少参数。
+
+**被调用函数改写寄存器**：
+- `dot_product` 甚至可能改写上述寄存器，`w` 与 `n` 随之丢失，第二次调用的参数全部错误；
+- `dot_sum` 与 `dot_product` 分别编译，前者无法知道后者改写了哪些寄存器；
+- 因此调用双方需要一套规定寄存器使用分工的调用规范。
+""")
+    p.notes("""
+参数寄存器只有一组，调用者为下一次调用准备参数时会覆盖自己的参数；被调用者执行时也使用寄存器。
+图中假定 dot_product 不改写 %rdi, %rsi, %rdx, %rcx，只看 y 的丢失。
+dot_product 的循环体由 cd examples; gcc -Og -fcf-protection=none -S dot.c -o - | sed -f asm.sed 可见：
+movl (%rsi,%r8,4), %ecx 与 imull (%rdi,%r8,4), %ecx 改写了 %ecx，即实际的 dot_product 并不满足图中的假定。
+""")
+
+
+def param_clobber_fig(p):
+    p.title('参数传递：连续调用时寄存器中的参数被覆盖')
+    figure(p, "param-clobber", 1120)
+
+
 def saved_regs(p):
     p.title('寄存器保护：调用者保存与被调用者保存')
     slide(p, r"""
@@ -1138,10 +1146,10 @@ def saved_regs(p):
 **职责划分契约**：
 1. **调用者保存（Caller-saved / 临时寄存器）**：
    - 包括：`%rax`, `%rdi`, `%rsi`, `%rdx`, `%rcx`, `%r8` ~ `%r11`
-   - 规则：被调用者可以随意修改。如果调用者在调用后还需要其原有数值，必须在 `call` 之前**自己负责存入栈中**。
+   - 规则：被调用者可以随意修改。如果调用者在调用后还需要其原有数值，必须在 `call` 之前**自己负责保存**。
 2. **被调用者保存（Callee-saved / 保持寄存器）**：
    - 包括：`%rbx`, `%rbp`, `%r12` ~ `%r15`, `%rsp`
-   - 规则：被调用者必须保证函数返回时这些寄存器的值原封不动。若被调用者需要使用，**必须在函数入口 `pushq` 保存，退出前 `popq` 恢复**。
+   - 规则：被调用者必须保证函数返回时这些寄存器的值原封不动。若被调用者需要使用，**必须在使用前保存原值，返回前恢复**。
 """)
     p.notes('调用链条中的寄存器覆盖矛盾与两种保存机制的职责划分。')
 
@@ -1149,128 +1157,47 @@ def saved_regs(p):
 def saved_regs_fig(p):
     p.title('寄存器保护：调用者保存与被调用者保存')
     figure(p, "saved-regs", 1120)
-
-
-def stack_align(p):
-    p.title('栈对齐：ABI 的 16 字节对齐要求')
     slide(p, r"""
-**ABI 16 字节栈对齐规范**：
-- **规范要求**：在调用者发起 `call` 指令前，栈指针 `%rsp` 的数值必须是 16 的倍数；
-- **原因分析**：ABI 规定对齐是为了被调用函数能够安全使用要求 16 字节对齐的 SSE 向量指令（例如 `movaps`）；若地址未对齐，执行这些指令会触发通用保护异常（#GP）；
-- **为什么减 40**：`main` 的两个数组共 32 字节。函数进入时 `call` 已将 8 字节返回地址压栈（此时 `%rsp` 除以 16 余 8），`main` 开辟 40 字节后，总偏移量为 40 + 8 = 48，是 16 的倍数，恰好保证下一次 `call` 时满足对齐要求；多出的 8 字节即栈帧中未使用的偏移 32 ~ 39。
-""")
-    p.notes('ABI 16 字节栈对齐的规定与原因，以及它如何决定 main 栈帧的大小。')
-
-
-def stack_align_fig(p):
-    p.title('栈对齐：ABI 的 16 字节对齐要求')
-    figure(p, "main-align", 1120)
-
-
-def red_zone(p):
-    p.title('红区机制：System V ABI 的 128 字节栈顶安全区')
-    slide(p, r"""
-**叶子函数（Leaf Function）**：
-- 不调用任何其他子函数的末端函数。
-
-**System V ABI 红区（Red Zone）机制**：
-- 规定栈指针 `%rsp` 下方的 **128 字节空间**（`[-128, -1](%rsp)`）留给当前叶子函数自由使用；
-- 操作系统内核的中断与异步信号处理程序不会覆写这 128 字节；
-- 当叶子函数需要使用少量局部变量时，可直接通过相对于 `%rsp` 的负偏移寻址这 128 字节，不必生成 `subq` 调整栈指针，退出前也不必生成 `addq` 回收栈。
-
-**红区使用示例**：
-""")
-    p.code('c', """int leaf_example(int a, int b) {
-    volatile int x = a, y = b; // volatile 局部变量分配在栈内存中
-    return x + y;
-}""")
-    p.notes('System V ABI 红区（Red Zone）规范及其在叶子函数中的栈操作消除。')
-
-
-def red_zone_2(p):
-    p.title('红区机制：System V ABI 的 128 字节栈顶安全区')
-    slide(p, r"""
-- 编译器实测汇编（`-Og` 与 `-O2`）：
-""")
-    p.demo('编译 leaf.c',
-           """cd examples
-gcc -Og -fcf-protection=none -S leaf.c -o - | sed -f asm.sed""",
-           output="""leaf_example:
-	movl	%edi, -8(%rsp)
-	movl	%esi, -4(%rsp)
-	movl	-8(%rsp), %eax
-	movl	-4(%rsp), %edx
-	addl	%edx, %eax
-	ret""",
-           files=['examples/leaf.c', 'examples/asm.sed'])
-    slide(p, r"""
-- 汇编指令直接利用 `-8(%rsp)` 与 `-4(%rsp)` 存放数据，无需调整 `%rsp` 指针，消除了栈帧分配与回收开销。
+**调用者与被调用者如何在需要时保存对应的寄存器？**
+需要保存的寄存器值属于本次调用的局部状态，与局部变量、返回地址一样，可以存入栈帧：
+- **被调用者保存寄存器：使用是权利**，寄存器不够时才用，因此原值必须入栈，返回前恢复；
+- **调用者保存寄存器：保存是义务**，调用后仍要使用的值（如 `%rdi` 中的第一个参数）在 `call` 前必须转移：如果有空闲的 callee-saved 寄存器，可以暂存其中（因为 callee 保证其值在函数返回时不变，但作为 callee 也需要保护该寄存器），否则存入栈中。
 """)
     p.notes("""
-examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号，与页面上的清单一致。
-把 -Og 换成 -O2，清单相同。
+保存下来的寄存器值与局部变量、返回地址一样随调用分配与释放，因此放在栈帧中；写入与读出栈顶的指令即随后介绍的 push 与 pop。
+被调用者保存寄存器由被调用者按需使用；调用者保存寄存器中调用后仍要使用的值，调用者每次调用前都必须转移。
+暂存到被调用者保存寄存器的做法见后续 dot_bias 的例子。
 """)
 
 
-def red_zone_fig(p):
-    p.title('红区机制：System V ABI 的 128 字节栈顶安全区')
-    figure(p, "red-zone", 1120)
-
-
-def dot_function(p):
-    p.title('汇编函数：标准的 dot_product 汇编清单')
+def push_pop(p):
+    p.title('指令分解：push 与 pop 的等价微操作')
     slide(p, r"""
-**主线算子的极简栈特征**：
-- `dot_product` 是不调用其他函数的叶子函数，且所需变量全部保存在寄存器中；
-- 既不需要在栈上分配局部变量，也不需要保存被调用者保存寄存器，因此**不建立栈帧，也没有栈操作开销**。
+**专用指令**：
+- 把寄存器的值保存到栈顶、从栈顶读出值写回寄存器，是保存与恢复寄存器时的常见操作；
+- 因此 x86-64 为这两种操作各提供一条单独的指令：`pushq` 与 `popq`。
 
-**代码全景解读**：
-- 入口直接使用 `%rdi`, `%rsi`, `%edx`（参数由调用方放好）；
-- 退出前通过 `movl %r9d, %eax` 将结果放入规定的返回值寄存器，执行 `ret` 返回。
+**`pushq Src` 的等价指令分解**：
+1. 步进指针：`subq $8, %rsp`（栈顶指针向低地址延伸 8 个字节，开辟槽位）；
+2. 数据存入：`movq Src, (%rsp)`（将 64 位源操作数写入新栈顶）。
+
+**`popq Dest` 的等价指令分解**：
+1. 数据读出：`movq (%rsp), Dest`（从当前栈顶读取 64 位数据到目标寄存器）；
+2. 回退指针：`addq $8, %rsp`（栈指针自增 8 字节，收缩释放栈顶槽位）。
 """)
-    p.notes("""
-第三部分结果，展示完整的汇编函数。
-`gcc -Og -fcf-protection=none -S dot.c` 的完整函数清单解读。
-""")
+    p.notes('栈操作基础指令 `push` 与 `pop` 向底层指针算术与内存访存的等价指令拆解。')
 
 
-def dot_function_2(p):
-    p.title('汇编函数：标准的 dot_product 汇编清单')
-    slide(p, r"""
-**函数入口与初始化（4 行）**：
-""")
-    p.code('assembly', """dot_product:
-	movl	$0, %eax
-	movl	$0, %r9d
-	jmp	.L2""")
-    slide(p, r"""
-**函数出口与返回（2 行）**：
-""")
-    p.code('assembly', """	movl	%r9d, %eax
-	ret""")
-
-
-def dot_function_fig(p):
-    p.title('汇编函数：标准的 dot_product 汇编清单')
-    figure(p, "dot-function", 1120)
+def push_pop_fig(p):
+    p.title('指令分解：push 与 pop 的等价微操作')
+    figure(p, "push-pop", 1120)
 
 
 def callee_example(p):
-    p.title('被调用者保存：dot_bias 中的 %rbx')
-    slide(p, r"""
-**被调用者保存寄存器（Callee-saved）真实例子：`dot_bias`**：
-- 代码：
-""")
+    p.title('示例：dot_bias 中的 %rbx')
     p.code('c', """int dot_bias(const int *w, const int *x, int n, int b) {
     return dot_product(w, x, n) + b;
 }""")
-
-
-def callee_example_2(p):
-    p.title('被调用者保存：dot_bias 中的 %rbx')
-    slide(p, r"""
-- `gcc -Og -fcf-protection=none -S` 汇编（6 行）：
-""")
     p.demo('编译 dot_bias.c',
            """cd examples
 gcc -Og -fcf-protection=none -S dot_bias.c -o - | sed -f asm.sed""",
@@ -1283,59 +1210,116 @@ gcc -Og -fcf-protection=none -S dot_bias.c -o - | sed -f asm.sed""",
 	ret""",
            files=['examples/dot_bias.c', 'examples/asm.sed'])
     slide(p, r"""
-- **机制分析**：参数 `b` 位于 `%ecx`（Caller-saved 寄存器），调用 `dot_product` 后可能被改写。编译器因此把 `b` 移到 Callee-saved 寄存器 `%rbx`；`dot_bias` 自己必须在入口 `pushq %rbx` 保存，在出口 `popq %rbx` 恢复。
+**机制分析**：`b` 位于 caller-saved 的 `%ecx`，调用后可能被改写，因此移到 callee-saved 的 `%rbx`；`dot_bias` 在入口 `pushq %rbx` 保存原值，在出口 `popq %rbx` 恢复。
 """)
     p.notes('examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号，与页面上的清单一致。')
 
 
-def recursion(p):
-    p.title('递归调用：多层栈帧的硬件推演与回溯')
+def soft_hard(p):
+    p.title('软约束与硬约束：ABI 约定与 ISA 语义')
     slide(p, r"""
-**主线递归形式：`dot_product_rec`**：
+**软约束：ABI 的约定**：
+- 参数寄存器的顺序，返回值放入 `%rax`，调用者保存与被调用者保存的分工；
+- 这些规定由编译器生成指令时遵守，CPU 执行时不检查；
+- 调用双方换用另一套约定，只要双方一致，参数与返回值照常传递。
+
+**硬约束：ISA 规定的指令语义**：
+- `call` 压入返回地址并改写 `%rip`，`ret` 从栈顶弹出返回地址写入 `%rip`；
+- `pushq` 与 `popq` 以 `%rsp` 为栈顶指针，每次把 `%rsp` 减 8 或加 8；
+- 这些行为由 CPU 执行指令时完成，编译器与操作系统都无法改变。
+
+**同一块 CPU，不同的软约束**：
+- Linux 与 Windows 运行在同一块 x86-64 CPU 上，硬约束相同，软约束不同；
+- 一方按自己的约定放置参数，另一方到别的寄存器中读取，二者的程序因此无法相互调用。
 """)
-    p.code('c', """int dot_product_rec(const int *w, const int *x, int n) {
-    if (n <= 0) return 0;
-    return dot_product_rec(w, x, n - 1) + w[n - 1] * x[n - 1];
+    p.notes("""
+软约束写在 ABI 文档中，由编译器遵守；硬约束写在 ISA 手册中，由 CPU 执行。
+GCC 在 x86-64 上提供 __attribute__((ms_abi))，同一个 Linux 程序中的函数可以按 Windows 的约定编译与调用，说明约定由编译器选择。
+""")
+
+
+def win_abi(p):
+    p.title('跨平台 ABI：Linux 与 Windows x64 调用约定对比')
+    slide(p, r"""
+**跨平台 ABI 的三处核心差异**：
+1. **整型参数寄存器集合不同**：
+   - Linux (System V)：前 6 个使用 `%rdi, %rsi, %rdx, %rcx, %r8, %r9`；
+   - Windows (MS x64)：前 4 个使用 `%rcx, %rdx, %r8, %r9`。
+2. **影子空间（Shadow Store / Home Space）**：
+   - Windows 规范要求：调用者在发起 `call` 前，**必须在栈顶预留 32 字节（4 个 8 字节槽）的空闲空间**，供被调用者在必要时将前 4 个寄存器参数溢写存入栈中。
+3. **寄存器保护职责差异**：
+   - 在 Linux 下，`%rsi` 与 `%rdi` 属于调用者保存（Caller-saved）；
+   - 在 Windows 下，`%rsi` 与 `%rdi` 属于**被调用者保存（Callee-saved）**。
+""")
+    p.notes('Linux (System V) 与 Windows (Microsoft x64) 在寄存器分配、影子空间与保护责任上的核心差异。')
+
+
+def buffer_overflow(p):
+    p.title('缓冲区溢出：越界写入覆盖栈帧中的相邻数据')
+    p.code('c', """static void fill(int *x, int argc, char **argv) {
+    for (int i = 1; i < argc; i++) x[i - 1] = atoi(argv[i]);  /* no bound */
+}
+int main(int argc, char **argv) {
+    int w[4] = {1, 2, 3, 4}, x[4];
+    fill(x, argc, argv);
+    return dot_product(w, x, 4);    /* result = exit status */
 }""")
-    slide(p, r"""
-**递归执行的栈帧状态推演**：
-- 每次执行自身调用时，`call` 压入当前层的返回地址；
-- 编译器通过 `pushq` 连续保存 `%r15, %r14, %rbx`，是为了在递归调用返回后，继续使用它们所保存的参数 `w, x, n` 计算 `w[n-1] * x[n-1]`；递归的累加中间结果则由 `%eax` 返回；
-- 栈空间随着递归深度 $n$ 线性向下延伸，构建出链式连续的多个栈帧。
+    p.demo('给出不同个数的实参',
+           """cd examples
+gcc -Og -fcf-protection=none -fno-stack-protector -o overflow overflow.c dot.c
+run() { ./overflow "$@" 2>&1 | cat; echo "  $# values -> exit ${PIPESTATUS[0]}"; }
+run 5 6 7 8
+run 5 6 7 8 1 1 1 1
+run 5 6 7 8 1 1 1 1 1 1 1 1""",
+           output="""  4 values -> exit 70
+  8 values -> exit 26
+  12 values -> exit 139""",
+           files=['examples/overflow.c', 'examples/dot.c'])
+    p.notes("""
+程序把点积作为退出状态返回，因此 $? 直接显示结果是否被改变；4 个实参时 1*5 + 2*6 + 3*7 + 4*8 = 70。
+2>&1 | cat 使崩溃时 shell 的作业提示不进入输出，退出码由 PIPESTATUS[0] 取得。
 """)
-    p.notes('以递归向量内积为例，展示多层嵌套调用时栈帧的线性堆叠与逐层返回。')
 
 
-def recursion_3(p):
-    p.title('递归调用：多层栈帧的硬件推演与回溯')
+def buffer_overflow_fig(p):
+    p.title('缓冲区溢出：越界写入覆盖栈帧中的相邻数据')
+    figure(p, "overflow", 1120)
     slide(p, r"""
-- 以 `dot_product_rec(w, x, 4)` 为例：$n > 0$ 的每一层在栈上占用 32 字节，即 `call` 压入的 8 字节返回地址与 `pushq` 保存的 3 个寄存器；$n = 0$ 的一层直接返回，不保存寄存器；
-- 返回时逐层 `popq` 恢复寄存器，`ret` 回到上一层，部分和经 `%eax` 带回。
+- **8 个实参**：多出的 4 个覆盖相邻的局部数组 `w`，结果由 70 变为 26，程序照常返回，不报任何错误；
+- **12 个实参**：写入到达返回地址，`ret` 跳向被改写的地址，进程收到 `SIGSEGV`（退出码 139）。
 """)
-    figure(p, "rec-stack", 1120)
+    p.notes("""
+清单由 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S overflow.c -o - | sed -f asm.sed 得到：
+main 的 pushq %rbx 与 subq $32, %rsp 给出图中的偏移，x 由 movq %rsp, %rdi 传给 fill，w 写在 16(%rsp) 起的 16 字节。
+8 个实参时 w 变为 {1, 1, 1, 1}，点积即 5 + 6 + 7 + 8 = 26。
+""")
 
 
-def canary_plt(p):
-    p.title('栈保护机制：金丝雀值与过程链接表 PLT')
+def canary(p):
+    p.title('栈保护机制：金丝雀值')
     slide(p, r"""
-**栈保护机制（Stack Canary）**：
-- **安全威胁**：局部数组若发生越界写入，会覆盖栈顶保存的返回地址，使攻击者劫持控制流。
-- **金丝雀防护机理（不加 `-fno-stack-protector` 时，`main` 的栈帧为 56 字节）**：
-  1. 写入金丝雀值：`movq %fs:40, %rax` 从操作系统线程局部存储（TLS）读取随机生成的金丝雀值，通过 `movq %rax, 40(%rsp)` 存入局部数组与返回地址（`56(%rsp)`）之间；
-  2. 出口检验：返回前执行 `subq %fs:40, %rdx`；若金丝雀值被篡改，`jne` 立即成立；
-  3. 检查失败：跳往 `.L4` 执行 `call __stack_chk_fail@PLT`，终止进程，防范攻击。
+**默认编译即开启**：上面的崩溃需要 `-fno-stack-protector`；去掉它重新编译，同一份源程序的溢出在返回之前就被发现：
 """)
-    p.notes('现代二进制安全中的栈溢出保护金丝雀（Canary）机制，以及跨文件调用的过程链接表（PLT）。')
-
-
-def canary_plt_2(p):
-    p.title('栈保护机制：金丝雀值与过程链接表 PLT')
+    p.demo('开启栈保护后重新编译',
+           """cd examples
+gcc -Og -fcf-protection=none -o overflow_sp overflow.c dot.c
+./overflow_sp 5 6 7 8 1 1 1 1 1 1 1 1 2>&1 | cat""",
+           output="""*** stack smashing detected ***: terminated""",
+           files=['examples/overflow.c'])
     slide(p, r"""
-**过程链接表（PLT: Procedure Linkage Table）**：
-- 汇编中形如 `call dot_product@PLT` 中的 `@PLT` 标记；
-- 跨文件或调用动态库函数时，函数地址在编译期尚未确定；
-- 代码首先跳转到 PLT 存根（Stub），在运行时由动态链接器进行地址解析与延迟绑定（细节详见链接专题）。
+**金丝雀值（Stack Canary）的防护机理**：
+1. **入口写入**：`movq %fs:40, %rax` 从线程局部存储读取每次运行都不同的随机值，`movq %rax, 40(%rsp)` 把它存入局部数组与返回地址之间；
+2. **返回前检验**：`movq 40(%rsp), %rdx` 与 `subq %fs:40, %rdx` 比较该值是否仍然相同；
+3. **不相等则终止**：`jne` 成立时执行 `call __stack_chk_fail@PLT`，进程被终止，退出码 134。
 """)
+    p.notes("""
+开启栈保护后编译器把数组放在栈帧的低地址一侧，金丝雀值位于 40(%rsp)，返回地址位于 56(%rsp)，
+因此越界写入先改写金丝雀值，才能到达返回地址。金丝雀值每次运行都不同，越过它而不被发现是困难的。
+""")
+
+
+def canary_fig(p):
+    p.title('栈保护机制：金丝雀值')
     figure(p, "canary", 1120)
 
 

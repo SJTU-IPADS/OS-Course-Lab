@@ -43,16 +43,16 @@ def build():
     # the red zone
     top, bottom = 142, 420
     out.append(rect(X, top, SW, bottom - top, FILL_RED, RED, rx=2, width=2, dash="7 4"))
-    out += slot(top + 8, 40, "y（参数 b）", "-4(%rsp)", FILL_GREEN, GREEN)
-    out += slot(top + 48, 40, "x（参数 a）", "-8(%rsp)", FILL_BLUE, BLUE)
+    out += slot(top, 40, "y（参数 b）", "-4(%rsp)", FILL_GREEN, GREEN)
+    out += slot(top + 40, 40, "x（参数 a）", "-8(%rsp)", FILL_BLUE, BLUE)
     out.append(text(X + SW / 2, 300, "其余空间：-128(%rsp) ~ -9(%rsp)", 15, MUTED))
-    out += vbrace(X - 10, top, bottom, RED, "红区 128 字节", 17, depth=10, right=False)
+    out += vbrace(X - 10, top + 8, bottom, RED, "红区 128 字节", 17, depth=10, right=False)
     out.append(text(X - 28, (top + bottom) / 2 + 32, "中断与信号处理程序", 14, RED,
                     anchor="end"))
     out.append(text(X - 28, (top + bottom) / 2 + 52, "不会覆写", 14, RED, anchor="end"))
-    # %rsp stays where it is
-    out.append(arrow(X - 70, 119, X - 6, 119, BLUE, 2.4))
-    out.append(mono(X - 76, 125, "%rsp", 16, BLUE, "bold", anchor="end"))
+    # %rsp stays where it is: the low edge of the return address, the top of the red zone
+    out.append(arrow(X - 70, top, X - 6, top, BLUE, 2.4))
+    out.append(mono(X - 76, top + 6, "%rsp", 16, BLUE, "bold", anchor="end"))
     # the listing; each store shares its slot's colour
     lx = 700
     out.append(text(lx - 16, 44, "gcc -Og / -O2 的输出", 15, MUTED, anchor="start"))
