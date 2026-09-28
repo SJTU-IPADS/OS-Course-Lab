@@ -41,9 +41,7 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
     s.page("single-mac", body=pages.single_mac)
     s.page("single-mac-fig", body=pages.single_mac_fig)
 
-    s.bridge('数据在内存里，如何参与 CPU 的运算？', id="bridge-part1-operands")
     with s.section('数据在内存里，如何参与 CPU 的运算？', id="part1-operands") as ss:
-        ss.page("von-neumann", body=pages.von_neumann)
         ss.page("visible-state", body=pages.visible_state)
         ss.page("visible-state-2", body=pages.visible_state_2)
         ss.page("register-slices", body=pages.register_slices)
