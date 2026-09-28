@@ -5,7 +5,8 @@ on:
     branches:
       - 'main'
     paths:
-      - Lab1/**
+      - OS-Labs/Lab1/**
+      - .github/workflows/lab1.yml
   workflow_dispatch:
   workflow_call:
 
@@ -24,4 +25,4 @@ jobs:
           submodules: true
           fetch-depth: 0
       - name: Build Lab1
-        run: cd Lab1 && make
+        run: cd OS-Labs/Lab1 && make
