@@ -29,14 +29,16 @@ def figure(p, name, width):
 def problem(p):
     p.title('问题提出')
     slide(p, r"""
-- 大模型想要预测下一个词，最重要的算子就是 $w$ 和 $x$ 的内积。推理程序 `ollama` 负责完成这些计算。但现代 CPU 不懂什么是 `for` 循环，什么是数组下标，什么是浮点数乘法。硅片上只有数以亿计的晶体管和电路开关，它是怎么把 `ollama` 执行完并算出结果的？
-
-**本节回答以下问题**：
-1. 可执行程序 `ollama` 与权重文件 `llama3.gguf` 在运行前存放在哪里，运行时如何进入内存并由 CPU 执行？
-2. 可执行程序 `ollama` 是如何构建出来的？自然语言或高级语言编写的程序可以直接由 CPU 执行吗？
-3. 同一个 `ollama` 程序可以在不同的 CPU 上执行吗？Windows / Linux / macOS 等操作系统可以使用同一个程序文件吗？
+- 大模型预测一段话的下一个词，其中一个核心数学算子就是 $w$ 和 $x$ 的内积，由推理程序 `ollama` 负责组织完成这些计算。如果在 CPU 上进行推理，这个算子可以由一个简单的 `for` 循环累积来完成。但 CPU 硅片上只有一些晶体管和电路开关，它是怎么把我们需要的指令执行完成的？
 """)
-    p.notes('以 ollama 的推理过程提出全节要回答的问题：程序如何在由晶体管构成的 CPU 上执行。')
+    p.code('c', """int dot_product(const int *w, const int *x, int n) {
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += w[i] * x[i];  // <-- 全节核心主线
+    }
+    return sum;
+}""")
+    p.notes('以 ollama 的推理过程提出全节要回答的问题：程序如何在由晶体管构成的 CPU 上执行；并给出全节核心主线程序 dot_product。')
 
 
 def system_view(p):
@@ -58,6 +60,7 @@ def system_view(p):
 def system_view_fig(p):
     p.title('系统执行：大模型推理的端到端硬件协同')
     figure(p, "system-view", 1120).footnote('照片从左到右来自 Wikimedia Commons 的 Evan-Amos（CC BY-SA 3.0）、D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。')
+    p.notes('左下的放大框取自 ollama 可执行文件偏移 0xcb4cf0 处的 22 字节，是其中 gonum 库 float32 内积函数 f32.DotUnitary 逐个元素处理的循环：前 3 条完成 sum += w[i] * x[i]，后 3 条更新下标与剩余次数并跳回循环开头。')
 
 
 def system_view_2(p):
@@ -77,26 +80,14 @@ def compile_mapping(p):
     slide(p, r"""
 **本节主线算子**：
 - 大模型计算的核心数学算子：向量内积 `dot_product`，这段代码如何才能被 CPU 执行？
-""")
-    p.code('c', """int dot_product(const int *w, const int *x, int n) {
-    int sum = 0;
-    for (int i = 0; i < n; i++) {
-        sum += w[i] * x[i];  // <-- 全节核心主线
-    }
-    return sum;
-}""")
-    slide(p, r"""
+
 **同一段代码的三种表示**：
 1. **高级语言（C）**：面向程序员的控制结构与变量符号抽象。
 2. **汇编指令（Assembly）**：通过 `objdump -d` 反汇编或 `gcc -S` 直接生成，与机器码对应。
 3. **目标机器码（Object Code）**：经 `gcc -c` 生成的纯二进制目标文件（ELF），通过 `hexdump` / `xxd` 观察，呈现为十六进制机器字节流。
 """)
-    p.notes('全节核心主线程序的提出，以及从高级 C 源码到二进制机器码与反汇编的映射概览。')
-
-
-def compile_mapping_fig(p):
-    p.title('编译映射：从 C 源码到二进制机器指令')
     figure(p, "compile-mapping", 1120)
+    p.notes('从高级 C 源码到二进制机器码与反汇编的映射概览。')
 
 
 def toolchain(p):
@@ -1324,112 +1315,188 @@ def canary_fig(p):
 
 
 def flops_estimate(p):
-    p.title('算力需求：大模型推理的乘加规模与耗时推算')
+    p.title('问题：生成一个 Token 的乘加次数与读取字节数')
     slide(p, r"""
-**大模型推理的算力挑战**：
-- 以参数量为 70 亿（7B）的语言模型（如 LLaMA-7B）为例；
-- 自回归生成单个 Token 时，需要对全网权重矩阵进行一次前向传播计算；
-- 每个参数对应一次乘法和一次累加，**生成单个 Token 需要约 70 亿次（$7 \times 10^9$）乘加运算（MAC）**。
+**以 70 亿参数（7B）的语言模型为例**：
+- 权重采用第二讲的 4 位整数量化（int4），每个权重占 4 位，1 字节存放 2 个权重；
+- 生成一个 Token 时，输入向量与每个权重矩阵各做一次矩阵向量乘 $y = Wx$，$y$ 的每个元素是 $W$ 的一行与 $x$ 的内积；
+- 每个权重参与 **1 次乘加**，并从内存读取 **1 次**。
+""")
+    p.table([
+        ['乘加次数', '$7 \\times 10^9$ 次'],
+        ['从内存读取的权重', '$7 \\times 10^9 \\times 0.5\\text{ B} = 3.5\\text{ GB}$'],
+    ], headers=['每生成 1 个 Token', '数量'])
+    slide(p, r"""
+**第二讲的结论**：单请求自回归推理处于访存受限区，生成速度的上限等于内存带宽除以每个 Token 读取的权重字节数。
 """)
     p.notes("""
-第四部分主线引入。
-大模型 Token 预测的乘加计算规模，以及用标量单核 CPU 执行时的理论耗时推算，引出向量化与并行加速的必要性。
+第四部分的引入。两个数量与第二讲的带宽估算口径相同：只计权重，KV cache 与激活的读取未计入。
 """)
 
 
-def flops_estimate_2(p):
-    p.title('算力需求：大模型推理的乘加规模与耗时推算')
+def hw_peak(p):
+    p.title('硬件上限：i9-11900H 的峰值算力与内存带宽')
+    p.table([
+        ['峰值算力（int8）', '8 核 × 64 次乘加/周期 × 4.0 GHz', '$2.0 \\times 10^{12}$ 次乘加/s（4.1 TOPS）'],
+        ['峰值算力（FP32）', '8 核 × 16 次乘加/周期 × 4.0 GHz', '$5.1 \\times 10^{11}$ 次乘加/s（1.0 TFLOPS）'],
+        ['内存带宽', '3200 MT/s × 8 B × 2 通道（DDR4-3200）', '51.2 GB/s'],
+    ], headers=['上限', '计算方法', '数值'], widths=[20, 42, 38])
     slide(p, r"""
-**单核标量 CPU 执行耗时推算**：
-- 假设 CPU 核心主频为 $4.0\text{ GHz}$（每秒提供 $4 \times 10^9$ 个时钟周期）；
-- `gcc -O2` 编译的标量循环每完成一次乘加执行 6 条机器指令（本部分后续统计）；
-- 参考实际运行时的平均指令执行效率 IPC $\approx 3.82$（本部分后续通过工具实测）：
-  - 所需机器指令总数：$7 \times 10^9 \times 6 = 4.2 \times 10^{10}$ 条指令；
-  - 所需时钟周期总数：$4.2 \times 10^{10} / 3.82 \approx 1.1 \times 10^{10}$ 个周期；
-  - 单核纯计算理论耗时：$1.1 \times 10^{10} / (4.0 \times 10^9) \approx 2.75\text{ 秒}$；
-- **工程结论**：
-  - 单核标量执行下，每秒仅能生成不到 0.4 个 Token；
-  - 生成一段 100 个 Token 的回答需要数分钟。
+**每周期乘加次数的来源**：
+- AVX-512 VNNI 指令 `vpdpbusd` 一条完成 64 次 8 位整数乘法，乘积每 4 个一组累加到 16 个 32 位和中；每个核心每周期执行 1 条；
+- FP32 的 16 次来自每周期 2 条 256 位 FMA（乘加融合）指令，每条完成 8 次乘加；
+- i9-11900H 没有 4 位整数乘法指令，int4 权重先展开成 8 位再相乘，峰值按 int8 计算。
+""")
+    p.notes("""
+TOPS 与 TFLOPS 按 1 次乘加计 2 次运算换算，与第二讲的约定相同。
+i9-11900H 单核最高 4.9 GHz；8 个核心同时执行向量指令时受功耗限制，主频低于这个值，本页取 4.0 GHz 估算。
+Willow Cove 核心把端口 0 与端口 1 合并执行 512 位运算：每周期 1 条 512 位 vpdpbusd，或 2 条 256 位 vpdpbusd（需要 AVX-512 VL），都是每周期 64 次 8 位乘加。
+在这台机器上用 10 条互不依赖的 vpdpbusd 组成循环，单核实测约每周期 60 次。
 """)
 
 
-def flops_estimate_fig(p):
-    p.title('算力需求：大模型推理的乘加规模与耗时推算')
-    figure(p, "token-time", 1120)
-
-
-def memory_wall(p):
-    p.title('访存墙：大模型推理的内存带宽瓶颈推算')
+def hw_peak_2(p):
+    p.title('硬件上限：i9-11900H 的峰值算力与内存带宽')
     slide(p, r"""
-**自回归推理的数据搬运量推算**：
-- 7B 模型即使采用 8 位整型（int8）紧凑量化，70 亿个参数占用的内存也达到 **$7\text{ GB}$**；
-- 自回归解码机制决定了：**每生成一个 Token，都必须将这 7 GB 权重从主内存（DRAM）中完整读取一遍**。
+**两个上限折算成生成速度（7B，int4）**：
 """)
-    p.notes('大模型自回归解码的访存密集型特征，推导权重数据纯搬运时间下限与 Roofline 性能边界。')
-
-
-def memory_wall_2(p):
-    p.title('访存墙：大模型推理的内存带宽瓶颈推算')
+    p.table([
+        ['算力上限', '$2.0 \\times 10^{12}$ 次/s', '$7 \\times 10^9 \\div (2.0 \\times 10^{12}) = 3.4$ ms'],
+        ['带宽上限', '$51.2\\text{ GB/s} \\times 2$ 个权重/字节 $= 1.0 \\times 10^{11}$ 次/s', '$3.5\\text{ GB} \\div 51.2\\text{ GB/s} = 68$ ms'],
+    ], headers=['上限', '乘加速率', '生成 1 个 Token 的时间'], widths=[16, 46, 38])
     slide(p, r"""
-**物理内存总线带宽瓶颈**：
-- 主流 PC 双通道 DDR4/DDR5 内存的物理峰值带宽约为 $40 \sim 60\text{ GB/s}$（取典型均值 $50\text{ GB/s}$）；
-- 纯粹把权重从 DRAM 搬运至 CPU 缓存所需的物理时间下限：
- $$T_{\text{transfer}} = \frac{7\text{ GB}}{50\text{ GB/s}} = 0.14\text{ 秒/Token}$$
-- **物理带宽决定的吞吐上限**：$\frac{1}{0.14\text{ s}} \approx 7.1\text{ Tokens/s}$。
-
-**性能模型分析（Roofline 模型）**：
-- 即使 CPU 算力无限充裕（运算耗时为 0），受限于内存总线物理带宽，单并发解码速度也无法超越 7.1 Token/s；
-- 现代高性能系统设计必须兼顾计算吞吐优化与内存层次缓存利用。
+- 带宽上限比算力上限低约 20 倍，生成速度由较低的带宽上限决定：每秒至多 $1 \div 68\text{ ms} \approx 14.6$ 个 Token；
+- 这与第二讲的结论一致：在这台机器上，int4 的 7B 模型处于访存受限区。
 """)
 
 
-def memory_wall_fig(p):
-    p.title('访存墙：大模型推理的内存带宽瓶颈推算')
+def test_program(p):
+    p.title('测试程序：顺序执行的标量矩阵向量乘')
+    slide(p, r"""
+**`examples/matvec_q4.c` 中计算一行内积的函数**：
+""")
+    p.code('c', """static int dot_q4(const unsigned char *w, const signed char *x) {
+    int sum = 0;
+    for (int j = 0; j < HALF; j++) {
+        int lo = (w[j] & 15) - 8, hi = (w[j] >> 4) - 8;
+        sum += lo * x[j] + hi * x[j + HALF];
+    }
+    return sum;
+}""")
+    slide(p, r"""
+- $W$ 有 4096 列，每行 2 KiB（`HALF` = 2048）。第 $j$ 个字节的低 4 位是第 $j$ 个权重，高 4 位是第 $j + 2048$ 个权重；存储值 $q$ 表示权重 $q - 8$；
+- $x$ 是 4096 个 int8 激活值，共 4 KiB，一直留在 L1 缓存中；
+- `matvec` 对 $W$ 的每一行调用一次 `dot_q4`。$W$ 默认 512 MiB（$2^{30}$ 个权重，约为 7B 模型的 1/7），远大于 24 MiB 的 L3 缓存，每做一次矩阵向量乘都要从内存读取整个 $W$。
+""")
+    p.notes("""
+权重的排列方式让低 4 位与高 4 位各自对应一段连续的 x，便于向量化，llama.cpp 的 Q4_0 格式在每 32 个权重的块内采用同样的排列。
+Q4_0 每块还带一个缩放因子，这里省略，只保留乘加。
+""")
+
+
+def test_program_2(p):
+    p.title('测试程序：顺序执行的标量矩阵向量乘')
+    slide(p, r"""
+**编译与运行**：
+- `-fno-tree-vectorize` 禁止编译器把循环改写成一条指令处理多个数据的形式（自动向量化）；GCC 12 起，`-O2` 会对这个循环做这种改写；
+- 程序先预热一次，再重复计算 1 秒以上，输出每次矩阵向量乘的平均毫秒数、每秒乘加次数（GMAC/s，$10^9$ 次/s）与每秒读取的权重字节数（GB/s）。
+""")
+    p.demo('编译并运行标量版本',
+           """cd examples
+make matvec_scalar
+./matvec_scalar""",
+           output="""gcc -O2 -fno-tree-vectorize -fopenmp -fcf-protection=none matvec_q4.c -o matvec_scalar
+threads 1  ms 1005.011  GMAC/s 1.07  GB/s 0.53""",
+           files=['examples/matvec_q4.c', 'examples/Makefile'])
+    p.notes("""
+-fopenmp 提供计时函数 omp_get_wtime。程序的第一个参数是线程数，默认 1；第二个参数是 W 的大小（MiB），默认 512。
+页面上的输出来自 i9-11900H，数值随 CPU 型号与主频变化。
+""")
+
+
+def scalar_gap(p):
+    p.title('实测差距：标量程序与两个上限')
+    p.table([
+        ['算力上限', '$2.0 \\times 10^{12}$', '3.4 ms', '约 1900 倍'],
+        ['带宽上限', '$1.0 \\times 10^{11}$', '68 ms', '约 96 倍'],
+        ['标量程序实测', '$1.1 \\times 10^{9}$', '6.5 s', '1'],
+    ], headers=['', '乘加速率（次/s）', '生成 1 个 Token', '相对标量程序'])
+    slide(p, r"""
+- 标量程序每秒从内存读取 0.53 GB 权重，占 51.2 GB/s 的 1.0%；
+- 把 $W$ 缩小到 8 MiB，全部留在 L3 缓存中，乘加速率不变：`./matvec_scalar 1 8` 输出 1.08 GMAC/s；
+- 第二讲判断访存受限，前提是处理器以峰值算力运行。标量程序只使用 1 个核心，每条乘法指令只计算 1 个乘积，乘加速率比带宽上限低约 96 倍：**这个程序的瓶颈在计算**。
+""")
+    p.notes("""
+倍数是乘加速率之比：2.05e12 ÷ 1.07e9 ≈ 1914，1.02e11 ÷ 1.07e9 ≈ 96。生成 1 个 Token 的时间按 7e9 次乘加计算：7e9 ÷ 1.07e9 ≈ 6.5 s。
+W = 8 MiB 时每次矩阵向量乘约 15 ms，程序重复计算 1 秒以上，第一次之后 W 从 L3 缓存读取。
+""")
+
+
+def scalar_gap_fig(p):
+    p.title('实测差距：标量程序与两个上限')
     figure(p, "roofline", 1120)
+    p.notes("""
+int4 权重每字节 2 个，每个权重做 1 次乘加，矩阵向量乘的计算强度是每字节 2 次乘加，位于脊点（40 次/字节）左侧的访存受限区。
+Roofline 的原始论文（Williams 等，2009）在峰值算力之下还画出不使用 SIMD 等条件下的较低上限（ceiling），标量程序处在这类上限之下。
+""")
 
 
 def insn_mix(p):
-    p.title('指令统计：标量循环的指令构成分析')
+    p.title('瓶颈分析：每次乘加执行的指令条数')
     slide(p, r"""
-**标量内积循环的指令清单**：
-- `-Og` 汇编循环体：包含 `movslq`, `movl`, `imull`, `addl`, `addl`, `cmpl`, `jl` 共 **7 条指令**；
-- `-O2` 优化循环体：包含 `movl`, `imull`, `addq`, `addl`, `cmpq`, `jne` 共 **6 条指令**。
+**`gcc -O2 -fno-tree-vectorize` 生成的循环体共 16 条指令，每轮处理 1 字节权重（2 次乘加），平均每次乘加 8 条**：
+- **乘加**：`imul` × 2、`add` × 2，共 4 条；
+- **读取**：`movzbl` 读 1 字节权重，`movsbl` × 2 读 2 个激活值，共 3 条；
+- **拆出 4 位权重**：`mov`、`shr`、`and`、`movzbl`、`sub` × 2，共 6 条；
+- **循环控制**：`add`、`cmp`、`jne`，共 3 条。
 
-**指令类型与开销解构**：
-1. **有效计算指令仅占 1/3**：
-   - 6 条指令中，真正执行乘加数学运算的仅有 `imull`（乘法）与 `addl`（累加）2 条；
-2. **控制与访存指令占 2/3**：
-   - 6 条指令中 4 条不做乘加，全部消耗在内存读取（`movl`）、指针步进（`addq $4`）与循环控制判断（`cmpq` + `jne`）上，占比达 67%；
-3. **处理器执行开销**：
-   - 处理器的译码单元与调度部件需要为大量辅助开销指令服务，限制了算术逻辑单元的吞吐。
+**每个周期发射的指令条数有上限**：
+- 核心每个周期最多发射（送入乱序执行部件）5 条指令，这是 i9-11900H 的 Willow Cove 微架构的发射宽度；
+- `cmp` 与 `jne` 合并为 1 条发射，每轮循环占 15 个发射名额，至少需要 3 个周期；
+- 单核每周期最多完成 $2 \div 3 \approx 0.67$ 次乘加，主频 4.0 GHz 时为 $2.7 \times 10^9$ 次/s。
 """)
-    p.notes('拆解标量循环的指令构成，揭示有效计算与控制开销失衡的问题。')
+    p.notes("""
+循环体取自 objdump -d matvec_scalar。mov %eax,%edx 与 movzbl %al,%eax 在重命名阶段消除，不占用执行单元，但仍占用发射名额。
+每轮 16 条指令中完成乘法与累加的是 4 条，另外 12 条负责读取、拆出 4 位权重与循环控制。
+""")
+
+
+def insn_mix_2(p):
+    p.title('瓶颈分析：每次乘加执行的指令条数')
+    slide(p, r"""
+**指令字节数的影响**：
+- 循环体共 57 字节，第一次执行后保存在核心的指令缓存（每核 32 KiB）中，此后每轮循环从缓存取指令；
+- 每轮循环从内存读取的数据是 1 字节权重，另外从 L1 缓存读取 2 个激活值。
+
+**结论**：
+- 标量程序的乘加速率由每个周期能发射的指令条数决定；
+- 每次乘加需要的指令越少，同样的发射宽度完成的乘加越多。
+""")
 
 
 def insn_mix_fig(p):
-    p.title('指令统计：标量循环的指令构成分析')
+    p.title('瓶颈分析：每次乘加执行的指令条数')
     figure(p, "insn-mix", 1120)
 
 
 def datapath_width(p):
-    p.title('数据通路：标量指令对宽通路的利用率分析')
+    p.title('解决思路：减少每次乘加的指令条数，增加执行的核心数')
     slide(p, r"""
-**现代 CPU 物理通路的硬件现实**：
-- 现代主流 CPU 在微架构层面普遍具备 256 位宽度的物理向量执行单元与内部数据总线；
+**提高乘加速率的两个方向**：
+1. **一条指令完成多次乘加**：256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算（SIMD，单指令多数据）；
+2. **多个核心同时执行**：i9-11900H 的 8 个核心各自执行循环的一部分。
 
-**标量指令的前端开销与产出**：
-- 标量 `imull` 在标量整数乘法器上执行，不占用 256 位向量单元；
-- 处理器为单条标量指令付出完整的取指、译码、调度与退休开销，却仅产出 1 个 32 位运算结果；
-- 相比之下，若使用一条 256 位向量指令，付出相近的前端指令管理开销，即可同时驱动向量算术单元产出 8 个运算结果；
+**两个方向的上限**：
+- 乘加速率随这两项提高，直到达到带宽上限 $1.0 \times 10^{11}$ 次/s；
+- 达到带宽上限之后，提高生成速度需要减少每个 Token 读取的字节数（第二讲的量化），或者提高内存带宽。
 
-**演进诉求**：
-- 硬件需提供指令支持：执行一条机器指令，即可驱动 256 位向量算术单元同时对 8 对 32 位整数执行并行乘加。
+**讲解使用的例子**：向量指令部分沿用第二部分的 32 位整数内积 `dot.c`，它的 `-O2` 标量循环每次乘加执行 6 条指令。
 """)
-    p.notes('现代超标量 CPU 内部数据通路物理宽度与 32 位标量指令的错配。')
+    p.notes('SIMD 与多核两个方向，以及它们共同的上限：内存带宽。')
 
 
 def datapath_width_fig(p):
-    p.title('数据通路：标量指令对宽通路的利用率分析')
+    p.title('解决思路：减少每次乘加的指令条数，增加执行的核心数')
     figure(p, "insn-results", 1120)
 
 
@@ -1574,7 +1641,7 @@ gcc -O2 -mavx2 -fcf-protection=none -S dot.c -o dot_avx2.s && sed -f asm.sed dot
     p.notes("""
 `gcc -O2 -mavx2` 编译生成的真实函数入口代码逐行深入剖析。
 examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号，与页面上的清单一致。
-dot_avx2.s 留在 examples/ 下，第 66、68 页的循环与规约都出自这一份清单。
+dot_avx2.s 留在 examples/ 下，清单中还有向量主循环与水平规约。
 """)
 
 
@@ -1683,7 +1750,7 @@ check  3182690""",
            files=['examples/dot_intrin.c'])
     p.notes("""
 dot_intrin.c 用 __attribute__((target("avx2"))) 只让这一个函数使用 AVX2，运行时用 __builtin_cpu_supports("avx2") 选择版本，不支持 AVX2 的机器走标量版本；check 一行是标量循环的结果。
-gcc -O2 编出的循环比第 66 页多一条 vmovdqa 寄存器拷贝。
+gcc -O2 编出的循环比 dot_avx2.s 的主循环多一条 vmovdqa 寄存器拷贝。
 """)
 
 
@@ -1786,7 +1853,7 @@ def perf_3(p):
   1. 程序内部调用 `clock_gettime(CLOCK_MONOTONIC)` 或通过 `__rdtsc()` 读取时间戳计数器；
   2. 安装 WSL2，在 Ubuntu 子系统内运行原生 Linux `perf`。
 
-**思考题**：若将数组规模 $n$ 扩大至超出 CPU L3 缓存容量（如数百兆字节），加速比将显著下降，直观印证前面讨论的“访存墙”与 Roofline 瓶颈。
+**思考题**：若将数组规模 $n$ 扩大到超出 L3 缓存容量（数百 MiB），两个版本的耗时与加速比会如何变化？
 """)
 
 
@@ -1841,6 +1908,112 @@ dot_omp.c 的循环与页面上的相同，n = 2^24；check 一行是单线程�
 def openmp_fig(p):
     p.title('多核并行：从单核 SIMD 到多核 OpenMP 并发')
     figure(p, "core-lanes", 1120)
+
+
+def memory_wall(p):
+    p.title('访存墙实测：AVX2 版本的矩阵向量乘')
+    slide(p, r"""
+**访存墙**：乘加速率达到带宽上限 $1.0 \times 10^{11}$ 次/s 之后，增加线程数、减少指令条数都不再提高速率，这个上限称为访存墙。
+
+**`matvec_q4.c` 中 `#ifdef __AVX2__` 分支的循环，每轮处理 32 字节权重（64 个权重）**：
+""")
+    p.code('c', """for (int j = 0; j < HALF; j += 32) {
+    __m256i b = _mm256_loadu_si256((const __m256i *)(w + j));
+    __m256i lo = _mm256_and_si256(b, low4);
+    __m256i hi = _mm256_and_si256(_mm256_srli_epi16(b, 4), low4);
+    __m256i xlo = _mm256_loadu_si256((const __m256i *)(x + j));
+    __m256i xhi = _mm256_loadu_si256((const __m256i *)(x + j + HALF));
+    __m256i p = _mm256_add_epi16(_mm256_maddubs_epi16(lo, xlo),
+                                 _mm256_maddubs_epi16(hi, xhi));
+    acc = _mm256_add_epi32(acc, _mm256_madd_epi16(p, ones));
+}""")
+    p.notes("""
+low4 的每个字节是 15，ones 的每个 16 位元素是 1，acc 是 8 个 32 位累加和，循环之前清零。
+""")
+
+
+def memory_wall_2(p):
+    p.title('访存墙实测：AVX2 版本的矩阵向量乘')
+    slide(p, r"""
+**循环中的向量指令**：
+- `vpand` 与 `vpsrlw`（`_mm256_srli_epi16`）从 32 字节中拆出 32 个低 4 位与 32 个高 4 位；
+- `vpmaddubsw`（`_mm256_maddubs_epi16`）一条完成 32 次无符号 8 位数与有符号 8 位数的乘法，相邻两个乘积相加，得到 16 个 16 位和；
+- `vpmaddwd`（`_mm256_madd_epi16`）把 16 位和与全 1 向量相乘，相邻两个相加，得到 8 个 32 位和。
+
+**每次乘加的指令条数**：
+- 编译得到的循环体共 13 条指令，每轮完成 64 次乘加，平均每次乘加约 0.2 条，标量版本是 8 条；
+- 存储值 $q$ 直接参与乘法：$\sum (q - 8)x = \sum qx - 8\sum x$，其中 $8\sum x$ 每行只减一次。
+
+**多线程**：`matvec` 的循环前有 `#pragma omp parallel for`，$W$ 的各行分给多个线程计算，程序的第一个参数是线程数。
+""")
+    p.notes("""
+13 条指令取自 objdump -d matvec_avx2：vmovdqu、vpsrlw、vpand × 2、vpmaddubsw × 2、vpaddw、vpmaddwd、vpaddd、vmovdqa、add、cmp、jne。两条 vpmaddubsw 直接从内存读取激活值。
+q 在 0 到 15 之间，激活值在 -128 到 127 之间，两条 vpmaddubsw 的结果相加后绝对值不超过 4 × 15 × 128 = 7680，16 位不会溢出。
+""")
+
+
+def memory_wall_3(p):
+    p.title('访存墙实测：乘加速率随线程数的变化')
+    p.demo('W = 512 MiB，标量版本与 AVX2 版本各用 1 至 8 个线程',
+           """cd examples
+make matvec_avx2
+for t in 1 2 4 8; do ./matvec_scalar $t; done
+for t in 1 2 4 8; do ./matvec_avx2 $t; done""",
+           output="""gcc -O2 -mavx2 -fopenmp -fcf-protection=none matvec_q4.c -o matvec_avx2
+threads 1  ms 1033.074  GMAC/s 1.04  GB/s 0.52
+threads 2  ms 591.879  GMAC/s 1.81  GB/s 0.91
+threads 4  ms 250.874  GMAC/s 4.28  GB/s 2.14
+threads 8  ms 226.679  GMAC/s 4.74  GB/s 2.37
+threads 1  ms 65.481  GMAC/s 16.40  GB/s 8.20
+threads 2  ms 38.722  GMAC/s 27.73  GB/s 13.86
+threads 4  ms 20.567  GMAC/s 52.21  GB/s 26.10
+threads 8  ms 16.262  GMAC/s 66.03  GB/s 33.01""",
+           bold=[8, 9],
+           files=['examples/matvec_q4.c', 'examples/Makefile'])
+    slide(p, r"""
+- 前 4 行是标量版本，后 4 行是 AVX2 版本。AVX2 版本从 4 线程到 8 线程，乘加速率只提高约 26%，读取速率停在约 33 GB/s。
+""")
+
+
+def memory_wall_4(p):
+    p.title('访存墙实测：乘加速率随线程数的变化')
+    slide(p, r"""
+**对照：$W$ = 8 MiB，小于 24 MiB 的 L3 缓存，第一次计算之后从缓存读取**：
+""")
+    p.demo('W = 8 MiB，1 至 8 个线程',
+           """cd examples
+for t in 1 2 4 8; do ./matvec_avx2 $t 8; done""",
+           output="""threads 1  ms 0.667  GMAC/s 25.14  GB/s 12.57
+threads 2  ms 0.336  GMAC/s 49.89  GB/s 24.94
+threads 4  ms 0.205  GMAC/s 81.84  GB/s 40.92
+threads 8  ms 0.140  GMAC/s 119.67  GB/s 59.83""",
+           bold=[4],
+           files=['examples/matvec_q4.c'])
+    slide(p, r"""
+- 同一个程序的乘加速率随线程数持续上升，8 线程达到 $1.2 \times 10^{11}$ 次/s，超过带宽上限 $1.0 \times 10^{11}$ 次/s；
+- 两次运行只有 $W$ 的大小不同：$W$ 在内存中时，乘加速率的上限由内存带宽决定。
+""")
+
+
+def memory_wall_fig(p):
+    p.title('访存墙实测：乘加速率随线程数的变化')
+    figure(p, "wall", 1120)
+
+
+def memory_wall_5(p):
+    p.title('访存墙实测：乘加速率随线程数的变化')
+    slide(p, r"""
+**实测结论**：
+- AVX2 版本用 4 至 8 个线程时读取速率约 33 GB/s，增加线程不再明显提高乘加速率，程序到达访存墙；
+- 标量版本用 8 个线程只读取 2.4 GB/s。8 个核心都以 4.0 GHz 运行时，标量版本至多 $8 \times 2.7 \times 10^9 \approx 2.1 \times 10^{10}$ 次/s，低于带宽上限，SIMD 与多核两者都需要。
+
+**折算到 7B 模型**：$7 \times 10^9 \div (6.6 \times 10^{10}) \approx 0.11$ s，每秒约 9 个 Token，带宽上限对应每秒 14.6 个。
+
+**到达访存墙之后**，提高生成速度需要减少每个 Token 读取的字节数（第二讲的量化），或者使用带宽更高的内存，例如第二讲中 RTX 5090 的显存带宽 1792 GB/s。
+""")
+    p.notes("""
+51.2 GB/s 是 DDR4-3200 双通道的理论值。DRAM 刷新、行切换与内存控制器的调度都占用时间，只读的实测带宽低于理论值。
+""")
 
 
 def simt(p):
