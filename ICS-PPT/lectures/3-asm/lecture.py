@@ -48,7 +48,7 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
         ss.page("register-slices-2", body=pages.register_slices_2)
         ss.page("register-slices-fig", body=pages.register_slices_fig)
 
-    s.bridge('CPU 如何知晓数据的位置？', id="bridge-part1-address")
+    s.bridge('内存数据被加载到CPU寄存器中参与计算，\n解决了"放到哪"的问题。\n内存数据"从哪取"：CPU 如何知晓数据的位置？', id="bridge-part1-address")
     with s.section('CPU 如何知晓数据的位置？', id="part1-address") as ss:
         ss.page("effective-address", body=pages.effective_address)
         ss.page("addressing-modes", body=pages.addressing_modes)
