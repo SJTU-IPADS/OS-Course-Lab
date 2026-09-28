@@ -139,7 +139,6 @@ gcc dot.o main.o -o dot_product
 def toolchain_fig(p):
     p.title('编译流程：预处理、编译、汇编与链接四阶段')
     figure(p, "toolchain", 1120)
-    p.aside("本课程统一采用 Linux / GNU 工具链默认的 AT&T 语法，对于 Intel 语法，可在课外自行学习")
 
 
 def isa_contract(p):
