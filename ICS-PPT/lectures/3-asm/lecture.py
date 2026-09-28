@@ -49,13 +49,11 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
     s.bridge('内存数据被加载到CPU寄存器中参与计算，\n解决了"放到哪"的问题。\n内存数据"从哪取"：CPU 如何知晓数据的位置？', id="bridge-part1-address")
     with s.section('CPU 如何知晓数据的位置？', id="part1-address") as ss:
         ss.page("effective-address", body=pages.effective_address)
-        ss.page("addressing-modes", body=pages.addressing_modes)
-        ss.page("addressing-modes-2", body=pages.addressing_modes_2)
         ss.page("addressing-modes-fig", body=pages.addressing_modes_fig)
         ss.page("lea-agu", body=pages.lea_agu)
         ss.page("lea-agu-fig", body=pages.lea_agu_fig)
 
-    s.bridge('CPU 如何搬运数据，如何执行运算？', id="bridge-part1-execute")
+    s.bridge('搬运数据的CPU指令', id="bridge-part1-execute")
     with s.section('CPU 如何搬运数据，如何执行运算？', id="part1-execute") as ss:
         ss.page("movl-load", body=pages.movl_load)
         ss.page("movl-load-2", body=pages.movl_load_2)
@@ -63,12 +61,11 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
         ss.page("load-example", body=pages.load_example)
         ss.page("load-example-2", body=pages.load_example_2)
         ss.page("load-example-3", body=pages.load_example_3)
+        ss.bridge('执行运算的CPU指令', id="bridge-part1-compute")
         ss.page("extension", body=pages.extension)
         ss.page("extension-fig", body=pages.extension_fig)
         ss.page("int-arith", body=pages.int_arith)
         ss.page("shift-ops", body=pages.shift_ops)
-        ss.page("shift-ops-3", body=pages.shift_ops_3)
-        ss.page("shift-ops-fig", body=pages.shift_ops_fig)
         ss.page("xor-strength", body=pages.xor_strength)
         ss.page("xor-strength-2", body=pages.xor_strength_2)
         ss.page("mac-exercise", body=pages.mac_exercise)
