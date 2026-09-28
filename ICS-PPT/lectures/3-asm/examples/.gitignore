@@ -1,6 +1,7 @@
 # What the demos leave behind: `gcc dot.c main.c` writes a.out, `make` writes
-# the two binaries perf measures, and the other examples write the program
-# named in their header comment. The .o, .i and .s files are ignored by the
+# the binaries perf measures, the matvec pages build matvec_scalar and
+# matvec_avx2, and the other examples write the program named in their
+# header comment. The .o, .i and .s files are ignored by the
 # top-level .gitignore.
 a.out
 dot_scalar
@@ -13,4 +14,6 @@ overflow_sp
 dot_intrin
 dot_omp
 dot_cuda
+matvec_scalar
+matvec_avx2
 *.exe

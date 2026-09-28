@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""A roofline, log-log, with LLM decoding on the bandwidth slope.
+"""The i9-11900H roofline, log-log, with the scalar int4 matvec on it.
 
-The slope is 50 GB/s of DRAM bandwidth. An int8 7B model reads 7 GB of
-weights per token for 7e9 multiply-adds: one multiply-add (two operations)
-per byte, so it sits at 2 ops/byte and 100 GOPs/s, i.e. 7.1 tokens/s. The
-compute roof is drawn schematically; no peak value is claimed.
+Memory roof: dual-channel DDR4-3200, 51.2 GB/s. Compute roof: 8 cores x 64
+int8 multiply-adds per cycle (vpdpbusd) x 4.0 GHz = 2.05e12 per second; the
+ridge is at 40 multiply-adds per byte. An int4 weight is half a byte and is
+used once, so the matvec sits at 2 multiply-adds per byte, under the memory
+roof at 1.02e11 per second. SCALAR is what ./matvec_scalar measured.
 Run it to refresh ../assets/roofline.svg.
 """
 
@@ -14,13 +15,16 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_RED, INK, LINE, MUTED, ORANGE, RED,
-                    arrow, circle, line, mono, rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_RED, INK, MUTED, ORANGE, RED, WHITE,
+                    arrow, circle, line, rect, save, text)
 
 W, H = 1120, 470
 PX0, PX1, PY0, PY1 = 130, 1000, 50, 390     # plot area
-BW = 50                                      # GB/s
-PEAK = 2000                                  # GOPs/s, schematic only
+BW = 51.2e9                                  # bytes per second
+PEAK = 8 * 64 * 4.0e9                        # multiply-adds per second
+AI = 2                                       # multiply-adds per byte, int4
+SCALAR = 1.07e9                              # ./matvec_scalar, multiply-adds per second
+SUP = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
 
 def gx(i):
@@ -28,7 +32,7 @@ def gx(i):
 
 
 def gy(p):
-    return PY1 - math.log10(p) * (PY1 - PY0) / 4             # 1 .. 10000
+    return PY1 - (math.log10(p) - 8) * (PY1 - PY0) / 5       # 1e8 .. 1e13
 
 
 def build():
@@ -36,41 +40,48 @@ def build():
     out = [rect(PX0, PY0, gx(ridge) - PX0, PY1 - PY0, FILL_RED, "none", rx=0, width=0),
            rect(gx(ridge), PY0, PX1 - gx(ridge), PY1 - PY0, FILL_BLUE, "none", rx=0,
                 width=0),
-           text((PX0 + gx(ridge)) / 2, PY0 + 34, "访存受限区（Memory Bound）", 17, RED,
-                "bold"),
-           text((gx(ridge) + PX1) / 2, PY1 - 60, "计算受限区", 17, BLUE, "bold"),
-           text((gx(ridge) + PX1) / 2, PY1 - 36, "（Compute Bound）", 15, BLUE)]
+           text((PX0 + gx(ridge)) / 2, PY0 + 34, "访存受限区", 17, RED, "bold"),
+           text((gx(ridge) + PX1) / 2, PY1 - 36, "计算受限区", 17, BLUE, "bold")]
     # axes
     out.append(arrow(PX0, PY1, PX1 + 20, PY1, INK, 1.8))
     out.append(arrow(PX0, PY1, PX0, PY0 - 16, INK, 1.8))
     for i in (0.1, 1, 10, 100, 1000):
         out.append(line(gx(i), PY1, gx(i), PY1 + 6, INK, 1.4))
-        out.append(mono(gx(i), PY1 + 24, f"{i:g}", 14, MUTED, anchor="middle"))
-    out.append(text((PX0 + PX1) / 2, PY1 + 58, "计算强度（运算次数 / Byte，对数坐标）", 16, INK))
-    out.append(text(PX0 + 14, PY0 - 8, "性能（GOPs/s，对数坐标）", 16, INK, anchor="start"))
+        out.append(text(gx(i), PY1 + 24, f"{i:g}", 14, MUTED))
+    for e in range(8, 14):
+        out.append(line(PX0 - 6, gy(10 ** e), PX0, gy(10 ** e), INK, 1.4))
+        out.append(text(PX0 - 10, gy(10 ** e) + 5, "10" + str(e).translate(SUP), 15, MUTED,
+                        anchor="end"))
+    out.append(text((PX0 + PX1) / 2, PY1 + 58, "计算强度（每字节权重的乘加次数，对数坐标）", 16,
+                    INK))
+    out.append(text(PX0 + 14, PY0 - 8, "乘加速率（次 / 秒，对数坐标）", 16, INK,
+                    anchor="start"))
     # the roofs
     x0, y0 = gx(0.1), gy(BW * 0.1)
     xr, yr = gx(ridge), gy(PEAK)
     out.append(line(x0, y0, xr, yr, RED, 3.4))
     out.append(line(xr, yr, PX1, yr, BLUE, 3.4))
-    out.append(text(xr + 20, yr - 12, "计算峰值", 15, BLUE, "bold", anchor="start"))
+    out.append(text(PX1, yr + 30, "峰值算力 2.0 × 10¹² 次 / 秒", 16, BLUE, "bold",
+                    anchor="end"))
+    out.append(text(PX1, yr + 54, "8 核 × 64 次 / 周期 × 4.0 GHz", 14, MUTED, anchor="end"))
     ang = math.degrees(math.atan2(yr - y0, xr - x0))
-    mx, my = gx(0.4), gy(BW * 0.4) - 14
+    mx, my = gx(0.35), gy(BW * 0.35) + 26
     out.append(f'<text x="{mx:.1f}" y="{my:.1f}" font-family="PingFang SC, Noto Sans CJK '
                f'SC, sans-serif" font-size="15" font-weight="bold" fill="{RED}" '
                f'text-anchor="middle" transform="rotate({ang:.1f} {mx:.1f} {my:.1f})">'
-               f'斜率 = 内存带宽 50 GB/s</text>')
-    # LLM decoding
-    px, py = gx(2), gy(BW * 2)
-    out.append(line(px, py, px, PY1, MUTED, 1.2, "4 4"))
-    out.append(line(PX0, py, px, py, MUTED, 1.2, "4 4"))
-    out.append(mono(PX0 - 8, py + 5, "100", 14, MUTED, anchor="end"))
-    out.append(circle(px, py, 8, ORANGE, ORANGE))
-    out.append(text(px + 18, py + 30, "大模型自回归解码", 16, ORANGE, "bold", anchor="start"))
-    out.append(text(px + 18, py + 54, "每字节权重 1 次乘加（2 次运算）", 14, INK,
-                    anchor="start"))
-    out.append(text(px + 18, py + 76, "上限 50 GB/s ÷ 7 GB ≈ 7.1 Token/s", 14, INK,
-                    anchor="start"))
+               f'斜率 = 内存带宽 51.2 GB/s</text>')
+    # the int4 matvec: its roof and the measured scalar program
+    px, pr, ps = gx(AI), gy(BW * AI), gy(SCALAR)
+    out.append(line(px, pr, px, PY1, MUTED, 1.2, "4 4"))
+    out.append(text(px, PY1 + 24, "2", 14, INK, "bold"))
+    out.append(circle(px, pr, 8, WHITE, RED, 3))
+    out.append(text(px - 18, pr - 14, "带宽上限 1.0 × 10¹¹", 15, RED, "bold", anchor="end"))
+    out.append(circle(px, ps, 8, ORANGE, ORANGE))
+    out.append(text(px + 18, ps + 5, f"标量程序实测 {SCALAR / 1e9:.1f} × 10⁹", 15, ORANGE,
+                    "bold", anchor="start"))
+    out.append(arrow(px + 30, pr + 12, px + 30, ps - 14, INK, 1.8, both=True))
+    out.append(text(px + 44, (pr + ps) / 2 + 5, f"相差 {BW * AI / SCALAR:.0f} 倍", 16, INK,
+                    "bold", anchor="start"))
     return out
 
 

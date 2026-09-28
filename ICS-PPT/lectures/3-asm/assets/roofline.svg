@@ -2,32 +2,45 @@
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
 <rect x="130.0" y="50.0" width="565.9" height="340.0" rx="0" fill="#fbe7e5" stroke="none" stroke-width="0"/>
 <rect x="695.9" y="50.0" width="304.1" height="340.0" rx="0" fill="#eaf3f7" stroke="none" stroke-width="0"/>
-<text x="413.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="middle">访存受限区（Memory Bound）</text>
-<text x="848.0" y="330.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">计算受限区</text>
-<text x="848.0" y="354.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#156082" text-anchor="middle">（Compute Bound）</text>
+<text x="413.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="middle">访存受限区</text>
+<text x="848.0" y="354.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">计算受限区</text>
 <line x1="130.0" y1="390.0" x2="1020.0" y2="390.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
 <line x1="130.0" y1="390.0" x2="130.0" y2="34.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
 <line x1="130.0" y1="390.0" x2="130.0" y2="396.0" stroke="#0e2841" stroke-width="1.4"/>
-<text x="130.0" y="414.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.1</text>
+<text x="130.0" y="414.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">0.1</text>
 <line x1="347.5" y1="390.0" x2="347.5" y2="396.0" stroke="#0e2841" stroke-width="1.4"/>
-<text x="347.5" y="414.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="347.5" y="414.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
 <line x1="565.0" y1="390.0" x2="565.0" y2="396.0" stroke="#0e2841" stroke-width="1.4"/>
-<text x="565.0" y="414.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<text x="565.0" y="414.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
 <line x1="782.5" y1="390.0" x2="782.5" y2="396.0" stroke="#0e2841" stroke-width="1.4"/>
-<text x="782.5" y="414.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">100</text>
+<text x="782.5" y="414.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">100</text>
 <line x1="1000.0" y1="390.0" x2="1000.0" y2="396.0" stroke="#0e2841" stroke-width="1.4"/>
-<text x="1000.0" y="414.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1000</text>
-<text x="565.0" y="448.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">计算强度（运算次数 / Byte，对数坐标）</text>
-<text x="144.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">性能（GOPs/s，对数坐标）</text>
-<line x1="130.0" y1="330.6" x2="695.9" y2="109.4" stroke="#c0392b" stroke-width="3.4"/>
-<line x1="695.9" y1="109.4" x2="1000.0" y2="109.4" stroke="#156082" stroke-width="3.4"/>
-<text x="715.9" y="97.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">计算峰值</text>
-<text x="260.9" y="265.4" font-family="PingFang SC, Noto Sans CJK SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle" transform="rotate(-21.3 260.9 265.4)">斜率 = 内存带宽 50 GB/s</text>
-<line x1="413.0" y1="220.0" x2="413.0" y2="390.0" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
-<line x1="130.0" y1="220.0" x2="413.0" y2="220.0" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
-<text x="122.0" y="225.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">100</text>
-<circle cx="413.0" cy="220.0" r="8.0" fill="#e97132" stroke="#e97132" stroke-width="1.4"/>
-<text x="431.0" y="250.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start">大模型自回归解码</text>
-<text x="431.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">每字节权重 1 次乘加（2 次运算）</text>
-<text x="431.0" y="296.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">上限 50 GB/s ÷ 7 GB ≈ 7.1 Token/s</text>
+<text x="1000.0" y="414.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1000</text>
+<line x1="124.0" y1="390.0" x2="130.0" y2="390.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="120.0" y="395.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">10⁸</text>
+<line x1="124.0" y1="322.0" x2="130.0" y2="322.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="120.0" y="327.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">10⁹</text>
+<line x1="124.0" y1="254.0" x2="130.0" y2="254.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="120.0" y="259.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">10¹⁰</text>
+<line x1="124.0" y1="186.0" x2="130.0" y2="186.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="120.0" y="191.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">10¹¹</text>
+<line x1="124.0" y1="118.0" x2="130.0" y2="118.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="120.0" y="123.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">10¹²</text>
+<line x1="124.0" y1="50.0" x2="130.0" y2="50.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="120.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">10¹³</text>
+<text x="565.0" y="448.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">计算强度（每字节权重的乘加次数，对数坐标）</text>
+<text x="144.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">乘加速率（次 / 秒，对数坐标）</text>
+<line x1="130.0" y1="273.8" x2="695.9" y2="96.8" stroke="#c0392b" stroke-width="3.4"/>
+<line x1="695.9" y1="96.8" x2="1000.0" y2="96.8" stroke="#156082" stroke-width="3.4"/>
+<text x="1000.0" y="126.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#156082" text-anchor="end">峰值算力 2.0 × 10¹² 次 / 秒</text>
+<text x="1000.0" y="150.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">8 核 × 64 次 / 周期 × 4.0 GHz</text>
+<text x="248.3" y="262.8" font-family="PingFang SC, Noto Sans CJK SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle" transform="rotate(-17.4 248.3 262.8)">斜率 = 内存带宽 51.2 GB/s</text>
+<line x1="413.0" y1="185.3" x2="413.0" y2="390.0" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
+<text x="413.0" y="414.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">2</text>
+<circle cx="413.0" cy="185.3" r="8.0" fill="#ffffff" stroke="#c0392b" stroke-width="3"/>
+<text x="395.0" y="171.3" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="end">带宽上限 1.0 × 10¹¹</text>
+<circle cx="413.0" cy="320.0" r="8.0" fill="#e97132" stroke="#e97132" stroke-width="1.4"/>
+<text x="431.0" y="325.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">标量程序实测 1.1 × 10⁹</text>
+<line x1="443.0" y1="197.3" x2="443.0" y2="306.0" stroke="#0e2841" stroke-width="1.8" marker-start="url(#ah-0e2841)" marker-end="url(#ah-0e2841)"/>
+<text x="457.0" y="257.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">相差 96 倍</text>
 </svg>

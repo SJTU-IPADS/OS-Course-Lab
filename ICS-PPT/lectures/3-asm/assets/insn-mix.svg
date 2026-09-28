@@ -1,33 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 450" width="1120" height="450">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 380" width="1120" height="380">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="20.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">-O2 标量循环体（共 6 条）</text>
-<rect x="20.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="110.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">movl</text>
-<rect x="200.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="290.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">imull</text>
-<rect x="380.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="470.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">addq $4</text>
-<rect x="560.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="650.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">addl</text>
-<rect x="740.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="830.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">cmpq</text>
-<rect x="920.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="1010.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">jne</text>
-<path d="M 290.0 140.0 A 140 140 0 0 1 411.2 210.0 L 362.7 238.0 A 84 84 0 0 0 290.0 196.0 Z" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<path d="M 411.2 210.0 A 140 140 0 0 1 411.2 350.0 L 362.7 322.0 A 84 84 0 0 0 362.7 238.0 Z" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<path d="M 411.2 350.0 A 140 140 0 0 1 290.0 420.0 L 290.0 364.0 A 84 84 0 0 0 362.7 322.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<path d="M 290.0 420.0 A 140 140 0 0 1 168.8 350.0 L 217.3 322.0 A 84 84 0 0 0 290.0 364.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<path d="M 168.8 350.0 A 140 140 0 0 1 168.8 210.0 L 217.3 238.0 A 84 84 0 0 0 217.3 322.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<path d="M 168.8 210.0 A 140 140 0 0 1 290.0 140.0 L 290.0 196.0 A 84 84 0 0 0 217.3 238.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="290.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="26" font-weight="bold" fill="#0e2841" text-anchor="middle">6 条</text>
-<text x="290.0" y="302.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">每轮循环</text>
-<text x="460.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="26" font-weight="bold" fill="#e97132" text-anchor="start">33%</text>
-<text x="120.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="26" font-weight="bold" fill="#5a6b78" text-anchor="end">67%</text>
-<rect x="600.0" y="182.0" width="22.0" height="22.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="634.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">乘加运算：2 条</text>
-<text x="634.0" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">imull（乘法）、addl（累加）</text>
-<rect x="600.0" y="272.0" width="22.0" height="22.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
-<text x="634.0" y="290.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">访存与控制：4 条</text>
-<text x="634.0" y="320.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">movl（读内存）、addq $4（指针步进）、</text>
-<text x="634.0" y="346.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">cmpq + jne（循环判断）</text>
+<text x="20.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">标量循环体：16 条指令，每轮处理 1 字节权重（2 次乘加）</text>
+<rect x="20.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="53.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">movzbl</text>
+<rect x="87.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="121.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">movsbl</text>
+<rect x="155.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="188.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">mov</text>
+<rect x="222.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="256.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">shr</text>
+<rect x="290.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="323.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">and</text>
+<rect x="357.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="391.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">movzbl</text>
+<rect x="425.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="458.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">sub</text>
+<rect x="492.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="526.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">sub</text>
+<rect x="560.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="593.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">imul</text>
+<rect x="627.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="661.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">movsbl</text>
+<rect x="695.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="728.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">add</text>
+<rect x="762.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="796.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">imul</text>
+<rect x="830.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="863.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">add</text>
+<rect x="897.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="931.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">add</text>
+<rect x="965.0" y="42.0" width="67.5" height="46.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="998.8" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">cmp</text>
+<rect x="1032.5" y="42.0" width="67.5" height="46.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="1066.2" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">jne</text>
+<rect x="20.0" y="110.0" width="20.0" height="20.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="50.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">乘加 4 条</text>
+<text x="50.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">imul × 2、add × 2</text>
+<rect x="290.0" y="110.0" width="20.0" height="20.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="320.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">读取 3 条</text>
+<text x="320.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">movzbl 读权重、movsbl × 2 读激活值</text>
+<rect x="560.0" y="110.0" width="20.0" height="20.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="590.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">拆出 4 位权重 6 条</text>
+<text x="590.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">mov、shr、and、movzbl、sub × 2</text>
+<rect x="830.0" y="110.0" width="20.0" height="20.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="860.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">循环控制 3 条</text>
+<text x="860.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">add、cmp、jne</text>
+<text x="20.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">每个周期最多发射 5 条（cmp 与 jne 合并为 1 条）</text>
+<text x="20.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">周期 1</text>
+<rect x="100.0" y="216.0" width="94.0" height="40.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="147.0" y="241.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">movzbl</text>
+<rect x="200.0" y="216.0" width="94.0" height="40.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="247.0" y="241.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">movsbl</text>
+<rect x="300.0" y="216.0" width="94.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="347.0" y="241.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">mov</text>
+<rect x="400.0" y="216.0" width="94.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="447.0" y="241.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">shr</text>
+<rect x="500.0" y="216.0" width="94.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="547.0" y="241.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">and</text>
+<text x="20.0" y="294.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">周期 2</text>
+<rect x="100.0" y="266.0" width="94.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="147.0" y="291.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">movzbl</text>
+<rect x="200.0" y="266.0" width="94.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="247.0" y="291.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">sub</text>
+<rect x="300.0" y="266.0" width="94.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="347.0" y="291.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">sub</text>
+<rect x="400.0" y="266.0" width="94.0" height="40.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="447.0" y="291.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">imul</text>
+<rect x="500.0" y="266.0" width="94.0" height="40.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="547.0" y="291.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">movsbl</text>
+<text x="20.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">周期 3</text>
+<rect x="100.0" y="316.0" width="94.0" height="40.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="147.0" y="341.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">add</text>
+<rect x="200.0" y="316.0" width="94.0" height="40.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="247.0" y="341.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">imul</text>
+<rect x="300.0" y="316.0" width="94.0" height="40.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="347.0" y="341.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">add</text>
+<rect x="400.0" y="316.0" width="94.0" height="40.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="447.0" y="341.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">add</text>
+<rect x="500.0" y="316.0" width="94.0" height="40.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="547.0" y="341.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">cmp+jne</text>
+<text x="660.0" y="250.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">每轮循环至少 3 个周期</text>
+<text x="660.0" y="290.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#e97132" text-anchor="start">每周期最多 2 ÷ 3 ≈ 0.67 次乘加</text>
+<text x="660.0" y="326.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">循环体 57 字节，保存在核心的指令缓存中</text>
 </svg>
