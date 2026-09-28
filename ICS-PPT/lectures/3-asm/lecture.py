@@ -26,9 +26,7 @@ lecture.cover(
 
 with lecture.section('前导概览：硬件系统与程序映射', id="prologue") as s:
     s.page("problem", body=pages.problem)
-    s.page("system-view", body=pages.system_view)
     s.page("system-view-fig", body=pages.system_view_fig)
-    s.page("system-view-2", body=pages.system_view_2)
     s.page("compile-mapping", body=pages.compile_mapping)
     s.page("toolchain", body=pages.toolchain)
     s.page("toolchain-2", body=pages.toolchain_2)

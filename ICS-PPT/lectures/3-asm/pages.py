@@ -29,57 +29,30 @@ def figure(p, name, width):
 def problem(p):
     p.title('问题提出')
     slide(p, r"""
-- 大模型预测一段话的下一个词，其中一个核心数学算子就是 $w$ 和 $x$ 的内积，由推理程序 `ollama` 负责组织完成这些计算。如果在 CPU 上进行推理，这个算子可以由一个简单的 `for` 循环累积来完成。但 CPU 硅片上只有一些晶体管和电路开关，它是怎么把我们需要的指令执行完成的？
+- 模型推理过程中有大量计算是矩阵乘法，例如需要计算 $w$ 和 $x$ 的内积，由推理程序 `ollama` 负责组织完成这些计算。如果在 CPU 上进行推理，内积可以由一个简单的 `for` 循环累积来完成。CPU不认识for、不认识内积，是怎么完成执行的？
 """)
     p.code('c', """int dot_product(const int *w, const int *x, int n) {
     int sum = 0;
     for (int i = 0; i < n; i++) {
-        sum += w[i] * x[i];  // <-- 全节核心主线
+        sum += w[i] * x[i]; 
     }
     return sum;
 }""")
     p.notes('以 ollama 的推理过程提出全节要回答的问题：程序如何在由晶体管构成的 CPU 上执行；并给出全节核心主线程序 dot_product。')
 
 
-def system_view(p):
-    p.title('系统执行：大模型推理的端到端硬件协同')
-    slide(p, r"""
-**计算机核心硬件实体**：
-- **外部存储（Disk）**：非易失性介质，持久化存放可执行程序 `ollama` 与模型权重文件 `llama3.gguf`。
-- **主存储器（DRAM）**：易失性介质，常驻操作系统内核（OS Kernel），受 OS 统一管理分配。
-- **中央处理器（CPU）**：运算核心，包含程序计数器（PC）、寄存器堆、控制单元与算术逻辑部件（ALU）。
-
-**底层二进制统一性（程序与数据都以二进制形式存储）**：
-- 磁盘上的可执行程序 `ollama` 是机器指令二进制流。
-- 磁盘上的模型文件 `llama3.gguf` 是参数权重二进制流。
-- **二者都是比特序列，存储介质不区分指令与数据**。
-""")
-    p.notes('现代计算机整机系统执行模型——以大模型推理引擎（Ollama）的运行过程为例。')
-
-
 def system_view_fig(p):
-    p.title('系统执行：大模型推理的端到端硬件协同')
+    p.title('CPU从内存中获取指令与数据进行计算')
     figure(p, "system-view", 1120).footnote('照片从左到右来自 Wikimedia Commons 的 Evan-Amos（CC BY-SA 3.0）、D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。')
     p.notes('左下的放大框取自 ollama 可执行文件偏移 0xcb4cf0 处的 22 字节，是其中 gonum 库 float32 内积函数 f32.DotUnitary 逐个元素处理的循环：前 3 条完成 sum += w[i] * x[i]，后 3 条更新下标与剩余次数并跳回循环开头。')
 
 
-def system_view_2(p):
-    p.title('系统执行：大模型推理的端到端硬件协同')
-    slide(p, r"""
-**执行的四个阶段**：
-1. **程序装载**：用户在 Shell 键入命令，OS 将 `ollama` 机器指令由 Disk 载入 DRAM 代码区。
-2. **取指运行**：CPU 从 DRAM 取出 `ollama` 指令流执行，产生文件读写与内存映射系统调用。
-3. **数据加载**：操作系统响应系统调用，驱动总线将权重数据从 Disk 读入 DRAM 数据缓存区。
-4. **运算产出**：结合输入 Token 向量 $x$ 与模型权重 $w$，CPU 循环将数据加载到内部寄存器，ALU 完成计算并输出预测 Token。
-""")
-
-
 def compile_mapping(p):
-    p.title('编译映射：从 C 源码到二进制机器指令')
+    p.title('编译：从 C 源码到二进制机器指令')
     p.gap(4)
     slide(p, r"""
 **本节主线算子**：
-- 大模型计算的核心数学算子：向量内积 `dot_product`，这段代码如何才能被 CPU 执行？
+- 大模型计算的数学算子：向量内积 `dot_product`，这段代码如何才能被 CPU 执行？
 
 **同一段代码的三种表示**：
 1. **高级语言（C）**：面向程序员的控制结构与变量符号抽象。
