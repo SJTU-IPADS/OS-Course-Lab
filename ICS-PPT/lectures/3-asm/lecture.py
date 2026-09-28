@@ -46,7 +46,6 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
     with s.section('数据在内存里，如何参与 CPU 的运算？', id="part1-operands") as ss:
         ss.page("von-neumann", body=pages.von_neumann)
         ss.page("visible-state", body=pages.visible_state)
-        ss.page("visible-state-fig", body=pages.visible_state_fig)
         ss.page("visible-state-2", body=pages.visible_state_2)
         ss.page("register-slices", body=pages.register_slices)
         ss.page("register-slices-2", body=pages.register_slices_2)
