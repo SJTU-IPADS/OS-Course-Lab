@@ -160,7 +160,7 @@ def single_mac_fig(p):
 
 
 def visible_state(p):
-    p.title('硬件状态：程序员可见状态与寄存器堆设计约束')
+    p.title('程序员可见状态：寄存器')
     slide(p, r"""
 **程序员可见状态（Programmer-Visible State）**：
 - 指令集架构直接暴露给软件程序、能够被指令读取和修改的全部硬件实体：
