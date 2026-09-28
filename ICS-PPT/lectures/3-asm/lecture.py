@@ -43,10 +43,8 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
 
     with s.section('数据在内存里，如何参与 CPU 的运算？', id="part1-operands") as ss:
         ss.page("visible-state", body=pages.visible_state)
-        ss.page("visible-state-2", body=pages.visible_state_2)
-        ss.page("register-slices", body=pages.register_slices)
-        ss.page("register-slices-2", body=pages.register_slices_2)
         ss.page("register-slices-fig", body=pages.register_slices_fig)
+        ss.page("visible-state-2", body=pages.visible_state_2)
 
     s.bridge('CPU 如何知晓数据的位置？', id="bridge-part1-address")
     with s.section('CPU 如何知晓数据的位置？', id="part1-address") as ss:
