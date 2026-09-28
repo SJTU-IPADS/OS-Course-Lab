@@ -106,35 +106,28 @@ def toolchain_fig(p):
 
 
 def isa_contract(p):
-    p.title('体系契约：指令集架构与微架构实现的解耦')
+    p.title('指令集架构')
     slide(p, r"""
 程序编译之后得到的是二进制机器码。但 CPU 执行需要能够认识这段二进制所代表的指令，因此二进制编码与 CPU 指令之间的约定必不可少。
 
 **指令集架构（ISA: Instruction Set Architecture）的定义**：
 - ISA 是软件与硬件电路之间达成的接口契约规范，在长期演进中保持严格的向后兼容性。
-- **ISA 规范的内容**：
+- **ISA包括如下**：
   - **程序员可见状态**：程序计数器（PC / `%rip`）、16 个通用寄存器、条件码寄存器（RFLAGS）、连续虚拟内存空间；
   - **指令编码与格式**：每条机器指令的二进制操作码、操作数编码规则与指令长度；
   - **支持的数据类型与寻址模式**。
+  - ...
 """)
     p.notes('指令集架构（ISA）的契约定义、程序员可见状态，以及 ISA 与微架构实现的解耦关系。')
 
 
-def isa_contract_2(p):
-    p.title('体系契约：指令集架构与微架构实现的解耦')
+def isa_contract_fig(p):
+    p.title('指令集架构与微架构实现的解耦')
     slide(p, r"""
-**ISA 与微架构（Microarchitecture）的解耦**：
 - **ISA 是接口（Interface）**：规定处理器能执行什么；
 - **微架构是实现（Implementation）**：规定处理器在物理电路层面如何执行。
-- **现实案例**：
-  - Intel Core i9-11900H（Tiger Lake 架构）与 AMD Ryzen 7000（Zen 4 架构）运行同一套 x86-64 ISA；
-  - 两者可无缝执行同一个可执行文件，但在内部的流水线级数、乱序调度窗口、分支预测器和执行端口数量等微架构设计上不同。
 """)
-
-
-def isa_contract_fig(p):
-    p.title('体系契约：指令集架构与微架构实现的解耦')
-    figure(p, "isa-contract", 1120)
+    figure(p, "isa-contract", 1040)
 
 
 def single_mac(p):

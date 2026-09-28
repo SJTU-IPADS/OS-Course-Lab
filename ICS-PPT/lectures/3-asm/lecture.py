@@ -32,10 +32,9 @@ with lecture.section('前导概览：硬件系统与程序映射', id="prologue"
     s.page("toolchain-2", body=pages.toolchain_2)
     s.page("toolchain-fig", body=pages.toolchain_fig)
     s.page("isa-contract", body=pages.isa_contract)
-    s.page("isa-contract-2", body=pages.isa_contract_2)
     s.page("isa-contract-fig", body=pages.isa_contract_fig)
 
-lecture.bridge('第一部分：执行单次计算\n运算只能在寄存器上进行', id="bridge-part1")
+lecture.bridge('第一部分：执行单次计算', id="bridge-part1")
 
 
 with lecture.section('第一部分：执行单次计算——运算只能在寄存器上进行', id="part1") as s:
