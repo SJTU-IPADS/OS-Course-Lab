@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 430" width="1120" height="430">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="398.0" y="26.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">每个核心内的 SIMD 通道（AVX2，8 × int32）</text>
+<text x="181.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 0</text>
+<text x="243.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 1</text>
+<text x="305.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 2</text>
+<text x="367.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 3</text>
+<text x="429.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 4</text>
+<text x="491.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 5</text>
+<text x="553.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 6</text>
+<text x="615.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Lane 7</text>
+<text x="136.0" y="85.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 0</text>
+<rect x="152.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="214.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="276.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="338.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="400.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="462.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="524.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="586.0" y="60.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="136.0" y="129.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 1</text>
+<rect x="152.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="214.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="276.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="338.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="400.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="462.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="524.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="586.0" y="104.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="136.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 2</text>
+<rect x="152.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="214.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="276.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="338.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="400.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="462.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="524.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="586.0" y="148.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="136.0" y="217.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 3</text>
+<rect x="152.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="214.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="276.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="338.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="400.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="462.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="524.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="586.0" y="192.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="136.0" y="261.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 4</text>
+<rect x="152.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="214.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="276.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="338.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="400.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="462.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="524.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="586.0" y="236.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="136.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 5</text>
+<rect x="152.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="214.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="276.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="338.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="400.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="462.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="524.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="586.0" y="280.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="136.0" y="349.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 6</text>
+<rect x="152.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="214.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="276.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="338.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="400.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="462.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="524.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<rect x="586.0" y="324.0" width="58.0" height="38.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="136.0" y="393.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">Core 7</text>
+<rect x="152.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="214.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="276.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="338.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="400.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="462.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="524.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="586.0" y="368.0" width="58.0" height="38.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<path d="M 656.0 60.0 L 664.0 60.0 L 664.0 406.0 L 656.0 406.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
+<text x="672.0" y="238.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start"></text>
+<text x="686.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">OpenMP：8 个线程</text>
+<text x="686.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">迭代范围切成 8 段，每个核心一段</text>
+<text x="686.0" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">每个核心：AVX2 向量指令</text>
+<text x="686.0" y="256.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">一条指令处理 8 个通道</text>
+<text x="686.0" y="320.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="22" font-weight="bold" fill="#e97132" text-anchor="start">8 核 × 8 通道 = 64 通道</text>
+</svg>

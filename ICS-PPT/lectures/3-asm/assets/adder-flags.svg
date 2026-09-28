@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 490" width="1120" height="490">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="119.0" width="330.0" height="112.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="40.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="start">a = 0xffffffff</text>
+<text x="40.0" y="189.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#e97132" text-anchor="start">unsigned：4294967295</text>
+<text x="40.0" y="217.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#156082" text-anchor="start">int：-1</text>
+<rect x="20.0" y="279.0" width="330.0" height="112.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="40.0" y="315.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="start">b = 0x00000001</text>
+<text x="40.0" y="349.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#e97132" text-anchor="start">unsigned：1</text>
+<text x="40.0" y="377.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#156082" text-anchor="start">int：1</text>
+<path d="M 420 100 L 520 170 L 520 340 L 420 410 L 420 279.0 L 442 255.0 L 420 231.0 Z" fill="#eef2f4" stroke="#0e2841" stroke-width="2"/>
+<text x="480.0" y="267.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="34" font-weight="bold" fill="#0e2841" text-anchor="middle">+</text>
+<text x="470.0" y="446.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">addl</text>
+<text x="470.0" y="476.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">只有一个加法器</text>
+<line x1="350.0" y1="175.0" x2="416.0" y2="175.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="350.0" y1="335.0" x2="416.0" y2="335.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="600.0" y="223.0" width="260.0" height="64.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="730.0" y="262.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">0x00000000</text>
+<line x1="520.0" y1="255.0" x2="596.0" y2="255.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="730.0" y="317.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">写回 %eax：两种解释下位串相同</text>
+<path d="M 506.0 160.0 L 560.0 160.0 L 560.0 60.0 L 716.0 60.0" fill="none" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="574.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#e97132" text-anchor="start">最高位进位</text>
+<rect x="720.0" y="28.0" width="110.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="775.0" y="67.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">CF = 1</text>
+<text x="850.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">无符号：结果超出范围</text>
+<text x="850.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#e97132" text-anchor="start">由 jb、ja 等读取</text>
+<path d="M 506.0 350.0 L 560.0 350.0 L 560.0 450.0 L 716.0 450.0" fill="none" stroke="#156082" stroke-width="2.4" marker-end="url(#ah-156082)"/>
+<text x="574.0" y="436.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#156082" text-anchor="start">符号位与溢出检测</text>
+<rect x="720.0" y="418.0" width="110.0" height="64.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="775.0" y="457.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">OF = 0</text>
+<text x="850.0" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">有符号：-1 + 1 = 0，SF = 0</text>
+<text x="850.0" y="472.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#156082" text-anchor="start">由 jl、jg 等读取</text>
+</svg>

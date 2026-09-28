@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 420" width="1120" height="420">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="12.0" y="8.0" width="540.0" height="404.0" rx="8" fill="#ffffff" stroke="#156082" stroke-width="1.8"/>
+<rect x="12.0" y="8.0" width="540.0" height="58.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="28.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#156082" text-anchor="start">实验一</text>
+<text x="28.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">反汇编对照与寻址模式</text>
+<rect x="28.0" y="84.0" width="508.0" height="34.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="40.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">gcc -Og -S dot.c</text>
+<line x1="282.0" y1="118.0" x2="282.0" y2="132.0" stroke="#156082" stroke-width="1.6" marker-end="url(#ah-156082)"/>
+<rect x="28.0" y="132.0" width="508.0" height="34.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="40.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">gcc -c dot.s</text>
+<line x1="282.0" y1="166.0" x2="282.0" y2="180.0" stroke="#156082" stroke-width="1.6" marker-end="url(#ah-156082)"/>
+<rect x="28.0" y="180.0" width="508.0" height="34.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="40.0" y="203.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">objdump -d dot.o</text>
+<text x="28.0" y="272.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="start">观察与记录</text>
+<text x="28.0" y="306.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">· 标出 (%rsi,%r8,4) 寻址</text>
+<text x="28.0" y="338.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">· 换用 -O2：addq $4 步进指针</text>
+<rect x="568.0" y="8.0" width="540.0" height="404.0" rx="8" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.8"/>
+<rect x="568.0" y="8.0" width="540.0" height="58.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="584.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">实验二</text>
+<text x="584.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">向量加速比与性能测量</text>
+<rect x="584.0" y="84.0" width="508.0" height="34.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="596.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">make -C examples</text>
+<line x1="838.0" y1="118.0" x2="838.0" y2="132.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<rect x="584.0" y="132.0" width="508.0" height="34.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="596.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">perf stat -e instructions,cycles</text>
+<line x1="838.0" y1="166.0" x2="838.0" y2="180.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<rect x="584.0" y="180.0" width="508.0" height="34.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="596.0" y="203.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">dot_scalar / dot_avx2</text>
+<text x="584.0" y="272.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">观察与记录</text>
+<text x="584.0" y="306.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">· 指令数、周期数、加速比</text>
+<text x="584.0" y="338.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">· Windows：WSL2 或 clock_gettime</text>
+<text x="584.0" y="370.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">· n 超出 L3：加速比变化</text>
+</svg>

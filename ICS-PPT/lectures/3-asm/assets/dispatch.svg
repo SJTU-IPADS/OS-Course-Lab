@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 200" width="1120" height="200">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="10.0" y="72.0" width="120.0" height="56.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="70.0" y="105.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">程序启动</text>
+<line x1="130.0" y1="100.0" x2="160.0" y2="100.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="164.0" y="66.0" width="170.0" height="68.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="249.0" y="97.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">cpuid</text>
+<text x="249.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">读取特性位</text>
+<line x1="334.0" y1="100.0" x2="364.0" y2="100.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="368.0" y="66.0" width="170.0" height="68.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="453.0" y="97.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">判定特性</text>
+<text x="453.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">AVX2 / AVX-512 …</text>
+<line x1="538.0" y1="100.0" x2="638.0" y2="18.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="640.0" y="4.0" width="470.0" height="28.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="650.0" y="23.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">libggml-cpu-x64.so</text>
+<text x="1100.0" y="23.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">x86-64 基线</text>
+<line x1="538.0" y1="100.0" x2="638.0" y2="50.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="640.0" y="36.0" width="470.0" height="28.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="650.0" y="55.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">libggml-cpu-sse42.so</text>
+<text x="1100.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">SSE4.2</text>
+<line x1="538.0" y1="100.0" x2="638.0" y2="82.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="640.0" y="68.0" width="470.0" height="28.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="650.0" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">libggml-cpu-haswell.so</text>
+<text x="1100.0" y="87.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">AVX2 + FMA</text>
+<line x1="538.0" y1="100.0" x2="638.0" y2="114.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="640.0" y="100.0" width="470.0" height="28.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="650.0" y="119.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">libggml-cpu-alderlake.so</text>
+<text x="1100.0" y="119.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">AVX2 + AVX_VNNI</text>
+<line x1="538.0" y1="100.0" x2="638.0" y2="146.0" stroke="#e97132" stroke-width="2.4"/>
+<rect x="640.0" y="132.0" width="470.0" height="28.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="650.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">libggml-cpu-icelake.so</text>
+<text x="1100.0" y="151.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="end">AVX-512 + VBMI + VNNI</text>
+<line x1="538.0" y1="100.0" x2="638.0" y2="178.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="640.0" y="164.0" width="470.0" height="28.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="650.0" y="183.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">libggml-cpu-zen4.so</text>
+<text x="1100.0" y="183.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">AVX-512</text>
+<text x="453.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">加载对应的动态库</text>
+</svg>

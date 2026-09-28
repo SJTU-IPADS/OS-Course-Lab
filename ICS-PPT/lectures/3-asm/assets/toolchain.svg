@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 330" width="1120" height="330">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<path d="M 12 130 L 120 130 L 136 146 L 136 214 L 12 214 Z" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<path d="M 120 130 L 120 146 L 136 146" fill="none" stroke="#156082" stroke-width="1.2"/>
+<text x="74.0" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">dot.c</text>
+<text x="74.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">C 源文件</text>
+<path d="M 254 130 L 362 130 L 378 146 L 378 214 L 254 214 Z" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<path d="M 362 130 L 362 146 L 378 146" fill="none" stroke="#156082" stroke-width="1.2"/>
+<text x="316.0" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">dot.i</text>
+<text x="316.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">预处理后的 C</text>
+<path d="M 496 130 L 604 130 L 620 146 L 620 214 L 496 214 Z" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<path d="M 604 130 L 604 146 L 620 146" fill="none" stroke="#156082" stroke-width="1.2"/>
+<text x="558.0" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">dot.s</text>
+<text x="558.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">汇编文本</text>
+<path d="M 738 130 L 846 130 L 862 146 L 862 214 L 738 214 Z" fill="#eef2f4" stroke="#156082" stroke-width="1.6"/>
+<path d="M 846 130 L 846 146 L 862 146" fill="none" stroke="#156082" stroke-width="1.2"/>
+<text x="800.0" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">dot.o</text>
+<text x="800.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">ELF 可重定位</text>
+<path d="M 980 130 L 1088 130 L 1104 146 L 1104 214 L 980 214 Z" fill="#eef2f4" stroke="#156082" stroke-width="1.6"/>
+<path d="M 1088 130 L 1088 146 L 1104 146" fill="none" stroke="#156082" stroke-width="1.2"/>
+<text x="1042.0" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">dot_product</text>
+<text x="1042.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">ELF 可执行文件</text>
+<rect x="147.0" y="20.0" width="96.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="195.0" y="49.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">cpp</text>
+<text x="195.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">① 预处理</text>
+<line x1="195.0" y1="84.0" x2="195.0" y2="164.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="142.0" y1="172.0" x2="248.0" y2="172.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="195.0" y="198.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">gcc -E</text>
+<rect x="389.0" y="20.0" width="96.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="437.0" y="49.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">cc1</text>
+<text x="437.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">② 编译</text>
+<line x1="437.0" y1="84.0" x2="437.0" y2="164.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="384.0" y1="172.0" x2="490.0" y2="172.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="437.0" y="198.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">gcc -S</text>
+<rect x="631.0" y="20.0" width="96.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="679.0" y="49.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">as</text>
+<text x="679.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">③ 汇编</text>
+<line x1="679.0" y1="84.0" x2="679.0" y2="164.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="626.0" y1="172.0" x2="732.0" y2="172.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="679.0" y="198.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">gcc -c</text>
+<rect x="873.0" y="20.0" width="96.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="921.0" y="49.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">ld</text>
+<text x="921.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">④ 链接</text>
+<line x1="921.0" y1="84.0" x2="921.0" y2="164.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="868.0" y1="172.0" x2="974.0" y2="172.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<path d="M 738 236 L 846 236 L 862 252 L 862 320 L 738 320 Z" fill="#eef2f4" stroke="#156082" stroke-width="1.6"/>
+<path d="M 846 236 L 846 252 L 862 252" fill="none" stroke="#156082" stroke-width="1.2"/>
+<text x="800.0" y="274.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">main.o</text>
+<text x="800.0" y="300.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">ELF 可重定位</text>
+<path d="M 868.0 278.0 L 921.0 278.0 L 921.0 180.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+</svg>

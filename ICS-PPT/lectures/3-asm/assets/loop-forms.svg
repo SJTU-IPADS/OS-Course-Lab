@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 500" width="1120" height="500">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="170.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">do-while</text>
+<text x="170.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">翻译 do-while 循环</text>
+<rect x="60.0" y="90.0" width="220.0" height="64.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="170.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">循环体</text>
+<rect x="60.0" y="230.0" width="220.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="170.0" y="257.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">cmp</text>
+<text x="170.0" y="279.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">jcc 回到循环体</text>
+<rect x="60.0" y="390.0" width="220.0" height="50.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="170.0" y="421.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">退出</text>
+<line x1="170.0" y1="72.0" x2="170.0" y2="86.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="170.0" y1="154.0" x2="170.0" y2="226.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="170.0" y1="294.0" x2="170.0" y2="386.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 280.0 262.0 L 310.0 262.0 L 310.0 122.0 L 284.0 122.0" fill="none" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="316.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">满足</text>
+<text x="555.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">jump-to-middle</text>
+<text x="555.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">翻译 while 循环，-Og 采用</text>
+<rect x="445.0" y="90.0" width="220.0" height="44.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="555.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">jmp 到判断</text>
+<rect x="445.0" y="170.0" width="220.0" height="64.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="555.0" y="208.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">循环体</text>
+<rect x="445.0" y="290.0" width="220.0" height="80.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="555.0" y="314.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">判断</text>
+<text x="555.0" y="336.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">cmp</text>
+<text x="555.0" y="358.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">jcc 回到循环体</text>
+<rect x="445.0" y="420.0" width="220.0" height="50.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="555.0" y="451.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">退出</text>
+<line x1="555.0" y1="72.0" x2="555.0" y2="86.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 445.0 112.0 L 415.0 112.0 L 415.0 330.0 L 441.0 330.0" fill="none" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="409.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">入口跳到判断</text>
+<line x1="555.0" y1="234.0" x2="555.0" y2="286.0" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah-5a6b78)"/>
+<line x1="555.0" y1="370.0" x2="555.0" y2="416.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 665.0 330.0 L 695.0 330.0 L 695.0 202.0 L 669.0 202.0" fill="none" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="701.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">满足</text>
+<text x="935.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">guarded-do</text>
+<text x="935.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">翻译 while 循环，-O2 采用</text>
+<rect x="825.0" y="90.0" width="220.0" height="64.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="935.0" y="117.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">cmp</text>
+<text x="935.0" y="139.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">jcc 跳过循环</text>
+<rect x="825.0" y="200.0" width="220.0" height="64.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="935.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">循环体</text>
+<rect x="825.0" y="310.0" width="220.0" height="64.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="935.0" y="337.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">cmp</text>
+<text x="935.0" y="359.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">jcc 回到循环体</text>
+<rect x="825.0" y="420.0" width="220.0" height="50.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="935.0" y="451.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">退出</text>
+<line x1="935.0" y1="72.0" x2="935.0" y2="86.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="935.0" y1="154.0" x2="935.0" y2="196.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="943.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">满足</text>
+<line x1="935.0" y1="264.0" x2="935.0" y2="306.0" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah-5a6b78)"/>
+<line x1="935.0" y1="374.0" x2="935.0" y2="416.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 1045.0 342.0 L 1071.0 342.0 L 1071.0 232.0 L 1049.0 232.0" fill="none" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="1075.0" y="292.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">满足</text>
+<path d="M 825.0 122.0 L 799.0 122.0 L 799.0 445.0 L 821.0 445.0" fill="none" stroke="#2e7d4f" stroke-width="2.4" marker-end="url(#ah-2e7d4f)"/>
+<text x="793.0" y="290.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="end">不满足</text>
+</svg>

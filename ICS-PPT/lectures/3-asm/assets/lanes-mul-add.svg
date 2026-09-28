@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 470" width="1120" height="470">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="44.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">%ymm2</text>
+<text x="20.0" y="62.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">w[i..i+7]</text>
+<text x="20.0" y="100.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">内存</text>
+<text x="20.0" y="118.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">x[i..i+7]</text>
+<rect x="980.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="1030.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+0]</text>
+<rect x="868.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="918.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+1]</text>
+<rect x="756.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="806.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+2]</text>
+<rect x="644.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="694.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+3]</text>
+<rect x="532.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="582.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+4]</text>
+<rect x="420.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="470.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+5]</text>
+<rect x="308.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="358.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+6]</text>
+<rect x="196.0" y="28.0" width="100.0" height="36.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="246.0" y="51.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[i+7]</text>
+<rect x="980.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="1030.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+0]</text>
+<rect x="868.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="918.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+1]</text>
+<rect x="756.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="806.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+2]</text>
+<rect x="644.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="694.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+3]</text>
+<rect x="532.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="582.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+4]</text>
+<rect x="420.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="470.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+5]</text>
+<rect x="308.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="358.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+6]</text>
+<rect x="196.0" y="84.0" width="100.0" height="36.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="246.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[i+7]</text>
+<line x1="1016.0" y1="120.0" x2="1022.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="1044.0" y1="120.0" x2="1038.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="1030.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="1030.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="1030.0" y1="192.0" x2="1030.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="1068.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s0</text>
+<line x1="1060.0" y1="298.0" x2="1044.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="1030.0" y1="262.0" x2="1024.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="1030.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="1030.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="1030.0" y1="346.0" x2="1030.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="904.0" y1="120.0" x2="910.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="932.0" y1="120.0" x2="926.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="918.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="918.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="918.0" y1="192.0" x2="918.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="956.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s1</text>
+<line x1="948.0" y1="298.0" x2="932.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="918.0" y1="262.0" x2="912.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="918.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="918.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="918.0" y1="346.0" x2="918.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="792.0" y1="120.0" x2="798.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="820.0" y1="120.0" x2="814.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="806.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="806.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="806.0" y1="192.0" x2="806.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="844.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s2</text>
+<line x1="836.0" y1="298.0" x2="820.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="806.0" y1="262.0" x2="800.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="806.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="806.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="806.0" y1="346.0" x2="806.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="680.0" y1="120.0" x2="686.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="708.0" y1="120.0" x2="702.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="694.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="694.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="694.0" y1="192.0" x2="694.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="732.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s3</text>
+<line x1="724.0" y1="298.0" x2="708.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="694.0" y1="262.0" x2="688.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="694.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="694.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="694.0" y1="346.0" x2="694.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="568.0" y1="120.0" x2="574.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="596.0" y1="120.0" x2="590.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="582.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="582.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="582.0" y1="192.0" x2="582.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="620.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s4</text>
+<line x1="612.0" y1="298.0" x2="596.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="582.0" y1="262.0" x2="576.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="582.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="582.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="582.0" y1="346.0" x2="582.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="456.0" y1="120.0" x2="462.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="484.0" y1="120.0" x2="478.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="470.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="470.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="470.0" y1="192.0" x2="470.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="508.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s5</text>
+<line x1="500.0" y1="298.0" x2="484.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="470.0" y1="262.0" x2="464.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="470.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="470.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="470.0" y1="346.0" x2="470.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="344.0" y1="120.0" x2="350.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="372.0" y1="120.0" x2="366.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="358.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="358.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="358.0" y1="192.0" x2="358.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="396.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s6</text>
+<line x1="388.0" y1="298.0" x2="372.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="358.0" y1="262.0" x2="352.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="358.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="358.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="358.0" y1="346.0" x2="358.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<line x1="232.0" y1="120.0" x2="238.0" y2="160.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="260.0" y1="120.0" x2="254.0" y2="160.0" stroke="#5a6b78" stroke-width="1.4"/>
+<circle cx="246.0" cy="176.0" r="16.0" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="246.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">×</text>
+<line x1="246.0" y1="192.0" x2="246.0" y2="222.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<text x="284.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="middle">s7</text>
+<line x1="276.0" y1="298.0" x2="260.0" y2="318.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="246.0" y1="262.0" x2="240.0" y2="314.0" stroke="#e97132" stroke-width="1.4"/>
+<circle cx="246.0" cy="330.0" r="16.0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="246.0" y="336.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">+</text>
+<line x1="246.0" y1="346.0" x2="246.0" y2="386.0" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#ah-2e7d4f)"/>
+<rect x="980.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="1030.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积0</text>
+<rect x="868.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="918.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积1</text>
+<rect x="756.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="806.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积2</text>
+<rect x="644.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="694.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积3</text>
+<rect x="532.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="582.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积4</text>
+<rect x="420.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="470.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积5</text>
+<rect x="308.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="358.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积6</text>
+<rect x="196.0" y="226.0" width="100.0" height="36.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="246.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">积7</text>
+<text x="20.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="start">vpmulld</text>
+<text x="20.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">8 个乘法器</text>
+<text x="20.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">vpaddd</text>
+<text x="20.0" y="366.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">8 个加法器</text>
+<text x="20.0" y="252.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">%ymm0</text>
+<text x="20.0" y="296.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#2e7d4f" text-anchor="start">%ymm1 原累加和</text>
+<rect x="980.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="1030.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s0</text>
+<rect x="868.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="918.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s1</text>
+<rect x="756.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="806.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s2</text>
+<rect x="644.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="694.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s3</text>
+<rect x="532.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="582.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s4</text>
+<rect x="420.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="470.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s5</text>
+<rect x="308.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="358.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s6</text>
+<rect x="196.0" y="390.0" width="100.0" height="36.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="246.0" y="413.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">s7</text>
+<text x="20.0" y="414.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">%ymm1</text>
+<text x="20.0" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">新累加和</text>
+<text x="560.0" y="456.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">一条指令驱动 8 个通道同时运算</text>
+</svg>

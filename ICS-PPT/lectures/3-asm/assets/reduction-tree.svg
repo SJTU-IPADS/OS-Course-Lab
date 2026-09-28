@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 380" width="1120" height="380">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="280.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%ymm1</text>
+<rect x="1006.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="1050.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s0</text>
+<rect x="906.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="950.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s1</text>
+<rect x="806.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="850.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s2</text>
+<rect x="706.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="750.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s3</text>
+<rect x="606.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="650.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s4</text>
+<rect x="506.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="550.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s5</text>
+<rect x="406.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="450.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s6</text>
+<rect x="306.0" y="20.0" width="88.0" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="350.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">s7</text>
+<line x1="1050.0" y1="60.0" x2="1050.0" y2="110.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="650.0" y1="60.0" x2="1052.0" y2="110.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<line x1="950.0" y1="60.0" x2="950.0" y2="110.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="550.0" y1="60.0" x2="952.0" y2="110.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<line x1="850.0" y1="60.0" x2="850.0" y2="110.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="450.0" y1="60.0" x2="852.0" y2="110.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<line x1="750.0" y1="60.0" x2="750.0" y2="110.0" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="350.0" y1="60.0" x2="752.0" y2="110.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="20.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">vextracti128 + vpaddd：t_k = s_k + s_(k+4)</text>
+<text x="280.0" y="136.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%xmm0</text>
+<rect x="1006.0" y="110.0" width="88.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1050.0" y="136.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">t0</text>
+<rect x="906.0" y="110.0" width="88.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="950.0" y="136.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">t1</text>
+<rect x="806.0" y="110.0" width="88.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="850.0" y="136.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">t2</text>
+<rect x="706.0" y="110.0" width="88.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="750.0" y="136.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">t3</text>
+<line x1="1050.0" y1="150.0" x2="1050.0" y2="200.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="850.0" y1="150.0" x2="1052.0" y2="200.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<line x1="950.0" y1="150.0" x2="950.0" y2="200.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="750.0" y1="150.0" x2="952.0" y2="200.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="20.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">vpsrldq $8 + vpaddd：u_k = t_k + t_(k+2)</text>
+<text x="280.0" y="226.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%xmm0</text>
+<rect x="1006.0" y="200.0" width="88.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1050.0" y="226.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">u0</text>
+<rect x="906.0" y="200.0" width="88.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="950.0" y="226.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">u1</text>
+<line x1="1050.0" y1="240.0" x2="1050.0" y2="290.0" stroke="#156082" stroke-width="1.4"/>
+<line x1="950.0" y1="240.0" x2="1052.0" y2="290.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="20.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">vpsrldq $4 + vpaddd：v = u0 + u1</text>
+<text x="280.0" y="316.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">%xmm0</text>
+<rect x="1006.0" y="290.0" width="88.0" height="40.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="1050.0" y="316.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">v</text>
+<line x1="1050.0" y1="330.0" x2="1050.0" y2="350.0" stroke="#e97132" stroke-width="1.6"/>
+<text x="990.0" y="370.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">vmovd → %ecx</text>
+</svg>

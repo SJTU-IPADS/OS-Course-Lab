@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 450" width="1120" height="450">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">-O2 标量循环体（共 6 条）</text>
+<rect x="20.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="110.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">movl</text>
+<rect x="200.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="290.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">imull</text>
+<rect x="380.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="470.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">addq $4</text>
+<rect x="560.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="650.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">addl</text>
+<rect x="740.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="830.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">cmpq</text>
+<rect x="920.0" y="44.0" width="180.0" height="50.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="1010.0" y="75.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">jne</text>
+<path d="M 290.0 140.0 A 140 140 0 0 1 411.2 210.0 L 362.7 238.0 A 84 84 0 0 0 290.0 196.0 Z" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<path d="M 411.2 210.0 A 140 140 0 0 1 411.2 350.0 L 362.7 322.0 A 84 84 0 0 0 362.7 238.0 Z" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<path d="M 411.2 350.0 A 140 140 0 0 1 290.0 420.0 L 290.0 364.0 A 84 84 0 0 0 362.7 322.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 290.0 420.0 A 140 140 0 0 1 168.8 350.0 L 217.3 322.0 A 84 84 0 0 0 290.0 364.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 168.8 350.0 A 140 140 0 0 1 168.8 210.0 L 217.3 238.0 A 84 84 0 0 0 217.3 322.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 168.8 210.0 A 140 140 0 0 1 290.0 140.0 L 290.0 196.0 A 84 84 0 0 0 217.3 238.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="290.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="26" font-weight="bold" fill="#0e2841" text-anchor="middle">6 条</text>
+<text x="290.0" y="302.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">每轮循环</text>
+<text x="460.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="26" font-weight="bold" fill="#e97132" text-anchor="start">33%</text>
+<text x="120.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="26" font-weight="bold" fill="#5a6b78" text-anchor="end">67%</text>
+<rect x="600.0" y="182.0" width="22.0" height="22.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="634.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">乘加运算：2 条</text>
+<text x="634.0" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">imull（乘法）、addl（累加）</text>
+<rect x="600.0" y="272.0" width="22.0" height="22.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="634.0" y="290.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">访存与控制：4 条</text>
+<text x="634.0" y="320.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">movl（读内存）、addq $4（指针步进）、</text>
+<text x="634.0" y="346.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">cmpq + jne（循环判断）</text>
+</svg>

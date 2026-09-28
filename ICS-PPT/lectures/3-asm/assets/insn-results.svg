@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 360" width="1120" height="360">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="62.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="start">imull</text>
+<text x="20.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">标量指令</text>
+<rect x="170.0" y="40.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="203.0" y="70.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">取指</text>
+<rect x="244.0" y="40.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="277.0" y="70.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">译码</text>
+<rect x="318.0" y="40.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="351.0" y="70.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">调度</text>
+<rect x="392.0" y="40.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="425.0" y="70.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">退休</text>
+<line x1="466.0" y1="65.0" x2="500.0" y2="65.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="504.0" y="34.0" width="150.0" height="62.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="579.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">标量乘法器</text>
+<text x="579.0" y="83.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 位</text>
+<line x1="654.0" y1="65.0" x2="690.0" y2="65.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="694.0" y="44.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="713.0" y="71.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<text x="694.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">1 个 32 位结果</text>
+<text x="20.0" y="232.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="start">vpmulld</text>
+<text x="20.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">向量指令</text>
+<rect x="170.0" y="210.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="203.0" y="240.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">取指</text>
+<rect x="244.0" y="210.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="277.0" y="240.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">译码</text>
+<rect x="318.0" y="210.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="351.0" y="240.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">调度</text>
+<rect x="392.0" y="210.0" width="66.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="425.0" y="240.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">退休</text>
+<line x1="466.0" y1="235.0" x2="500.0" y2="235.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="504.0" y="204.0" width="210.0" height="62.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="609.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">256 位向量单元</text>
+<text x="609.0" y="253.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">8 个 32 位通道</text>
+<line x1="714.0" y1="235.0" x2="750.0" y2="235.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="754.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="773.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="794.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="813.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="834.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="853.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="874.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="893.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="914.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="933.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="954.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="973.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="994.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="1013.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<rect x="1034.0" y="214.0" width="38.0" height="42.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="1053.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">32</text>
+<text x="754.0" y="288.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">8 个 32 位结果</text>
+<path d="M 170.0 170.0 L 170.0 178.0 L 458.0 178.0 L 458.0 170.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="314.0" y="197.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="middle">每条指令的管理开销相近</text>
+</svg>

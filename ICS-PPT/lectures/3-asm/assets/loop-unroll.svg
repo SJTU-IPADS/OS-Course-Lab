@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 190" width="1120" height="190">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="70.0" width="240.0" height="100.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="140.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">单次乘加（i = 0）</text>
+<text x="140.0" y="120.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">movl</text>
+<text x="140.0" y="138.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">imull</text>
+<text x="140.0" y="156.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">addl</text>
+<line x1="268.0" y1="120.0" x2="330.0" y2="120.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="340.0" y="92.0" width="112.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="396.0" y="125.8" font-family="monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">i = 0</text>
+<line x1="454.0" y1="120.0" x2="466.0" y2="120.0" stroke="#156082" stroke-width="1.6" marker-end="url(#ah-156082)"/>
+<rect x="468.0" y="92.0" width="112.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="524.0" y="125.8" font-family="monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">i = 1</text>
+<line x1="582.0" y1="120.0" x2="594.0" y2="120.0" stroke="#156082" stroke-width="1.6" marker-end="url(#ah-156082)"/>
+<rect x="596.0" y="92.0" width="112.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="652.0" y="125.8" font-family="monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">i = 2</text>
+<line x1="710.0" y1="120.0" x2="722.0" y2="120.0" stroke="#156082" stroke-width="1.6" marker-end="url(#ah-156082)"/>
+<rect x="724.0" y="92.0" width="112.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="780.0" y="125.8" font-family="monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">i = 3</text>
+<line x1="838.0" y1="120.0" x2="850.0" y2="120.0" stroke="#156082" stroke-width="1.6" marker-end="url(#ah-156082)"/>
+<text x="908.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="980.0" y="92.0" width="112.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1036.0" y="125.8" font-family="monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">i = 4095</text>
+<text x="740.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">展开后共 4096 份相同的乘加指令</text>
+<path d="M 1036 88 C 1000 40, 440 40, 400 88" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#ah-c0392b)"/>
+<text x="720.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="middle">回环：同一段指令重复执行 4096 次</text>
+</svg>

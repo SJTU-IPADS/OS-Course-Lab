@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 324" width="1120" height="324">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="30.0" y="20.0" width="200.0" height="60.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="130.0" y="47.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">Base：%rdi</text>
+<text x="130.0" y="68.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x2000</text>
+<rect x="30.0" y="122.0" width="200.0" height="60.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="130.0" y="149.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">Index：%rcx</text>
+<text x="130.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<rect x="30.0" y="236.0" width="200.0" height="60.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="130.0" y="263.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">Disp：8</text>
+<text x="130.0" y="284.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">指令中的立即数</text>
+<rect x="290.0" y="122.0" width="150.0" height="60.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="365.0" y="149.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">左移 2 位</text>
+<text x="365.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">× 4 → 12</text>
+<rect x="290.0" y="206.0" width="150.0" height="38.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="365.0" y="230.4" font-family="monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">SIB.scale = 10</text>
+<line x1="365.0" y1="204.0" x2="365.0" y2="186.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="365.0" y="292.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#e97132" text-anchor="middle">2 位字段选择移位量</text>
+<path d="M 500 14 L 590 94 L 590 210 L 500 290 L 500 176.0 L 522 152.0 L 500 128.0 Z" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<text x="556.0" y="162.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="30" font-weight="bold" fill="#156082" text-anchor="middle">+</text>
+<text x="545.0" y="314.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">三输入加法器</text>
+<rect x="640.0" y="117.0" width="170.0" height="70.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="725.0" y="149.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">有效地址</text>
+<text x="725.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">0x2014</text>
+<line x1="590.0" y1="152.0" x2="636.0" y2="152.0" stroke="#0e2841" stroke-width="2.6" marker-end="url(#ah-0e2841)"/>
+<rect x="900.0" y="14.0" width="200.0" height="80.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="1000.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">内存总线</text>
+<text x="1000.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">读写地址 0x2014</text>
+<rect x="900.0" y="214.0" width="200.0" height="80.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="1000.0" y="251.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<text x="1000.0" y="272.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">%eax = 0x2014</text>
+<path d="M 814.0 142.0 L 850.0 142.0 L 850.0 54.0 L 896.0 54.0" fill="none" stroke="#5a6b78" stroke-width="2.4" marker-end="url(#ah-5a6b78)"/>
+<path d="M 814.0 162.0 L 850.0 162.0 L 850.0 254.0 L 896.0 254.0" fill="none" stroke="#2e7d4f" stroke-width="2.6" marker-end="url(#ah-2e7d4f)"/>
+<text x="862.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="start">访问内存</text>
+<text x="862.0" y="186.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">lea</text>
+<text x="862.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#2e7d4f" text-anchor="start">不访问内存</text>
+<line x1="230.0" y1="50.0" x2="496.0" y2="50.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
+<line x1="230.0" y1="152.0" x2="286.0" y2="152.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
+<line x1="440.0" y1="152.0" x2="518.0" y2="152.0" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
+<line x1="230.0" y1="266.0" x2="496.0" y2="266.0" stroke="#5a6b78" stroke-width="2.2" marker-end="url(#ah-5a6b78)"/>
+<text x="365.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">组合逻辑：单周期内完成</text>
+</svg>

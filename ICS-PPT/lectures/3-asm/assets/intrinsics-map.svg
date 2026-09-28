@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 440" width="1120" height="440">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="280.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">C 语言 Intrinsics（&lt;immintrin.h&gt;）</text>
+<text x="900.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">机器指令</text>
+<rect x="20.0" y="70.0" width="520.0" height="46.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="36.0" y="99.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">__m256i</text>
+<rect x="700.0" y="70.0" width="400.0" height="46.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="716.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">%ymm 寄存器（256 位）</text>
+<line x1="544.0" y1="93.0" x2="696.0" y2="93.0" stroke="#5a6b78" stroke-width="2"/>
+<rect x="20.0" y="128.0" width="520.0" height="46.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="36.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">_mm256_setzero_si256()</text>
+<rect x="700.0" y="128.0" width="400.0" height="46.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="716.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">vpxor %xmm1, %xmm1, %xmm1</text>
+<line x1="544.0" y1="151.0" x2="696.0" y2="151.0" stroke="#5a6b78" stroke-width="2"/>
+<rect x="20.0" y="186.0" width="520.0" height="46.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="36.0" y="215.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">_mm256_loadu_si256(&amp;w[i])</text>
+<rect x="700.0" y="186.0" width="400.0" height="46.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="716.0" y="215.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">vmovdqu</text>
+<line x1="544.0" y1="209.0" x2="696.0" y2="209.0" stroke="#156082" stroke-width="2"/>
+<rect x="20.0" y="244.0" width="520.0" height="46.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="36.0" y="273.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">_mm256_loadu_si256(&amp;x[i])</text>
+<rect x="20.0" y="302.0" width="520.0" height="46.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="36.0" y="331.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">_mm256_mullo_epi32(va, vb)</text>
+<rect x="700.0" y="302.0" width="400.0" height="46.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="716.0" y="331.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">vpmulld</text>
+<line x1="544.0" y1="325.0" x2="696.0" y2="325.0" stroke="#e97132" stroke-width="2"/>
+<rect x="20.0" y="360.0" width="520.0" height="46.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="36.0" y="389.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">_mm256_add_epi32(vsum, vprod)</text>
+<rect x="700.0" y="360.0" width="400.0" height="46.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="716.0" y="389.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">vpaddd</text>
+<line x1="544.0" y1="383.0" x2="696.0" y2="383.0" stroke="#2e7d4f" stroke-width="2"/>
+<path d="M 544.0 267.0 L 620.0 267.0 L 620.0 317.0 L 696.0 317.0" fill="none" stroke="#156082" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="716.0" y="273.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#156082" text-anchor="start">没有单独的指令：并入 vpmulld 的内存操作数</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 210" width="1120" height="210">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="10.0" width="540.0" height="190.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="34.0" y="36.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#a9b6bf" text-anchor="start">int dot_product(const int *w, const int *x, int n) {</text>
+<text x="34.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#a9b6bf" text-anchor="start" xml:space="preserve">    int sum = 0;</text>
+<text x="34.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#a9b6bf" text-anchor="start" xml:space="preserve">    for (int i = 0; i &lt; n; i++) {</text>
+<rect x="28.0" y="91.0" width="524.0" height="24.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="34.0" y="108.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve">        sum += w[i] * x[i];</text>
+<text x="34.0" y="132.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#a9b6bf" text-anchor="start" xml:space="preserve">    }</text>
+<text x="34.0" y="156.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#a9b6bf" text-anchor="start" xml:space="preserve">    return sum;</text>
+<text x="34.0" y="180.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#a9b6bf" text-anchor="start">}</text>
+<text x="380.0" y="188.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start">i = 0：w[0] * x[0]</text>
+<rect x="610.0" y="20.0" width="220.0" height="170.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="720.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">DRAM</text>
+<text x="626.0" y="95.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">w</text>
+<rect x="646.0" y="70.0" width="58.0" height="38.0" rx="2" fill="#fce9df" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="675.0" y="94.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[0]</text>
+<rect x="704.0" y="70.0" width="58.0" height="38.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="733.0" y="94.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">w[1]</text>
+<rect x="762.0" y="70.0" width="58.0" height="38.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="791.0" y="94.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">…</text>
+<text x="626.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">x</text>
+<rect x="646.0" y="126.0" width="58.0" height="38.0" rx="2" fill="#fce9df" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="675.0" y="150.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[0]</text>
+<rect x="704.0" y="126.0" width="58.0" height="38.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="733.0" y="150.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">x[1]</text>
+<rect x="762.0" y="126.0" width="58.0" height="38.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="791.0" y="150.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">…</text>
+<rect x="900.0" y="20.0" width="200.0" height="170.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1000.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">CPU</text>
+<rect x="930.0" y="70.0" width="140.0" height="40.0" rx="6" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<text x="1000.0" y="95.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器</text>
+<rect x="930.0" y="126.0" width="140.0" height="44.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="1000.0" y="153.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">ALU：× +</text>
+<line x1="834.0" y1="105.0" x2="896.0" y2="105.0" stroke="#c0392b" stroke-width="2.4" stroke-dasharray="6 4" marker-end="url(#ah-c0392b)"/>
+<text x="865.0" y="92.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="22" font-weight="bold" fill="#c0392b" text-anchor="middle">?</text>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 270" width="1120" height="270">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="20.0" width="520.0" height="230.0" rx="10" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="280.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#156082" text-anchor="middle">调用者保存（Caller-saved）× 9</text>
+<rect x="44.0" y="74.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="88.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rax</text>
+<rect x="140.0" y="74.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="184.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rcx</text>
+<rect x="236.0" y="74.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="280.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rdx</text>
+<rect x="332.0" y="74.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="376.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rsi</text>
+<rect x="428.0" y="74.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="472.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rdi</text>
+<rect x="44.0" y="124.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="88.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r8</text>
+<rect x="140.0" y="124.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="184.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r9</text>
+<rect x="236.0" y="124.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="280.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r10</text>
+<rect x="332.0" y="124.0" width="88.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="376.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r11</text>
+<text x="280.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">被调用者可以直接改写</text>
+<text x="280.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">调用后还要用：调用者在调用前保存</text>
+<rect x="560.0" y="20.0" width="380.0" height="230.0" rx="10" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="750.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#2e7d4f" text-anchor="middle">被调用者保存（Callee-saved）× 6</text>
+<rect x="584.0" y="74.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="636.7" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rbx</text>
+<rect x="697.3" y="74.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="750.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rbp</text>
+<rect x="810.7" y="74.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="863.3" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r12</text>
+<rect x="584.0" y="124.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="636.7" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r13</text>
+<rect x="697.3" y="124.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="750.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r14</text>
+<rect x="810.7" y="124.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="863.3" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r15</text>
+<text x="750.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">调用前后值必须相同</text>
+<text x="750.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">要使用：入口保存、退出前恢复</text>
+<rect x="960.0" y="20.0" width="140.0" height="230.0" rx="10" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.8"/>
+<text x="1030.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">栈指针</text>
+<rect x="984.0" y="74.0" width="92.0" height="40.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="1030.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rsp</text>
+<text x="1030.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">单独管理</text>
+<text x="1030.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">见运行时栈</text>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" width="1120" height="520">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">软件</text>
+<rect x="180.0" y="20.0" width="250.0" height="70.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="305.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">ollama 源代码</text>
+<text x="305.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">Go 与 C/C++</text>
+<rect x="500.0" y="20.0" width="250.0" height="70.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="625.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">编译器</text>
+<text x="625.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">go build 与 gcc</text>
+<rect x="820.0" y="20.0" width="250.0" height="70.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="945.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">可执行文件</text>
+<text x="945.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">ollama</text>
+<line x1="434.0" y1="55.0" x2="496.0" y2="55.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="754.0" y1="55.0" x2="816.0" y2="55.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="945.0" y1="94.0" x2="945.0" y2="126.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="170.0" y="130.0" width="930.0" height="120.0" rx="0" fill="#fce9df" stroke="none" stroke-width="0"/>
+<line x1="170.0" y1="130.0" x2="1100.0" y2="130.0" stroke="#e97132" stroke-width="4"/>
+<line x1="170.0" y1="250.0" x2="1100.0" y2="250.0" stroke="#e97132" stroke-width="4"/>
+<text x="20.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">ISA</text>
+<text x="20.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">接口</text>
+<text x="635.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">x86-64 指令集架构：软硬件之间的契约</text>
+<rect x="198.0" y="184.0" width="280.7" height="46.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.4"/>
+<text x="338.3" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">程序员可见状态</text>
+<rect x="494.7" y="184.0" width="280.7" height="46.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.4"/>
+<text x="635.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">指令编码与格式</text>
+<rect x="791.3" y="184.0" width="280.7" height="46.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.4"/>
+<text x="931.7" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">数据类型与寻址模式</text>
+<text x="20.0" y="392.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">微架构</text>
+<text x="20.0" y="416.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">实现</text>
+<line x1="250.0" y1="292.0" x2="250.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="250.0" y1="488.0" x2="250.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="292.5" y1="292.0" x2="292.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="292.5" y1="488.0" x2="292.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="335.0" y1="292.0" x2="335.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="335.0" y1="488.0" x2="335.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="377.5" y1="292.0" x2="377.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="377.5" y1="488.0" x2="377.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="420.0" y1="292.0" x2="420.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="420.0" y1="488.0" x2="420.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="462.5" y1="292.0" x2="462.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="462.5" y1="488.0" x2="462.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="505.0" y1="292.0" x2="505.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="505.0" y1="488.0" x2="505.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="547.5" y1="292.0" x2="547.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="547.5" y1="488.0" x2="547.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="590.0" y1="292.0" x2="590.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="590.0" y1="488.0" x2="590.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<rect x="220.0" y="300.0" width="400.0" height="188.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<text x="420.0" y="330.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">Intel Core i9-11900H</text>
+<text x="420.0" y="352.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">Tiger Lake 微架构</text>
+<rect x="236.0" y="366.0" width="176.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="324.0" y="389.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">流水线</text>
+<rect x="428.0" y="366.0" width="176.0" height="36.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="516.0" y="389.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">分支预测器</text>
+<rect x="236.0" y="410.0" width="110.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="291.0" y="430.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="356.0" y="410.0" width="110.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="411.0" y="430.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="476.0" y="410.0" width="128.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="540.0" y="430.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<rect x="236.0" y="448.0" width="368.0" height="26.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="420.0" y="466.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">乱序调度窗口</text>
+<line x1="680.0" y1="292.0" x2="680.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="680.0" y1="488.0" x2="680.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="722.5" y1="292.0" x2="722.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="722.5" y1="488.0" x2="722.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="765.0" y1="292.0" x2="765.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="765.0" y1="488.0" x2="765.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="807.5" y1="292.0" x2="807.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="807.5" y1="488.0" x2="807.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="850.0" y1="292.0" x2="850.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="850.0" y1="488.0" x2="850.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="892.5" y1="292.0" x2="892.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="892.5" y1="488.0" x2="892.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="935.0" y1="292.0" x2="935.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="935.0" y1="488.0" x2="935.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="977.5" y1="292.0" x2="977.5" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="977.5" y1="488.0" x2="977.5" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="1020.0" y1="292.0" x2="1020.0" y2="300.0" stroke="#5a6b78" stroke-width="2"/>
+<line x1="1020.0" y1="488.0" x2="1020.0" y2="496.0" stroke="#5a6b78" stroke-width="2"/>
+<rect x="650.0" y="300.0" width="400.0" height="188.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<text x="850.0" y="330.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">AMD Ryzen 7000</text>
+<text x="850.0" y="352.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">Zen 4 微架构</text>
+<rect x="666.0" y="366.0" width="368.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="850.0" y="386.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">乱序调度窗口</text>
+<rect x="666.0" y="404.0" width="86.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="709.0" y="424.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="760.0" y="404.0" width="86.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="803.0" y="424.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="854.0" y="404.0" width="86.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="897.0" y="424.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="948.0" y="404.0" width="86.0" height="30.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="991.0" y="424.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="666.0" y="442.0" width="120.0" height="32.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="726.0" y="463.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<rect x="794.0" y="442.0" width="110.0" height="32.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="849.0" y="463.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">流水线</text>
+<rect x="912.0" y="442.0" width="122.0" height="32.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="973.0" y="463.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">分支预测器</text>
+<line x1="420.0" y1="252.0" x2="420.0" y2="288.0" stroke="#e97132" stroke-width="2.4" marker-start="url(#ah-e97132)" marker-end="url(#ah-e97132)"/>
+<line x1="850.0" y1="252.0" x2="850.0" y2="288.0" stroke="#e97132" stroke-width="2.4" marker-start="url(#ah-e97132)" marker-end="url(#ah-e97132)"/>
+<text x="635.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">同一个可执行文件</text>
+</svg>

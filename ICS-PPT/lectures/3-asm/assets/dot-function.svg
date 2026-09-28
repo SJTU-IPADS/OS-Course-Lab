@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" width="1120" height="520">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="40.0" y="10.0" width="470.0" height="492.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="60.0" y="39.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">dot_product:</text>
+<rect x="54.0" y="50.0" width="430.0" height="30.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<text x="60.0" y="71.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        movl    $0, %eax</text>
+<rect x="54.0" y="82.0" width="430.0" height="30.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<text x="60.0" y="103.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        movl    $0, %r9d</text>
+<rect x="54.0" y="114.0" width="430.0" height="30.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<text x="60.0" y="135.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        jmp     .L2</text>
+<text x="60.0" y="167.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">.L3:</text>
+<rect x="54.0" y="178.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="199.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        movslq  %eax, %r8</text>
+<rect x="54.0" y="210.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="231.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        movl    (%rsi,%r8,4), %ecx</text>
+<rect x="54.0" y="242.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="263.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        imull   (%rdi,%r8,4), %ecx</text>
+<rect x="54.0" y="274.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="295.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        addl    %ecx, %r9d</text>
+<rect x="54.0" y="306.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="327.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        addl    $1, %eax</text>
+<text x="60.0" y="359.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">.L2:</text>
+<rect x="54.0" y="370.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="391.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        cmpl    %edx, %eax</text>
+<rect x="54.0" y="402.0" width="430.0" height="30.0" rx="3" fill="#eaf3f7" stroke="none" stroke-width="0"/>
+<text x="60.0" y="423.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        jl      .L3</text>
+<rect x="54.0" y="434.0" width="430.0" height="30.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="60.0" y="455.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        movl    %r9d, %eax</text>
+<rect x="54.0" y="466.0" width="430.0" height="30.0" rx="3" fill="#e5f3ea" stroke="none" stroke-width="0"/>
+<text x="60.0" y="487.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        ret</text>
+<path d="M 530.0 52.0 L 538.0 52.0 L 538.0 140.0 L 530.0 140.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="546.0" y="102.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="start">入口：i = 0，sum = 0，先跳到判断</text>
+<text x="556.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">参数 %rdi、%rsi、%edx 由调用方放好</text>
+<path d="M 530.0 148.0 L 538.0 148.0 L 538.0 428.0 L 530.0 428.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="546.0" y="294.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="start">循环计算：第二部分的循环代码</text>
+<text x="556.0" y="320.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">只用调用者保存寄存器</text>
+<path d="M 530.0 436.0 L 538.0 436.0 L 538.0 460.0 L 530.0 460.0" fill="none" stroke="#e97132" stroke-width="1.6"/>
+<text x="546.0" y="454.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="start">返回值装填：sum → %eax</text>
+<path d="M 530.0 468.0 L 538.0 468.0 L 538.0 492.0 L 530.0 492.0" fill="none" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="546.0" y="486.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">返回：ret</text>
+<text x="556.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">叶子函数：不建立栈帧，也没有寄存器恢复开销</text>
+</svg>

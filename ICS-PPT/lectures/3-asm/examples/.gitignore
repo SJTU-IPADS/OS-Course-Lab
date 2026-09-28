@@ -1,0 +1,14 @@
+# What the demos leave behind: `gcc dot.c main.c` writes a.out, `make` writes
+# the two binaries perf measures, and the other examples write the program
+# named in their header comment. The .o, .i and .s files are ignored by the
+# top-level .gitignore.
+a.out
+dot_scalar
+dot_avx2
+dot_product
+dot_dbg
+dot_rec
+dot_intrin
+dot_omp
+dot_cuda
+*.exe

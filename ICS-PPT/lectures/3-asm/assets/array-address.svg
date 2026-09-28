@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 190" width="1120" height="190">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="80.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="110.0" y1="94.0" x2="110.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="140.0" y1="94.0" x2="140.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="170.0" y1="94.0" x2="170.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="140.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[0]</text>
+<text x="80.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">w_base</text>
+<line x1="80.0" y1="106.0" x2="80.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="200.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="230.0" y1="94.0" x2="230.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="260.0" y1="94.0" x2="260.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="290.0" y1="94.0" x2="290.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="260.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[1]</text>
+<text x="200.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">+4</text>
+<line x1="200.0" y1="106.0" x2="200.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="320.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="350.0" y1="94.0" x2="350.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="380.0" y1="94.0" x2="380.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="410.0" y1="94.0" x2="410.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="380.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[2]</text>
+<text x="320.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">+8</text>
+<line x1="320.0" y1="106.0" x2="320.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="440.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<line x1="470.0" y1="94.0" x2="470.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="500.0" y1="94.0" x2="500.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="530.0" y1="94.0" x2="530.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="500.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">w[3]</text>
+<text x="440.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">+12</text>
+<line x1="440.0" y1="106.0" x2="440.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="560.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="590.0" y1="94.0" x2="590.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="620.0" y1="94.0" x2="620.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="650.0" y1="94.0" x2="650.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="620.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[4]</text>
+<text x="560.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">+16</text>
+<line x1="560.0" y1="106.0" x2="560.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="680.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="710.0" y1="94.0" x2="710.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="740.0" y1="94.0" x2="740.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="770.0" y1="94.0" x2="770.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="740.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[5]</text>
+<text x="680.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">+20</text>
+<line x1="680.0" y1="106.0" x2="680.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="800.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="830.0" y1="94.0" x2="830.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="860.0" y1="94.0" x2="860.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="890.0" y1="94.0" x2="890.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="860.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[6]</text>
+<text x="800.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">+24</text>
+<line x1="800.0" y1="106.0" x2="800.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="920.0" y="50.0" width="120.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<line x1="950.0" y1="94.0" x2="950.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="980.0" y1="94.0" x2="980.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<line x1="1010.0" y1="94.0" x2="1010.0" y2="106.0" stroke="#5a6b78" stroke-width="1"/>
+<text x="980.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">w[7]</text>
+<text x="920.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">+28</text>
+<line x1="920.0" y1="106.0" x2="920.0" y2="116.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="140.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">每个 int 占 4 字节</text>
+<path d="M 82.0 146.0 L 82.0 154.0 L 438.0 154.0 L 438.0 146.0" fill="none" stroke="#e97132" stroke-width="1.6"/>
+<text x="260.0" y="173.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">3 × 4 = 12 字节</text>
+</svg>

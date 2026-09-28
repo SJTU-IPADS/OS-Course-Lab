@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 290" width="1120" height="290">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<g transform="translate(0,14)">
+<rect x="20.0" y="44.0" width="240.0" height="66.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="140.0" y="74.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rip = 0x36</text>
+<text x="140.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">下一条指令的地址</text>
+<rect x="20.0" y="158.0" width="240.0" height="66.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="140.0" y="188.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">偏移 = -22</text>
+<text x="140.0" y="209.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">指令字节 0xea，符号扩展</text>
+<path d="M 320 26 L 400 86 L 400 182 L 320 242 L 320 154.0 L 338 134.0 L 320 114.0 Z" fill="#eef2f4" stroke="#0e2841" stroke-width="2"/>
+<text x="368.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="28" font-weight="bold" fill="#0e2841" text-anchor="middle">+</text>
+<line x1="260.0" y1="77.0" x2="316.0" y2="77.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
+<line x1="260.0" y1="191.0" x2="316.0" y2="191.0" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
+<rect x="460.0" y="101.0" width="180.0" height="66.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="550.0" y="131.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">目标 = 0x20</text>
+<text x="550.0" y="152.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">.L3：循环体开头</text>
+<line x1="400.0" y1="134.0" x2="456.0" y2="134.0" stroke="#2e7d4f" stroke-width="2.4" marker-end="url(#ah-2e7d4f)"/>
+<path d="M 550.0 99.0 L 550.0 12.0 L 140.0 12.0 L 140.0 40.0" fill="none" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="560.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">写入 %rip</text>
+</g>
+<text x="690.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">示例：dot.o（-Og）中的 jl .L3</text>
+<rect x="690.0" y="44.0" width="420.0" height="110.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<rect x="696.0" y="82.0" width="408.0" height="32.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="704.0" y="72.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">0x32</text>
+<text x="765.2" y="72.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">39 d0</text>
+<text x="867.2" y="72.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">cmp  %edx, %eax</text>
+<text x="704.0" y="106.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">0x34</text>
+<text x="765.2" y="106.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">7c</text>
+<text x="795.8" y="106.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#e97132" text-anchor="start">ea</text>
+<text x="867.2" y="106.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">jl   .L3</text>
+<text x="704.0" y="140.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">0x36</text>
+<text x="765.2" y="140.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">44 89 c8</text>
+<text x="867.2" y="140.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">mov  %r9d, %eax</text>
+<text x="690.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="start">① 下一条指令地址：0x34 + 2 = 0x36</text>
+<text x="690.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="start">② 偏移字节 0xea 符号扩展：0xea - 0x100 = -22</text>
+<text x="690.0" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">③ 目标地址：0x36 + (-22) = 0x20，即 .L3</text>
+<text x="690.0" y="278.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">向后跳转偏移为负；代码整体搬移后偏移不变</text>
+</svg>

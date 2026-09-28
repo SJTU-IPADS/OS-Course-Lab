@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 256" width="1120" height="256">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="24.0" width="180.0" height="70.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="110.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rsi</text>
+<text x="110.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 = x</text>
+<circle cx="22.0" cy="26.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="22.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">①</text>
+<line x1="204.0" y1="59.0" x2="232.0" y2="59.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="250.0" y="24.0" width="200.0" height="70.0" rx="6" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<text x="350.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">TLB</text>
+<text x="350.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">虚拟地址 → 物理地址</text>
+<circle cx="252.0" cy="26.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="252.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">②</text>
+<line x1="454.0" y1="59.0" x2="482.0" y2="59.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="500.0" y="24.0" width="170.0" height="70.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="585.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">L1 Cache</text>
+<text x="585.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">命中：直接读出</text>
+<circle cx="502.0" cy="26.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="502.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">③</text>
+<line x1="674.0" y1="59.0" x2="702.0" y2="59.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="720.0" y="24.0" width="190.0" height="70.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="815.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">读数据通路</text>
+<text x="815.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 位数据 x[0]</text>
+<circle cx="722.0" cy="26.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="722.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">④</text>
+<rect x="500.0" y="160.0" width="170.0" height="56.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="585.0" y="194.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">DRAM</text>
+<line x1="555.0" y1="98.0" x2="555.0" y2="156.0" stroke="#5a6b78" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-5a6b78)"/>
+<line x1="615.0" y1="156.0" x2="615.0" y2="98.0" stroke="#5a6b78" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-5a6b78)"/>
+<text x="548.0" y="134.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">未命中</text>
+<rect x="730.0" y="160.0" width="185.0" height="48.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="915.0" y="160.0" width="185.0" height="48.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="822.5" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">高 32 位：清零</text>
+<text x="1007.5" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">%eax = x[0]</text>
+<text x="730.0" y="228.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="start">%rax</text>
+<text x="917.0" y="228.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">31</text>
+<text x="1100.0" y="228.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">0</text>
+<path d="M 1008.0 98.0 L 1008.0 156.0" fill="none" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="1016.0" y="134.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">写回</text>
+<rect x="20.0" y="140.0" width="420.0" height="96.0" rx="8" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="40.0" y="180.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">movl (%rsi), (%rdi)</text>
+<line x1="36.0" y1="174.0" x2="290.0" y2="174.0" stroke="#c0392b" stroke-width="2.4"/>
+<text x="40.0" y="214.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">非法：源与目的不能同时为内存</text>
+<line x1="360.0" y1="168.0" x2="400.0" y2="208.0" stroke="#c0392b" stroke-width="5"/>
+<line x1="360.0" y1="208.0" x2="400.0" y2="168.0" stroke="#c0392b" stroke-width="5"/>
+</svg>
