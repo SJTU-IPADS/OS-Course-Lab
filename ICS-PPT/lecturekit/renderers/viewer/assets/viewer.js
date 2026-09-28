@@ -12,18 +12,14 @@
     return (data.ui && data.ui[name]) || { outline: "大纲" }[name] || name;
   }
 
-  // Two numberings, deliberately distinct: slideIndexById addresses a slide
-  // (1-based deck position, what navigation and the deck anchors use), while
-  // shownNumberById is the number the deck *prints* — an animation's frames all
-  // show their group's number. They diverge once a deck holds an animation.
+  // One numbering: slideIndexById is a slide's 1-based deck position, which is
+  // what navigation and the deck anchors use and what the deck prints.
   var pageOrder = data.pages.map(function (p) { return p.id; });
   var pageById = {};
   var slideIndexById = {};
-  var shownNumberById = {};
   data.pages.forEach(function (p, i) {
     pageById[p.id] = p;
     slideIndexById[p.id] = i + 1;
-    shownNumberById[p.id] = p.number || i + 1;
   });
 
   // An outline row can stand for several slides: a page node with "frames": n
@@ -230,7 +226,7 @@
       row.addEventListener("click", function () { showPage(node.id); });
     }
     if (node.type === "page") {
-      var text = String(shownNumberById[node.id]);
+      var text = String(slideIndexById[node.id]);
       var pageNumber = document.createElement("span");
       pageNumber.className = "page-number";
       pageNumber.textContent = text;

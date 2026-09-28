@@ -155,9 +155,9 @@ class FrameGroup:
     ``total`` sibling pages that share every block but that one figure. ``id`` is
     the page id the author wrote — the frames themselves are ``<id>-1`` …
     ``<id>-N`` — and ``index`` is 1-based. Downstream everything is an ordinary
-    page; only three places read this: the outline (folds a group into one
-    entry), the deck's reveal mode (only the first frame steps), and a citation
-    backref (reported once, at the group's first slide). See dsl.PageBuilder.frames.
+    page; this is read where the frames act as one: the outline (folds a group
+    into one entry) and the deck's reveal mode (only the first frame steps).
+    Each frame still prints its own slide number. See dsl.PageBuilder.frames.
     """
     id: str
     index: int
@@ -373,10 +373,11 @@ def outline_folds(children: list[Section | Page]) -> frozenset[str]:
 
     Two consecutive sibling pages titled the same are one idea told over two
     slides — a static page and the animation that redraws it, or an annotation
-    reveal pair — so they get one outline row and one shown slide number, the
-    same treatment an animation's frames already get. An animation counts as one
-    unit here: its frames share a title, and it is the group as a whole that
-    folds into its neighbour (or is folded into by it).
+    reveal pair — so they get one outline row, the same treatment an animation's
+    frames already get. An animation counts as one unit here: its frames share a
+    title, and it is the group as a whole that folds into its neighbour (or is
+    folded into by it). Only the outline folds: every page still prints its own
+    slide number, its position in the deck.
 
     Siblings only, and adjacent in their own list: a run reaching across a
     section boundary would fold the next section's first page into the previous
@@ -440,47 +441,6 @@ def block_held(page: Page, block: Block) -> bool:
         and not tail_visible(page)
         and block.kind not in HELD_EXEMPT_KINDS
     )
-
-
-def slide_numbers(pages: list[Page], folds: frozenset[str] = frozenset()) -> list[int]:
-    """The number each page is *shown* as, 1-based, one entry per page.
-
-    An animation is one slide to a reader: every frame carries the group's
-    number and the count advances once for the whole group, so a three-frame
-    animation at 12 leaves the next page at 13, not 15. This is the number the
-    deck prints, the outline labels a row with, and a citation backrefs — the
-    physical position in ``pages`` stays the addressing scheme for navigation,
-    ``--pages``, and exported image filenames.
-
-    ``folds`` is :func:`outline_folds` — pages folded into the previous outline
-    row, which take its number the same way, so one row stays one number. It is
-    computed from the tree (siblings, not deck order), which is why it arrives
-    as an argument rather than being read off ``pages`` here.
-    """
-    numbers = [0] * len(pages)
-    seen: set[str] = set()
-    count = 0
-    for position, page in enumerate(pages):
-        if is_bridge_page(page):
-            # A bridge is a breath between topics, not an idea: it prints no
-            # number and the count does not advance, so the pages around it
-            # stay consecutively numbered.
-            numbers[position] = count or 1
-            continue
-        group = page.frame_group.id if page.frame_group is not None else None
-        if page.id in folds and count:
-            # Same title as the page before: one row, so one number. Registering
-            # the group keeps this page's own frames on that number too.
-            if group is not None:
-                seen.add(group)
-            numbers[position] = count
-            continue
-        if group is None or group not in seen:
-            count += 1
-            if group is not None:
-                seen.add(group)
-        numbers[position] = count
-    return numbers
 
 
 def select_pages(lecture: Lecture, spec: str) -> Lecture:

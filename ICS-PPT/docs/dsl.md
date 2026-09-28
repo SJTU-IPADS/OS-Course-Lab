@@ -108,9 +108,9 @@ inline notebook rendering; it is inert for the CLI build. See
     more than 3 lines is a `ValidationError` at the call site.
   - **Not in the outline.** Neither the viewer's tree nor the PDF outline page
     lists it — it is a breath, not a knowledge point.
-  - **No slide number.** The page prints no number and the count does not
-    advance (Marp's `_paginate: skip`), so the pages around it stay
-    consecutively numbered — the same machinery as an animation's held frames.
+  - **No printed number.** The page prints no number (Marp's
+    `_paginate: false`) but is still counted, so every page after it prints
+    its position in the deck (see [usage.md](usage.md#slide-numbers)).
   - **Deck only.** The book and the transcript sheet never print it
     (`book="skip"` is forced); PPTX draws it as a centered text box.
   - In `--watch --reveal` mode it arrives fully lit — one Enter and it is gone.
@@ -830,12 +830,12 @@ everything downstream treats them as such. What differs:
 | | |
 | --- | --- |
 | outline | one row for the animation, linking to frame 1; `inspect` likewise lists it once |
-| slide number | one number for the whole animation — every frame prints it, and the count advances once (see [usage.md](usage.md#two-numberings)) |
+| slide number | each frame prints its own number, its position in the deck (see [usage.md](usage.md#slide-numbers)) |
 | `--pages` | the authored id selects the whole animation (`--pages commit-logging`), `commit-logging-2` one frame, a number is still a deck index |
 | book | one section printing the **last** frame — the finished picture, post-animation blocks included — so a `ref` names that figure; the earlier frames drop out like `book="skip"` (see [book.md](book.md)) |
 | `--watch --reveal` | frame 1 steps through the blocks before the animation; the last frame steps through the blocks after it; the frames in between arrive fully lit, one Enter apiece (see [usage.md](usage.md#reveal-on-enter)) |
 | `p.notes(...)` | rides every frame, so the speaker view has the script whichever frame is up |
-| `p.cite(...)` | the animation is one slide to a reference: the backref reads `(P2)`, not `(P2, P3, P4)` |
+| `p.cite(...)` | rides every frame, so the backref lists each frame's number: `(P2, P3, P4)` |
 
 This is the figure counterpart of the [annotation reveal
 pair](#reveal-a-bubble-as-a-build-step): that one reveals a *bubble* over an
@@ -848,24 +848,24 @@ only one: a page and the animation that redraws it, an [annotation reveal
 pair](#reveal-a-bubble-as-a-build-step), a build-up carried by seven hand-written
 pages — all of them repeat a title, because they are one knowledge point.
 
-So a **run of consecutive sibling pages carrying the same title is one row and
-one number**, exactly as an animation is:
+So a **run of consecutive sibling pages carrying the same title is one outline
+row**, exactly as an animation is:
 
 ```python
 with lec.section("MapReduce") as s:
-    s.page(id="complete-picture", body=overview)   # ┐ one outline row,
-    s.page(id="step1-split",      body=step1)      # │ one number on the
-    s.page(id="step2-fork",       body=step2)      # ┘ projector
+    s.page(id="complete-picture", body=overview)   # ┐
+    s.page(id="step1-split",      body=step1)      # │ one outline row
+    s.page(id="step2-fork",       body=step2)      # ┘
 ```
 
-The row links to the run's first slide and spans the rest; the deck prints the
-run's number on every page of it (Marp's `_paginate: hold`, the same machinery
-an animation's frames use), and a `p.cite(...)` on any of them backrefs that one
-number. An animation inside a run counts as one unit — its frames already share
-a title, so the group as a whole folds.
+The row links to the run's first slide, is labelled with that slide's number,
+and spans the rest. An animation inside a run counts as one unit — its frames
+already share a title, so the group as a whole folds.
 
-Nothing else changes: every page keeps its own id and is its own slide, so
-`--pages step2-fork`, `slides.00N.png`, and navigation are untouched. `inspect`
+Only the outline folds: every page keeps its own id, is its own slide, and
+prints its own number (see [usage.md](usage.md#slide-numbers)), so a
+`p.cite(...)` on two of them backrefs both numbers, and `--pages step2-fork`,
+`slides.00N.png`, and navigation are untouched. `inspect`
 keeps one line per page and marks the folded ones `[folded]`, since that is the
 structural view.
 

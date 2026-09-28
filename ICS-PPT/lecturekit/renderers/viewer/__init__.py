@@ -252,16 +252,14 @@ class StaticViewerRenderer:
 def build_data(lecture: model.Lecture) -> dict:
     lecture = with_references_page(lecture)
     pages = iter_pages(lecture.children)
-    folds = model.outline_folds(lecture.children)
-    spans = outline_spans(pages, folds)
-    numbers = model.slide_numbers(pages, folds)
+    spans = outline_spans(pages, model.outline_folds(lecture.children))
     return {
         "lecture": {"id": lecture.id, "title": lecture.title, "subtitle": lecture.subtitle},
         # lecturekit's own chrome, resolved here so `viewer.js` prints the deck's
         # language instead of hardcoding one. See `i18n.UI_STRINGS`.
         "ui": i18n.ui_table(lecture.lang),
         "tree": build_tree(lecture.children, spans),
-        "pages": [build_page(page, number) for page, number in zip(pages, numbers)],
+        "pages": [build_page(page) for page in pages],
     }
 
 
@@ -356,7 +354,7 @@ def with_references_page(lecture: model.Lecture) -> model.Lecture:
             f"page id {REFERENCES_PAGE_ID!r} is reserved for the auto-generated "
             "references page"
         )
-    entries = references.collect_citations(pages, model.outline_folds(lecture.children))
+    entries = references.collect_citations(pages)
     if not entries:
         return lecture
     page = model.Page(
@@ -395,13 +393,10 @@ def _citation_meta(citation: model.Citation) -> str:
     return ". ".join(parts)
 
 
-def build_page(page: model.Page, number: int) -> dict:
+def build_page(page: model.Page) -> dict:
     return {
         "id": page.id,
         "title": page.title,
-        # The number this slide is *shown* as; the position in ``pages`` is what
-        # navigation addresses. They differ once an animation is in the deck.
-        "number": number,
         "blocks": [
             {"kind": block.kind, "content": block.content}
             for block in model.select_blocks(page, "viewer", VIEWER_KINDS)
@@ -428,16 +423,9 @@ def build_marp_markdown(
         "---",
     ]
     slide_size = model.RATIOS[lecture.ratio]
-    pages = iter_pages(lecture.children)
-    numbers = model.slide_numbers(pages, model.outline_folds(lecture.children))
     slides = [
-        render_marp_page(
-            page,
-            slide_size,
-            reveal=reveal and _steps_through(page),
-            hold_number=i > 0 and numbers[i] == numbers[i - 1],
-        )
-        for i, page in enumerate(pages)
+        render_marp_page(page, slide_size, reveal=reveal and _steps_through(page))
+        for page in iter_pages(lecture.children)
     ]
     return "\n".join(header) + "\n\n" + "\n\n---\n\n".join(slides) + "\n"
 
@@ -494,8 +482,8 @@ def build_outline_html(lecture: model.Lecture) -> str:
     Each page row's title is an anchor to its slide (``SLIDE_LINK_PREFIX`` + the
     flat page index, in deck order); the merged-PDF step rewrites those URIs into
     internal page links. Section rows are not links — they have no slide. An
-    animation is one row, linking to its first frame and labelled with the single
-    number the deck shows on every one of its frames.
+    animation, or a run of same-titled pages, is one row, linking to its first
+    slide and labelled with the number that slide prints.
     """
     lecture = with_references_page(lecture)
     spans = outline_spans(
@@ -509,7 +497,7 @@ def build_outline_html(lecture: model.Lecture) -> str:
         f'<span class="marker">▼</span>'
         f'<span class="node-title"> {_title_html(lecture.title)}</span></span></div>'
     )
-    _walk_outline(lecture.children, [], rows, [0, 1], spans)
+    _walk_outline(lecture.children, [], rows, [0], spans)
     return '<div class="outline">\n' + "\n".join(rows) + "\n</div>"
 
 
@@ -567,7 +555,7 @@ def _walk_outline(
     nodes: list[model.Section | model.Page],
     ancestors_last: list[bool],
     rows: list[str],
-    page_index: list[int],          # [physical slide index, shown number]
+    page_index: list[int],          # [0-based slide index]
     spans: dict[str, int],
 ) -> None:
     # A folded animation frame or a bridge has no row, and so is not a candidate
@@ -611,11 +599,10 @@ def _outline_row(
     else:
         marker, marker_class, kind = "✦", "icon", "page-row"
         node_html = f'<a class="node-link" href="{SLIDE_LINK_PREFIX}{page_index[0]}">{title}</a>'
-        # The link addresses the physical slide; the label is the number the deck
-        # shows, which counts a whole animation as one.
-        page_number = f'<span class="page-number">{page_index[1]}</span>'
+        # The label is the number the row's first slide prints: its 1-based
+        # position in the deck.
+        page_number = f'<span class="page-number">{page_index[0] + 1}</span>'
         page_index[0] += spans.get(node.id, 1)
-        page_index[1] += 1
     return (
         f'<div class="row {kind}">'
         f'<span class="connector">{prefix}</span>'
@@ -630,7 +617,6 @@ def render_marp_page(
     slide_size: tuple[int, int] = model.RATIOS[model.DEFAULT_RATIO],
     *,
     reveal: bool = False,
-    hold_number: bool = False,
 ) -> str:
     width, height = slide_size
     visible_blocks = model.select_blocks(page, "viewer", VIEWER_KINDS)
@@ -639,11 +625,6 @@ def render_marp_page(
     if model.is_bridge_page(page):
         return _render_bridge_page(visible_blocks[0])
     out = []
-    if hold_number:
-        # The same slide, told over another page — a later frame of an animation,
-        # or a page repeating the previous one's title: it shows the number that
-        # page showed, and does not advance the count.
-        out.extend(["<!-- _paginate: hold -->", ""])
     classes = []
     if page.gap is not None:
         classes.append("lk-gap-auto")
@@ -729,14 +710,13 @@ def _is_cover_page(blocks: list[model.Block]) -> bool:
 def _render_bridge_page(block: model.Block) -> str:
     """A transition slide: its lines centered, no title, no number.
 
-    ``_paginate: skip`` both hides the page number and keeps Marp's count from
-    advancing, matching :func:`model.slide_numbers` — the pages around a bridge
-    stay consecutively numbered on the projector and in the outline alike. Like
-    a cover, the page bypasses reveal mode entirely and arrives fully lit.
+    ``_paginate: false`` hides the page number but, like a cover, still counts
+    the slide, so every page after it prints its position in the deck. Like a
+    cover, the page bypasses reveal mode entirely and arrives fully lit.
     """
     return "\n".join([
         "<!-- _class: lk-bridge -->",
-        "<!-- _paginate: skip -->",
+        "<!-- _paginate: false -->",
         "",
         *render_block(block),
     ]).rstrip()

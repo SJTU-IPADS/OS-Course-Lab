@@ -19,39 +19,23 @@ class CitationEntry:
     pages: tuple[int, ...]  # 1-based deck positions that cited it
 
 
-def collect_citations(
-    pages: list[model.Page], folds: frozenset[str] = frozenset()
-) -> list[CitationEntry]:
+def collect_citations(pages: list[model.Page]) -> list[CitationEntry]:
     """Merge the citations of ``pages`` (deck order) into unique entries.
 
-    ``folds`` is :func:`model.outline_folds`, passed straight through to the
-    numbering: pages sharing one slide number backref it once.
+    Each entry is backreffed by the deck position of every page that cited it —
+    the number that page prints, whatever its title or animation.
     """
     order: list[str] = []
     merged: dict[str, list] = {}  # key -> [citation, [page numbers]]
-    numbers = _backref_numbers(pages, folds)
-    for position, page in enumerate(pages):
-        number = numbers[position]
+    for position, page in enumerate(pages, start=1):
         for citation in page.citations:
             key = _dedup_key(citation)
             if key not in merged:
                 merged[key] = [citation, []]
                 order.append(key)
-            if number not in merged[key][1]:
-                merged[key][1].append(number)
+            if position not in merged[key][1]:
+                merged[key][1].append(position)
     return [CitationEntry(merged[key][0], tuple(merged[key][1])) for key in order]
-
-
-def _backref_numbers(
-    pages: list[model.Page], folds: frozenset[str] = frozenset()
-) -> list[int]:
-    """The slide number each page reports when it cites something (1-based).
-
-    An animation is one slide as far as a reference is concerned, as is a run of
-    same-titled pages — which is just the shown slide number, see
-    ``model.slide_numbers``.
-    """
-    return model.slide_numbers(pages, folds)
 
 
 def dedup_citations(citations: list[model.Citation]) -> list[model.Citation]:
