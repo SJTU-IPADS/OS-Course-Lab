@@ -713,7 +713,11 @@ p.image("arch.svg", caption="图 1").caption_align("right")
 `p.side_image(src, *, alt="", width=None, side="right")` places the image in a
 side column and reflows the slide text into the other column. `side` is `"right"`
 (default) or `"left"`; `width` (e.g. `"38%"`) sets the column width, defaulting
-to a half-split.
+to a half-split. `alt` carries Marp's background keywords: `alt="contain"` (or
+`"fit"`) shows the whole image inside the column, and without it the image
+covers the column and is cropped to it. The PPTX export draws the same split:
+the picture fills (or, with `contain`, fits into) a full-height column, and the
+title and the other blocks are laid out in the rest of the slide.
 
 `p.slide(...).image_right(src, *, alt="", width_px=None, width_pct=None,
 height_px=None, height_pct=None)` floats a **small** image on the right of that
@@ -880,7 +884,7 @@ becomes one book section. See [book.md](book.md).)
 
 ### Tables
 
-`p.table(rows, *, headers, align=None)` renders a native GFM table. `headers` is
+`p.table(rows, *, headers, align=None, widths=None)` renders a native GFM table. `headers` is
 required (a GFM table must have a header row); `rows` is a list of rows, each a
 list of cells. Cells carry inline markdown, passed straight through.
 
@@ -899,6 +903,22 @@ Rows must be rectangular — every row's width must equal the number of headers.
 `align`, if given, is one of `left` / `center` / `right` per column and must have
 one entry per column; omit it for all-left. A literal `|` in a cell is escaped
 and newlines are collapsed so a row never breaks.
+
+By default a table takes its content's width and the columns share it as the
+browser sees fit, so a long cell in one column can push another into wrapping.
+`widths` fixes the split: one positive weight per column, and the table then
+spans the content width with each column taking its weight's share. The weights
+are relative, so `[2, 3, 5]` and `[20, 30, 50]` mean the same.
+
+```python
+p.table(rows, headers=["寻址类型", "汇编语法", "有效地址", "场景"],
+        widths=[2, 2.4, 2.6, 3])
+```
+
+Every renderer honors it: the viewer wraps the table in a `lk-table` div with a
+generated rule (a GFM table carries no widths), PowerPoint sets the column
+widths, the book uses `p{…}` columns of the line width, and the transcript
+emits a `<colgroup>`.
 
 ### Architecture diagrams
 
@@ -1033,6 +1053,9 @@ is a command the lecture runs on stage.
 p.demo("看汇编", "gcc -O2 -S demo.c -o - | grep -A3 return_1",
        description="当场编译,当场看输出")
 ```
+
+`name` may be `""`. The slide then shows the command alone, and the drawer
+labels the run with the command's first line.
 
 `command` may be several lines; they run in order, as one bash would read them.
 A line that ends in a backslash, or that leaves a quote open, continues the one

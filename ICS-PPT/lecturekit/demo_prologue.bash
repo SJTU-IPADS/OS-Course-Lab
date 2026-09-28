@@ -9,8 +9,11 @@
 unset BASH_ENV
 
 # A copy of stdout, so that `{ ...; } > file` and `$(...)` never capture a
-# marker meant for the drawer.
-exec {__lk_fd}>&1
+# marker meant for the drawer. A fixed number rather than `exec {var}>&1`:
+# macOS still ships bash 3.2, which cannot pick one. 19 is past the 3-9 a
+# script reaches for by hand.
+__lk_fd=19
+exec 19>&1
 __lk_l=0
 
 # `( ... )` subshells report too.

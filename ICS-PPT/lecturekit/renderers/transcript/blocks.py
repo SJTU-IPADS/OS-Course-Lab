@@ -189,7 +189,15 @@ def _table(block: model.Block, embedder: Embedder) -> str:
         )
         for row in content["rows"]
     )
-    return f'<table class="tx-table"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>'
+    widths = content.get("widths")
+    if widths is None:
+        return f'<table class="tx-table"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>'
+    cols = "".join(f'<col style="width:{100 * w:.2f}%">' for w in widths)
+    return (
+        '<table class="tx-table" style="table-layout:fixed;width:100%">'
+        f"<colgroup>{cols}</colgroup>"
+        f"<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
+    )
 
 
 _FLOW_GLYPH = {"down": "↓", "up": "↑", "both": "↕"}

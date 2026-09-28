@@ -117,6 +117,27 @@ class RenderBlockTest(unittest.TestCase):
         lines = render_block(self._table(rows=[["`fork()`", "**子进程**"]]))
         self.assertEqual(lines[2], "| `fork()` | **子进程** |")
 
+    def test_table_widths_wrap_the_rows_under_a_width_rule(self):
+        lines = render_block(self._table(widths=[0.25, 0.75]))
+        self.assertIn(
+            "section .lk-cols-25-75 > table th:nth-child(2) { width: 75%; }", lines
+        )
+        start = lines.index('<div class="lk-table lk-cols-25-75">')
+        self.assertEqual(
+            lines[start:],
+            ['<div class="lk-table lk-cols-25-75">', "",
+             "| 机制 | 开销 |", "| --- | --- |", "| 进程 | 高 |", "", "</div>", ""],
+        )
+
+    def test_table_width_class_keeps_decimals(self):
+        lines = render_block(self._table(widths=[1 / 3, 2 / 3]))
+        self.assertIn('<div class="lk-table lk-cols-33_33-66_67">', lines)
+
+    def test_widths_table_footnote_marker_follows_the_last_row(self):
+        lines = render_block(self._table(widths=[0.5, 0.5]), footnote_numbers=(1,))
+        last_row = lines.index("| 进程 | 高 |")
+        self.assertIn("footnote-ref-tuck", lines[last_row + 1])
+
     def _sidenote(self, **overrides):
         content = {"title": "T", "text": "B", "link": None, "logo": None}
         content.update(overrides)

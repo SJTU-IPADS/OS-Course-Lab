@@ -67,6 +67,25 @@ def test_html_build_patches_slides_with_svg_scope():
     assert "<section>slide</section>" in body
 
 
+def test_html_build_tells_the_viewer_shell_which_slide_is_up():
+    # The shell cannot read a file:// frame's location in Chrome, so the deck
+    # says its slide number itself; a rendered bundle is exactly that case.
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp)
+
+        def fake_run(command, **kwargs):
+            (out / "slides.html").write_text(
+                "<html><body><section>slide</section></body></html>", encoding="utf-8"
+            )
+
+        with patch("lecturekit.renderers.viewer.marp.subprocess.run", fake_run):
+            build_deck(out)
+        body = (out / "slides.html").read_text(encoding="utf-8")
+
+    assert 'lecturekit: "slide"' in body
+    assert body.index("postMessage") < body.rindex("</body>")
+
+
 def test_html_build_does_not_allow_local_files():
     with tempfile.TemporaryDirectory() as tmp:
         with patch("lecturekit.renderers.viewer.marp.subprocess.run") as run:
@@ -250,17 +269,33 @@ def test_theme_copy_brings_the_font_files_along():
 def test_marp_command_prefers_a_local_install_over_npx(tmp_path, monkeypatch):
     monkeypatch.delenv("LECTUREKIT_MARP", raising=False)
     monkeypatch.setattr(marp, "PKG_ROOT", tmp_path)
-    monkeypatch.setattr(marp.shutil, "which", lambda name: None)
+    found = {}
+    monkeypatch.setattr(marp.shutil, "which", found.get)
 
     assert marp.marp_command() == [
         "npx", "--yes", "--prefer-offline", marp.MARP_PACKAGE,
     ]
 
-    vendored = tmp_path / "node_modules" / ".bin" / "marp"
+    # Resolved to a full path when it can be: on Windows `npx` is `npx.cmd`,
+    # which `subprocess` only starts by its full name.
+    found["npx"] = "/opt/node/npx.cmd"
+    assert marp.marp_command()[0] == "/opt/node/npx.cmd"
+
+    found["marp"] = "/usr/local/bin/marp"
+    assert marp.marp_command() == ["/usr/local/bin/marp"]
+
+    # The vendored copy runs as `node marp-cli.js`, not through `.bin/marp`,
+    # which on Windows is a shell script.
+    vendored = tmp_path / "node_modules" / "@marp-team" / "marp-cli" / "marp-cli.js"
     vendored.parent.mkdir(parents=True)
     vendored.touch()
+    assert marp.marp_command() == ["/usr/local/bin/marp"]  # no node to run it
 
-    assert marp.marp_command() == [str(vendored)]
+    found["node"] = "/usr/bin/node"
+    assert marp.marp_command() == ["/usr/bin/node", str(vendored)]
+
+    monkeypatch.setenv("LECTUREKIT_MARP", "/somewhere/marp")
+    assert marp.marp_command() == ["/somewhere/marp"]
 
 
 def test_npx_fallback_is_pinned_and_offline_first():

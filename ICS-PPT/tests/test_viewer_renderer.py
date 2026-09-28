@@ -443,7 +443,7 @@ class StaticViewerRendererTest(unittest.TestCase):
             js = Path(tmp, "viewer.js").read_text(encoding="utf-8")
         # no leading outline slide: page index i -> deck slide i+1
         self.assertIn('"slides.html#" + (idx + 1)', js)
-        self.assertIn("pageOrder[slide - 1]", js)
+        self.assertIn("pageOrder[said.number - 1]", js)
 
     def test_viewer_outline_shows_one_based_page_numbers(self):
         with tempfile.TemporaryDirectory() as tmp:

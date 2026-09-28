@@ -23,7 +23,8 @@ from watchfiles import Change, watch
 from . import demo as demo_module
 from . import source as source_module
 from .renderers.viewer.marp import (
-    inject_svg_scope,
+    MARP_PACKAGE,
+    inject_deck_scripts,
     marp_command,
     strip_watch_client,
     watch_command,
@@ -279,9 +280,9 @@ def make_handler(
     ``index.html`` is served with the reload client injected; ``/__livereload``
     answers with the current rebuild count (see ``ReloadBroadcaster``); everything
     else is a plain static file.
-    ``slides.html`` always carries the SVG-scoping controller (see
-    ``marp.inject_svg_scope``), and carries the reveal-on-Enter controller when
-    ``reveal`` is true.
+    ``slides.html`` always carries the deck's own controllers (see
+    ``marp.inject_deck_scripts``), and carries the reveal-on-Enter controller
+    when ``reveal`` is true.
 
     Both are injected into the response, never the file: under ``--watch`` the
     on-disk ``slides.html`` belongs to ``marp --watch``, which rewrites it on
@@ -400,6 +401,9 @@ def make_handler(
             spec = demo_module.read(directory).get(demo_id)
             if spec is None:
                 self._send_json(404, {"error": "no such demo"})
+                return
+            if not demo_module.RUNNABLE:
+                self._send_json(501, {"error": "demos run on Linux and macOS only"})
                 return
             print(f"\nlecturekit: demo $ {spec.command}", file=sys.stderr, flush=True)
             terminal = None
@@ -598,10 +602,10 @@ def make_handler(
                 self.send_error(404)
                 return
             # `marp --watch` owns slides.html on disk and rewrites it on every
-            # rebuild, so both controllers are injected into the response body
-            # rather than the file. The SVG scoper rides every deck; the reveal
+            # rebuild, so the controllers are injected into the response body
+            # rather than the file. The deck's own ride every deck; the reveal
             # controller is the preview feature `--reveal` turns on.
-            html = inject_svg_scope(html)
+            html = inject_deck_scripts(html)
             if reveal:
                 html = inject_reveal(html)
             if demo_cwd is not None:
@@ -887,7 +891,7 @@ def watch_marp_health(
                 "npx is resolving marp against the npm registry; offline that can "
                 "hang for minutes. Run scripts/prepare.sh once (with network) to "
                 "vendor marp locally."
-                if marp_command()[0].endswith("npx")
+                if MARP_PACKAGE in marp_command()
                 else "check the marp output above."
             )
             print(
@@ -922,8 +926,14 @@ def _terminate_process_group(proc) -> None:
     ``node`` marp worker as a grandchild) *and* the worker that binds marp's
     live-reload port, so nothing is orphaned and the port is released. SIGTERM
     first, then SIGKILL if it does not exit promptly.
+
+    Windows has no process groups (``start_new_session`` is ignored there), so
+    ``taskkill /T`` walks the tree from ``proc`` instead.
     """
     if proc.poll() is not None:
+        return
+    if os.name != "posix":
+        _terminate_tree(proc)
         return
     try:
         pgid = os.getpgid(proc.pid)
@@ -940,6 +950,23 @@ def _terminate_process_group(proc) -> None:
             os.killpg(pgid, signal.SIGKILL)
         except (ProcessLookupError, OSError):
             pass
+
+
+def _terminate_tree(proc) -> None:
+    """Kill ``proc`` and its descendants on Windows, where there is no group."""
+    try:
+        subprocess.run(
+            ["taskkill", "/T", "/F", "/PID", str(proc.pid)],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except OSError:
+        proc.kill()
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        pass
 
 
 def serve(
@@ -990,7 +1017,10 @@ def serve(
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        text=True,
+        # Node writes UTF-8 whatever the locale says; Windows' default codec
+        # would choke on a CJK file name in an error.
+        encoding="utf-8",
+        errors="replace",
         # Own session/process group: marp is spawned via `npx`, so the real
         # `node .../marp` worker (which binds marp's fixed live-reload port) is a
         # grandchild. A plain terminate() would signal only the npx wrapper and
@@ -1022,10 +1052,13 @@ def serve(
 
     url = f"http://127.0.0.1:{port}/"
     print(f"lecturekit: live viewer on {url} (Ctrl-C to stop)")
-    print(
-        f"lecturekit: demo chips armed — a press runs its command in "
-        f"{lecture_dir} (timeout {demo_timeout_s:g}s)"
-    )
+    if demo_module.RUNNABLE:
+        print(
+            f"lecturekit: demo chips armed — a press runs its command in "
+            f"{lecture_dir} (timeout {demo_timeout_s:g}s)"
+        )
+    else:
+        print("lecturekit: demos run on Linux and macOS only; their chips answer so")
     if open_browser:
         webbrowser.open(url)
 

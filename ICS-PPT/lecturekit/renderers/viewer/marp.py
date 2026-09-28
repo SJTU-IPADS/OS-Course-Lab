@@ -45,21 +45,27 @@ def marp_command() -> list[str]:
     because it talks to the registry. `scripts/prepare.sh` vendors marp into
     `node_modules/` precisely so the offline path is the one taken.
 
-    Order: ``$LECTUREKIT_MARP``, the vendored ``node_modules/.bin/marp``, a
-    ``marp`` on ``PATH``, then ``npx``. The npx fallback pins the version and
-    passes ``--prefer-offline`` so a cached copy is used without revalidating
-    it against the registry.
+    Order: ``$LECTUREKIT_MARP``, the vendored marp-cli, a ``marp`` on ``PATH``,
+    then ``npx``. The npx fallback pins the version and passes
+    ``--prefer-offline`` so a cached copy is used without revalidating it
+    against the registry.
+
+    The vendored copy is run as ``node marp-cli.js`` rather than through
+    ``node_modules/.bin/marp``, and the rest are resolved with ``which``: on
+    Windows the ``.bin`` entry is a shell script, and ``marp``/``npx`` are
+    ``.cmd`` files that only a full path lets `subprocess` start.
     """
     override = os.environ.get("LECTUREKIT_MARP")
     if override:
         return [override]
-    vendored = PKG_ROOT / "node_modules" / ".bin" / "marp"
-    if vendored.exists():
-        return [str(vendored)]
+    vendored = PKG_ROOT / "node_modules" / "@marp-team" / "marp-cli" / "marp-cli.js"
+    node = shutil.which("node")
+    if vendored.exists() and node:
+        return [node, str(vendored)]
     on_path = shutil.which("marp")
     if on_path:
         return [on_path]
-    return ["npx", "--yes", "--prefer-offline", MARP_PACKAGE]
+    return [shutil.which("npx") or "npx", "--yes", "--prefer-offline", MARP_PACKAGE]
 
 
 def _copy_theme(output_dir: Path, theme_dir: Path) -> bool:
@@ -154,19 +160,26 @@ def render_pages_png(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> None:
     subprocess.run(command, cwd=output_dir, check=True, stdin=subprocess.DEVNULL)
 
 
-def inject_svg_scope(html: str) -> str:
-    """Return ``html`` with the SVG-scoping controller inserted before </body>.
+#: Controllers of ours that ride every deck: written into the file a render
+#: produces, and injected into the watch server's response (where slides.html
+#: belongs to `marp --watch`). Each file says why it is there.
+DECK_SCRIPTS = ("svg-scope.js", "position.js")
 
-    marp-cli bakes marpit-svg-polyfill into every deck; on WebKit it re-runs over
-    *every* slide on every animation frame, which costs a full-document layout
-    apiece. The controller confines it to the slide on screen. See
-    ``assets/svg-scope.js`` for the measurements and the why.
 
-    Applied to every deck we build, not just the live preview: the cost lands on
-    whoever opens the deck in Safari, which includes a rendered bundle opened
-    long after the session that produced it.
+def inject_deck_scripts(html: str) -> str:
+    """Return ``html`` with the ``DECK_SCRIPTS`` inserted before </body>.
+
+    Applied to every deck we build, not just the live preview: what they fix
+    lands on whoever opens the deck, which includes a rendered bundle opened
+    long after the session that produced it. ``svg-scope.js`` keeps
+    marpit-svg-polyfill off the slides nobody is looking at, which Safari pays
+    for otherwise; ``position.js`` tells the viewer shell which slide is on
+    screen, which Chrome will not let it read from a file:// frame.
     """
-    bundle = f"<script>\n{(ASSETS_DIR / 'svg-scope.js').read_text(encoding='utf-8')}</script>"
+    bundle = "".join(
+        f"<script>\n{(ASSETS_DIR / name).read_text(encoding='utf-8')}</script>"
+        for name in DECK_SCRIPTS
+    )
     marker = "</body>"
     idx = html.rfind(marker)
     if idx == -1:
@@ -221,7 +234,7 @@ def build_deck(
         slides_html = output_dir / "slides.html"
         if slides_html.exists():
             slides_html.write_text(
-                inject_svg_scope(slides_html.read_text(encoding="utf-8")),
+                inject_deck_scripts(slides_html.read_text(encoding="utf-8")),
                 encoding="utf-8",
             )
 

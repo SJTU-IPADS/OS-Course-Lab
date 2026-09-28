@@ -2,7 +2,8 @@
 
 One slide per page (deck order). Each slide draws the page title, then the
 page's PPTX-visible blocks stacked top-to-bottom by the layout cursor, then any
-accumulated footnotes. Shapes are native (text frames, tables, pictures,
+accumulated footnotes. A ``side_image`` takes a full-height column first and
+the rest of the page is laid out beside it. Shapes are native (text frames, tables, pictures,
 autoshapes), so the deck is editable in PowerPoint; styling is ported from the
 viewer theme, but vertical spacing is estimated (no browser to measure text).
 """
@@ -19,7 +20,7 @@ from lecturekit import model, rasterize
 from lecturekit.dsl import slugify
 from .blocks import (
     PPTX_KINDS, Ctx, draw_block, draw_bridge, draw_cover, draw_footnotes,
-    draw_title, redraw_architecture,
+    draw_side_images, draw_title, redraw_architecture, side_layout,
 )
 from .layout import Cursor, Layout
 
@@ -70,8 +71,16 @@ class PptxRenderer:
             if model.is_bridge_page(page):
                 draw_bridge(visible_blocks[0], ctx)
                 continue
+            # A side_image column narrows the content box for the title and
+            # every other block, as Marp's split background does.
+            sides = [block for block in visible_blocks if block.kind == "side_image"]
+            if sides:
+                draw_side_images(sides, ctx)
+                ctx.layout = side_layout(sides, layout)
+                ctx.cursor = Cursor(ctx.layout)
+                visible_blocks = [b for b in visible_blocks if b.kind != "side_image"]
             draw_title(page.title, ctx)
-            footnotes: list[str] = []
+            footnotes: list[str] = [note for block in sides for note in block.footnotes]
             block_shapes: list[list[object]] = []
             for block in visible_blocks:
                 before = len(slide.shapes)

@@ -28,17 +28,14 @@ from __future__ import annotations
 import bisect
 import codecs
 import errno
-import fcntl
 import functools
 import hashlib
 import json
 import os
-import pty
 import select
 import signal
 import struct
 import subprocess
-import termios
 import threading
 import time
 from collections.abc import Iterator
@@ -46,6 +43,20 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import model
+
+# POSIX only, and so are demos. Windows still renders and serves a deck, and the
+# renderer imports this module to write the demo table, so their absence there
+# is not an ImportError; it is `RUNNABLE` being false.
+try:
+    import fcntl
+    import pty
+    import termios
+except ImportError:
+    fcntl = pty = termios = None
+
+#: Whether this machine can run a demo: bash, pipes that `select` can wait on,
+#: process groups and pseudo-terminals are all POSIX.
+RUNNABLE = pty is not None
 
 #: The table of runnable commands, written next to the deck by the viewer
 #: renderer and read back by the dev server. Rewritten on every render — always,

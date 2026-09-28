@@ -63,24 +63,21 @@
   var STORAGE_KEY = "lecturekit:viewer:" + data.lecture.id;
   restoreState();
 
-  function currentSlideNumber() {
+  // The deck says which slide is on screen each time it changes (position.js,
+  // written into slides.html), so the page the reader paged to is the one the
+  // outline highlights and a reload comes back to. Pages map 1:1 onto deck
+  // slides; page index i is deck slide i + 1. A message rather than a look at
+  // the frame's location: that is a same-origin read, and Chrome refuses it
+  // between two file:// documents.
+  window.addEventListener("message", function (event) {
     var frame = document.querySelector(".slide-frame");
-    if (!frame) { return null; }
-    try {
-      var n = parseInt(frame.contentWindow.location.hash.replace(/^#/, ""), 10);
-      return isNaN(n) ? null : n;
-    } catch (e) {
-      return null; // iframe not ready
-    }
-  }
+    var said = event.data;
+    if (!frame || event.source !== frame.contentWindow) { return; }
+    if (!said || said.lecturekit !== "slide") { return; }
+    if (pageOrder[said.number - 1]) { state.currentPageId = pageOrder[said.number - 1]; }
+  });
 
   function persistState() {
-    // Pages map 1:1 onto deck slides; page index i is deck slide i + 1. The live
-    // iframe hash tells us which page the reader paged to inside the deck.
-    if (state.mode === "slide") {
-      var slide = currentSlideNumber();
-      if (slide && pageOrder[slide - 1]) { state.currentPageId = pageOrder[slide - 1]; }
-    }
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
         mode: state.mode,
@@ -298,11 +295,13 @@
     }
     var frame = document.querySelector(".slide-frame");
     if (!DECK_KEYS[event.key] || !frame) { return; }
-    var doc;
-    try { doc = frame.contentDocument; } catch (e) { return; }
-    if (!doc || !doc.body) { return; }
     event.preventDefault();
     frame.contentWindow.focus();
+    // A deck in another origin — a file:// bundle, to Chrome — keeps its
+    // document to itself. Then this key only moves focus, and the next pages.
+    var doc;
+    try { doc = frame.contentDocument; } catch (e) { doc = null; }
+    if (!doc || !doc.body) { return; }
     (doc.activeElement || doc.body).dispatchEvent(new KeyboardEvent("keydown", {
       key: event.key,
       code: event.code,

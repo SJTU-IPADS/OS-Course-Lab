@@ -321,10 +321,28 @@ def _row(block: model.Block, ctx: Ctx) -> str:
     return _figure("\n".join(parts), block.content.get("caption"), block, ctx)
 
 
+_PARBOX_ALIGN = {"left": r"\raggedright", "center": r"\centering", "right": r"\raggedleft"}
+
+
+def _width_column(align: str, share: float) -> str:
+    r"""A `p` column taking ``share`` of the line, less its own padding.
+
+    Each column pads both sides by \tabcolsep, so taking it off every column
+    keeps the table exactly \linewidth wide.
+    """
+    return r">{%s\arraybackslash}p{\dimexpr %s\linewidth-2\tabcolsep\relax}" % (
+        _PARBOX_ALIGN[align], _fmt(share)
+    )
+
+
 def _table(block: model.Block, ctx: Ctx) -> str:
     headers = block.content["headers"]
     align = block.content.get("align") or ["left"] * len(headers)
-    spec = "".join(_COLUMN_SPEC[a] for a in align)
+    widths = block.content.get("widths")
+    if widths is None:
+        spec = "".join(_COLUMN_SPEC[a] for a in align)
+    else:
+        spec = "".join(_width_column(a, w) for a, w in zip(align, widths))
     lines = [
         r"\begin{center}",
         r"\begin{tabular}{%s}" % spec,
@@ -368,7 +386,8 @@ def _demo(block: model.Block, ctx: Ctx) -> str:
         r"\begin{tcolorbox}[colback=blue!3,colframe=blue!40,title=%s]"
         % i18n.ui(ctx.lang, "demo")
     ]
-    lines.append(r"\textbf{%s}\\" % inline(content["name"]))
+    if content["name"]:  # a demo may go without a name
+        lines.append(r"\textbf{%s}\\" % inline(content["name"]))
     if content.get("description"):
         lines.append(inline(content["description"]) + r"\\")
     transcript = demo_module.prompt_lines(str(content["command"]))

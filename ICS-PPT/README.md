@@ -7,7 +7,7 @@ or a chapter of a LaTeX textbook.
 
 ```bash
 pip install -e .
-scripts/prepare.sh                                      # vendors marp-cli (needs Node)
+scripts/prepare.sh                                      # vendors marp-cli (needs Node; Windows: see docs/usage.md)
 
 python3 -m lecturekit.cli view examples/showcase        # open the example deck
 python3 -m lecturekit.cli view examples/showcase --watch   # live-reload while editing

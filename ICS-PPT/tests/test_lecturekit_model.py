@@ -543,11 +543,27 @@ class LectureKitModelTest(unittest.TestCase):
             "headers": ["机制", "开销"],
             "rows": [["进程", "高"], ["线程", "低"]],
             "align": ["left", "right"],
+            "widths": None,
         })
 
     def test_table_align_defaults_to_none(self):
         block = self._table_block(headers=["a", "b"], rows=[["1", "2"]])
         self.assertIsNone(block.content["align"])
+
+    def test_table_widths_are_stored_as_fractions(self):
+        block = self._table_block(
+            headers=["a", "b", "c"], rows=[["1", "2", "3"]], widths=[1, 1, 2]
+        )
+        self.assertEqual(block.content["widths"], [0.25, 0.25, 0.5])
+
+    def test_table_rejects_widths_of_wrong_length(self):
+        with self.assertRaises(ValidationError):
+            self._table_block(headers=["a", "b"], rows=[["1", "2"]], widths=[1])
+
+    def test_table_rejects_non_positive_width(self):
+        for bad in (0, -1, "2", True, float("inf")):
+            with self.subTest(bad=bad), self.assertRaises(ValidationError):
+                self._table_block(headers=["a", "b"], rows=[["1", "2"]], widths=[1, bad])
 
     def test_table_rejects_ragged_row(self):
         with self.assertRaises(ValidationError):

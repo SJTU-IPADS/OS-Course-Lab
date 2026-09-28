@@ -12,7 +12,7 @@ sit beside the picture instead.
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from pptx.dml.color import RGBColor
@@ -434,7 +434,7 @@ def _slide(block, ctx: Ctx) -> None:
     height = _estimate_paras_height(paras, width)
     box, tf = _textbox(ctx, height, width=width)
     first = True
-    ordinal = 0
+    ordinals: dict[int, int] = {}      # running number per list level
     for index, para in enumerate(paras):
         p = tf.paragraphs[0] if first else tf.add_paragraph()
         first = False
@@ -453,10 +453,19 @@ def _slide(block, ctx: Ctx) -> None:
             p.space_before = Pt(before)
         if para.kind in ("bullet", "ordered"):
             p.level = min(para.level, 8)
-            ordinal = ordinal + 1 if para.kind == "ordered" else 0
-            marker = f"{ordinal}.  " if para.kind == "ordered" else "•  "
+            # A nested item leaves the outer count alone; an item at this
+            # level or shallower ends every deeper list.
+            for deeper in [lv for lv in ordinals if lv > para.level]:
+                del ordinals[deeper]
+            if para.kind == "ordered":
+                ordinals[para.level] = ordinals.get(para.level, 0) + 1
+            else:
+                ordinals.pop(para.level, None)
+            marker = f"{ordinals[para.level]}.  " if para.kind == "ordered" else "•  "
             _hanging_indent(p, marker, size_pt=size, level=para.level)
             _style_run(p.add_run(), marker, size_pt=size, color=theme.ACCENT1, bold=True)
+        else:
+            ordinals.clear()           # a paragraph ends every open list
         if para.kind == "heading":
             for r in para.runs:
                 _style_run(p.add_run(), r.text, size_pt=size, color=theme.FG,
@@ -563,18 +572,20 @@ def _demo(block, ctx: Ctx) -> None:
     output = content.get("output")
     outputs = str(output).strip("\n").split("\n") if output else []
 
-    head = str(content["name"])
-    if content.get("description"):
-        head = f"{head} — {content['description']}"
-    head_height = estimate_text_height(head, font_pt=theme.CAPTION_PT,
-                                       width=ctx.layout.content_width)
-    box, tf = _textbox(ctx, head_height)
-    _set_line_spacing(tf.paragraphs[0], theme.CAPTION_PT)
-    _apply_runs(tf.paragraphs[0], parse_markdown(head)[0].runs,
-                size_pt=theme.CAPTION_PT, color=theme.DK2)
-    for run in tf.paragraphs[0].runs:
-        run.font.bold = True
-    ctx.cursor.place(head_height)
+    # A demo may go without a name, and then the listing is all there is.
+    head = " — ".join(
+        str(part) for part in (content["name"], content.get("description")) if part
+    )
+    if head:
+        head_height = estimate_text_height(head, font_pt=theme.CAPTION_PT,
+                                           width=ctx.layout.content_width)
+        box, tf = _textbox(ctx, head_height)
+        _set_line_spacing(tf.paragraphs[0], theme.CAPTION_PT)
+        _apply_runs(tf.paragraphs[0], parse_markdown(head)[0].runs,
+                    size_pt=theme.CAPTION_PT, color=theme.DK2)
+        for run in tf.paragraphs[0].runs:
+            run.font.bold = True
+        ctx.cursor.place(head_height)
 
     vertical_pad_pt = 4
     rows = lines + outputs
@@ -769,6 +780,14 @@ def _table(block, ctx: Ctx) -> None:
     )
     table = frame.table
     table.first_row = True
+    widths = content.get("widths")
+    if widths is not None:
+        # the last column takes the rounding remainder, so the sum is exact
+        total = ctx.layout.content_width
+        spans = [Emu(int(total * w)) for w in widths[:-1]]
+        spans.append(Emu(total - sum(spans)))
+        for column, span in zip(table.columns, spans):
+            column.width = span
     for c, header in enumerate(headers):
         _fill_cell(table.cell(0, c), str(header), bold=True, align=align, col=c)
     for r, row in enumerate(rows, start=1):
@@ -887,6 +906,62 @@ def _size_to_emu(value, whole: int) -> int | None:
     if text.endswith("%"):
         return round(whole * float(text[:-1]) / 100)
     return None
+
+
+def _side_column(block, layout: Layout) -> tuple[int, int]:
+    """Left edge and width (EMU) of a ``side_image``'s full-height column.
+
+    Marp's ``bg right`` without a size takes half the slide.
+    """
+    width = _size_to_emu(block.content.get("width") or "50%", layout.width)
+    width = min(width or layout.width // 2, layout.content_width)
+    left = 0 if block.content.get("side") == "left" else layout.width - width
+    return left, width
+
+
+def side_layout(sides: list, layout: Layout) -> Layout:
+    """The content box a page's ``side_image`` column leaves to the other blocks.
+
+    Marp's split background narrows the whole slide to the rest of its width and
+    keeps the ordinary padding inside it, so the title and every block reflow
+    there. The first ``side_image`` sets the side and the width.
+    """
+    left, width = _side_column(sides[0], layout)
+    return replace(
+        layout,
+        content_left=layout.content_left + (width if left == 0 else 0),
+        content_width=layout.content_width - width,
+    )
+
+
+def draw_side_images(sides: list, ctx: Ctx) -> None:
+    """Draw a page's ``side_image`` blocks into their full-height column.
+
+    Several images share the column side by side, as in Marp. ``contain`` or
+    ``fit`` in ``alt`` fits the whole picture in its cell, centred; otherwise it
+    covers the cell and is cropped to it, Marp's default for a background.
+    """
+    column, width = _side_column(sides[0], ctx.layout)
+    cell, height = width // len(sides), ctx.layout.height
+    for i, block in enumerate(sides):
+        path = _resolve_image(block.content["src"], ctx)
+        if path is None:
+            continue
+        left = column + i * cell
+        pic = ctx.slide.shapes.add_picture(str(path), left, 0)
+        w, h = pic.width, pic.height
+        if {"contain", "fit"} & set(str(block.content.get("alt") or "").split()):
+            scale = min(cell / w, height / h)
+            pic.width, pic.height = round(w * scale), round(h * scale)
+            pic.left = left + (cell - pic.width) // 2
+            pic.top = (height - pic.height) // 2
+            continue
+        scale = max(cell / w, height / h)
+        crop_x = (1 - cell / (w * scale)) / 2
+        crop_y = (1 - height / (h * scale)) / 2
+        pic.crop_left = pic.crop_right = crop_x
+        pic.crop_top = pic.crop_bottom = crop_y
+        pic.width, pic.height = cell, height
 
 
 def _caption(text: str, align: str, ctx: Ctx) -> None:
@@ -1241,7 +1316,6 @@ _DRAWERS = {
     "sidenote": _sidenote,
     "table": _table,
     "image": _image,
-    "side_image": _image,
     "architecture": _architecture,
     "row": _row,
 }

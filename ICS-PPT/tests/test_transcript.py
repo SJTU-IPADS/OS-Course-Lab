@@ -47,6 +47,17 @@ class BlockSelection(unittest.TestCase):
         self.assertNotIn("口头讲的话", html)
         self.assertNotIn("python3 demo.py", html)
 
+    def test_table_widths_become_a_colgroup(self):
+        def body(p):
+            p.title("Modes")
+            p.table([["a", "b"]], headers=["H1", "H2"], widths=[1, 3])
+
+        html = _render(_lecture_with(body))
+        self.assertIn(
+            '<colgroup><col style="width:25.00%"><col style="width:75.00%"></colgroup>',
+            html,
+        )
+
     def test_footnotes_never_reach_the_sheet(self):
         def body(p):
             p.title("Quorums")

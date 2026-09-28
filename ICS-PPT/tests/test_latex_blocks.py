@@ -99,6 +99,19 @@ class BlocksTest(unittest.TestCase):
         self.assertIn(r"\bottomrule", out)
         self.assertIn("1 & 2", out)
 
+    def test_table_widths_become_p_columns_of_the_line(self):
+        out = self.emit("table", {
+            "headers": ["a", "b"], "rows": [["1", "2"]],
+            "align": ["left", "right"], "widths": [0.25, 0.75],
+        })
+        self.assertIn(
+            r"\begin{tabular}{>{\raggedright\arraybackslash}"
+            r"p{\dimexpr 0.25\linewidth-2\tabcolsep\relax}"
+            r">{\raggedleft\arraybackslash}"
+            r"p{\dimexpr 0.75\linewidth-2\tabcolsep\relax}}",
+            out,
+        )
+
     def test_table_without_align_is_all_left(self):
         out = self.emit("table", {"headers": ["a", "b"], "rows": [], "align": None})
         self.assertIn(r"\begin{tabular}{ll}", out)
@@ -144,6 +157,13 @@ class BlocksTest(unittest.TestCase):
             "name": "N", "command": "make run", "description": None,
         })
         self.assertIn("动手试试", out)
+        self.assertIn("$ make run", out)
+
+    def test_a_nameless_demo_prints_no_empty_name(self):
+        out = self.emit("demo", {
+            "name": "", "command": "make run", "description": None,
+        })
+        self.assertNotIn(r"\textbf{}", out)
         self.assertIn("$ make run", out)
 
     def test_demo_prints_the_recorded_output_too(self):

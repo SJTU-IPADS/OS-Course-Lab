@@ -258,7 +258,36 @@ def _table(block):
     ]
     for row in table["rows"]:
         lines.append("| " + " | ".join(_table_cell(c) for c in row) + " |")
-    return [*lines, ""]
+    widths = table.get("widths")
+    if widths is None:
+        return [*lines, ""]
+    return _fixed_table(lines, widths)
+
+
+def _fixed_table(lines: list[str], widths: list[float]) -> list[str]:
+    """Wrap GFM table lines so the table spans the slide at given column shares.
+
+    A GFM table carries no widths, so the table goes in a div whose class names
+    the percentages, and a <style> rule keyed on that class sets them (Marp
+    honors rules in a <style> block; see the annotation bubbles below). The
+    class is derived from the widths, so tables sharing widths share one rule
+    and no deck-wide counter is needed. The <style> comes first: a footnote
+    marker is tucked after the last table row, which must stay the last line
+    with text in it. Blank lines keep Marp parsing the rows as markdown.
+    """
+    percents = [f"{100 * w:.2f}".rstrip("0").rstrip(".") for w in widths]
+    cls = "lk-cols-" + "-".join(pc.replace(".", "_") for pc in percents)
+    rules = [
+        f"section .{cls} {{ align-self: stretch; }}",
+        f"section .{cls} > table {{ table-layout: fixed; width: 100%; }}",
+    ] + [
+        f"section .{cls} > table th:nth-child({i}) {{ width: {pc}%; }}"
+        for i, pc in enumerate(percents, start=1)
+    ]
+    return [
+        "<style>", *rules, "</style>", "",
+        f'<div class="lk-table {cls}">', "", *lines, "", "</div>", "",
+    ]
 
 
 def _architecture(block):

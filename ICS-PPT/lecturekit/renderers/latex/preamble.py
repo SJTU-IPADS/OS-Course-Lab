@@ -13,6 +13,7 @@ from .text import escape
 _PACKAGES = """\
 \\usepackage{graphicx}
 \\usepackage{booktabs}
+\\usepackage{array}
 \\usepackage{listings}
 \\usepackage{xcolor}
 \\usepackage[most]{tcolorbox}

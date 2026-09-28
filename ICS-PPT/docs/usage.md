@@ -50,6 +50,11 @@ Click a page to open it as a Marp slide; use `←` / `→` to page and the
 "≡ 大纲" button to return to the outline. The deck itself carries no outline
 slide.
 
+The bundle needs no server: `index.html` opens straight from disk, so a copy
+on a Windows, macOS or Linux machine presents in Chrome, Edge or Firefox with
+nothing installed. Only rendering needs Python and Node, and only a
+[watch session](#live-preview-edit-and-watch) adds the preview features.
+
 ### Two numberings
 
 An [animation](dsl.md#frames-an-animation) is several slides but one *idea*, and
@@ -104,6 +109,13 @@ see and parks it on the rest, which brings the same pass to 0.05 ms. Overview,
 presenter view, and printing show every slide, so there it is restored on all of
 them.
 
+A second one, `assets/position.js`, tells the outline shell which slide is on
+screen each time it changes. The shell uses that number to highlight the page
+you paged to when you return to the outline, and to come back to the same slide
+after a reload. It cannot read the number from the deck itself: Chrome treats
+every `file://` page as its own origin, so a shell opened from disk may not
+look inside its own deck.
+
 ### Rendering offline
 
 Run this once, with network, and nothing in a render reaches out again:
@@ -112,10 +124,20 @@ Run this once, with network, and nothing in a render reaches out again:
 scripts/prepare.sh          # vendors marp-cli into node_modules/
 ```
 
-Marp is looked up in this order: `$LECTUREKIT_MARP`, the vendored
-`node_modules/.bin/marp`, a `marp` on `PATH`, and finally `npx`. Only that last
-one talks to the npm registry — and it is the one to avoid on a bad network:
-resolving the package hangs for minutes when the network is up but the registry
+On Windows, where `prepare.sh` does not run, the same step is one command in
+the repository root:
+
+```bash
+npm install --no-audit --no-fund @marp-team/marp-cli@4.5.0
+```
+
+The version is `MARP_VERSION` in `lecturekit/renderers/viewer/marp.py`.
+
+Marp is looked up in this order: `$LECTUREKIT_MARP`, the vendored copy (run as
+`node node_modules/@marp-team/marp-cli/marp-cli.js`), a `marp` on `PATH`, and
+finally `npx`. Only that last one talks to the npm registry — and it is the one
+to avoid on a bad network: resolving the package hangs for minutes when the
+network is up but the registry
 is unreachable (npm's fetch timeout is 5 minutes, times three attempts), so
 `marp --watch` never starts, `slides.html` is never rebuilt, and the live viewer
 keeps showing the previous build. A watch session says so after 20 seconds
@@ -356,7 +378,9 @@ else — a rendered bundle has nothing to run it:
 python3 -m lecturekit.cli view "$LEC" --watch
 ```
 
-Press it and bash runs the command **in the lecture directory**. Its output
+Press it and bash runs the command **in the lecture directory**. Demos run on
+Linux and macOS. On Windows the rest of a watch session works, and a press
+answers "demos run on Linux and macOS only". Its output
 (stdout and stderr merged) appears in a drawer along the bottom of the deck **as
 it is produced**, not when the command is over: a model answering a token at a
 time is watched, not waited for. The drawer counts the seconds while it runs and

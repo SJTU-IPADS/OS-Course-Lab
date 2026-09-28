@@ -501,6 +501,29 @@ class MarpWatchCommandTest(unittest.TestCase):
             self.assertNotIn("--theme", command)
 
 
+class TerminateProcessGroupTest(unittest.TestCase):
+    def test_windows_walks_the_tree_instead(self):
+        # No process groups there, and marp may sit under an npx.cmd wrapper:
+        # killing the wrapper alone would leave node holding marp's port.
+        class Proc:
+            pid = 4242
+            waited = False
+
+            def poll(self):
+                return None
+
+            def wait(self, timeout=None):
+                self.waited = True
+                return 1
+
+        proc = Proc()
+        with patch.object(dev_server.os, "name", "nt"), \
+                patch.object(dev_server.subprocess, "run") as run:
+            dev_server._terminate_process_group(proc)
+        self.assertEqual(run.call_args.args[0], ["taskkill", "/T", "/F", "/PID", "4242"])
+        self.assertTrue(proc.waited)
+
+
 class PumpMarpOutputTest(unittest.TestCase):
     def test_drops_info_keeps_warnings_and_errors(self):
         import io
@@ -734,6 +757,7 @@ class ServeSlideTest(unittest.TestCase):
                 body = resp.read().decode("utf-8")
             self.assertIn("data-lk-marpit-svg", body)
             self.assertIn("bespoke-marp-active", body)
+            self.assertIn('lecturekit: "slide"', body)  # position.js
 
     def test_slides_html_missing_returns_404(self):
         with tempfile.TemporaryDirectory() as tmp:

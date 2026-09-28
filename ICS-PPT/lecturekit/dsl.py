@@ -712,7 +712,8 @@ class PageBuilder:
 
         ``side`` is "right" (default) or "left"; ``width`` sets the column width
         (e.g. "38%"), defaulting to a half-split. Renders via Marp's split
-        background in the viewer/Marp deck and a floated image in slidev.
+        background in the viewer/Marp deck, a full-height column beside the
+        narrowed content box in PPTX, and a floated image in slidev.
         """
         if side not in ("left", "right"):
             raise model.ValidationError(
@@ -897,6 +898,7 @@ class PageBuilder:
         *,
         headers: Iterable[str],
         align: Iterable[str] | None = None,
+        widths: Iterable[float] | None = None,
         only: Iterable[str] | None = None,
         except_: Iterable[str] | None = None,
         key: str | None = None,
@@ -905,6 +907,9 @@ class PageBuilder:
 
         ``headers`` is required (a GFM table must have a header row). ``align``,
         when given, is one of ``"left"``/``"center"``/``"right"`` per column.
+        ``widths``, when given, is one positive weight per column; the table
+        then spans the content width and each column takes its weight's share.
+        They are stored normalized, as fractions summing to 1.
         Cells carry inline markdown, passed through to Marp.
         """
         header_list = [str(h) for h in headers]
@@ -927,9 +932,25 @@ class PageBuilder:
                     raise model.ValidationError(
                         f"table align must be left/center/right, got {a!r}"
                     )
+        width_list = None
+        if widths is not None:
+            weights = list(widths)
+            if len(weights) != width:
+                raise model.ValidationError(
+                    f"table widths has {len(weights)} entries, expected {width}"
+                )
+            for w in weights:
+                if (isinstance(w, bool) or not isinstance(w, (int, float))
+                        or not 0 < w < float("inf")):
+                    raise model.ValidationError(
+                        f"table widths must be positive numbers, got {w!r}"
+                    )
+            total = float(sum(weights))
+            width_list = [w / total for w in weights]
         return self._block(
             "table",
-            {"headers": header_list, "rows": row_list, "align": align_list},
+            {"headers": header_list, "rows": row_list, "align": align_list,
+             "widths": width_list},
             only=only,
             except_=except_,
             key=key,

@@ -97,6 +97,34 @@ class PptxRendererTest(unittest.TestCase):
         self.assertIn("hello", text)
         self.assertIn("world", text)
 
+    def test_nested_bullets_do_not_restart_the_outer_numbering(self):
+        lecture = Lecture(id="lec", title="T")
+
+        def body(p):
+            p.title("Steps")
+            p.slide("1. one\n   - a\n2. two\n   - b\n3. three\n\n- x\n1. again")
+
+        with lecture.section("S", id="s") as s:
+            s.page("p1", body=body)
+        prs, _ = self.render(lecture)
+        lines = all_text(prs.slides[0]).split("\n")
+        numbered = [l.split()[0] for l in lines if l[:1].isdigit()]
+        self.assertEqual(numbered, ["1.", "2.", "3.", "1."])
+
+    def test_a_paragraph_between_two_ordered_lists_restarts_the_numbering(self):
+        lecture = Lecture(id="lec", title="T")
+
+        def body(p):
+            p.title("Steps")
+            p.slide("**call**:\n1. push\n2. jump\n\n**ret**:\n1. pop\n2. resume")
+
+        with lecture.section("S", id="s") as s:
+            s.page("p1", body=body)
+        prs, _ = self.render(lecture)
+        lines = all_text(prs.slides[0]).split("\n")
+        numbered = [l.split()[0] for l in lines if l[:1].isdigit()]
+        self.assertEqual(numbered, ["1.", "2.", "1.", "2."])
+
     def test_cover_slide_draws_title_metadata_and_logos(self):
         src = Path(tempfile.mkdtemp())
         (src / "assets").mkdir()
@@ -201,6 +229,24 @@ class PptxRendererTest(unittest.TestCase):
         self.assertIn("$ gcc -S a.c", text)
         self.assertIn("a.s written", text)
 
+    def test_a_nameless_demo_is_its_listing_alone(self):
+        # The name is optional (the deck's drawer labels such a run with its
+        # first line), so the handout must not trip over its absence.
+        lecture = Lecture(id="lec", title="L")
+
+        def body(p):
+            p.title("P")
+            p.demo("", "make run", output="built")
+            p.demo("", "make test", description="the checks")
+
+        lecture.page("p1", body=body)
+        prs, _ = self.render(lecture)
+        text = all_text(prs.slides[0])
+        self.assertIn("$ make run", text)
+        self.assertIn("built", text)
+        self.assertIn("the checks", text)
+        self.assertNotIn("— the checks", text)
+
     def test_code_background_matches_rows_without_an_extra_blank_line(self):
         lecture = Lecture(id="lec", title="L")
 
@@ -271,6 +317,22 @@ class PptxRendererTest(unittest.TestCase):
         self.assertEqual(len(table.columns), 2)
         self.assertEqual(table.cell(0, 0).text, "H1")
         self.assertEqual(table.cell(1, 1).text, "b")
+
+    def test_table_widths_split_the_content_width(self):
+        lecture = Lecture(id="lec", title="L")
+
+        def body(p):
+            p.title("P")
+            p.table([["a", "b", "c"]], headers=["H1", "H2", "H3"], widths=[1, 1, 2])
+
+        with lecture.section("S", id="s") as s:
+            s.page("p", body=body)
+        prs, _ = self.render(lecture)
+        table = next(s for s in prs.slides[0].shapes if s.has_table)
+        cols = [c.width for c in table.table.columns]
+        self.assertEqual(sum(cols), table.width)
+        self.assertEqual(cols[0], cols[1])
+        self.assertAlmostEqual(cols[2] / table.width, 0.5, places=4)
 
     def test_sidenote_and_aside_text_present(self):
         prs, _ = self.render(self.sample())
@@ -425,6 +487,67 @@ class PptxRendererTest(unittest.TestCase):
                     and "beside the picture" in s.text_frame.text)
         # the text box stops short of the picture rather than running under it
         self.assertLessEqual(text.left + text.width, pic.left)
+
+    def test_side_image_takes_a_column_and_the_text_reflows_beside_it(self):
+        src = Path(tempfile.mkdtemp())
+        (src / "assets").mkdir()
+        (src / "assets" / "pic.png").write_bytes(_PNG)
+        lecture = Lecture(id="lec", title="L")
+
+        def body(p):
+            p.title("P")
+            p.side_image("assets/pic.png", width="40%", alt="contain")
+            p.slide("beside the picture")
+
+        lecture.page("p1", body=body)
+        prs, _ = self.render(lecture, asset_root=src)
+        slide = prs.slides[0]
+        layout = Layout.from_ratio("16:9")
+        column = round(layout.width * 0.4)
+        pic = next(
+            s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
+        )
+        # the square picture is fitted whole into the column, centred in it
+        self.assertEqual(pic.width, column)
+        self.assertEqual(pic.left, layout.width - column)
+        self.assertEqual(pic.top, (layout.height - pic.height) // 2)
+        for name in ("P", "beside the picture"):
+            text = next(s for s in slide.shapes if s.has_text_frame
+                        and s.text_frame.text == name)
+            self.assertEqual(text.left, layout.content_left)
+            self.assertLessEqual(text.left + text.width,
+                                 layout.content_left + layout.content_width - column)
+        # the text starts under the title, not under the picture
+        self.assertLess(text.top, layout.height // 3)
+
+    def test_side_image_on_the_left_covers_its_column(self):
+        src = Path(tempfile.mkdtemp())
+        (src / "assets").mkdir()
+        (src / "assets" / "pic.png").write_bytes(_PNG)
+        lecture = Lecture(id="lec", title="L")
+
+        def body(p):
+            p.title("P")
+            p.side_image("assets/pic.png", side="left")
+            p.slide("beside the picture")
+
+        lecture.page("p1", body=body)
+        prs, _ = self.render(lecture, asset_root=src)
+        slide = prs.slides[0]
+        layout = Layout.from_ratio("16:9")
+        pic = next(
+            s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
+        )
+        # Marp's default: half the slide, filled edge to edge and cropped
+        self.assertEqual((pic.left, pic.top), (0, 0))
+        self.assertEqual((pic.width, pic.height), (layout.width // 2, layout.height))
+        # the square picture is wider than the column once it fills its height
+        self.assertGreater(pic.crop_left, 0)
+        self.assertAlmostEqual(pic.crop_left, pic.crop_right)
+        self.assertEqual(pic.crop_top, 0)
+        text = next(s for s in slide.shapes if s.has_text_frame
+                    and s.text_frame.text == "beside the picture")
+        self.assertEqual(text.left, layout.width // 2 + layout.content_left)
 
     def test_architecture_draws_a_band_and_a_box_per_module(self):
         lecture = Lecture(id="lec", title="L")

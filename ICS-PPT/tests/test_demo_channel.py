@@ -20,6 +20,7 @@ import urllib.request
 from contextlib import closing
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 from lecturekit import demo, dev_server
 from lecturekit.dsl import Lecture
@@ -236,6 +237,15 @@ class DemoTranscriptTest(unittest.TestCase):
 
     def _commands(self, events):
         return [e.text for e in events if isinstance(e, demo.Command)]
+
+    def test_the_prologue_is_bash_3_2(self):
+        # macOS still ships bash 3.2, where `exec {var}>&1` runs a command named
+        # `{var}`: the prologue would fail before the demo's first line.
+        code = [
+            line for line in demo._PROLOGUE.read_text(encoding="utf-8").splitlines()
+            if not line.startswith("#")
+        ]
+        self.assertNotRegex("\n".join(code), r"\{\w+\}\s*[<>]")
 
     def _output(self, events):
         return "".join(e.text for e in events if isinstance(e, demo.Chunk))
@@ -546,6 +556,19 @@ class DemoEndpointTest(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(output.strip(), "ran-it")
         self.assertEqual(self._end(events)["exit"], 0)
+
+    def test_where_demos_cannot_run_a_press_is_told_so(self):
+        # Windows serves a deck but has no pty, process groups or pipes that
+        # `select` can wait on: the chip gets an answer, not a traceback.
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            demo.write(_lecture("echo hi"), out)
+            port = self._server(out, demo_cwd=out)
+            with patch.object(demo, "RUNNABLE", False):
+                with self.assertRaises(urllib.error.HTTPError) as caught:
+                    self._post(port, {"id": demo.demo_id("echo hi")})
+        self.assertEqual(caught.exception.code, 501)
+        self.assertIn("Linux and macOS", json.loads(caught.exception.read())["error"])
 
     def test_an_unknown_id_runs_nothing(self):
         with tempfile.TemporaryDirectory() as tmp:
