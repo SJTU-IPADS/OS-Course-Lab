@@ -183,39 +183,6 @@ def visible_state_2(p):
 """)
 
 
-def register_slices(p):
-    p.title('寄存器切片：16 个通用寄存器及其命名规则')
-    slide(p, r"""
-**16 个通用寄存器（64 位宽）及其子寄存器切片**：
-- **前 8 个经典寄存器**（源自 8086/IA32 历史兼容演进）：
-  - `%rax` $\to$ 32位 `%eax` $\to$ 16位 `%ax` $\to$ 8位高 `%ah` / 低 `%al`；
-  - `%rbx` $\to$ `%ebx` $\to$ `%bx` $\to$ `%bh` / `%bl`；
-  - `%rcx` $\to$ `%ecx` $\to$ `%cx` $\to$ `%ch` / `%cl`；
-  - `%rdx` $\to$ `%edx` $\to$ `%dx` $\to$ `%dh` / `%dl`；
-  - `%rsi` $\to$ `%esi` $\to$ `%si` $\to$ 低 8 位 `%sil`；
-  - `%rdi` $\to$ `%edi` $\to$ `%di` $\to$ 低 8 位 `%dil`；
-  - `%rbp` $\to$ `%ebp` $\to$ `%bp` $\to$ 低 8 位 `%bpl`；
-  - `%rsp` $\to$ `%esp` $\to$ `%sp` $\to$ 低 8 位 `%spl`。
-""")
-    p.notes('x86-64 体系 16 个通用寄存器的高低位嵌套切片命名体系及核心约定用途。')
-
-
-def register_slices_2(p):
-    p.title('寄存器切片：16 个通用寄存器及其命名规则')
-    slide(p, r"""
-- **后 8 个新增寄存器**（x86-64 扩展引入）：
-  - 64 位完整：`%r8`, `%r9`, `%r10`, `%r11`, `%r12`, `%r13`, `%r14`, `%r15`；
-  - 32 位切片（加后缀 `d`）：`%r8d` ~ `%r15d`；
-  - 16 位切片（加后缀 `w`）：`%r8w` ~ `%r15w`；
-  - 8 位切片（加后缀 `b`）：`%r8b` ~ `%r15b`。
-
-**核心用途（将在后续介绍）**：
-- `%rsp`：栈指针（Stack Pointer）；
-- `%rax`：函数返回值（Return Value）；
-- `%rdi`, `%rsi`, `%rdx`, `%rcx`, `%r8`, `%r9`：用于传递前 6 个整型与指针参数。
-""")
-
-
 def register_slices_fig(p):
     p.title('寄存器切片：16 个通用寄存器及其命名规则')
     figure(p, "register-table", 1120)
