@@ -55,29 +55,23 @@ on a Windows, macOS or Linux machine presents in Chrome, Edge or Firefox with
 nothing installed. Only rendering needs Python and Node, and only a
 [watch session](#live-preview-edit-and-watch) adds the preview features.
 
-### Two numberings
+### Slide numbers
 
-An [animation](dsl.md#frames-an-animation) is several slides but one *idea*, and
-the deck counts it as one. Every frame prints the **same** number, the count does
-not advance across them, and the page after a three-frame animation at 12 is 13
-— not 15. The outline row and a `p.cite(...)` backref use that same number, so
-what the projector shows, what the outline lists, and what a reference points at
-are one number.
+A slide's number is its position in the deck, counting every slide. Each frame
+of an [animation](dsl.md#frames-an-animation) and each page in a run of [pages
+titled the same](dsl.md#pages-titled-the-same) prints its own number: the page
+after a three-frame animation at 12 is 15.
 
-A run of [pages titled the same](dsl.md#pages-titled-the-same) is treated the
-same way, for the same reason: one title is one idea, so consecutive sibling
-pages sharing one get a single outline row and a single number, held across the
-run.
+The cover and every [bridge page](dsl.md#the-tree) (`lec.bridge(...)`) print no
+number but are still counted, so the page after a bridge at 8 is 9 and prints 9.
 
-A [bridge page](dsl.md#the-tree) (`lec.bridge(...)`) goes further: it is zero
-ideas, so it prints no number at all and the count does not advance — the pages
-around it stay consecutively numbered, and the outline never lists it.
+The outline gives an animation or a same-titled run one row, labelled with the
+number of its first slide. A `p.cite(...)` backref lists the number of each
+page that cited the work, so a citation on two frames of one animation reads
+`(P12, P13)`.
 
-Build tooling still counts **slides**: `--pages 4` is the 4th slide in flat deck
-order and `slides.004.png` is that slide's image, both unaffected by animations
-(or bridges) earlier in the deck. So on a deck with animations the shown number is lower than
-the `--pages` index — that is the one place the two numberings are meant to
-disagree. Selecting a page by **id** (`--pages commit-logging`) sidesteps it.
+Build tooling uses the same count: `--pages 4` selects the slide that prints 4 in
+the full deck, and a full `--png` export names that slide's image `slides.004.png`.
 
 **Presenter notes.** A page's `p.notes(...)` blocks are emitted into the deck as
 Marp presenter notes. Open the deck (`slides.html`) and press `p` to open the
