@@ -1,47 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 262" width="1120" height="262">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="20.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">xorl %eax, %eax</text>
-<text x="210.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">在重命名阶段完成</text>
-<rect x="20.0" y="70.0" width="110.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="75.0" y="104.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">译码</text>
-<rect x="170.0" y="70.0" width="150.0" height="56.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="245.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">重命名</text>
-<text x="245.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">RAT</text>
-<rect x="360.0" y="70.0" width="110.0" height="56.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="415.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">ALU</text>
-<rect x="510.0" y="70.0" width="100.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="560.0" y="104.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">完成</text>
-<line x1="130.0" y1="98.0" x2="166.0" y2="98.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<path d="M 320 84 C 380 30, 450 30, 506 84" fill="none" stroke="#2e7d4f" stroke-width="2.4" marker-end="url(#ah-2e7d4f)"/>
-<text x="415.0" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">0 周期，不占 ALU</text>
-<text x="20.0" y="170.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">寄存器别名表（RAT）</text>
-<rect x="20.0" y="184.0" width="150.0" height="30.0" rx="2" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.2"/>
-<text x="95.0" y="204.0" font-family="sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">架构寄存器</text>
-<rect x="170.0" y="184.0" width="150.0" height="30.0" rx="2" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.2"/>
-<text x="245.0" y="204.0" font-family="sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">物理寄存器</text>
-<rect x="20.0" y="214.0" width="150.0" height="30.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
-<text x="95.0" y="234.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">%eax</text>
-<rect x="170.0" y="214.0" width="150.0" height="30.0" rx="2" fill="#e5f3ea" stroke="#9fb5c3" stroke-width="1.2"/>
-<text x="245.0" y="234.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">物理零</text>
-<text x="340.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">编码 2 字节：31 c0</text>
-<text x="340.0" y="246.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">movl $0：5 字节</text>
-<line x1="630.0" y1="16.0" x2="630.0" y2="246.0" stroke="#9fb5c3" stroke-width="1"/>
-<text x="650.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">x * 5</text>
-<text x="720.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">的两种写法</text>
-<path d="M 780 90 L 780 64 L 835.0 64 L 835.0 90 L 890 90 L 890 64 L 945.0 64 L 945.0 90 L 1000 90 L 1000 64 L 1055.0 64 L 1055.0 90 L 1110 90" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="835.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 1</text>
-<text x="945.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 2</text>
-<text x="1055.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 3</text>
-<line x1="780.0" y1="96.0" x2="780.0" y2="236.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
-<line x1="890.0" y1="96.0" x2="890.0" y2="236.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
-<line x1="1000.0" y1="96.0" x2="1000.0" y2="236.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
-<line x1="1110.0" y1="96.0" x2="1110.0" y2="236.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="650.0" y="136.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">imull</text>
-<rect x="780.0" y="112.0" width="330.0" height="36.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="945.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">乘法器：3 个周期</text>
-<text x="650.0" y="200.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">leal</text>
-<text x="650.0" y="222.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">(%rax,%rax,4)</text>
-<rect x="780.0" y="176.0" width="110.0" height="36.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="835.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">1 个周期</text>
-<text x="1000.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">x + x × 4</text>
+<text x="20.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">x * 5</text>
+<text x="92.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="start">的两种写法</text>
+<path d="M 230 92 L 230 64 L 375.0 64 L 375.0 92 L 520 92 L 520 64 L 665.0 64 L 665.0 92 L 810 92 L 810 64 L 955.0 64 L 955.0 92 L 1100 92" fill="none" stroke="#5a6b78" stroke-width="1.8"/>
+<text x="375.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 1</text>
+<text x="665.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 2</text>
+<text x="955.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 3</text>
+<line x1="230.0" y1="98.0" x2="230.0" y2="252.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="520.0" y1="98.0" x2="520.0" y2="252.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="810.0" y1="98.0" x2="810.0" y2="252.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="1100.0" y1="98.0" x2="1100.0" y2="252.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="20.0" y="142.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">imull</text>
+<rect x="230.0" y="114.0" width="870.0" height="42.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="665.0" y="141.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">乘法器：3 个周期</text>
+<text x="20.0" y="208.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">leal</text>
+<text x="20.0" y="232.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">(%rax,%rax,4)</text>
+<rect x="230.0" y="184.0" width="290.0" height="42.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="375.0" y="211.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">1 个周期</text>
+<text x="665.0" y="211.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">x + x × 4</text>
 </svg>
