@@ -377,13 +377,13 @@ def int_arith(p):
 
 
 def shift_ops(p):
-    p.title('算术逻辑：一元、二元与移位运算指令体系')
+    p.title('一元、二元与移位运算指令体系')
     slide(p, r"""
 **一元与二元运算指令体系**：
 - **一元运算**：`incl D`（自增 1），`decl D`（自减 1），`negl D`（取相反数 $D \leftarrow -D$），`notl D`（按位取反）；
 - **二元运算**：`addl S, D`，`subl S, D`（减法 $D \leftarrow D - S$），`andl S, D`，`orl S, D`，`xorl S, D`。
 
-**移位操作指令（算术 vs 逻辑）**：
+**移位操作指令**：
 - **左移指令**：`sall` / `shll`（左移，低位补 0，二者等价）；
 - **算术右移**：`sarl`（右移时复制最高符号位，保持有符号负数语义）；
 - **逻辑右移**：`shrl`（右移时高位严格补 0，用于无符号数除以 $2^k$）。
@@ -392,9 +392,9 @@ def shift_ops(p):
 
 
 def xor_strength(p):
-    p.title('指令优化：xorl 寄存器清零与乘常数强度削减')
+    p.title('指令优化：xorl 寄存器清零')
     slide(p, r"""
-**惯用写法：`xorl %eax, %eax` 寄存器清零**：
+**编译器优化：`xorl %eax, %eax` 寄存器清零**：
 - 任何数异或自身恒为 0（$A \oplus A = 0$）；
 - **为什么不用 `movl $0, %eax`**：
   - 编码长度：`xorl %eax, %eax` 仅需 2 字节（`31 c0`），而 `movl $0, %eax` 占用 5 字节（`b8 00 00 00 00`）；
@@ -404,9 +404,9 @@ def xor_strength(p):
 
 
 def xor_strength_2(p):
-    p.title('指令优化：xorl 寄存器清零与乘常数强度削减')
+    p.title('指令优化：整数乘法优化')
     slide(p, r"""
-**编译器优化：乘常数强度削减（Strength Reduction）**：
+**编译器优化**：
 - 整数乘法 `imull` 耗时通常需 3 个时钟周期；
 - 编译器会自动将常数乘法拆解为组合开销为 1 周期的 `lea` 与移位：
   - `x * 5` $\to$ `leal (%rax,%rax,4), %eax`（$x + x \times 4$）；
