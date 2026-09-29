@@ -377,9 +377,9 @@ def int_arith(p):
 
 
 def shift_ops(p):
-    p.title('一元、二元与移位运算指令体系')
+    p.title('一元、二元与移位运算指令')
     slide(p, r"""
-**一元与二元运算指令体系**：
+**一元与二元运算指令**：
 - **一元运算**：`incl D`（自增 1），`decl D`（自减 1），`negl D`（取相反数 $D \leftarrow -D$），`notl D`（按位取反）；
 - **二元运算**：`addl S, D`，`subl S, D`（减法 $D \leftarrow D - S$），`andl S, D`，`orl S, D`，`xorl S, D`。
 
