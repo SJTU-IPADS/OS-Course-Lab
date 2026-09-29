@@ -91,17 +91,15 @@ def staff_and_textbooks(p):
 - **办公室**：软件大楼 3203 · 3401，答疑请提前预约
 - **教材**：*Computer Systems: A Programmer's Perspective*（CS:APP 第 3 版，2016）
 - **教材**：*Operating Systems: Three Easy Pieces*（OSTEP 1.10 版，2023）
+- **教材**：*操作系统：原理与实现*（银杏书）
 """).image_right("assets/instructors.png", width_px=260)
-    p.sidenote(
-        "第一讲建议阅读",
-        "CS:APP 第 3 版第 1 章：**§1.1**（信息就是位加上下文）、**§1.2**（编译系统）、"
-        "**§1.4**（处理器如何读并执行指令）、**§1.7**（操作系统管理硬件）、**§1.8**（网络）。",
-    )
     p.cite(title="Computer Systems: A Programmer's Perspective", author="Bryant & O'Hallaron",
            year="2016", venue="Prentice Hall, 3rd ed.", key="csapp")
     p.cite(title="Operating Systems: Three Easy Pieces", author="Arpaci-Dusseau & Arpaci-Dusseau",
            year="2023", venue="Version 1.10", url="https://pages.cs.wisc.edu/~remzi/OSTEP/",
            key="ostep")
+    p.cite(title="操作系统：原理与实现", author="陈海波、夏虞斌",
+           year="2023", venue="机械工业出版社", key="ginkgo")
 
 
 def worth_taking(p):

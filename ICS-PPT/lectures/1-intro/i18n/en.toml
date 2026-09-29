@@ -90,7 +90,7 @@ text = 'Instructors and textbooks'
 # src: 任课教师与课程教材
 
 ['staff-and-textbooks.slide.1']
-src_hash = '765bab71'
+src_hash = 'caf98900'
 text = '''
 - **Instructors**: Jinyu Gu · Rong Chen
 - **Email**: gujinyu@sjtu.edu.cn · rongchen@sjtu.edu.cn
@@ -98,6 +98,7 @@ text = '''
 - **Office**: Software Building 3203 · 3401; please make an appointment in advance
 - **Textbook**: *Computer Systems: A Programmer's Perspective* (CS:APP 3rd ed., 2016)
 - **Textbook**: *Operating Systems: Three Easy Pieces* (OSTEP v1.10, 2023)
+- **Textbook**: *Operating Systems: Principles and Implementation* (Ginkgo Book)
 '''
 # src:
 # 
@@ -107,16 +108,7 @@ text = '''
 # - **办公室**：软件大楼 3203 · 3401，答疑请提前预约
 # - **教材**：*Computer Systems: A Programmer's Perspective*（CS:APP 第 3 版，2016）
 # - **教材**：*Operating Systems: Three Easy Pieces*（OSTEP 1.10 版，2023）
-
-['staff-and-textbooks.sidenote.1.title']
-src_hash = '1ff29961'
-text = 'Reading for lecture 1'
-# src: 第一讲建议阅读
-
-['staff-and-textbooks.sidenote.1.text']
-src_hash = 'c984b20d'
-text = 'CS:APP 3rd ed., chapter 1: **§1.1** (information is bits plus context), **§1.2** (the compilation system), **§1.4** (how the processor reads and executes instructions), **§1.7** (the operating system manages the hardware), **§1.8** (networking).'
-# src: CS:APP 第 3 版第 1 章：**§1.1**（信息就是位加上下文）、**§1.2**（编译系统）、**§1.4**（处理器如何读并执行指令）、**§1.7**（操作系统管理硬件）、**§1.8**（网络）。
+# - **教材**：*操作系统：原理与实现*（银杏书）
 
 ['worth-taking.title']
 src_hash = '259bd5ca'
