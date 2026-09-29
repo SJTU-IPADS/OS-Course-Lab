@@ -80,16 +80,16 @@
 <table>
   <tr>
     <td width="25%" valign="top">
-      <h3>💻 <a href="OS-Labs"><code>OS-Labs/</code></a></h3>
-      操作系统课程实验，基于 ChCore 微内核；同时包含在线实验手册源码 <a href="OS-Labs/Pages"><code>Pages/</code></a>
+      <h3>🎬 <a href="ICS-PPT"><code>ICS-PPT/</code></a></h3>
+      ICS 课件：用 Python 编写讲义，一份源码可渲染为网页幻灯片、PowerPoint 与 LaTeX 教材章节
     </td>
     <td width="25%" valign="top">
       <h3>🧮 <a href="ICS-Labs"><code>ICS-Labs/</code></a></h3>
       前置课程“计算机系统基础”（ICS / CS:APP）的实验，为操作系统打下地基
     </td>
     <td width="25%" valign="top">
-      <h3>🎬 <a href="ICS-PPT"><code>ICS-PPT/</code></a></h3>
-      ICS 课件：用 Python 编写讲义，一份源码可渲染为网页幻灯片、PowerPoint 与 LaTeX 教材章节
+      <h3>💻 <a href="OS-Labs"><code>OS-Labs/</code></a></h3>
+      操作系统课程实验，基于 ChCore 微内核；同时包含在线实验手册源码 <a href="OS-Labs/Pages"><code>Pages/</code></a>
     </td>
     <td width="25%" valign="top">
       <h3>🎞️ <a href="OS-PPT"><code>OS-PPT/</code></a></h3>
