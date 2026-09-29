@@ -79,17 +79,21 @@
 
 <table>
   <tr>
-    <td width="33%" valign="top">
+    <td width="25%" valign="top">
       <h3>💻 <a href="OS-Labs"><code>OS-Labs/</code></a></h3>
-      操作系统课程实验，基于 ChCore 微内核；同时包含在线实验手册源码 <a href="OS-Labs/Pages"><code>Pages/</code></a> 与课程讲义 <a href="OS-Labs/Slides"><code>Slides/</code></a>
+      操作系统课程实验，基于 ChCore 微内核；同时包含在线实验手册源码 <a href="OS-Labs/Pages"><code>Pages/</code></a>
     </td>
-    <td width="33%" valign="top">
+    <td width="25%" valign="top">
       <h3>🧮 <a href="ICS-Labs"><code>ICS-Labs/</code></a></h3>
       前置课程“计算机系统基础”（ICS / CS:APP）的实验，为操作系统打下地基
     </td>
-    <td width="33%" valign="top">
+    <td width="25%" valign="top">
       <h3>🎬 <a href="ICS-PPT"><code>ICS-PPT/</code></a></h3>
       ICS 课件：用 Python 编写讲义，一份源码可渲染为网页幻灯片、PowerPoint 与 LaTeX 教材章节
+    </td>
+    <td width="25%" valign="top">
+      <h3>🎞️ <a href="OS-PPT"><code>OS-PPT/</code></a></h3>
+      操作系统课程讲义（PDF 幻灯片）
     </td>
   </tr>
 </table>
@@ -103,7 +107,7 @@
 - 📖 **[在线实验手册](https://sjtu-ipads.github.io/OS-Course-Lab/)**：环境搭建、实验说明与思考题
 - 🔍 **[源码解析](https://sjtu-ipads.github.io/OS-Course-Lab/Appendix/source-code/Lab1/booting.html)**：逐段解读 ChCore 的关键代码
 - 🛠️ **[工具教程](https://sjtu-ipads.github.io/OS-Course-Lab/Appendix/toolchains.html)**：tmux、GDB、objdump、make、QEMU
-- 🎞️ **[课程讲义](OS-Labs/Slides)**：操作系统课程幻灯片（PDF）
+- 🎞️ **[课程讲义](OS-PPT)**：操作系统课程幻灯片（PDF）
 - 📚 **配套教材**：《操作系统：原理与实现》，陈海波、夏虞斌等著，机械工业出版社
 
 </td>
