@@ -17,7 +17,7 @@
 
 | 节 | 页数 | 内容 |
 | --- | --- | --- |
-| 回顾与本节的问题 | 5 | 课程信息与课程安排 · Ollama：本机的推理服务 · 第一讲的权重文件 · CPU、内存与磁盘 · 四个问题 |
+| 回顾与本节的问题 | 4 | Ollama：本机的推理服务 · 第一讲的权重文件 · CPU、内存与磁盘 · 四个问题 |
 | 第一部分 · 位与字节 | 6 | `xxd` 的二进制与十六进制视图 · 位串到值 · 十六进制与 C 的进制写法 · 模型格式如何标识自己 · C 数据类型的宽度 · 布尔值的存储 |
 | 第二部分 · 字节序 | 7 | 内存即字节 · 字长与地址范围 · 大端与小端 · 读一个字段 · `show_bytes` · 字节序在什么场合可见 · 文本与 token |
 | **第三部分 · 整数** | **10（另有 1 个续页）** | 两种整型数的表示 · 取值范围 · 强制转换 · 比较陷阱 · 越界与内核缺陷及其答案 · 大小不同的操作数比较 · 位运算 · 移位 · 运算符优先级与实例 |
@@ -448,7 +448,7 @@ codex exec --skip-git-repo-check --sandbox workspace-write "$PROMPT" < /dev/null
 
 | 文件 | 使用页 | 来源与授权 |
 | --- | --- | --- |
-| `zang-binyu.jpg` | `course-info` | 上海交通大学并行与分布式系统研究所成员页，https://ipads.se.sjtu.edu.cn/zh/pub/members/binyu_zang/ |
+| `zang-binyu.jpg` | —（课程信息页已移到第一讲） | 上海交通大学并行与分布式系统研究所成员页，https://ipads.se.sjtu.edu.cn/zh/pub/members/binyu_zang/ |
 | `core-memory.jpg` | —（当前不占幻灯片） | Wikimedia Commons，摄影 Mister rf，CC BY-SA 4.0 |
 | `ariane-501.jpg` | —（当前不占幻灯片） | **出处与授权未记录**，本表补写时已不在任何页面上使用；重新使用前需要重新核对 |
 | `kahan.jpg` | `ieee-history` | Wikimedia Commons，摄影 George Bergman，CC BY-SA 4.0 |

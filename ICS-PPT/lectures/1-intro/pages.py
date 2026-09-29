@@ -59,6 +59,29 @@ dot_kernel<<<blocks, 256>>>(d_w, d_x, d_out, n);     // tens of thousands of thr
 # 课程概览
 # ==============================================================================
 
+def course_info(p):
+    p.gap(28)
+    p.title("课程信息")
+    p.slide("""
+1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
+   便于实时更新、团队共建、师生共建
+2. **课件使用**：问 AI 即可；欢迎丰富使用方式
+3. **微信群**
+""")
+    p.slide("""
+4. **课程安排**
+   - 周六上课：从课程融合到实际课时压缩
+   - 周中习题课改为讨论课
+   - 从 A1 / A2 到 A0，再到 B / C：ICS 重回兵器谱前 XX，打造人气 TA
+   - **臧斌宇老师**　ICS 课程在中国的创始人
+     **伟大导师　·　伟大舵手　·　伟大奠基人　·　伟大引路人**
+""").image_right("assets/ext/zang-binyu.jpg", width_px=160
+    ).footnote("照片来自上海交通大学并行与分布式系统研究所（IPADS）成员页。")
+    p.slide("""
+5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30；君子协定：对于 AI 的使用
+""")
+
+
 def staff_and_textbooks(p):
     p.title("任课教师与课程教材")
     p.slide("""

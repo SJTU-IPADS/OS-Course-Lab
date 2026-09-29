@@ -24,6 +24,8 @@ lecture.cover(
     time="上海交通大学 IPADS",
 )
 
+lecture.page("course-info", body=pages.course_info)
+
 with lecture.section("课程概览", id="course-overview") as s:
     s.page("staff-and-textbooks", body=pages.staff_and_textbooks)
     s.page("worth-taking", body=pages.worth_taking)

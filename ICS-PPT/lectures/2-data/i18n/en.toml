@@ -33,57 +33,6 @@ src_hash = '6f88ed18'
 text = 'Recap, and the question of this lecture'
 # src: 回顾与本节的问题
 
-['course-info.title']
-src_hash = '4da04dfe'
-text = 'Course information'
-# src: 课程信息
-
-['course-info.slide.1']
-src_hash = 'abdcc429'
-text = '''
-1. **Slides**: https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
-   Live updates; built together by the staff and with students
-2. **How to use the slides**: ask an AI; other uses are welcome
-3. **WeChat group**
-'''
-# src:
-# 
-# 1. **课件下载**：https://github.com/SJTU-IPADS/OS-Course-Lab/tree/OS-Pre-Course-CSAPP
-#    便于实时更新、团队共建、师生共建
-# 2. **课件使用**：问 AI 即可；欢迎丰富使用方式
-# 3. **微信群**
-
-['course-info.slide.2']
-src_hash = '96eafae5'
-text = '''
-4. **Schedule**
-   - Saturday lectures: from merging courses to a shorter timetable
-   - Mid-week exercise sessions become discussion sessions
-   - From A1 / A2 to A0, then B / C: ICS back toward the top of the ranking, with popular TAs
-   - **Prof. Binyu Zang** is the founder of the ICS course in China
-     **Great Teacher · Great Helmsman · Great Founder · Great Guide**
-'''
-# src:
-# 
-# 4. **课程安排**
-#    - 周六上课：从课程融合到实际课时压缩
-#    - 周中习题课改为讨论课
-#    - 从 A1 / A2 到 A0，再到 B / C：ICS 重回兵器谱前 XX，打造人气 TA
-#    - **臧斌宇老师**　ICS 课程在中国的创始人
-#      **伟大导师　·　伟大舵手　·　伟大奠基人　·　伟大引路人**
-
-['course-info.slide.2.footnote.1']
-src_hash = '709c2960'
-text = 'Photo from the IPADS members page, Shanghai Jiao Tong University.'
-# src: 照片来自上海交通大学并行与分布式系统研究所（IPADS）成员页。
-
-['course-info.slide.3']
-src_hash = 'cf5606ea'
-text = '5. **Assessment**: quiz + final + lab, about 20 + 50 + 30; honor code: on the use of AI'
-# src:
-# 
-# 5. **考核**：quiz + 期末 + lab，约 20 + 50 + 30；君子协定：对于 AI 的使用
-
 ['ollama-intro.title']
 src_hash = 'b33d30e2'
 text = 'Recap: local inference with Ollama'
