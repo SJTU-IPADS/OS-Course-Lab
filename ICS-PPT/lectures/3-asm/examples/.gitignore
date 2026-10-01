@@ -4,6 +4,7 @@
 # header comment. The .o, .i and .s files are ignored by the
 # top-level .gitignore.
 a.out
+add
 dot_scalar
 dot_avx2
 dot_product

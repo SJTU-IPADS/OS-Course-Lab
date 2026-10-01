@@ -470,6 +470,44 @@ ret                             add     w0, w2, w0
 """)
 
 
+def recap_part1(p):
+    p.title('前情回顾：一行 C 代码如何运行在 CPU 上')
+    p.code('c', """int a = 1, b = 6, y;   // 全局变量
+
+void add(void) {
+    y = a + b;
+}""")
+    p.demo('编译并反汇编',
+           """cd examples
+gcc -O0 -fomit-frame-pointer -fcf-protection=none -no-pie add.c -o add
+objdump -d add | sed -n '/<add>:/,/ret/p'""",
+           output="""0000000000401106 <add>:
+  401106:	8b 15 1c 2f 00 00    	mov    0x2f1c(%rip),%edx        # 404028 <a>
+  40110c:	8b 05 1a 2f 00 00    	mov    0x2f1a(%rip),%eax        # 40402c <b>
+  401112:	01 d0                	add    %edx,%eax
+  401114:	89 05 1a 2f 00 00    	mov    %eax,0x2f1a(%rip)        # 404034 <y>
+  40111a:	90                   	nop
+  40111b:	c3                   	ret""",
+           bold=[2, 3, 4, 5],
+           files=['examples/add.c'])
+    p.notes("""
+第一部分收尾。先只看代码与反汇编：y = a + b 变成两条 movl 读 a、b，一条 addl 相加，一条 movl 写回 y；nop 是 -O0 留下的空操作，ret 返回 main。
+objdump 每行三栏：指令的内存地址、机器码字节、汇编助记符；行尾的 # 404028 <a> 是 objdump 算出的 a(%rip) 实际地址。
+编译选项：-O0 让两次读取与加法分开成三条指令；-fomit-frame-pointer 去掉 push/pop %rbp（第三部分再讲栈帧）；-no-pie 让文件中的地址就是装入内存后的地址；-fcf-protection=none 去掉 endbr64。
+下一页用示意图把可执行文件、内存与 CPU 串起来。
+""")
+
+
+def recap_part1_fig(p):
+    p.title('前情回顾：一行 C 代码如何运行在 CPU 上')
+    figure(p, "recap-part1", 1120)
+    p.notes("""
+串起已经讲过的三个重点：编译得到可执行文件（代码段与数据段）；装入内存后指令与数据都是带地址的字节（整数的小端补码编码、指令的机器码编码）；CPU 以 PC 取指、把 a 与 b 读入寄存器、在 ALU 中相加、再写回 y。
+图中 CPU 的快照取在 addl 执行时：a、b 已读入 %edx、%eax，y 尚未写回。地址、机器码与上一页 objdump 的输出一致；a(%rip) 的位移量 0x2f1c = 0x404028 − 0x40110c，即目标地址减去下一条指令的地址。
+y 未初始化，放在 .bss；0x404030 处是 libc 的一个 1 字节标志，所以 y 在 0x404034 而不是紧跟 b。
+""")
+
+
 def loop_need(p):
     p.title('循环需求：4096 维内积与控制流的挑战')
     slide(p, r"""
