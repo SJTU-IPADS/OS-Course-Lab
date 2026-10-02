@@ -24,6 +24,7 @@ from . import demo as demo_module
 from . import source as source_module
 from .renderers.viewer.marp import (
     MARP_PACKAGE,
+    before_body_end,
     inject_deck_scripts,
     marp_command,
     strip_watch_client,
@@ -108,9 +109,10 @@ _IGNORED_WATCH_DIRS = frozenset(
 )
 
 
-def _reveal_bundle() -> str:
-    css = (_REVEAL_ASSETS / "reveal.css").read_text(encoding="utf-8")
-    js = (_REVEAL_ASSETS / "reveal.js").read_text(encoding="utf-8")
+def _asset_bundle(name: str) -> str:
+    """``<name>.css`` and ``<name>.js`` from the viewer assets, inlined."""
+    css = (_REVEAL_ASSETS / f"{name}.css").read_text(encoding="utf-8")
+    js = (_REVEAL_ASSETS / f"{name}.js").read_text(encoding="utf-8")
     return f"<style>\n{css}</style>\n<script>\n{js}</script>"
 
 
@@ -149,18 +151,7 @@ def inject_demo(html: str) -> str:
     bundle rendered by ``render`` therefore cannot run anything, which is the
     intended resting state for a deck that has no server behind it.
     """
-    bundle = _demo_bundle()
-    marker = "</body>"
-    idx = html.rfind(marker)
-    if idx == -1:
-        return html + bundle
-    return html[:idx] + bundle + html[idx:]
-
-
-def _source_bundle() -> str:
-    css = (_REVEAL_ASSETS / "source.css").read_text(encoding="utf-8")
-    js = (_REVEAL_ASSETS / "source.js").read_text(encoding="utf-8")
-    return f"<style>\n{css}</style>\n<script>\n{js}</script>"
+    return before_body_end(html, _demo_bundle())
 
 
 def inject_source(html: str) -> str:
@@ -171,12 +162,7 @@ def inject_source(html: str) -> str:
     once they have used it, so the panel that is on top — this one — has to be
     asked first. Same reasoning for a click outside them.
     """
-    bundle = _source_bundle()
-    marker = "</body>"
-    idx = html.rfind(marker)
-    if idx == -1:
-        return html + bundle
-    return html[:idx] + bundle + html[idx:]
+    return before_body_end(html, _asset_bundle("source"))
 
 
 def inject_reveal(html: str) -> str:
@@ -185,12 +171,7 @@ def inject_reveal(html: str) -> str:
     Used only by the live dev server, applied to the HTTP response body — the
     on-disk slides.html (owned by ``marp --watch``) is never modified.
     """
-    bundle = _reveal_bundle()
-    marker = "</body>"
-    idx = html.rfind(marker)
-    if idx == -1:
-        return html + bundle
-    return html[:idx] + bundle + html[idx:]
+    return before_body_end(html, _asset_bundle("reveal"))
 
 
 def purge_lecture_modules(lecture_dir: Path) -> None:
@@ -402,8 +383,9 @@ def make_handler(
             if spec is None:
                 self._send_json(404, {"error": "no such demo"})
                 return
-            if not demo_module.RUNNABLE:
-                self._send_json(501, {"error": "demos run on Linux and macOS only"})
+            refusal = demo_module.why_not(spec)
+            if refusal is not None:
+                self._send_json(501, {"error": refusal})
                 return
             print(f"\nlecturekit: demo $ {spec.command}", file=sys.stderr, flush=True)
             terminal = None
@@ -452,6 +434,9 @@ def make_handler(
         def _serve_source(self):
             """Answer with the text of a file the deck names, as JSON.
 
+            ``tokens`` rides along when the file could be lexed: the same text
+            as lines of ``[class, text]`` runs, for the panel to colour.
+
             The request carries an id, so the path is this end's to know (see
             `lecturekit.source`). The table is re-read per request, on
             `_serve_demo`'s reasoning, and so is the file: what the room reads
@@ -475,7 +460,11 @@ def make_handler(
             except OSError:
                 self._send_json(404, {"error": "file not readable"})
                 return
-            self._send_json(200, {"path": entry.path, "text": text})
+            payload = {"path": entry.path, "text": text}
+            tokens = source_module.highlight(entry.path, text)
+            if tokens is not None:
+                payload["tokens"] = tokens
+            self._send_json(200, payload)
 
         def _same_origin(self) -> bool:
             """Refuse a request another page sent from somewhere else.
@@ -651,14 +640,6 @@ class QuietHTTPServer(ThreadingHTTPServer):
         super().handle_error(request, client_address)
 
 
-def _is_relative_to(path: Path, root: Path) -> bool:
-    try:
-        path.relative_to(root)
-    except ValueError:
-        return False
-    return True
-
-
 class LectureWatchFilter:
     """Accept source changes and Marp's final HTML, ignoring heavy vendor trees.
 
@@ -685,7 +666,7 @@ class LectureWatchFilter:
         root = self._root_of(candidate)
         if root is None:
             return False
-        if _is_relative_to(candidate, self.output_dir):
+        if candidate.is_relative_to(self.output_dir):
             return False
         relative = candidate.relative_to(root)
         if any(part in _IGNORED_WATCH_DIRS for part in relative.parts):
@@ -694,7 +675,7 @@ class LectureWatchFilter:
 
     def _root_of(self, candidate: Path) -> Path | None:
         for root in (self.lecture_dir, *self.review_dirs):
-            if _is_relative_to(candidate, root):
+            if candidate.is_relative_to(root):
                 return root
         return None
 
@@ -754,13 +735,13 @@ def _watch_paths(
     lecture_dir = lecture_dir.resolve()
     output_dir = output_dir.resolve()
     roots = [lecture_dir]
-    if not _is_relative_to(output_dir, lecture_dir):
+    if not output_dir.is_relative_to(lecture_dir):
         roots.append(output_dir)
     for path in review_dirs:
         path = path.resolve()
         # A review source nested inside the lecture (or already listed) is
         # covered by a root we are watching anyway.
-        if not any(_is_relative_to(path, root) for root in roots):
+        if not any(path.is_relative_to(root) for root in roots):
             roots.append(path)
     return tuple(roots)
 
@@ -909,12 +890,7 @@ def inject_livereload(html: str, generation: int = 0) -> str:
     ``generation`` is the rebuild count the page is served at; the client reloads
     once the server reports a different one.
     """
-    client = LIVERELOAD_CLIENT % (generation,)
-    marker = "</body>"
-    idx = html.rfind(marker)
-    if idx == -1:
-        return html + client
-    return html[:idx] + client + html[idx:]
+    return before_body_end(html, LIVERELOAD_CLIENT % (generation,))
 
 
 def _terminate_process_group(proc) -> None:
@@ -933,7 +909,11 @@ def _terminate_process_group(proc) -> None:
     if proc.poll() is not None:
         return
     if os.name != "posix":
-        _terminate_tree(proc)
+        demo_module.kill_tree(proc)
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            pass
         return
     try:
         pgid = os.getpgid(proc.pid)
@@ -950,23 +930,6 @@ def _terminate_process_group(proc) -> None:
             os.killpg(pgid, signal.SIGKILL)
         except (ProcessLookupError, OSError):
             pass
-
-
-def _terminate_tree(proc) -> None:
-    """Kill ``proc`` and its descendants on Windows, where there is no group."""
-    try:
-        subprocess.run(
-            ["taskkill", "/T", "/F", "/PID", str(proc.pid)],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-    except OSError:
-        proc.kill()
-    try:
-        proc.wait(timeout=5)
-    except subprocess.TimeoutExpired:
-        pass
 
 
 def serve(
@@ -1052,13 +1015,13 @@ def serve(
 
     url = f"http://127.0.0.1:{port}/"
     print(f"lecturekit: live viewer on {url} (Ctrl-C to stop)")
-    if demo_module.RUNNABLE:
+    if demo_module.BASH is not None:
         print(
             f"lecturekit: demo chips armed — a press runs its command in "
             f"{lecture_dir} (timeout {demo_timeout_s:g}s)"
         )
     else:
-        print("lecturekit: demos run on Linux and macOS only; their chips answer so")
+        print("lecturekit: no bash found, so demo chips answer a press with why")
     if open_browser:
         webbrowser.open(url)
 

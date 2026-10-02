@@ -7,7 +7,9 @@ from dataclasses import replace
 from pathlib import Path
 
 from lecturekit import demo, i18n, model, references, source
-from .blocks import BLOCK_RENDERERS, annotation_markup, render_block, render_footnotes
+from .blocks import (
+    BLOCK_RENDERERS, annotation_markup, escape_html, render_block, render_footnotes,
+)
 from .marp import CJK_FONT
 from .pdf import SLIDE_LINK_PREFIX
 
@@ -251,7 +253,7 @@ class StaticViewerRenderer:
 
 def build_data(lecture: model.Lecture) -> dict:
     lecture = with_references_page(lecture)
-    pages = iter_pages(lecture.children)
+    pages = model.flatten_pages(lecture.children)
     spans = outline_spans(pages, model.outline_folds(lecture.children))
     return {
         "lecture": {"id": lecture.id, "title": lecture.title, "subtitle": lecture.subtitle},
@@ -335,10 +337,6 @@ def build_tree_node(
     }
 
 
-def iter_pages(children: list[model.Section | model.Page]) -> list[model.Page]:
-    return model.flatten_pages(children)
-
-
 def with_references_page(lecture: model.Lecture) -> model.Lecture:
     """Return ``lecture`` with a trailing references page, if any page cited work.
 
@@ -348,7 +346,7 @@ def with_references_page(lecture: model.Lecture) -> model.Lecture:
     navigation, slide numbering, and PDF like any other. No citations → the
     lecture is returned unchanged.
     """
-    pages = iter_pages(lecture.children)
+    pages = model.flatten_pages(lecture.children)
     if any(page.id == REFERENCES_PAGE_ID for page in pages):
         raise model.ValidationError(
             f"page id {REFERENCES_PAGE_ID!r} is reserved for the auto-generated "
@@ -425,7 +423,7 @@ def build_marp_markdown(
     slide_size = model.RATIOS[lecture.ratio]
     slides = [
         render_marp_page(page, slide_size, reveal=reveal and _steps_through(page))
-        for page in iter_pages(lecture.children)
+        for page in model.flatten_pages(lecture.children)
     ]
     return "\n".join(header) + "\n\n" + "\n\n---\n\n".join(slides) + "\n"
 
@@ -487,7 +485,7 @@ def build_outline_html(lecture: model.Lecture) -> str:
     """
     lecture = with_references_page(lecture)
     spans = outline_spans(
-        iter_pages(lecture.children), model.outline_folds(lecture.children)
+        model.flatten_pages(lecture.children), model.outline_folds(lecture.children)
     )
     rows: list[str] = []
     if lecture.subtitle:
@@ -811,10 +809,6 @@ def render_index_html(title: str, embedded_json: str, lang: str | None = None) -
         lang=escape_html(lang or "zh"),
         data=embedded_json.replace("</", "<\\/"),
     )
-
-
-def escape_html(text: str) -> str:
-    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def _title_html(text: str) -> str:

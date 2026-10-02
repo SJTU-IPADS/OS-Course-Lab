@@ -151,12 +151,11 @@ class ReviewTest(unittest.TestCase):
         ids = [page.id for page in model.flatten_pages(lecture.children)]
         self.assertEqual(ids, ["today", "src/commit-log-1", "src/commit-log-2"])
 
-    def test_a_borrowed_animation_stays_one_slide(self):
+    def test_a_borrowed_animation_stays_one_group(self):
         lecture = self.fixture(sources='{"../source": ["commit-log"]}').load()
         pages = model.flatten_pages(lecture.children)
         self.assertEqual([page.frame_group.id for page in pages[1:]],
                          ["src/commit-log", "src/commit-log"])
-        self.assertEqual(model.slide_numbers(pages), [1, 2, 2])
 
     def test_pages_arrive_in_the_order_asked_for(self):
         lecture = self.fixture(sources='{"../source": ["commit-log", "quorum"]}').load()

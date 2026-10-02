@@ -1,0 +1,55 @@
+# Build the PDF of every lecture a RELEASE file marks (docs/release.md) and
+# pack them into one zip. Every push builds it and keeps it as a job artifact;
+# a tag push also uploads it to the project's package registry and publishes a
+# release named after the tag that links to it. With no RELEASE file in the
+# repository neither job is created, and a pipeline without jobs does not run.
+# .github/workflows/lectures.yml does the same on GitHub; the work itself is in
+# scripts/.
+
+variables:
+  # Override (Settings > CI/CD > Variables) where runners cannot reach Docker
+  # Hub: any Debian trixie image with Python 3.12 or later will do.
+  LECTURE_IMAGE: python:3.12-slim-trixie
+  PACKAGE_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/lectures/${CI_COMMIT_TAG}
+
+stages: [build, release]
+
+build:
+  stage: build
+  image: $LECTURE_IMAGE
+  rules:
+    - exists: ["**/RELEASE"]
+  script:
+    - scripts/ci-setup.sh
+    - scripts/release-zip.sh "dist/lectures-${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}.zip"
+    - |
+      if [ -n "${CI_COMMIT_TAG:-}" ]; then
+        curl --fail-with-body --silent --show-error \
+          --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+          --upload-file "dist/lectures-$CI_COMMIT_TAG.zip" \
+          "$PACKAGE_URL/lectures-$CI_COMMIT_TAG.zip"
+      fi
+  artifacts:
+    paths: [dist/]
+    expire_in: 1 week
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+      exists: ["**/RELEASE"]
+  needs:
+    - job: build
+      artifacts: false
+  script:
+    - echo "releasing $CI_COMMIT_TAG"
+  release:
+    tag_name: $CI_COMMIT_TAG
+    name: $CI_COMMIT_TAG
+    description: PDFs of the released lectures, built from $CI_COMMIT_SHA.
+    assets:
+      links:
+        - name: lectures-$CI_COMMIT_TAG.zip
+          url: $PACKAGE_URL/lectures-$CI_COMMIT_TAG.zip
+          link_type: package

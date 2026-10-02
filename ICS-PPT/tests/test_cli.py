@@ -24,14 +24,16 @@ class LectureCliTest(unittest.TestCase):
         self.assertIn("Welcome", result.stdout)
 
     def test_commands_run_where_there_is_no_pty(self):
-        # Windows has no fcntl, pty or termios. It cannot run a demo, but it
-        # renders a deck, and every command imports the demo module to do it.
-        # `None` in sys.modules is what a missing module looks like to import.
+        # Windows has no fcntl, pty or termios. It runs a demo on pipes and
+        # refuses only one that takes the keyboard; it renders a deck, and every
+        # command imports the demo module to do it. `None` in sys.modules is
+        # what a missing module looks like to import.
         code = (
             "import runpy, sys\n"
             "sys.modules.update(fcntl=None, pty=None, termios=None)\n"
             "from lecturekit import demo, dev_server\n"
-            "assert not demo.RUNNABLE\n"
+            "assert demo.why_not(demo.Spec('ls')) is None\n"
+            "assert demo.why_not(demo.Spec('ls', interactive=True))\n"
             f"sys.argv = ['lecturekit', 'inspect', {LECTURE_SOURCE!r}]\n"
             "runpy.run_module('lecturekit.cli', run_name='__main__')\n"
         )

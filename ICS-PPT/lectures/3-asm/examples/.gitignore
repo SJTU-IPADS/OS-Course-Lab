@@ -17,4 +17,8 @@ dot_omp
 dot_cuda
 matvec_scalar
 matvec_avx2
+equal
+shift
+max
+times
 *.exe

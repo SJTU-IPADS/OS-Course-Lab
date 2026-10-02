@@ -412,7 +412,7 @@ def load_overlay(directory: Path, lang: str) -> Overlay:
     path = overlay_path(directory, lang)
     if not path.exists():
         raise model.ValidationError(
-            f"no {lang} overlay: {path} (run `lecturekit i18n extract "
+            f"no {lang} overlay: {path} (run `python3 -m lecturekit.cli i18n extract "
             f"{directory} --lang {lang}` to start one)"
         )
     return parse_overlay(path.read_text(encoding="utf-8"), path)

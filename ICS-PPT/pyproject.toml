@@ -11,7 +11,7 @@ requires-python = ">=3.12"
 authors = [
   { name = "wxd" }
 ]
-dependencies = ["pypdf>=4", "python-pptx>=1", "watchfiles>=1,<2"]
+dependencies = ["pygments>=2", "pypdf>=4", "python-pptx>=1", "watchfiles>=1,<2"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]

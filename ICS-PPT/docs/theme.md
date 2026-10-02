@@ -45,9 +45,10 @@ only the blocks it knows, so a page is authored once.
 | --- | --- | --- |
 | viewer | `render` / `view` | Marp deck in an outline shell (+ `--pdf`, `--png`) |
 | pptx | `render --to pptx` | editable PowerPoint, styled from the viewer theme |
+| transcript | `render --to transcript` | one printable A4 sheet (+ `--pdf`), styled by `themes/transcript.css` from the same palette |
 | book | `book` | one `ctexbook` document, one chapter per lecture |
 
-`RENDERERS` in `lecturekit/renderers/` is the `--to` registry the first two
+`RENDERERS` in `lecturekit/renderers/` is the `--to` registry the first three
 live in, and the extension point for a new deck target. `book` is its own
 command, and the notebook path (`Lecture(assets=".")`) reuses the viewer's Marp
 pipeline to display a single slide as a cell output.

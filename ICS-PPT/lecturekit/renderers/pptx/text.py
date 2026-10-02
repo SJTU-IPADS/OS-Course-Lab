@@ -44,8 +44,8 @@ class Para:
 
 
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
-_BULLET_RE = re.compile(r"^(\s*)[-*]\s+(.*)$")
-_ORDERED_RE = re.compile(r"^(\s*)\d+\.\s+(.*)$")
+_BULLET_RE = re.compile(r"^(\s*)[-*+]\s+(.*)$")
+_ORDERED_RE = re.compile(r"^(\s*)\d+[.)]\s+(.*)$")
 
 # Inline spans, longest-delimiter-first so `**` wins over `*`. Math comes first
 # so a `*` or `_` inside a formula is never read as markdown emphasis. A mark's

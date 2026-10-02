@@ -1,15 +1,13 @@
 """ICS 第 3 章：程序的机器级表示与执行。
 
-页面文案逐字取自同目录的 PPTContents.md（第 01 ~ 77 页），不改写任何表述。
-开头「问题提出」一页的任务与悬念两条由作者另行给出，不在 PPTContents.md 中。
 一页排不下时按语义拆成几页，拆出的页沿用同一个页面标题；
-每页「配图建议」对应的图由 diagrams/ 下的同名脚本生成，放在正文之后：
+每页的配图由 diagrams/ 下的同名脚本生成，放在正文之后：
 与正文放得进一页时放在同一页，否则放在同标题的下一页。
-过渡页（第 09、26、39、56、74 页）写成 lecture.bridge，见 lecture.py：只放页面标题。
+过渡页写成 lecture.bridge，见 lecture.py：只放页面标题。
 
 排版约定：
-- 原文的粗体逐处写明，slide() 因此关闭自动加粗。
-- 原文的表格写成 p.table。
+- 粗体在文案里逐处写明，slide() 因此关闭自动加粗。
+- 表格写成 p.table。
 - 汇编清单取自 gcc 15.2 的真实输出（-fcf-protection=none，不含 endbr64），制表符原样保留。
   演示命令用 examples/asm.sed 去掉汇编伪指令，只留下指令与跳转标号。
 - 演示命令在本节目录下执行，所以以 `cd examples` 开头。
@@ -17,12 +15,12 @@
 
 
 def slide(p, md, **kw):
-    """PPTContents.md 的页面文案。粗体由原文逐处写明，因此关闭自动加粗。"""
+    """页面文案。粗体在文案里逐处写明，因此关闭自动加粗。"""
     return p.slide(md, autobold=False, **kw)
 
 
 def figure(p, name, width):
-    """配图建议对应的图，由 diagrams/ 下的同名脚本生成。"""
+    """页面的配图，由 diagrams/ 下的同名脚本生成。"""
     return p.image(f"assets/{name}.svg", width_px=width)
 
 
@@ -359,6 +357,60 @@ def extension_fig(p):
     figure(p, "extension", 1120)
 
 
+def extension_example(p):
+    p.title('扩展传送实例：比较 signed char 与 unsigned char')
+    p.code('c', """int equal(signed char a, unsigned char b) { return a == b; }""")
+    slide(p, r"""
+**第二讲的规则**：窄于 `int` 的操作数先提升为 `int`，再做比较。
+""")
+    p.demo('编译 equal.c',
+           """cd examples
+gcc -Og -fcf-protection=none -S equal.c -o - | sed -f asm.sed""",
+           output="""equal:
+	movsbl	%dil, %edi
+	movzbl	%sil, %esi
+	cmpl	%esi, %edi
+	sete	%al
+	movzbl	%al, %eax
+	ret""",
+           bold=[2, 3],
+           files=['examples/equal.c', 'examples/asm.sed'])
+    slide(p, r"""
+**编译器选择的指令**：两次提升各由一条扩展传送指令完成，补符号位还是补 0 由原类型决定。
+- `a` 的类型是 `signed char`，编译器选用符号扩展指令 `movsbl`；
+- `b` 的类型是 `unsigned char`，编译器选用零扩展指令 `movzbl`。
+""")
+    p.notes("""
+第二讲「混合比较：宽度不同的操作数进行比较」一页给出这条规则：先把窄于 `int` 的类型提升为 `int`，补 0 还是补符号位由原类型决定。两个操作数提升后都是 `int`，比较按 `int` 进行。
+`%dil` 保存参数 `a`，`%sil` 保存参数 `b`，`%eax` 保存返回值，对应规则在第三部分详细讲。
+后三条指令比较两个 32 位值并产生返回值，在第二部分详细讲。
+""")
+
+
+def extension_example_2(p):
+    p.title('扩展传送实例：比较 signed char 与 unsigned char')
+    slide(p, r"""
+**指令执行**：`%dil` 保存 `a`，`%sil` 保存 `b`，两个参数的字节都是 `0xF0`：
+""")
+    p.table([
+        ['`movsbl %dil, %edi`', '`%dil = 0xF0`', '`%edi = 0xFFFFFFF0`，即 $-16$'],
+        ['`movzbl %sil, %esi`', '`%sil = 0xF0`', '`%esi = 0x000000F0`，即 $240$'],
+        ['`cmpl %esi, %edi`', '$-16$ 与 $240$', '两个值不相等，返回 0'],
+    ], headers=['指令', '执行前', '执行后'])
+    p.demo('运行 equal',
+           """cd examples
+gcc -Og -fcf-protection=none equal.c equal_main.c -o equal && ./equal""",
+           output="""a = -16 (byte 0xf0), b = 240 (byte 0xf0), a == b: 0""",
+           files=['examples/equal_main.c'])
+    slide(p, r"""
+**结论**：两个参数的字节相同，比较结果是不相等。类型的区别由编译器转化为 `movsbl` 与 `movzbl` 两条指令，CPU 按指令逐条执行。
+""")
+    p.notes("""
+`movsbl` 复制最高位：`0xF0` 的最高位是 1，高 24 位填 1。`movzbl` 的高 24 位填 0。
+`cmpl` 之后的 `sete` 与 `movzbl` 将返回值 `%eax` 置为 0，在第二部分详细讲。
+""")
+
+
 def int_arith(p):
     p.title('整数算术：imull 与 addl 指令的执行')
     slide(p, r"""
@@ -391,6 +443,52 @@ def shift_ops(p):
     p.notes('x86-64 体系中除加减法外的通用整数算术、按位逻辑与移位指令集全览。')
 
 
+def shift_example(p):
+    p.title('移位实例：int 与 unsigned 的右移')
+    p.code('c', """int      sar4(int x)      { return x >> 4; }
+unsigned shr4(unsigned x) { return x >> 4; }""")
+    p.demo('编译 shift.c',
+           """cd examples
+gcc -Og -fcf-protection=none -S shift.c -o - | sed -f asm.sed | pr -2 -e -l 4""",
+           output="""sar4:                              	shr4:
+        movl    %edi, %eax         	        movl    %edi, %eax
+        sarl    $4, %eax           	        shrl    $4, %eax
+        ret                        	        ret""",
+           bold=[3],
+           files=['examples/shift.c', 'examples/asm.sed'])
+    slide(p, r"""
+**编译器选择的指令**：两个函数的 C 表达式相同，都先把 `x` 复制到 `%eax`，再右移 4 位。
+- `x` 的类型是 `int`，编译器选用算术右移指令 `sarl`；
+- `x` 的类型是 `unsigned`，编译器选用逻辑右移指令 `shrl`。
+""")
+    p.notes("""
+`pr -2 -e -l 4` 把输出排成两栏，每栏 4 行，`-e` 把制表符展开为空格：左栏是 `sar4`，右栏是 `shr4`。
+`%edi` 保存参数 `x`，`%eax` 保存返回值，对应规则在第三部分详细讲。
+C23 之前的 C 标准规定有符号负数右移的结果由实现定义，gcc 采用算术右移。
+""")
+
+
+def shift_example_2(p):
+    p.title('移位实例：int 与 unsigned 的右移')
+    slide(p, r"""
+**指令执行**：两个函数的参数都是位模式 `0xFFFFFFF0`，`movl` 把它复制到 `%eax`：
+""")
+    p.table([
+        ['`sarl $4, %eax`', '`0xFFFFFFF0`，即 $-16$', '`0xFFFFFFFF`，即 $-1$'],
+        ['`shrl $4, %eax`', '`0xFFFFFFF0`，即 $4294967280$', '`0x0FFFFFFF`，即 $268435455$'],
+    ], headers=['指令', '执行前的 `%eax`', '执行后的 `%eax`'])
+    p.demo('运行 shift',
+           """cd examples
+gcc -Og -fcf-protection=none shift.c shift_main.c -o shift && ./shift""",
+           output="""sar4(0xfffffff0) = 0xffffffff = -1
+shr4(0xfffffff0) = 0x0fffffff = 268435455""",
+           files=['examples/shift_main.c'])
+    slide(p, r"""
+**结论**：位模式相同，C 表达式相同，结果不同。类型的区别由编译器转化为 `sarl` 与 `shrl` 两条指令：`sarl` 在高 4 位填符号位，`shrl` 在高 4 位填 0。
+""")
+    p.notes('两个结果分别等于该类型下 x 除以 16 的商：-16 除以 16 等于 -1，4294967280 除以 16 等于 268435455。')
+
+
 def xor_strength(p):
     p.title('指令优化：xorl 寄存器清零')
     slide(p, r"""
@@ -416,27 +514,132 @@ def xor_strength_2(p):
     figure(p, "xor-lea", 1120)
 
 
-def mac_exercise(p):
-    p.title('练习：从汇编推导 C 代码')
+def lea_mul_example(p):
+    p.title('整数乘法优化实例：x * 5 与 x * 12')
+    p.code('c', """int times5(int x)  { return x * 5; }
+int times12(int x) { return x * 12; }""")
+    p.demo('编译 times.c',
+           """cd examples
+gcc -Og -fcf-protection=none -S times.c -o - | sed -f asm.sed""",
+           output="""times5:
+	leal	(%rdi,%rdi,4), %eax
+	ret
+times12:
+	leal	(%rdi,%rdi,2), %eax
+	sall	$2, %eax
+	ret""",
+           bold=[2, 5, 6],
+           files=['examples/times.c', 'examples/asm.sed'])
     slide(p, r"""
-**从汇编推导 C 代码**：给定函数 `mac` 的汇编代码，推导其 C 函数体：
+**编译器选择的指令**：两个函数的编译结果中都没有 `imull`。
+- `x * 5`：一条 `leal` 计算 $x + x \times 4$；
+- `x * 12`：`leal` 计算 $x + x \times 2$，`sall $2` 再乘以 $2^2$。
 """)
-    p.code('assembly', """mac:
+    p.notes('`%rdi` 保存参数 `x`，`%eax` 保存返回值，对应规则在第三部分详细讲。')
+
+
+def lea_mul_example_2(p):
+    p.title('整数乘法优化实例：x * 5 与 x * 12')
+    slide(p, r"""
+**指令执行**：两个函数的参数都是 7，即 `%rdi = 7`：
+""")
+    p.table([
+        ['`times5`', '`leal (%rdi,%rdi,4), %eax`', '`%rdi = 7`', '`%eax = 35`，即 $7 + 7 \\times 4$'],
+        ['`times12`', '`leal (%rdi,%rdi,2), %eax`', '`%rdi = 7`', '`%eax = 21`，即 $7 + 7 \\times 2$'],
+        ['`times12`', '`sall $2, %eax`', '`%eax = 21`', '`%eax = 84`，即 $21 \\times 2^2$'],
+    ], headers=['函数', '指令', '执行前', '执行后'])
+    p.demo('运行 times',
+           """cd examples
+gcc -Og -fcf-protection=none times.c times_main.c -o times && ./times""",
+           output="""times5(7) = 35, times12(7) = 84""",
+           files=['examples/times_main.c'])
+    slide(p, r"""
+**结论**：C 代码写的是乘法，编译器选用地址计算指令与移位指令。CPU 执行这两类指令，得到的结果与乘法相同。
+""")
+
+
+def insn_bytes(p):
+    p.title('指令编码：指令的字节由操作码与操作数字段组成')
+    slide(p, r"""
+**指令的字节表示**：一条机器指令是内存中一段连续的字节，由操作码与操作数字段组成。
+""")
+    figure(p, "insn-bytes", 1120)
+    slide(p, r"""
+**结论**：指令的开头是操作码。CPU 由操作码识别这是哪一条指令，并据此读取其后长度可变的操作数字段。
+""")
+    p.notes("""
+x86-64 的前三条指令，字段的边界与字节的边界重合：`ret` 只有操作码；`movl $0, %eax` 的操作码 `b8` 含寄存器编号，其后是 4 字节立即数；`xorl %eax, %eax` 的第二个字节描述两个寄存器操作数。
+`c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。x86-64 把 4 位编号的低 3 位放在这个字节中，最高位放在前缀字节中（第四条的 `48`）；前三条指令没有前缀字节，编号的最高位是 0。
+x86-64 的操作码之前可以有前缀字节，第四条的 `48` 就是前缀；Y86-64 的指令都以操作码开头。
+第四条 `movq 8(%rdi), %rcx` 从地址 `%rdi + 8` 读取 8 字节到 `%rcx`，编码是 `48 8b 4f 08`：`4f` 的二进制是 `01 001 111`，三段依次表示 1 字节偏移、`%rcx`、`%rdi`。完整的编码规则见 Intel 手册第 2 卷第 2 章。
+Y86-64 是教材 CS:APP 第 4 章为教学设计的指令集，指令的功能与 x86-64 相近，编码规则更简单：第 1 字节是操作码，第 2 字节的两个十六进制位是两个寄存器编号，其后是 8 字节常数。`mrmovq 8(%rdi), %rcx` 与第四条是同一操作。寄存器编号与 x86-64 相同：`%rax` 为 0，`%rcx` 为 1，`%rdi` 为 7。
+x86-64 的字节可用 `echo 'ret; movl $0, %eax; xorl %eax, %eax; movq 8(%rdi), %rcx' | gcc -c -x assembler - -o t.o && objdump -d t.o` 得到。
+""")
+
+
+def disasm_exercise(p):
+    p.title('练习：反汇编和反编译')
+    figure(p, "x86-rules", 1120)
+    slide(p, r"""
+**第一步，反汇编**：按上面的规则切分函数 `mac` 的机器码，写出每条指令的汇编。
+""")
+    p.demo('编译 mac.c，查看 mac 的机器码',
+           """cd examples
+gcc -Og -fcf-protection=none -c mac.c
+objcopy -O binary -j .text mac.o /dev/stdout | od -An -tx1""",
+           output=""" 8b 06 0f af 07 01 d0 c3""",
+           files=['examples/mac.c'])
+    p.notes("""
+课堂练习。`mac.c` 中只有函数 `mac`。`objcopy -O binary -j .text` 从 `mac.o` 中取出代码段的字节，`od -An -tx1` 按十六进制逐字节打印，共 8 个字节、4 条指令。
+规则只列出本题用到的 4 条指令，以及操作数字节的两种模式：11（寄存器）与 00（内存，地址在寄存器中）。
+做法是重复三步：读取操作码，按规则判断其后有没有操作数字节，把操作数字节写成二进制并分成三段。
+操作数字节在 Intel 手册中称为 ModR/M。mm 为 01、10 时地址中还有偏移；mm 为 00 且 bbb 为 100 或 101 时另有规则，本题不涉及。
+""")
+
+
+def disasm_exercise_2(p):
+    p.title('练习：反汇编和反编译')
+    slide(p, r"""
+**反汇编过程**：读取操作码，再把操作数字节写成二进制并分成三段：
+""")
+    p.code('text', """8b 06       06 = 00 000 110    movl  (%rsi), %eax
+0f af 07    07 = 00 000 111    imull (%rdi), %eax
+01 d0       d0 = 11 010 000    addl  %edx, %eax
+c3                             ret""")
+    slide(p, r"""
+- `8b 06`：`movl B, R`。mm 是 00，B 是内存操作数，地址在 110 号寄存器 `%rsi` 中；R 是 000 号寄存器 `%eax`；
+- `0f af 07`：`imull B, R`，操作码占 2 字节。B 是 `(%rdi)`，R 是 `%eax`；
+- `01 d0`：`addl R, B`。mm 是 11，B 是 000 号寄存器 `%eax`；R 是 010 号寄存器 `%edx`；
+- `c3`：`ret`，没有操作数字节。
+""")
+    p.notes('8 个字节切分为 2、3、2、1 字节的 4 条指令。`objdump -d` 完成的就是这一过程。')
+
+
+def mac_exercise(p):
+    p.title('练习：反汇编和反编译')
+    slide(p, r"""
+**第二步，反编译**：由第一步得到的函数 `mac` 的汇编代码，推导其 C 函数体：
+""")
+    p.demo('编译 mac.c，查看 mac 的汇编代码',
+           """cd examples
+gcc -Og -fcf-protection=none -S mac.c -o - | sed -f asm.sed""",
+           output="""mac:
 	movl	(%rsi), %eax
 	imull	(%rdi), %eax
 	addl	%edx, %eax
-	ret""")
+	ret""",
+           files=['examples/mac.c', 'examples/asm.sed'])
     slide(p, r"""
 **已知**：
 - 函数原型：`int mac(const int *w, const int *x, int sum)`；
 - 执行前，`%rdi` 保存指针 `w`，即 `w[0]` 的地址；`%rsi` 保存指针 `x`，即 `x[0]` 的地址；`%edx` 保存 `sum` 的值；
 - 执行 `ret` 时，`%eax` 中的值即函数的返回值。
 """)
-    p.notes('课堂练习：已知寄存器内容，由单次乘加的汇编推导 C 函数体。')
+    p.notes('课堂练习：已知寄存器内容，由单次乘加的汇编推导 C 函数体。编译器输出的 4 条指令与第一步反汇编的结果相同。')
 
 
 def mac_exercise_2(p):
-    p.title('练习：从汇编推导 C 代码')
+    p.title('练习：反汇编和反编译')
     slide(p, r"""
 **分析推导**：逐条对应的 C 代码如下：
 """)
@@ -655,6 +858,58 @@ def cond_jump(p):
     p.notes('x86-64 完整的条件跳转指令分类、条件码判定组合，以及有符号与无符号跳转的本质差异。')
 
 
+def cond_jump_example(p):
+    p.title('条件跳转实例：int 与 unsigned 的 max')
+    p.code('c', """int max(int a, int b) { int v = a; if (a < b) v = b; return v; }
+unsigned max_u(unsigned a, unsigned b) { unsigned v = a; if (a < b) v = b; return v; }""")
+    p.demo('编译 max.c',
+           """cd examples
+gcc -Og -fcf-protection=none -S max.c -o - | sed -f asm.sed | pr -2 -e -l 7""",
+           output="""max:                               	max_u:
+        movl    %esi, %eax         	        movl    %esi, %eax
+        cmpl    %esi, %edi         	        cmpl    %esi, %edi
+        jl      .L2                	        jb      .L4
+        movl    %edi, %eax         	        movl    %edi, %eax
+.L2:                               	.L4:
+        ret                        	        ret""",
+           bold=[4],
+           files=['examples/max.c', 'examples/asm.sed'])
+    slide(p, r"""
+**编译器选择的指令**：两个函数都用 `cmpl %esi, %edi` 比较 `a` 与 `b`，只有跳转指令不同。
+- 参数类型是 `int`，编译器选用有符号跳转指令 `jl`；
+- 参数类型是 `unsigned`，编译器选用无符号跳转指令 `jb`。
+""")
+    p.notes("""
+`pr -2 -e -l 7` 把输出排成两栏，每栏 7 行，`-e` 把制表符展开为空格：左栏是 `max`，右栏是 `max_u`。
+`%edi` 保存参数 `a`，`%esi` 保存参数 `b`，`%eax` 保存返回值，对应规则在第三部分详细讲。
+""")
+
+
+def cond_jump_example_2(p):
+    p.title('条件跳转实例：int 与 unsigned 的 max')
+    slide(p, r"""
+**指令执行**：两个函数的参数都是 `%edi = 0xFFFFFFF0`，`%esi = 0x000000F0`：
+""")
+    p.table([
+        ['`cmpl %esi, %edi`', '差为 `0xFFFFFF00`', 'ZF=0，SF=1，OF=0，CF=0'],
+        ['`jl .L2`（`max`）', 'SF $\\ne$ OF 成立，跳转', '`%eax` 保持 `b`，返回 $240$'],
+        ['`jb .L4`（`max_u`）', 'CF=1 不成立，顺序执行', '`movl` 写入 `a`，返回 $4294967280$'],
+    ], headers=['指令', '执行', '结果'])
+    p.demo('运行 max',
+           """cd examples
+gcc -Og -fcf-protection=none max.c max_main.c -o max && ./max""",
+           output="""max  (-16, 240) = 240
+max_u(4294967280, 240) = 4294967280""",
+           files=['examples/max_main.c'])
+    slide(p, r"""
+**结论**：同一条 `cmpl` 设置同一组标志位。类型的区别由编译器转化为 `jl` 与 `jb` 两条指令，CPU 按各自的条件读取标志位。
+""")
+    p.notes("""
+第一条 `movl %esi, %eax` 先把 `b` 写入 `%eax`。`jl` 跳转后 `%eax` 保持 `b`；`jb` 不跳转，`movl %edi, %eax` 把 `a` 写入 `%eax`。
+`0xFFFFFFF0` 按 `int` 解释是 -16，按 `unsigned` 解释是 4294967280；`0x000000F0` 两种解释都是 240。
+""")
+
+
 def loop_forms_for(p):
     p.title('循环翻译：从 jump-to-middle 到 guarded-do 结构')
     slide(p, r"""
@@ -740,6 +995,23 @@ def type_neutral(p):
 - **类型的真正差异体现在后续选用哪一条条件跳转指令**（例如根据有符号标志跳转 `jl` 还是根据无符号标志跳转 `jb`）。
 """)
     p.notes('汇编语言与硬件在算术层面的无类型特征，类型差异向后续分支跳转的延后。')
+
+
+def type_neutral_2(p):
+    p.title('类型中立：机器级指令不携带类型的特征')
+    slide(p, r"""
+**本节实例中的类型与指令**：同一个 C 运算，操作数类型不同时，编译器选用的指令如下：
+""")
+    p.table([
+        ['加法 `a + b`、减法 `a - b`', '`addl`、`subl`', '`addl`、`subl`', '两种类型的指令相同'],
+        ['8 位扩展到 32 位', '`movsbl`', '`movzbl`', '`equal`'],
+        ['右移 `x >> 4`', '`sarl`', '`shrl`', '`sar4` 与 `shr4`'],
+        ['比较 `a < b` 之后的跳转', '`jl`', '`jb`', '`max` 与 `max_u`'],
+    ], headers=['C 运算', '有符号类型', '无符号类型', '实例'])
+    slide(p, r"""
+**结论**：类型信息在编译时转化为指令的选择。CPU 执行指令时只处理位模式，每条指令的行为由指令本身确定。
+""")
+    p.notes('回顾扩展传送、移位、条件跳转三个实例：三处的 C 代码只有类型不同，编译结果各有一条指令不同。')
 
 
 def type_neutral_fig(p):
@@ -1429,13 +1701,13 @@ def vex_naming(p):
 - 传统标量汇编为两操作数格式（破坏性写入，如 `addl %ecx, %r9d` 会覆盖 `%r9d` 原值）；
 - AVX 采用 VEX 编码前缀，支持非破坏性三操作数格式：
 """)
-    p.code('assembly', """vpaddd    %ymm0, %ymm1, %ymm1    # 语义：%ymm1 = %ymm1 + %ymm0""")
+    p.code('assembly', """vpaddd    %ymm0, %ymm1, %ymm1    # meaning: %ymm1 = %ymm1 + %ymm0""")
     slide(p, r"""
 - **优势**：源操作数内容不被覆盖，编译器无需插入额外的寄存器暂存与拷贝指令。
 
 **向量寄存器异或清零惯用法**：
 """)
-    p.code('assembly', """vpxor    %xmm1, %xmm1, %xmm1     # 向量累加器置零""")
+    p.code('assembly', """vpxor    %xmm1, %xmm1, %xmm1     # zero the vector accumulator""")
     p.notes('AVX 指令集的 VEX 前缀编码规范、非破坏性三操作数格式、异或清零惯用法与向量指令助记符命名规律。')
 
 
@@ -1598,7 +1870,7 @@ def intrinsics(p):
 __m256i vsum = _mm256_setzero_si256();   // vpxor %xmm1, %xmm1, %xmm1
 for (int i = 0; i <= n - 8; i += 8) {
     __m256i va = _mm256_loadu_si256((__m256i*)&w[i]);  // vmovdqu
-    __m256i vb = _mm256_loadu_si256((__m256i*)&x[i]);  // 并入 vpmulld 的内存操作数
+    __m256i vb = _mm256_loadu_si256((__m256i*)&x[i]);  // folded into vpmulld as its memory operand
     __m256i vprod = _mm256_mullo_epi32(va, vb);       // vpmulld
     vsum = _mm256_add_epi32(vsum, vprod);             // vpaddd
 }""")
@@ -1929,7 +2201,7 @@ def cuda(p):
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     cache[tid] = (idx < n) ? w[idx] * x[idx] : 0;
     __syncthreads();
-    // 块内共享内存树状折半规约（对应 CPU 向量水平规约）
+    // tree reduction in shared memory (the GPU form of the horizontal sum)
     for (int s = blockDim.x / 2; s > 0; s >>= 1) {
         if (tid < s) cache[tid] += cache[tid + s];
         __syncthreads();

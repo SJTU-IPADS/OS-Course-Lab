@@ -1,0 +1,6 @@
+# Bash reads these, and bash takes a CR at the end of a line as part of the
+# line. Git for Windows checks text out with CRLF by default, which would break
+# every demo (lecturekit/demo_prologue.bash) and every script on a student's
+# machine, so these stay LF whatever the checkout's settings.
+*.bash text eol=lf
+*.sh   text eol=lf

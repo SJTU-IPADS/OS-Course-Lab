@@ -21,6 +21,9 @@ announced (`Command`) as bash reaches it, so a three-line demo reads as three
 prompts, each followed by what it printed. A demo marked ``interactive`` runs
 on a pseudo-terminal instead of a pipe, and its `Terminal` is how keystrokes
 from the deck reach it.
+
+On Windows the bash is Git Bash's, and a demo runs on pipes only: there is no
+pseudo-terminal to give an interactive one, so that kind is refused (`why_not`).
 """
 
 from __future__ import annotations
@@ -32,7 +35,9 @@ import functools
 import hashlib
 import json
 import os
+import queue
 import select
+import shutil
 import signal
 import struct
 import subprocess
@@ -40,13 +45,13 @@ import threading
 import time
 from collections.abc import Iterator
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 from . import model
 
-# POSIX only, and so are demos. Windows still renders and serves a deck, and the
-# renderer imports this module to write the demo table, so their absence there
-# is not an ImportError; it is `RUNNABLE` being false.
+# The keyboard end of an interactive demo, and POSIX only. Windows has none of
+# the three; it still runs every other demo, and the renderer imports this module
+# to write the demo table, so their absence is not an ImportError.
 try:
     import fcntl
     import pty
@@ -54,9 +59,44 @@ try:
 except ImportError:
     fcntl = pty = termios = None
 
-#: Whether this machine can run a demo: bash, pipes that `select` can wait on,
-#: process groups and pseudo-terminals are all POSIX.
-RUNNABLE = pty is not None
+
+def _find_bash(windows: bool = os.name == "nt") -> str | None:
+    """Where bash is: on PATH, or on Windows the one Git for Windows ships.
+
+    A ``bash`` on a Windows PATH may be WSL's launcher (in System32, or an app
+    alias in WindowsApps). That one runs the command in a Linux VM with its own
+    environment, not in the lecture directory as this machine sees it, so it is
+    passed over for Git Bash: ``bin\\bash.exe`` under the directory ``git`` is
+    installed in, which puts Git's tools on the command's PATH as it starts.
+    """
+    found = shutil.which("bash")
+    if not windows:
+        return found
+    if found and PureWindowsPath(found).parent.name.lower() not in (
+        "system32",
+        "windowsapps",
+    ):
+        return found
+    roots = []
+    git = shutil.which("git")
+    if git:  # <root>\cmd\git.exe, or <root>\mingw64\bin\git.exe
+        roots += PureWindowsPath(git).parents[:3]
+    for variable, below in (
+        ("ProgramFiles", "Git"),
+        ("LOCALAPPDATA", "Programs\\Git"),
+    ):
+        if os.environ.get(variable):
+            roots.append(PureWindowsPath(os.environ[variable], below))
+    for root in roots:
+        candidate = str(root / "bin" / "bash.exe")
+        if os.path.isfile(candidate):
+            return candidate
+    return None
+
+
+#: The bash a demo runs in, or ``None``: the deck is still served, and a press
+#: is answered with why nothing ran.
+BASH = _find_bash()
 
 #: The table of runnable commands, written next to the deck by the viewer
 #: renderer and read back by the dev server. Rewritten on every render — always,
@@ -98,8 +138,25 @@ _WRITE_WAIT_S = 1.0
 # top-level command's line in the output, which `stream` takes out again and
 # turns into a `Command`. The file says why each part is there.
 _PROLOGUE = Path(__file__).resolve().with_name("demo_prologue.bash")
+
+# How bash is started. The command travels in the environment, not on bash's
+# command line: on Windows a command line is one string that the program splits
+# by its own rules, and Git Bash's are not the ones Python quotes for, so a
+# backslash or a quote in a demo would arrive changed. This line is fixed text
+# with no such characters to lose. It execs the real shell with the prologue
+# armed, keeping ``bash`` as its name so its error messages read as before.
+_LAUNCH = 'BASH_ENV=$LECTUREKIT_PROLOGUE exec -a bash "$BASH" -c "$LECTUREKIT_DEMO"'
 _MARK = b"\x1b]7717;"
 _MARK_MAX = len(_MARK) + 12  # the marker, digits and the BEL that ends it
+
+
+def why_not(spec: "Spec") -> str | None:
+    """Why this machine cannot run ``spec``, or ``None`` when it can."""
+    if BASH is None:
+        return "demos need bash; on Windows, install Git for Windows (Git Bash)"
+    if spec.interactive and pty is None:
+        return "an interactive demo needs a pseudo-terminal: Linux, macOS or WSL"
+    return None
 
 
 def demo_id(command: str) -> str:
@@ -289,7 +346,7 @@ def _parses(text: str) -> bool:
     """
     try:
         result = subprocess.run(
-            ["bash", "-n"],
+            [BASH or "bash", "-n"],
             input=text.encode("utf-8"),
             capture_output=True,
             env={**os.environ, "LC_ALL": "C"},
@@ -502,15 +559,6 @@ class Result:
     timed_out: bool
     duration_s: float
 
-    def as_dict(self) -> dict:
-        return {
-            "command": self.command,
-            "output": self.output,
-            "exit": self.exit_code,
-            "timedOut": self.timed_out,
-            "duration": round(self.duration_s, 3),
-        }
-
 
 def stream(
     command: str,
@@ -543,20 +591,21 @@ def stream(
     ``timeout_s=None`` lets the command run until it, or somebody, stops it.
     """
     started = time.monotonic()
-    env = {**os.environ, "BASH_ENV": str(_PROLOGUE)}
+    argv, env = _launch(command)
     if terminal is None:
         proc = subprocess.Popen(
-            ["bash", "-c", command],
+            argv,
             cwd=str(cwd),
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             stdin=subprocess.DEVNULL,
-            start_new_session=True,
+            start_new_session=True,  # ignored on Windows; `_kill_session` copes
         )
-        fd = proc.stdout.fileno()
+        reads = _pumped(proc.stdout)
     else:
-        proc, fd = _spawn_on(terminal, command, cwd, {**env, "TERM": TERM})
+        proc, fd = _spawn_on(terminal, argv, cwd, {**env, "TERM": TERM})
+        reads = _polled(fd)
     transcript = _Transcript(command)
     markers = _Markers()
     decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
@@ -565,19 +614,12 @@ def stream(
     capped = False
     timed_out = False
     try:
-        while True:
-            ready, _, _ = select.select([fd], [], [], TICK_S)
-            if ready:
-                try:
-                    data = os.read(fd, _READ_BYTES)
-                except BlockingIOError:
-                    continue
-                except OSError as error:
-                    if error.errno != errno.EIO:  # EIO: the terminal's last
-                        raise  # writer is gone, which is its end of file
-                    data = b""
-                if not data:
-                    break
+        for data in reads:
+            if data is None:
+                yield Tick(time.monotonic() - started)
+            elif not data:
+                break
+            else:
                 for piece in markers.feed(data):
                     if capped:
                         continue  # still draining, so the child is never blocked
@@ -592,8 +634,6 @@ def stream(
                         text += f"\r\n… [output past {MAX_OUTPUT_BYTES} bytes dropped]"
                     if text:
                         yield Chunk(text)
-            else:
-                yield Tick(time.monotonic() - started)
             if deadline is not None and time.monotonic() > deadline:
                 timed_out = True
                 yield Chunk(f"\r\n… [killed after {timeout_s:g}s]")
@@ -611,21 +651,82 @@ def stream(
         if proc.poll() is None:
             _kill_session(proc)
             proc.wait()
-        if terminal is None:
-            proc.stdout.close()
-        else:
+        if terminal is not None:
             terminal._detach()
 
 
+def _launch(command: str) -> tuple[list[str], dict[str, str]]:
+    """The argv and environment that run ``command`` (see `_LAUNCH`)."""
+    env = {key: value for key, value in os.environ.items() if key != "BASH_ENV"}
+    env["LECTUREKIT_DEMO"] = command
+    env["LECTUREKIT_PROLOGUE"] = _PROLOGUE.as_posix()  # Git Bash reads C:/...
+    return [BASH or "bash", "-c", _LAUNCH], env
+
+
+def _pumped(pipe) -> Iterator[bytes | None]:
+    """A pipe's output as it comes, ``None`` for each quiet `TICK_S`, and
+    ``b""`` once at its end.
+
+    A thread does the waiting, because Windows' `select` takes sockets only. The
+    thread owns the pipe and closes it at the end: closed from here instead, a
+    read in flight could be left holding a descriptor number that by then names
+    somebody else's file. The run is over by the time the stream is, so the
+    end is never long in coming — killing the command closes the pipe's far end.
+    """
+    pending: queue.SimpleQueue[bytes] = queue.SimpleQueue()
+
+    def pump():
+        with pipe:
+            while True:
+                try:
+                    data = os.read(pipe.fileno(), _READ_BYTES)
+                except OSError:
+                    data = b""
+                pending.put(data)
+                if not data:
+                    return
+
+    threading.Thread(target=pump, name="lecturekit-demo", daemon=True).start()
+    while True:
+        try:
+            data = pending.get(timeout=TICK_S)
+        except queue.Empty:
+            yield None
+            continue
+        yield data
+        if not data:
+            return
+
+
+def _polled(fd: int) -> Iterator[bytes | None]:
+    """`_pumped` for a pseudo-terminal's master, which POSIX `select` can wait on."""
+    while True:
+        ready, _, _ = select.select([fd], [], [], TICK_S)
+        if not ready:
+            yield None
+            continue
+        try:
+            data = os.read(fd, _READ_BYTES)
+        except BlockingIOError:
+            continue
+        except OSError as error:
+            if error.errno != errno.EIO:  # EIO: the terminal's last writer
+                raise  # is gone, which is its end of file
+            data = b""
+        yield data
+        if not data:
+            return
+
+
 def _spawn_on(
-    terminal: Terminal, command: str, cwd: Path, env: dict[str, str]
+    terminal: Terminal, argv: list[str], cwd: Path, env: dict[str, str]
 ) -> tuple[subprocess.Popen, int]:
-    """Start ``command`` on a fresh pseudo-terminal; return it and the master."""
+    """Start ``argv`` on a fresh pseudo-terminal; return it and the master."""
     master, slave = pty.openpty()
     try:
         _set_window(slave, terminal.cols, terminal.rows)
         proc = subprocess.Popen(
-            ["bash", "-c", command],
+            argv,
             cwd=str(cwd),
             env=env,
             stdin=slave,
@@ -673,10 +774,32 @@ def _shell_status(code: int) -> int:
 
 
 def _kill_session(proc: subprocess.Popen) -> None:
-    """Kill the child's whole process group, falling back to the child itself."""
+    """Kill the child's whole process group, falling back to the child itself.
+
+    Windows has no process groups to signal; there the tree is walked instead.
+    """
+    if os.name != "posix":
+        kill_tree(proc)
+        return
     try:
         os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
     except (ProcessLookupError, PermissionError, OSError):
+        try:
+            proc.kill()
+        except OSError:
+            pass
+
+
+def kill_tree(proc: subprocess.Popen) -> None:
+    """Kill ``proc`` and every process under it, on Windows (``taskkill /T``)."""
+    try:
+        subprocess.run(
+            ["taskkill", "/T", "/F", "/PID", str(proc.pid)],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except OSError:
         try:
             proc.kill()
         except OSError:

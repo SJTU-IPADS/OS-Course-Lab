@@ -20,13 +20,6 @@ class ProseBlockTest(unittest.TestCase):
         self.assertEqual([b.kind for b in page.blocks], ["prose"])
         self.assertEqual(page.blocks[0].content, "a paragraph")
 
-    def test_handout_is_a_deprecated_alias_for_prose(self):
-        def body(p):
-            p.title("T")
-            p.handout("legacy")
-
-        self.assertEqual([b.kind for b in _page(body).blocks], ["prose"])
-
     def test_prose_is_not_autobolded(self):
         def body(p):
             p.title("T")

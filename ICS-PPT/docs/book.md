@@ -1,6 +1,6 @@
 # The book target
 
-Many lectures, one book. `lecturekit book` renders a course into a LaTeX tree
+Many lectures, one book. `python3 -m lecturekit.cli book` renders a course into a LaTeX tree
 that compiles to a PDF: **each lecture becomes a chapter**. For authoring a
 single lecture see [dsl.md](dsl.md); for the deck pipeline see
 [usage.md](usage.md).
@@ -14,7 +14,8 @@ A slide is projected bullets; a textbook wants paragraphs. So a page carries
 | --- | --- | --- |
 | `p.slide(...)` | ✅ | ❌ |
 | `p.prose(...)` | ❌ | ✅ |
-| everything else (`image`, `table`, `sidenote`, `code`, `news`, …) | ✅ | ✅ |
+| everything else (`image`, `table`, `sidenote`, `code`, …) | ✅ | ✅ |
+| `p.news(...)` (page metadata, not a block) | ❌ | ✅ |
 
 Figures, tables, sidenotes and code are authored **once** and shared. Only the
 running text is written twice, because it is genuinely different writing.
@@ -40,8 +41,6 @@ That forced-in slide is also the only way an inline
 [`<mark>`](dsl.md#inline-highlight-mark) reaches the book — the tag is legal in
 slide text alone, and a slide is otherwise deck-only. It renders as the same
 marker stroke the deck draws.
-
-(`p.handout(...)` is a deprecated alias for `p.prose(...)`.)
 
 ## `book.py`
 
@@ -72,18 +71,11 @@ book.
 ## Running it
 
 ```bash
-lecturekit book <book-dir>                     # -> build/book/
-lecturekit book <book-dir> --out build/mybook
-lecturekit book <book-dir> --stats             # coverage only, renders nothing
-lecturekit book <book-dir> --lectures lec02    # one chapter, by lecture id
-lecturekit book <book-dir> --compile           # also run latexmk (needs XeLaTeX)
-```
-
-From this repo's root, remember the `PYTHONPATH` prefix as with the other
-commands:
-
-```bash
-PYTHONPATH=lecturekit python3 -m lecturekit.cli book "$BOOK"
+python3 -m lecturekit.cli book <book-dir>                     # -> build/book/
+python3 -m lecturekit.cli book <book-dir> --out build/mybook
+python3 -m lecturekit.cli book <book-dir> --stats             # coverage only, renders nothing
+python3 -m lecturekit.cli book <book-dir> --lectures lec02    # one chapter, by lecture id
+python3 -m lecturekit.cli book <book-dir> --compile           # also run latexmk (needs XeLaTeX)
 ```
 
 The output tree:
@@ -91,7 +83,7 @@ The output tree:
 ```
 build/book/
   book.tex                                 # preamble + \include of each chapter
-  chapters/02-a-story-of-scaling.tex
+  chapters/lec02.tex                       # named by lecture id
   assets/lec02/intelligence-explosion.png
   Makefile                                 # latexmk -xelatex book.tex
 ```
@@ -127,8 +119,8 @@ is Chinese) — on macOS, MacTeX provides both: `cd build/book && make`.
 `--lang en` renders the book in English:
 
 ```bash
-lecturekit i18n extract <book-dir> --lang en    # -> <book-dir>/i18n/en.toml
-lecturekit book <book-dir> --lang en            # -> build/book-en/
+python3 -m lecturekit.cli i18n extract <book-dir> --lang en    # -> <book-dir>/i18n/en.toml
+python3 -m lecturekit.cli book <book-dir> --lang en            # -> build/book-en/
 ```
 
 A book is an ordering, so its own overlay holds three keys — `book.title`,
@@ -250,9 +242,10 @@ per-slide page backrefs are dropped — they mean nothing in print).
 Two deliberate approximations, in the spirit of the pptx target:
 
 - **`architecture` is a box drawing, not a diagram.** Layers stack as tabulars.
-- **A figure LaTeX cannot embed** (an animated `.gif`, say — graphicx reads
-  png/jpg/pdf/eps) renders as a labelled placeholder, and the CLI warns. Print
-  has no place for an animation, and one such file should not fail the book.
+- **A figure LaTeX cannot embed** (an `.svg`, or an animated `.gif` — graphicx
+  reads png/jpg/pdf/eps) renders as a labelled placeholder, and the CLI warns.
+  Print has no place for an animation, and one such file should not fail the
+  book.
 
 ## Markdown → LaTeX
 

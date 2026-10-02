@@ -8,10 +8,12 @@
 # so a change to the theme or a renderer is one command away from being visible
 # in the README. Nothing here is hand-edited or hand-cropped.
 #
-# Each shot needs the tool its target needs, and is skipped (with a note) when
-# that tool is missing: Node for the deck, a local Chrome for the PNG and
-# outline shots, XeLaTeX + poppler for the book page, macOS Quick Look for the
-# PowerPoint preview. ImageMagick, if present, trims the outline shot.
+# The deck is rendered first and has to succeed: it needs Node (marp-cli, see
+# scripts/prepare.sh) and a local Chrome for its PNGs. Every other shot needs
+# the tool its target needs and is skipped (with a note) when that is missing:
+# ImageMagick for the frames strip, XeLaTeX + latexmk + poppler for the book
+# page, macOS Quick Look for the PowerPoint preview. ImageMagick, if present,
+# also trims the outline shot.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -21,9 +23,13 @@ LEC=examples/showcase
 OUT=docs/images
 BUILD=build/screenshots
 PY="${PYTHON:-python3}"
-CHROME="${CHROME_PATH:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 
 lecturekit() { PYTHONPATH="$ROOT" "$PY" -m lecturekit.cli "$@"; }
+# The Chrome the renderer itself would print with (CHROME_PATH, then the usual
+# places on each platform).
+CHROME="$(PYTHONPATH="$ROOT" "$PY" -c \
+  'from lecturekit.renderers.viewer.pdf import find_chrome; print(find_chrome())' \
+  2>/dev/null || true)"
 skip() { echo "screenshots: skipping $1 ($2)" >&2; }
 
 mkdir -p "$OUT"
@@ -53,8 +59,8 @@ fi
 
 # ------------------------------------------------------------- the outline --
 # The viewer shell is the outline, so it is a page in its own right: shot at 2x
-# and trimmed to its content, because the deck it lists is only nine slides.
-if [ -x "$CHROME" ]; then
+# and trimmed to its content, because the deck it lists is a short one.
+if [ -n "$CHROME" ] && [ -x "$CHROME" ]; then
   "$CHROME" --headless=new --disable-gpu --hide-scrollbars \
     --force-device-scale-factor=2 --window-size=1280,860 \
     --virtual-time-budget=3000 \
@@ -66,7 +72,7 @@ if [ -x "$CHROME" ]; then
     cp "$BUILD/outline.png" "$OUT/outline.png"
   fi
 else
-  skip outline.png "no Chrome at $CHROME — set CHROME_PATH"
+  skip outline.png "no Chrome found — set CHROME_PATH"
 fi
 
 # ---------------------------------------------------------------- the book --
@@ -75,7 +81,8 @@ fi
 # earlier in the chapter does not silently re-shoot the wrong page — and a
 # sentence of prose, unlike the heading, cannot also match the table of
 # contents.
-if command -v xelatex >/dev/null 2>&1 && command -v pdftoppm >/dev/null 2>&1; then
+if command -v xelatex >/dev/null 2>&1 && command -v latexmk >/dev/null 2>&1 &&
+   command -v pdftoppm >/dev/null 2>&1; then
   echo "screenshots: compiling the book …"
   lecturekit book examples --out "$BUILD/book" --compile >/dev/null
   page=""
@@ -92,7 +99,7 @@ if command -v xelatex >/dev/null 2>&1 && command -v pdftoppm >/dev/null 2>&1; th
       "$BUILD/book/book.pdf" "${OUT%/}/book-page"
   fi
 else
-  skip book-page.png "needs xelatex and pdftoppm (MacTeX, poppler)"
+  skip book-page.png "needs xelatex, latexmk and pdftoppm (TeX Live, poppler)"
 fi
 
 # ---------------------------------------------------------------- the pptx --

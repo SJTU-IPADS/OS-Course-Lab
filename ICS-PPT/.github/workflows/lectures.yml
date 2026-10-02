@@ -1,0 +1,60 @@
+# Build the PDF of every lecture a RELEASE file marks (docs/release.md) and
+# pack them into one zip. Every push builds it and keeps it as a workflow
+# artifact; a tag push also publishes it as a release named after the tag.
+# With no RELEASE file in the repository there is nothing to build: the job
+# stops after listing, and a tag publishes no release.
+# .gitlab-ci.yml does the same on GitLab; the work itself is in scripts/.
+name: lectures
+
+on: push
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: python:3.12-slim-trixie
+    outputs:
+      marked: ${{ steps.list.outputs.marked }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: List the released lectures
+        id: list
+        run: |
+          list=$(scripts/released.sh)
+          if [ -n "$list" ]; then echo "marked=true" >> "$GITHUB_OUTPUT"
+          else echo "no RELEASE file marks a lecture; nothing to build"; fi
+      - if: steps.list.outputs.marked
+        run: scripts/ci-setup.sh
+      - name: Build the PDFs
+        if: steps.list.outputs.marked
+        run: |
+          if [ "$GITHUB_REF_TYPE" = tag ]; then version=${GITHUB_REF_NAME//\//-}
+          else version=${GITHUB_SHA::8}; fi
+          scripts/release-zip.sh "dist/lectures-$version.zip"
+      - uses: actions/upload-artifact@v4
+        if: steps.list.outputs.marked
+        with:
+          name: lectures
+          path: dist/*.zip
+          compression-level: 0 # a zip of PDFs does not shrink again
+
+  release:
+    if: github.ref_type == 'tag' && needs.build.outputs.marked
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: lectures
+          path: dist
+      - run: >
+          gh release create "$GITHUB_REF_NAME" dist/*.zip
+          --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME"
+          --notes "PDFs of the released lectures, built from $GITHUB_SHA."
+        env:
+          GH_TOKEN: ${{ github.token }}

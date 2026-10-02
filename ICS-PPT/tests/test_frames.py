@@ -2,6 +2,7 @@
 
 import contextlib
 import io
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -289,16 +290,16 @@ class OutlineTest(unittest.TestCase):
         html = build_outline_html(_lecture())
         self.assertIn('<span class="page-number">2</span>', html)
 
-    def test_an_animation_advances_the_shown_number_by_one(self):
-        # before / anim (3 frames) / after are shown as 1 / 2 / 3 — an animation
-        # is one slide to a reader, so the page after it is 3, not 5.
+    def test_the_row_after_an_animation_counts_every_frame(self):
+        # before / anim (3 frames) / after start at slides 1 / 2 / 5.
         html = build_outline_html(_lecture())
-        self.assertIn('<span class="page-number">3</span>', html)
-        self.assertEqual(html.count("page-number"), 3)
+        self.assertEqual(
+            re.findall(r'<span class="page-number">(\d+)</span>', html),
+            ["1", "2", "5"],
+        )
 
-    def test_the_row_still_links_to_the_physical_slide(self):
-        # The label compresses; the link must not — it addresses a real slide,
-        # so "after" stays deck slide 5 (0-based 4) even though it shows as 3.
+    def test_the_row_links_to_the_physical_slide(self):
+        # "after" is deck slide 5 (0-based 4), and is labelled 5.
         html = build_outline_html(_lecture())
         self.assertIn(f'href="{SLIDE_LINK_PREFIX}1"', html)   # anim-1
         self.assertIn(f'href="{SLIDE_LINK_PREFIX}4"', html)   # after
@@ -309,46 +310,13 @@ class OutlineTest(unittest.TestCase):
         self.assertEqual(rows["anim-2"]["frames"], 2)
 
 
-class ShownNumberTest(unittest.TestCase):
-    """An animation is one slide to a reader: every frame shows one number."""
+class SlideNumberTest(unittest.TestCase):
+    """Every frame is a slide of its own and prints its own deck position."""
 
-    def _slides(self):
-        return build_marp_markdown(_lecture()).split("\n\n---\n\n")
-
-    def test_the_first_frame_carries_the_number(self):
-        slides = self._slides()
-        self.assertNotIn("_paginate: hold", slides[1])
-
-    def test_later_frames_hold_it(self):
-        slides = self._slides()
-        self.assertIn("<!-- _paginate: hold -->", slides[2])
-        self.assertIn("<!-- _paginate: hold -->", slides[3])
-
-    def test_the_page_after_an_animation_advances_again(self):
-        self.assertNotIn("_paginate: hold", self._slides()[4])
-
-    def test_a_deck_without_animations_never_holds(self):
-        lec = Lecture(id="plain", title="Plain")
-        lec.page(id="one", body=lambda p: (p.title("One"), p.slide("a")))
-        lec.page(id="two", body=lambda p: (p.title("Two"), p.slide("b")))
-        self.assertNotIn("_paginate: hold", build_marp_markdown(lec.build()))
-
-    def test_the_json_carries_the_shown_number_per_page(self):
-        pages = build_data(_lecture())["pages"]
-        self.assertEqual([page["number"] for page in pages], [1, 2, 2, 2, 3])
-
-
-class SlideNumbersTest(unittest.TestCase):
-    def test_pages_without_animations_number_themselves(self):
-        pages = _pages(_lecture())
-        self.assertEqual(model.slide_numbers(pages), [1, 2, 2, 2, 3])
-
-    def test_an_empty_deck_is_empty(self):
-        self.assertEqual(model.slide_numbers([]), [])
-
-    def test_a_pruned_animation_still_counts_once(self):
-        pruned = _pages(model.select_pages(_lecture(), "anim-2,anim-3,after"))
-        self.assertEqual(model.slide_numbers(pruned), [1, 1, 2])
+    def test_no_frame_holds_the_number(self):
+        deck = build_marp_markdown(_lecture())
+        self.assertNotIn("_paginate: hold", deck)
+        self.assertNotIn("_paginate: skip", deck)
 
 
 class RevealTest(unittest.TestCase):
@@ -400,16 +368,15 @@ def _cited_lecture():
 
 
 class CitationBackrefTest(unittest.TestCase):
-    def test_an_animation_reports_one_slide_not_every_frame(self):
+    def test_an_animation_reports_every_frame(self):
         [entry] = references.collect_citations(_pages(_cited_lecture()))
-        # Cited on the animation and again on the page after it: the animation
-        # counts once, and shows as one number, so the pages after it shift up.
-        self.assertEqual(entry.pages, (2, 3))
+        # Cited on the animation (frames 2..4) and again on the page after it.
+        self.assertEqual(entry.pages, (2, 3, 4, 5))
 
-    def test_the_deck_reference_page_shows_the_folded_backref(self):
+    def test_the_deck_reference_page_shows_every_backref(self):
         pages = build_data(_cited_lecture())["pages"]
         text = pages[-1]["blocks"][0]["content"]
-        self.assertIn("(P2, P3)", text)
+        self.assertIn("(P2, P3, P4, P5)", text)
 
 
 class SerializeTest(unittest.TestCase):

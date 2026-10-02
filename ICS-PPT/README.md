@@ -6,7 +6,7 @@ or a chapter of a LaTeX textbook.
 ## Quick start
 
 ```bash
-pip install -e .
+pip install -e .                                        # editable: themes/ stays in the checkout
 scripts/prepare.sh                                      # vendors marp-cli (needs Node; Windows: see docs/usage.md)
 
 python3 -m lecturekit.cli view examples/showcase        # open the example deck
@@ -55,7 +55,7 @@ running text is written twice, as `p.slide(...)` and `p.prose(...)`.
 ### More of the vocabulary
 
 `p.frames(a, b, c)` is an animation: the text written once, the figure swapped
-under it. All three frames count as one slide.
+under it. Each frame is a slide of its own; the outline gives the three one row.
 
 <img src="docs/images/frames-strip.png" alt="The same figure in three states: the bank file copied to a dashed bank_temp, then bank_temp holding the changed values, then renamed over bank" width="560">
 
@@ -93,11 +93,12 @@ the path rather than the path, on the same terms as the command.
 ## Docs
 
 - [docs/dsl.md](docs/dsl.md) — the authoring DSL: tree, blocks, images, tables, footnotes, callouts
-- [docs/usage.md](docs/usage.md) — the CLI: `inspect` / `build` / `render` / `view`, PDF/PNG/PPTX export, live preview
+- [docs/usage.md](docs/usage.md) — the CLI: `inspect` / `build` / `render` / `view`, PDF/PNG/PPTX/transcript export, live preview, demos on Windows
 - [docs/book.md](docs/book.md) — the book target: many lectures, one LaTeX textbook
 - [docs/i18n.md](docs/i18n.md) — teaching one lecture in two languages (`--lang`)
 - [docs/notebook.md](docs/notebook.md) — slides inline in a Jupyter notebook
 - [docs/theme.md](docs/theme.md) — how one theme feeds every renderer; where to add a target
+- [docs/release.md](docs/release.md) — CI: which lectures a `RELEASE` file marks, their PDFs built on every push, a zip released on every tag
 
 ## Test
 

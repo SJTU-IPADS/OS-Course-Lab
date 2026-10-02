@@ -372,7 +372,7 @@ class StaticViewerRendererTest(unittest.TestCase):
             '<div class="lk-spacer" aria-hidden="true" style="height:24px"></div>'
         )
         self.assertIn(spacer_html, md)
-        self.assertNotIn(f'<div class="reveal-block" data-reveal', spacer_html)
+        self.assertNotIn('<div class="reveal-block" data-reveal', spacer_html)
 
     def test_highlight_renders_a_centered_toned_chip(self):
         lecture = Lecture(id="lec01", title="L")
@@ -451,12 +451,10 @@ class StaticViewerRendererTest(unittest.TestCase):
             js = Path(tmp, "viewer.js").read_text(encoding="utf-8")
             css = Path(tmp, "outline.css").read_text(encoding="utf-8")
 
-        # Two numberings: the deck position addresses a slide, the shown number
-        # labels the outline row (they diverge once a deck holds an animation).
+        # One numbering: the deck position addresses a slide and labels its row.
         self.assertIn("slideIndexById[p.id] = i + 1", js)
-        self.assertIn("shownNumberById[p.id] = p.number || i + 1", js)
         self.assertIn('pageNumber.className = "page-number"', js)
-        self.assertIn("shownNumberById[node.id]", js)
+        self.assertIn("String(slideIndexById[node.id])", js)
         self.assertIn(".page-number", css)
 
     def test_viewer_js_hosts_marp_iframe_not_handrolled_markdown(self):

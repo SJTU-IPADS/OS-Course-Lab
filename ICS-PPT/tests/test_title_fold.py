@@ -1,5 +1,6 @@
-"""Consecutive sibling pages titled the same: one outline row, one slide number."""
+"""Consecutive sibling pages titled the same: one outline row, own slide numbers."""
 
+import re
 import unittest
 
 from lecturekit import model, references
@@ -23,6 +24,11 @@ def _body(title, text="x"):
 
 def _pages(lecture):
     return model.flatten_pages(lecture.children)
+
+
+def _labels(html):
+    """The page numbers the printed outline labels its rows with."""
+    return re.findall(r'<span class="page-number">(\d+)</span>', html)
 
 
 def _tree_pages(nodes):
@@ -104,16 +110,14 @@ class OutlineTest(unittest.TestCase):
             [page["id"] for page in pages], ["before", "same-1", "same-2", "after"]
         )
 
-    def test_the_printed_outline_numbers_the_rows_consecutively(self):
-        # before / the run / after are shown as 1 / 2 / 3 — one row, one number.
-        html = build_outline_html(_run())
-        self.assertEqual(html.count("page-number"), 3)
-        self.assertIn('<span class="page-number">3</span>', html)
-        self.assertNotIn('<span class="page-number">4</span>', html)
+    def test_the_printed_outline_labels_each_row_with_its_first_slide(self):
+        # before / the run / after start at slides 1 / 2 / 4 — the run is one
+        # row, but its second page still counts.
+        self.assertEqual(_labels(build_outline_html(_run())), ["1", "2", "4"])
 
-    def test_the_links_still_address_physical_slides(self):
-        # The label compresses; the link must not — the row after the run
-        # addresses slide 3, the slide the deck really holds there.
+    def test_the_links_address_physical_slides(self):
+        # The row after the run addresses slide 3 (0-based), the slide the deck
+        # really holds there.
         html = build_outline_html(_run())
         self.assertEqual(html.count(SLIDE_LINK_PREFIX), 3)
         for index in (0, 1, 3):
@@ -121,20 +125,10 @@ class OutlineTest(unittest.TestCase):
         self.assertNotIn(f'href="{SLIDE_LINK_PREFIX}2"', html)
 
 
-class ShownNumberTest(unittest.TestCase):
-    def test_the_folded_page_holds_the_number(self):
-        slides = build_marp_markdown(_run()).split("\n\n---\n\n")
-        self.assertNotIn("_paginate: hold", slides[1])
-        self.assertIn("<!-- _paginate: hold -->", slides[2])
-        self.assertNotIn("_paginate: hold", slides[3])
-
-    def test_the_json_carries_one_number_for_the_run(self):
-        pages = build_data(_run())["pages"]
-        self.assertEqual([page["number"] for page in pages], [1, 2, 2, 3])
-
-    def test_numbering_without_folds_is_unchanged(self):
-        # The default argument is the old behaviour, page by page.
-        self.assertEqual(model.slide_numbers(_pages(_run())), [1, 2, 3, 4])
+class SlideNumberTest(unittest.TestCase):
+    def test_no_page_of_the_run_holds_the_number(self):
+        # Every page prints its own deck position; Marp counts each one.
+        self.assertNotIn("_paginate: hold", build_marp_markdown(_run()))
 
 
 class AnimationTest(unittest.TestCase):
@@ -162,13 +156,13 @@ class AnimationTest(unittest.TestCase):
         self.assertEqual(list(rows), ["still", "after"])
         self.assertEqual(rows["still"]["frames"], 3)
 
-    def test_every_frame_holds_the_run_number(self):
-        pages = build_data(self._lecture())["pages"]
-        self.assertEqual([page["number"] for page in pages], [1, 1, 1, 2])
+    def test_the_row_after_the_run_counts_every_frame(self):
+        # still / anim-1 / anim-2 / after: the row after the run starts at 4.
+        self.assertEqual(_labels(build_outline_html(self._lecture())), ["1", "4"])
 
 
 class CitationTest(unittest.TestCase):
-    def test_a_run_backrefs_one_slide_number(self):
+    def test_a_run_backrefs_every_page(self):
         def cited(title):
             def fill(p):
                 p.title(title)
@@ -180,11 +174,8 @@ class CitationTest(unittest.TestCase):
         with lec.section("S") as s:
             s.page(id="p1", body=cited("Same"))
             s.page(id="p2", body=cited("Same"))
-        lecture = lec.build()
-        entries = references.collect_citations(
-            _pages(lecture), model.outline_folds(lecture.children)
-        )
-        self.assertEqual([entry.pages for entry in entries], [(1,)])
+        entries = references.collect_citations(_pages(lec.build()))
+        self.assertEqual([entry.pages for entry in entries], [(1, 2)])
 
 
 class InspectTest(unittest.TestCase):

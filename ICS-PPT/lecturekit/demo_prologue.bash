@@ -5,8 +5,10 @@
 # terminal transcript. As a file rather than a line in front of the command, so
 # that $LINENO and bash's own error messages count the author's lines.
 
-# Only this shell reads it: a bash script the demo runs is not a demo.
-unset BASH_ENV
+# Only this shell reads it: a bash script the demo runs is not a demo. The
+# other two carried the command and this file's path here (see `_LAUNCH`), and
+# are nothing the command itself should see.
+unset BASH_ENV LECTUREKIT_DEMO LECTUREKIT_PROLOGUE
 
 # A copy of stdout, so that `{ ...; } > file` and `$(...)` never capture a
 # marker meant for the drawer. A fixed number rather than `exec {var}>&1`:

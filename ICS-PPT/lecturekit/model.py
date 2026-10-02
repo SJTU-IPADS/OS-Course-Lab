@@ -865,6 +865,22 @@ def check_spacer(content: dict, page_id: str) -> None:
         )
 
 
+def logo_is_image(logo: str | None) -> bool:
+    """Whether a sidenote's ``logo`` names an image (a path or a URL) rather
+    than a glyph such as an emoji. Asked here, once, so that every renderer
+    reads a given logo the same way."""
+    if not logo:
+        return False
+    logo = str(logo)
+    return (
+        logo.startswith(("http://", "https://"))
+        or "/" in logo
+        or logo.lower().endswith(
+            (".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".bmp", ".tif", ".tiff")
+        )
+    )
+
+
 # The fence a display formula is written between, in a highlight as in a slide.
 DISPLAY_MATH_FENCE = "$$"
 

@@ -118,3 +118,38 @@
   flex: none;
   min-width: 0;
 }
+
+/* The roles source.highlight sorts a file's tokens into: the six the slide
+   theme gives its own code blocks, and `meta` for what the preprocessor reads.
+   The hues follow the theme's, lifted for a dark ground; text under no role
+   keeps the panel's own colour. */
+.lk-tok-comment {
+  color: #7f93a3;
+  font-style: italic;
+}
+
+.lk-tok-keyword {
+  color: #7ab8ff;
+  font-weight: 700;
+}
+
+.lk-tok-type {
+  color: #6fd3c7;
+}
+
+.lk-tok-title {
+  color: #f1d58a;
+  font-weight: 700;
+}
+
+.lk-tok-string {
+  color: #a3d98a;
+}
+
+.lk-tok-number {
+  color: #f2a27c;
+}
+
+.lk-tok-meta {
+  color: #c9a6f0;
+}

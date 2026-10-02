@@ -235,10 +235,6 @@ def _apply_runs(paragraph, runs: list[Run], *, size_pt: float, color: RGBColor) 
                        italic=r.italic, mark=r.mark)
 
 
-def _para_text_len(para: Para) -> int:
-    return sum(len(r.text) for r in para.runs)
-
-
 # --- title (the slide's h1) ---
 
 
@@ -723,7 +719,7 @@ def _sidenote(block, ctx: Ctx) -> None:
     # An image logo embeds as a picture in a left gutter (the theme floats it);
     # an emoji/glyph logo stays an inline text run. A path that won't resolve
     # falls back to the default book glyph rather than leaking the path as text.
-    logo_path = _resolve_image(raw_logo, ctx) if _looks_like_image(raw_logo) else None
+    logo_path = _resolve_image(raw_logo, ctx) if model.logo_is_image(raw_logo) else None
     logo_glyph = "" if logo_path is not None else (raw_logo or "📖")
 
     height = estimate_text_height(
@@ -814,18 +810,6 @@ def _fill_cell(cell, text: str, *, bold: bool, align, col: int) -> None:
 
 
 # --- image / side_image ---
-
-
-def _looks_like_image(logo: str | None) -> bool:
-    """Whether a sidenote logo names an image (path/url) vs. an emoji/glyph."""
-    if not logo:
-        return False
-    lowered = logo.lower()
-    return (
-        logo.startswith(("http://", "https://"))
-        or "/" in logo
-        or lowered.endswith(_EMBEDDABLE_EXTS)
-    )
 
 
 def _resolve_image(src: str, ctx: Ctx) -> Path | None:

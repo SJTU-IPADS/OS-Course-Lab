@@ -74,11 +74,12 @@ inline notebook rendering; it is inert for the CLI build. See
          book_title="Case #1：Deep Blue 与国际象棋")
   s.page(id="duel-chess-scale", body=duel_chess_scale, book="merge")
   ```
-- `lec.close(id, *, body, tags=(), annotation=True)` — sugar for a closing
+- `lec.close(id, *, body, tags=(), annotation=True, book="page", book_title=None)`
+  — sugar for a closing
   conclusion: a single **top-level page** (not a section), so it lands as a leaf
   in the outline with nothing to expand. Like any page, its title (the outline
-  label) comes from `p.title(...)` in `body`. `tags` and `annotation` apply to
-  that page. Call it last to land the conclusion at the end of the deck and the
+  label) comes from `p.title(...)` in `body`. `tags`, `annotation`, `book` and
+  `book_title` apply to that page as they do to `page(...)`. Call it last to land the conclusion at the end of the deck and the
   outline; pass `id` to `--pages` to render just it.
 
   ```python
@@ -627,11 +628,12 @@ medium. See [book.md](book.md).
 
 ### Block visibility
 
-Two cross-cutting controls decide whether a block is rendered:
+Three cross-cutting controls decide whether a block is rendered:
 
 1. **Renderer block tables.** Each renderer renders only the kinds it knows. The
-   viewer renders `slide`, `code`, `link`, `image`, `side_image`, `sidenote`,
-   `aside`, `demo`, and `table`. `notes` is emitted into the Marp deck as a
+   viewer renders `slide`, `code`, `link`, `image`, `side_image`, `row`,
+   `architecture`, `sidenote`, `aside`, `highlight`, `demo`, `table`, `spacer`,
+   and the `cover` and `bridge` pages. `notes` is emitted into the Marp deck as a
    **presenter note** — an HTML comment the speaker view shows (press `p`) but
    the audience slide never renders. The `latex` (book) target renders `prose`,
    `demo`, and the shared blocks, but never `slide`.
@@ -673,7 +675,7 @@ its neighbours. See [i18n.md](i18n.md).
 ### Images
 
 `p.image(src, *, alt="", caption=None, width_px=None, width_pct=None,
-height_px=None, height_pct=None, framed=False, caption_align="center")`
+height_px=None, height_pct=None, framed=False, caption_align="center", ref=None)`
 
 An image renders as a `<figure>`. The caption sits below it and is **centered by
 default**; pass `caption_align="left"` or `"right"` to re-align it (any other
@@ -737,17 +739,17 @@ In the PPTX export the picture keeps its place at the right edge, but the text
 does not wrap around it: PowerPoint cannot flow text around a shape, so the text
 box is narrowed to sit beside the picture for its whole height.
 
-`p.row(*, caption=None)` lays out several images **side by side** in one band.
+`p.row(*, caption=None, ref=None)` lays out several images **side by side** in one band.
 It returns a `RowHandle`; add images with `row.image(src, ...)`, each taking the
 same options as `p.image` (`alt`, `caption`, `width_px`/`width_pct`,
 `height_px`/`height_pct`, `framed`, `caption_align`). Images chain, and
 `.footnote(...)` / `.annotate(...)` attach to the row as a whole.
 
 ```python
-p.row(caption="进程 vs 线程")
- .image("proc.svg", width_px=300, caption="图1")
- .image("thread.svg", caption="图2", framed=True)
- .footnote("来源：CSAPP 3e")
+(p.row(caption="进程 vs 线程")
+  .image("proc.svg", width_px=300, caption="图1")
+  .image("thread.svg", caption="图2", framed=True)
+  .footnote("来源：CSAPP 3e"))
 ```
 
 With no per-image width, the images share the row width evenly; a per-image
@@ -922,7 +924,7 @@ emits a `<colgroup>`.
 
 ### Architecture diagrams
 
-`p.architecture(*, caption=None, flow=None)` draws a **layered + modular** system
+`p.architecture(*, caption=None, flow=None, ref=None)` draws a **layered + modular** system
 diagram: vertical layers stacked top-to-bottom, where each layer is a single box
 holding a row of nested module boxes. It returns an `ArchHandle`; add layers with
 `arch.layer(title, modules)`, read top-to-bottom exactly as the diagram renders.
@@ -1107,7 +1109,8 @@ every run the slide started; omitted, the session's `--demo-timeout` applies.
 Without it, standard input is empty, so a program that waits for input reads
 end of file and goes on, and the drawer only displays. With it, the command
 gets a pseudo-terminal and the drawer takes the keyboard while the run is
-alive. A question can be typed to `ollama run`, a REPL can be driven, and
+alive (Linux, macOS and WSL; native Windows has no pseudo-terminal and refuses
+it, see [usage.md](usage.md#running-a-demo-from-the-deck)). A question can be typed to `ollama run`, a REPL can be driven, and
 `Ctrl-C` interrupts the program as it would in a shell. It pairs with
 `timeout=0` for a conversation that has no set length:
 
@@ -1258,5 +1261,5 @@ lec.page(id="jump-2", body=fig, annotation=True)   # bubble revealed
 
 (The two steps need distinct, unique `id`s, like any two pages.)
 
-The two share a title, so the outline prints one row for them and the deck one
-number — see [Pages titled the same](#pages-titled-the-same).
+The two share a title, so the outline prints one row for them, while each
+still prints its own slide number — see [Pages titled the same](#pages-titled-the-same).

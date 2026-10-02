@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 from lecturekit import i18n, model, pseudo
@@ -57,8 +57,6 @@ class Ctx:
     lang: str | None = None
     # Figures are numbered per page so labels stay stable as pages move.
     figure_index: int = 0
-    # Footnotes deferred out of a float; see `_figure`.
-    pending_footnotes: list[str] = field(default_factory=list)
 
     def next_label(self) -> str:
         self.figure_index += 1

@@ -24,11 +24,8 @@ FG = _rgb("--color-fg")
 DK2 = _rgb("--color-dk2")
 LT2 = _rgb("--color-lt2")
 ACCENT1 = _rgb("--color-accent1")
-ACCENT2 = _rgb("--color-accent2")
-ACCENT3 = _rgb("--color-accent3")
 ACCENT4 = _rgb("--color-accent4")
 LINK = _rgb("--color-link")
-LINK_VISITED = _rgb("--color-link-visited")
 
 # Sidenote color wheel (six soft pastels); the renderer cycles per-page so a
 # stack of callouts doesn't read as one monotonous block. The slot count is the

@@ -53,11 +53,32 @@
   // One row per line, numbered: the number is what a lecture points at when it
   // says where to look. Text nodes throughout — the body is a file's bytes, so
   // it is text and only text, never markup to be parsed.
+  //
+  // The colours come from the server: `tokens` is the same text cut into lines
+  // of [class, text] runs (see source.highlight), and a run becomes a span
+  // around a text node. There is no lexer here. When the server sent none, or
+  // sent lines that do not match the text's own, the text is shown plain.
 
-  function fill(text) {
+  function paint(code, runs) {
+    for (var i = 0; i < runs.length; i++) {
+      var kind = runs[i][0];
+      var piece = document.createTextNode(String(runs[i][1]));
+      if (typeof kind === "string" && /^[a-z]+$/.test(kind)) {
+        var span = document.createElement("span");
+        span.className = "lk-tok-" + kind;
+        span.appendChild(piece);
+        code.appendChild(span);
+      } else {
+        code.appendChild(piece);
+      }
+    }
+  }
+
+  function fill(text, tokens) {
     var body = panel.body;
     body.textContent = "";
     var lines = text.replace(/\n$/, "").split("\n");
+    var coloured = Array.isArray(tokens) && tokens.length === lines.length;
     var frag = document.createDocumentFragment();
     for (var i = 0; i < lines.length; i++) {
       var row = document.createElement("div");
@@ -67,7 +88,8 @@
       no.textContent = String(i + 1);
       var code = document.createElement("span");
       code.className = "lk-file-code";
-      code.textContent = lines[i];
+      if (coloured && Array.isArray(tokens[i])) paint(code, tokens[i]);
+      else code.textContent = lines[i];
       row.appendChild(no);
       row.appendChild(code);
       frag.appendChild(row);
@@ -111,7 +133,7 @@
           return;
         }
         panel.path.textContent = payload.path;
-        panel.status.textContent = fill(payload.text) + " lines";
+        panel.status.textContent = fill(payload.text, payload.tokens) + " lines";
       })
       .catch(function () {
         if (mine === token) panel.status.textContent = "unreachable";

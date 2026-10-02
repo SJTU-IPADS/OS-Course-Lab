@@ -11,7 +11,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from ..viewer.pdf import find_chrome
+from ..viewer.pdf import print_command
 
 # Every figure is a data: URI, so a lecture's worth of them has to decode before
 # the print snapshot — more generous than the deck's outline page needs.
@@ -26,10 +26,7 @@ def print_pdf(html_path: Path, *, chrome: str | None = None) -> Path:
     dest = html_path.with_suffix(".pdf")
     subprocess.run(
         [
-            chrome or find_chrome(),
-            "--headless=new",
-            "--disable-gpu",
-            "--no-pdf-header-footer",
+            *print_command(chrome),
             f"--virtual-time-budget={_VIRTUAL_TIME_MS}",
             f"--print-to-pdf={dest}",
             html_path.as_uri(),

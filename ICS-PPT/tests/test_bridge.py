@@ -1,5 +1,6 @@
 """``lec.bridge(...)`` / ``s.bridge(...)``: the transition page and its fallout."""
 
+import re
 import unittest
 
 from lecturekit import model
@@ -109,17 +110,6 @@ class BridgeDsl(unittest.TestCase):
 
 
 class BridgeModel(unittest.TestCase):
-    def test_slide_numbers_hold(self):
-        pages = model.flatten_pages(_lecture().children)
-        self.assertEqual(model.slide_numbers(pages), [1, 1, 2])
-
-    def test_leading_bridge_number_stays_positive(self):
-        lec = Lecture(id="l", title="L")
-        lec.bridge(TEXT)
-        lec.page(id="a", body=_page("A"))
-        pages = model.flatten_pages(lec.build().children)
-        self.assertEqual(model.slide_numbers(pages), [1, 1])
-
     def test_bridge_block_must_be_alone(self):
         page = model.Page(id="p", title="t", book="skip", blocks=[
             model.Block(kind="bridge", content={"text": TEXT}),
@@ -161,7 +151,8 @@ class BridgeDeck(unittest.TestCase):
         slides = deck.split("\n\n---\n\n")
         bridge = slides[1]
         self.assertIn("<!-- _class: lk-bridge -->", bridge)
-        self.assertIn("<!-- _paginate: skip -->", bridge)
+        # Hidden but counted, so the page after it prints its deck position.
+        self.assertIn("<!-- _paginate: false -->", bridge)
         self.assertIn(f'<div class="lk-bridge-body">{TEXT}</div>', bridge)
         self.assertNotIn("# ", bridge)               # no title heading
         self.assertNotIn("_paginate: hold", bridge)
@@ -191,11 +182,16 @@ class BridgeOutline(unittest.TestCase):
             [node["id"] for node in section["children"]], ["a", "b"]
         )
 
-    def test_pages_keep_the_slide_with_a_held_number(self):
+    def test_pages_keep_the_bridge_slide(self):
         data = build_data(_lecture())
         self.assertEqual(
-            [(p["id"], p["number"]) for p in data["pages"]],
-            [("a", 1), ("bridge-1", 1), ("b", 2)],
+            [p["id"] for p in data["pages"]], ["a", "bridge-1", "b"]
+        )
+
+    def test_print_outline_numbers_the_page_after_a_bridge_by_position(self):
+        html = build_outline_html(_lecture())
+        self.assertEqual(
+            re.findall(r'<span class="page-number">(\d+)</span>', html), ["1", "3"]
         )
 
     def test_print_outline_links_step_over_the_bridge(self):

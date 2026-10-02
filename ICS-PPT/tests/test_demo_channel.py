@@ -338,6 +338,66 @@ class DemoTranscriptTest(unittest.TestCase):
         self.assertEqual(b"".join(markers.feed(title)), title)
 
 
+class DemoLaunchTest(unittest.TestCase):
+    """The command reaches bash through the environment, never a command line."""
+
+    def _output(self, command):
+        with tempfile.TemporaryDirectory() as tmp:
+            return demo.run(command, cwd=Path(tmp)).output
+
+    def test_the_command_arrives_exactly_as_written(self):
+        # What a Windows command line would have mangled on the way to Git Bash:
+        # doubled backslashes, both kinds of quote, and a newline.
+        command = 'printf "%s|" "a\\\\b" \'c "d"\' \\\n  "e\\"f"\necho'
+        self.assertEqual(self._output(command), 'a\\b|c "d"|e"f|\n')
+
+    def test_bash_keeps_its_name(self):
+        # Its own messages say `bash: ...`, as recorded outputs expect.
+        self.assertEqual(self._output("echo $0"), "bash\n")
+
+    def test_the_hand_off_is_not_the_commands_to_see(self):
+        output = self._output(
+            'echo "${LECTUREKIT_DEMO-unset} ${LECTUREKIT_PROLOGUE-unset} '
+            '${BASH_ENV-unset}"'
+        )
+        self.assertEqual(output, "unset unset unset\n")
+
+
+class FindBashTest(unittest.TestCase):
+    """On Windows, WSL's `bash` is passed over for Git Bash."""
+
+    def _find(self, which, files, env=None):
+        with patch.object(demo.shutil, "which", lambda name: which.get(name)), \
+                patch.object(demo.os.path, "isfile", lambda path: path in files), \
+                patch.dict(demo.os.environ, env or {}, clear=True):
+            return demo._find_bash(windows=True)
+
+    def test_a_bash_on_path_is_used(self):
+        bash = r"C:\Program Files\Git\usr\bin\bash.exe"
+        self.assertEqual(self._find({"bash": bash}, set()), bash)
+
+    def test_wsls_launcher_is_passed_over_for_the_bash_beside_git(self):
+        found = self._find(
+            {
+                "bash": r"C:\Windows\System32\bash.exe",
+                "git": r"D:\Tools\Git\cmd\git.exe",
+            },
+            {r"D:\Tools\Git\bin\bash.exe"},
+        )
+        self.assertEqual(found, r"D:\Tools\Git\bin\bash.exe")
+
+    def test_a_default_install_is_found_without_git_on_path(self):
+        found = self._find(
+            {"bash": r"C:\Users\u\AppData\Local\Microsoft\WindowsApps\bash.exe"},
+            {r"C:\Program Files\Git\bin\bash.exe"},
+            {"ProgramFiles": r"C:\Program Files"},
+        )
+        self.assertEqual(found, r"C:\Program Files\Git\bin\bash.exe")
+
+    def test_no_bash_is_none(self):
+        self.assertIsNone(self._find({}, set()))
+
+
 class DemoTerminalTest(unittest.TestCase):
     """An interactive run: a terminal the deck types into."""
 
@@ -557,18 +617,34 @@ class DemoEndpointTest(unittest.TestCase):
         self.assertEqual(output.strip(), "ran-it")
         self.assertEqual(self._end(events)["exit"], 0)
 
-    def test_where_demos_cannot_run_a_press_is_told_so(self):
-        # Windows serves a deck but has no pty, process groups or pipes that
-        # `select` can wait on: the chip gets an answer, not a traceback.
+    def test_where_there_is_no_bash_a_press_is_told_so(self):
+        # A Windows machine without Git Bash serves the deck all the same: the
+        # chip gets an answer, not a traceback.
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp)
             demo.write(_lecture("echo hi"), out)
             port = self._server(out, demo_cwd=out)
-            with patch.object(demo, "RUNNABLE", False):
+            with patch.object(demo, "BASH", None):
                 with self.assertRaises(urllib.error.HTTPError) as caught:
                     self._post(port, {"id": demo.demo_id("echo hi")})
         self.assertEqual(caught.exception.code, 501)
-        self.assertIn("Linux and macOS", json.loads(caught.exception.read())["error"])
+        self.assertIn("Git Bash", json.loads(caught.exception.read())["error"])
+
+    def test_without_a_pty_only_an_interactive_demo_is_refused(self):
+        # Windows: pipes run a display-only demo, but nothing can give one that
+        # takes the keyboard a terminal.
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            demo.write(_lecture("echo hi", interactive=True), out)
+            port = self._server(out, demo_cwd=out)
+            with patch.object(demo, "pty", None):
+                with self.assertRaises(urllib.error.HTTPError) as caught:
+                    self._post(port, {"id": demo.demo_id("echo hi")})
+                self.assertIsNone(demo.why_not(demo.Spec("echo hi")))
+        self.assertEqual(caught.exception.code, 501)
+        self.assertIn(
+            "pseudo-terminal", json.loads(caught.exception.read())["error"]
+        )
 
     def test_an_unknown_id_runs_nothing(self):
         with tempfile.TemporaryDirectory() as tmp:

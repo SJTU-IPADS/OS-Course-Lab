@@ -111,8 +111,8 @@ class Lecture:
         """Add a transition page (衔接页): a line or two, centered, nothing else.
 
         A bridge marks the turn between topics without being a knowledge point:
-        it has no title, appears in no outline, prints no slide number (and does
-        not advance the count), and never reaches the book or the transcript
+        it has no title, appears in no outline, prints no slide number (though
+        it is counted, as every slide is), and never reaches the book or the transcript
         sheet. ``text`` is plain text — no inline markdown, no ``<mark>`` — of at
         most :data:`model.BRIDGE_MAX_LINES` lines; blank lines are dropped.
 
@@ -543,11 +543,6 @@ class PageBuilder:
         headline.
         """
         return self._block("prose", content, only=only, except_=except_, key=key)
-
-    def handout(self, content: str, *, only: Iterable[str] | None = None,
-        except_: Iterable[str] | None = None, key: str | None = None) -> "BlockHandle":
-        """Deprecated alias for :meth:`prose`."""
-        return self.prose(content, only=only, except_=except_, key=key)
 
     def code(
         self,

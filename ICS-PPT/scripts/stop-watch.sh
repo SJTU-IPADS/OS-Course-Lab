@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Stop the `python3 -m lecturekit.cli view` servers left running on this
+# machine: all of them, or only the one serving PORT. Without PORT it also
+# reaps any `marp --watch` worker a hard-killed server orphaned.
+#
+#   scripts/stop-watch.sh [PORT]
 set -euo pipefail
 
 usage() {

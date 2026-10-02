@@ -14,7 +14,9 @@ LEC=path/to/your/lecture
 
 Four commands, each doing one thing. `inspect` and `build` are pure and need no
 Node; `render` and `view` produce a complete viewer bundle and run Marp (the
-viewer's own tool) to build `slides.html`.
+viewer's own tool) to build `slides.html`. `render --to` picks another target:
+an editable [PowerPoint](#powerpoint-export) (`pptx`) or a printable
+[transcript](#transcript-export) sheet (`transcript`).
 
 ```bash
 # 1. Print and validate the lecture tree (human-readable)
@@ -39,6 +41,10 @@ A rendered bundle contains:
 - `index.html` / `viewer.css` / `viewer.js` / `outline.css` — the outline shell
 - `outline.html` — a standalone print page used only for the PDF outline
 - `slides.html` — the Marp-rendered deck (pages only)
+- `theme.css`, the bundled `*.woff2` fonts and `assets/` — what the deck loads
+  (`theme-pdf.css` too, once a PDF or PNG export has run)
+- `<title>.pdf`, `slides.NNN.png` — with `--pdf` / `--png` (see
+  [PDF export](#pdf-export), [PNG export](#png-export))
 - `demos.json` — `p.demo(...)` commands by id, rewritten every render (see
   [Running a demo from the deck](#running-a-demo-from-the-deck)); inert without
   a live server
@@ -262,8 +268,8 @@ copy of the figure. The PNG is temporary: its bytes go into the `.pptx` and the
 file is discarded.
 
 The conversion is delegated to whichever SVG renderer the machine has, in this
-order: **rsvg-convert** (`brew install librsvg`), **cairosvg**
-(`pip install cairosvg`), **Inkscape**. Rendering happens at 2× the figure's
+order: **rsvg-convert** (`brew install librsvg`), **Inkscape**, **cairosvg**
+(`pip install cairosvg`). Rendering happens at 2× the figure's
 intrinsic size, so it survives PowerPoint's zoom and print resampling.
 
 With none of them installed — or on an SVG the backend chokes on — that one
@@ -337,6 +343,27 @@ LECTUREKIT_PPTX_CJK_FONT="Hiragino Sans GB" \
   python3 -m lecturekit.cli render "$LEC" --to pptx
 ```
 
+## Transcript export
+
+`render --to transcript` writes the lecture as one printable HTML sheet, for
+a student to take into an open-book exam rather than seventy one-up slides:
+A4, two columns, the section tree as a numbered outline, each slide one entry
+under it with its figures beside it.
+
+```bash
+python3 -m lecturekit.cli render "$LEC" --to transcript        # -> build/<id>-transcript/<slug>-transcript.html
+python3 -m lecturekit.cli render "$LEC" --to transcript --pdf  # and the PDF beside it
+```
+
+It is derived from what the deck says, so there is nothing more to write. It
+leaves out what a sheet cannot use or would print twice: speaker notes, book
+prose, the cover, the reference list, an animation's earlier frames, a reveal
+pair's first half, and pages borrowed from another lecture. Every figure is
+embedded in the file as a `data:` URI, so the one `.html` is the whole sheet; a
+raster is scaled down to print resolution first when Pillow is installed.
+`--pdf` prints the sheet with headless Chrome, found as for the
+[PDF export](#pdf-export). `--pages` and `--lang` work as for the other targets.
+
 ## Live preview: edit and watch
 
 ```bash
@@ -362,6 +389,12 @@ borrowed slide reloads it. Each extra root is named on startup. Adding or
 dropping a review source mid-session re-arms the watcher on the next render; no
 restart needed.
 
+`Ctrl-C` stops a session. One left running in the background, or in a terminal
+since closed, is stopped by `scripts/stop-watch.sh` (every session) or
+`scripts/stop-watch.sh 3031` (the one on that port); a session killed outright
+can leave its `marp --watch` worker behind, which the port-less form also
+reaps.
+
 ### Running a demo from the deck
 
 A [`p.demo(...)`](dsl.md#demos) block draws the command on the slide with a ▶
@@ -372,9 +405,7 @@ else — a rendered bundle has nothing to run it:
 python3 -m lecturekit.cli view "$LEC" --watch
 ```
 
-Press it and bash runs the command **in the lecture directory**. Demos run on
-Linux and macOS. On Windows the rest of a watch session works, and a press
-answers "demos run on Linux and macOS only". Its output
+Press it and bash runs the command **in the lecture directory**. Its output
 (stdout and stderr merged) appears in a drawer along the bottom of the deck **as
 it is produced**, not when the command is over: a model answering a token at a
 time is watched, not waited for. The drawer counts the seconds while it runs and
@@ -399,6 +430,19 @@ every key goes to the program, `Ctrl-C` and `Escape` included, so
 `ollama run` can be asked a question from the keyboard. To look at the slide,
 click it or press ▾. When the program exits, the keyboard goes back to the
 deck.
+
+**On Windows.** The bash is Git Bash's, from
+[Git for Windows](https://git-scm.com/download/win): a `bash` on `PATH` is used
+unless it is WSL's launcher (`System32\bash.exe`), and otherwise the one under
+the directory `git` is installed in, or under `Program Files\Git`. A command
+therefore runs as the author wrote it for Linux, with Git Bash's tools (`ls`,
+`grep`, `sed`) and whatever else is on `PATH` (a MinGW `gcc`); a tool that only
+Linux has fails as it would in Git Bash. An interactive demo is the exception:
+it needs a pseudo-terminal, which Windows does not offer, so its press answers
+with that and nothing runs. Under WSL everything is Linux and all of it works.
+With no bash found at all, a press says to install Git for Windows. A
+checkout has to keep `lecturekit/demo_prologue.bash` in LF line endings, which
+`.gitattributes` asks for; a copy converted to CRLF stops every demo.
 
 **Several at once.** Every press of ▶ starts a *new* run and gives it a tab
 along the top of the drawer, and runs on the same slide run side by side. That
@@ -487,6 +531,14 @@ the second the drawer.
 The file is read **when the button is pressed**, so editing a source file during
 a lecture and pressing the button again shows the edit — the same file the ▶
 beside it would compile.
+
+The panel colours the file by its syntax. The lexer is chosen from the file
+name (`.c`, `.h`, `.s`, `.S`, `.py`, `.sh`, `.sed`, `Makefile`, `.cu`, ...) and
+the lexing is done by [Pygments](https://pygments.org) on the server, so the
+deck ships no highlighter. The colours are the roles the theme gives a `p.code`
+block — keyword, type, name being defined, string, number, comment — on the
+panel's dark ground. A file Pygments has no lexer for is shown as plain text,
+and so is every file when Pygments is not installed.
 
 Armed with ▶, in a watch session and nowhere else. **The browser cannot
 invent a path**, on the demo channel's terms: the button carries a hash of the

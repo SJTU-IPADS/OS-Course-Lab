@@ -99,7 +99,7 @@ def _sidenote(block: model.Block, embedder: Embedder) -> str:
         title = f'<a href="{url}">{title}</a>'
     # The logo may be an image path rather than a glyph; on a sheet that is one
     # more figure than the line is worth, so a path falls back to the default.
-    if "/" in str(logo) or str(logo).endswith((".svg", ".png", ".jpg")):
+    if model.logo_is_image(logo):
         logo = "📖"
     return (
         f'<div class="tx-sidenote"><span class="tx-logo">{escape(str(logo))}</span>'

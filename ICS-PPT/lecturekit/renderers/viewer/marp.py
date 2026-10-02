@@ -180,11 +180,19 @@ def inject_deck_scripts(html: str) -> str:
         f"<script>\n{(ASSETS_DIR / name).read_text(encoding='utf-8')}</script>"
         for name in DECK_SCRIPTS
     )
-    marker = "</body>"
-    idx = html.rfind(marker)
+    return before_body_end(html, bundle)
+
+
+def before_body_end(html: str, fragment: str) -> str:
+    """Return ``html`` with ``fragment`` inserted before its last </body>.
+
+    A page without one gets ``fragment`` appended, which a browser runs all
+    the same.
+    """
+    idx = html.rfind("</body>")
     if idx == -1:
-        return html + bundle
-    return html[:idx] + bundle + html[idx:]
+        return html + fragment
+    return html[:idx] + fragment + html[idx:]
 
 
 #: The script `marp --watch` appends to every deck it builds: its own WebSocket

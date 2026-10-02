@@ -24,8 +24,6 @@ A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 A14 = "http://schemas.microsoft.com/office/drawing/2010/main"
 MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 
-_NS = {"m": M, "a": A, "a14": A14, "mc": MC}
-
 # Commands that set the following group upright (a function name or a word),
 # rather than the italic that math runs default to.
 _UPRIGHT = ("\\mathrm", "\\operatorname", "\\text", "\\textrm", "\\mathsf",

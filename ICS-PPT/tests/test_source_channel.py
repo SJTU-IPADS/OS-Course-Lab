@@ -8,6 +8,7 @@ and the content is read per request, so what the room sees is the file as it is
 on disk rather than as it was when the deck was built.
 """
 
+import builtins
 import json
 import tempfile
 import threading
@@ -17,6 +18,7 @@ import urllib.request
 from contextlib import closing
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from unittest import mock
 
 from lecturekit import dev_server, model, source
 from lecturekit.dsl import Lecture
@@ -167,6 +169,71 @@ class SourceReadTest(unittest.TestCase):
             self.assertIn("int a;", source.load(path))
 
 
+def _panel_lines(text: str) -> list[str]:
+    """The lines the panel numbers: source.js's own split of the text."""
+    return (text[:-1] if text.endswith("\n") else text).split("\n")
+
+
+def _plain(lines) -> list[str]:
+    return ["".join(piece for _, piece in line) for line in lines]
+
+
+class SourceHighlightTest(unittest.TestCase):
+    C = "/* two\n   lines */\n#include <stdio.h>\nint f(int a) {\n    return a + 1;\n}\n"
+
+    def test_the_runs_add_up_to_the_lines_the_panel_numbers(self):
+        for text in (self.C, self.C.rstrip("\n"), "\n\nint a;\n", "int a;\n\n\n", ""):
+            lines = source.highlight("a.c", text)
+            self.assertEqual(_plain(lines), _panel_lines(text), repr(text))
+
+    def test_c_is_sorted_into_the_theme_roles(self):
+        lines = source.highlight("examples/a.c", self.C)
+        self.assertEqual(lines[2][0][0], "meta")
+        self.assertEqual(lines[3][:3], [["type", "int"], ["", " "], ["title", "f"]])
+        self.assertIn(["keyword", "return"], lines[4])
+        self.assertIn(["number", "1"], lines[4])
+
+    def test_a_token_that_spans_lines_keeps_its_class_on_each(self):
+        lines = source.highlight("a.c", self.C)
+        self.assertEqual(lines[0], [["comment", "/* two"]])
+        self.assertEqual(lines[1], [["comment", "   lines */"]])
+
+    def test_a_script_is_coloured_too(self):
+        lines = source.highlight("run.sh", "# build\ncd examples && make\n")
+        self.assertEqual(lines[0], [["comment", "# build"]])
+        self.assertEqual(lines[1][0], ["keyword", "cd"])
+
+    def test_dot_capital_s_is_assembly(self):
+        lines = source.highlight("dot.S", "f:\tmovl $1, %eax  # one\n\tret\n")
+        self.assertIn(["comment", "# one"], lines[0])
+        self.assertIn(["type", "%eax"], lines[0])
+
+    def test_windows_line_endings_do_not_shift_the_lines(self):
+        lines = source.highlight("a.c", "int a;\r\nint b;\r\n")
+        self.assertEqual(_plain(lines), ["int a;", "int b;"])
+
+    def test_a_file_without_a_lexer_is_left_plain(self):
+        self.assertIsNone(source.highlight("notes.unknown", "some text\n"))
+
+    def test_without_pygments_every_file_is_left_plain(self):
+        real_import = builtins.__import__
+
+        def no_pygments(name, *args, **kwargs):
+            if name.split(".")[0] == "pygments":
+                raise ImportError(name)
+            return real_import(name, *args, **kwargs)
+
+        with mock.patch("builtins.__import__", no_pygments):
+            self.assertIsNone(source.highlight("a.c", self.C))
+
+    def test_the_classes_are_ones_the_panel_has_a_colour_for(self):
+        css = Path(dev_server.__file__).parent.joinpath(
+            "renderers", "viewer", "assets", "source.css"
+        ).read_text(encoding="utf-8")
+        for css_class in {css_class for _, css_class in source._TOKEN_CLASSES}:
+            self.assertIn(f".lk-tok-{css_class} ", css)
+
+
 class SourceButtonTest(unittest.TestCase):
     def _html(self, *files: str) -> str:
         block = _demo_block(_lecture(*files))
@@ -223,6 +290,16 @@ class SourceEndpointTest(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(payload["path"], "examples/a.c")
         self.assertEqual(payload["text"], "int main;\n")
+        self.assertEqual(payload["tokens"], [[["type", "int"], ["", " main;"]]])
+
+    def test_a_file_without_a_lexer_answers_with_text_alone(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = self._deck(tmp, "notes.unknown")
+            Path(out, "notes.unknown").write_text("plain\n", encoding="utf-8")
+            port = self._server(out, demo_cwd=out)
+            _, payload = self._get(port, "id=" + source.source_id("notes.unknown"))
+        self.assertEqual(payload["text"], "plain\n")
+        self.assertNotIn("tokens", payload)
 
     def test_the_file_is_read_per_request(self):
         with tempfile.TemporaryDirectory() as tmp:

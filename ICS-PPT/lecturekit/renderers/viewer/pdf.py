@@ -53,22 +53,36 @@ def find_chrome() -> str:
     )
 
 
+def print_command(chrome: str | None = None) -> list[str]:
+    """Headless Chrome, set up to print a page: the start of every print here.
+
+    As root, which is who a CI container runs as, Chrome will not start without
+    ``--no-sandbox``; marp-cli, which prints the slides, adds it on the same
+    condition.
+    """
+    command = [
+        chrome or find_chrome(),
+        "--headless=new",
+        "--disable-gpu",
+        "--no-pdf-header-footer",
+    ]
+    if hasattr(os, "getuid") and os.getuid() == 0:
+        command.append("--no-sandbox")
+    return command
+
+
 def render_outline_pdf(output_dir: Path, *, chrome: str | None = None) -> Path:
     """Print ``outline.html`` to a single content-sized ``outline.pdf``.
 
     ``--virtual-time-budget`` lets headless Chrome wait for the page's
     ``fonts.ready`` -> ``@page`` height injection before it prints.
     """
-    chrome = chrome or find_chrome()
     source = (output_dir / "outline.html").resolve()
     if not source.exists():
         raise FileNotFoundError(f"no outline.html to render in {output_dir}")
     dest = output_dir / "outline.pdf"
     command = [
-        chrome,
-        "--headless=new",
-        "--disable-gpu",
-        "--no-pdf-header-footer",
+        *print_command(chrome),
         "--allow-file-access-from-files",
         "--virtual-time-budget=3000",
         f"--print-to-pdf={dest}",

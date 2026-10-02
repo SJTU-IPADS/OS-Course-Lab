@@ -15,6 +15,12 @@ tracks the source with no second copy to keep in sync. The file's *content* is
 not in it: it is read when the button is pressed, so what the room sees is what
 is on disk at that moment — the point of editing a file live and running it
 again.
+
+The panel colours what it shows. The lexing is done here, by Pygments, and the
+browser is handed lines of ``[class, text]`` runs: it still builds text nodes
+and nothing else, and it carries no lexer of its own. Pygments is looked for
+when a file is read; without it, or for a file it has no lexer for, the panel
+shows the text plain.
 """
 
 from __future__ import annotations
@@ -37,6 +43,32 @@ SOURCES_FILENAME = "sources.json"
 MAX_SOURCE_BYTES = 256 * 1024
 
 _ID_LENGTH = 12
+
+#: A lexer Pygments would not pick from the file name alone: it reads `.S` as
+#: the S language, and here it is assembly that goes through the preprocessor.
+_LEXER_BY_SUFFIX = {".S": "gas"}
+
+#: Pygments token type -> the class the panel colours it by, most specific
+#: first; a token under none of them is plain text. Six roles and `meta`, the
+#: ones the slide theme gives its own code blocks, so a file in the panel is
+#: coloured the way a listing on the slide beside it is.
+_TOKEN_CLASSES = (
+    ("Comment.Preproc", "meta"),
+    ("Comment.PreprocFile", "meta"),
+    ("Comment", "comment"),
+    ("Keyword.Type", "type"),
+    ("Keyword", "keyword"),
+    ("Operator.Word", "keyword"),
+    ("Literal.String", "string"),
+    ("Literal.Number", "number"),
+    ("Name.Builtin", "keyword"),
+    ("Name.Function", "title"),
+    ("Name.Class", "title"),
+    ("Name.Label", "title"),
+    ("Name.Variable", "type"),
+    ("Name.Attribute", "type"),
+    ("Name.Tag", "type"),
+)
 
 
 def source_id(path: str) -> str:
@@ -160,3 +192,71 @@ def load(path: Path) -> str:
     if len(data) > MAX_SOURCE_BYTES:
         text += f"\n… [file past {MAX_SOURCE_BYTES} bytes not shown]"
     return text
+
+
+def _lexer(path: str, text: str):
+    """The Pygments lexer for the file at ``path``, or ``None`` without one.
+
+    ``stripnl`` and ``ensurenl`` are turned off so that the tokens add up to
+    the text exactly: the panel numbers its lines, and a lexer that drops a
+    leading blank line would number every line after it one short.
+    """
+    try:
+        from pygments.lexers import get_lexer_by_name, get_lexer_for_filename
+        from pygments.util import ClassNotFound
+    except ImportError:
+        return None
+    name = PurePosixPath(path).name
+    options = {"stripnl": False, "ensurenl": False}
+    try:
+        alias = _LEXER_BY_SUFFIX.get(PurePosixPath(name).suffix)
+        if alias:
+            return get_lexer_by_name(alias, **options)
+        return get_lexer_for_filename(name, text, **options)
+    except ClassNotFound:
+        return None
+
+
+def _token_class(ttype) -> str:
+    """The panel's class for a Pygments token type; "" for plain text."""
+    from pygments.token import string_to_tokentype
+
+    for name, css in _TOKEN_CLASSES:
+        if ttype in string_to_tokentype(name):
+            return css
+    return ""
+
+
+def highlight(path: str, text: str) -> list[list[list[str]]] | None:
+    """``text`` as lines of ``[class, text]`` runs, or ``None`` to show it plain.
+
+    One list per line of the file, in the panel's own line split: a final
+    newline ends the last line rather than opening an empty one. A token that
+    spans lines, a block comment say, is cut at each newline and keeps its
+    class on every piece. ``None`` when Pygments is not installed, when it has
+    no lexer for this file, or when the tokens do not add up to the text.
+    """
+    lexer = _lexer(path, text)
+    if lexer is None:
+        return None
+    lines: list[list[list[str]]] = [[]]
+    seen: list[str] = []
+    for ttype, value in lexer.get_tokens(text):
+        seen.append(value)
+        css = _token_class(ttype)
+        for index, piece in enumerate(value.split("\n")):
+            if index:
+                lines.append([])
+            if not piece:
+                continue
+            row = lines[-1]
+            if row and row[-1][0] == css:
+                row[-1][1] += piece
+            else:
+                row.append([css, piece])
+    # Pygments reads every line ending as "\n" before it lexes.
+    if "".join(seen) != text.replace("\r\n", "\n").replace("\r", "\n"):
+        return None
+    if len(lines) > 1 and not lines[-1] and text.endswith(("\n", "\r")):
+        lines.pop()
+    return lines

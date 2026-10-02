@@ -4,10 +4,9 @@ import re
 
 from lecturekit import model, pseudo
 
-_IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp")
 
-
-def _escape(text: str) -> str:
+def escape_html(text: str) -> str:
+    """Escape ``text`` for HTML text and for a double-quoted attribute."""
     return (
         str(text)
         .replace("&", "&amp;").replace("<", "&lt;")
@@ -35,7 +34,7 @@ def _inline_md(text: str) -> str:
     ``**bold**``/``*italic*``/``` `code` ```, ``[label](url)`` links, and turn
     newlines into line breaks.
     """
-    html = _escape(text)
+    html = escape_html(text)
     html = _TAG_RE.sub(r"<\1>", html)
     html = _CODE_RE.sub(r"<code>\1</code>", html)
     html = _LINK_RE.sub(
@@ -46,21 +45,12 @@ def _inline_md(text: str) -> str:
     return html.replace("\n", "<br>")
 
 
-def _looks_like_image(logo: str) -> bool:
-    lowered = logo.lower()
-    return (
-        logo.startswith(("http://", "https://"))
-        or "/" in logo
-        or lowered.endswith(_IMAGE_EXTENSIONS)
-    )
-
-
 def _sidenote_logo_html(logo: str | None) -> str:
     if logo is None:
         return '<span class="sidenote-logo">📖</span>'
-    if _looks_like_image(logo):
-        return f'<img class="sidenote-logo" src="{_escape(logo)}" alt="" />'
-    return f'<span class="sidenote-logo">{_escape(logo)}</span>'
+    if model.logo_is_image(logo):
+        return f'<img class="sidenote-logo" src="{escape_html(logo)}" alt="" />'
+    return f'<span class="sidenote-logo">{escape_html(logo)}</span>'
 
 
 def _sidenote_classes(note: dict) -> str:
@@ -83,8 +73,8 @@ def _float_image_html(image: dict) -> str:
         decls.append(f"height: {image['height']}")
     decls.append("margin: 0 0 .4em 1em")
     style = "; ".join(decls)
-    src = _escape(image["src"])
-    alt = _escape(image.get("alt") or "")
+    src = escape_html(image["src"])
+    alt = escape_html(image.get("alt") or "")
     return f'<img src="{src}" alt="{alt}" style="{style};" />'
 
 
@@ -139,7 +129,7 @@ def _pseudo_html(content: str, marked: set[int], tone: str) -> str:
     out = []
     for number, tokens in enumerate(pseudo.tokenize(content), start=1):
         line = "".join(
-            f'<span class="tok-{cls}">{_escape(text)}</span>' if cls else _escape(text)
+            f'<span class="tok-{cls}">{escape_html(text)}</span>' if cls else escape_html(text)
             for cls, text in (
                 (_PSEUDO_CLASSES.get(kind), text) for kind, text in tokens
             )
@@ -161,8 +151,8 @@ def _code(block):
 
 
 def _link(block):
-    label = _escape(block.content["label"])
-    url = _escape(block.content["url"])
+    label = escape_html(block.content["label"])
+    url = escape_html(block.content["url"])
     return [f'- <a href="{url}" target="_blank" rel="noopener noreferrer">{label}</a>', ""]
 
 
@@ -185,8 +175,8 @@ def _figure_inner(image: dict) -> tuple[str, str]:
         sizes.append(f"height:{_css_length(image['height'])}")
     style = f' style="{";".join(sizes)}"' if sizes else ""
     img = (
-        f'<img src="{_escape(image["src"])}" '
-        f'alt="{_escape(image.get("alt") or "")}"{style}>'
+        f'<img src="{escape_html(image["src"])}" '
+        f'alt="{escape_html(image.get("alt") or "")}"{style}>'
     )
     caption = ""
     if image.get("caption"):
@@ -311,13 +301,13 @@ def _architecture(block):
         parts.append('<div class="lk-arch-layer">')
         title = layer.get("title")
         if title:
-            parts.append(f'<div class="lk-arch-label">{_escape(title)}</div>')
+            parts.append(f'<div class="lk-arch-label">{escape_html(title)}</div>')
         parts.append('<div class="lk-arch-modules">')
         for module in layer["modules"]:
             cls = "lk-arch-module"
             if module == model.ARCH_ELLIPSIS:
                 cls += " lk-arch-module--more"
-            parts.append(f'<div class="{cls}">{_escape(module)}</div>')
+            parts.append(f'<div class="{cls}">{escape_html(module)}</div>')
         parts.append("</div></div>")
     if diagram.get("caption"):
         parts.append(f"<figcaption>{_inline_md(diagram['caption'])}</figcaption>")
@@ -330,10 +320,10 @@ SIDENOTE_WHEEL_SIZE = 6
 
 def _sidenote(block, index=0):
     note = block.content
-    title = f'{_escape(note["title"])}：'
+    title = f'{escape_html(note["title"])}：'
     if note.get("link"):
         title_html = (
-            f'<a class="sidenote-title" href="{_escape(note["link"])}"'
+            f'<a class="sidenote-title" href="{escape_html(note["link"])}"'
             f' target="_blank" rel="noopener noreferrer">{title}</a>'
         )
     else:
@@ -531,13 +521,13 @@ def _demo(block):
         '<button class="lk-demo-run" type="button" disabled'
         ' aria-label="Run this demo">▶</button>'
     ) + _demo_files(content.get("files"))
-    name = f'<span class="lk-demo-name">{_escape(content["name"])}</span>'
+    name = f'<span class="lk-demo-name">{escape_html(content["name"])}</span>'
     desc = ""
     if content.get("description"):
         desc = f'<span class="lk-demo-desc">{_inline_md(content["description"])}</span>'
     # `lk-demo-cmd` holds the command lines and nothing else — `demo.js` falls
     # back on its first line to label a run whose demo has no name.
-    cmd = f'<code class="lk-demo-cmd">{_escape(chr(10).join(lines))}</code>'
+    cmd = f'<code class="lk-demo-cmd">{escape_html(chr(10).join(lines))}</code>'
     open_tag = (
         f'<div class="lk-demo" data-lk-demo="{demo_module.demo_id(command)}"'
         f' data-lk-demo-form="{"block" if block_form else "inline"}">'
@@ -567,11 +557,11 @@ def _demo_output(output, bold):
     ``bold`` renders exactly as it did before the option existed.
     """
     if not bold:
-        return _escape(output)
+        return escape_html(output)
     skip = len(output) - len(output.lstrip("\n"))
     wanted = {number + skip - 1 for number in bold}
     return "\n".join(
-        f"<strong>{_escape(line)}</strong>" if index in wanted else _escape(line)
+        f"<strong>{escape_html(line)}</strong>" if index in wanted else escape_html(line)
         for index, line in enumerate(output.split("\n"))
     )
 
@@ -585,8 +575,8 @@ def _demo_files(files):
         parts.append(
             f'<button class="lk-demo-file" type="button" disabled'
             f' data-lk-source="{source_module.source_id(path)}"'
-            f' aria-label="Show {_escape(path)}">'
-            f"{_escape(source_module.label(path))}</button>"
+            f' aria-label="Show {escape_html(path)}">'
+            f"{escape_html(source_module.label(path))}</button>"
         )
     return "".join(parts)
 
@@ -594,7 +584,7 @@ def _demo_files(files):
 def _bridge(block):
     """A transition page's centered lines. Plain text — escaped, no inline md."""
     body = "<br>".join(
-        _escape(line) for line in str(block.content["text"]).splitlines()
+        escape_html(line) for line in str(block.content["text"]).splitlines()
     )
     return [f'<div class="lk-bridge-body">{body}</div>', ""]
 

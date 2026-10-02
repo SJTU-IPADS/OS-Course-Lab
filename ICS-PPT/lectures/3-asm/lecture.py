@@ -1,9 +1,8 @@
 """ICS 第 3 章：程序的机器级表示与执行。
 
-以向量内积 dot_product 为唯一主线，按 PPTContents.md 的大纲分四部分推进：
+以向量内积 dot_product 为唯一主线，分四部分推进：
 单次乘加（寄存器、寻址、数据传送与算术指令），循环控制（%rip、标志位、条件跳转、循环结构），
 过程调用（运行时栈与栈帧、call/ret、ABI、缓冲区溢出、金丝雀），向量化（YMM、AVX2、perf 实测、OpenMP、CUDA）。
-页面文案逐字取自 PPTContents.md，见 pages.py 开头的说明。
 """
 
 from lecturekit.dsl import Lecture
@@ -64,10 +63,19 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
         ss.bridge('执行运算的CPU指令', id="bridge-part1-compute")
         ss.page("extension", body=pages.extension)
         ss.page("extension-fig", body=pages.extension_fig)
+        ss.page("extension-example", body=pages.extension_example)
+        ss.page("extension-example-2", body=pages.extension_example_2)
         ss.page("int-arith", body=pages.int_arith)
         ss.page("shift-ops", body=pages.shift_ops)
+        ss.page("shift-example", body=pages.shift_example)
+        ss.page("shift-example-2", body=pages.shift_example_2)
         ss.page("xor-strength", body=pages.xor_strength)
         ss.page("xor-strength-2", body=pages.xor_strength_2)
+        ss.page("lea-mul-example", body=pages.lea_mul_example)
+        ss.page("lea-mul-example-2", body=pages.lea_mul_example_2)
+        ss.page("insn-bytes", body=pages.insn_bytes)
+        ss.page("disasm-exercise", body=pages.disasm_exercise)
+        ss.page("disasm-exercise-2", body=pages.disasm_exercise_2)
         ss.page("mac-exercise", body=pages.mac_exercise)
         ss.page("mac-exercise-2", body=pages.mac_exercise_2)
         ss.page("memory-operand-2", body=pages.memory_operand_2)
@@ -88,12 +96,15 @@ with lecture.section('第二部分：循环控制与状态机推进', id="part2"
     s.page("cmp-test", body=pages.cmp_test)
     s.page("cmp-test-2", body=pages.cmp_test_2)
     s.page("cond-jump", body=pages.cond_jump)
+    s.page("cond-jump-example", body=pages.cond_jump_example)
+    s.page("cond-jump-example-2", body=pages.cond_jump_example_2)
     s.page("loop-forms-for", body=pages.loop_forms_for)
     s.page("loop-forms", body=pages.loop_forms)
     s.page("loop-forms-fig", body=pages.loop_forms_fig)
     s.page("cmov", body=pages.cmov)
     s.page("cmov-fig", body=pages.cmov_fig)
     s.page("type-neutral", body=pages.type_neutral)
+    s.page("type-neutral-2", body=pages.type_neutral_2)
     s.page("type-neutral-fig", body=pages.type_neutral_fig)
 
 lecture.bridge('第三部分：函数的硬件实现\n从代码组织到过程调用', id="bridge-part3")
