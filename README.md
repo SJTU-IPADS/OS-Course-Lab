@@ -139,7 +139,6 @@ ICS 实验的要求与评测方式请参阅 [`ICS-Labs/`](ICS-Labs) 下各实验
 
 如果你有任何建议或更正意见，欢迎提交 [Issue](https://github.com/SJTU-IPADS/OS-Course-Lab/issues) 或 [Pull Request](https://github.com/SJTU-IPADS/OS-Course-Lab/pulls)，让我们一起把实验做得更好。提交前请先阅读[贡献指南](https://sjtu-ipads.github.io/OS-Course-Lab/Contribute.html)：
 
-- 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/) 规范（允许的类型见 [`.commitlintrc.json`](.commitlintrc.json)），例如 `fix(lab2): ...`、`docs: ...`
 - 实验手册经 markdownlint 检查，合入 `main` 后由 GitHub Actions 自动构建并发布到 [GitHub Pages](https://sjtu-ipads.github.io/OS-Course-Lab/)
 
 <a href="https://github.com/SJTU-IPADS/OS-Course-Lab/graphs/contributors">

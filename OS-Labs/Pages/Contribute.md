@@ -4,9 +4,6 @@
 
 ## 代码规范
 
-> [!IMPORTANT] Commit
-> 我们参照Conventional Commit构建了Pull Request的Blocker，并且关闭了对主分支的直接Push，请确保你的Commit符合Conventional Commit规范
-
 > [!IMPORTANT] Github
 > 我们使用Github Issues跟踪所有的问题，如果你在实验过程中产生了任何预期以外的错误，欢迎提交Issues.
 
