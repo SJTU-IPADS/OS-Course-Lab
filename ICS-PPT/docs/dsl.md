@@ -314,7 +314,7 @@ handle for chaining (see [Footnotes](#footnotes) and
 | --- | --- | --- |
 | `p.cover(...)` | `cover` | Cover-page metadata, usually created through `lec.cover(...)`. |
 | `p.slide(content)` | `slide` | A markdown text block — the main body of a page. |
-| `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language) and [marking lines](#marking-a-line)). |
+| `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language), [dialects](#dialects-cuda) and [marking lines](#marking-a-line)). |
 | `p.link(label, url)` | `link` | A labelled hyperlink. |
 | `p.image(src, …)` | `image` | An inline image (see [Images](#images)). |
 | `p.frames(src, src, …)` | `image` ×N | An animation: one page, one figure per frame (see [Frames](#frames-an-animation)). |
@@ -387,6 +387,41 @@ language's keywords get — blue is already the message's, and a keyword drawn
 in the body's own navy is only bold, which at code size is no color at all. The
 viewer and the book both render them; PPTX sets the whole listing in one ink, as
 it does for every other language.
+
+### Dialects: `cuda`
+
+A language name is otherwise handed to the renderer's highlighter as written —
+highlight.js in the deck, `listings` in the book — so it has to be a name that
+highlighter knows (`c`, `cpp`, `python`, `bash`, …). A name it does not know
+prints in one ink.
+
+A **dialect** is a name lecturekit adds: another language plus a few words.
+`cuda` is the one that exists — C++ plus what CUDA adds to it:
+
+| role | words |
+| --- | --- |
+| keyword | `__global__` `__device__` `__host__` `__noinline__` `__forceinline__` `__shared__` `__constant__` `__restrict__` |
+| built-in | `gridDim` `blockIdx` `blockDim` `threadIdx` `warpSize`, `__syncthreads` and its `_count` / `_and` / `_or` forms, `__threadfence` and its `_block` / `_system` forms |
+| type | `dim3` `uint3` |
+
+```python
+p.code("cuda", """__global__ void scale(int *v, int n) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < n) v[i] *= 2;
+}""")
+```
+
+Written as `cpp`, the same block leaves exactly those words — the ones the
+page is about — in the plain ink. The deck colours a dialect in the base
+language's own inks (and so do PDF and PNG); the book prints its words in the
+keyword face `listings` gives the base's. PPTX and the transcript sheet set
+every listing in one ink, a dialect included. `mark=` stays `pseudo`-only.
+
+The words live in `lecturekit/dialects.json`, one entry per dialect: the base
+language under its highlight.js and its `listings` name, then the words by
+role. Both renderers read that file, so a new dialect of a language whose
+highlight.js definition lists its keywords by role (as `c` and `cpp` do) is a
+new entry and no code; see `lecturekit/dialects.py`.
 
 ### Marking a line
 

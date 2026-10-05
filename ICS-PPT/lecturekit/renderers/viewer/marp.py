@@ -13,6 +13,12 @@ PKG_ROOT = tokens.PKG_ROOT
 THEME_DIR = tokens.THEME_DIR
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
+# Every marp-cli run goes through this engine: Marp, plus the code dialects
+# (`lecturekit.dialects`) registered with its highlighter. Passed as an absolute
+# path because marp runs in the output directory.
+ENGINE = Path(__file__).resolve().parent / "marp-engine.cjs"
+ENGINE_ARGS = ["--engine", str(ENGINE)]
+
 # A CJK font bundled into the PDF. Marp renders PDFs with a headless Chromium
 # that cannot see the host's system fonts, so Chinese silently drops out unless
 # we embed a font via @font-face. The live viewer (a real browser) is unaffected.
@@ -134,7 +140,7 @@ def render_pages_pdf(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> Path:
     """Marp-export the pages-only deck to ``pages.pdf`` (embedded CJK, local files)."""
     command = marp_command() + [
         "slides.md", "-o", "pages.pdf", "--html", "--allow-local-files",
-    ]
+    ] + ENGINE_ARGS
     pdf_theme = _write_pdf_theme(output_dir, theme_dir)
     if pdf_theme is not None:
         command += ["--theme", pdf_theme]
@@ -153,7 +159,7 @@ def render_pages_png(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> None:
     command = marp_command() + [
         "slides.md", "-o", "slides.png", "--images", "png",
         "--html", "--allow-local-files",
-    ]
+    ] + ENGINE_ARGS
     pdf_theme = _write_pdf_theme(output_dir, theme_dir)
     if pdf_theme is not None:
         command += ["--theme", pdf_theme]
@@ -235,7 +241,7 @@ def build_deck(
     if "html" in formats:
         command = marp_command() + [
             "slides.md", "-o", "slides.html", "--html",
-        ]
+        ] + ENGINE_ARGS
         if _copy_theme(output_dir, theme_dir):
             command += ["--theme", "theme.css"]
         subprocess.run(command, cwd=output_dir, check=True, stdin=subprocess.DEVNULL)
@@ -264,7 +270,7 @@ def watch_command(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> list[str]
     """The persistent `marp --watch` command; copies the theme if present."""
     command = marp_command() + [
         "slides.md", "-o", "slides.html", "--html", "--watch",
-    ]
+    ] + ENGINE_ARGS
     if _copy_theme(output_dir, theme_dir):
         command += ["--theme", "theme.css"]
     return command

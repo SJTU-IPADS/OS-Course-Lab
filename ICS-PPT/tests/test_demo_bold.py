@@ -1,3 +1,4 @@
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -76,7 +77,14 @@ class BoldRenderTest(unittest.TestCase):
     def test_the_deck_is_unchanged_without_bold(self):
         html = render_block(demo_block())[0]
         self.assertNotIn("<strong>", html)
-        self.assertIn('<code class="lk-demo-out">\nscheme', html)
+        self.assertIn('<code class="lk-demo-out">&#10;scheme', html)
+
+    def test_the_deck_keeps_a_blank_line_inside_the_html_block(self):
+        # A blank line ends a raw HTML block in Markdown; see the same test
+        # without `bold` in test_demo_channel.py.
+        html = render_block(demo_block(output="a\n\nb\nc", bold=[3]))[0]
+        self.assertNotRegex(html, re.compile(r"^[ \t]*$", re.M))
+        self.assertIn("<strong>b</strong>", html)
 
     def test_the_pptx_bolds_the_named_rows(self):
         out = PptxRenderer().render(demo_lecture(bold=[2]).build(),

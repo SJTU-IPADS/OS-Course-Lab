@@ -9,8 +9,9 @@
      ./matvec_avx2 8            8 threads
      ./matvec_avx2 8 8          8 threads, W = 8 MiB (fits in L3)
 
-   Prints the milliseconds per product, the multiply-adds per second and the
-   weight bytes read per second. Built with -mavx2 it uses the AVX2 kernel,
+   Prints the milliseconds per product, the operations per second in GFLOPS
+   (a multiply-add counts as 2 operations, as in a roofline) and the weight
+   bytes read per second. Built with -mavx2 it uses the AVX2 kernel,
    otherwise the scalar one. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,8 +94,8 @@ int main(int argc, char **argv) {
         reps++;
     } while ((t = omp_get_wtime() - t0) < 1.0);
     t /= reps;
-    /* each byte of W holds two weights: two multiply-adds */
-    printf("threads %d  ms %.3f  GMAC/s %.2f  GB/s %.2f\n",
-           threads, t * 1e3, 2.0 * bytes / t / 1e9, bytes / t / 1e9);
+    /* each byte of W holds two weights: two multiply-adds, 4 operations */
+    printf("threads %d  ms %.3f  GFLOPS %.2f  GB/s %.2f\n",
+           threads, t * 1e3, 4.0 * bytes / t / 1e9, bytes / t / 1e9);
     return 0;
 }

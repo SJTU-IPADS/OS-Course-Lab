@@ -24,7 +24,9 @@
 <text x="140.0" y="39.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">1000</text>
 <text x="575.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">算术强度（FLOP/Byte，对数坐标）</text>
 <text x="164.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">运算速率（GFLOPS，对数坐标）</text>
-<line x1="711.8" y1="65.3" x2="711.8" y2="230.0" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="711.8" y1="65.3" x2="711.8" y2="128.5" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="711.8" y1="150.5" x2="711.8" y2="186.2" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="711.8" y1="208.2" x2="711.8" y2="230.0" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 4"/>
 <text x="711.8" y="248.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">6.25</text>
 <line x1="150.0" y1="115.7" x2="711.8" y2="65.3" stroke="#c0392b" stroke-width="3.4"/>
 <line x1="711.8" y1="65.3" x2="1000.0" y2="65.3" stroke="#156082" stroke-width="3.4"/>
@@ -36,4 +38,12 @@
 <circle cx="538.7" cy="80.9" r="8.0" fill="#ffffff" stroke="#c0392b" stroke-width="3"/>
 <text x="522.7" y="62.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="end">带宽上限 53 Token/s（182 GFLOPS）</text>
 <text x="528.7" y="214.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">Qwen3-VL-2B（Q4_0）</text>
+<line x1="150.0" y1="122.5" x2="1000.0" y2="122.5" stroke="#156082" stroke-width="2.4" stroke-dasharray="8 5"/>
+<text x="992.0" y="114.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">单核算力上限 P ÷ 8 = 40 GFLOPS</text>
+<circle cx="538.7" cy="124.8" r="8.0" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="554.7" y="144.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">ollama 单线程实测 10.7 Token/s（约 37 GFLOPS）</text>
+<circle cx="538.7" cy="197.2" r="8.0" fill="#e97132" stroke="#e97132" stroke-width="1.4"/>
+<text x="554.7" y="202.2" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">mini-ollama 单线程实测 0.77 Token/s（约 2.6 GFLOPS）</text>
+<line x1="514.7" y1="128.8" x2="514.7" y2="193.2" stroke="#0e2841" stroke-width="1.8" marker-start="url(#ah-0e2841)" marker-end="url(#ah-0e2841)"/>
+<text x="502.7" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">相差 14 倍</text>
 </svg>

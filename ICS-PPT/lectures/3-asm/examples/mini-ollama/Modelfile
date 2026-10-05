@@ -1,0 +1,9 @@
+FROM ../../../nano-quant/model/q4_0.gguf
+TEMPLATE """<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+PARAMETER stop <|im_end|>
+PARAMETER temperature 0
+PARAMETER num_gpu 0
+PARAMETER num_thread 1

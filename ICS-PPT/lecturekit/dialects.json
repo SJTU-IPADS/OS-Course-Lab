@@ -1,0 +1,16 @@
+{
+  "cuda": {
+    "hljs": "cpp",
+    "listings": "C++",
+    "keyword": [
+      "__global__", "__device__", "__host__", "__noinline__", "__forceinline__",
+      "__shared__", "__constant__", "__restrict__"
+    ],
+    "built_in": [
+      "gridDim", "blockIdx", "blockDim", "threadIdx", "warpSize",
+      "__syncthreads", "__syncthreads_count", "__syncthreads_and", "__syncthreads_or",
+      "__threadfence", "__threadfence_block", "__threadfence_system"
+    ],
+    "type": ["dim3", "uint3"]
+  }
+}

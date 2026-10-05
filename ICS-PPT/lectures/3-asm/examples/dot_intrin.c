@@ -1,31 +1,45 @@
 /* The AVX2 dot product written with intrinsics, and a scalar fallback
    chosen at run time by __builtin_cpu_supports.
 
-     gcc -O2 -fcf-protection=none -S dot_intrin.c -o -   # see the vector loop
+     gcc -O2 -S dot_intrin.c -o - | sed -f asm.sed   # see the vector loop
      gcc -O2 dot_intrin.c -o dot_intrin && ./dot_intrin
 
-   Only dot_product_avx2 is compiled for AVX2 (the target attribute), so the
+   Only the functions marked target("avx2") are compiled for AVX2, so the
    program still runs on a CPU without it and takes the scalar path there. */
 #include <immintrin.h>
 #include <stdio.h>
+
+/* The 8 sums held in v, added up: s0 + s1 + ... + s7. */
+__attribute__((target("avx2")))
+static int sum_lanes(__m256i v) {
+    __m128i s = _mm_add_epi32(_mm256_castsi256_si128(v),
+                              _mm256_extracti128_si256(v, 1));
+    s = _mm_add_epi32(s, _mm_srli_si128(s, 8));
+    s = _mm_add_epi32(s, _mm_srli_si128(s, 4));
+    return _mm_cvtsi128_si32(s);
+}
+
+/* The last n % 8 elements, one at a time, without vector instructions.
+   noinline keeps the loop in a function of its own: inlined into
+   dot_product_avx2, gcc would vectorize it with AVX2 as well. */
+__attribute__((noinline))
+int scalar_tail(const int *w, const int *x, int n) {
+    int sum = 0;
+    for (int i = n / 8 * 8; i < n; i++)
+        sum += w[i] * x[i];
+    return sum;
+}
 
 __attribute__((target("avx2")))
 int dot_product_avx2(const int *w, const int *x, int n) {
     __m256i vsum = _mm256_setzero_si256();   // vpxor %xmm1, %xmm1, %xmm1
     for (int i = 0; i <= n - 8; i += 8) {
         __m256i va = _mm256_loadu_si256((__m256i*)&w[i]);  // vmovdqu
-        __m256i vb = _mm256_loadu_si256((__m256i*)&x[i]);  // folded into vpmulld
+        __m256i vb = _mm256_loadu_si256((__m256i*)&x[i]);  // folded into vpmulld as its memory operand
         __m256i vprod = _mm256_mullo_epi32(va, vb);       // vpmulld
         vsum = _mm256_add_epi32(vsum, vprod);             // vpaddd
     }
-    /* Horizontal sum of the eight lanes, then the n % 8 elements left. */
-    __m128i s = _mm_add_epi32(_mm256_castsi256_si128(vsum),
-                              _mm256_extracti128_si256(vsum, 1));
-    s = _mm_add_epi32(s, _mm_srli_si128(s, 8));
-    s = _mm_add_epi32(s, _mm_srli_si128(s, 4));
-    int sum = _mm_cvtsi128_si32(s);
-    for (int i = n & ~7; i < n; i++)
-        sum += w[i] * x[i];
+    int sum = sum_lanes(vsum) + scalar_tail(w, x, n);  // last n % 8 elements: no vector instructions
     return sum;
 }
 

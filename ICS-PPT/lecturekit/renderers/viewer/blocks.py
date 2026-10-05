@@ -546,7 +546,11 @@ def _demo(block):
         out = _demo_output(str(output), bold)
         parts.append(f'<code class="lk-demo-out"{attr}>{out}</code>')
     parts.append("</pre></div>")
-    return ["".join(parts), ""]
+    # The line breaks are written as character references, so the transcript is
+    # one source line. A raw HTML block ends at the first blank line of the
+    # Markdown, and a blank row in the output or in a quoted argument would be
+    # one: Marp would parse the rows after it as a paragraph inside the `pre`.
+    return ["".join(parts).replace("\n", "&#10;"), ""]
 
 
 def _demo_output(output, bold):

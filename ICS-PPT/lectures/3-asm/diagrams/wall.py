@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""The memory wall, measured: multiply-adds per second against threads.
+"""The memory wall, measured: operations per second against threads.
 
 Three runs of examples/matvec_q4.c: the AVX2 build with W = 8 MiB (in cache),
 the AVX2 build with W = 512 MiB (from DRAM) and the scalar build with
-W = 512 MiB. The dashed line is 51.2 GB/s of int4 weights, two multiply-adds
-per byte. The numbers are the GMAC/s column of the runs on the page.
+W = 512 MiB. The dashed line is 51.2 GB/s of int4 weights at 4 FLOP/Byte
+(two multiply-adds per byte, 2 operations each). The numbers are the GFLOPS
+column of the runs on the page.
 Run it to refresh ../assets/wall.svg.
 """
 
@@ -20,13 +21,14 @@ from svgkit import (BLUE, INK, LINE, MUTED, ORANGE, RED, arrow, circle, line,
 W, H = 1120, 450
 PX0, PX1, PY0, PY1 = 110, 700, 50, 380      # plot area
 THREADS = (1, 2, 4, 8)
-LIMIT = 51.2 * 2                             # the bandwidth line, 1e9 per second
+LIMIT = 51.2 * 4                             # the bandwidth line, GFLOPS
+STEP = 100                                   # between grid lines, GFLOPS
 
-# (label, colour, GMAC/s at 1, 2, 4, 8 threads)
-RUNS = [("AVX2，W = 8 MiB（缓存）", BLUE, (25.14, 49.89, 81.84, 119.67)),
-        ("AVX2，W = 512 MiB（内存）", ORANGE, (16.40, 27.73, 52.21, 66.03)),
-        ("标量，W = 512 MiB（内存）", MUTED, (1.04, 1.81, 4.28, 4.74))]
-YMAX = 40 * math.ceil(max(max(v) for _, _, v in RUNS) / 40)
+# (label, colour, GFLOPS at 1, 2, 4, 8 threads)
+RUNS = [("AVX2，W = 8 MiB（缓存）", BLUE, (99.99, 188.40, 322.46, 540.35)),
+        ("AVX2，W = 512 MiB（内存）", ORANGE, (51.04, 90.10, 128.08, 135.68)),
+        ("标量，W = 512 MiB（内存）", MUTED, (4.76, 8.75, 16.73, 29.62))]
+YMAX = STEP * math.ceil(max(max(v) for _, _, v in RUNS) / STEP)
 
 
 def gx(k):
@@ -40,9 +42,9 @@ def gy(v):
 def build():
     out = [arrow(PX0, PY1, PX1 + 20, PY1, INK, 1.8),
            arrow(PX0, PY1, PX0, PY0 - 16, INK, 1.8),
-           text(PX0 + 14, PY0 - 22, "乘加速率（10⁹ 次 / 秒）", 16, INK, anchor="start"),
+           text(PX0 + 14, PY0 - 22, "运算速率（GFLOPS）", 16, INK, anchor="start"),
            text((PX0 + PX1) / 2, PY1 + 58, "线程数", 16, INK)]
-    for v in range(0, YMAX + 1, 40):
+    for v in range(0, YMAX + 1, STEP):
         if v:
             out.append(line(PX0, gy(v), PX1, gy(v), LINE, 0.8, "2 4"))
         out.append(text(PX0 - 10, gy(v) + 5, f"{v}", 14, MUTED, anchor="end"))
@@ -50,8 +52,9 @@ def build():
         out.append(line(gx(k), PY1, gx(k), PY1 + 6, INK, 1.4))
         out.append(text(gx(k), PY1 + 26, f"{t}", 16, INK, "bold"))
     out.append(line(PX0, gy(LIMIT), PX1, gy(LIMIT), RED, 2.4, "8 6"))
-    out.append(text(PX1 + 12, gy(LIMIT) - 4, "带宽上限 102", 15, RED, "bold", anchor="start"))
-    out.append(text(PX1 + 12, gy(LIMIT) + 18, "51.2 GB/s × 2 次 / 字节", 13, RED,
+    out.append(text(PX1 + 12, gy(LIMIT) - 4, f"带宽上限 {LIMIT:g} GFLOPS", 15, RED, "bold",
+                    anchor="start"))
+    out.append(text(PX1 + 12, gy(LIMIT) + 18, "51.2 GB/s × 4 FLOP/Byte", 13, RED,
                     anchor="start"))
     for label, colour, values in RUNS:
         pts = [(gx(k), gy(v)) for k, v in enumerate(values)]
@@ -63,11 +66,12 @@ def build():
             crowded = any(0 < y - gy(o[k]) < 34 for _, _, o in RUNS)
             tag = f"{v:.0f}" if v >= 10 else f"{v:.1f}"
             out.append(circle(x, y, 6, colour, colour))
-            out.append(text(x - 14, y + 5, tag, 14, colour, "bold", anchor="end") if crowded
-                       else text(x, y - 14, tag, 14, colour, "bold"))
+            # ... and stays clear of the x axis
+            out.append(text(x - 14, min(y + 5, PY1 - 8), tag, 14, colour, "bold", anchor="end")
+                       if crowded else text(x, y - 14, tag, 14, colour, "bold"))
     # legend
     for k, (label, colour, _) in enumerate(RUNS):
-        y = 260 + k * 40
+        y = 90 + k * 40
         out.append(line(PX1 + 40, y - 5, PX1 + 80, y - 5, colour, 3))
         out.append(circle(PX1 + 60, y - 5, 6, colour, colour))
         out.append(text(PX1 + 92, y, label, 15, INK, anchor="start"))

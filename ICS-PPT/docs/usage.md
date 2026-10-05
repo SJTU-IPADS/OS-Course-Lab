@@ -143,6 +143,11 @@ is unreachable (npm's fetch timeout is 5 minutes, times three attempts), so
 keeps showing the previous build. A watch session says so after 20 seconds
 without a deck rather than leaving you to guess.
 
+Whichever Marp is found is run with `--engine
+lecturekit/renderers/viewer/marp-engine.cjs`: Marp itself, with the code
+[dialects](dsl.md#dialects-cuda) (`cuda`) registered in its highlighter. A
+`$LECTUREKIT_MARP` wrapper has to pass that option through.
+
 The deck itself is self-contained: fonts are bundled with the theme, so no slide
 load fetches anything. Only the `--pdf`/`--png` exports need more than Node — a
 local Chrome — and `npx` remains the fallback for a machine that has never run

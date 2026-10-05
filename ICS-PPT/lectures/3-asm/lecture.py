@@ -12,13 +12,13 @@ import pages
 
 lecture = Lecture(
     id="ics-asm",
-    title="第 3 章 程序的机器级表示与执行",
+    title="程序的机器级表示与执行",
     subtitle="一行大模型代码的硬件之旅",
     ratio="16:9",
 )
 
 lecture.cover(
-    "第 3 章 程序的机器级表示与执行",
+    "程序的机器级表示与执行",
     author="古金宇 · 陈榕",
     time="上海交通大学 IPADS",
 )
@@ -153,73 +153,39 @@ lecture.bridge('第四部分：性能瓶颈与向量化\n从标量计算到向�
 with lecture.section('第四部分：性能瓶颈与向量化——从标量计算到向量与并发', id="part4") as s:
     s.page("flops-estimate", body=pages.flops_estimate)
     s.page("hw-peak", body=pages.hw_peak)
-    s.page("hw-peak-2", body=pages.hw_peak_2)
-    s.page("test-program", body=pages.test_program)
-    s.page("test-program-2", body=pages.test_program_2)
-    s.page("scalar-gap", body=pages.scalar_gap)
-    s.page("scalar-gap-fig", body=pages.scalar_gap_fig)
+    s.page("measured-speed", body=pages.measured_speed)
+    s.page("system-limits", body=pages.system_limits)
     s.page("insn-mix", body=pages.insn_mix)
-    s.page("insn-mix-2", body=pages.insn_mix_2)
-    s.page("insn-mix-fig", body=pages.insn_mix_fig)
-    s.page("datapath-width", body=pages.datapath_width)
-    s.page("datapath-width-fig", body=pages.datapath_width_fig)
-    s.page("simd-history", body=pages.simd_history)
-    s.page("simd-history-fig", body=pages.simd_history_fig)
-    s.page("ymm", body=pages.ymm)
-    s.page("ymm-2", body=pages.ymm_2)
-    s.page("vex-naming", body=pages.vex_naming)
-    s.page("vex-naming-2", body=pages.vex_naming_2)
-    s.page("vex-naming-fig", body=pages.vex_naming_fig)
-    s.page("vector-arith", body=pages.vector_arith)
-    s.page("vector-arith-2", body=pages.vector_arith_2)
-    s.page("vector-arith-fig", body=pages.vector_arith_fig)
-    s.page("vector-entry", body=pages.vector_entry)
-    s.page("vector-entry-2", body=pages.vector_entry_2)
-    s.page("vector-entry-fig", body=pages.vector_entry_fig)
-    s.page("vector-loop", body=pages.vector_loop)
-    s.page("vector-loop-2", body=pages.vector_loop_2)
-    s.page("vector-loop-3", body=pages.vector_loop_3)
-    s.page("intrinsics", body=pages.intrinsics)
-    s.page("intrinsics-2", body=pages.intrinsics_2)
-    s.page("intrinsics-fig", body=pages.intrinsics_fig)
-    s.page("reduction", body=pages.reduction)
-    s.page("reduction-2", body=pages.reduction_2)
-    s.page("reduction-fig", body=pages.reduction_fig)
-    s.page("perf", body=pages.perf)
-    s.page("perf-2", body=pages.perf_2)
-    s.page("perf-3", body=pages.perf_3)
-    s.page("perf-fig", body=pages.perf_fig)
-    s.page("openmp", body=pages.openmp)
-    s.page("openmp-2", body=pages.openmp_2)
-    s.page("openmp-fig", body=pages.openmp_fig)
-    s.page("memory-wall", body=pages.memory_wall)
-    s.page("memory-wall-2", body=pages.memory_wall_2)
-    s.page("memory-wall-3", body=pages.memory_wall_3)
-    s.page("memory-wall-4", body=pages.memory_wall_4)
-    s.page("memory-wall-fig", body=pages.memory_wall_fig)
-    s.page("memory-wall-5", body=pages.memory_wall_5)
-    s.page("simt", body=pages.simt)
-    s.page("simt-2", body=pages.simt_2)
-    s.page("simt-fig", body=pages.simt_fig)
-    s.page("cuda", body=pages.cuda)
-    s.page("cuda-2", body=pages.cuda_2)
-    s.page("cuda-fig", body=pages.cuda_fig)
-    s.page("cpu-dispatch", body=pages.cpu_dispatch)
-    s.page("cpu-dispatch-2", body=pages.cpu_dispatch_2)
-    s.page("cpu-dispatch-3", body=pages.cpu_dispatch_3)
-    s.page("cpu-dispatch-4", body=pages.cpu_dispatch_4)
+    s.page("speedup-plan", body=pages.speedup_plan)
+    s.bridge('SIMD 思想：数据并行', id="bridge-simd")
+    with s.section('SIMD 思想：数据并行', id="part4-simd") as ss:
+        ss.page("simd-history", body=pages.simd_history)
+        ss.page("simd-history-fig", body=pages.simd_history_fig)
+        ss.page("ymm", body=pages.ymm)
+        ss.page("vector-naming", body=pages.vector_naming)
+        ss.page("vector-arith", body=pages.vector_arith)
+        ss.page("vector-arith-fig", body=pages.vector_arith_fig)
+        ss.page("intrinsics", body=pages.intrinsics)
+        ss.page("vector-loop", body=pages.vector_loop)
+        ss.page("perf", body=pages.perf)
+        ss.page("perf-2", body=pages.perf_2)
+    s.bridge('SIMT 思想：线程并行', id="bridge-simt")
+    with s.section('SIMT 思想：线程并行', id="part4-simt") as ss:
+        ss.page("gpu-why", body=pages.gpu_why)
+        ss.page("gpu-arch", body=pages.gpu_arch)
+        ss.page("gpu-arch-fig", body=pages.gpu_arch_fig)
+        ss.page("cuda-kernel", body=pages.cuda_kernel)
+        ss.page("cuda-host", body=pages.cuda_host)
+        ss.page("cuda-build", body=pages.cuda_build)
+        ss.page("cuda-remote", body=pages.cuda_remote)
 
-lecture.bridge('全节收尾：\n总结与实验任务', id="bridge-wrapup")
+lecture.bridge('总结与实验任务', id="bridge-wrapup")
 
 
-with lecture.section('全节收尾：总结与实验任务', id="wrapup") as s:
+with lecture.section('总结与实验任务', id="wrapup") as s:
     s.page("insn-summary", body=pages.insn_summary)
     s.page("insn-summary-2", body=pages.insn_summary_2)
-    s.page("insn-summary-3", body=pages.insn_summary_3)
     s.page("insn-summary-fig", body=pages.insn_summary_fig)
     s.page("summary", body=pages.summary)
     s.page("summary-2", body=pages.summary_2)
-    s.page("lab", body=pages.lab)
-    s.page("lab-2", body=pages.lab_2)
-    s.page("lab-3", body=pages.lab_3)
-    s.page("lab-fig", body=pages.lab_fig)
+    s.page("exercise", body=pages.exercise)

@@ -10,6 +10,7 @@ handle. Several tests below poke at exactly those two seams.
 
 import json
 import os
+import re
 import socket
 import tempfile
 import threading
@@ -18,6 +19,7 @@ import unittest
 import urllib.error
 import urllib.request
 from contextlib import closing
+from html import unescape
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
@@ -522,6 +524,12 @@ class DemoBlockRenderTest(unittest.TestCase):
             },
         )
 
+    @staticmethod
+    def _rows(html, element):
+        """The rows of one transcript element, as a browser reads them."""
+        inner = re.search(rf'<code class="{element}"[^>]*>(.*?)</code>', html, re.S)
+        return unescape(re.sub(r"<[^>]+>", "", inner.group(1))).split("\n")
+
     def test_the_deck_now_draws_a_demo(self):
         self.assertIn("demo", BLOCK_RENDERERS)
 
@@ -554,7 +562,26 @@ class DemoBlockRenderTest(unittest.TestCase):
     def test_a_multi_line_command_is_a_transcript_too(self):
         html = "".join(render_block(self._block(command="cd examples\ngcc a.c")))
         self.assertIn('data-lk-demo-form="block"', html)
-        self.assertIn("$ cd examples\n$ gcc a.c", html)
+        self.assertEqual(self._rows(html, "lk-demo-cmd"), ["$ cd examples", "$ gcc a.c"])
+
+    def test_a_blank_output_line_does_not_end_the_html_block(self):
+        # The transcript is a raw HTML block in the Markdown handed to Marp, and
+        # CommonMark ends such a block at the first blank line. The rows after
+        # it would be parsed as a paragraph inside the open `pre`, each one with
+        # a `<br>` in front of its own line break.
+        for output in ("line 1\n\nline 3\nline 4", "line 1\n \t\nline 3\nline 4",
+                       "\n\nline 1\n\n\nline 4\n\n"):
+            with self.subTest(output=output):
+                html = "".join(render_block(self._block(output=output)))
+                self.assertNotRegex(html, re.compile(r"^[ \t]*$", re.M))
+                self.assertEqual(self._rows(html, "lk-demo-out"), output.split("\n"))
+
+    def test_a_blank_line_in_a_quoted_argument_does_not_end_the_html_block(self):
+        html = "".join(render_block(self._block(command="curl x -d '{\n\n}'\nls")))
+        self.assertNotRegex(html, re.compile(r"^[ \t]*$", re.M))
+        self.assertEqual(
+            self._rows(html, "lk-demo-cmd"), ["$ curl x -d '{", "", "}'", "$ ls"]
+        )
 
     def test_the_command_element_holds_the_command_and_nothing_else(self):
         # `demo.js` may read it to label a run, so nothing else may be in it.

@@ -7,7 +7,7 @@ system defaults, mirroring how the viewer uses system fonts.
 
 from __future__ import annotations
 
-from ... import i18n, tokens
+from ... import dialects, i18n, tokens
 from .text import escape
 
 _PACKAGES = """\
@@ -129,6 +129,14 @@ _MACROS = tokens.substitute("""\
   \\rlap{\\textcolor{#1}{\\rule[@--mark-tex-raise@]{\\wd\\lkmarkbox}{@--mark-tex-height@}}}\\usebox{\\lkmarkbox}}}
 """)
 
+# A dialect (`lecturekit.dialects`) is its base language with more keywords:
+# `listings` prints them in the keyword face it gives the base's own.
+_DIALECTS = "% Code dialects: a base language plus the words it adds.\n" + "".join(
+    "\\lstdefinelanguage{%s}[]{%s}{morekeywords={%s}}\n"
+    % (name, dialect["listings"], ",".join(dialects.words(name)))
+    for name, dialect in dialects.DIALECTS.items()
+)
+
 MAKEFILE = """\
 book.pdf: book.tex
 \tlatexmk -xelatex -interaction=nonstopmode book.tex
@@ -146,6 +154,7 @@ def document_preamble(book) -> str:
         "",
         _PACKAGES,
         _MACROS.replace("@@TODO@@", i18n.ui(book.lang, "todo")),
+        _DIALECTS,
         f"\\title{{{escape(book.title)}}}",
     ]
     if book.subtitle:
