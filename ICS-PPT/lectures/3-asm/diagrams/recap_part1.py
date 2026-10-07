@@ -17,8 +17,9 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, INK, LINE, MUTED,
-                    ORANGE, WHITE, arrow, cells, elbow, mono, rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK,
+                    LINE, MUTED, ORANGE, WHITE, arrow, cells, elbow, mono, rect,
+                    save, text)
 
 W, H = 1120, 512
 TOP, BOT = 44, 406                       # panel top and bottom
@@ -44,12 +45,12 @@ def panel(x, w, title, fill, stroke):
 def executable():
     x, w = 16, 300
     out = panel(x, w, "① 编译：可执行文件（ELF）", WHITE, BLUE)
-    out.append(rect(x + 12, 86, w - 24, 194, FILL_BLUE, LINE, rx=4, width=1))
+    out.append(rect(x + 12, 86, w - 24, 194, FILL_BLUE, BLUE, rx=4, width=1))
     out.append(text(x + 24, 100, "代码段：add 函数的指令", 13, MUTED, anchor="start"))
     for i, s in enumerate(ASM):
         out.append(mono(x + 24, CODE_Y + i * ROW + BL, s, 16,
                         MUTED if i >= QUIET else INK))
-    out.append(rect(x + 12, 288, w - 24, 108, FILL_BLUE, LINE, rx=4, width=1))
+    out.append(rect(x + 12, 288, w - 24, 108, FILL_GREEN, GREEN, rx=4, width=1))
     out.append(text(x + 24, 302, "数据段：全局变量 a、b、y", 13, MUTED, anchor="start"))
     for i, s in enumerate(["int a = 1", "int b = 6", "int y"]):
         out.append(mono(x + 24, DATA_Y + i * ROW + BL, s, 16))

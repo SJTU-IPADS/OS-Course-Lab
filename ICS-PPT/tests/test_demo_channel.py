@@ -1076,6 +1076,18 @@ class DemoInjectionTest(unittest.TestCase):
         unarmed = self._serve_slides(None)
         self.assertNotIn("lk-drawer", unarmed)
 
+    def test_the_drawer_ships_its_size_controls_styled_and_wired(self):
+        # A− / A+ and the draggable top edge: each is markup demo.js builds
+        # and a rule demo.css gives it, so each name must be in both.
+        with tempfile.TemporaryDirectory() as tmp:
+            armed = self._serve_slides(Path(tmp))
+        for name in ("lk-drawer-zoom", "lk-drawer-grip"):
+            with self.subTest(name=name):
+                self.assertIn(f'class="{name}"', armed)   # built
+                self.assertIn(f".{name} {{", armed)        # styled
+        for key in ("lk-drawer-font", "lk-drawer-height"):  # and remembered
+            self.assertIn(key, armed)
+
     def test_arming_moves_the_deck_onto_our_own_reload_channel(self):
         # marp's WebSocket client reloads on any rebuild, including the one a
         # demo's build artifacts cause -- which would wipe the demo's output off

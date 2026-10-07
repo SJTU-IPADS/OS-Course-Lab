@@ -28,11 +28,11 @@ def bx(off):
 
 def build():
     out = []
-    parts = [(0, 32, "局部数组 w, x（0 ~ 31）", FILL_BLUE, BLUE, INK, None),
+    parts = [(0, 32, "局部数组 w, x（0 ~ 31）", FILL_ORANGE, ORANGE, INK, None),
              (32, 8, "填充", WHITE, LINE, MUTED, "5 4"),
              (40, 8, "金丝雀值", FILL_RED, RED, RED, None),
              (48, 8, "填充", WHITE, LINE, MUTED, "5 4"),
-             (56, 8, "返回地址", FILL_ORANGE, ORANGE, INK, None)]
+             (56, 8, "返回地址", FILL_BLUE, BLUE, INK, None)]
     for off, n, name, fill, stroke, color, dash in parts:
         w = n * B
         out.append(rect(bx(off), Y, w, CH, fill, stroke, rx=2,

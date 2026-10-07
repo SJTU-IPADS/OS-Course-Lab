@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 """The bytes of an instruction, field by field: opcode, registers, constant.
 
-Upper half, x86-64: three instructions whose fields fall on byte boundaries,
-then, in grey, a load with a base register and an offset, where the register
-numbers and the addressing form share one byte. Lower half: the same load in
-Y86-64, the teaching instruction set of CS:APP chapter 4, where every field
-is a whole number of hex digits, so the bytes can be read off.
+Upper half, x86-64: three instructions whose fields fall on byte boundaries.
+Lower half: `movl $0, %eax` again in Y86-64, the teaching instruction set of
+CS:APP chapter 4, where every field is a whole number of hex digits, so the
+bytes can be read off.
 
 The x86-64 bytes are what the assembler prints:
-    echo 'ret; movl $0, %eax; xorl %eax, %eax; movq 8(%rdi), %rcx' |
+    echo 'ret; movl $0, %eax; xorl %eax, %eax' |
         gcc -c -x assembler - -o t.o && objdump -d t.o
-The Y86-64 bytes follow CS:APP figure 4.2: mrmovq D(rB), rA is 50, then rA:rB,
-then D as 8 little-endian bytes; %rcx is register 1 and %rdi register 7, the
-numbers x86-64 uses.
+The Y86-64 bytes follow CS:APP figure 4.2: irmovq V, rB is 30, then F:rB
+(F means no register), then V as 8 little-endian bytes; %rax is register 0,
+the number x86-64 uses.
 Run it to refresh ../assets/insn-bytes.svg.
 """
 
@@ -21,10 +20,10 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK,
-                    LINE, MUTED, ORANGE, brace, cells, line, mono, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_ORANGE, GREEN, INK, LINE,
+                    MUTED, ORANGE, brace, cells, line, mono, save, text)
 
-W, H = 1120, 350
+W, H = 1120, 322
 AX, BX = 24, 262                    # assembly text, left edge of the bytes
 CW, CH = 38, 34                     # one byte
 NW = 46                             # one hex digit of a Y86-64 byte
@@ -34,7 +33,6 @@ SIZE = 16
 OP = (FILL_ORANGE, ORANGE)
 REG = (FILL_GREEN, GREEN)
 CONST = (FILL_BLUE, BLUE)
-PLAIN = (FILL_GREY, MUTED)
 
 # tone, assembly, [(bytes, colours)], [(x offset, label, colour, weight)]
 X86 = [
@@ -45,8 +43,6 @@ X86 = [
       (256, "4 字节立即数 0", BLUE, "bold")]),
     (INK, "xorl %eax, %eax", [(["31"], OP), (["c0"], REG)],
      [(0, "操作码", ORANGE, "bold"), (256, "两个寄存器操作数", GREEN, "bold")]),
-    (MUTED, "movq 8(%rdi), %rcx", [(["48", "8b", "4f", "08"], PLAIN)],
-     [(0, "寄存器编号 1、7 与寻址方式按位合并在 4f 中", MUTED, "normal")]),
 ]
 
 
@@ -79,27 +75,29 @@ def x86_rows():
 
 
 def y86_row():
-    y = 272
-    out = [text(AX, 254, "Y86-64：同一操作的编码", 17, INK, "bold", anchor="start"),
-           text(AX + 212, 254, "CS:APP 的教学指令集", SIZE, MUTED, anchor="start"),
-           mono(AX, y + CH / 2 + 6, "mrmovq 8(%rdi), %rcx", 17, INK)]
-    shapes, x = cells(BX, y, ["5", "0"], NW, CH, *OP, SIZE)
+    y = 226
+    out = [text(AX, 208, "Y86-64：同一操作的编码", 17, INK, "bold", anchor="start"),
+           text(AX + 212, 208, "CS:APP 的教学指令集", SIZE, MUTED, anchor="start"),
+           mono(AX, y + CH / 2 + 6, "irmovq $0, %rax", 17, INK)]
+    shapes, x = cells(BX, y, ["3", "0"], NW, CH, *OP, SIZE)
     out += shapes
-    shapes, x = cells(x, y, ["1", "7"], NW, CH, *REG, SIZE)
+    shapes, x = cells(x, y, ["F", "0"], NW, CH, *REG, SIZE)
     out += shapes
-    shapes, right = cells(x, y, ["08"] + ["00"] * 7, CW, CH, *CONST, SIZE)
+    shapes, right = cells(x, y, ["00"] * 8, CW, CH, *CONST, SIZE)
     out += shapes
     by = y + CH + 3
     out += brace(BX + 2, BX + 2 * NW - 2, by, ORANGE, "操作码", SIZE, 7)
-    out += brace(BX + 2 * NW + 2, BX + 3 * NW - 2, by, GREEN, "%rcx", SIZE, 7)
-    out += brace(BX + 3 * NW + 2, BX + 4 * NW - 2, by, GREEN, "%rdi", SIZE, 7)
-    out += brace(x + 2, right - 2, by, BLUE, "8 字节偏移：数值 8，小端", SIZE, 7)
+    # the two register digits are too narrow for both labels on one line
+    out += brace(BX + 2 * NW + 2, BX + 3 * NW - 2, by, GREEN, "", SIZE, 7)
+    out.append(text(BX + 2.5 * NW, by + 7 + 2 * (SIZE + 4), "无寄存器", SIZE, GREEN, "bold"))
+    out += brace(BX + 3 * NW + 2, BX + 4 * NW - 2, by, GREEN, "%rax", SIZE, 7)
+    out += brace(x + 2, right - 2, by, BLUE, "8 字节常数 0，小端", SIZE, 7)
     out.append(length(y, 10))
     return out
 
 
 def build():
-    return x86_rows() + [line(AX, 228, W - 24, 228, LINE, 1.4, "6 5")] + y86_row()
+    return x86_rows() + [line(AX, 182, W - 24, 182, LINE, 1.4, "6 5")] + y86_row()
 
 
 if __name__ == "__main__":

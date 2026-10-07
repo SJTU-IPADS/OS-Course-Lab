@@ -36,12 +36,12 @@
 <text x="750.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r14</text>
 <rect x="810.7" y="124.0" width="105.3" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
 <text x="863.3" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%r15</text>
-<text x="750.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">调用前后值必须相同</text>
-<text x="750.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">要使用：入口保存、退出前恢复</text>
+<text x="750.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">返回时的值与被调用时相同</text>
+<text x="750.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">要使用：先保存原值，返回前恢复</text>
 <rect x="960.0" y="20.0" width="140.0" height="230.0" rx="10" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.8"/>
-<text x="1030.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">栈指针</text>
+<text x="1030.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">栈顶指针</text>
 <rect x="984.0" y="74.0" width="92.0" height="40.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
 <text x="1030.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">%rsp</text>
-<text x="1030.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">单独管理</text>
-<text x="1030.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">见运行时栈</text>
+<text x="1030.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">返回后的值</text>
+<text x="1030.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">与调用前相同</text>
 </svg>

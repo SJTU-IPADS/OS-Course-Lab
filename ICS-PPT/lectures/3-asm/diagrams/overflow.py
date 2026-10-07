@@ -15,19 +15,18 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN,
-                    INK, LINE, MONO, MUTED, ORANGE, RED, arrow, mono, rect, save,
-                    text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_ORANGE, GREEN, INK, MONO,
+                    MUTED, ORANGE, RED, arrow, mono, rect, save, text)
 
 W, H = 1120, 330
 X0, B = 100, 17                     # left edge, pixels per byte
 Y, CH = 84, 60                      # frame row: top, height
 
 # the frame, low addresses first: offset, size, name, fill, stroke
-PARTS = [(0, 16, "x[0..3]", FILL_BLUE, BLUE),
-         (16, 16, "w[0..3]", FILL_GREEN, GREEN),
-         (32, 8, "保存的 %rbx", FILL_GREY, LINE),
-         (40, 8, "返回地址", FILL_ORANGE, ORANGE)]
+PARTS = [(0, 16, "x[0..3]", FILL_ORANGE, ORANGE),
+         (16, 16, "w[0..3]", FILL_ORANGE, ORANGE),
+         (32, 8, "保存的 %rbx", FILL_GREEN, GREEN),
+         (40, 8, "返回地址", FILL_BLUE, BLUE)]
 
 # how far each run writes: count, end offset, result, tone
 RUNS = [(4, 16, "结果 70，正确", GREEN),

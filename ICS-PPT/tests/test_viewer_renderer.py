@@ -667,6 +667,29 @@ def test_render_marp_page_wraps_blocks_when_reveal():
     assert md.count('class="reveal-block"') == 2
 
 
+def _left_side_page():
+    lecture = Lecture(id="lec", title="T")
+
+    def body(p):
+        p.title("Title")
+        p.side_image("assets/x.svg", width="40%", alt="contain", side="left")
+        p.slide("beside the picture")
+    lecture.page("pg", body=body)
+    return lecture.build().children[0]
+
+
+def test_a_left_side_image_keeps_the_title_across_the_slide():
+    md = render_marp_page(_left_side_page(), reveal=True)
+    # no Marp split: it would move the title into the right column
+    assert "![bg" not in md
+    assert "<!-- _class: lk-side-left -->" in md
+    figure = '<figure class="lk-side"><img src="assets/x.svg" alt="" class="lk-side-fit"></figure>'
+    # the column comes right after the title and is not a reveal step
+    assert md.index("# Title") < md.index(figure) < md.index("beside the picture")
+    assert "section { --lk-side-width: 512px; }" in md
+    assert md.count('class="reveal-block"') == 1
+
+
 def test_reveal_wrapper_pads_with_blank_lines():
     md = render_marp_page(_reveal_page(), reveal=True)
     block = md.split('<div class="reveal-block" data-reveal="0">', 1)[1]

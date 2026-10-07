@@ -368,6 +368,17 @@ class SourceInjectionTest(unittest.TestCase):
         self.assertIn("lk-file", armed)
         self.assertNotIn("lk-file", _slides(None))
 
+    def test_the_panel_ships_its_size_controls_styled_and_wired(self):
+        # A− / A+ and the draggable left edge: each is markup source.js builds
+        # and a rule source.css gives it, so each name must be in both.
+        armed = _slides(Path("."))
+        for name in ("lk-file-zoom", "lk-file-grip"):
+            with self.subTest(name=name):
+                self.assertIn(f'class="{name}"', armed)   # built
+                self.assertIn(f".{name} {{", armed)        # styled
+        for key in ("lk-file-font", "lk-file-width"):     # and remembered
+            self.assertIn(key, armed)
+
     def test_the_file_panel_is_asked_before_the_demo_drawer(self):
         # Both controllers take Escape and an outside click in the capture
         # phase and stop them dead; the one on top has to be listening first.

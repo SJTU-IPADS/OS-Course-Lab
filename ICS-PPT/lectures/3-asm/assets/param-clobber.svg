@@ -43,9 +43,9 @@
 <text x="723.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">n</text>
 <rect x="641.0" y="272.0" width="164.0" height="54.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
 <text x="723.0" y="305.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">n</text>
-<rect x="641.0" y="338.0" width="164.0" height="54.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<rect x="641.0" y="338.0" width="164.0" height="54.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
 <text x="723.0" y="361.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">第一次结果</text>
-<text x="723.0" y="382.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">返回值</text>
+<text x="723.0" y="382.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">返回值</text>
 <text x="918.1" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">④ 进入 </text>
 <text x="972.9" y="28.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">dot_product</text>
 <text x="995.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">第二次调用：w, y, n</text>
@@ -75,7 +75,7 @@
 <path d="M 265 299.0 C 325.0 299.0, 305.0 233.0, 365 233.0" fill="none" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
 <rect x="316.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
 <text x="348.3" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">本次调用的参数</text>
-<rect x="472.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="472.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
 <text x="504.3" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">返回值</text>
 <rect x="572.3" y="421.0" width="24.0" height="16.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
 <text x="604.3" y="434.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">y 被覆盖而丢失</text>

@@ -15,8 +15,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, GREEN, INK, LINE, MUTED,
-                    ORANGE, WHITE, arrow, mono, rect, save, text, vbrace)
+from svgkit import (FILL_ORANGE, INK, LINE, MUTED, ORANGE, WHITE, arrow, mono, rect,
+                    save, text, vbrace)
 
 W, H = 560, 600
 CX, CW = 128, 200                   # cell column: left edge, width
@@ -26,7 +26,7 @@ TOP, OLD, GAP, RH = 64, 56, 60, 46  # stack top edge, old-stack, unused, int row
 def build():
     out = [text(W / 2, 30, "main 的栈帧（高地址在上）", 19, INK, "bold")]
     # the stack before main started
-    out.append(rect(CX, TOP, CW, OLD, FILL_GREY, LINE, rx=2, width=1.4))
+    out.append(rect(CX, TOP, CW, OLD, FILL_ORANGE, ORANGE, rx=2, width=1.4))
     out.append(text(CX + CW / 2, TOP + OLD / 2 + 6, "进入 main 之前的栈", 16, MUTED))
     y = TOP + OLD
     entry = y
@@ -38,8 +38,7 @@ def build():
     # one row per int, w[3] at the top, x[0] at the bottom
     for k in range(7, -1, -1):
         name, value = (f"w[{k - 4}]", k - 3) if k >= 4 else (f"x[{k}]", k + 5)
-        fill, stroke = (FILL_BLUE, BLUE) if k >= 4 else (FILL_GREEN, GREEN)
-        out.append(rect(CX, y, CW, RH, fill, stroke, rx=2, width=1.4))
+        out.append(rect(CX, y, CW, RH, FILL_ORANGE, ORANGE, rx=2, width=1.4))
         out.append(mono(CX + CW / 2, y + RH / 2 + 7, f"{name} = {value}", 19, INK, "bold",
                         anchor="middle"))
         addr = f"{4 * k}(%rsp)" if k else "(%rsp)"
@@ -52,11 +51,11 @@ def build():
                     "bold", anchor="start"))
     out.append(text(CX + CW + 30, (entry + bottom) / 2 + 22, "40 字节", 17, INK,
                     "bold", anchor="start"))
-    out.append(arrow(W - 30, entry, CX + CW + 22, entry, ORANGE, 2.2))
-    out.append(text(W - 30, entry - 10, "进入 main 时的 %rsp", 16, ORANGE, "bold",
+    out.append(arrow(W - 30, entry, CX + CW + 22, entry, LINE, 2.2, dash="5 4"))
+    out.append(text(W - 30, entry - 10, "进入 main 时的 %rsp", 16, MUTED, "bold",
                     anchor="end"))
-    out.append(arrow(W - 30, bottom, CX + CW + 22, bottom, BLUE, 2.2))
-    out.append(text(W - 30, bottom + 24, "subq 之后的 %rsp", 16, BLUE, "bold",
+    out.append(arrow(W - 30, bottom, CX + CW + 22, bottom, INK, 2.2))
+    out.append(text(W - 30, bottom + 24, "subq 之后的 %rsp", 16, INK, "bold",
                     anchor="end"))
     # direction of addresses
     out.append(arrow(24, bottom, 24, TOP + 6, MUTED, 1.8))

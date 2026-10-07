@@ -4,7 +4,9 @@
    shows is a file on disk at whatever length that file happens to be, not
    authored slide content. It takes the right-hand side rather than the bottom
    because source is read down the page: a screen's worth of lines at the size a
-   back row can read them, with the slide still visible beside it.
+   back row can read them, with the slide still visible beside it. The width
+   below is where it starts; source.js sets another once the left edge has been
+   dragged, and sets the size of the file's text (A− and A+).
 
    Injected only by the live dev server (see dev_server.inject_source), so a
    rendered bundle never carries it. */
@@ -32,6 +34,29 @@
 
 .lk-file[data-open="1"] {
   transform: translateX(0);
+}
+
+/* The left edge is a handle: drag it to set the panel's width. It lights up
+   under the pointer because an edge that can be dragged looks like any other
+   edge until it does. */
+.lk-file-grip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 7px;
+  border-left: 2px solid transparent;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.lk-file-grip:hover {
+  border-left-color: #2c4a63;
+}
+
+.lk-file-grip[data-dragging="1"] {
+  border-left-color: #8fd3ff;
 }
 
 .lk-file-head {
@@ -68,6 +93,35 @@
   color: #9fb3c2;
 }
 
+/* A− and A+: the size of the file's text. Beside ▸ on the left, for the reason
+   ▸ is there. */
+.lk-file-zooms {
+  display: flex;
+  flex: none;
+  gap: 0.3em;
+}
+
+.lk-file-zoom {
+  padding: 0.05em 0.55em;
+  border: 1px solid #263039;
+  border-radius: 5px;
+  background: #141c23;
+  color: #9fb3c2;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.lk-file-zoom:hover {
+  border-color: #3a4a57;
+  color: #dfe6ec;
+}
+
+.lk-file-zoom:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* Leads the head row; see the note in source.js. */
 .lk-file-close {
   flex: none;
@@ -101,6 +155,7 @@
      in the same column however far the body is scrolled. */
   width: max-content;
   min-width: 100%;
+  box-sizing: border-box;   /* the floor includes the padding: no stray scrollbar */
   padding-right: 0.9em;
   white-space: pre;
 }

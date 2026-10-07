@@ -8,7 +8,7 @@
 <line x1="204.0" y1="59.0" x2="232.0" y2="59.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
 <rect x="250.0" y="24.0" width="200.0" height="70.0" rx="6" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
 <text x="350.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">TLB</text>
-<text x="350.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">虚拟地址 → 物理地址</text>
+<text x="350.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址转换</text>
 <circle cx="252.0" cy="26.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
 <text x="252.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">②</text>
 <line x1="454.0" y1="59.0" x2="482.0" y2="59.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>

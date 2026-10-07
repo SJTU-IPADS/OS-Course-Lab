@@ -37,7 +37,7 @@ def cpu():
 
 def memory():
     out = [rect(900, 6, 200, 250, WHITE, BLUE, rx=10, width=1.6),
-           text(1000, 34, "虚拟内存空间", 17, INK, "bold")]
+           text(1000, 34, "内存空间", 17, INK, "bold")]
     for k, s in enumerate(["代码", "全局变量", "栈"]):
         out.append(rect(920, 50 + k * 66, 160, 56, FILL_BLUE, LINE, rx=4, width=1.2))
         out.append(text(1000, 84 + k * 66, s, 16, INK))

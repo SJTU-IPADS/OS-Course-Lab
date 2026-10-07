@@ -33,7 +33,7 @@ CARDS = [
      [("cmpl cmpq", "减法设标志"), ("testl testq", "与运算设标志"),
       ("jmp", "无条件跳转"), ("jl jle jg jge", "有符号"), ("jb jbe ja jae", "无符号"),
       ("je jne", "零值"), ("setX cmovX", "条件设置 / 传送")]),
-    ("4  过程调用与运行时安全", RED, FILL_RED,
+    ("4  函数调用与运行时安全", RED, FILL_RED,
      [("call ret", "调用与返回"), ("%fs:40", "金丝雀值"),
       ("__stack_chk_fail@PLT", "检查失败")]),
     ("5  向量计算（AVX2 扩展）", BLUE, FILL_BLUE,

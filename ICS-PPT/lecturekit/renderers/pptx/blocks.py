@@ -893,7 +893,7 @@ def _size_to_emu(value, whole: int) -> int | None:
 
 
 def _side_column(block, layout: Layout) -> tuple[int, int]:
-    """Left edge and width (EMU) of a ``side_image``'s full-height column.
+    """Left edge and width (EMU) of a ``side_image``'s column.
 
     Marp's ``bg right`` without a size takes half the slide.
     """
@@ -907,8 +907,9 @@ def side_layout(sides: list, layout: Layout) -> Layout:
     """The content box a page's ``side_image`` column leaves to the other blocks.
 
     Marp's split background narrows the whole slide to the rest of its width and
-    keeps the ordinary padding inside it, so the title and every block reflow
-    there. The first ``side_image`` sets the side and the width.
+    keeps the ordinary padding inside it, so every block reflows there; so does
+    the title when the column is on the right. The first ``side_image`` sets
+    the side and the width.
     """
     left, width = _side_column(sides[0], layout)
     return replace(
@@ -918,27 +919,29 @@ def side_layout(sides: list, layout: Layout) -> Layout:
     )
 
 
-def draw_side_images(sides: list, ctx: Ctx) -> None:
-    """Draw a page's ``side_image`` blocks into their full-height column.
+def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
+    """Draw a page's ``side_image`` blocks into their column, from ``top`` down.
 
-    Several images share the column side by side, as in Marp. ``contain`` or
-    ``fit`` in ``alt`` fits the whole picture in its cell, centred; otherwise it
-    covers the cell and is cropped to it, Marp's default for a background.
+    The column is the slide's full height on the right (``top`` 0) and starts
+    under the title on the left. Several images share it side by side, as in
+    Marp. ``contain`` or ``fit`` in ``alt`` fits the whole picture in its cell,
+    centred; otherwise it covers the cell and is cropped to it, Marp's default
+    for a background.
     """
     column, width = _side_column(sides[0], ctx.layout)
-    cell, height = width // len(sides), ctx.layout.height
+    cell, height = width // len(sides), ctx.layout.height - top
     for i, block in enumerate(sides):
         path = _resolve_image(block.content["src"], ctx)
         if path is None:
             continue
         left = column + i * cell
-        pic = ctx.slide.shapes.add_picture(str(path), left, 0)
+        pic = ctx.slide.shapes.add_picture(str(path), left, top)
         w, h = pic.width, pic.height
         if {"contain", "fit"} & set(str(block.content.get("alt") or "").split()):
             scale = min(cell / w, height / h)
             pic.width, pic.height = round(w * scale), round(h * scale)
             pic.left = left + (cell - pic.width) // 2
-            pic.top = (height - pic.height) // 2
+            pic.top = top + (height - pic.height) // 2
             continue
         scale = max(cell / w, height / h)
         crop_x = (1 - cell / (w * scale)) / 2

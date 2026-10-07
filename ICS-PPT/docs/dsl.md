@@ -752,9 +752,19 @@ side column and reflows the slide text into the other column. `side` is `"right"
 (default) or `"left"`; `width` (e.g. `"38%"`) sets the column width, defaulting
 to a half-split. `alt` carries Marp's background keywords: `alt="contain"` (or
 `"fit"`) shows the whole image inside the column, and without it the image
-covers the column and is cropped to it. The PPTX export draws the same split:
-the picture fills (or, with `contain`, fits into) a full-height column, and the
-title and the other blocks are laid out in the rest of the slide.
+covers the column and is cropped to it.
+
+The title always starts at the slide's left edge, so the two sides differ in
+what the column takes:
+
+| `side` | Image column | Title |
+| --- | --- | --- |
+| `"right"` | the slide's full height (a Marp split background) | in the text column, beside the image |
+| `"left"` | from under the title's rule to the slide's left and bottom edges | the slide's full width, above both columns |
+
+The text column has the same width on either side. The PPTX export draws the
+same two layouts: the picture fills (or, with `contain`, fits into) its column,
+and the other blocks are laid out in the rest of the slide.
 
 `p.slide(...).image_right(src, *, alt="", width_px=None, width_pct=None,
 height_px=None, height_pct=None)` floats a **small** image on the right of that
@@ -766,9 +776,8 @@ and flows under it once cleared. It chains like a footnote
 `ValidationError`.
 
 This is distinct from `side_image`: `side_image` splits the *whole slide* into
-two full-height columns (a Marp split background), whereas `image_right` is a
-single small figure beside one block of text that does not claim the full slide
-height.
+two columns, whereas `image_right` is a single small figure beside one block of
+text that does not claim the full slide height.
 
 In the PPTX export the picture keeps its place at the right edge, but the text
 does not wrap around it: PowerPoint cannot flow text around a shape, so the text
@@ -794,7 +803,7 @@ height; the optional `caption` renders below the whole row. An empty row (no
 `.image(...)`) raises a `ValidationError` at build time.
 
 This is distinct from the other image placements: `side_image` splits the whole
-slide into two full-height columns, `image_right` floats one small image beside
+slide into two columns, `image_right` floats one small image beside
 a single text block, and `row` is a self-contained band of N images with no
 slide text flowing around them.
 
@@ -853,8 +862,8 @@ invisible rather than dropping them), so the figure and the text above it sit
 at identical positions on every frame — the punchline appears in place instead
 of pushing the layout around. In PPTX, where slides share no geometry, held
 blocks are simply omitted from the earlier frames' slides. A `side_image` is
-the one exception: it is a Marp split background claiming the whole slide, so
-it stays visible on every frame wherever it is written.
+the one exception: its column sets the width of every other block, so it stays
+visible on every frame wherever it is written.
 
 A page carries **at most one** `frames` block (one page, one animation); a
 second is a `ValidationError`, as is an empty list or a blank source. Frame

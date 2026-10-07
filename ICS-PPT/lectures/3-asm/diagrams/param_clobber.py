@@ -15,9 +15,9 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_RED, FONT, GREEN,
-                    INK, LINE, MONO, MUTED, ORANGE, RED, WHITE, arrow, label_line,
-                    mono, path, rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, FILL_RED, FONT, INK,
+                    LINE, MONO, MUTED, ORANGE, RED, WHITE, arrow, label_line, mono,
+                    path, rect, save, text)
 from svgkit import _advance
 
 W, H = 1120, 452
@@ -29,7 +29,7 @@ REGS = ["%rdi", "%rsi", "%rdx", "%rcx", "%rax"]
 
 # cell kinds: (fill, stroke, dash, value tone, note tone)
 KIND = {"arg": (FILL_BLUE, BLUE, None, INK, INK),
-        "ret": (FILL_GREEN, GREEN, None, INK, GREEN),
+        "ret": (FILL_ORANGE, ORANGE, None, INK, ORANGE),
         "lost": (FILL_RED, RED, None, RED, RED),
         "other": (FILL_GREY, LINE, None, MUTED, MUTED),
         "empty": (WHITE, LINE, "5 4", MUTED, MUTED)}

@@ -13,9 +13,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN,
-                    INK, LINE, MUTED, ORANGE, RED, arrow, line, mono, rect,
-                    save, text, vbrace)
+from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, GREEN, INK, LINE, MUTED, ORANGE,
+                    WHITE, arrow, line, mono, rect, save, text, vbrace)
 
 W, H = 1120, 400
 SH = 34
@@ -45,18 +44,20 @@ def column(x0, title, regs, shadow, saved):
     sx = x0 + 150
     out.append(text(sx + SW / 2, 114, "进入被调用函数时的栈顶", 15, INK, "bold"))
     y = 128
-    out += slot(sx, y, "调用者的栈数据", "", FILL_GREY, LINE, color=MUTED)
+    out += slot(sx, y, "调用者的栈数据", "", FILL_ORANGE, ORANGE, color=MUTED)
     y += SH
     if shadow:
         top = y
+        # reserved by the caller, written by nobody yet: drawn as unused space
         for k, r in enumerate(["%r9", "%r8", "%rdx", "%rcx"]):
-            out += slot(sx, y, f"{r} 的归属槽", f"{32 - 8 * k}(%rsp)", FILL_GREEN, GREEN)
+            out += slot(sx, y, f"{r} 的归属槽", f"{32 - 8 * k}(%rsp)", WHITE, LINE,
+                        dash="5 4", color=MUTED)
             y += SH
-        out += vbrace(sx - 10, top + 2, y - 2, GREEN, "影子空间 32 字节", 15, right=False)
-    out += slot(sx, y, "返回地址", "0(%rsp)", FILL_ORANGE, ORANGE)
+        out += vbrace(sx - 10, top + 2, y - 2, MUTED, "影子空间 32 字节", 15, right=False)
+    out += slot(sx, y, "返回地址", "0(%rsp)", FILL_BLUE, BLUE)
     ry = y + SH                     # %rsp is the low edge of the return address
-    out.append(arrow(sx + SW + 60, ry, sx + SW + 6, ry, BLUE, 2.4))
-    out.append(mono(sx + SW + 66, ry + 6, "%rsp", 16, BLUE, "bold"))
+    out.append(arrow(sx + SW + 60, ry, sx + SW + 6, ry, INK, 2.4))
+    out.append(mono(sx + SW + 66, ry + 6, "%rsp", 16, INK, "bold"))
     who, color = saved
     out.append(mono(x0 + 250, 382, "%rsi, %rdi", 16, INK, "bold", anchor="end"))
     out.append(text(x0 + 258, 382, "：" + who, 16, color, "bold", anchor="start"))
@@ -65,9 +66,9 @@ def column(x0, title, regs, shadow, saved):
 
 def build():
     out = column(20, "Linux（System V）", ["%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"],
-                 False, ("调用者保存", ORANGE))
+                 False, ("调用者保存", BLUE))
     out += column(590, "Windows（MS x64）", ["%rcx", "%rdx", "%r8", "%r9"],
-                  True, ("被调用者保存", RED))
+                  True, ("被调用者保存", GREEN))
     out.append(line(575, 16, 575, 390, LINE, 1))
     return out
 

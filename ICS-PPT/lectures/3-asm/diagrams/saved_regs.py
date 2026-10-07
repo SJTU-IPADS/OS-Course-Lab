@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """The sixteen general registers split by who has to preserve them.
 
-Nine caller-saved, six callee-saved; %rsp is the stack pointer and belongs to
-neither group.
+Nine caller-saved, six callee-saved; %rsp is the stack pointer, back at its
+value from before the call once the callee has returned.
 Run it to refresh ../assets/saved-regs.svg.
 """
 
@@ -39,13 +39,13 @@ def build():
     out = group(20, 520, "调用者保存（Caller-saved）× 9", CALLER, 5, BLUE, FILL_BLUE,
                 ["被调用者可以直接改写", "调用后还要用：调用者在调用前保存"])
     out += group(560, 380, "被调用者保存（Callee-saved）× 6", CALLEE, 3, GREEN,
-                 FILL_GREEN, ["调用前后值必须相同", "要使用：入口保存、退出前恢复"])
+                 FILL_GREEN, ["返回时的值与被调用时相同", "要使用：先保存原值，返回前恢复"])
     out.append(rect(960, 20, 140, 230, FILL_GREY, MUTED, rx=10, width=1.8))
-    out.append(text(1030, 54, "栈指针", 19, INK, "bold"))
+    out.append(text(1030, 54, "栈顶指针", 19, INK, "bold"))
     out.append(rect(984, 74, 92, 40, WHITE, MUTED, rx=4, width=1.4))
     out.append(mono(1030, 101, "%rsp", 18, INK, "bold", anchor="middle"))
-    out.append(text(1030, 198, "单独管理", 16, INK, "bold"))
-    out.append(text(1030, 226, "见运行时栈", 16, MUTED))
+    out.append(text(1030, 198, "返回后的值", 16, INK, "bold"))
+    out.append(text(1030, 226, "与调用前相同", 16, INK, "bold"))
     return out
 
 

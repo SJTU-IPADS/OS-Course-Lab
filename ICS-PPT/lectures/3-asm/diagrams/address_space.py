@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A process's virtual address space, high addresses at the top.
+"""A process's address space, high addresses at the top.
 
 The stack sits at the high end and grows toward lower addresses; %rsp marks
 its top. Code and data sit at the low end, the heap above them, growing toward
@@ -29,7 +29,7 @@ TOP = 60
 
 
 def build():
-    out = [text(W / 2, 30, "虚拟地址空间（高地址在上）", 19, INK, "bold")]
+    out = [text(W / 2, 30, "地址空间（高地址在上）", 19, INK, "bold")]
     y = TOP
     edges = []
     for name, sub, h, fill, stroke in SEGS:

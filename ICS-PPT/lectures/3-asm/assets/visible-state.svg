@@ -49,7 +49,7 @@
 <rect x="645.0" y="200.0" width="105.0" height="42.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
 <text x="697.0" y="227.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">%r15</text>
 <rect x="900.0" y="6.0" width="200.0" height="250.0" rx="10" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
-<text x="1000.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">虚拟内存空间</text>
+<text x="1000.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">内存空间</text>
 <rect x="920.0" y="50.0" width="160.0" height="56.0" rx="4" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1.2"/>
 <text x="1000.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">代码</text>
 <rect x="920.0" y="116.0" width="160.0" height="56.0" rx="4" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1.2"/>

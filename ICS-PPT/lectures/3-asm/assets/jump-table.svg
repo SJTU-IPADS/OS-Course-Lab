@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 262" width="1120" height="262">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="24.0" y="27.3" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">calc:</text>
+<text x="24.0" y="51.3" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        cmpl    $5, %edi</text>
+<text x="24.0" y="75.3" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        ja      .L10</text>
+<text x="24.0" y="99.3" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        movl    %edi, %edi</text>
+<rect x="18.0" y="108.0" width="277.0" height="22.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="24.0" y="123.3" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">        jmp     *.L4(,%rdi,8)</text>
+<rect x="400.0" y="44.0" width="140.0" height="27.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="410.0" y="62.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">0</text>
+<text x="478.0" y="62.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">.L9</text>
+<rect x="400.0" y="74.0" width="140.0" height="27.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="410.0" y="92.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">1</text>
+<text x="478.0" y="92.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">.L8</text>
+<rect x="400.0" y="104.0" width="140.0" height="27.0" rx="2" fill="#eaf3f7" stroke="#e97132" stroke-width="2.4"/>
+<text x="410.0" y="122.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">2</text>
+<text x="478.0" y="122.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">.L7</text>
+<rect x="400.0" y="134.0" width="140.0" height="27.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="410.0" y="152.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">3</text>
+<text x="478.0" y="152.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">.L6</text>
+<rect x="400.0" y="164.0" width="140.0" height="27.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="410.0" y="182.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">4</text>
+<text x="478.0" y="182.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">.L5</text>
+<rect x="400.0" y="194.0" width="140.0" height="27.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="410.0" y="212.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">5</text>
+<text x="478.0" y="212.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">.L3</text>
+<text x="470.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">跳转表 .L4：每项 8 字节，一个目标地址</text>
+<rect x="740.0" y="44.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="750.0" y="62.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L9</text>
+<text x="788.0" y="62.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">case 0: return a + b;</text>
+<rect x="740.0" y="74.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="750.0" y="92.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L8</text>
+<text x="788.0" y="92.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">case 1: return a - b;</text>
+<rect x="740.0" y="104.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#e97132" stroke-width="2.4"/>
+<text x="750.0" y="122.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L7</text>
+<text x="788.0" y="122.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">case 2: return a * b;</text>
+<rect x="740.0" y="134.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="750.0" y="152.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L6</text>
+<text x="788.0" y="152.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">case 3: return a &amp; b;</text>
+<rect x="740.0" y="164.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="750.0" y="182.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L5</text>
+<text x="788.0" y="182.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">case 4: return a | b;</text>
+<rect x="740.0" y="194.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="750.0" y="212.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L3</text>
+<text x="788.0" y="212.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">case 5: return a ^ b;</text>
+<rect x="740.0" y="8.0" width="310.0" height="27.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="750.0" y="26.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">.L10</text>
+<text x="788.0" y="26.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">return 0;</text>
+<line x1="544.0" y1="57.5" x2="734.0" y2="57.5" stroke="#9fb5c3" stroke-width="1.2" marker-end="url(#ah-9fb5c3)"/>
+<line x1="544.0" y1="87.5" x2="734.0" y2="87.5" stroke="#9fb5c3" stroke-width="1.2" marker-end="url(#ah-9fb5c3)"/>
+<line x1="544.0" y1="147.5" x2="734.0" y2="147.5" stroke="#9fb5c3" stroke-width="1.2" marker-end="url(#ah-9fb5c3)"/>
+<line x1="544.0" y1="177.5" x2="734.0" y2="177.5" stroke="#9fb5c3" stroke-width="1.2" marker-end="url(#ah-9fb5c3)"/>
+<line x1="544.0" y1="207.5" x2="734.0" y2="207.5" stroke="#9fb5c3" stroke-width="1.2" marker-end="url(#ah-9fb5c3)"/>
+<line x1="308.0" y1="118.0" x2="394.0" y2="118.0" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="352.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">.L4 + 8 × op</text>
+<line x1="544.0" y1="117.5" x2="734.0" y2="117.5" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="640.0" y="108.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">读出 .L7 的地址，写入 %rip</text>
+<path d="M 308.0 70.0 L 332.0 70.0 L 332.0 22.0 L 734.0 22.0" fill="none" stroke="#5a6b78" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-5a6b78)"/>
+<text x="536.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">op 作为无符号数大于 5：跳到 .L10</text>
+</svg>

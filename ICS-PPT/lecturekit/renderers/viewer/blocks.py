@@ -211,6 +211,9 @@ def _side_image(block):
     image = block.content
     src = image["src"]
     side = image.get("side") or "right"
+    if side == "left":
+        # Drawn once per page by `side_column`, under the full-width title.
+        return []
     width = image.get("width")
     alt = image.get("alt") or ""
     directive = f"bg {side}"
@@ -219,6 +222,58 @@ def _side_image(block):
     if alt:
         directive += f" {alt}"
     return [f"![{directive}]({src})", ""]
+
+
+# Marp's background keywords that ask for the whole image, uncropped.
+_SIDE_FIT = frozenset({"contain", "fit"})
+_SIDE_KEYWORDS = _SIDE_FIT | {"cover"}
+
+
+def side_width_px(width, slide_width: int) -> int:
+    """A ``side_image`` column's width in pixels on a slide ``slide_width`` wide.
+
+    ``width`` is a percentage of the slide (``"40%"``), a pixel count
+    (``"480px"`` or a bare number), or ``None`` for Marp's half split.
+    """
+    if isinstance(width, (int, float)):
+        return round(width)
+    text = str(width or "50%").strip()
+    try:
+        if text.endswith("%"):
+            return round(slide_width * float(text[:-1]) / 100)
+        return round(float(text.removesuffix("px")))
+    except ValueError:
+        return slide_width // 2
+
+
+def side_column(sides: list, slide_width: int) -> list[str]:
+    """The image column of a page whose ``side_image`` blocks sit on the left.
+
+    Marp's split background moves the whole slide into the other column, the
+    title with it; on the left that takes the title away from the slide's left
+    edge. So a left column is drawn by the theme instead
+    (``section.lk-side-left``): the title keeps the slide's width, and the
+    images share one column that starts under it. The scoped style hands the
+    theme that column's width, set by the first image.
+    """
+    width = side_width_px(sides[0].content.get("width"), slide_width)
+    images = []
+    for block in sides:
+        words = str(block.content.get("alt") or "").split()
+        fit = ' class="lk-side-fit"' if _SIDE_FIT & set(words) else ""
+        alt = " ".join(word for word in words if word not in _SIDE_KEYWORDS)
+        images.append(
+            f'<img src="{escape_html(block.content["src"])}" '
+            f'alt="{escape_html(alt)}"{fit}>'
+        )
+    return [
+        f'<figure class="lk-side">{"".join(images)}</figure>',
+        "",
+        "<style scoped>",
+        f"section {{ --lk-side-width: {width}px; }}",
+        "</style>",
+        "",
+    ]
 
 
 def _aside(block):

@@ -36,7 +36,7 @@ def problem(p):
     }
     return sum;
 }""")
-    p.notes('以 ollama 的推理过程提出全节要回答的问题：程序如何在由晶体管构成的 CPU 上执行；并给出全节核心主线程序 dot_product。')
+    p.notes('以 ollama 的推理过程提出全节要回答的问题：程序如何在由晶体管构成的 CPU 上执行；并给出全节围绕的核心函数 dot_product。')
 
 
 def system_view_fig(p):
@@ -49,7 +49,7 @@ def compile_mapping(p):
     p.title('编译：从 C 源码到二进制机器指令')
     p.gap(4)
     slide(p, r"""
-**本节主线算子**：
+**本节的核心函数**：
 - 大模型计算的数学算子：向量内积 `dot_product`，这段代码如何才能被 CPU 执行？
 
 **同一段代码的三种表示**：
@@ -147,7 +147,7 @@ def single_mac(p):
 - 数据如何从内存送到 ALU 完成算术运算？
 """)
     p.notes("""
-第一部分主线引入。
+第一部分的引入。
 先忽略循环与函数外壳，聚焦最核心的单次乘加操作。
 """)
 
@@ -363,130 +363,85 @@ def extension_example(p):
     slide(p, r"""
 **第二讲的规则**：窄于 `int` 的操作数先提升为 `int`，再做比较。
 """)
-    p.demo('编译 equal.c',
-           """cd examples
-gcc -Og -fcf-protection=none -S equal.c -o - | sed -f asm.sed""",
-           output="""equal:
-	movsbl	%dil, %edi
-	movzbl	%sil, %esi
+    slide(p, r"""
+**`gcc -Og` 编译得到的汇编**：
+""")
+    p.code('assembly', """equal:
+	movsbl	%dil, %edi      # a: signed char -> int, sign extension
+	movzbl	%sil, %esi      # b: unsigned char -> int, zero extension
 	cmpl	%esi, %edi
 	sete	%al
 	movzbl	%al, %eax
-	ret""",
-           bold=[2, 3],
-           files=['examples/equal.c', 'examples/asm.sed'])
+	ret""")
     slide(p, r"""
 **编译器选择的指令**：两次提升各由一条扩展传送指令完成，补符号位还是补 0 由原类型决定。
 - `a` 的类型是 `signed char`，编译器选用符号扩展指令 `movsbl`；
-- `b` 的类型是 `unsigned char`，编译器选用零扩展指令 `movzbl`。
+- `b` 的类型是 `unsigned char`，编译器选用零扩展指令 `movzbl`；
+- 两个参数的字节都是 `0xF0` 时，`%edi` 为 $-16$，`%esi` 为 $240$，比较结果为不相等。
 """)
     p.notes("""
 第二讲「混合比较：宽度不同的操作数进行比较」一页给出这条规则：先把窄于 `int` 的类型提升为 `int`，补 0 还是补符号位由原类型决定。两个操作数提升后都是 `int`，比较按 `int` 进行。
+清单由 cd examples; gcc -Og -fcf-protection=none -S equal.c -o - | sed -f asm.sed 得到，注释为讲解所加。
 `%dil` 保存参数 `a`，`%sil` 保存参数 `b`，`%eax` 保存返回值，对应规则在第三部分详细讲。
 后三条指令比较两个 32 位值并产生返回值，在第二部分详细讲。
 """)
 
 
-def extension_example_2(p):
-    p.title('扩展传送实例：比较 signed char 与 unsigned char')
-    slide(p, r"""
-**指令执行**：`%dil` 保存 `a`，`%sil` 保存 `b`，两个参数的字节都是 `0xF0`：
-""")
-    p.table([
-        ['`movsbl %dil, %edi`', '`%dil = 0xF0`', '`%edi = 0xFFFFFFF0`，即 $-16$'],
-        ['`movzbl %sil, %esi`', '`%sil = 0xF0`', '`%esi = 0x000000F0`，即 $240$'],
-        ['`cmpl %esi, %edi`', '$-16$ 与 $240$', '两个值不相等，返回 0'],
-    ], headers=['指令', '执行前', '执行后'])
-    p.demo('运行 equal',
-           """cd examples
-gcc -Og -fcf-protection=none equal.c equal_main.c -o equal && ./equal""",
-           output="""a = -16 (byte 0xf0), b = 240 (byte 0xf0), a == b: 0""",
-           files=['examples/equal_main.c'])
-    slide(p, r"""
-**结论**：两个参数的字节相同，比较结果是不相等。类型的区别由编译器转化为 `movsbl` 与 `movzbl` 两条指令，CPU 按指令逐条执行。
-""")
-    p.notes("""
-`movsbl` 复制最高位：`0xF0` 的最高位是 1，高 24 位填 1。`movzbl` 的高 24 位填 0。
-`cmpl` 之后的 `sete` 与 `movzbl` 将返回值 `%eax` 置为 0，在第二部分详细讲。
-""")
-
-
 def int_arith(p):
-    p.title('整数算术：imull 与 addl 指令的执行')
+    p.title('整数乘法指令：imull')
     slide(p, r"""
-**乘法指令：`imull`**：
-- 格式：`imull (%rdi), %eax` 或 `imull %ecx, %eax`
-- 语义：`%eax` $\leftarrow$ `%eax` $\times$ 源操作数
-- 硬件执行：乘法器流水线计算两数乘积，乘积只保留低 32 位写入 `%eax`；根据前面介绍的位宽规则，写入 `%eax` 会将 `%rax` 的高 32 位自动清零。
+**二操作数格式 `imull S, D`**（单次乘加中的 `imull (%rdi), %eax`）：
+- 语义：$D \leftarrow D \times S$；$S$ 可以是寄存器、内存操作数或立即数，$D$ 只能是寄存器；
+- 乘积只保留低 32 位写入 $D$。有符号与无符号乘法的低 32 位相同，`int` 与 `unsigned` 的乘法因此都编译为 `imull`；
 
-**加法指令：`addl`**：
-- 格式：`addl %ecx, %eax`
-- 语义：`%eax` $\leftarrow$ `%eax` $+$ `%ecx`
-- 硬件执行：ALU 内部全加器执行 32 位二进制加法，结果写回寄存器。
+**三操作数格式 `imull $k, S, D`**：$D \leftarrow S \times k$，$k$ 是立即数，源与目的可以是不同的寄存器。
+
+**单操作数格式 `imull S`**：$\%edx\!:\!\%eax \leftarrow \%eax \times S$，保留完整的 64 位乘积，高 32 位在 `%edx`，低 32 位在 `%eax`；无符号版本是 `mull S`。
+
+**后缀与位宽**：`imulw` / `imull` / `imulq` 分别做 16、32、64 位乘法；写入 32 位寄存器时 `%rax` 等的高 32 位清零。
 """)
     figure(p, "int-alu", 1120)
-    p.notes('整数乘法与加法指令在 ALU 中的执行。')
-
-
-def shift_ops(p):
-    p.title('一元、二元与移位运算指令')
-    slide(p, r"""
-**一元与二元运算指令**：
-- **一元运算**：`incl D`（自增 1），`decl D`（自减 1），`negl D`（取相反数 $D \leftarrow -D$），`notl D`（按位取反）；
-- **二元运算**：`addl S, D`，`subl S, D`（减法 $D \leftarrow D - S$），`andl S, D`，`orl S, D`，`xorl S, D`。
-
-**移位操作指令**：
-- **左移指令**：`sall` / `shll`（左移，低位补 0，二者等价）；
-- **算术右移**：`sarl`（右移时复制最高符号位，保持有符号负数语义）；
-- **逻辑右移**：`shrl`（右移时高位严格补 0，用于无符号数除以 $2^k$）。
-""")
-    p.notes('x86-64 体系中除加减法外的通用整数算术、按位逻辑与移位指令集全览。')
-
-
-def shift_example(p):
-    p.title('移位实例：int 与 unsigned 的右移')
-    p.code('c', """int      sar4(int x)      { return x >> 4; }
-unsigned shr4(unsigned x) { return x >> 4; }""")
-    p.demo('编译 shift.c',
-           """cd examples
-gcc -Og -fcf-protection=none -S shift.c -o - | sed -f asm.sed | pr -2 -e -l 4""",
-           output="""sar4:                              	shr4:
-        movl    %edi, %eax         	        movl    %edi, %eax
-        sarl    $4, %eax           	        shrl    $4, %eax
-        ret                        	        ret""",
-           bold=[3],
-           files=['examples/shift.c', 'examples/asm.sed'])
-    slide(p, r"""
-**编译器选择的指令**：两个函数的 C 表达式相同，都先把 `x` 复制到 `%eax`，再右移 4 位。
-- `x` 的类型是 `int`，编译器选用算术右移指令 `sarl`；
-- `x` 的类型是 `unsigned`，编译器选用逻辑右移指令 `shrl`。
-""")
     p.notes("""
-`pr -2 -e -l 4` 把输出排成两栏，每栏 4 行，`-e` 把制表符展开为空格：左栏是 `sar4`，右栏是 `shr4`。
-`%edi` 保存参数 `x`，`%eax` 保存返回值，对应规则在第三部分详细讲。
-C23 之前的 C 标准规定有符号负数右移的结果由实现定义，gcc 采用算术右移。
+图中是 imull 在 ALU 中的执行：D 与 S 进入乘法器，得到 64 位乘积，两半的去向由格式决定。二操作数与三操作数格式只把低 32 位写回 D，高 32 位丢弃，与 C 语言 int 乘法的截断一致；单操作数格式把高 32 位写入 %edx、低 32 位写入 %eax，C 代码中 (long)a * b 这类表达式会用到。
+三操作数格式 imull $k, S, D 是 x86-64 少有的目的操作数可以与源不同的算术指令。
 """)
 
 
-def shift_example_2(p):
-    p.title('移位实例：int 与 unsigned 的右移')
+def int_arith_2(p):
+    p.title('整数加法指令：addl')
     slide(p, r"""
-**指令执行**：两个函数的参数都是位模式 `0xFFFFFFF0`，`movl` 把它复制到 `%eax`：
+**格式 `addl S, D`**：
+- 语义：$D \leftarrow D + S$；$S$ 可以是立即数、寄存器或内存操作数，$D$ 可以是寄存器或内存操作数，二者不能同时是内存操作数；
+- 32 位二进制加法，结果写回 $D$，超出 32 位的进位丢弃；
+- 有符号与无符号加法的位运算相同。
+
+**三种写法示例**：
+- `addl %edx, %eax`：寄存器加寄存器，单次乘加中累加 `sum`；
+- `addl $1, %eax`：加立即数，`i++` 编译为这一条指令；
+- `addl %eax, (%rdi)`：目的是内存操作数，读出 `*w`、相加、写回，一条指令完成 `*w += t`。
+""")
+    p.notes('加法指令的格式、位宽与标志位。上一页的 ALU 示意图同样适用于 addl：操作数进入加法器，和写回寄存器，标志位写入 RFLAGS。')
+
+
+def insn_table(p):
+    p.title('其他算术与逻辑指令')
+    slide(p, r"""
+**指令一览**（`w` / `l` / `q` 为 16 / 32 / 64 位版本；操作数规则与 `imull`、`addl` 相同）：
 """)
     p.table([
-        ['`sarl $4, %eax`', '`0xFFFFFFF0`，即 $-16$', '`0xFFFFFFFF`，即 $-1$'],
-        ['`shrl $4, %eax`', '`0xFFFFFFF0`，即 $4294967280$', '`0x0FFFFFFF`，即 $268435455$'],
-    ], headers=['指令', '执行前的 `%eax`', '执行后的 `%eax`'])
-    p.demo('运行 shift',
-           """cd examples
-gcc -Og -fcf-protection=none shift.c shift_main.c -o shift && ./shift""",
-           output="""sar4(0xfffffff0) = 0xffffffff = -1
-shr4(0xfffffff0) = 0x0fffffff = 268435455""",
-           files=['examples/shift_main.c'])
-    slide(p, r"""
-**结论**：位模式相同，C 表达式相同，结果不同。类型的区别由编译器转化为 `sarl` 与 `shrl` 两条指令：`sarl` 在高 4 位填符号位，`shrl` 在高 4 位填 0。
+        ['`leaq S, D`', '$D \\leftarrow \\&S$', '计算地址，不访问内存'],
+        ['`incl`、`decl`、`negl`、`notl D`', '$D \\leftarrow D \\pm 1$、$-D$、$\\sim D$', '一元运算'],
+        ['`addl`、`subl S, D`', '$D \\leftarrow D + S$、$D - S$', '加、减'],
+        ['`imull S, D`', '$D \\leftarrow D \\times S$', '乘，保留低 32 位'],
+        ['`andl`、`orl`、`xorl S, D`', '$D \\leftarrow D \\,\\&\\, S$、$D \\mid S$、$D \\oplus S$', '按位与、或、异或'],
+        ['`sall`、`sarl`、`shrl k, D`', '$D \\leftarrow D \\ll k$、$D \\gg k$', '左移补 0；算术右移补符号位，逻辑右移补 0'],
+        ['`imull`、`mull S`；`cltd`；`idivl`、`divl S`', '$\\%edx\\!:\\!\\%eax \\leftarrow \\%eax \\times S$；$\\%eax \\leftarrow$ 商，$\\%edx \\leftarrow$ 余数', '完整 64 位乘积；除法前 `cltd` 把 `%eax` 符号扩展到 `%edx`'],
+    ], headers=['指令', '效果', '说明'], widths=[3.6, 3.2, 3.2])
+    p.notes("""
+一元指令只有一个操作数，二元指令的目的操作数同时是一个源。移位量 k 是立即数或 %cl 寄存器。
+sarl 与 shrl 的区别对应 C 语言中 int 与 unsigned 的右移：int 右移补符号位（除以 2^k 向下取整），unsigned 右移补 0。
+除法只有单操作数格式，被除数固定在 %edx:%eax 中；cltd 把 %eax 符号扩展到 %edx，64 位版本是 cqto 与 idivq。
 """)
-    p.notes('两个结果分别等于该类型下 x 除以 16 的商：-16 除以 16 等于 -1，4294967280 除以 16 等于 268435455。')
 
 
 def xor_strength(p):
@@ -514,66 +469,58 @@ def xor_strength_2(p):
     figure(p, "xor-lea", 1120)
 
 
-def lea_mul_example(p):
-    p.title('整数乘法优化实例：x * 5 与 x * 12')
-    p.code('c', """int times5(int x)  { return x * 5; }
-int times12(int x) { return x * 12; }""")
-    p.demo('编译 times.c',
-           """cd examples
-gcc -Og -fcf-protection=none -S times.c -o - | sed -f asm.sed""",
-           output="""times5:
-	leal	(%rdi,%rdi,4), %eax
-	ret
-times12:
-	leal	(%rdi,%rdi,2), %eax
-	sall	$2, %eax
-	ret""",
-           bold=[2, 5, 6],
-           files=['examples/times.c', 'examples/asm.sed'])
-    slide(p, r"""
-**编译器选择的指令**：两个函数的编译结果中都没有 `imull`。
-- `x * 5`：一条 `leal` 计算 $x + x \times 4$；
-- `x * 12`：`leal` 计算 $x + x \times 2$，`sall $2` 再乘以 $2^2$。
-""")
-    p.notes('`%rdi` 保存参数 `x`，`%eax` 保存返回值，对应规则在第三部分详细讲。')
-
-
-def lea_mul_example_2(p):
-    p.title('整数乘法优化实例：x * 5 与 x * 12')
-    slide(p, r"""
-**指令执行**：两个函数的参数都是 7，即 `%rdi = 7`：
-""")
-    p.table([
-        ['`times5`', '`leal (%rdi,%rdi,4), %eax`', '`%rdi = 7`', '`%eax = 35`，即 $7 + 7 \\times 4$'],
-        ['`times12`', '`leal (%rdi,%rdi,2), %eax`', '`%rdi = 7`', '`%eax = 21`，即 $7 + 7 \\times 2$'],
-        ['`times12`', '`sall $2, %eax`', '`%eax = 21`', '`%eax = 84`，即 $21 \\times 2^2$'],
-    ], headers=['函数', '指令', '执行前', '执行后'])
-    p.demo('运行 times',
-           """cd examples
-gcc -Og -fcf-protection=none times.c times_main.c -o times && ./times""",
-           output="""times5(7) = 35, times12(7) = 84""",
-           files=['examples/times_main.c'])
-    slide(p, r"""
-**结论**：C 代码写的是乘法，编译器选用地址计算指令与移位指令。CPU 执行这两类指令，得到的结果与乘法相同。
-""")
-
-
 def insn_bytes(p):
-    p.title('指令编码：指令的字节由操作码与操作数字段组成')
+    p.title('指令编码：指令的字节由"操作码"与"操作数"组成')
     slide(p, r"""
 **指令的字节表示**：一条机器指令是内存中一段连续的字节，由操作码与操作数字段组成。
 """)
     figure(p, "insn-bytes", 1120)
     slide(p, r"""
-**结论**：指令的开头是操作码。CPU 由操作码识别这是哪一条指令，并据此读取其后长度可变的操作数字段。
+x86-64 指令的开头一般是操作码。CPU 由操作码识别这是哪一条指令，并据此读取其后长度可变的操作数字段。
 """)
     p.notes("""
-x86-64 的前三条指令，字段的边界与字节的边界重合：`ret` 只有操作码；`movl $0, %eax` 的操作码 `b8` 含寄存器编号，其后是 4 字节立即数；`xorl %eax, %eax` 的第二个字节描述两个寄存器操作数。
-`c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。x86-64 把 4 位编号的低 3 位放在这个字节中，最高位放在前缀字节中（第四条的 `48`）；前三条指令没有前缀字节，编号的最高位是 0。
-x86-64 的操作码之前可以有前缀字节，第四条的 `48` 就是前缀；Y86-64 的指令都以操作码开头。
-第四条 `movq 8(%rdi), %rcx` 从地址 `%rdi + 8` 读取 8 字节到 `%rcx`，编码是 `48 8b 4f 08`：`4f` 的二进制是 `01 001 111`，三段依次表示 1 字节偏移、`%rcx`、`%rdi`。完整的编码规则见 Intel 手册第 2 卷第 2 章。
-Y86-64 是教材 CS:APP 第 4 章为教学设计的指令集，指令的功能与 x86-64 相近，编码规则更简单：第 1 字节是操作码，第 2 字节的两个十六进制位是两个寄存器编号，其后是 8 字节常数。`mrmovq 8(%rdi), %rcx` 与第四条是同一操作。寄存器编号与 x86-64 相同：`%rax` 为 0，`%rcx` 为 1，`%rdi` 为 7。
-x86-64 的字节可用 `echo 'ret; movl $0, %eax; xorl %eax, %eax; movq 8(%rdi), %rcx' | gcc -c -x assembler - -o t.o && objdump -d t.o` 得到。
+x86-64 的三条指令，字段的边界与字节的边界重合：`ret` 只有操作码；`movl $0, %eax` 的操作码 `b8` 含寄存器编号，其后是 4 字节立即数；`xorl %eax, %eax` 的第二个字节描述两个寄存器操作数。
+`c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。带内存操作数的指令把寄存器编号与寻址方式合并编码在操作数字节中，规则见 Intel 手册第 2 卷第 2 章，本讲不展开。
+Y86-64 是教材 CS:APP 第 4 章为教学设计的指令集，指令的功能与 x86-64 相近，编码规则更简单：第 1 字节是操作码，第 2 字节的两个十六进制位是两个寄存器编号（F 表示没有寄存器），其后是 8 字节常数。`irmovq $0, %rax` 与 `movl $0, %eax` 是同一操作：把常数 0 写入寄存器 `%rax`。Y86-64 只有 64 位运算，常数占 8 字节，所以整条指令 10 字节，x86-64 的 5 字节编码更紧凑。寄存器编号与 x86-64 相同：`%rax` 为 0。
+x86-64 的字节可用 `echo 'ret; movl $0, %eax; xorl %eax, %eax' | gcc -c -x assembler - -o t.o && objdump -d t.o` 得到。
+""")
+
+
+def recap_part1(p):
+    p.title('前情回顾：一行 C 代码如何运行在 CPU 上')
+    p.code('c', """int a = 1, b = 6, y;   // 全局变量
+
+void add(void) {
+    y = a + b;
+}""")
+    p.demo('编译并反汇编',
+           """cd examples
+gcc -O0 -fomit-frame-pointer -fcf-protection=none -no-pie add.c -o add
+objdump -d add | sed -n '/<add>:/,/ret/p'""",
+           output="""0000000000401106 <add>:
+  401106:	8b 15 1c 2f 00 00    	mov    0x2f1c(%rip),%edx        # 404028 <a>
+  40110c:	8b 05 1a 2f 00 00    	mov    0x2f1a(%rip),%eax        # 40402c <b>
+  401112:	01 d0                	add    %edx,%eax
+  401114:	89 05 1a 2f 00 00    	mov    %eax,0x2f1a(%rip)        # 404034 <y>
+  40111a:	90                   	nop
+  40111b:	c3                   	ret""",
+           bold=[2, 3, 4, 5],
+           files=['examples/add.c'])
+    p.notes("""
+第一部分的小结。先只看代码与反汇编：y = a + b 变成两条 movl 读 a、b，一条 addl 相加，一条 movl 写回 y；nop 是 -O0 留下的空操作，ret 返回 main。
+objdump 每行三栏：指令的内存地址、机器码字节、汇编助记符；行尾的 # 404028 <a> 是 objdump 算出的 a(%rip) 实际地址。
+编译选项：-O0 让两次读取与加法分开成三条指令；-fomit-frame-pointer 去掉 push/pop %rbp（第三部分再讲栈帧）；-no-pie 让文件中的地址就是装入内存后的地址；-fcf-protection=none 去掉 endbr64。
+下一页用示意图把可执行文件、内存与 CPU 串起来。
+""")
+
+
+def recap_part1_fig(p):
+    p.title('前情回顾：一行 C 代码如何运行在 CPU 上')
+    figure(p, "recap-part1", 1120)
+    p.notes("""
+串起已经讲过的三个重点：编译得到可执行文件（代码段与数据段）；装入内存后指令与数据都是带地址的字节（整数的小端补码编码、指令的机器码编码）；CPU 以 PC 取指、把 a 与 b 读入寄存器、在 ALU 中相加、再写回 y。
+图中 CPU 的快照取在 addl 执行时：a、b 已读入 %edx、%eax，y 尚未写回。地址、机器码与上一页 objdump 的输出一致；a(%rip) 的位移量 0x2f1c = 0x404028 − 0x40110c，即目标地址减去下一条指令的地址。
+y 未初始化，放在 .bss；0x404030 处是 libc 的一个 1 字节标志，所以 y 在 0x404034 而不是紧跟 b。
 """)
 
 
@@ -655,64 +602,8 @@ ret                     # return t;""")
 """)
 
 
-def memory_operand_2(p):
-    p.title('sidebar：x86指令内存操作数的优势')
-    slide(p, r"""
-**架构对比（CISC vs RISC）**：`return w[0] + x[0];` 分别编译为 x86-64 与 ARM64 汇编：
-""")
-    p.code('text', """# x86-64 (gcc -Og)              // ARM64 (aarch64-linux-gnu-gcc -Og)
-movl    (%rsi), %eax            ldr     w2, [x0]
-addl    (%rdi), %eax            ldr     w0, [x1]
-ret                             add     w0, w2, w0
-                                ret""")
-    slide(p, r"""
-- 指针 `w` 与 `x` 在 x86-64 中位于 `%rdi` 与 `%rsi`，在 ARM64 中位于 `x0` 与 `x1`；返回值分别写入 `%eax` 与 `w0`（`x0` 的低 32 位）；
-- x86-64：`addl (%rdi), %eax` 的源操作数是内存操作数，一条指令完成读取 `w[0]` 与相加；
-- ARM64：两条 `ldr` 先将 `w[0]` 与 `x[0]` 读入 `w2` 与 `w0`，再由 `add` 相加（ARM64 汇编的目的操作数写在最前面）；
-- ARM64 只有加载与存储指令（`ldr` / `str`）访问内存，算术指令只能使用寄存器，同一计算因此多用一条指令。
-""")
-
-
-def recap_part1(p):
-    p.title('前情回顾：一行 C 代码如何运行在 CPU 上')
-    p.code('c', """int a = 1, b = 6, y;   // 全局变量
-
-void add(void) {
-    y = a + b;
-}""")
-    p.demo('编译并反汇编',
-           """cd examples
-gcc -O0 -fomit-frame-pointer -fcf-protection=none -no-pie add.c -o add
-objdump -d add | sed -n '/<add>:/,/ret/p'""",
-           output="""0000000000401106 <add>:
-  401106:	8b 15 1c 2f 00 00    	mov    0x2f1c(%rip),%edx        # 404028 <a>
-  40110c:	8b 05 1a 2f 00 00    	mov    0x2f1a(%rip),%eax        # 40402c <b>
-  401112:	01 d0                	add    %edx,%eax
-  401114:	89 05 1a 2f 00 00    	mov    %eax,0x2f1a(%rip)        # 404034 <y>
-  40111a:	90                   	nop
-  40111b:	c3                   	ret""",
-           bold=[2, 3, 4, 5],
-           files=['examples/add.c'])
-    p.notes("""
-第一部分收尾。先只看代码与反汇编：y = a + b 变成两条 movl 读 a、b，一条 addl 相加，一条 movl 写回 y；nop 是 -O0 留下的空操作，ret 返回 main。
-objdump 每行三栏：指令的内存地址、机器码字节、汇编助记符；行尾的 # 404028 <a> 是 objdump 算出的 a(%rip) 实际地址。
-编译选项：-O0 让两次读取与加法分开成三条指令；-fomit-frame-pointer 去掉 push/pop %rbp（第三部分再讲栈帧）；-no-pie 让文件中的地址就是装入内存后的地址；-fcf-protection=none 去掉 endbr64。
-下一页用示意图把可执行文件、内存与 CPU 串起来。
-""")
-
-
-def recap_part1_fig(p):
-    p.title('前情回顾：一行 C 代码如何运行在 CPU 上')
-    figure(p, "recap-part1", 1120)
-    p.notes("""
-串起已经讲过的三个重点：编译得到可执行文件（代码段与数据段）；装入内存后指令与数据都是带地址的字节（整数的小端补码编码、指令的机器码编码）；CPU 以 PC 取指、把 a 与 b 读入寄存器、在 ALU 中相加、再写回 y。
-图中 CPU 的快照取在 addl 执行时：a、b 已读入 %edx、%eax，y 尚未写回。地址、机器码与上一页 objdump 的输出一致；a(%rip) 的位移量 0x2f1c = 0x404028 − 0x40110c，即目标地址减去下一条指令的地址。
-y 未初始化，放在 .bss；0x404030 处是 libc 的一个 1 字节标志，所以 y 在 0x404034 而不是紧跟 b。
-""")
-
-
 def loop_need(p):
-    p.title('循环需求：4096 维内积与控制流的挑战')
+    p.title('向量内积和控制流')
     slide(p, r"""
 **回顾核心代码**：
 """)
@@ -720,330 +611,304 @@ def loop_need(p):
     sum += w[i] * x[i];
 }""")
     slide(p, r"""
-**现实情况**：
-- 第一部分实现了单次乘加。
-- 某大模型向量内积的实际维度为 $n = 4096$。
-- 机器指令中没有 `for` 结构，CPU 如何通过离散指令实现 4096 次循环迭代？
+**顺序执行**：程序计数器（PC，即 `%rip`）存放下一条要取出的指令的地址。CPU 从该地址取出指令并执行，同时把 `%rip` 加上这条指令的长度，下一次取指因此从紧接着的那条指令开始：
+$$\%rip \leftarrow \%rip + \text{指令长度}$$
+""")
+    figure(p, "pc-increment", 1120)
+    p.notes("""
+第二部分从循环引入控制流。先说明顺序执行：%rip 的递增由 CPU 在执行每条指令时完成，程序中没有对应的指令。
+图中是 dot_product（gcc -Og）循环体的 7 条指令在内存中的位置，地址与长度来自 objdump -d dot.o。按地址递增依次取指，执行流只会前进到更高的地址。
+""")
+
+
+def loop_need_2(p):
+    p.title('向量内积和控制流')
+    p.code('text', """sum += w[0] * x[0];        movl    (%rsi), %eax
+                           imull   (%rdi), %eax
+                           addl    %edx, %eax""")
+    slide(p, r"""
+**只有顺序执行时**：三条指令完成一次乘加，执行流前进到下一条指令，不会回到这三条指令。
+- 完成 4096 次乘加，就要把同样的三条指令写 4096 份，一份接一份地放在内存中；
+- 代码长度随 $n$ 增长；$n$ 在运行时才确定的程序无法这样写出。
 """)
     figure(p, "loop-unroll", 1120)
+    slide(p, r"""
+**需要的能力**：一次乘加执行完后，让 `%rip` 回到这段指令的开头再执行一次，并在执行了 $n$ 次之后停下来。改写 `%rip` 的指令称为跳转指令。
+""")
     p.notes("""
-第二部分主线引入。
-由单次计算推向完整循环，交代硬件面临的控制流问题。
+页面上方的代码块是第一部分的单次乘加：左边是 C 代码，右边是它对应的三条指令，%rdi 保存 w，%rsi 保存 x，%edx 保存 sum。
+某大模型（Qwen3-8B）的隐藏层维度是 4096，一次向量内积要做 4096 次乘加。
+展开 4096 份的代码可以写出，但 n 是 dot_product 的参数，调用时才知道，展开的份数无法在编译时确定。
 """)
 
 
-def pc_update(p):
-    p.title('程序计数器：顺序执行时 PC 的更新规则')
+def loop_asm(p):
+    p.title('循环的汇编：两条跳转指令')
+    p.side_image("assets/loop-jumps.svg", width="40%", alt="contain", side="left")
+    p.demo('用 gcc -Og 编译 dot.c',
+           """cd examples
+gcc -Og -fcf-protection=none -S dot.c -o - \\
+    | sed -f asm.sed""",
+           files=['examples/dot.c', 'examples/asm.sed'])
     slide(p, r"""
-**程序计数器（PC / `%rip`）**：
-- 存放当前即将从内存代码段取出的指令的虚拟地址。
-
-**顺序更新规则**：
-- 不执行跳转指令时，`%rip` 自动按当前指令长度递增，**该操作由硬件自动完成**：
- $$\%rip \leftarrow \%rip + \text{Instruction\_Length}$$
-
-**局限**：按地址递增的顺序依次取指，执行流不会回到地址更小的指令。
+- `%eax` 保存 `i`，`%r9d` 保存 `sum`，`%edx` 保存 `n`，`%rdi` 与 `%rsi` 保存 `w` 与 `x`（参数与寄存器的对应规则在第三部分讲解）；
+- `.L3:`、`.L2:` 是标号：紧随其后那条指令的地址的名字，汇编器把它换算成地址；
+- 循环体是 `.L3` 之后的 5 条指令：`movslq` 把 `i` 扩展为 64 位，`movl` 与 `imull` 读出 `x[i]` 并乘以 `w[i]`，两条 `addl` 累加 `sum` 并完成 `i++`；
+- 循环体之后，`cmpl` 比较 `i` 与 `n`，`jl` 决定是否再执行一次循环体。
 """)
-    p.notes('程序计数器（PC / `%rip`）在顺序执行时的推移机制。')
-    figure(p, "pc-increment", 1120)
+    p.notes("""
+左侧的清单是这条命令的输出，加上两条跳转指令的箭头。命令上方的 dot.c 按钮在右侧打开源码，与左侧的汇编逐行对照。
+循环体的 5 条指令：movslq 把 i 扩展为 64 位下标，movl 读出 x[i]，imull 乘以 w[i]，addl 累加到 sum，addl $1 完成 i++。
+与第一部分的单次乘加相比，数组下标由 i 决定，因此 movl 与 imull 使用 (%rsi,%r8,4) 这种带变址的内存操作数。
+""")
 
 
-def jump_encoding(p):
-    p.title('跳转指令：直接跳转、间接跳转与 PC 相对编码')
+def loop_asm_2(p):
+    p.title('循环的汇编：两条跳转指令')
+    p.side_image("assets/loop-jumps.svg", width="40%", alt="contain", side="left")
+    p.demo('用 gcc -Og 编译 dot.c',
+           """cd examples
+gcc -Og -fcf-protection=none -S dot.c -o - \\
+    | sed -f asm.sed""",
+           files=['examples/dot.c', 'examples/asm.sed'])
     slide(p, r"""
-**改变执行方向**：通过改写 `%rip` 寄存器的数值实现程序流跳转。
+- **`jl .L3`，条件跳转**：`i < n` 时把 `.L3` 的地址写入 `%rip`，代替 `%rip + 指令长度`，执行流回到循环体开头；否则 `%rip` 照常递增，执行 `jl` 之后的两条指令，返回 `sum`；
+- **`jmp .L2`，无条件跳转**：进入循环前跳到 `.L2`，先比较，再决定是否执行循环体；`n` 为 0 时循环体一次也不执行。
 
-**无条件跳转的两类形式**：
-1. **直接跳转（Direct Jump）**：
-   - 语法：`jmp Label`；
-   - 目标地址在编译汇编时已确定，作为指令的一部分直接编码；
-2. **间接跳转（Indirect Jump）**：
-   - 语法：`jmp *%rax`（从寄存器读取目标地址）或 `jmp *(%rax)`（从内存读取目标地址）；
-   - 作用：为 C 语言函数指针、多态虚函数分发、switch 跳转表及 `ret` 返回指令提供硬件基础。
+**问题**：`jl` 的操作数只有一个标号，`i < n` 的比较结果从哪里来？
 """)
-    p.notes('无条件跳转指令的硬件机制、直接与间接跳转分类，以及 PC 相对编码的原理。')
+    p.notes("""
+跳转指令把目标标号的地址写入 %rip。其余指令执行后 %rip 仍按长度递增，只有跳转指令改写它。
+对照 dot.c：jl .L3 对应 for 的条件 i < n，jmp .L2 对应第一次进入循环前的条件检查。
+jl 读取的是 cmpl 留下的标志位，下面几页说明标志位、cmp 与 test 指令，再回到 jl 这一类条件跳转指令。
+""")
 
 
-def jump_encoding_2(p):
-    p.title('跳转指令：直接跳转、间接跳转与 PC 相对编码')
+def jump_insn(p):
+    p.title('跳转指令：jmp 与 jl 如何改写 %rip')
     slide(p, r"""
-**跳转目标的 PC 相对编码（PC-Relative Encoding）**：
-- 机器指令中存储的是目标地址相对于下一条指令地址的偏移：
- $$\text{Offset} = \text{Target\_Address} - \text{Next\_RIP}$$
-- **优势**：指令长度短（常用 1 字节或 4 字节偏移），且代码在内存中整体搬移重定位后依然正确执行。
+**无条件跳转 `jmp Label`**：
+- 执行时把 `Label` 的地址写入 `%rip`，下一条执行的指令即 `Label` 处的指令；
+- 没有条件，总是跳转；指令本身仅修改 PC `%rip` 寄存器。
+
+**条件跳转 `jl Label`**（jump if less）：
+- 条件成立时与 `jmp Label` 相同；条件不成立时 `%rip` 按指令长度递增，执行下一条指令；
+- 条件来自最近的一条算术或比较指令：`cmpl %edx, %eax` 计算 `%eax - %edx`，把结果的特征记录在 CPU 的标志位中，`jl` 读取标志位判断 `%eax < %edx` 是否成立。
+
+**问题**：标志位记录结果的哪些特征？`cmpl` 如何设置它们？
 """)
-    figure(p, "pc-relative", 1120)
+    p.notes("""
+跳转指令与数据传送、算术指令一样是一条普通的指令：取指、执行、更新 %rip。区别只在更新 %rip 的方式。
+""")
 
 
 def rflags(p):
-    p.title('状态标志：算术运算的副作用与 RFLAGS 条件码')
+    p.title('标志位：运算结果的特征记录在 RFLAGS 寄存器中')
     slide(p, r"""
-**条件状态标志位（RFLAGS 寄存器）**：
-- CPU 维护单比特标志位，记录最近一次算术或逻辑运算的特征：
-  - **ZF（Zero Flag）**：最近一次运算结果为 0 则置 1；
-  - **SF（Sign Flag）**：最近一次运算结果为负数（最高符号位为 1）则置 1；
-  - **CF（Carry Flag）**：最高有效位发生无符号溢出（产生进位或借位）则置 1；
-  - **OF（Overflow Flag）**：补码有符号整数发生正负号反转溢出则置 1。
+**标志位（条件码，RFLAGS 寄存器中的单个比特）**：记录最近一次算术或逻辑运算结果的特征：
+- **ZF（Zero Flag）**：结果为 0 时置 1；
+- **SF（Sign Flag）**：结果为负数（最高位为 1）时置 1；
+- **CF（Carry Flag）**：最高位产生进位或借位时置 1，即按无符号数解释时溢出；
+- **OF（Overflow Flag）**：按补码有符号数解释时溢出置 1。以加法为例：两个加数同号（同正或同负），和的符号与它们相反。
+
+**标志位由运算指令顺带设置**：`addl %ecx, %r9d` 在写回结果的同时设置四个标志位，程序中没有单独设置标志位的指令。
 """)
-    p.notes('运算副作用产生的条件状态位（ZF, SF, CF, OF）及各指令对其影响规范。')
+    p.notes('标志位 ZF、SF、CF、OF 的定义。每条算术指令在写回结果的同时设置它们，条件跳转指令读取它们。')
 
 
 def rflags_2(p):
-    p.title('状态标志：算术运算的副作用与 RFLAGS 条件码')
+    p.title('标志位：运算结果的特征记录在 RFLAGS 寄存器中')
     slide(p, r"""
-**各类指令对标志位的影响规范**：
-- 算术与逻辑指令（`add`, `sub`, `imul`, `and`, `or`, `xor`）会更新标志位；
-- `lea` 与 `mov` 纯地址与数据传送，**不改变任何标志位**；
-- `inc` / `dec` 指令更新 ZF、SF、OF，但**保留 CF 不变**；
-- 逻辑指令（`and/or/xor/test`）执行后将 CF 与 OF 清零。
+**各类指令对标志位的影响**：
+- 算术与逻辑指令（`add`、`sub`、`imul`、`and`、`or`、`xor`）按结果更新标志位；
+- `lea` 与 `mov` 只传送地址与数据，**不改变任何标志位**；
+- `inc` / `dec` 更新 ZF、SF、OF，**保留 CF 不变**；
+- 逻辑指令（`and` / `or` / `xor` / `test`）执行后把 CF 与 OF 清零。
 
 **CF 与 OF 的区别，以 8 位二进制加法为例**：
 - `0xFF + 0x01 = 0x00`：无符号 $255+1=256$ 溢出（CF=1）；有符号 $-1+1=0$ 无溢出（OF=0）；
-- `0x7F + 0x01 = 0x80`：无符号 $127+1=128$ 无溢出（CF=0）；有符号 $127+1=-128$ 符号反转溢出（OF=1）。
+- `0x7F + 0x01 = 0x80`：无符号 $127+1=128$ 无溢出（CF=0）；有符号 $127+1=-128$，两个正数相加得到负数，溢出（OF=1）。
 """)
+    p.notes('同一次加法同时设置 CF 与 OF：CF 按无符号解释判断溢出，OF 按有符号解释判断溢出。类型的区别由随后的条件跳转指令读取哪一个标志位体现。')
 
 
 def cmp_test(p):
-    p.title('状态比较：cmp 与 test 指令的状态设置机制')
+    p.title('比较指令：cmp 与 test 只设置标志位')
     slide(p, r"""
-**比较指令：`cmp`**：
-- 语法：`cmpl S2, S1`
-- **语义**：计算 $S1 - S2$ 的差值，仅按差值结果更新 ZF, SF, CF, OF 标志位，**丢弃减法结果，两个操作数寄存器保持原值**。
+**比较指令 `cmpl S2, S1`**：
+- 计算 $S1 - S2$，按差设置 ZF、SF、CF、OF；**差本身丢弃，两个操作数保持原值**；
+- `cmpl %edx, %eax` 计算 `i - n`：差为负则 SF=1，差为 0 则 ZF=1。
 
-**检测指令：`test`**：
-- 语法：`testl S2, S1`
-- **语义**：计算 $S1 \ \& \ S2$ 的按位与，仅按与运算结果设置 ZF 与 SF（并将 CF 和 OF 清零），**丢弃运算结果**。
+**测试指令 `testl S2, S1`**：
+- 计算 $S1 \ \& \ S2$ 的按位与，按结果设置 ZF 与 SF，CF 与 OF 清零；**结果丢弃**；
+- `testl %edx, %edx`：`n` 与自身按位与仍是 `n`，于是 ZF 表示 `n` 是否为 0，SF 表示 `n` 是否为负。
 """)
     figure(p, "cmp-test", 1120)
-    p.notes('`cmp` 与 `test` 指令的执行语义，以及 dot.c 编译输出入口处的卫语句。')
+    p.notes('cmp 与 test 是只设置标志位的减法与按位与。比较两个数就是做减法看差的符号与是否为零。')
 
 
 def cmp_test_2(p):
-    p.title('状态比较：cmp 与 test 指令的状态设置机制')
+    p.title('比较指令：cmp 与 test 只设置标志位')
     slide(p, r"""
-**实例：函数入口的维度检查**（`gcc -O2` 编译 `dot.c`，`%edx` 保存维度 $n$）：
+**实例：`gcc -O2` 编译的 `dot_product` 在函数入口检查 $n$**（`%edx` 保存 $n$）：
 """)
-    p.code('assembly', """dot_product:
+    p.demo('编译 dot.c，查看函数入口与跳转目标 .L4（中间的循环略去）',
+           """cd examples
+gcc -O2 -fcf-protection=none -S dot.c -o - | sed -f asm.sed | sed -n '1,4p;/^\\.L4:/,$p'""",
+           output="""dot_product:
 	movq	%rsi, %r8
 	testl	%edx, %edx
-	jle	.L4""")
-    slide(p, r"""
-跳转目标 `.L4`（函数的另一个出口）：
-""")
-    p.code('assembly', """.L4:
+	jle	.L4
+.L4:
 	xorl	%esi, %esi
 	movl	%esi, %eax
-	ret""")
+	ret""",
+           bold=[3, 4],
+           files=['examples/dot.c', 'examples/asm.sed'])
     slide(p, r"""
-- **机制分析**：`testl %edx, %edx` 将维度 $n$ 与自身做按位与。若 $n = 0$，ZF 置位；若 $n < 0$，SF 置位。配合 `jle`，只需一条指令即可检测并拦截 $n \le 0$ 的非正维度边界，直接跳到退出点 `.L4`，以返回值 0 返回。
+- `testl %edx, %edx` 按 $n$ 设置标志位：$n = 0$ 时 ZF=1，$n < 0$ 时 SF=1；`jle`（小于等于时跳转）读取这两个标志位，$n \le 0$ 时跳到 `.L4`，以返回值 0 返回；
+- `dot.c` 的 `for` 循环在第一次执行循环体之前检查 `i < n`；`-O2` 把这次检查放在函数入口，`testl` 与 `jle` 两条指令的效果等同于 `if (n <= 0) return 0;`。
+""")
+    p.notes("""
+-O2 把循环改为先检查一次 n，再进入底部判断的循环；这里只看入口的两条指令。
+输出的前 4 行是函数入口，后 4 行是跳转目标 .L4，两段之间是循环。sed -n '1,4p;/^\\.L4:/,$p' 打印第 1 到 4 行，以及从 .L4: 到末尾的各行。
+dot.c 按钮在右侧打开源码：源码中没有 if (n <= 0) 这一行，它来自 for 循环第一次的条件检查。
 """)
 
 
 def cond_jump(p):
-    p.title('条件分支：完整的条件跳转指令体系')
+    p.title('条件跳转指令：读取标志位的组合')
     slide(p, r"""
-**完整的条件跳转指令分类**：
-1. **相等与零值检测**：`je` / `jz` (ZF=1), `jne` / `jnz` (ZF=0)；
-2. **有符号数值比较分支**：
+**条件跳转指令 `jX Label`，按 X 读取不同的标志位**：
+1. **相等与零值**：`je` / `jz`（ZF=1），`jne` / `jnz`（ZF=0）；
+2. **有符号比较**（`cmpl S2, S1` 之后，判断 $S1$ 与 $S2$ 的大小）：
    - `jl`：小于，条件为 $\text{SF} \ne \text{OF}$；
    - `jle`：小于等于，条件为 $(\text{SF} \ne \text{OF}) \lor (\text{ZF}=1)$；
    - `jg`：大于，条件为 $(\text{SF} = \text{OF}) \land (\text{ZF}=0)$；
    - `jge`：大于等于，条件为 $\text{SF} = \text{OF}$；
-3. **无符号数值比较分支**：
-   - `jb`：Below，无符号小于，条件为 $\text{CF}=1$；
-   - `jbe`：Below or Equal，无符号小于等于，条件为 $\text{CF}=1 \lor \text{ZF}=1$；
-   - `ja`：Above，无符号大于，条件为 $\text{CF}=0 \land \text{ZF}=0$；
-   - `jae`：Above or Equal，无符号大于等于，条件为 $\text{CF}=0$。
-""")
-    p.notes('x86-64 完整的条件跳转指令分类、条件码判定组合，以及有符号与无符号跳转的本质差异。')
-
-
-def cond_jump_example(p):
-    p.title('条件跳转实例：int 与 unsigned 的 max')
-    p.code('c', """int max(int a, int b) { int v = a; if (a < b) v = b; return v; }
-unsigned max_u(unsigned a, unsigned b) { unsigned v = a; if (a < b) v = b; return v; }""")
-    p.demo('编译 max.c',
-           """cd examples
-gcc -Og -fcf-protection=none -S max.c -o - | sed -f asm.sed | pr -2 -e -l 7""",
-           output="""max:                               	max_u:
-        movl    %esi, %eax         	        movl    %esi, %eax
-        cmpl    %esi, %edi         	        cmpl    %esi, %edi
-        jl      .L2                	        jb      .L4
-        movl    %edi, %eax         	        movl    %edi, %eax
-.L2:                               	.L4:
-        ret                        	        ret""",
-           bold=[4],
-           files=['examples/max.c', 'examples/asm.sed'])
-    slide(p, r"""
-**编译器选择的指令**：两个函数都用 `cmpl %esi, %edi` 比较 `a` 与 `b`，只有跳转指令不同。
-- 参数类型是 `int`，编译器选用有符号跳转指令 `jl`；
-- 参数类型是 `unsigned`，编译器选用无符号跳转指令 `jb`。
+3. **无符号比较**：
+   - `jb`：below，无符号小于，条件为 $\text{CF}=1$；
+   - `jbe`：无符号小于等于，条件为 $\text{CF}=1 \lor \text{ZF}=1$；
+   - `ja`：above，无符号大于，条件为 $\text{CF}=0 \land \text{ZF}=0$；
+   - `jae`：无符号大于等于，条件为 $\text{CF}=0$。
 """)
     p.notes("""
-`pr -2 -e -l 7` 把输出排成两栏，每栏 7 行，`-e` 把制表符展开为空格：左栏是 `max`，右栏是 `max_u`。
-`%edi` 保存参数 `a`，`%esi` 保存参数 `b`，`%eax` 保存返回值，对应规则在第三部分详细讲。
+有符号小于的条件是 SF ≠ OF：差不溢出时 OF=0，SF 即差的符号，SF=1 表示小于；差溢出时 OF=1，SF 与差的真实符号相反，SF=0 表示小于。两种情况合起来就是 SF ≠ OF。
+同一条 cmpl 之后，编译器按操作数的类型选用 jl 或 jb：int 用 jl，unsigned 用 jb。
 """)
 
 
-def cond_jump_example_2(p):
-    p.title('条件跳转实例：int 与 unsigned 的 max')
+def jump_direct(p):
+    p.title('直接跳转与间接跳转')
     slide(p, r"""
-**指令执行**：两个函数的参数都是 `%edi = 0xFFFFFFF0`，`%esi = 0x000000F0`：
-""")
-    p.table([
-        ['`cmpl %esi, %edi`', '差为 `0xFFFFFF00`', 'ZF=0，SF=1，OF=0，CF=0'],
-        ['`jl .L2`（`max`）', 'SF $\\ne$ OF 成立，跳转', '`%eax` 保持 `b`，返回 $240$'],
-        ['`jb .L4`（`max_u`）', 'CF=1 不成立，顺序执行', '`movl` 写入 `a`，返回 $4294967280$'],
-    ], headers=['指令', '执行', '结果'])
-    p.demo('运行 max',
-           """cd examples
-gcc -Og -fcf-protection=none max.c max_main.c -o max && ./max""",
-           output="""max  (-16, 240) = 240
-max_u(4294967280, 240) = 4294967280""",
-           files=['examples/max_main.c'])
-    slide(p, r"""
-**结论**：同一条 `cmpl` 设置同一组标志位。类型的区别由编译器转化为 `jl` 与 `jb` 两条指令，CPU 按各自的条件读取标志位。
+**直接跳转（Direct Jump）**：`jmp .L2`、`jl .L3` 的目标是一个标号，目标地址在汇编与链接时确定，作为指令的一部分编码在指令中。`dot_product` 中的跳转都是直接跳转。
+
+**目标在运行时才确定的情况**：
+- 执行哪一段代码取决于运行时的一个值，例如 `switch (op)` 按 `op` 的值选择分支，`op` 是函数的参数；
+- 一条直接跳转只能写死一个目标，表示不了"按 `op` 的值选择目标"。
+
+**间接跳转（Indirect Jump）**：目标地址从寄存器或内存中读出，写入 `%rip`：
+- `jmp *%rax`：`%rax` 中的值即目标地址；
+- `jmp *(%rax)`：从地址 `%rax` 处读出 8 字节作为目标地址；
+- `jmp *.L4(,%rdi,8)`：从地址 $\text{.L4} + 8 \times \text{\%rdi}$ 处读出 8 字节作为目标地址，寻址方式与第一部分的内存操作数相同。
 """)
     p.notes("""
-第一条 `movl %esi, %eax` 先把 `b` 写入 `%eax`。`jl` 跳转后 `%eax` 保持 `b`；`jb` 不跳转，`movl %edi, %eax` 把 `a` 写入 `%eax`。
-`0xFFFFFFF0` 按 `int` 解释是 -16，按 `unsigned` 解释是 4294967280；`0x000000F0` 两种解释都是 240。
+间接跳转的目标是数据：寄存器中的值或内存中的 8 字节。C 语言的函数指针调用、C++ 的虚函数调用也编译为间接跳转或间接调用。
 """)
 
 
-def loop_forms_for(p):
-    p.title('循环翻译：从 jump-to-middle 到 guarded-do 结构')
+def switch_table(p):
+    p.title('switch 语句：跳转表与间接跳转')
+    p.code('c', """int calc(int op, int a, int b) {
+    switch (op) {
+    case 0: return a + b;   case 1: return a - b;   case 2: return a * b;
+    case 3: return a & b;   case 4: return a | b;   case 5: return a ^ b;
+    }
+    return 0;
+}""")
     slide(p, r"""
-**for 循环改写为 while 循环**：
+**6 个 `case`，6 段代码**：执行哪一段由参数 `op` 决定，编译时不知道 `op` 的值。
+- 逐一比较：`op` 与 0、1、…、5 依次 `cmpl` 并条件跳转，最多比较 6 次；
+- 跳转表：把 6 段代码的地址排成一张表，按 `op` 取出第 `op` 个地址，跳过去。
 """)
-    p.code('c', """/* for loop in dot.c */            /* equivalent while loop */
-int sum = 0;                       int sum = 0;
-for (int i = 0; i < n; i++) {      int i = 0;
-    sum += w[i] * x[i];            while (i < n) {
-}                                      sum += w[i] * x[i];
-                                       i++;
-                                   }""")
+    p.notes("""
+switch 语句是间接跳转最常见的来源。case 的值连续且个数足够时（gcc 约 5 个起），编译器生成跳转表，否则逐一比较。
+""")
+
+
+def switch_table_2(p):
+    p.title('switch 语句：跳转表与间接跳转')
+    p.demo('编译 calc.c，查看函数入口与跳转表',
+           """cd examples
+gcc -O1 -fno-pie -fcf-protection=none -S calc.c -o - | sed -e '/\\.quad/b' -f asm.sed | sed -n '1,12p'""",
+           output="""calc:
+	cmpl	$5, %edi
+	ja	.L10
+	movl	%edi, %edi
+	jmp	*.L4(,%rdi,8)
+.L4:
+	.quad	.L9
+	.quad	.L8
+	.quad	.L7
+	.quad	.L6
+	.quad	.L5
+	.quad	.L3""",
+           bold=[5],
+           files=['examples/calc.c', 'examples/asm.sed'])
     slide(p, r"""
-**改写规则**：`for (init; test; update) body` 等价于 `init; while (test) { body; update; }`（循环体不含 `continue` 时成立）：
-- `init`（`int i = 0`）在进入循环前执行一次；
-- `test`（`i < n`）在每轮循环体之前判断，第一轮之前也判断；
-- `update`（`i++`）在每轮循环体之后执行。
-
-机器级翻译因此只需处理 do-while 与 while 两种循环；dot.c 中的 for 循环按 while 循环翻译。
+`%edi` 保存 `op`；`.L9` 到 `.L3` 是 6 个 `case` 的代码，`.L10` 是 `return 0`。`.quad` 一行在内存中放一个 8 字节的地址。
 """)
-    p.notes('C 语言的 for 循环可改写为等价的 while 循环，机器级翻译只需处理 do-while 与 while 两种循环。')
+    p.notes("""
+sed 的第一个表达式保留 .quad 行，asm.sed 删去其余伪指令；sed -n '1,12p' 只取入口与跳转表，其后是六段 case 代码，各自以 ret 结束。
+-fno-pie 使跳转表中直接存放绝对地址；默认的 PIE 编译存放的是相对偏移，入口多两条指令，间接跳转写为 jmp *%rax。
+""")
 
 
-def loop_forms(p):
-    p.title('循环翻译：从 jump-to-middle 到 guarded-do 结构')
+def switch_table_3(p):
+    p.title('switch 语句：跳转表与间接跳转')
+    figure(p, "jump-table", 1000)
     slide(p, r"""
-**C 循环与三种机器级结构**：do-while 循环在底部判断条件，循环体至少执行一次；while 循环在第一轮之前也判断条件，循环体可能一次也不执行。
-1. **`do-while` 结构（翻译 do-while 循环）**：
-   - 先执行循环体，底部比较并条件跳转，满足条件时跳回循环体开头。
-2. **`jump-to-middle` 结构（翻译普通 while 循环，`-Og` 采用）**：
-   - 入口用无条件跳转 `jmp` 跳到底部的条件判断，满足条件时跳回循环体开头；
-   - 第一轮之前即判断条件，$n \le 0$ 时循环体一次也不执行。
-3. **`guarded-do` 结构（翻译普通 while 循环，`-O2` 采用）**：
-   - 入口先判断一次条件，作为卫语句（Guard），初始条件不成立时直接跳出；
-   - 卫语句通过后，循环按 do-while 结构执行，在底部判断条件；
-   - 与 jump-to-middle 相比，每次调用少执行一条入口 `jmp`。
+- **范围检查**：`cmpl $5, %edi` 与 `ja .L10`，`op` 不在 0 到 5 之间时跳到 `return 0`；按无符号比较，负数被视为很大的数，一次比较同时排除负数与过大的值；
+- **取表项**：`movl %edi, %edi` 把 `op` 零扩展为 64 位下标，`jmp *.L4(,%rdi,8)` 从第 `op` 项读出地址，写入 `%rip`；
+- **为什么是间接跳转**：目标随 `op` 变化，直接跳转表示不了。与逐一比较相比（最多 6 次 `cmpl` 与 `je`），跳转表用一次比较、一次访存与一次跳转完成，执行时间与 case 的个数无关。
 """)
-    p.notes('编译器翻译循环的三种结构：do-while 结构翻译 do-while 循环，jump-to-middle（`-Og`）与 guarded-do（`-O2`）翻译普通 while 循环。')
-
-
-def loop_forms_fig(p):
-    p.title('循环翻译：从 jump-to-middle 到 guarded-do 结构')
-    figure(p, "loop-forms", 1120)
+    p.notes("""
+跳转表 .L4 的 6 个项由汇编器写入只读数据段，第 op 项存放 case op 的代码的地址；movl %edi, %edi 零扩展的依据是第一部分的位宽规则。
+case 的值稀疏或个数少时，编译器仍用逐一比较；gcc 对连续的 case 在 case 数达到 5 个左右时生成跳转表。
+""")
 
 
 def cmov(p):
-    p.title('无分支选择：setX 指令与 cmov 条件传送')
+    p.title('sidebar：条件传送 cmov 与条件设置 setX')
     slide(p, r"""
-**条件设置指令：`setX`**：
-- 根据标志位状态，将单个字节目标设为 0 或 1（如 `setl %al` 用于布尔求值 `a < b`）。
+**读取标志位的指令除条件跳转外还有两类**：
 
-**条件传送指令：`cmovX`（Conditional Move）**：
-- 语法：`cmovl %edx, %eax`（若小于则将 `%edx` 拷贝到 `%eax`，否则 `%eax` 保持原值）；
-- 两个候选值先分别放入寄存器，`cmovX` 依据标志位选出其中一个；
-- 选择过程不需要条件跳转，指令序列中少了分支跳转指令与对应的标号。
+**条件设置指令 `setX D`**：按标志位把单字节目标 `D` 置为 0 或 1。第一部分 `equal` 的汇编中，`cmpl %esi, %edi` 之后的 `sete %al` 把"相等"写入 `%al`，`movzbl %al, %eax` 再扩展为返回值。
+
+**条件传送指令 `cmovX S, D`**（Conditional Move）：
+- 条件成立时把 `S` 复制到 `D`，否则 `D` 保持原值；
+- 两个候选值先分别放入寄存器，`cmovX` 依据标志位选出其中一个，指令序列中没有跳转指令与标号。
 
 **示例**：`int max(int a, int b) { int v = a; if (a < b) v = b; return v; }`
 - `gcc -Og` 用条件跳转 `jl` 实现选择；
-- `gcc -O2` 改用 `cmovge`，少了一条分支跳转指令。
+- `gcc -O2` 改用 `cmovge`，少了一条跳转指令。
 """)
-    p.notes('条件设置指令 `setX` 与条件传送指令 `cmov`：同一个选择用 `cmov` 实现时，少了分支跳转指令。')
+    p.notes("""
+拓展内容。setX 与 cmovX 的 X 与条件跳转的 X 相同：e、ne、l、le、g、ge、b、a 等。
+cmov 在候选值都已算出、选择本身很简单时有优势；第四讲说明跳转指令对流水线的影响。
+""")
 
 
 def cmov_fig(p):
-    p.title('无分支选择：setX 指令与 cmov 条件传送')
+    p.title('sidebar：条件传送 cmov 与条件设置 setX')
     slide(p, r"""
-`%edi` 保存参数 `a`，`%esi` 保存参数 `b`，`%eax` 保存返回值（对应规则将在后续介绍）。
+`%edi` 保存参数 `a`，`%esi` 保存参数 `b`，`%eax` 保存返回值（对应规则在第三部分讲解）。
 """)
     figure(p, "cmov-mux", 1120)
 
 
-def type_neutral(p):
-    p.title('类型中立：机器级指令不携带类型的特征')
-    slide(p, r"""
-**ALU 硬件的类型中立性**：
-- CPU 内部只有一套纯粹的二进制全加器与乘法器；
-- 无论高级语言中声明的是 `int`（有符号补码）还是 `unsigned int`（无符号二进制编码），底层的二进制位运算规则相同；
-- 编译器生成的指令都是 `addl` 与 `subl`，指令本身不区分有符号或无符号。
-
-**类型的延后体现**：
-- 变量究竟是有符号还是无符号，硬件并不在运算这一刻决定；
-- 算术运算在生成结果的同时，同步设置无符号进位标志（CF）与有符号溢出标志（OF）；
-- **类型的真正差异体现在后续选用哪一条条件跳转指令**（例如根据有符号标志跳转 `jl` 还是根据无符号标志跳转 `jb`）。
-""")
-    p.notes('汇编语言与硬件在算术层面的无类型特征，类型差异向后续分支跳转的延后。')
-
-
-def type_neutral_2(p):
-    p.title('类型中立：机器级指令不携带类型的特征')
-    slide(p, r"""
-**本节实例中的类型与指令**：同一个 C 运算，操作数类型不同时，编译器选用的指令如下：
-""")
-    p.table([
-        ['加法 `a + b`、减法 `a - b`', '`addl`、`subl`', '`addl`、`subl`', '两种类型的指令相同'],
-        ['8 位扩展到 32 位', '`movsbl`', '`movzbl`', '`equal`'],
-        ['右移 `x >> 4`', '`sarl`', '`shrl`', '`sar4` 与 `shr4`'],
-        ['比较 `a < b` 之后的跳转', '`jl`', '`jb`', '`max` 与 `max_u`'],
-    ], headers=['C 运算', '有符号类型', '无符号类型', '实例'])
-    slide(p, r"""
-**结论**：类型信息在编译时转化为指令的选择。CPU 执行指令时只处理位模式，每条指令的行为由指令本身确定。
-""")
-    p.notes('回顾扩展传送、移位、条件跳转三个实例：三处的 C 代码只有类型不同，编译结果各有一条指令不同。')
-
-
-def type_neutral_fig(p):
-    p.title('类型中立：机器级指令不携带类型的特征')
-    figure(p, "adder-flags", 1120)
-
-
 def procedure_need(p):
-    p.title('过程抽象：函数调用的控制转移需求')
-    slide(p, r"""
-**主线函数的模块化封装**：
-""")
-    p.code('c', """int dot_product(const int *w, const int *x, int n);""")
-    slide(p, r"""
-**过程调用的硬件动作需求**：
-1. **控制转移**：执行流跳转到 `dot_product` 的第一条指令；
-2. **数据传递**：调用者把参数（`w`, `x`, `n`）交给被调用者；
-3. **状态隔离**：函数执行期间不能破坏调用者的关键局部数据；
-4. **局部状态**：被调用者执行期间需要存放自己的局部变量，调用返回后这些空间随之释放；
-5. **结果返回与恢复**：被调用者将结果交给调用者，执行流返回到调用点之后继续执行。
-""")
-    p.notes("""
-第三部分主线引入。
-过程抽象在工程中的必然性，引出调用与返回的硬件机制。
-""")
-
-
-def local_state(p):
-    p.title('局部状态：局部变量与栈帧')
-    slide(p, r"""
-**`main.c` 中 `main` 的局部变量**：
-""")
+    p.title('函数调用：main 如何调用 dot_product')
     p.code('c', """int dot_product(const int *w, const int *x, int n);
 int main(void) {
     int w[4] = {1, 2, 3, 4};
@@ -1051,292 +916,417 @@ int main(void) {
     return dot_product(w, x, 4);
 }""")
     slide(p, r"""
-**局部变量的存储需求**：
-- 数组元素按地址访问（`w[i]` 即 `*(w + i)`），寄存器没有地址，数组只能放在内存中；
-- 局部变量只在一次调用期间存在：调用开始时分配，调用返回时释放；
-- 同一函数的多次调用可以同时处于活动状态（例如递归），每次调用需要各自的一份局部变量，因此局部变量不能分配在固定地址。
+**已经学过的**：一个函数内部的执行。数据传送与算术指令完成一次乘加，标志位与跳转指令实现循环，`dot_product` 的循环由这些指令组成。
+
+**新的问题**：执行如何跨越两个函数。`main` 执行到 `dot_product(w, x, 4)` 时，CPU 转去执行 `dot_product` 的指令；`dot_product` 执行完毕后，CPU 回到 `main` 继续执行。
+
+**两个术语**：发起调用的函数称为**调用者（caller）**，被调用的函数称为**被调用者（callee）**。这次调用中 `main` 是调用者，`dot_product` 是被调用者。
 """)
     p.notes("""
-从局部变量的存放位置引入运行时栈与栈帧。
-全局变量分配在数据段的固定地址，整个程序运行期间只有一份；局部变量每次调用各有一份。
+第三部分的例子是 main 调用 dot_product。前两部分讲的是一个函数内部的指令，这一部分讲两个函数之间的配合。
+CS:APP 把函数称为过程（procedure），调用者与被调用者的说法相同。
 """)
 
 
-def local_state_2(p):
-    p.title('局部状态：局部变量与栈帧')
+def call_vs_jump(p):
+    p.title('函数调用与跳转的相同点与不同点')
     slide(p, r"""
-**用栈管理局部状态**：
-- 调用按后进先出（LIFO）的顺序返回：最后开始的调用最先返回；
-- 局部状态随调用开始而分配、随调用返回而释放，分配与释放的顺序同样是后进先出，因此用栈管理；
-- 每次调用在栈上占用一段连续区域，存放本次调用的局部状态，这段区域称为该调用的**栈帧（Stack Frame）**；
-- 调用开始时在栈顶分配栈帧，调用返回时释放栈帧；栈顶的栈帧属于正在执行的调用。
+**相同点**：调用把执行流从 `main` 的指令转移到 `dot_product` 的第一条指令。这是一次无条件跳转，`jmp dot_product` 就能做到。
+
+**不同点**：一次调用还要完成四件事，跳转指令都不做：
+1. **返回**：`dot_product` 执行完毕后，执行流回到 `main` 中调用点的下一条指令；
+2. **传递数据**：`main` 把参数 `w`、`x`、`4` 交给 `dot_product`，`dot_product` 把返回值交给 `main`；
+3. **寄存器**：两个函数使用同一组 16 个寄存器，`main` 放在寄存器中的值可能被 `dot_product` 改写；
+4. **局部变量**：`main` 的数组 `w` 与 `x` 在调用期间保持原值，`dot_product` 的 `sum` 与 `i` 只在这次调用期间存在。
 """)
-    figure(p, "frame-lifo", 1120)
-
-
-def runtime_stack(p):
-    p.title('运行时栈：进程内存结构与向低地址生长')
-    p.side_image("assets/address-space.svg", width="30%", alt="contain")
-    slide(p, r"""
-**进程典型虚拟内存布局（从低地址到高地址）**：
-1. **代码段（.text）**：存放机器指令，只读且可执行；
-2. **数据段（.data / .bss）**：存放已初始化/未初始化全局变量；
-3. **堆（Heap）**：由 `malloc` / `new` 动态分配，向高地址生长；
-4. **运行时栈（Stack）**：存放各次调用的栈帧，**向低地址生长**。
-
-**栈顶指针 `%rsp`**：
-- `%rsp` 保存栈顶地址，即栈中已使用部分的最低地址；
-- 分配栈帧时减小 `%rsp`，释放栈帧时增大 `%rsp`。
-
-**为什么栈要向低地址生长**：
-- 历史设计：堆和栈分别置于虚拟地址空间的两端，彼此相对生长，最大化利用有限的地址空间而不必预先划分死边界。
-""")
-    p.notes('进程虚拟内存全景、运行时栈（Stack）的生长方向与栈顶指针 %rsp。')
-
-
-def stack_frame(p):
-    p.title('栈帧实例：main 的局部数组')
-    p.side_image("assets/main-stack.svg", width="42%", alt="contain")
-    slide(p, r"""
-**`main.c` 中 `main` 的汇编清单**：
-""")
-    p.code('assembly', """main:
-    subq  $40, %rsp        # allocate the frame
-    movl  $1, 16(%rsp)     # w[0] = 1;
-    movl  $2, 20(%rsp)     # w[1] = 2;
-    movl  $3, 24(%rsp)     # w[2] = 3;
-    movl  $4, 28(%rsp)     # w[3] = 4;
-    movl  $5, (%rsp)       # x[0] = 5;
-    movl  $6, 4(%rsp)      # x[1] = 6;
-    movl  $7, 8(%rsp)      # x[2] = 7;
-    movl  $8, 12(%rsp)     # x[3] = 8;
-    movq  %rsp, %rsi       # these four lines call
-    leaq  16(%rsp), %rdi   # dot_product(w, x, 4)
-    movl  $4, %edx
-    call  dot_product@PLT
-    addq  $40, %rsp        # free the frame
-    ret""")
     p.notes("""
-清单由 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S main.c -o - | sed -f asm.sed 得到，注释为讲解所加。
--fno-stack-protector 关闭栈保护，栈帧中只剩局部数组；默认编译时的栈保护在本部分最后介绍。
+函数调用首先是一次跳转，在跳转之外多出返回、传递数据、寄存器、局部变量四件事。第三部分按这五件事的顺序展开。
 """)
 
 
-def stack_frame_2(p):
-    p.title('栈帧实例：main 的局部数组')
-    p.side_image("assets/main-stack.svg", width="42%", alt="contain")
+# The five problems of a call, in the order the part solves them: name, what
+# has to hold, how it is solved. The checklist page comes back at the head of
+# each subsection with one more row filled in.
+CALL_PROBLEMS = [
+    ('调用被调用者', '执行流进入被调用者的第一条指令', '`call` 指令'),
+    ('返回调用者', '执行流回到调用点的下一条指令', '`ret` 指令'),
+    ('传递数据', '参数交给被调用者，返回值交给调用者', '约定：寄存器与栈'),
+    ('寄存器', '调用者放在寄存器中的值，调用之后仍可使用', '约定：调用者保存与被调用者保存'),
+    ('局部变量', '每次调用有自己的一份局部变量', '在栈帧中分配与释放'),
+]
+
+
+def call_checklist_table(p, done, current=1):
+    p.title('函数调用的实现：五个问题')
+    rows = []
+    for k, (name, goal, answer) in enumerate(CALL_PROBLEMS):
+        if k < done:
+            rows.append([name, goal, '✓ ' + answer])
+        elif k < done + current:
+            rows.append([f'**{name}**', f'**{goal}**', '**?**'])
+        else:
+            rows.append([name, goal, '?'])
+    p.table(rows, headers=['问题', '要做到的事', '解决的方式'], widths=[2, 5, 4])
+
+
+def call_checklist(p):
+    call_checklist_table(p, 0, current=2)
     slide(p, r"""
-**栈帧的分配、使用与释放**：
-1. **分配**：`subq $40, %rsp` 把 `%rsp` 减 40，从 `%rsp` 开始的 40 字节成为 `main` 的栈帧；
-2. **使用**：局部变量按相对 `%rsp` 的偏移访问，`x[i]` 位于偏移 $4i$，`w[i]` 位于偏移 $16 + 4i$。偏移在编译时确定，每次调用的 `%rsp` 不同，同一段指令因此访问本次调用的局部变量；
-3. **释放**：返回前 `addq $40, %rsp` 把 `%rsp` 加回 40，栈帧随之释放，其中的数据不需要清除。
+**五个问题的来源**：第一个是跳转本身，后四个是调用比跳转多出的四件事。每解决一个问题，表中相应的一行填上解决的方式。
+
+**先解决前两个问题**：执行流如何进入 `dot_product`，执行完毕后又如何回到 `main`？
 """)
-    p.aside("偏移 32 ~ 39 未被使用：ABI 要求 `call` 前 `%rsp` 是 16 的倍数，40 字节栈帧加 8 字节返回地址共 48 字节。")
+    p.notes("""
+这张表在后面每一小节的开头出现一次，已经解决的行标上对勾，加粗的一行是这一小节要解决的问题。
+""")
 
 
 def return_address(p):
-    p.title('函数调用：jmp 指令无法支持动态返回')
+    p.title('返回地址：调用点下一条指令的地址')
     slide(p, r"""
-**为什么不能只用 `jmp`**：
-- `jmp` 的目标地址在指令中是固定的。
-- 函数会被程序中不同位置的调用者调用（例如调用点 A `0x4010`、调用点 B `0x4080`）。
-- 函数执行完毕时，硬件无法仅凭固定操作数的 `jmp` 确定应跳转的目标返回地址。
-
-**硬件机制**：
-- 调用发生时必须动态保存调用点下一条指令的地址（返回地址 Return Address）；
-- 返回地址每次调用各有一份，因此也属于一次函数调用的局部状态。
+**回到调用者**：`dot_product` 执行完毕后跳到调用点的下一条指令。
+- `dot_product` 可以在程序的多处被调用，各个调用点的下一条指令地址不同；
+- `jmp` 的目标写在指令中，只能是其中一个；
+- 调用发生时因此要把调用点下一条指令的地址保存起来，返回时跳到保存的地址。这个地址称为**返回地址（Return Address）**。
 """)
-    p.notes('过程调用的硬件困境与简单 `jmp` 的局限。')
-    figure(p, "return-address", 1120)
-
-
-def call_ret(p):
-    p.title('函数调用：x86-64 的 call 与 ret 指令')
-    p.side_image("assets/call-ret.svg", width="42%", alt="contain")
+    figure(p, "return-address", 1000)
     slide(p, r"""
-**返回地址的存放位置**：
-- 返回地址属于一次调用的局部状态，最直接的做法是与局部变量一样保存在栈帧中，x86-64 采用这种做法。
-
-**`call Label` 的硬件微操作**：
-1. `%rsp` 减 8，把 `call` 的下一条指令的地址（返回地址）写到 `%rsp` 所指处；
-2. 跳转到 `Label`。
-
-**`ret` 的硬件微操作**：
-1. 把 `%rsp` 所指处的返回地址读入 `%rip`，`%rsp` 加 8；
-2. 从调用点的下一条指令继续执行。
+**问题**：返回地址保存在哪里？
 """)
     p.notes("""
-返回地址是局部状态，最直接的做法是与局部变量一样放在栈帧中，x86-64 的 call 与 ret 负责它的写入与读出。
-call 的第 1 步与 pushq 相同，ret 的第 1 步与 popq 到 %rip 相同；push 与 pop 在寄存器保存时介绍。
+进入 dot_product 用已有的指令就能做到：jmp dot_product 把它第一条指令的地址写入 %rip。回到调用者是新的问题。
+调用点 A 在 main 中，调用点 B 在另一个函数中，两处都调用 dot_product。dot_product 结束时回到哪里由这一次是谁调用决定，编译 dot_product 时无法确定。
+返回时跳转的目标是运行时保存下来的一个地址，这是第二部分讲过的间接跳转。
 """)
 
 
-def param_state(p):
-    p.title('参数传递：参数也是局部状态')
+def runtime_stack(p):
+    p.title('运行时栈：按后进先出的顺序保存返回地址')
+    p.side_image("assets/address-space.svg", width="30%", alt="contain")
     slide(p, r"""
-**参数随调用变化**：
-- 同一函数每次被调用时，传入的实参可以不同，例如 `dot_product(w, x, 4)` 与 `dot_product(w, y, 8)`；
-- C 语言的形参是函数的局部变量：调用开始时取得实参的值，调用返回时释放；
-- 因此参数同样属于一次函数调用的局部状态。
+**调用可以嵌套**：`main` 调用函数 `f`，`f` 又调用函数 `g`。
+- 两个返回地址同时需要保存：回到 `main` 的地址先保存，回到 `f` 的地址后保存；
+- `g` 最先返回，用到的是后保存的那个地址。保存与取出的顺序是后进先出（LIFO）。
 
-**最直接的做法：参数全部放在栈中**：
-- 与局部变量和返回地址一样，调用者在 `call` 之前把实参写入栈，被调用者按相对 `%rsp` 的偏移读取。
-
-**访存开销与寄存器传参**：
-- 寄存器在单周期内完成访问；访存要经过地址转换再访问缓存，延迟高于寄存器；
-- 被调用者几乎一定会读取自己的参数，参数全部放在栈中，每次调用都要先写入再读出；
-- 因此 x86-64 的调用规约用寄存器传递前几个参数，寄存器不够时才使用栈。
+**运行时栈（Stack）**：按后进先出的顺序存取数据的一段内存。
+- **位置**：在进程地址空间的高地址一端；
+- **栈顶指针 `%rsp`**：保存栈顶的地址，即栈中最后存入的数据的地址；
+- **向低地址生长**：存入 8 字节时 `%rsp` 减 8，取出 8 字节时 `%rsp` 加 8；
+- 地址不低于 `%rsp` 的部分正在使用，地址低于 `%rsp` 的部分尚未使用。
 """)
     p.notes("""
-参数与局部变量、返回地址一样随调用分配与释放，最直接的做法是全部放在栈中。
-32 位 x86 的 cdecl 约定即把全部参数放在栈中；x86-64 改为寄存器传参，减少每次调用的访存。
-即使命中 L1 数据缓存，一次访存的延迟也有数个周期。
-""")
-
-
-def sysv_abi(p):
-    p.title('调用规约：System V AMD64 ABI 约定')
-    slide(p, r"""
-**应用二进制接口（ABI: Application Binary Interface）**：
-- 规定不同编译器生成的二进制模块之间如何协同工作的全套底层协议。
-
-**整型与指针参数传递（前 6 个按序分配寄存器）**：
-- 顺序固定为：`%rdi, %rsi, %rdx, %rcx, %r8, %r9`。
-
-**返回值传递规范**：
-- 存放在 `%rax` 体系中，按宽度取 `%al` (char), `%ax` (short), `%eax` (int), `%rax` (long / 指针)。
-
-**超过 6 个参数的栈传递规范**：
-- 若参数多于 6 个，参数 7 及以后由调用者在发起 `call` 之前按从右向左顺序压入栈中；
-- 被调用函数入口处，参数 7 位于栈顶偏上偏移 `8(%rsp)`，参数 8 位于 `16(%rsp)`（`0(%rsp)` 存放返回地址）。
-""")
-    p.notes('System V AMD64 ABI 接口契约中关于参数、返回值及栈传递的规定。')
-
-
-def sysv_abi_fig(p):
-    p.title('调用规约：System V AMD64 ABI 约定')
-    figure(p, "abi-slots", 1120)
-
-
-def dot_params(p):
-    p.title('参数映射：dot_product 的形参和返回值绑定')
-    slide(p, r"""
-**函数原型**：
-""")
-    p.code('c', """int dot_product(const int *w, const int *x, int n);""")
-    slide(p, r"""
-**ABI 架构寄存器分配表**：
-- 参数 1 `w`（指针，64 位）：进入 `%rdi`
-- 参数 2 `x`（指针，64 位）：进入 `%rsi`
-- 参数 3 `n`（整数，32 位）：进入 `%edx`
-- 返回值 `sum`（整数，32 位）：放入 `%eax`
-
-**硬件一致性**：
-- 任何符合 System V ABI 规范的编译器调用该函数时，必须在 `call` 之前将参数就绪于这三个寄存器中。
-""")
-    p.notes('主线函数 `dot_product` 在 ABI 契约下的架构寄存器分配。')
-
-
-def dot_params_fig(p):
-    p.title('参数映射：dot_product 的形参和返回值绑定')
-    figure(p, "param-binding", 1120)
-
-
-def param_clobber(p):
-    p.title('参数传递：连续调用时寄存器中的参数被覆盖')
-    slide(p, r"""
-**例子**：`dot_sum` 计算两个点积之和，连续两次调用 `dot_product`：
-""")
-    p.code('c', """int dot_sum(const int *w, const int *x, const int *y, int n) {
-    return dot_product(w, x, n) + dot_product(w, y, n);
-}""")
-    slide(p, r"""
-**参数被覆盖**（先假定 `dot_product` 不改写 `%rdi, %rsi, %rdx, %rcx`）：
-1. 进入 `dot_sum` 时，`w, x, y, n` 依次位于 `%rdi, %rsi, %rdx, %ecx`；
-2. 第一次调用的第 3 个参数 `n` 须放入 `%edx`，覆盖了第二次调用还要使用的 `y`；
-3. 第一次调用返回后，`w` 与 `n` 仍在寄存器中，`y` 已丢失，第二次调用缺少参数。
-
-**被调用函数改写寄存器**：
-- `dot_product` 甚至可能改写上述寄存器，`w` 与 `n` 随之丢失，第二次调用的参数全部错误；
-- `dot_sum` 与 `dot_product` 分别编译，前者无法知道后者改写了哪些寄存器；
-- 因此调用双方需要一套规定寄存器使用分工的调用规范。
-""")
-    p.notes("""
-参数寄存器只有一组，调用者为下一次调用准备参数时会覆盖自己的参数；被调用者执行时也使用寄存器。
-图中假定 dot_product 不改写 %rdi, %rsi, %rdx, %rcx，只看 y 的丢失。
-dot_product 的循环体由 cd examples; gcc -Og -fcf-protection=none -S dot.c -o - | sed -f asm.sed 可见：
-movl (%rsi,%r8,4), %ecx 与 imull (%rdi,%r8,4), %ecx 改写了 %ecx，即实际的 dot_product 并不满足图中的假定。
-""")
-
-
-def param_clobber_fig(p):
-    p.title('参数传递：连续调用时寄存器中的参数被覆盖')
-    figure(p, "param-clobber", 1120)
-
-
-def saved_regs(p):
-    p.title('寄存器保护：调用者保存与被调用者保存')
-    slide(p, r"""
-**核心矛盾**：通用寄存器仅有 16 个，若所有函数都自由使用，调用者的数据会被被调用者改写。
-
-**职责划分契约**：
-1. **调用者保存（Caller-saved / 临时寄存器）**：
-   - 包括：`%rax`, `%rdi`, `%rsi`, `%rdx`, `%rcx`, `%r8` ~ `%r11`
-   - 规则：被调用者可以随意修改。如果调用者在调用后还需要其原有数值，必须在 `call` 之前**自己负责保存**。
-2. **被调用者保存（Callee-saved / 保持寄存器）**：
-   - 包括：`%rbx`, `%rbp`, `%r12` ~ `%r15`, `%rsp`
-   - 规则：被调用者必须保证函数返回时这些寄存器的值原封不动。若被调用者需要使用，**必须在使用前保存原值，返回前恢复**。
-""")
-    p.notes('调用链条中的寄存器覆盖矛盾与两种保存机制的职责划分。')
-
-
-def saved_regs_fig(p):
-    p.title('寄存器保护：调用者保存与被调用者保存')
-    figure(p, "saved-regs", 1120)
-    slide(p, r"""
-**调用者与被调用者如何在需要时保存对应的寄存器？**
-需要保存的寄存器值属于本次调用的局部状态，与局部变量、返回地址一样，可以存入栈帧：
-- **被调用者保存寄存器：使用是权利**，寄存器不够时才用，因此原值必须入栈，返回前恢复；
-- **调用者保存寄存器：保存是义务**，调用后仍要使用的值（如 `%rdi` 中的第一个参数）在 `call` 前必须转移：如果有空闲的 callee-saved 寄存器，可以暂存其中（因为 callee 保证其值在函数返回时不变，但作为 callee 也需要保护该寄存器），否则存入栈中。
-""")
-    p.notes("""
-保存下来的寄存器值与局部变量、返回地址一样随调用分配与释放，因此放在栈帧中；写入与读出栈顶的指令即随后介绍的 push 与 pop。
-被调用者保存寄存器由被调用者按需使用；调用者保存寄存器中调用后仍要使用的值，调用者每次调用前都必须转移。
-暂存到被调用者保存寄存器的做法见后续 dot_bias 的例子。
+返回地址的保存与取出是后进先出的，因此放在栈中。栈是内存中的一段区域，%rsp 是 16 个通用寄存器之一，用来保存栈顶的地址。
+右图是进程的地址空间：代码段存放指令，数据段存放全局变量，堆由 malloc 分配，栈在高地址一端。堆向高地址生长，栈向低地址生长，两者之间的空间由先用到的一方使用。
+本讲把图中的地址当作内存地址使用，地址的翻译在后面的讲次说明。
 """)
 
 
 def push_pop(p):
-    p.title('指令分解：push 与 pop 的等价微操作')
+    p.title('栈操作指令：pushq 与 popq')
     slide(p, r"""
-**专用指令**：
-- 把寄存器的值保存到栈顶、从栈顶读出值写回寄存器，是保存与恢复寄存器时的常见操作；
-- 因此 x86-64 为这两种操作各提供一条单独的指令：`pushq` 与 `popq`。
+**`pushq S`**：把 8 字节的 `S` 存入栈顶。
+1. `%rsp` 减 8；
+2. 把 `S` 写入 `%rsp` 所指的 8 个字节。
 
-**`pushq Src` 的等价指令分解**：
-1. 步进指针：`subq $8, %rsp`（栈顶指针向低地址延伸 8 个字节，开辟槽位）；
-2. 数据存入：`movq Src, (%rsp)`（将 64 位源操作数写入新栈顶）。
+**`popq D`**：从栈顶取出 8 字节，写入 `D`。
+1. 读出 `%rsp` 所指的 8 个字节，写入 `D`；
+2. `%rsp` 加 8。
 
-**`popq Dest` 的等价指令分解**：
-1. 数据读出：`movq (%rsp), Dest`（从当前栈顶读取 64 位数据到目标寄存器）；
-2. 回退指针：`addq $8, %rsp`（栈指针自增 8 字节，收缩释放栈顶槽位）。
+**操作数、标志位与等效的指令**：
+- `S` 可以是寄存器、内存操作数或立即数（32 位，符号扩展为 64 位），`D` 可以是寄存器或内存操作数；
+- `pushq` 与 `popq` 不改变标志位；
+- 以 `%rbx` 为例：对 `%rsp` 与栈的效果，`pushq %rbx` 与 `subq $8, %rsp`、`movq %rbx, (%rsp)` 两条指令相同，`popq %rbx` 与 `movq (%rsp), %rbx`、`addq $8, %rsp` 两条指令相同；`pushq %rbx` 占 1 字节，等效的两条指令共 8 字节。
 """)
-    p.notes('栈操作基础指令 `push` 与 `pop` 向底层指针算术与内存访存的等价指令拆解。')
+    p.notes("""
+pushq 与 popq 各用一条指令完成两步：改写 %rsp，读写栈顶。x86-64 的栈以 8 字节为单位，两条指令的操作数都是 64 位。
+等效的两条指令中 subq 与 addq 会设置标志位，pushq 与 popq 不会。操作数是内存操作数时没有这样的两条指令：movq 不能有两个内存操作数。
+操作数是 %rsp 时，pushq %rsp 压入的是减 8 之前的值。
+字节数来自汇编器的输出：pushq %rbx 是 53，popq %rbx 是 5b；subq $8, %rsp 是 48 83 ec 08，movq %rbx, (%rsp) 是 48 89 1c 24。
+""")
 
 
 def push_pop_fig(p):
-    p.title('指令分解：push 与 pop 的等价微操作')
+    p.title('栈操作指令：pushq 与 popq')
     figure(p, "push-pop", 1120)
+    p.notes("""
+左半是 pushq 的两步：%rsp 先减 8，再把 Src 写入新的栈顶。右半是 popq 的两步：先读出栈顶的 8 个字节，%rsp 再加 8。
+popq 之后原来的 8 个字节仍在内存中，%rsp 已经越过它，这 8 个字节不再属于栈中正在使用的部分。
+""")
 
 
-def callee_example(p):
-    p.title('示例：dot_bias 中的 %rbx')
+def call_emulate(p):
+    p.title('用已有的指令实现调用与返回')
+    slide(p, r"""
+**调用**：把返回地址压入栈，再跳到 `dot_product`：
+""")
+    p.code('assembly', """    leaq   .Lnext(%rip), %rax    # the address of the next instruction
+    pushq  %rax                  # save it as the return address
+    jmp    dot_product
+.Lnext:                          # execution resumes here after the return""")
+    slide(p, r"""
+**返回**：从栈顶弹出返回地址，用间接跳转跳到这个地址：
+""")
+    p.code('assembly', """    popq   %rcx                  # the return address
+    jmp    *%rcx""")
+    slide(p, r"""
+- 调用用 3 条指令共 13 字节，返回用 2 条指令共 3 字节，各占用一个寄存器；
+- 返回地址是下一条指令的地址，CPU 顺序执行时已经在计算它（`%rip` 加指令长度），程序用 `leaq` 又计算了一遍。
+
+**x86-64 为这两件事各提供一条指令**：`call dot_product` 占 5 字节，`ret` 占 1 字节，都不占用通用寄存器。
+""")
+    p.notes("""
+.Lnext(%rip) 是第一部分的 PC 相对寻址，leaq 算出标号 .Lnext 的地址，即 jmp 之后那条指令的地址。
+字节数来自汇编器的输出：leaq 7 字节，pushq %rax 1 字节，jmp dot_product 5 字节；popq %rcx 1 字节，jmp *%rcx 2 字节。
+call 与 ret 由 CPU 直接完成这两组动作。CPU 还按 call 与 ret 的配对预测返回地址，第四讲说明。
+""")
+
+
+def call_ret(p):
+    p.title('call 与 ret：调用与返回的两条指令')
+    p.side_image("assets/call-ret.svg", width="42%", alt="contain", side="left")
+    slide(p, r"""
+**`call Label`** 相当于 `pushq` 返回地址，再 `jmp Label`：
+1. `%rsp` 减 8，把 `call` 的下一条指令的地址写入 `%rsp` 所指处；
+2. 把 `Label` 的地址写入 `%rip`。
+
+**`ret`** 相当于把栈顶 `popq` 到 `%rip`：
+1. 读出 `%rsp` 所指的 8 个字节，`%rsp` 加 8；
+2. 把读出的地址写入 `%rip`。
+
+**`call *Operand`** 是间接调用：目标地址从寄存器或内存中读出，例如 `call *%rax`。
+""")
+    p.notes("""
+左图的地址取自 main.c 与 dot.c 链接成的可执行文件：main 中的 call 位于 0x401156，下一条指令 addq $40, %rsp 位于 0x40115b，dot_product 从 0x401160 开始，它的 ret 位于 0x401199。
+三个时刻：① 执行 call 之前；② call 之后，返回地址 0x40115b 占栈顶的 8 字节，%rip 指向 dot_product 的入口；③ ret 之后，返回地址已弹出，%rip 回到 0x40115b。
+间接调用的写法与间接跳转相同。C 语言通过函数指针的调用编译为间接调用。
+""")
+
+
+def call_ret_2(p):
+    p.title('call 与 ret：调用与返回的两条指令')
+    p.side_image("assets/call-ret.svg", width="42%", alt="contain", side="left")
+    p.demo('查看 call 与栈顶的返回地址',
+           """cd examples
+gcc -Og -fcf-protection=none -no-pie \\
+    -fno-stack-protector -o main main.c dot.c
+objdump -d --no-show-raw-insn main \\
+    | grep -A1 'call.*<dot_product>'
+gdb -q -batch -ex 'break *dot_product' \\
+    -ex run -ex 'x/gx $rsp' main 2>&1 | tail -1""",
+           output="""  401156:	call   401160 <dot_product>
+  40115b:	add    $0x28,%rsp
+0x7fffffffd7a8:	0x000000000040115b""",
+           files=['examples/main.c', 'examples/dot.c'])
+    slide(p, r"""
+- **`objdump` 的两行**：`call` 位于 `0x401156`，占 5 字节，下一条指令位于 `0x40115b`；
+- **`gdb` 的一行**：程序停在 `dot_product` 的入口，`%rsp` 所指的 8 个字节是 `0x40115b`，即返回地址。
+""")
+    p.notes("""
+-no-pie 使可执行文件中的地址就是装入内存后的地址。objdump -d 反汇编，--no-show-raw-insn 不打印机器码字节，grep -A1 取出 call 一行与它的下一行。
+gdb 的三个 -ex 依次执行三条命令：在 dot_product 的第一条指令处设置断点（*dot_product 是这条指令的地址），运行程序，以十六进制打印 %rsp 所指的 8 个字节（x/gx）；tail -1 只保留最后一行。
+最后一行冒号之前是栈顶的地址，随运行环境变化；冒号之后的返回地址不变。换用其他版本的编译器，三个地址会变化，call 的下一条指令的地址与栈顶的 8 个字节仍然相同。
+""")
+
+
+def stack_frames(p):
+    p.title('栈帧：一次调用在栈上占用的区域')
+    slide(p, r"""
+**栈帧（Stack Frame）**：一次调用在栈上占用的一段连续区域，存放这次调用自己的数据。
+- `call` 压入的返回地址是调用者栈帧的最后一项，被调用者的栈帧从它之下开始；
+- 调用开始时在栈顶建立栈帧，调用返回时释放；`%rsp` 指向最后建立的栈帧的末端，这个栈帧属于正在执行的函数；
+- 调用按后进先出的顺序返回，栈帧的建立与释放也按后进先出的顺序进行。
+""")
+    figure(p, "frame-lifo", 1120)
+    slide(p, r"""
+**栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量，由后面三个问题的解决方式决定。
+""")
+    p.notes("""
+图中 main 调用 f，f 先后调用 g 与 h。每一列是一个时刻的栈，栈底在上，最下面的栈帧属于正在执行的函数。
+g 返回后它的栈帧释放，f 再调用 h 时，h 的栈帧使用同一段内存。
+""")
+
+
+def call_checklist_2(p):
+    call_checklist_table(p, 2)
+    slide(p, r"""
+**问题**：`main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
+""")
+    p.notes("""
+前两个问题由 call 与 ret 两条指令解决，返回地址保存在运行时栈中。
+""")
+
+
+def param_regs(p):
+    p.title('传递数据：前 6 个参数与返回值使用寄存器')
+    slide(p, r"""
+**调用双方的约定**：调用者在 `call` 之前把数据写入约定的位置，被调用者从同一位置读出。
+
+**参数**：整数与指针参数的前 6 个依次使用下表的寄存器，按参数的宽度使用相应的部分：
+""")
+    p.table([
+        ['64 位', '`%rdi`', '`%rsi`', '`%rdx`', '`%rcx`', '`%r8`', '`%r9`'],
+        ['32 位', '`%edi`', '`%esi`', '`%edx`', '`%ecx`', '`%r8d`', '`%r9d`'],
+        ['16 位', '`%di`', '`%si`', '`%dx`', '`%cx`', '`%r8w`', '`%r9w`'],
+        ['8 位', '`%dil`', '`%sil`', '`%dl`', '`%cl`', '`%r8b`', '`%r9b`'],
+    ], headers=['参数宽度', '参数 1', '参数 2', '参数 3', '参数 4', '参数 5', '参数 6'])
+    slide(p, r"""
+**返回值**：放入 `%rax`，按返回值的宽度使用 `%rax`、`%eax`、`%ax` 或 `%al`。
+
+**约定的出处**：System V AMD64 ABI。应用二进制接口（ABI）规定分别编译的模块之间如何配合，其中关于函数调用的规定称为调用规约。
+""")
+    p.notes("""
+参数与返回值的位置是调用双方共同遵守的约定，CPU 不检查。约定优先使用寄存器：读写寄存器不需要访问内存。
+System V AMD64 ABI 是 x86-64 上的 Linux 使用的 ABI，ABI 是 Application Binary Interface 的缩写。
+浮点参数使用另一组寄存器 %xmm0 到 %xmm7，浮点返回值使用 %xmm0；本讲的例子都是整数与指针。
+32 位 x86 的约定把全部参数放在栈中。x86-64 有 16 个通用寄存器，改为用寄存器传递前 6 个参数，减少每次调用的访存。
+""")
+
+
+def dot_params(p):
+    p.title('实例：dot_product 的参数与返回值')
+    figure(p, "param-binding", 760)
+    p.demo('编译 main.c，查看 call 之前的指令',
+           """cd examples && gcc -Og -fcf-protection=none -fno-stack-protector -S main.c -o - \\
+    | sed -f asm.sed | sed -n '/movq/,/call/p'""",
+           output="""	movq	%rsp, %rsi
+	leaq	16(%rsp), %rdi
+	movl	$4, %edx
+	call	dot_product@PLT""",
+           files=['examples/main.c', 'examples/dot.c', 'examples/asm.sed'])
+    slide(p, r"""
+- **调用者 `main`**：`call` 之前把 `w` 的地址写入 `%rdi`，`x` 的地址写入 `%rsi`，`4` 写入 `%edx`；
+- **被调用者 `dot_product`**：从这三个寄存器读取参数，返回前把 `sum` 放入 `%eax`；
+- 数组 `w` 的地址是 `%rsp` 加 16，`x` 的地址是 `%rsp`，在「局部变量」一节说明。
+""")
+    p.notes("""
+图是 dot_product 的原型与约定的对应：两个指针参数用 64 位的 %rdi 与 %rsi，int 参数 n 用 32 位的 %edx，int 返回值用 %eax。
+sed -n '/movq/,/call/p' 只打印 main 的清单中从 movq 到 call 的四行。@PLT 是链接用的记号，第五讲说明；call dot_product@PLT 调用的就是 dot_product。
+被调用者一侧见第二部分 dot_product 的清单，返回前的 movl %r9d, %eax 把 sum 放入 %eax；dot.c 按钮打开它的源码。main 把 dot_product 的返回值作为自己的返回值，call 之后没有改写 %eax。
+""")
+
+
+def stack_args(p):
+    p.title('超过 6 个参数：第 7 个起经栈传递')
+    p.side_image("assets/stack-args.svg", width="40%", alt="contain", side="left")
+    slide(p, r"""
+**第 7 个及以后的参数由调用者压入栈**：
+- 压栈在 `call` 之前进行，顺序从右向左：最后一个参数最先压入，第 7 个参数最后压入；
+- 每个参数占 8 字节，宽度不足 8 字节的参数也占 8 字节；
+- `call` 再压入返回地址。进入被调用者时，`(%rsp)` 是返回地址，`8(%rsp)` 是参数 7，`16(%rsp)` 是参数 8，依此类推；
+- 调用返回后，调用者增大 `%rsp`，释放这些参数。
+
+**例子**：`use8` 调用 `last2(1, 2, 3, 4, 5, 6, 7, 8)`，`last2` 返回第 7 个参数减第 8 个参数的差。左图是进入 `last2` 时的栈。
+""")
+    p.notes("""
+从右向左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
+左图各行左侧是 last2 访问该位置的写法，右侧是 use8 中写入该位置的指令。三个位置都属于 use8 的栈帧。
+""")
+
+
+def stack_args_2(p):
+    p.title('超过 6 个参数：第 7 个起经栈传递')
+    p.side_image("assets/stack-args.svg", width="40%", alt="contain", side="left")
+    p.demo('编译 args8.c',
+           """cd examples && gcc -Og -fcf-protection=none \\
+    -S args8.c -o - | sed -f asm.sed""",
+           output="""last2:
+	movq	8(%rsp), %rax
+	subq	16(%rsp), %rax
+	ret
+use8:
+	pushq	$8
+	pushq	$7
+	movl	$6, %r9d
+	movl	$5, %r8d
+	movl	$4, %ecx
+	movl	$3, %edx
+	movl	$2, %esi
+	movl	$1, %edi
+	call	last2
+	addq	$16, %rsp
+	ret""",
+           bold=[2, 3, 6, 7, 15],
+           files=['examples/args8.c', 'examples/asm.sed'])
+    p.notes("""
+加粗的五行是经栈传递的部分：use8 先压入 8，再压入 7；last2 从 8(%rsp) 读出参数 7，从 16(%rsp) 读出参数 8；返回后 addq $16, %rsp 释放两个参数。
+其余六条 movl 把前 6 个参数放入寄存器。last2 没有改写 %rsp，它的两个参数始终在 8(%rsp) 与 16(%rsp)。
+""")
+
+
+def call_checklist_3(p):
+    call_checklist_table(p, 3)
+    slide(p, r"""
+**问题**：调用者放在寄存器中的值，在被调用者执行之后是否还在？
+""")
+    p.notes("""
+数据的传递由约定解决：前 6 个参数与返回值使用寄存器，其余参数经栈传递。
+""")
+
+
+def reg_conflict(p):
+    p.title('寄存器：调用者的值可能被被调用者改写')
     p.code('c', """int dot_bias(const int *w, const int *x, int n, int b) {
     return dot_product(w, x, n) + b;
 }""")
+    slide(p, r"""
+**进入 `dot_bias` 时**，`w`、`x`、`n`、`b` 依次在 `%rdi`、`%rsi`、`%edx`、`%ecx` 中。前三个正是 `dot_product` 的参数，可以直接 `call`；返回后把 `%ecx` 中的 `b` 加到 `%eax` 上：
+""")
+    p.code('text', """dot_bias:                              dot_product:    # two instructions of the loop body
+    call   dot_product                     movl   (%rsi,%r8,4), %ecx    # x[i]
+    addl   %ecx, %eax     # b ?            imull  (%rdi,%r8,4), %ecx
+    ret""")
+    slide(p, r"""
+- **结果错误**：`dot_product` 的循环体把 `x[i]` 与乘积写入 `%ecx`，`b` 被覆盖；
+- **原因**：寄存器只有一组，所有函数共用；两个函数分别编译，编译一方时看不到另一方使用哪些寄存器。
+
+**需要一项约定**：规定每个寄存器的值在一次调用前后是否保持不变。
+""")
+    p.notes("""
+左边是不保存 b 的写法，右边是第二部分 dot_product 清单中循环体的两条指令。
+这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在本节最后一页。
+""")
+
+
+def saved_regs(p):
+    p.title('寄存器使用惯例：调用者保存与被调用者保存')
+    slide(p, r"""
+**被调用者保存寄存器（Callee-saved）**：`%rbx`、`%rbp`、`%r12`、`%r13`、`%r14`、`%r15`
+- 约定：函数返回时，这些寄存器的值与函数被调用时相同；
+- 被调用者要使用其中一个时，先把原值保存到栈上，返回前恢复。
+
+**调用者保存寄存器（Caller-saved）**：`%rax`、6 个参数寄存器、`%r10`、`%r11`
+- 约定：被调用者可以直接改写这些寄存器；
+- 调用者在调用之后还要使用其中的值时，在 `call` 之前把它保存到栈上，或者移到一个被调用者保存寄存器中。
+
+**栈顶指针 `%rsp`**：函数返回后，`%rsp` 的值与执行 `call` 之前相同。
+""")
+    p.notes("""
+这项约定与参数的约定同属 System V AMD64 ABI。两类寄存器的名称说明由谁负责保存其中的值。
+6 个参数寄存器是 %rdi、%rsi、%rdx、%rcx、%r8、%r9，调用者保存寄存器共 9 个。
+被调用者保存寄存器只在被调用者要使用时才保存；一个函数没有用到它们，就没有保存与恢复的指令。
+""")
+
+
+def saved_regs_fig(p):
+    p.title('寄存器使用惯例：调用者保存与被调用者保存')
+    figure(p, "saved-regs", 1120)
+    slide(p, r"""
+**`dot_bias` 的 `b` 在调用者保存的 `%ecx` 中，调用之后还要使用，有两种做法**：
+- 调用之前把 `b` 压入栈，调用之后弹出；
+- 调用之前把 `b` 移到一个被调用者保存寄存器中，按约定 `dot_product` 返回时它的值不变。`dot_bias` 自己也是被调用者，使用这个寄存器之前要先保存它的原值。
+""")
+    p.notes("""
+16 个通用寄存器分为三组：9 个调用者保存，6 个被调用者保存，加上栈顶指针 %rsp。
+两种做法都要访问一次栈：第一种保存的是 b，第二种保存的是被调用者保存寄存器的原值。
+""")
+
+
+def callee_example(p):
+    p.title('实例：dot_bias 中的 %rbx')
+    p.side_image("assets/bias-stack.svg", width="42%", alt="contain", side="left")
     p.demo('编译 dot_bias.c',
-           """cd examples
-gcc -Og -fcf-protection=none -S dot_bias.c -o - | sed -f asm.sed""",
+           """cd examples && gcc -Og -fcf-protection=none \\
+    -S dot_bias.c -o - | sed -f asm.sed""",
            output="""dot_bias:
 	pushq	%rbx
 	movl	%ecx, %ebx
@@ -1344,50 +1334,163 @@ gcc -Og -fcf-protection=none -S dot_bias.c -o - | sed -f asm.sed""",
 	addl	%ebx, %eax
 	popq	%rbx
 	ret""",
-           files=['examples/dot_bias.c', 'examples/asm.sed'])
+           files=['examples/dot_bias.c', 'examples/dot.c', 'examples/asm.sed'])
     slide(p, r"""
-**机制分析**：`b` 位于 caller-saved 的 `%ecx`，调用后可能被改写，因此移到 callee-saved 的 `%rbx`；`dot_bias` 在入口 `pushq %rbx` 保存原值，在出口 `popq %rbx` 恢复。
-""")
-    p.notes('examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号，与页面上的清单一致。')
-
-
-def soft_hard(p):
-    p.title('软约束与硬约束：ABI 约定与 ISA 语义')
-    slide(p, r"""
-**软约束：ABI 的约定**：
-- 参数寄存器的顺序，返回值放入 `%rax`，调用者保存与被调用者保存的分工；
-- 这些规定由编译器生成指令时遵守，CPU 执行时不检查；
-- 调用双方换用另一套约定，只要双方一致，参数与返回值照常传递。
-
-**硬约束：ISA 规定的指令语义**：
-- `call` 压入返回地址并改写 `%rip`，`ret` 从栈顶弹出返回地址写入 `%rip`；
-- `pushq` 与 `popq` 以 `%rsp` 为栈顶指针，每次把 `%rsp` 减 8 或加 8；
-- 这些行为由 CPU 执行指令时完成，编译器与操作系统都无法改变。
-
-**同一块 CPU，不同的软约束**：
-- Linux 与 Windows 运行在同一块 x86-64 CPU 上，硬约束相同，软约束不同；
-- 一方按自己的约定放置参数，另一方到别的寄存器中读取，二者的程序因此无法相互调用。
+- **`movl %ecx, %ebx`**：`b` 移到被调用者保存的 `%ebx`，`dot_product` 返回后它的值不变；
+- **`pushq %rbx` 与 `popq %rbx`**：`dot_bias` 改写 `%rbx` 之前保存原值，返回前恢复；
+- **`dot_product`** 只改写调用者保存寄存器，没有保存与恢复的指令。
 """)
     p.notes("""
-软约束写在 ABI 文档中，由编译器遵守；硬约束写在 ISA 手册中，由 CPU 执行。
-GCC 在 x86-64 上提供 __attribute__((ms_abi))，同一个 Linux 程序中的函数可以按 Windows 的约定编译与调用，说明约定由编译器选择。
+左图是 dot_product 执行期间的栈：dot_bias 的栈帧有两项，保存的 %rbx 与 call 压入的返回地址，共 16 字节。
+gcc 选用上一页的第二种做法。b 放在寄存器中，调用前后都不需要访存来读写 b；入口与出口各多一条 pushq 与 popq。
+dot_product 改写的寄存器可以在第二部分的清单中核对：%eax、%ecx、%r8、%r9d，都是调用者保存寄存器。
+examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号。
 """)
 
 
-def win_abi(p):
-    p.title('跨平台 ABI：Linux 与 Windows x64 调用约定对比')
+def call_checklist_4(p):
+    call_checklist_table(p, 4)
     slide(p, r"""
-**跨平台 ABI 的三处核心差异**：
-1. **整型参数寄存器集合不同**：
-   - Linux (System V)：前 6 个使用 `%rdi, %rsi, %rdx, %rcx, %r8, %r9`；
-   - Windows (MS x64)：前 4 个使用 `%rcx, %rdx, %r8, %r9`。
-2. **影子空间（Shadow Store / Home Space）**：
-   - Windows 规范要求：调用者在发起 `call` 前，**必须在栈顶预留 32 字节（4 个 8 字节槽）的空闲空间**，供被调用者在必要时将前 4 个寄存器参数溢写存入栈中。
-3. **寄存器保护职责差异**：
-   - 在 Linux 下，`%rsi` 与 `%rdi` 属于调用者保存（Caller-saved）；
-   - 在 Windows 下，`%rsi` 与 `%rdi` 属于**被调用者保存（Callee-saved）**。
+**问题**：`main` 的数组 `w` 与 `x` 存放在哪里？
 """)
-    p.notes('Linux (System V) 与 Windows (Microsoft x64) 在寄存器分配、影子空间与保护责任上的核心差异。')
+    p.notes("""
+寄存器的问题由使用惯例解决：6 个被调用者保存寄存器的值在调用前后相同，其余的由调用者在需要时保存。
+""")
+
+
+def local_vars(p):
+    p.title('局部变量：放在寄存器中，或在栈帧中分配')
+    slide(p, r"""
+**能放在寄存器中的局部变量不占用内存**：`dot_product` 的 `sum` 在 `%r9d` 中，`i` 在 `%eax` 中，函数没有在栈上分配空间。
+
+**局部变量必须放在内存中的三种情况**：
+1. 寄存器不够用：同时使用的局部变量多于可用的寄存器；
+2. 局部变量是数组或结构体：元素按地址访问，`main` 的 `w[4]` 与 `x[4]` 属于这种情况；
+3. 程序对局部变量取地址（`&` 运算符）：寄存器没有地址。
+
+**在栈帧中分配**：
+- 函数开头把 `%rsp` 减去所需的字节数，这段空间成为函数栈帧的一部分；
+- 局部变量按相对 `%rsp` 的偏移访问；
+- 返回前把 `%rsp` 加上同样的字节数，这段空间随之释放；
+- 每次调用各自分配，同一个函数的多次调用（例如递归）各有一份局部变量。
+""")
+    p.notes("""
+全局变量分配在数据段的固定地址，整个程序运行期间只有一份；局部变量随调用分配，随返回释放，因此放在栈中。
+main 把 w 与 x 的地址作为参数传给 dot_product，两个数组必须有地址。
+""")
+
+
+def stack_frame(p):
+    p.title('实例：main 的栈帧')
+    p.side_image("assets/main-stack.svg", width="42%", alt="contain", side="left")
+    p.demo('用 gcc -Og 编译 main.c',
+           """cd examples && gcc -Og -fcf-protection=none \\
+    -fno-stack-protector -S main.c -o - \\
+    | sed -f asm.sed""",
+           output="""main:
+	subq	$40, %rsp
+	movl	$1, 16(%rsp)
+	movl	$2, 20(%rsp)
+	movl	$3, 24(%rsp)
+	movl	$4, 28(%rsp)
+	movl	$5, (%rsp)
+	movl	$6, 4(%rsp)
+	movl	$7, 8(%rsp)
+	movl	$8, 12(%rsp)
+	movq	%rsp, %rsi
+	leaq	16(%rsp), %rdi
+	movl	$4, %edx
+	call	dot_product@PLT
+	addq	$40, %rsp
+	ret""",
+           bold=[2, 15],
+           files=['examples/main.c', 'examples/asm.sed'])
+    p.notes("""
+清单分四段：第 2 行分配栈帧，第 3 到 10 行写入两个数组的 8 个元素，第 11 到 14 行准备参数并调用 dot_product，第 15 行释放栈帧。
+-fno-stack-protector 关闭栈保护，栈帧中只有局部数组；默认编译时的栈保护在本部分「缓冲区溢出与栈保护」一节说明。
+main.c 按钮在右侧打开源码，与左侧的栈帧对照。
+""")
+
+
+def stack_frame_2(p):
+    p.title('实例：main 的栈帧')
+    p.side_image("assets/main-stack.svg", width="42%", alt="contain", side="left")
+    slide(p, r"""
+**局部数组的分配、使用与释放**：
+1. **分配**：`subq $40, %rsp` 把 `%rsp` 减 40，从 `%rsp` 开始的 40 字节成为 `main` 的栈帧；
+2. **使用**：8 条 `movl` 按相对 `%rsp` 的偏移写入数组元素，`x[i]` 位于偏移 $4i$，`w[i]` 位于偏移 $16 + 4i$；数组的地址 `(%rsp)` 与 `16(%rsp)` 作为参数传给 `dot_product`；
+3. **释放**：`addq $40, %rsp` 把 `%rsp` 加回 40，栈帧随之释放，其中的数据不需要清除。
+""")
+    p.aside("偏移 32 ~ 39 未被使用：调用规约要求执行 `call` 时 `%rsp` 是 16 的倍数。进入 `main` 时栈顶是 8 字节的返回地址，40 + 8 = 48 是 16 的倍数。")
+    p.notes("""
+偏移在编译时确定，每次调用的 %rsp 不同，同一段指令因此访问本次调用的局部变量。
+main 的栈帧中没有保存的寄存器：它没有使用被调用者保存寄存器，调用 dot_product 之后也不再使用调用者保存寄存器中的值。
+「超过 6 个参数」一页的 use8 执行 call 时 %rsp 是 16 的倍数加 8：last2 与 use8 在同一个文件中，gcc 看到 last2 不依赖栈的对齐，省去了调整 %rsp 的指令（选项 -fipa-stack-alignment，默认开启）。被调用者在另一个文件中时，gcc 按规约对齐。
+""")
+
+
+def call_checklist_5(p):
+    call_checklist_table(p, 5)
+    slide(p, r"""
+**五个问题的解决方式分为三类**：
+- **两条指令**：`call` 与 `ret`，行为由 ISA 规定；
+- **两项约定**：数据的传递与寄存器的使用，由编译器在生成指令时遵守；
+- **运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都存放在栈帧中。
+""")
+    p.notes("""
+五个问题都已解决。接下来把它们按一次调用的时间顺序排列。
+""")
+
+
+def call_sequence(p):
+    p.title('综合起来：一次调用的完整步骤')
+    p.side_image("assets/frame-layout.svg", width="34%", alt="contain")
+    slide(p, r"""
+**调用者，在调用之前**：
+1. 保存调用后还要用的调用者保存寄存器；
+2. 第 7 个起的参数从右向左压入栈；
+3. 前 6 个参数放入寄存器；
+4. `call`：压入返回地址，跳到被调用者。
+
+**被调用者**：
+
+5. `pushq`：保存要用的被调用者保存寄存器；
+6. `subq`：减小 `%rsp`，分配局部变量；
+7. 执行函数体，把返回值放入 `%rax`；
+8. `addq`：增大 `%rsp`，释放局部变量；
+9. `popq`：恢复被调用者保存寄存器；
+10. `ret`：弹出返回地址，回到调用者。
+""")
+    p.notes("""
+右图是这次调用在栈上存放的数据，圆圈中的数字是写入该区域的步骤：第 2 步压入参数，第 4 步压入返回地址，第 5 步保存寄存器，第 6 步分配局部变量。第 8、9、10 步按相反的顺序释放它们。
+返回之后，调用者增大 %rsp 释放第 2 步压入的参数，并恢复第 1 步保存的值。
+不需要的步骤可以省去。dot_product 只有第 7 步与第 10 步。dot_bias 没有第 6 步与第 8 步；它的第 1 步是把 b 移到 %ebx，三个参数已经在 dot_product 需要的寄存器中，第 3 步没有指令。main 没有第 5 步与第 9 步。
+""")
+
+
+def abi_isa(p):
+    p.title('指令与约定：ISA 规定的行为，ABI 规定的用法')
+    slide(p, r"""
+**ISA 规定指令的行为**：`call` 压入返回地址并改写 `%rip`，`ret` 弹出返回地址写入 `%rip`。这些动作由 CPU 执行指令时完成，编译器不能改变。
+
+**ABI 规定寄存器与栈的用法**：参数与返回值的位置，寄存器由哪一方保存，执行 `call` 时 `%rsp` 是 16 的倍数。这些规定由编译器生成指令时遵守，CPU 执行时不检查。
+
+**同一种 CPU 上的两套约定**：Linux 与 Windows 使用相同的指令，调用规约不同：
+""")
+    p.table([
+        ['整数与指针参数', '`%rdi` `%rsi` `%rdx` `%rcx` `%r8` `%r9`', '`%rcx` `%rdx` `%r8` `%r9`'],
+        ['`%rsi` 与 `%rdi`', '调用者保存', '被调用者保存'],
+        ['调用者预留的栈空间', '无', '32 字节'],
+    ], headers=['规定', 'Linux（System V AMD64 ABI）', 'Windows（Microsoft x64）'],
+        widths=[3, 5, 4])
+    slide(p, r"""
+按一套约定编译的函数，不能直接调用按另一套约定编译的函数。
+""")
+    p.notes("""
+指令的行为写在 ISA 手册中，由 CPU 执行；寄存器与栈的用法写在 ABI 文档中，由编译器遵守。pushq 与 popq 以 %rsp 为栈顶指针，也是 ISA 规定的行为。
+GCC 在 x86-64 上提供 __attribute__((ms_abi))，同一个 Linux 程序中的函数可以按 Windows 的约定编译与调用，说明约定由编译器选择。
+Windows 的 32 字节称为影子空间（shadow space），调用者在 call 之前预留，被调用者可以把 4 个寄存器参数存入其中。
+""")
 
 
 def buffer_overflow(p):
@@ -1412,6 +1515,7 @@ run 5 6 7 8 1 1 1 1 1 1 1 1""",
   12 values -> exit 139""",
            files=['examples/overflow.c', 'examples/dot.c'])
     p.notes("""
+fill 把命令行上的每个数写入 x 的一个元素，写入的个数由 argc 决定，没有与 x 的 4 个元素比较。
 程序把点积作为退出状态返回，因此 $? 直接显示结果是否被改变；4 个实参时 1*5 + 2*6 + 3*7 + 4*8 = 70。
 2>&1 | cat 使崩溃时 shell 的作业提示不进入输出，退出码由 PIPESTATUS[0] 取得。
 """)
@@ -1434,7 +1538,7 @@ main 的 pushq %rbx 与 subq $32, %rsp 给出图中的偏移，x 由 movq %rsp, 
 def canary(p):
     p.title('栈保护机制：金丝雀值')
     slide(p, r"""
-**默认编译即开启**：上面的崩溃需要 `-fno-stack-protector`；去掉它重新编译，同一份源程序的溢出在返回之前就被发现：
+**默认编译即开启**：前面的溢出实验使用了 `-fno-stack-protector`；去掉这个选项重新编译，同一份源程序的溢出在返回之前就被发现：
 """)
     p.demo('开启栈保护后重新编译',
            """cd examples
@@ -1457,6 +1561,119 @@ gcc -Og -fcf-protection=none -o overflow_sp overflow.c dot.c
 def canary_fig(p):
     p.title('栈保护机制：金丝雀值')
     figure(p, "canary", 1120)
+
+
+def recap_part3(p):
+    p.title('小结：函数调用用到的指令与约定')
+    p.table([
+        ['调用与返回',
+         '`call` 压入返回地址并跳转，`ret` 弹出返回地址并跳转',
+         '`main` 中的 `call dot_product`'],
+        ['传递数据',
+         '前 6 个参数用寄存器，其余经栈传递；返回值用 `%rax`',
+         '`w`、`x`、`n` 在 `%rdi`、`%rsi`、`%edx` 中'],
+        ['寄存器',
+         '6 个由被调用者保存，9 个由调用者保存',
+         '`dot_bias` 的 `pushq %rbx` 与 `popq %rbx`'],
+        ['局部变量',
+         '减小 `%rsp` 分配，按偏移访问，增大 `%rsp` 释放',
+         '`main` 的 `subq $40, %rsp`'],
+        ['缓冲区溢出',
+         '越界写入改写栈帧中相邻的数据；金丝雀值在返回前检验',
+         '`overflow.c` 的 8 个与 12 个实参'],
+    ], headers=['问题', '指令与约定', '本部分的例子'], widths=[2, 6, 5])
+    slide(p, r"""
+**运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都在栈帧中，`%rsp` 指向栈顶；栈帧在调用开始时建立，在调用返回时释放。
+""")
+    p.notes("""
+第三部分的小结。前四行是五个问题的解决方式，第五行是栈帧布局带来的安全问题。
+call 与 ret 的行为由 ISA 规定，参数、返回值与寄存器的用法由 ABI 约定。被调用者保存的 6 个寄存器是 %rbx、%rbp、%r12 到 %r15。
+""")
+
+
+def reg_exercise(p):
+    p.title('练习：dot_sum 中的寄存器')
+    p.code('c', """int dot_sum(const int *w, const int *x, const int *y, int n) {
+    return dot_product(w, x, n) + dot_product(w, y, n);
+}""")
+    slide(p, r"""
+`dot_sum` 先后两次调用 `dot_product`，把两个结果相加。
+
+**按参数的约定与寄存器使用惯例回答**：
+1. 进入 `dot_sum` 时，`w`、`x`、`y`、`n` 分别在哪个寄存器中？
+2. 第一次调用之前，哪些寄存器要写入新的值？哪个参数因此被覆盖？
+3. 哪些值在一次调用返回之后还要使用？调用期间它们应当放在哪一类寄存器中？
+4. `dot_sum` 的开头要用 `pushq` 保存几个寄存器？
+""")
+    p.notes("""
+课堂练习。先按约定分析，再与编译器的输出核对。
+dot_sum 与 dot_bias 的区别：调用之后还要使用的值有 4 个，其中一个是第一次调用的返回值。
+""")
+
+
+def reg_exercise_2(p):
+    p.title('练习：dot_sum 中的寄存器')
+    p.demo('编译 dot_sum.c，查看第一次调用之前的指令',
+           """cd examples
+gcc -Og -fcf-protection=none -S dot_sum.c -o - | sed -f asm.sed | sed -n '2,10p'""",
+           output="""	pushq	%r15
+	pushq	%r14
+	pushq	%rbp
+	pushq	%rbx
+	subq	$8, %rsp
+	movq	%rdi, %rbx
+	movq	%rdx, %r15
+	movl	%ecx, %ebp
+	movl	%ecx, %edx""",
+           files=['examples/dot_sum.c', 'examples/asm.sed'])
+    slide(p, r"""
+1. `w`、`x`、`y`、`n` 依次在 `%rdi`、`%rsi`、`%rdx`、`%ecx` 中；
+2. 只有 `%edx` 要写入 `n`，原来在 `%rdx` 中的 `y` 被覆盖；
+3. `w`、`y`、`n` 与第一次调用的结果，放在被调用者保存的 `%rbx`、`%r15`、`%ebp`、`%r14d` 中；
+4. 4 个。`subq $8, %rsp` 使执行 `call` 时 `%rsp` 是 16 的倍数。
+""")
+    p.notes("""
+sed -n '2,10p' 打印清单的第 2 到 10 行，即入口到第一次 call 之前；之后是 call、movl %eax, %r14d、第二次调用的三条参数指令与 call、addl、addq $8, %rsp、4 条 popq 与 ret。
+x 只用于第一次调用，调用之后不再使用，不需要保存。第一次调用的结果由 movl %eax, %r14d 保存，它要在第二次调用之后使用。
+对齐的计算：进入 dot_sum 时栈顶是 8 字节的返回地址，4 条 pushq 共 32 字节，再减 8，合计 48 字节，是 16 的倍数。
+""")
+
+
+def rec_exercise(p):
+    p.title('练习：递归调用的栈帧')
+    p.code('c', """int dot_product_rec(const int *w, const int *x, int n) {
+    if (n <= 0) return 0;
+    return dot_product_rec(w, x, n - 1) + w[n - 1] * x[n - 1];
+}""")
+    slide(p, r"""
+**`dot_product_rec` 用递归计算内积**，`main` 调用 `dot_product_rec(w, x, 4)`：
+1. 从 `main` 的这次调用算起，`dot_product_rec` 一共被调用几次？
+2. `n` 为 0 的那次调用执行时，这几次调用的返回地址有几个在栈上？它们各自回到哪个函数？
+3. 递归调用返回之后还要计算 `w[n - 1] * x[n - 1]`。递归调用期间，`w`、`x`、`n` 应当放在哪一类寄存器中？每次调用因此要在栈上保存什么？
+4. 实现递归是否需要 `call`、`ret`、寄存器使用惯例与栈帧之外的机制？
+""")
+    p.demo('编译 dot_rec.c',
+           """cd examples && gcc -Og -fcf-protection=none -fno-stack-protector -S dot_rec.c -o - | sed -f asm.sed""",
+           files=['examples/dot_rec.c', 'examples/asm.sed'])
+    p.notes("""
+课堂练习。递归是同一个函数的多次调用同时处于活动状态，每次调用的返回地址与保存的寄存器值各有一份。
+演示的输出是 dot_product_rec 与 main 的清单，用来核对第 3 题：入口的 testl 与 jle 处理 n <= 0，之后是 3 条 pushq、3 条保存参数的 mov、leal -1(%rdx), %edx 与递归的 call。
+""")
+
+
+def rec_exercise_2(p):
+    p.title('练习：递归调用的栈帧')
+    figure(p, "rec-stack", 880)
+    slide(p, r"""
+1. 5 次，`n` 依次为 4、3、2、1、0；
+2. 5 个：最早压入的回到 `main`，其余 4 个回到 `dot_product_rec`；
+3. 被调用者保存寄存器；每次调用用 3 条 `pushq` 保存 `%r15`、`%r14`、`%rbx` 的原值；
+4. 不需要：每次调用有自己的返回地址与保存的寄存器值。
+""")
+    p.notes("""
+图的每一行是一次调用压入栈的内容：调用它的 call 压入的返回地址，以及它自己用 pushq 保存的三个寄存器，每一层递归在栈上增加 32 字节。n 为 0 的调用在 pushq 之前就返回，只有返回地址。
+返回时每一层先用 3 条 popq 恢复寄存器，再用 ret 回到上一层，%eax 中是已经算出的部分和。
+""")
 
 
 def flops_estimate(p):
@@ -1627,7 +1844,7 @@ def ymm(p):
 - 硬件提供 16 个 256 位宽度的向量寄存器：`%ymm0` ~ `%ymm15`；
 - **向下兼容映射**：每个 `%ymm` 寄存器的低 128 位映射为同名的 `%xmm` 寄存器；
 - 单个 256 位 `%ymm` 寄存器可同时封装容纳：
-  - **8 个 32 位整数（int32）** $\leftarrow$ 本节主线算子；
+  - **8 个 32 位整数（int32）** $\leftarrow$ 本节的 `dot_product`；
   - 或 8 个单精度浮点数（float32）；
   - 或 4 个 64 位整数/双精度浮点数；
   - 或 32 个 8 位整数（int8 / 字符）。
@@ -1988,7 +2205,7 @@ def insn_summary_2(p):
    - `jmp`（无条件跳转，直接/间接）；
    - `jX`（条件跳转：有符号 `jl/jle/jg/jge`，无符号 `jb/jbe/ja/jae`，零值 `je/jne`）；
    - `setX`（条件设置字节）；`cmovX`（条件传送，消除分支）。
-4. **过程调用与运行时安全**：
+4. **函数调用与运行时安全**：
    - `call`, `ret`（返回地址压栈跳转与出栈恢复）；
    - `%fs:40`, `__stack_chk_fail@PLT`（金丝雀栈溢出保护）。
 5. **向量计算（AVX2 扩展）**：

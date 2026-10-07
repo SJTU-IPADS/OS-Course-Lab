@@ -20,7 +20,7 @@ from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, FILL_RED, INK, LINE
 W, H = 1120, 256
 
 STAGES = [(20, 180, "%rsi", "地址 = x", FILL_BLUE, BLUE),
-          (250, 200, "TLB", "虚拟地址 → 物理地址", WHITE, BLUE),
+          (250, 200, "TLB", "地址转换", WHITE, BLUE),
           (500, 170, "L1 Cache", "命中：直接读出", FILL_BLUE, BLUE),
           (720, 190, "读数据通路", "32 位数据 x[0]", FILL_ORANGE, ORANGE)]
 

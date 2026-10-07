@@ -706,9 +706,10 @@ class PageBuilder:
         """Place an image in a side column; slide text reflows into the other column.
 
         ``side`` is "right" (default) or "left"; ``width`` sets the column width
-        (e.g. "38%"), defaulting to a half-split. Renders via Marp's split
-        background in the viewer/Marp deck, a full-height column beside the
-        narrowed content box in PPTX, and a floated image in slidev.
+        (e.g. "38%"), defaulting to a half-split. On the right the column is
+        the slide's full height and the title reflows beside it (Marp's split
+        background in the viewer, the same box in PPTX). On the left the title
+        keeps the slide's width and the column starts under it.
         """
         if side not in ("left", "right"):
             raise model.ValidationError(

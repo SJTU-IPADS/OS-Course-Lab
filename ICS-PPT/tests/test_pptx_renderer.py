@@ -538,16 +538,27 @@ class PptxRendererTest(unittest.TestCase):
         pic = next(
             s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
         )
-        # Marp's default: half the slide, filled edge to edge and cropped
-        self.assertEqual((pic.left, pic.top), (0, 0))
-        self.assertEqual((pic.width, pic.height), (layout.width // 2, layout.height))
-        # the square picture is wider than the column once it fills its height
-        self.assertGreater(pic.crop_left, 0)
-        self.assertAlmostEqual(pic.crop_left, pic.crop_right)
-        self.assertEqual(pic.crop_top, 0)
+        title = next(s for s in slide.shapes if s.has_text_frame
+                     and s.text_frame.text == "P")
+        # the title keeps the slide's width; the column starts under it
+        self.assertEqual(title.left, layout.content_left)
+        self.assertEqual(title.width, layout.content_width)
+        self.assertGreater(pic.top, title.top + title.height)
+        # Marp's default: half the slide, filled to the left and bottom edges
+        # and cropped
+        self.assertEqual(pic.left, 0)
+        self.assertEqual(pic.width, layout.width // 2)
+        self.assertEqual(pic.top + pic.height, layout.height)
+        # under the title the half-slide column is wider than it is tall, so
+        # the square picture fills its width and loses its top and bottom
+        self.assertGreater(pic.crop_top, 0)
+        self.assertAlmostEqual(pic.crop_top, pic.crop_bottom)
+        self.assertEqual(pic.crop_left, 0)
         text = next(s for s in slide.shapes if s.has_text_frame
                     and s.text_frame.text == "beside the picture")
         self.assertEqual(text.left, layout.width // 2 + layout.content_left)
+        # the text starts level with the column, under the title
+        self.assertEqual(text.top, pic.top)
 
     def test_architecture_draws_a_band_and_a_box_per_module(self):
         lecture = Lecture(id="lec", title="L")

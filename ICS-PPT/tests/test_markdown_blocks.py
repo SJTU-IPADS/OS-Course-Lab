@@ -83,8 +83,41 @@ class RenderBlockTest(unittest.TestCase):
         self.assertEqual(render_block(block), ["![bg right](x.png)", ""])
 
     def test_side_image_marp_with_width_and_alt(self):
-        block = Block(kind="side_image", content={"src": "x.png", "alt": "a", "side": "left", "width": "34%"})
-        self.assertEqual(render_block(block), ["![bg left:34% a](x.png)", ""])
+        block = Block(kind="side_image", content={"src": "x.png", "alt": "a", "side": "right", "width": "34%"})
+        self.assertEqual(render_block(block), ["![bg right:34% a](x.png)", ""])
+
+    def test_side_image_on_the_left_is_left_to_the_page(self):
+        # Marp's split would take the title into the right column with the
+        # text; the page draws the left column itself (`side_column`).
+        block = Block(kind="side_image", content={"src": "x.png", "alt": "", "side": "left", "width": "34%"})
+        self.assertEqual(render_block(block), [])
+
+    def test_side_column_holds_the_images_and_hands_the_theme_its_width(self):
+        from lecturekit.renderers.viewer.blocks import side_column
+
+        sides = [
+            Block(kind="side_image", content={"src": "a.png", "alt": "contain", "side": "left", "width": "40%"}),
+            Block(kind="side_image", content={"src": "b.png", "alt": "a map", "side": "left", "width": None}),
+        ]
+        lines = side_column(sides, 1280)
+        self.assertEqual(
+            lines[0],
+            '<figure class="lk-side">'
+            '<img src="a.png" alt="" class="lk-side-fit">'
+            '<img src="b.png" alt="a map">'
+            '</figure>',
+        )
+        # the first image sets the column: 40% of a 1280px slide
+        self.assertIn("section { --lk-side-width: 512px; }", lines)
+        self.assertIn("<style scoped>", lines)
+
+    def test_side_width_px_reads_percent_pixels_and_the_half_default(self):
+        from lecturekit.renderers.viewer.blocks import side_width_px
+
+        self.assertEqual(side_width_px("38%", 1280), 486)
+        self.assertEqual(side_width_px("480px", 1280), 480)
+        self.assertEqual(side_width_px(300, 1280), 300)
+        self.assertEqual(side_width_px(None, 1280), 640)
 
     def test_aside_block_is_blockquote(self):
         block = Block(kind="aside", content="note")

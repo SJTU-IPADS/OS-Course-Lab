@@ -12,9 +12,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK, LINE,
-                    MONO, MUTED, ORANGE, WHITE, arrow, box, line, mono, rect,
-                    save, text)
+from svgkit import (FILL_GREEN, FILL_ORANGE, GREEN, INK, LINE, MONO, MUTED, ORANGE,
+                    WHITE, arrow, box, line, mono, rect, save, text)
 
 W, H = 1120, 440
 CW, SH, Y0 = 140, 56, 120          # column width, slot height, top of column
@@ -26,14 +25,15 @@ def column(x, top):
     """Two slots of older data and the slot at the top of the stack."""
     out = []
     for k in range(2):
-        out.append(rect(x, Y0 + SH * k, CW, SH, FILL_GREY, LINE, rx=2, width=1.4))
+        out.append(rect(x, Y0 + SH * k, CW, SH, FILL_ORANGE, ORANGE, rx=2, width=1.4))
         out.append(text(x + CW / 2, MID[k] + 5, "已有数据", 15, MUTED))
     y = Y0 + 2 * SH
     if top is None:
         out.append(rect(x, y, CW, SH, WHITE, LINE, rx=2, width=1.4, dash="5 4"))
     else:
+        # the slot being written or read shares the colour of Src / Dest
         label, color = top
-        out.append(rect(x, y, CW, SH, FILL_ORANGE, ORANGE, rx=2, width=1.8))
+        out.append(rect(x, y, CW, SH, FILL_GREEN, GREEN, rx=2, width=1.8))
         out.append(text(x + CW / 2, MID[2] + 5, label, 15, color, "bold"))
     return out
 
@@ -41,18 +41,18 @@ def column(x, top):
 def rsp(x, row, old, sign):
     """%rsp now (solid) and before the step (dashed), with the move between."""
     out = [arrow(x + CW + 56, EDGE[old], x + CW + 6, EDGE[old], LINE, 1.8, dash="5 4"),
-           arrow(x + CW + 56, EDGE[row], x + CW + 6, EDGE[row], BLUE, 2.4),
-           mono(x + CW + 62, EDGE[row] + 6, "%rsp", 16, BLUE, "bold")]
+           arrow(x + CW + 56, EDGE[row], x + CW + 6, EDGE[row], INK, 2.4),
+           mono(x + CW + 62, EDGE[row] + 6, "%rsp", 16, INK, "bold")]
     y0, y1 = EDGE[old], EDGE[row]
     step = 6 if y1 > y0 else -6
-    out.append(arrow(x + CW + 34, y0 + step, x + CW + 34, y1 - step, BLUE, 1.8))
-    out.append(mono(x + CW + 42, (y0 + y1) / 2 + 5, sign, 15, BLUE, "bold"))
+    out.append(arrow(x + CW + 34, y0 + step, x + CW + 34, y1 - step, INK, 1.8))
+    out.append(mono(x + CW + 42, (y0 + y1) / 2 + 5, sign, 15, INK, "bold"))
     return out
 
 
 def rsp_still(x, row):
-    return [arrow(x + CW + 56, EDGE[row], x + CW + 6, EDGE[row], BLUE, 2.4),
-            mono(x + CW + 62, EDGE[row] + 6, "%rsp", 16, BLUE, "bold")]
+    return [arrow(x + CW + 56, EDGE[row], x + CW + 6, EDGE[row], INK, 2.4),
+            mono(x + CW + 62, EDGE[row] + 6, "%rsp", 16, INK, "bold")]
 
 
 def step_title(x, s):

@@ -2,8 +2,9 @@
 
 One slide per page (deck order). Each slide draws the page title, then the
 page's PPTX-visible blocks stacked top-to-bottom by the layout cursor, then any
-accumulated footnotes. A ``side_image`` takes a full-height column first and
-the rest of the page is laid out beside it. Shapes are native (text frames, tables, pictures,
+accumulated footnotes. A ``side_image`` takes a column (full-height on the
+right, under the title on the left) and the rest of the page is laid out beside
+it. Shapes are native (text frames, tables, pictures,
 autoshapes), so the deck is editable in PowerPoint; styling is ported from the
 viewer theme, but vertical spacing is estimated (no browser to measure text).
 """
@@ -71,15 +72,24 @@ class PptxRenderer:
             if model.is_bridge_page(page):
                 draw_bridge(visible_blocks[0], ctx)
                 continue
-            # A side_image column narrows the content box for the title and
-            # every other block, as Marp's split background does.
+            # A side_image column narrows the content box. On the right it is
+            # full-height and the title reflows beside it with every other
+            # block, as in Marp's split background. On the left the title keeps
+            # the slide's width, and the column starts under it.
             sides = [block for block in visible_blocks if block.kind == "side_image"]
-            if sides:
+            visible_blocks = [b for b in visible_blocks if b.kind != "side_image"]
+            on_left = bool(sides) and sides[0].content.get("side") == "left"
+            if sides and not on_left:
                 draw_side_images(sides, ctx)
                 ctx.layout = side_layout(sides, layout)
                 ctx.cursor = Cursor(ctx.layout)
-                visible_blocks = [b for b in visible_blocks if b.kind != "side_image"]
             draw_title(page.title, ctx)
+            if on_left:
+                under_title = ctx.cursor.top
+                draw_side_images(sides, ctx, top=under_title)
+                ctx.layout = side_layout(sides, layout)
+                ctx.cursor = Cursor(ctx.layout)
+                ctx.cursor.top = under_title
             footnotes: list[str] = [note for block in sides for note in block.footnotes]
             block_shapes: list[list[object]] = []
             for block in visible_blocks:

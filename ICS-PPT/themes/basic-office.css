@@ -1006,6 +1006,56 @@ section > figure.lk-row > figcaption {
   color: var(--color-dk2);
 }
 
+/* --- An image column on the left (p.side_image(..., side="left")) ---
+   Marp's split background moves the whole slide into the other column, the
+   title with it; on the left that takes the title away from the slide's left
+   edge. This split is therefore drawn here: the title keeps the slide's width,
+   the image column runs from under the title's rule to the slide's left and
+   bottom edges, and the blocks keep their flex column to the right of it, as
+   wide as Marp's split leaves them. The renderer sets --lk-side-width (px) on
+   the slide. */
+section.lk-side-left {
+  padding-left: calc(var(--lk-side-width) + 80px);
+  anchor-scope: --lk-title;
+}
+
+section.lk-side-left > h1 {
+  margin-left: calc(-1 * var(--lk-side-width));
+  anchor-name: --lk-title;
+}
+
+section.lk-side-left > .lk-side {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--lk-side-width);
+  /* Where a one-line title's rule ends (the slide's top padding plus the h1
+     box), for a browser without anchor positioning; then where this title's
+     rule ends, however many lines it takes. */
+  top: calc(44px + 26pt * (1.4 + 0.18) + 1.5px);
+  top: anchor(--lk-title bottom);
+  margin: 13pt 0 0;           /* the title's own bottom margin */
+  display: flex;              /* several images share the column side by side */
+}
+
+.lk-side > img {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;          /* Marp's default for a background: fill, cropped */
+}
+
+.lk-side > img.lk-side-fit {
+  object-fit: contain;        /* alt="contain": the whole image, centred */
+}
+
+/* Footnotes stay under the text, as they do inside Marp's split. */
+section.lk-side-left > .footnotes {
+  left: calc(var(--lk-side-width) + 80px);
+}
+
 /* --- Pagination + footer --- */
 
 section::after {

@@ -472,6 +472,20 @@ read what it printed. **Turning the page stops everything the slide started**:
 every run of the slide you leave is killed and the rack emptied, so a lecture
 never trails a server behind it.
 
+**Sizing it for the room.** Two things about the drawer are set by hand,
+because a room decides them:
+
+| Control | What it does |
+| --- | --- |
+| `A−` / `A+`, at the left end of the bar | the terminal's text, 2px a press, from 10px to 40px (14px to start) |
+| the drawer's top edge, dragged | the drawer's height; from then on it keeps that height whatever the output needs |
+| the top edge, double-clicked | gives the height back to the output (as many rows as it printed, up to 55% of the window) |
+
+An interactive run is told its new size after either. Both settings are kept
+in the browser (`localStorage`) and so outlive the reload that follows every
+rebuild; they belong to the address the deck is served from, so another port
+starts from the defaults.
+
 There is no stop *request* behind any of this: the browser drops the connection,
 and the server kills that command's whole process group when its next write has
 nowhere to go. So a command with no natural end — `ollama serve` — is a
@@ -537,6 +551,12 @@ The file is read **when the button is pressed**, so editing a source file during
 a lecture and pressing the button again shows the edit — the same file the ▶
 beside it would compile.
 
+The panel is sized by hand, like the drawer: `A−` / `A+` beside ▸ set the size
+of the file's text (2px a press, 10px to 40px, 14px to start), dragging the
+panel's left edge sets its width, and a double click on that edge returns it to
+the default (46% of the window, at most 720px). Both are kept in the browser
+across reloads.
+
 The panel colours the file by its syntax. The lexer is chosen from the file
 name (`.c`, `.h`, `.s`, `.S`, `.py`, `.sh`, `.sed`, `Makefile`, `.cu`, ...) and
 the lexing is done by [Pygments](https://pygments.org) on the server, so the
@@ -573,7 +593,7 @@ writes, an entire burst collapses into a single render.
 With `--watch --reveal` a page's body starts dimmed (grey). Press **Enter** to reveal
 the next block; once every block on the page is shown, Enter pages to the next
 slide. Paging back shows a slide fully. The reveal unit is the block — a `slide`
-block reveals in one Enter, not line by line; a `side_image` background is always
+block reveals in one Enter, not line by line; a `side_image` column is always
 visible, and a block's callout bubbles reveal with it.
 
 A reload keeps what the current slide shows: a live-reload after an edit, or

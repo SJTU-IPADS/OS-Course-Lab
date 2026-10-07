@@ -1,30 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 220" width="1120" height="220">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
 <rect x="130.0" y="8.0" width="280.0" height="40.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="18.0" y="34.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">0x4010</text>
-<text x="146.0" y="34.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">call dot_product</text>
+<text x="120.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">main 中</text>
+<text x="146.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">调用 dot_product</text>
 <text x="420.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">调用点 A</text>
 <rect x="130.0" y="52.0" width="280.0" height="40.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.2"/>
-<text x="18.0" y="78.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="start">0x4015</text>
-<text x="146.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">下一条指令</text>
+<text x="146.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">A 的下一条指令</text>
 <rect x="130.0" y="128.0" width="280.0" height="40.0" rx="4" fill="#eaf3f7" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="18.0" y="154.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">0x4080</text>
-<text x="146.0" y="154.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">call dot_product</text>
+<text x="120.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">另一个函数中</text>
+<text x="146.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">调用 dot_product</text>
 <text x="420.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">调用点 B</text>
 <rect x="130.0" y="172.0" width="280.0" height="40.0" rx="4" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.2"/>
-<text x="18.0" y="198.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="start">0x4085</text>
-<text x="146.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">下一条指令</text>
+<text x="146.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">B 的下一条指令</text>
 <text x="270.0" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">⋮</text>
-<rect x="640.0" y="68.0" width="250.0" height="98.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<rect x="640.0" y="68.0" width="250.0" height="98.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
 <text x="765.0" y="98.0" font-family="monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">dot_product</text>
 <rect x="660.0" y="116.0" width="210.0" height="36.0" rx="4" fill="#ffffff" stroke="#c0392b" stroke-width="1.6"/>
-<text x="765.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">ret：回到哪里？</text>
+<text x="765.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">执行完毕：回到哪里？</text>
 <path d="M 500 28 C 560 28, 580 78, 636 84" fill="none" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
 <path d="M 500 148 C 560 148, 580 112, 636 106" fill="none" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
 <path d="M 660 134 C 560 134, 520 72, 414 72" fill="none" stroke="#156082" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-156082)"/>
 <path d="M 660 146 C 560 146, 520 192, 414 192" fill="none" stroke="#2e7d4f" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-2e7d4f)"/>
-<text x="910.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">0x4015 还是 0x4085，</text>
+<text x="910.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">回到 A 之后还是 B 之后，</text>
 <text x="910.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">取决于这次是谁调用的</text>
-<text x="910.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">固定目标的 jmp 只能</text>
-<text x="910.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">写死其中一个</text>
+<text x="910.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">jmp 的目标写在指令中，</text>
+<text x="910.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">只能是其中一个</text>
 </svg>

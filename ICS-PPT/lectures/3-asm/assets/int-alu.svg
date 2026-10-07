@@ -1,25 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 112" width="1120" height="112">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 136" width="1120" height="136">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<rect x="20.0" y="8.0" width="220.0" height="42.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="130.0" y="35.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">%eax（32 位）</text>
-<rect x="20.0" y="62.0" width="220.0" height="42.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="130.0" y="88.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">(%rdi) 或 %ecx（32 位）</text>
-<line x1="240.0" y1="29.0" x2="316.0" y2="29.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
-<line x1="240.0" y1="83.0" x2="316.0" y2="83.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
-<rect x="320.0" y="4.0" width="290.0" height="104.0" rx="10" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
-<text x="354.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">ALU</text>
-<rect x="390.0" y="12.0" width="206.0" height="40.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
-<text x="493.0" y="37.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">乘法器（imull）</text>
-<rect x="390.0" y="60.0" width="206.0" height="40.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
-<text x="493.0" y="85.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">加法器（addl）</text>
-<line x1="610.0" y1="30.0" x2="676.0" y2="30.0" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
-<rect x="680.0" y="8.0" width="170.0" height="44.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
-<text x="765.0" y="36.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">取低 32 位</text>
-<line x1="850.0" y1="30.0" x2="916.0" y2="30.0" stroke="#2e7d4f" stroke-width="2.4" marker-end="url(#ah-2e7d4f)"/>
-<rect x="920.0" y="8.0" width="180.0" height="44.0" rx="6" fill="#eef2f4" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="1010.0" y="36.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">写回 %eax</text>
-<path d="M 610.0 82.0 L 676.0 82.0" fill="none" stroke="#5a6b78" stroke-width="2.2" marker-end="url(#ah-5a6b78)"/>
-<text x="643.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">状态输出</text>
-<rect x="680.0" y="60.0" width="170.0" height="44.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="765.0" y="88.1" font-family="monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">RFLAGS</text>
+<rect x="20.0" y="8.0" width="240.0" height="44.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="140.0" y="35.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">D（寄存器，如 %eax）</text>
+<rect x="20.0" y="84.0" width="240.0" height="44.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="140.0" y="111.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">S（寄存器、内存或立即数）</text>
+<rect x="310.0" y="4.0" width="250.0" height="128.0" rx="10" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="340.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">ALU</text>
+<line x1="260.0" y1="30.0" x2="366.0" y2="30.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
+<line x1="260.0" y1="106.0" x2="366.0" y2="106.0" stroke="#156082" stroke-width="2.2" marker-end="url(#ah-156082)"/>
+<rect x="370.0" y="14.0" width="170.0" height="108.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="455.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">乘法器</text>
+<text x="455.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">imull</text>
+<line x1="540.0" y1="68.0" x2="592.0" y2="68.0" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<rect x="596.0" y="4.0" width="168.0" height="128.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5,4"/>
+<text x="680.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">64 位乘积</text>
+<rect x="608.0" y="30.0" width="144.0" height="40.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="680.0" y="55.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">高 32 位</text>
+<rect x="608.0" y="86.0" width="144.0" height="40.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="680.0" y="111.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">低 32 位</text>
+<line x1="752.0" y1="50.0" x2="826.0" y2="50.0" stroke="#2e7d4f" stroke-width="2.4" marker-end="url(#ah-2e7d4f)"/>
+<line x1="752.0" y1="106.0" x2="826.0" y2="106.0" stroke="#2e7d4f" stroke-width="2.4" marker-end="url(#ah-2e7d4f)"/>
+<rect x="830.0" y="24.0" width="270.0" height="52.0" rx="6" fill="#eef2f4" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="965.0" y="47.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">单操作数格式：写入 %edx</text>
+<text x="965.0" y="68.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">二、三操作数格式：丢弃</text>
+<rect x="830.0" y="80.0" width="270.0" height="52.0" rx="6" fill="#eef2f4" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="965.0" y="103.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">二、三操作数格式：写回 D</text>
+<text x="965.0" y="124.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">单操作数格式：写入 %eax</text>
 </svg>

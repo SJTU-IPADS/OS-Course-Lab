@@ -422,9 +422,9 @@ def tail_visible(page: Page) -> bool:
     return group is None or group.index == group.total
 
 
-# Kinds ``block_held`` never holds. A ``side_image`` is a Marp split background
-# claiming the whole slide: hiding it would reflow every frame's text to full
-# width, which is exactly the between-frame shift holding exists to prevent.
+# Kinds ``block_held`` never holds. A ``side_image`` column narrows the whole
+# slide: hiding it would reflow every frame's text to full width, which is
+# exactly the between-frame shift holding exists to prevent.
 HELD_EXEMPT_KINDS = frozenset({"side_image"})
 
 

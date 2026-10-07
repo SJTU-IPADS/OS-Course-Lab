@@ -8,7 +8,9 @@
 
    The output itself is an xterm.js terminal per run (vendor/xterm), which
    draws its own rows; this file lays out the frame around it. demo.js sizes
-   each terminal to the 55vh below, less the bar.
+   each terminal to the 55vh below, less the bar — or, once the top edge has
+   been dragged, to the height it was dragged to, which demo.js then sets on
+   the drawer itself. The terminal's text size is demo.js's too (A− and A+).
 
    Injected only by the live dev server (see dev_server.make_handler), so a
    rendered bundle never carries it. */
@@ -39,9 +41,34 @@
   transform: translateY(0);
 }
 
-/* One row of chrome: a tab per run, then the shown run's status, its stop
-   button and ▾. The tab is where a run is closed, so a run with no tab would
-   be a run with no way out; the commands themselves are in the terminal. */
+/* The top edge is a handle: drag it to set the drawer's height. A strip over
+   the bar's own top padding, so it costs the bar nothing; it lights up under
+   the pointer because an edge that can be dragged looks like any other edge
+   until it does. */
+.lk-drawer-grip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 7px;
+  border-top: 2px solid transparent;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.lk-drawer-grip:hover {
+  border-top-color: #2c4a63;
+}
+
+.lk-drawer-grip[data-dragging="1"] {
+  border-top-color: #8fd3ff;
+}
+
+/* One row of chrome: the text size, a tab per run, then the shown run's
+   status, its stop button and ▾. The tab is where a run is closed, so a run
+   with no tab would be a run with no way out; the commands themselves are in
+   the terminal. */
 .lk-drawer-bar {
   display: flex;
   align-items: center;
@@ -188,6 +215,37 @@
 .lk-drawer-stop:hover {
   background: #3a1c1c;
   color: #ffc4ba;
+}
+
+/* A− and A+: the size of the terminal's text, for the room rather than for
+   the author's own screen. One control in two halves, at the bar's left end,
+   which the file panel never covers. */
+.lk-drawer-zooms {
+  display: flex;
+  flex: none;
+  gap: 0.3em;
+  margin-bottom: 0.35em;
+}
+
+.lk-drawer-zoom {
+  padding: 0.05em 0.55em;
+  border: 1px solid #263039;
+  border-radius: 5px;
+  background: #141c23;
+  color: #9fb3c2;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.lk-drawer-zoom:hover {
+  border-color: #3a4a57;
+  color: #dfe6ec;
+}
+
+.lk-drawer-zoom:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* A running command has no number to show yet, so the badge shows a pulse

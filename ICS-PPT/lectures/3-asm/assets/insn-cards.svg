@@ -45,7 +45,7 @@
 <text x="1094.0" y="218.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">条件设置 / 传送</text>
 <rect x="197.0" y="248.0" width="356.0" height="226.0" rx="8" fill="#ffffff" stroke="#c0392b" stroke-width="1.8"/>
 <rect x="197.0" y="248.0" width="356.0" height="40.0" rx="8" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.8"/>
-<text x="213.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve">4  过程调用与运行时安全</text>
+<text x="213.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve">4  函数调用与运行时安全</text>
 <text x="213.0" y="362.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">call ret</text>
 <text x="539.0" y="362.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">调用与返回</text>
 <text x="213.0" y="386.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">%fs:40</text>

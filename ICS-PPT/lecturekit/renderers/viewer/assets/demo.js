@@ -22,6 +22,13 @@
   // demo the author marked interactive takes the keyboard; every other one is
   // display only, and keys pressed in it still reach the deck.
   //
+  // Two things are the presenter's to set, because a room decides them and a
+  // stylesheet cannot: the size of the text (A− and A+ in the bar) and the
+  // height of the drawer (its top edge drags; a double click on the edge gives
+  // the height back to the output). Both are kept in localStorage — the dev
+  // server reloads this page on every rebuild, and a size chosen for the back
+  // row should outlive that.
+  //
   // Injected only by the dev server, and only under `view --watch`. Its
   // presence *is* the arming signal — the buttons ship `disabled` and a
   // rendered bundle, having no server behind it, never loads this.
@@ -47,18 +54,59 @@
   var SHOW_CURSOR = "\x1b[?25h";
   var DRAWER_SHARE = 0.55; // of the window's height; demo.css says the same
   var INPUT_PIECE = 4096; // characters per keystroke request, for a long paste
+  var FONT_SIZES = { least: 10, most: 40, step: 2, usual: 14 }; // px
+  var FONT_KEY = "lk-drawer-font";
+  var HEIGHT_KEY = "lk-drawer-height";
+  var LEAST_HEIGHT = 96; // px: the bar and a couple of rows
+  var HEADROOM = 48; // px of slide a dragged drawer always leaves above itself
 
   var drawer = null;
   var runs = []; // every run started on the slide now showing, oldest first
   var active = null; // the run whose terminal is on screen
+  var fontSize = clamp(recall(FONT_KEY) || FONT_SIZES.usual, FONT_SIZES.least, FONT_SIZES.most);
+  var pinned = recall(HEIGHT_KEY); // the height the edge was dragged to, or null
+
+  function clamp(value, least, most) {
+    return Math.min(Math.max(value, least), most);
+  }
+
+  // A number the presenter set on an earlier load, or null. Storage can be
+  // off (a private window); the drawer then simply forgets between reloads.
+  function recall(key) {
+    try {
+      var value = parseFloat(window.localStorage.getItem(key));
+      return isFinite(value) ? value : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function keep(key, value) {
+    try {
+      if (value === null) window.localStorage.removeItem(key);
+      else window.localStorage.setItem(key, String(value));
+    } catch (err) {
+      /* nothing to keep it in */
+    }
+  }
 
   function build() {
     var el = document.createElement("div");
     el.className = "lk-drawer";
     el.setAttribute("data-lk-chrome", "demo");
     el.setAttribute("data-open", "0");
+    // A− and A+ lead the bar: the file panel, when it is up, lies over the
+    // bar's right-hand end, and the text is resized with a file beside it as
+    // often as without.
     el.innerHTML =
+      '<div class="lk-drawer-grip" title="Drag to resize; double-click to reset"></div>' +
       '<div class="lk-drawer-bar">' +
+      '<span class="lk-drawer-zooms">' +
+      '<button class="lk-drawer-zoom" type="button" data-zoom="-1" ' +
+      'aria-label="Smaller text" title="Smaller text">A−</button>' +
+      '<button class="lk-drawer-zoom" type="button" data-zoom="1" ' +
+      'aria-label="Larger text" title="Larger text">A+</button>' +
+      "</span>" +
       '<div class="lk-drawer-tabs"></div>' +
       '<span class="lk-drawer-status"></span>' +
       '<button class="lk-drawer-stop" type="button" ' +
@@ -69,6 +117,17 @@
       '<div class="lk-drawer-screen"></div>';
     el.querySelector(".lk-drawer-close").addEventListener("click", hide);
     el.querySelector(".lk-drawer-stop").addEventListener("click", stopActive);
+    var zooms = el.querySelectorAll(".lk-drawer-zoom");
+    for (var i = 0; i < zooms.length; i++) {
+      zooms[i].addEventListener("click", function (event) {
+        zoom(parseInt(event.currentTarget.getAttribute("data-zoom"), 10));
+        // Marp ignores every key aimed at a button; the keys go back to the
+        // deck, or to the program a run is talking to.
+        event.currentTarget.blur();
+        if (active && active.interactive && !active.ended) active.term.focus();
+      });
+    }
+    grip(el.querySelector(".lk-drawer-grip"));
     // Keys typed into an interactive run are the program's. Marp pages on the
     // arrow keys and space from a listener on the document, so they stop here,
     // on the way up.
@@ -88,6 +147,7 @@
 
     return {
       root: el,
+      zooms: zooms,
       bar: el.querySelector(".lk-drawer-bar"),
       tabs: el.querySelector(".lk-drawer-tabs"),
       status: el.querySelector(".lk-drawer-status"),
@@ -109,7 +169,7 @@
       cursorBlink: false,
       cursorInactiveStyle: "none",
       fontFamily: FONT,
-      fontSize: 14,
+      fontSize: fontSize,
       lineHeight: 1.2,
       scrollback: 5000,
       theme: THEME
@@ -149,13 +209,12 @@
   // the output needs, up to the drawer's share of the window, for a run that
   // only prints — a one-line answer gets a one-line drawer. An interactive run
   // gets the whole share at once, and keeps it: a program drawing a screen
-  // needs a screen that holds still, and the far end is told its size.
+  // needs a screen that holds still, and the far end is told its size. A
+  // drawer whose edge was dragged is as tall as it was dragged, whatever the
+  // output needs; the rows are counted the same way inside it.
   function fit(run) {
     if (run !== active || !run.term || !run.term.element) return;
-    var room =
-      Math.floor(window.innerHeight * DRAWER_SHARE) -
-      drawer.bar.offsetHeight -
-      padding(drawer.screen);
+    var room = share() - drawer.bar.offsetHeight - padding(drawer.screen);
     run.box.style.height = Math.max(room, 0) + "px";
     var dims = run.fit.proposeDimensions();
     run.box.style.height = "";
@@ -185,14 +244,111 @@
     return parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
   }
 
+  // The drawer's height, bar included: what its edge was dragged to, kept
+  // inside the window, or its usual share of the window.
+  function share() {
+    if (pinned === null) return Math.floor(window.innerHeight * DRAWER_SHARE);
+    return clamp(pinned, LEAST_HEIGHT, Math.max(window.innerHeight - HEADROOM, LEAST_HEIGHT));
+  }
+
+  // A dragged drawer holds its height; an undragged one is as tall as its
+  // terminal, up to the 55vh demo.css gives it.
+  function frame() {
+    if (!drawer) return;
+    drawer.root.style.height = pinned === null ? "" : share() + "px";
+    drawer.root.style.maxHeight = pinned === null ? "" : "none";
+  }
+
+  // Measuring is not free and a drag or a window resize asks for it on every
+  // event, so it happens once per frame.
   var refit = 0;
-  window.addEventListener("resize", function () {
+  function later() {
     if (refit) return;
     refit = requestAnimationFrame(function () {
       refit = 0;
+      frame(); // the window may have shrunk under a dragged height
       if (active) fit(active);
     });
-  });
+  }
+  window.addEventListener("resize", later);
+
+  // ---- the presenter's settings -------------------------------------------
+
+  // A− and A+: the terminals' text, one step at a time. Every run changes
+  // size, shown or not; the one on screen is measured again at once and the
+  // others when they are picked (see select).
+  function zoom(direction) {
+    fontSize = clamp(
+      fontSize + direction * FONT_SIZES.step, FONT_SIZES.least, FONT_SIZES.most
+    );
+    keep(FONT_KEY, fontSize);
+    for (var i = 0; i < runs.length; i++) {
+      if (runs[i].term) runs[i].term.options.fontSize = fontSize;
+    }
+    limits();
+    later();
+  }
+
+  // A button that has nowhere further to go says so.
+  function limits() {
+    if (!drawer) return;
+    drawer.zooms[0].disabled = fontSize <= FONT_SIZES.least;
+    drawer.zooms[1].disabled = fontSize >= FONT_SIZES.most;
+  }
+
+  // The top edge: drag it and the drawer is as tall as the pointer says, double
+  // click it and the height is the output's again. The pointer is captured, so
+  // the drag goes on over the slide and over the terminal alike.
+  function grip(el) {
+    var dragging = false;
+    el.addEventListener("pointerdown", function (event) {
+      if (event.button !== 0) return;
+      dragging = true;
+      el.setPointerCapture(event.pointerId);
+      el.setAttribute("data-dragging", "1");
+      event.preventDefault(); // no text selection trailing the pointer
+    });
+    el.addEventListener("pointermove", function (event) {
+      if (!dragging) return;
+      pinned = window.innerHeight - event.clientY;
+      frame();
+      later();
+    });
+    function done() {
+      if (!dragging) return;
+      dragging = false;
+      el.removeAttribute("data-dragging");
+      if (pinned !== null) {
+        pinned = share(); // what it was held to, not where the pointer went
+        keep(HEIGHT_KEY, pinned);
+      }
+      swallowClick();
+    }
+    el.addEventListener("pointerup", done);
+    el.addEventListener("pointercancel", done);
+    el.addEventListener("dblclick", function () {
+      pinned = null;
+      keep(HEIGHT_KEY, null);
+      frame();
+      later();
+    });
+  }
+
+  // A drag is not a click, but a browser may report one when the button comes
+  // up — on the slide, if the pointer ended there, where it would put this
+  // drawer away and turn Marp's page. The one click that follows a drag is
+  // taken before anything else hears it; a drag that produced none leaves
+  // nothing behind.
+  function swallowClick() {
+    function swallow(event) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+    window.addEventListener("click", swallow, true);
+    setTimeout(function () {
+      window.removeEventListener("click", swallow, true);
+    }, 0);
+  }
 
   // ---- input --------------------------------------------------------------
   // Keystrokes travel as requests of their own, one at a time and in order:
@@ -463,7 +619,11 @@
   // ---- running ------------------------------------------------------------
 
   function start(chip) {
-    if (!drawer) drawer = build();
+    if (!drawer) {
+      drawer = build();
+      frame();
+      limits();
+    }
     var run = {
       chip: chip,
       label: label(chip),

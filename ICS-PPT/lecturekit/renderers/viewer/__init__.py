@@ -9,6 +9,7 @@ from pathlib import Path
 from lecturekit import demo, i18n, model, references, source
 from .blocks import (
     BLOCK_RENDERERS, annotation_markup, escape_html, render_block, render_footnotes,
+    side_column,
 )
 from .marp import CJK_FONT
 from .pdf import SLIDE_LINK_PREFIX
@@ -20,6 +21,7 @@ OUTLINE_CSS = (ASSETS / "outline.css").read_text(encoding="utf-8")
 
 # A Marp background directive (``![bg …](…)``) must stay a top-level image, so a
 # side_image is never wrapped: it is always visible and consumes no reveal step.
+# (One on the left renders nothing in its own place; `side_column` draws it.)
 # A spacer is pure layout whitespace, so it is likewise always visible and never
 # claims a reveal step of its own.
 _REVEAL_SKIP = {"side_image", "spacer"}
@@ -628,9 +630,19 @@ def render_marp_page(
         classes.append("lk-gap-auto")
     if page.id == REFERENCES_PAGE_ID:
         classes.append("lk-references")
+    # A side_image on the left is drawn by the theme, not by Marp's split: the
+    # title keeps the slide's width and the image column starts under it.
+    left_sides = [
+        block for block in visible_blocks
+        if block.kind == "side_image" and block.content.get("side") == "left"
+    ]
+    if left_sides:
+        classes.append("lk-side-left")
     if classes:
         out.extend([f"<!-- _class: {' '.join(classes)} -->", ""])
     out.extend([f"# {_title_html(page.title)}", ""])
+    if left_sides:
+        out.extend(side_column(left_sides, width))
     footnotes: list[str] = []
     annotation_rules: list[str] = []
     if page.gap is not None:

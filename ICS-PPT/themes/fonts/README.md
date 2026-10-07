@@ -19,7 +19,7 @@ painting the previous slide — which reads as a slow live reload. Each face lis
 ## NotoSansSC-Regular.woff2
 
 A static Regular instance of **Noto Sans SC** (Simplified Chinese), used only by
-the PDF deck build. Marp renders PDFs with a headless Chromium that cannot see
+the PDF and PNG deck builds and the PDF's outline page. Marp renders PDFs with a headless Chromium that cannot see
 the host's system fonts, so Chinese text silently drops out unless a CJK font is
 embedded via `@font-face`. `lecturekit/renderers/viewer/marp.py` copies this file
 into the bundle and references it from a PDF-only theme. The live HTML viewer

@@ -14,8 +14,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, GREEN, INK, LINE,
-                    MUTED, ORANGE, arrow, mono, path, rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_ORANGE, GREEN, INK, MUTED,
+                    ORANGE, arrow, mono, path, rect, save, text)
 
 W, H = 1120, 416
 X, RW, SWD = 230, 250, 110          # bar left, return-address cell, saved cell
@@ -23,22 +23,22 @@ RH, STEP, TOP = 42, 54, 112
 
 
 def frame(y, ret, pushes):
-    out = [rect(X, y, RW, RH, FILL_ORANGE, ORANGE, rx=2, width=1.6),
+    out = [rect(X, y, RW, RH, FILL_BLUE, BLUE, rx=2, width=1.6),
            mono(X + RW / 2, y + 27, ret, 15, INK, "bold", anchor="middle")]
     if pushes:
         for k, r in enumerate(["%r15", "%r14", "%rbx"]):
             x = X + RW + k * SWD
-            out.append(rect(x, y, SWD, RH, FILL_BLUE, BLUE, rx=2, width=1.4))
+            out.append(rect(x, y, SWD, RH, FILL_GREEN, GREEN, rx=2, width=1.4))
             out.append(mono(x + SWD / 2, y + 27, r, 15, INK, anchor="middle"))
     return out
 
 
 def build():
     right = X + RW + 3 * SWD
-    out = [text(X + RW / 2, 60, "返回地址（call 压入）", 15, ORANGE, "bold"),
-           text(X + RW + 1.5 * SWD, 60, "被调用者保存的寄存器（pushq）", 15, BLUE, "bold"),
+    out = [text(X + RW / 2, 60, "返回地址（call 压入）", 15, BLUE, "bold"),
+           text(X + RW + 1.5 * SWD, 60, "被调用者保存的寄存器（pushq）", 15, GREEN, "bold"),
            text(90, 60, "调用层", 15, MUTED)]
-    out.append(rect(X, 70, right - X, 32, FILL_GREY, LINE, rx=2, width=1.4))
+    out.append(rect(X, 70, right - X, 32, FILL_ORANGE, ORANGE, rx=2, width=1.4))
     out.append(text((X + right) / 2, 92, "main 的栈帧", 15, MUTED))
     out.append(mono(90, 92, "main", 15, MUTED, anchor="middle"))
     ends = [(right, 86)]
@@ -62,8 +62,8 @@ def build():
     out.append(arrow(20, 110, 20, 370, MUTED, 1.8))
     out.append(text(30, 396, "低地址", 14, MUTED, anchor="start"))
     y0 = TOP + 4 * STEP + RH
-    out.append(arrow(X + 40, y0 + 34, X + 40, y0 + 4, BLUE, 2.4))
-    out.append(text(X + 50, y0 + 36, "%rsp（n = 0 时）", 15, BLUE, "bold", anchor="start"))
+    out.append(arrow(X + 40, y0 + 34, X + 40, y0 + 4, INK, 2.4))
+    out.append(text(X + 50, y0 + 36, "%rsp（n = 0 时）", 15, INK, "bold", anchor="start"))
     return out
 
 

@@ -13,8 +13,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, INK, LINE, MUTED,
-                    ORANGE, WHITE, arrow, mono, rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, INK, LINE, MUTED, ORANGE, WHITE,
+                    arrow, mono, rect, save, text)
 
 W, H = 1120, 450
 REGS = ["%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"]
@@ -41,10 +41,10 @@ def cards():
 
 def stack():
     x, w, sh = SX, 2 * STEP - 12, 44
-    rows = [("调用者的栈数据", "", FILL_GREY, LINE),
-            ("参数 8", "16(%rsp)", WHITE, BLUE),
-            ("参数 7", "8(%rsp)", WHITE, BLUE),
-            ("返回地址", "0(%rsp)", FILL_ORANGE, ORANGE)]
+    rows = [("调用者的栈数据", "", FILL_ORANGE, ORANGE),
+            ("参数 8", "16(%rsp)", FILL_ORANGE, ORANGE),
+            ("参数 7", "8(%rsp)", FILL_ORANGE, ORANGE),
+            ("返回地址", "0(%rsp)", FILL_BLUE, BLUE)]
     out = [text(x + w / 2, 196, "进入被调用函数时的栈顶", 15, INK, "bold")]
     for k, (name, off, fill, stroke) in enumerate(rows):
         y = 214 + k * sh
@@ -53,8 +53,8 @@ def stack():
         if off:
             out.append(mono(x + w - 14, y + 28, off, 15, INK, "bold", anchor="end"))
     ry = 214 + 4 * sh               # %rsp is the low edge of the return address
-    out.append(arrow(x - 70, ry, x - 6, ry, BLUE, 2.4))
-    out.append(mono(x - 76, ry + 6, "%rsp", 16, BLUE, "bold", anchor="end"))
+    out.append(arrow(x - 70, ry, x - 6, ry, INK, 2.4))
+    out.append(mono(x - 76, ry + 6, "%rsp", 16, INK, "bold", anchor="end"))
     out.append(text(x + w / 2, 420, "由调用者在 call 之前从右向左压入", 14, MUTED))
     return out
 
@@ -63,7 +63,7 @@ def result():
     right, bit, top = 680, 7, 214
     rows = [("%rax", 64, "long / 指针"), ("%eax", 32, "int"),
             ("%ax", 16, "short"), ("%al", 8, "char")]
-    out = [text(right - 32 * bit, 196, "返回值：%rax 体系，按宽度取", 15, INK, "bold")]
+    out = [text(right - 32 * bit, 196, "返回值：%rax，按宽度使用", 15, INK, "bold")]
     for k, (name, bits, ctype) in enumerate(rows):
         y, w = top + k * 44, bits * bit
         out.append(rect(right - w, y + 4, w, 36, FILL_ORANGE, ORANGE, rx=3, width=1.6))

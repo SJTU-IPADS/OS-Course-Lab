@@ -1,8 +1,8 @@
 """ICS 第 3 章：程序的机器级表示与执行。
 
 以向量内积 dot_product 为唯一主线，分四部分推进：
-单次乘加（寄存器、寻址、数据传送与算术指令），循环控制（%rip、标志位、条件跳转、循环结构），
-过程调用（运行时栈与栈帧、call/ret、ABI、缓冲区溢出、金丝雀），向量化（YMM、AVX2、perf 实测、OpenMP、CUDA）。
+单次乘加（寄存器、寻址、数据传送与算术指令），循环控制（%rip、跳转指令、标志位、条件跳转、跳转表与间接跳转），
+函数调用（call/ret 与运行时栈、参数传递、寄存器使用惯例、局部变量与栈帧、缓冲区溢出、金丝雀），向量化（YMM、AVX2、perf 实测、CUDA）。
 """
 
 from lecturekit.dsl import Lecture
@@ -64,88 +64,98 @@ with lecture.section('第一部分：执行单次计算——运算只能在寄�
         ss.page("extension", body=pages.extension)
         ss.page("extension-fig", body=pages.extension_fig)
         ss.page("extension-example", body=pages.extension_example)
-        ss.page("extension-example-2", body=pages.extension_example_2)
         ss.page("int-arith", body=pages.int_arith)
-        ss.page("shift-ops", body=pages.shift_ops)
-        ss.page("shift-example", body=pages.shift_example)
-        ss.page("shift-example-2", body=pages.shift_example_2)
+        ss.page("int-arith-2", body=pages.int_arith_2)
+        ss.page("insn-table", body=pages.insn_table)
         ss.page("xor-strength", body=pages.xor_strength)
         ss.page("xor-strength-2", body=pages.xor_strength_2)
-        ss.page("lea-mul-example", body=pages.lea_mul_example)
-        ss.page("lea-mul-example-2", body=pages.lea_mul_example_2)
         ss.page("insn-bytes", body=pages.insn_bytes)
+
+    with s.section('小结与练习', id="part1-summary") as ss:
+        ss.page("recap-part1", body=pages.recap_part1)
+        ss.page("recap-part1-fig", body=pages.recap_part1_fig)
         ss.page("disasm-exercise", body=pages.disasm_exercise)
         ss.page("disasm-exercise-2", body=pages.disasm_exercise_2)
         ss.page("mac-exercise", body=pages.mac_exercise)
         ss.page("mac-exercise-2", body=pages.mac_exercise_2)
-        ss.page("memory-operand-2", body=pages.memory_operand_2)
 
-    s.page("recap-part1", body=pages.recap_part1)
-    s.page("recap-part1-fig", body=pages.recap_part1_fig)
-
-lecture.bridge('第二部分：循环控制与状态机推进', id="bridge-part2")
+lecture.bridge('第二部分：循环控制与跳转指令', id="bridge-part2")
 
 
-with lecture.section('第二部分：循环控制与状态机推进', id="part2") as s:
+with lecture.section('第二部分：循环控制与跳转指令', id="part2") as s:
     s.page("loop-need", body=pages.loop_need)
-    s.page("pc-update", body=pages.pc_update)
-    s.page("jump-encoding", body=pages.jump_encoding)
-    s.page("jump-encoding-2", body=pages.jump_encoding_2)
+    s.page("loop-need-2", body=pages.loop_need_2)
+    s.page("loop-asm", body=pages.loop_asm)
+    s.page("loop-asm-2", body=pages.loop_asm_2)
+    s.page("jump-insn", body=pages.jump_insn)
     s.page("rflags", body=pages.rflags)
     s.page("rflags-2", body=pages.rflags_2)
     s.page("cmp-test", body=pages.cmp_test)
     s.page("cmp-test-2", body=pages.cmp_test_2)
     s.page("cond-jump", body=pages.cond_jump)
-    s.page("cond-jump-example", body=pages.cond_jump_example)
-    s.page("cond-jump-example-2", body=pages.cond_jump_example_2)
-    s.page("loop-forms-for", body=pages.loop_forms_for)
-    s.page("loop-forms", body=pages.loop_forms)
-    s.page("loop-forms-fig", body=pages.loop_forms_fig)
+    s.page("jump-direct", body=pages.jump_direct)
+    s.page("switch-table", body=pages.switch_table)
+    s.page("switch-table-2", body=pages.switch_table_2)
+    s.page("switch-table-3", body=pages.switch_table_3)
     s.page("cmov", body=pages.cmov)
     s.page("cmov-fig", body=pages.cmov_fig)
-    s.page("type-neutral", body=pages.type_neutral)
-    s.page("type-neutral-2", body=pages.type_neutral_2)
-    s.page("type-neutral-fig", body=pages.type_neutral_fig)
 
-lecture.bridge('第三部分：函数的硬件实现\n从代码组织到过程调用', id="bridge-part3")
+lecture.bridge('第三部分：函数调用', id="bridge-part3")
 
 
-with lecture.section('第三部分：函数的硬件实现——从代码组织到过程调用', id="part3") as s:
+with lecture.section('第三部分：函数调用', id="part3") as s:
     s.page("procedure-need", body=pages.procedure_need)
+    s.page("call-vs-jump", body=pages.call_vs_jump)
+    s.page("call-checklist", body=pages.call_checklist)
 
-    s.bridge('内存中局部状态的布局', id="bridge-part3-layout")
-    with s.section('内存中局部状态的布局', id="part3-layout") as ss:
-        ss.page("local-state", body=pages.local_state)
-        ss.page("local-state-2", body=pages.local_state_2)
+    with s.section('调用与返回：call 与 ret', id="part3-call") as ss:
+        ss.page("return-address", body=pages.return_address)
         ss.page("runtime-stack", body=pages.runtime_stack)
+        ss.page("push-pop", body=pages.push_pop)
+        ss.page("push-pop-fig", body=pages.push_pop_fig)
+        ss.page("call-emulate", body=pages.call_emulate)
+        ss.page("call-ret", body=pages.call_ret)
+        ss.page("call-ret-2", body=pages.call_ret_2)
+        ss.page("stack-frames", body=pages.stack_frames)
+
+    with s.section('传递数据：寄存器与栈', id="part3-data") as ss:
+        ss.page("call-checklist-2", body=pages.call_checklist_2)
+        ss.page("param-regs", body=pages.param_regs)
+        ss.page("dot-params", body=pages.dot_params)
+        ss.page("stack-args", body=pages.stack_args)
+        ss.page("stack-args-2", body=pages.stack_args_2)
+
+    with s.section('寄存器：使用惯例', id="part3-regs") as ss:
+        ss.page("call-checklist-3", body=pages.call_checklist_3)
+        ss.page("reg-conflict", body=pages.reg_conflict)
+        ss.page("saved-regs", body=pages.saved_regs)
+        ss.page("saved-regs-fig", body=pages.saved_regs_fig)
+        ss.page("callee-example", body=pages.callee_example)
+
+    with s.section('局部变量：栈帧中的分配与释放', id="part3-locals") as ss:
+        ss.page("call-checklist-4", body=pages.call_checklist_4)
+        ss.page("local-vars", body=pages.local_vars)
         ss.page("stack-frame", body=pages.stack_frame)
         ss.page("stack-frame-2", body=pages.stack_frame_2)
 
-    s.bridge('函数调用产生的局部状态', id="bridge-part3-call")
-    with s.section('函数调用产生的局部状态', id="part3-call") as ss:
-        ss.page("return-address", body=pages.return_address)
-        ss.page("call-ret", body=pages.call_ret)
-        ss.page("param-state", body=pages.param_state)
-        ss.page("sysv-abi", body=pages.sysv_abi)
-        ss.page("sysv-abi-fig", body=pages.sysv_abi_fig)
-        ss.page("dot-params", body=pages.dot_params)
-        ss.page("dot-params-fig", body=pages.dot_params_fig)
-        ss.page("param-clobber", body=pages.param_clobber)
-        ss.page("param-clobber-fig", body=pages.param_clobber_fig)
+    with s.section('综合起来：一次调用的完整步骤', id="part3-together") as ss:
+        ss.page("call-checklist-5", body=pages.call_checklist_5)
+        ss.page("call-sequence", body=pages.call_sequence)
+        ss.page("abi-isa", body=pages.abi_isa)
 
-    s.bridge('寄存器的调用约定，及与内存的取舍', id="bridge-part3-abi")
-    with s.section('寄存器的调用约定，及与内存的取舍', id="part3-abi") as ss:
-        ss.page("saved-regs", body=pages.saved_regs)
-        ss.page("saved-regs-fig", body=pages.saved_regs_fig)
-        ss.page("push-pop", body=pages.push_pop)
-        ss.page("push-pop-fig", body=pages.push_pop_fig)
-        ss.page("callee-example", body=pages.callee_example)
-        ss.page("soft-hard", body=pages.soft_hard)
-        ss.page("win-abi", body=pages.win_abi)
+    s.bridge('缓冲区溢出与栈保护\n局部数组与返回地址同在栈帧中\n越界写入会改写什么？', id="bridge-part3-overflow")
+    with s.section('缓冲区溢出与栈保护', id="part3-overflow") as ss:
         ss.page("buffer-overflow", body=pages.buffer_overflow)
         ss.page("buffer-overflow-fig", body=pages.buffer_overflow_fig)
         ss.page("canary", body=pages.canary)
         ss.page("canary-fig", body=pages.canary_fig)
+
+    with s.section('小结与练习', id="part3-summary") as ss:
+        ss.page("recap-part3", body=pages.recap_part3)
+        ss.page("reg-exercise", body=pages.reg_exercise)
+        ss.page("reg-exercise-2", body=pages.reg_exercise_2)
+        ss.page("rec-exercise", body=pages.rec_exercise)
+        ss.page("rec-exercise-2", body=pages.rec_exercise_2)
 
 lecture.bridge('第四部分：性能瓶颈与向量化\n从标量计算到向量与并发', id="bridge-part4")
 
