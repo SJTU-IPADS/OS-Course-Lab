@@ -36,4 +36,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("loop-unroll", W, H, build())
+    save("loop-unroll", W, H, build(), left=-4)    # centres the ink on the canvas

@@ -22,7 +22,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, FONT, INK, LINE, MONO, MUTED, ORANGE,
                     arrow, label_line, mono, rect, save, text, vbrace)
 
-W, H = 540, 430
+W, H = 520, 380
 CX, CW = 112, 190                   # cell column: left edge, width
 TOP, DATA, SLOT = 62, 130, 48       # top edge, use8's other data, one 8-byte slot
 

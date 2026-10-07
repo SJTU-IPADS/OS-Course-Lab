@@ -23,7 +23,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_ORANGE, GREEN, INK, LINE, MUTED,
                     ORANGE, arrow, mono, rect, save, text, vbrace)
 
-W, H = 470, 468
+W, H = 450, 468
 CX, CW = 92, 200                    # cell column: left edge, width
 TOP = 62
 

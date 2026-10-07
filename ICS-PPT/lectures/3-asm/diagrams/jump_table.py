@@ -107,4 +107,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("jump-table", W, H, build())
+    save("jump-table", W, H, build(), left=-25)    # centres the ink on the canvas

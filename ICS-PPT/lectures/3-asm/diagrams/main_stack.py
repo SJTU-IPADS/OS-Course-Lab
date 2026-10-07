@@ -18,7 +18,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (FILL_ORANGE, INK, LINE, MUTED, ORANGE, WHITE, arrow, mono, rect,
                     save, text, vbrace)
 
-W, H = 560, 600
+W, H = 536, 600
 CX, CW = 128, 200                   # cell column: left edge, width
 TOP, OLD, GAP, RH = 64, 56, 60, 46  # stack top edge, old-stack, unused, int row
 
@@ -51,11 +51,11 @@ def build():
                     "bold", anchor="start"))
     out.append(text(CX + CW + 30, (entry + bottom) / 2 + 22, "40 字节", 17, INK,
                     "bold", anchor="start"))
-    out.append(arrow(W - 30, entry, CX + CW + 22, entry, LINE, 2.2, dash="5 4"))
-    out.append(text(W - 30, entry - 10, "进入 main 时的 %rsp", 16, MUTED, "bold",
+    out.append(arrow(W - 18, entry, CX + CW + 22, entry, LINE, 2.2, dash="5 4"))
+    out.append(text(W - 18, entry - 10, "进入 main 时的 %rsp", 16, MUTED, "bold",
                     anchor="end"))
-    out.append(arrow(W - 30, bottom, CX + CW + 22, bottom, INK, 2.2))
-    out.append(text(W - 30, bottom + 24, "subq 之后的 %rsp", 16, INK, "bold",
+    out.append(arrow(W - 18, bottom, CX + CW + 22, bottom, INK, 2.2))
+    out.append(text(W - 18, bottom + 24, "subq 之后的 %rsp", 16, INK, "bold",
                     anchor="end"))
     # direction of addresses
     out.append(arrow(24, bottom, 24, TOP + 6, MUTED, 1.8))

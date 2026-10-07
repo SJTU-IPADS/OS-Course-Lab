@@ -94,4 +94,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("push-pop", W, H, build())
+    save("push-pop", W, H, build(), left=10)    # centres the ink on the canvas

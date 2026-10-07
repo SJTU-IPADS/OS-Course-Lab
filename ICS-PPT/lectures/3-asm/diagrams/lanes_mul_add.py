@@ -65,4 +65,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("lanes-mul-add", W, H, build())
+    save("lanes-mul-add", W, H, build(), left=-10)    # centres the ink on the canvas

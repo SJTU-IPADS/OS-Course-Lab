@@ -762,9 +762,19 @@ what the column takes:
 | `"right"` | the slide's full height (a Marp split background) | in the text column, beside the image |
 | `"left"` | from under the title's rule to the slide's left and bottom edges | the slide's full width, above both columns |
 
-The text column has the same width on either side. The PPTX export draws the
-same two layouts: the picture fills (or, with `contain`, fits into) its column,
-and the other blocks are laid out in the rest of the slide.
+A covering image is a backdrop: it fills the column out to the slide's edges.
+A fitted one (`contain`) is a figure beside the text, so the box it is fitted
+into keeps the slide's margins. That box ends at the side padding (80px) on
+the outside, in line with the title, stops 40px short of the text column and
+40px above the slide's bottom edge, and on the right starts at the top padding.
+The picture is centred in it, which puts it nearer the text than the slide's
+edge. `width` therefore counts the outer margin: a fitted image is drawn at
+most `width` minus 40px wide.
+
+The text column has the same width on either side, fitted image or covering.
+The PPTX export draws the same layouts: the picture fills (or, with `contain`,
+fits into the inset box of) its column, and the other blocks are laid out in
+the rest of the slide.
 
 `p.slide(...).image_right(src, *, alt="", width_px=None, width_pct=None,
 height_px=None, height_pct=None)` floats a **small** image on the right of that

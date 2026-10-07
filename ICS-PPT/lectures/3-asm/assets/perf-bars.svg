@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 196" width="1120" height="196">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="190.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">指令数</text>
-<text x="178.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_scalar</text>
-<rect x="190.0" y="46.0" width="280.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="482.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#156082" text-anchor="start">2.46 G</text>
-<text x="178.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_avx2</text>
-<rect x="190.0" y="104.0" width="35.4" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="237.4" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="start">0.31 G</text>
-<line x1="190.0" y1="38.0" x2="190.0" y2="152.0" stroke="#5a6b78" stroke-width="1.4"/>
-<text x="190.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">约 1/8（比值 7.91）</text>
-<text x="740.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">执行耗时</text>
-<text x="728.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_scalar</text>
-<rect x="740.0" y="46.0" width="280.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="1032.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#156082" text-anchor="start">0.150 s</text>
-<text x="728.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_avx2</text>
-<rect x="740.0" y="104.0" width="44.8" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="796.8" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="start">0.024 s</text>
-<line x1="740.0" y1="38.0" x2="740.0" y2="152.0" stroke="#5a6b78" stroke-width="1.4"/>
-<text x="740.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">约 1/6.25</text>
-<line x1="570.0" y1="14.0" x2="570.0" y2="182.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="154.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">指令数</text>
+<text x="142.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_scalar</text>
+<rect x="154.0" y="46.0" width="280.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="446.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#156082" text-anchor="start">2.46 G</text>
+<text x="142.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_avx2</text>
+<rect x="154.0" y="104.0" width="35.4" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="201.4" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="start">0.31 G</text>
+<line x1="154.0" y1="38.0" x2="154.0" y2="152.0" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="154.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">约 1/8（比值 7.91）</text>
+<text x="704.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">执行耗时</text>
+<text x="692.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_scalar</text>
+<rect x="704.0" y="46.0" width="280.0" height="40.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="996.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#156082" text-anchor="start">0.150 s</text>
+<text x="692.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="end">dot_avx2</text>
+<rect x="704.0" y="104.0" width="44.8" height="40.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="760.8" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="start">0.024 s</text>
+<line x1="704.0" y1="38.0" x2="704.0" y2="152.0" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="704.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">约 1/6.25</text>
+<line x1="560.0" y1="14.0" x2="560.0" y2="182.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
 </svg>

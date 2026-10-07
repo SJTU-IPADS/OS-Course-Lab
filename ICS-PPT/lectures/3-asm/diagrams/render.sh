@@ -15,10 +15,10 @@ for dot in "$here"/*.dot; do
     echo "$assets/$name.svg"
 done
 
-# svgkit.py is a module and check_bounds.py is the checker
+# svgkit.py is a module; check_bounds.py and margins.py inspect the output
 for py in "$here"/*.py; do
     [ -e "$py" ] || continue
-    case $(basename "$py") in svgkit.py|check_bounds.py) continue ;; esac
+    case $(basename "$py") in svgkit.py|check_bounds.py|margins.py) continue ;; esac
     python3 "$py"
 done
 

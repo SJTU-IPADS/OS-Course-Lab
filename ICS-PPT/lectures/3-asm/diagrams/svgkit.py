@@ -35,15 +35,23 @@ def _marker(color):
             f'<path d="M0,0 L10,5 L0,10 z" fill="{color}"/></marker>')
 
 
-def svg(w, h, body, defs=()):
+def svg(w, h, body, defs=(), left=0):
+    """The canvas is the window x in [left, left + w], y in [0, h] over the drawing.
+
+    A figure shown across the page is centred on the slide by its canvas, so
+    the drawing has to sit in the middle of it. When labels hang off one side
+    and the ink ends up off-centre, `left` moves the window instead of every
+    coordinate: left=-20 shows the drawing 20 px further right. margins.py
+    prints the blank margin on each side of every figure.
+    """
     head = "<defs>" + "".join(_marker(c) for c in ARROW_COLORS) + "".join(defs) + "</defs>"
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{left:g} 0 {w} {h}" '
             f'width="{w}" height="{h}">\n{head}\n' + "\n".join(body) + "\n</svg>\n")
 
 
-def save(name, w, h, body, defs=()):
+def save(name, w, h, body, defs=(), left=0):
     path = ASSETS / f"{name}.svg"
-    path.write_text(svg(w, h, body, defs), encoding="utf-8")
+    path.write_text(svg(w, h, body, defs, left), encoding="utf-8")
     print(path)
 
 

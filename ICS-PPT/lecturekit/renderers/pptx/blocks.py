@@ -919,6 +919,16 @@ def side_layout(sides: list, layout: Layout) -> Layout:
     )
 
 
+# A fitted side image keeps the slide's margins (theme `.lk-side:has(> img.lk-side-fit)`):
+# the side padding on the outside, and this far from the text column and from
+# the slide's bottom edge.
+_SIDE_FIT_GAP = 40
+
+
+def _fitted(block) -> bool:
+    return bool({"contain", "fit"} & set(str(block.content.get("alt") or "").split()))
+
+
 def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
     """Draw a page's ``side_image`` blocks into their column, from ``top`` down.
 
@@ -927,9 +937,20 @@ def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
     Marp. ``contain`` or ``fit`` in ``alt`` fits the whole picture in its cell,
     centred; otherwise it covers the cell and is cropped to it, Marp's default
     for a background.
+
+    A covering image is a backdrop and bleeds to the slide's edges. A fitted
+    one is a figure beside the text, so its column is first drawn in to the
+    slide's margins: the picture then sits nearer the text than the edge.
     """
-    column, width = _side_column(sides[0], ctx.layout)
-    cell, height = width // len(sides), ctx.layout.height - top
+    layout = ctx.layout
+    column, width = _side_column(sides[0], layout)
+    bottom = layout.height
+    if any(_fitted(block) for block in sides):
+        pad, gap = layout.content_left, px(_SIDE_FIT_GAP)
+        column = pad if column == 0 else column - gap
+        width = max(width - pad + gap, len(sides))
+        top, bottom = max(top, layout.content_top), bottom - gap
+    cell, height = width // len(sides), bottom - top
     for i, block in enumerate(sides):
         path = _resolve_image(block.content["src"], ctx)
         if path is None:
@@ -937,7 +958,7 @@ def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
         left = column + i * cell
         pic = ctx.slide.shapes.add_picture(str(path), left, top)
         w, h = pic.width, pic.height
-        if {"contain", "fit"} & set(str(block.content.get("alt") or "").split()):
+        if _fitted(block):
             scale = min(cell / w, height / h)
             pic.width, pic.height = round(w * scale), round(h * scale)
             pic.left = left + (cell - pic.width) // 2

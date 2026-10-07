@@ -8,6 +8,7 @@ than a label, so rectangles are checked as well.  Reads every SVG named on the
 command line (default: all of ../assets), writes one line per offence.
 """
 
+import html
 import pathlib
 import re
 import sys
@@ -26,22 +27,22 @@ def advance(s, size):
 
 def offences(path):
     src = path.read_text(encoding="utf-8")
-    m = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', src)
+    m = re.search(r'<svg[^>]*viewBox="([-\d.]+) 0 ([\d.]+) ([\d.]+)"', src)
     if not m:
         return [(path.name, "no viewBox")]
-    w, h = float(m.group(1)), float(m.group(2))
+    x0, w, h = float(m.group(1)), float(m.group(2)), float(m.group(3))
     out = []
     for x, y, size, anchor, body in PAT.findall(src):
         x, y, size = float(x), float(y), float(size)
-        wide = advance(body, size)
+        wide = advance(html.unescape(body), size)
         left = {"end": x - wide, "middle": x - wide / 2}.get(anchor, x)
         right = left + wide
-        if left < 2 or right > w - 2 or y > h - 2 or y < size:
+        if left < x0 + 2 or right > x0 + w - 2 or y > h - 2 or y < size:
             out.append((path.name, f"x {left:.0f}..{right:.0f} y {y:.0f} "
                                    f"(canvas {w:.0f}x{h:.0f})  {body!r}"))
     for x, y, rw, rh in RECT.findall(src):
         x, y, rw, rh = float(x), float(y), float(rw), float(rh)
-        if x < 0 or y < 0 or x + rw > w or y + rh > h:
+        if x < x0 or y < 0 or x + rw > x0 + w or y + rh > h:
             out.append((path.name, f"rect {x:.0f},{y:.0f} {rw:.0f}x{rh:.0f} "
                                    f"(canvas {w:.0f}x{h:.0f})"))
     return out

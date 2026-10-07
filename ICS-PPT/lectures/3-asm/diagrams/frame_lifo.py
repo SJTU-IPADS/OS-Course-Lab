@@ -61,4 +61,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("frame-lifo", W, H, build())
+    save("frame-lifo", W, H, build(), left=6)    # centres the ink on the canvas

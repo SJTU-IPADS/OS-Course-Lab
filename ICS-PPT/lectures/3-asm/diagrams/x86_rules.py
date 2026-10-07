@@ -97,4 +97,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("x86-rules", W, H, build())
+    save("x86-rules", W, H, build(), left=-19)    # centres the ink on the canvas

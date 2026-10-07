@@ -39,4 +39,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("system-layers", W, H, build())
+    save("system-layers", W, H, build(), left=-24)    # centres the ink on the canvas

@@ -18,8 +18,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (BLUE, FILL_BLUE, INK, MUTED, ORANGE, elbow, listing, save,
                     text, vbrace)
 
-W, H = 500, 390
-LX, LY, SIZE, LH = 120, 14, 13, 24          # listing: left edge, top, font, pitch
+W, H = 489, 390
+LX, LY, SIZE, LH = 100, 14, 13, 24          # listing: left edge, top, font, pitch
 RIGHT = LX + 34 * SIZE * 0.6 + 10           # right edge of the washed rows
 
 ASM = ["dot_product:",

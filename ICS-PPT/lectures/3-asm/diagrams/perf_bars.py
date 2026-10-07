@@ -35,13 +35,13 @@ def group(x0, title, rows, top, note):
 
 
 def build():
-    out = group(40, "指令数", [("dot_scalar", 2.4596, "2.46 G", BLUE, FILL_BLUE),
+    out = group(4, "指令数", [("dot_scalar", 2.4596, "2.46 G", BLUE, FILL_BLUE),
                                ("dot_avx2", 0.3108, "0.31 G", GREEN, FILL_GREEN)],
                 2.4596, "约 1/8（比值 7.91）")
-    out += group(590, "执行耗时", [("dot_scalar", 0.150, "0.150 s", BLUE, FILL_BLUE),
+    out += group(554, "执行耗时", [("dot_scalar", 0.150, "0.150 s", BLUE, FILL_BLUE),
                                   ("dot_avx2", 0.024, "0.024 s", GREEN, FILL_GREEN)],
                  0.150, "约 1/6.25")
-    out.append(line(570, 14, 570, H - 14, LINE, 1, "4 4"))
+    out.append(line(W / 2, 14, W / 2, H - 14, LINE, 1, "4 4"))
     return out
 
 

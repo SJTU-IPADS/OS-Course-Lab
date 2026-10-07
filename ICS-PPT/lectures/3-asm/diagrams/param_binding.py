@@ -14,15 +14,15 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, INK, MONO_EM, MUTED, ORANGE,
                     WHITE, arrow, box, brace, mono, save, text)
 
-W, H = 1120, 200
+W, H = 880, 154
 SIZE = 22
 PROTO = "int dot_product(const int *w, const int *x, int n)"
 X0 = (W - len(PROTO) * SIZE * MONO_EM) / 2
 
-PARTS = [("int", "%eax", "返回值：32 位整数", ORANGE, FILL_ORANGE, 110),
-         ("const int *w", "%rdi", "参数 1：64 位指针", BLUE, FILL_BLUE, 370),
-         ("const int *x", "%rsi", "参数 2：64 位指针", BLUE, FILL_BLUE, 630),
-         ("int n", "%edx", "参数 3：32 位整数", BLUE, FILL_BLUE, 890)]
+PARTS = [("int", "%eax", "返回值：32 位整数", ORANGE, FILL_ORANGE, 20),
+         ("const int *w", "%rdi", "参数 1：64 位指针", BLUE, FILL_BLUE, 240),
+         ("const int *x", "%rsi", "参数 2：64 位指针", BLUE, FILL_BLUE, 460),
+         ("int n", "%edx", "参数 3：32 位整数", BLUE, FILL_BLUE, 680)]
 
 
 def span(token, start=0):
@@ -37,9 +37,8 @@ def build():
     for token, reg, what, color, fill, bx in PARTS:
         a, b, pos = span(token, pos)
         out += brace(a + 1, b - 1, 50, color, "", depth=7)
-        out.append(arrow((a + b) / 2, 60, bx + 90, 116, color, 2))
-        out += box(bx, 120, 180, 44, reg, fill, color, 20, font="monospace")
-        out.append(text(bx + 90, 190, what, 15, color, "bold"))
+        out.append(arrow((a + b) / 2, 60, bx + 90, 90, color, 2))
+        out += box(bx, 94, 180, 52, reg, fill, color, 20, font="monospace", sub=what)
     return out
 
 

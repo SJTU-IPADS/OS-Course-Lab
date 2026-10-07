@@ -1051,6 +1051,29 @@ section.lk-side-left > .lk-side {
   object-fit: contain;        /* alt="contain": the whole image, centred */
 }
 
+/* A fitted image is a figure beside the text, where a covering one is a
+   backdrop that bleeds to the slide's edges. So the box it is fitted into
+   keeps the slide's margins: it ends at the side padding (80px) on the
+   outside and 40px short of the text column on the inside, and stops 40px
+   above the bottom edge. The picture then sits nearer the text than the
+   slide's edge, its outer side in line with the title. The text column is
+   the same either way. */
+section.lk-side-left > .lk-side:has(> img.lk-side-fit) {
+  left: 80px;
+  width: calc(var(--lk-side-width) - 40px);
+  bottom: 40px;
+}
+
+/* The same box for Marp's split on the right, which runs the slide's full
+   height: there the top margin is the slide's top padding (44px). */
+section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split="right"]
+  > div[data-marpit-advanced-background-container]:has(> figure[style*="contain"]) {
+  box-sizing: border-box;
+  width: calc(var(--marpit-advanced-background-split, 50%) - 40px);
+  margin-left: calc(100% - var(--marpit-advanced-background-split, 50%) - 40px);
+  padding: 44px 0 40px;
+}
+
 /* Footnotes stay under the text, as they do inside Marp's split. */
 section.lk-side-left > .footnotes {
   left: calc(var(--lk-side-width) + 80px);

@@ -1207,7 +1207,7 @@ sed -n '/movq/,/call/p' 只打印 main 的清单中从 movq 到 call 的四行�
 
 def stack_args(p):
     p.title('超过 6 个参数：第 7 个起经栈传递')
-    p.side_image("assets/stack-args.svg", width="40%", alt="contain", side="left")
+    p.side_image("assets/stack-args.svg", width="42%", alt="contain", side="left")
     slide(p, r"""
 **第 7 个及以后的参数由调用者压入栈**：
 - 压栈在 `call` 之前进行，顺序从右向左：最后一个参数最先压入，第 7 个参数最后压入；
@@ -1225,7 +1225,7 @@ def stack_args(p):
 
 def stack_args_2(p):
     p.title('超过 6 个参数：第 7 个起经栈传递')
-    p.side_image("assets/stack-args.svg", width="40%", alt="contain", side="left")
+    p.side_image("assets/stack-args.svg", width="42%", alt="contain", side="left")
     p.demo('编译 args8.c',
            """cd examples && gcc -Og -fcf-protection=none \\
     -S args8.c -o - | sed -f asm.sed""",
@@ -1323,7 +1323,7 @@ def saved_regs_fig(p):
 
 def callee_example(p):
     p.title('实例：dot_bias 中的 %rbx')
-    p.side_image("assets/bias-stack.svg", width="42%", alt="contain", side="left")
+    p.side_image("assets/bias-stack.svg", width="44%", alt="contain", side="left")
     p.demo('编译 dot_bias.c',
            """cd examples && gcc -Og -fcf-protection=none \\
     -S dot_bias.c -o - | sed -f asm.sed""",
@@ -1444,7 +1444,7 @@ def call_checklist_5(p):
 
 def call_sequence(p):
     p.title('综合起来：一次调用的完整步骤')
-    p.side_image("assets/frame-layout.svg", width="34%", alt="contain")
+    p.side_image("assets/frame-layout.svg", width="37%", alt="contain")
     slide(p, r"""
 **调用者，在调用之前**：
 1. 保存调用后还要用的调用者保存寄存器；

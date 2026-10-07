@@ -45,8 +45,8 @@ def build():
     out.append(arrow(X0, 200, end + 40, 200, LINE, 1.6))
     out.append(text(X0, 220, "低地址", 14, MUTED, anchor="start"))
     out.append(text(end + 40, 220, "高地址", 14, MUTED, anchor="end"))
-    out.append(text(20, 28, "%rip ← %rip + 指令长度：", 17, INK, "bold", anchor="start"))
-    out.append(text(250, 28, "每次都前进到更高的地址", 17, MUTED, anchor="start"))
+    out.append(text(X0, 28, "%rip ← %rip + 指令长度：", 17, INK, "bold", anchor="start"))
+    out.append(text(X0 + 230, 28, "每次都前进到更高的地址", 17, MUTED, anchor="start"))
     return out
 
 

@@ -11,7 +11,7 @@ from pptx.util import Emu, Inches, Pt
 from lecturekit import Lecture, model
 from lecturekit.renderers import RENDERERS, get_renderer
 from lecturekit.renderers.pptx import PptxRenderer, theme
-from lecturekit.renderers.pptx.layout import Layout
+from lecturekit.renderers.pptx.layout import Layout, px
 
 # 1x1 transparent PNG (python-pptx can embed it; svg is unsupported upstream).
 _PNG = base64.b64decode(
@@ -507,10 +507,13 @@ class PptxRendererTest(unittest.TestCase):
         pic = next(
             s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
         )
-        # the square picture is fitted whole into the column, centred in it
-        self.assertEqual(pic.width, column)
-        self.assertEqual(pic.left, layout.width - column)
-        self.assertEqual(pic.top, (layout.height - pic.height) // 2)
+        # a fitted picture keeps the slide's margins: its box ends at the side
+        # padding and starts 40px from the text, and the square picture fills
+        # that width, centred between the top padding and 40px above the bottom
+        self.assertEqual(pic.left, layout.width - column - px(40))
+        self.assertEqual(pic.left + pic.width, layout.content_left + layout.content_width)
+        top, bottom = layout.content_top, layout.height - px(40)
+        self.assertEqual(pic.top, top + (bottom - top - pic.height) // 2)
         for name in ("P", "beside the picture"):
             text = next(s for s in slide.shapes if s.has_text_frame
                         and s.text_frame.text == name)
@@ -519,6 +522,33 @@ class PptxRendererTest(unittest.TestCase):
                                  layout.content_left + layout.content_width - column)
         # the text starts under the title, not under the picture
         self.assertLess(text.top, layout.height // 3)
+
+    def test_fitted_side_image_on_the_left_keeps_the_slide_margins(self):
+        src = Path(tempfile.mkdtemp())
+        (src / "assets").mkdir()
+        (src / "assets" / "pic.png").write_bytes(_PNG)
+        lecture = Lecture(id="lec", title="L")
+
+        def body(p):
+            p.title("P")
+            p.side_image("assets/pic.png", width="30%", alt="contain", side="left")
+            p.slide("beside the picture")
+
+        lecture.page("p1", body=body)
+        prs, _ = self.render(lecture, asset_root=src)
+        slide = prs.slides[0]
+        layout = Layout.from_ratio("16:9")
+        column = round(layout.width * 0.3)
+        pic = next(
+            s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
+        )
+        text = next(s for s in slide.shapes if s.has_text_frame
+                    and s.text_frame.text == "beside the picture")
+        # the picture starts in line with the title and ends 40px from the text
+        self.assertEqual(pic.left, layout.content_left)
+        self.assertEqual(pic.left + pic.width, text.left - px(40))
+        self.assertEqual(text.left, column + layout.content_left)
+        self.assertLessEqual(pic.top + pic.height, layout.height - px(40))
 
     def test_side_image_on_the_left_covers_its_column(self):
         src = Path(tempfile.mkdtemp())

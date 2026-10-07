@@ -44,6 +44,6 @@
 <line x1="110.0" y1="200.0" x2="1030.0" y2="200.0" stroke="#9fb5c3" stroke-width="1.6" marker-end="url(#ah-9fb5c3)"/>
 <text x="110.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">低地址</text>
 <text x="1030.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">高地址</text>
-<text x="20.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">%rip ← %rip + 指令长度：</text>
-<text x="250.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">每次都前进到更高的地址</text>
+<text x="110.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">%rip ← %rip + 指令长度：</text>
+<text x="340.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">每次都前进到更高的地址</text>
 </svg>

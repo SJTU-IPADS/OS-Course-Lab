@@ -68,4 +68,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("rec-stack", W, H, build())
+    save("rec-stack", W, H, build(), left=-35)    # centres the ink on the canvas

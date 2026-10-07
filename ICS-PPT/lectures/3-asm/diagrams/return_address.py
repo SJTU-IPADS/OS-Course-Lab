@@ -56,4 +56,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("return-address", W, H, build())
+    save("return-address", W, H, build(), left=-9)    # centres the ink on the canvas

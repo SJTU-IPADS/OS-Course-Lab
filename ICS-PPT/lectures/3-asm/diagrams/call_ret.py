@@ -32,7 +32,7 @@ from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, FONT,
                     GREEN, INK, LINE, MONO, MUTED, ORANGE, WHITE, arrow,
                     label_line, line, mono, path, rect, save, text)
 
-W, H = 568, 628
+W, H = 542, 628
 AX, AW = 8, 236                     # address-space column: left edge, width
 PX, PW = 268, 266                   # stack close-up panel: left edge, width
 SX, SW = 316, 210                   # stack close-up: slot left edge, width

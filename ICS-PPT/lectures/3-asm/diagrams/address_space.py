@@ -15,7 +15,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN,
                     INK, LINE, MUTED, ORANGE, WHITE, arrow, mono, rect, save, text)
 
-W, H = 400, 650
+W, H = 370, 624
 CX, CW = 24, 210                    # segment column: left edge, width
 
 # top to bottom: name, subtitle, height, fill, stroke
@@ -51,8 +51,8 @@ def build():
     out.append(arrow(CX + 50, heap - 4, CX + 50, heap - 50, MUTED, 2, "5 4"))
     out.append(text(CX + 64, heap - 20, "向高地址生长", 15, MUTED, anchor="start"))
     # %rsp marks the lowest address the stack uses
-    out.append(arrow(W - 30, gap, CX + CW + 8, gap, INK, 2.2))
-    out.append(mono(W - 30, gap - 10, "%rsp：栈顶", 16, INK, "bold", anchor="end"))
+    out.append(arrow(W - 24, gap, CX + CW + 8, gap, INK, 2.2))
+    out.append(mono(W - 24, gap - 10, "%rsp：栈顶", 16, INK, "bold", anchor="end"))
     # direction of addresses
     out.append(text(CX + CW + 10, TOP + 16, "高地址", 14, MUTED, anchor="start"))
     out.append(text(CX + CW + 10, bottom - 6, "低地址", 14, MUTED, anchor="start"))

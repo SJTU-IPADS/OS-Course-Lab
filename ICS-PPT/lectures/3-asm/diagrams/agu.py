@@ -74,4 +74,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("agu", W, H, build())
+    save("agu", W, H, build(), left=5)    # centres the ink on the canvas

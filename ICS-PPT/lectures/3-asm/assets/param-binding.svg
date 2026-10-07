@@ -1,28 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 200" width="1120" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 154" width="880" height="154">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="230.0" y="40.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="start">int dot_product(const int *w, const int *x, int n)</text>
-<path d="M 231.0 50.0 L 231.0 57.0 L 268.6 57.0 L 268.6 50.0" fill="none" stroke="#e97132" stroke-width="1.6"/>
-<text x="249.8" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle"></text>
-<line x1="249.8" y1="60.0" x2="200.0" y2="116.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
-<rect x="110.0" y="120.0" width="180.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="200.0" y="149.2" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%eax</text>
-<text x="200.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">返回值：32 位整数</text>
-<path d="M 442.2 50.0 L 442.2 57.0 L 598.6 57.0 L 598.6 50.0" fill="none" stroke="#156082" stroke-width="1.6"/>
-<text x="520.4" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle"></text>
-<line x1="520.4" y1="60.0" x2="460.0" y2="116.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
-<rect x="370.0" y="120.0" width="180.0" height="44.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="460.0" y="149.2" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%rdi</text>
-<text x="460.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">参数 1：64 位指针</text>
-<path d="M 627.0 50.0 L 627.0 57.0 L 783.4 57.0 L 783.4 50.0" fill="none" stroke="#156082" stroke-width="1.6"/>
-<text x="705.2" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle"></text>
-<line x1="705.2" y1="60.0" x2="720.0" y2="116.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
-<rect x="630.0" y="120.0" width="180.0" height="44.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="720.0" y="149.2" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%rsi</text>
-<text x="720.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">参数 2：64 位指针</text>
-<path d="M 811.8 50.0 L 811.8 57.0 L 875.8 57.0 L 875.8 50.0" fill="none" stroke="#156082" stroke-width="1.6"/>
-<text x="843.8" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle"></text>
-<line x1="843.8" y1="60.0" x2="980.0" y2="116.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
-<rect x="890.0" y="120.0" width="180.0" height="44.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="980.0" y="149.2" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%edx</text>
-<text x="980.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">参数 3：32 位整数</text>
+<text x="110.0" y="40.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="start">int dot_product(const int *w, const int *x, int n)</text>
+<path d="M 111.0 50.0 L 111.0 57.0 L 148.6 57.0 L 148.6 50.0" fill="none" stroke="#e97132" stroke-width="1.6"/>
+<text x="129.8" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle"></text>
+<line x1="129.8" y1="60.0" x2="110.0" y2="90.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<rect x="20.0" y="94.0" width="180.0" height="52.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="110.0" y="117.0" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%eax</text>
+<text x="110.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">返回值：32 位整数</text>
+<path d="M 322.2 50.0 L 322.2 57.0 L 478.6 57.0 L 478.6 50.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="400.4" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle"></text>
+<line x1="400.4" y1="60.0" x2="330.0" y2="90.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<rect x="240.0" y="94.0" width="180.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="330.0" y="117.0" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%rdi</text>
+<text x="330.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">参数 1：64 位指针</text>
+<path d="M 507.0 50.0 L 507.0 57.0 L 663.4 57.0 L 663.4 50.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="585.2" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle"></text>
+<line x1="585.2" y1="60.0" x2="550.0" y2="90.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<rect x="460.0" y="94.0" width="180.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="550.0" y="117.0" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%rsi</text>
+<text x="550.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">参数 2：64 位指针</text>
+<path d="M 691.8 50.0 L 691.8 57.0 L 755.8 57.0 L 755.8 50.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="723.8" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle"></text>
+<line x1="723.8" y1="60.0" x2="770.0" y2="90.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<rect x="680.0" y="94.0" width="180.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="770.0" y="117.0" font-family="monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">%edx</text>
+<text x="770.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">参数 3：32 位整数</text>
 </svg>

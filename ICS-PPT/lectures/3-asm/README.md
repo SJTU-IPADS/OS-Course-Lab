@@ -136,3 +136,13 @@ int dot_product(const int *w, const int *x, int n) {
 * **计算机系统抽象层级全景总结（第 130、131 页）**：总结高级语言（算法逻辑）、ABI（软件约定契约）、指令集 ISA（软硬件接口契约）与微架构（物理电路）的解耦架构，明确 ABI 与 ISA 的界限。
 * **课后练习 `parallel-dot`（`exercise` 页，第 132 页，全讲最后一页）**：实验原名 `gpu-program`，2026-10-06 改名：它的第一步是 SIMD，与 GPU 无关；两步分别是讲义的数据并行与线程并行，计算的都是内积。页面的 id 随之由 `lab-gpu` 改为 `exercise`。介绍第四部分的不计分练习 `lectures/parallel-dot/`，给出两步的目录、要写的代码、完成标准与入口命令。第一步 `simd/`：用 AVX2 intrinsics 实现 `vec_dot_q4_0`（Q4_0 一行权重与 float 向量的内积），`make test` 输出 `all passed` 为完成；第二步 `cuda/`：点积与矩阵向量乘的 4 个 CUDA kernel，`make run` 的 `check` 一列全部是 `same` 为完成，没有 NVIDIA 显卡时用 `make remote` 提交到课程服务器（与「远程运行」一页是同一个服务器的两个接口：实验提交两个 kernel 文件，讲义的例子提交一个完整的程序）。两步依次对应「解决方案」一页的方案 1 与方案 2。
 * **2026-10-05 删去的页**：「课后实验：反汇编与性能测量指南」四页（`lab`、`lab-2`、`lab-3`、`lab-fig`）：实验一（反汇编对照与寻址模式验证）、实验二（AVX2 向量加速比与硬件性能事件测量）、跨平台与环境提示、提交要求与配图 `lab-cards`。图源 `diagrams/lab_cards.py` 与 `assets/lab-cards.svg` 仍在目录里，没有页面使用。
+
+---
+
+## 配图在页面上的位置
+
+* **侧图放在页边距以内**：`p.side_image(..., alt="contain")` 的图，外侧与标题的一端对齐（距页面边缘 80 px），内侧距正文 40 px，下端距页面底边 40 px。这是主题的规则（`themes/basic-office.css`，说明见 `docs/dsl.md` 的 `p.side_image` 一节），页面源码只写 `width`。`width` 是图与外侧页边距合计占页面宽度的比例，图自身最宽为 `width` 减 40 px；正文一栏的宽度只由 `width` 决定。
+* **各侧图的宽度**：`loop-jumps` 40%，`address-space` 30%，`call-ret` 42%，`stack-args` 42%，`bias-stack` 44%，`main-stack` 42%，`frame-layout` 37%。同一张图出现在连续两页时，两页的宽度相同。
+* **侧图的画布贴合图的内容**：四周各留 10 ~ 25 px。画布一侧的留白较多时，图在页面上偏向另一侧，并且整体缩小。
+* **整页宽的图按画布居中**：`figure(p, name, 1120)` 的图，内容要位于画布正中。内容偏向一侧时，在图源的 `save(...)` 中用 `left=` 平移画布（见 `diagrams/svgkit.py` 中 `svg` 的说明），图中的坐标保持原样。`array-address.svg` 的一行方格两端对称，以方格为准，伸出的 `w_base` 标注不计。
+* **核对留白**：`python3 diagrams/margins.py` 打印每张图左、右、上、下的留白，单位是画布像素（需要 `rsvg-convert` 与 Pillow）。整页宽的图左右留白相差 8 px 以上时需要调整。`diagrams/render.sh` 结尾的 `check_bounds.py` 检查标注是否越出画布，画布用 `left=` 平移后按平移后的范围检查。

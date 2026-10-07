@@ -57,4 +57,4 @@ def build():
 
 
 if __name__ == "__main__":
-    save("simd-widths", W, H, build())
+    save("simd-widths", W, H, build(), left=4)    # centres the ink on the canvas
