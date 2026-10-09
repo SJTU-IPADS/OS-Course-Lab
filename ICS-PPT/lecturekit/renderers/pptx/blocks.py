@@ -35,6 +35,7 @@ from .text import Para, Run, emphasize, parse_inline, parse_markdown
 PPTX_KINDS = {
     "cover", "slide", "code", "demo", "link", "image", "side_image", "aside",
     "sidenote", "table", "highlight", "bridge", "architecture", "row",
+    "columns",
 }
 
 # Image formats python-pptx can embed. `.svg` is not one of them — it is
@@ -429,6 +430,44 @@ def _slide(block, ctx: Ctx) -> None:
     paras = parse_markdown(str(block.content))
     height = _estimate_paras_height(paras, width)
     box, tf = _textbox(ctx, height, width=width)
+    _fill_paras(tf, paras)
+    # A floated picture may be taller than the text beside it; the block owns
+    # whichever is taller, so the next block clears both.
+    ctx.cursor.place(max(height, pic.height) if pic is not None else height)
+    ctx.cursor.advance(_GAP)
+
+
+# Gap between the columns of a `columns` block (theme: `.lk-columns { gap: 2em }`).
+_COLUMN_GAP_EM = 2.0
+
+
+def _columns(block, ctx: Ctx) -> None:
+    """Slide text in side-by-side text boxes that share the content width.
+
+    One text box per column, all at the cursor's top; the block owns the
+    tallest of them. Columns split the width left after the gaps evenly, or by
+    the block's ``widths`` shares.
+    """
+    items = block.content["items"]
+    gap = Emu(Pt(theme.BODY_PT * _COLUMN_GAP_EM))
+    track = ctx.layout.content_width - gap * (len(items) - 1)
+    shares = block.content.get("widths") or [1 / len(items)] * len(items)
+    left = ctx.layout.content_left
+    tallest = 0
+    for text, share in zip(items, shares):
+        width = round(track * share)
+        paras = parse_markdown(str(text))
+        height = _estimate_paras_height(paras, width)
+        _, tf = _textbox(ctx, height, left=left, width=width)
+        _fill_paras(tf, paras)
+        tallest = max(tallest, height)
+        left += width + gap
+    ctx.cursor.place(tallest)
+    ctx.cursor.advance(_GAP)
+
+
+def _fill_paras(tf, paras: list[Para]) -> None:
+    """Write parsed slide markdown into a text frame, one paragraph each."""
     first = True
     ordinals: dict[int, int] = {}      # running number per list level
     for index, para in enumerate(paras):
@@ -468,10 +507,6 @@ def _slide(block, ctx: Ctx) -> None:
                            bold=True, mark=r.mark)
         else:
             _apply_runs(p, para.runs, size_pt=size, color=theme.FG)
-    # A floated picture may be taller than the text beside it; the block owns
-    # whichever is taller, so the next block clears both.
-    ctx.cursor.place(max(height, pic.height) if pic is not None else height)
-    ctx.cursor.advance(_GAP)
 
 
 def _hanging_indent(paragraph, marker: str, *, size_pt: float, level: int) -> None:
@@ -1326,4 +1361,5 @@ _DRAWERS = {
     "image": _image,
     "architecture": _architecture,
     "row": _row,
+    "columns": _columns,
 }

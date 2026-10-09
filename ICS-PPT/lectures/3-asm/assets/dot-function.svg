@@ -33,7 +33,7 @@
 <text x="556.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">参数 %rdi、%rsi、%edx 由调用方放好</text>
 <path d="M 530.0 148.0 L 538.0 148.0 L 538.0 428.0 L 530.0 428.0" fill="none" stroke="#156082" stroke-width="1.6"/>
 <text x="546.0" y="294.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="start">循环计算：第二部分的循环代码</text>
-<text x="556.0" y="320.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">只用调用者保存寄存器</text>
+<text x="556.0" y="320.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">只用 caller-saved 寄存器</text>
 <path d="M 530.0 436.0 L 538.0 436.0 L 538.0 460.0 L 530.0 460.0" fill="none" stroke="#e97132" stroke-width="1.6"/>
 <text x="546.0" y="454.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="start">返回值装填：sum → %eax</text>
 <path d="M 530.0 468.0 L 538.0 468.0 L 538.0 492.0 L 530.0 492.0" fill="none" stroke="#2e7d4f" stroke-width="1.6"/>

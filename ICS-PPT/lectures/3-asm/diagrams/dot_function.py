@@ -38,7 +38,7 @@ DOT_S = ["dot_product:",
 GROUPS = [(1, 3, ["入口：i = 0，sum = 0，先跳到判断",
                   "参数 %rdi、%rsi、%edx 由调用方放好"], MUTED, FILL_GREY),
           (4, 12, ["循环计算：第二部分的循环代码",
-                   "只用调用者保存寄存器"], BLUE, FILL_BLUE),
+                   "只用 caller-saved 寄存器"], BLUE, FILL_BLUE),
           (13, 13, ["返回值装填：sum → %eax"], ORANGE, FILL_ORANGE),
           (14, 14, ["返回：ret"], GREEN, FILL_GREEN)]
 

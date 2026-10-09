@@ -112,13 +112,11 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("return-address", body=pages.return_address)
         ss.page("runtime-stack", body=pages.runtime_stack)
         ss.page("push-pop", body=pages.push_pop)
-        ss.page("push-pop-fig", body=pages.push_pop_fig)
         ss.page("call-emulate", body=pages.call_emulate)
         ss.page("call-ret", body=pages.call_ret)
-        ss.page("call-ret-2", body=pages.call_ret_2)
         ss.page("stack-frames", body=pages.stack_frames)
 
-    with s.section('传递数据：寄存器与栈', id="part3-data") as ss:
+    with s.section('传递数据：寄存器、栈', id="part3-data") as ss:
         ss.page("call-checklist-2", body=pages.call_checklist_2)
         ss.page("param-regs", body=pages.param_regs)
         ss.page("dot-params", body=pages.dot_params)
@@ -132,7 +130,7 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("saved-regs-fig", body=pages.saved_regs_fig)
         ss.page("callee-example", body=pages.callee_example)
 
-    with s.section('局部变量：栈帧中的分配与释放', id="part3-locals") as ss:
+    with s.section('局部变量：栈', id="part3-locals") as ss:
         ss.page("call-checklist-4", body=pages.call_checklist_4)
         ss.page("local-vars", body=pages.local_vars)
         ss.page("stack-frame", body=pages.stack_frame)
@@ -143,17 +141,28 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("call-sequence", body=pages.call_sequence)
         ss.page("abi-isa", body=pages.abi_isa)
 
-    s.bridge('缓冲区溢出与栈保护\n局部数组与返回地址同在栈帧中\n越界写入会改写什么？', id="bridge-part3-overflow")
-    with s.section('缓冲区溢出与栈保护', id="part3-overflow") as ss:
-        ss.page("buffer-overflow", body=pages.buffer_overflow)
-        ss.page("buffer-overflow-fig", body=pages.buffer_overflow_fig)
-        ss.page("canary", body=pages.canary)
-        ss.page("canary-fig", body=pages.canary_fig)
+    s.bridge('缓冲区溢出', id="bridge-part3-overflow")
+    with s.section('缓冲区溢出', id="part3-overflow") as ss:
+        ss.page("gets-no-bound", body=pages.gets_no_bound)
+        ss.page("echo-buf", body=pages.echo_buf)
+        ss.page("echo-frame", body=pages.echo_frame)
+        ss.page("overflow-attack", body=pages.overflow_attack)
+        ss.page("morris-worm", body=pages.morris_worm)
 
+    with s.section('对抗缓冲区溢出攻击', id="part3-defense") as ss:
+        ss.page("stack-random", body=pages.stack_random)
+        ss.page("stack-random-range", body=pages.stack_random_range)
+        ss.page("nop-sled", body=pages.nop_sled)
+        ss.page("canary", body=pages.canary)
+        ss.page("canary-asm", body=pages.canary_asm)
+        ss.page("canary-run", body=pages.canary_run)
+        ss.page("nx-bit", body=pages.nx_bit)
+        ss.page("code-reuse", body=pages.code_reuse)
+        ss.page("shadow-stack", body=pages.shadow_stack)
+
+    s.bridge('小结与练习', id="bridge-part3-summary")
     with s.section('小结与练习', id="part3-summary") as ss:
         ss.page("recap-part3", body=pages.recap_part3)
-        ss.page("reg-exercise", body=pages.reg_exercise)
-        ss.page("reg-exercise-2", body=pages.reg_exercise_2)
         ss.page("rec-exercise", body=pages.rec_exercise)
         ss.page("rec-exercise-2", body=pages.rec_exercise_2)
 
@@ -199,3 +208,4 @@ with lecture.section('总结与实验任务', id="wrapup") as s:
     s.page("summary", body=pages.summary)
     s.page("summary-2", body=pages.summary_2)
     s.page("exercise", body=pages.exercise)
+    s.page("lab-mini-cpu", body=pages.lab_mini_cpu)

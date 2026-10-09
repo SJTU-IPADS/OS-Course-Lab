@@ -120,6 +120,9 @@ def content_slots(kind: str, content: Any) -> list[tuple[str, tuple]]:
     elif kind in ("image", "side_image"):
         add("caption", ("caption",))
         add("alt", ("alt",))
+    elif kind == "columns":
+        for i, _ in enumerate(content.get("items") or [], start=1):
+            add(f"col.{i}", ("items", i - 1))
     elif kind == "row":
         add("caption", ("caption",))
         for i, _ in enumerate(content.get("items") or [], start=1):
@@ -147,7 +150,8 @@ def rewrite_replacement(
 ) -> str:
     """A replacement string, put through its slot's own authoring rules.
 
-    Slide text is the one slot with any: `p.slide(...)` expands the `==mark==`
+    Slide text is the one slot with any (a `slide` block, and each column of a
+    `columns` block): `p.slide(...)` expands the `==mark==`
     shorthand and bolds flush-left prose lines, and a translator writing that
     slot is writing slide text — having to hand-write `**…**` on every headline
     would be a trap the DSL exists to remove. Both rewrites are idempotent on
@@ -159,7 +163,7 @@ def rewrite_replacement(
     block the author kept unbolded must not come back bolded in another
     language.
     """
-    if kind == "slide" and sub == "":
+    if (kind == "slide" and sub == "") or kind == "columns":
         text = marks.expand(text)
         return autobold(text) if autobold_lines else text
     return text

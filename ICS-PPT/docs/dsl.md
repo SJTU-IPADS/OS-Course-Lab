@@ -314,6 +314,7 @@ handle for chaining (see [Footnotes](#footnotes) and
 | --- | --- | --- |
 | `p.cover(...)` | `cover` | Cover-page metadata, usually created through `lec.cover(...)`. |
 | `p.slide(content)` | `slide` | A markdown text block — the main body of a page. |
+| `p.columns(left, right, …)` | `columns` | Slide text set side by side, one markdown string per column (see [Columns](#columns)). |
 | `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language), [dialects](#dialects-cuda) and [marking lines](#marking-a-line)). |
 | `p.link(label, url)` | `link` | A labelled hyperlink. |
 | `p.image(src, …)` | `image` | An inline image (see [Images](#images)). |
@@ -599,7 +600,8 @@ half-written `==`: an unpaired one is ordinary text everywhere else in markdown,
 so it stays ordinary text here. Where you want the mistake *refused* — a tone
 typo, an unclosed span — write the tag, which is validated (below).
 
-**It is legal in `p.slide(...)` text and nowhere else.** Not in a title (already
+**It is legal in slide text (`p.slide(...)`, and each column of
+`p.columns(...)`) and nowhere else.** Not in a title (already
 the loudest thing on the page — marking a word there says this matters more than
 the loudest thing, which is a sign the title is too long), not in a caption,
 sidenote, footnote, callout bubble, table cell, chip, or `prose`. A `code` block
@@ -654,6 +656,41 @@ the Marp deck. The PPTX export translates the same `$…$` / `$$…$$` into
 and stays editable in PowerPoint's equation editor rather than arriving as a
 picture. See [usage.md](usage.md#math) for the vocabulary it covers.
 
+### Columns
+
+`p.columns(*columns, widths=None, autobold=True)` sets slide text side by side:
+one markdown string per column, at least two. It is for two short passages of
+the same shape (an instruction and its inverse, a caller and its callee) that
+would each leave half the slide empty when stacked.
+
+```python
+p.columns(
+    """
+push S
+1. rsp decreases by 8
+2. S is written at the top of the stack
+""",
+    """
+pop D
+1. the top of the stack is read into D
+2. rsp increases by 8
+""",
+)
+```
+
+Each column is slide text and follows the rules of `p.slide(...)`: `==mark==`
+expands, and flush-left prose lines are [auto-bolded](#auto-bold-on-slide)
+unless `autobold=False`, which applies to every column of the block. The
+columns share the content width evenly. `widths` gives one positive weight per
+column, relative like a table's (`widths=[2, 3]`).
+
+The block is one unit: it takes one reveal step, one footnote chain, and one
+translation key per column (`<page>.columns.<n>.col.<k>`). The viewer, PDF and
+PNG set the columns side by side, as does PowerPoint (one text box per column).
+The transcript prints the columns in order, one after the other. The book does
+not render the block; `only=["latex"]` forces it in, as with a `slide`, and it
+then prints as prose in column order.
+
 ### `slide` vs `prose`
 
 `p.slide(...)` is the deck's body; `p.prose(...)` is the book's. A page carries
@@ -666,12 +703,12 @@ medium. See [book.md](book.md).
 Three cross-cutting controls decide whether a block is rendered:
 
 1. **Renderer block tables.** Each renderer renders only the kinds it knows. The
-   viewer renders `slide`, `code`, `link`, `image`, `side_image`, `row`,
+   viewer renders `slide`, `columns`, `code`, `link`, `image`, `side_image`, `row`,
    `architecture`, `sidenote`, `aside`, `highlight`, `demo`, `table`, `spacer`,
    and the `cover` and `bridge` pages. `notes` is emitted into the Marp deck as a
    **presenter note** — an HTML comment the speaker view shows (press `p`) but
    the audience slide never renders. The `latex` (book) target renders `prose`,
-   `demo`, and the shared blocks, but never `slide`.
+   `demo`, and the shared blocks, but never `slide` or `columns`.
 2. **Author overrides.** Every block accepts `only=[…]` / `except_=[…]`, a set of
    renderer names that force the block in or out for specific targets, **on top
    of** the renderer's own table. `only=["latex"]` therefore pulls a block into

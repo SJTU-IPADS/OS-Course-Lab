@@ -928,21 +928,7 @@ class PageBuilder:
                     raise model.ValidationError(
                         f"table align must be left/center/right, got {a!r}"
                     )
-        width_list = None
-        if widths is not None:
-            weights = list(widths)
-            if len(weights) != width:
-                raise model.ValidationError(
-                    f"table widths has {len(weights)} entries, expected {width}"
-                )
-            for w in weights:
-                if (isinstance(w, bool) or not isinstance(w, (int, float))
-                        or not 0 < w < float("inf")):
-                    raise model.ValidationError(
-                        f"table widths must be positive numbers, got {w!r}"
-                    )
-            total = float(sum(weights))
-            width_list = [w / total for w in weights]
+        width_list = _weights(widths, width, "table")
         return self._block(
             "table",
             {"headers": header_list, "rows": row_list, "align": align_list,
@@ -978,6 +964,36 @@ class PageBuilder:
             key=key,
         )
         return ArchHandle(self, len(self.blocks) - 1)
+
+    def columns(
+        self,
+        *columns: str,
+        widths: Iterable[float] | None = None,
+        autobold: bool = True,
+        only: Iterable[str] | None = None,
+        except_: Iterable[str] | None = None,
+        key: str | None = None,
+    ) -> "BlockHandle":
+        """Slide text set side by side: one markdown string per column.
+
+        Each column is slide text and follows the rules of :meth:`slide`: the
+        ``==keyword==`` shorthand expands, and flush-left prose lines are
+        bolded unless ``autobold=False``. The columns share the content width
+        evenly; ``widths``, when given, is one positive weight per column and
+        is stored normalized, as fractions summing to 1.
+        """
+        items = []
+        for column in columns:
+            text = marks.expand(str(column))
+            items.append(_autobold(text) if autobold else text)
+        return self._block(
+            "columns",
+            {"items": items, "widths": _weights(widths, len(items), "columns")},
+            only=only,
+            except_=except_,
+            key=key,
+            autobold=autobold,
+        )
 
     def row(
         self,
@@ -1052,6 +1068,25 @@ class PageBuilder:
             )
         )
         return BlockHandle(self, len(self.blocks) - 1)
+
+
+def _weights(widths, count: int, what: str) -> list[float] | None:
+    """Column weights as fractions summing to 1, or None when not given."""
+    if widths is None:
+        return None
+    weights = list(widths)
+    if len(weights) != count:
+        raise model.ValidationError(
+            f"{what} widths has {len(weights)} entries, expected {count}"
+        )
+    for w in weights:
+        if (isinstance(w, bool) or not isinstance(w, (int, float))
+                or not 0 < w < float("inf")):
+            raise model.ValidationError(
+                f"{what} widths must be positive numbers, got {w!r}"
+            )
+    total = float(sum(weights))
+    return [w / total for w in weights]
 
 
 class BlockHandle:

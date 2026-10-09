@@ -10,8 +10,8 @@ dot_avx2
 dot_product
 dot_dbg
 dot_rec
-overflow
-overflow_sp
+echo
+echo_sp
 dot_intrin
 dot_omp
 dot_cuda

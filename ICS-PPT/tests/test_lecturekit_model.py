@@ -21,8 +21,8 @@ class SelectBlocksTest(unittest.TestCase):
             frozenset({
                 "cover", "slide", "notes", "prose", "code", "link",
                 "image", "side_image", "sidenote", "demo", "aside",
-                "table", "architecture", "row", "spacer", "highlight",
-                "bridge",
+                "table", "architecture", "row", "columns", "spacer",
+                "highlight", "bridge",
             }),
         )
 

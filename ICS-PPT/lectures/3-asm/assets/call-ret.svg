@@ -42,7 +42,7 @@
 <rect x="268.0" y="34.0" width="266.0" height="408.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.4"/>
 <line x1="244.0" y1="40.0" x2="268.0" y2="34.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 4"/>
 <line x1="244.0" y1="150.0" x2="268.0" y2="442.0" stroke="#e97132" stroke-width="1.4" stroke-dasharray="4 4"/>
-<text x="401.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">运行时栈的顶部（放大）</text>
+<text x="401.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">运行时栈的顶部</text>
 <text x="278.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">①</text>
 <text x="296.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">执行 </text>
 <text x="334.2" y="76.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">call</text>

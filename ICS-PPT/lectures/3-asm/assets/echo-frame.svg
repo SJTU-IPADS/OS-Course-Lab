@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 0 1120 178" width="1120" height="178">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 0 1120 252" width="1120" height="252">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<rect x="120.0" y="44.0" width="176.0" height="56.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="208.0" y="79.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">buf[0..7]</text>
-<rect x="296.0" y="44.0" width="176.0" height="56.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="3"/>
-<text x="384.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">金丝雀值</text>
+<rect x="120.0" y="44.0" width="176.0" height="56.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="208.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">未使用</text>
+<rect x="296.0" y="44.0" width="176.0" height="56.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="384.0" y="79.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">buf[0..7]</text>
 <rect x="472.0" y="44.0" width="176.0" height="56.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
 <text x="560.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">保存的 %rbx</text>
 <rect x="648.0" y="44.0" width="176.0" height="56.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
@@ -22,6 +22,13 @@
 <text x="824.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">main 的栈帧</text>
 <text x="120.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">低地址</text>
 <text x="1000.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">高地址</text>
-<line x1="120.0" y1="156.0" x2="472.0" y2="156.0" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
-<text x="484.0" y="161.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">超出 buf 的写入先改写金丝雀值</text>
+<text x="284.0" y="161.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">7 个字符</text>
+<line x1="296.0" y1="156.0" x2="472.0" y2="156.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="484.0" y="161.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">与结束符共 8 字节，填满 buf</text>
+<text x="284.0" y="201.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="end">15 个字符</text>
+<line x1="296.0" y1="196.0" x2="648.0" y2="196.0" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
+<text x="660.0" y="201.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">覆盖保存的 %rbx</text>
+<text x="284.0" y="241.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="end">23 个字符</text>
+<line x1="296.0" y1="236.0" x2="824.0" y2="236.0" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
+<text x="836.0" y="241.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">覆盖返回地址，SIGSEGV</text>
 </svg>

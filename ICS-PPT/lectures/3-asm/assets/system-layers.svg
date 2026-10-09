@@ -7,7 +7,7 @@
 <path d="M 230.0 74 L 570.0 74 L 640.0 134 L 160.0 134 Z" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
 <text x="400.0" y="111.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">ABI</text>
 <line x1="650.0" y1="104.0" x2="820.0" y2="104.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>
-<text x="830.0" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">调用规约、寄存器保护、栈对齐</text>
+<text x="830.0" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">调用约定、寄存器保护、栈对齐</text>
 <path d="M 160.0 140 L 640.0 140 L 710.0 200 L 90.0 200 Z" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
 <text x="400.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">ISA</text>
 <line x1="720.0" y1="170.0" x2="820.0" y2="170.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 3"/>

@@ -451,6 +451,24 @@ def annotation_markup(note, uid: str, width: int, height: int) -> tuple[str, str
     return aside, rule
 
 
+def _columns(block):
+    """Slide text in side-by-side columns.
+
+    A flex track of `lk-column` divs. Each column's markdown sits between blank
+    lines so Marp parses it as markdown (an HTML block ends at a blank line).
+    Columns share the track evenly; a weighted column carries its share as the
+    flex grow factor.
+    """
+    content = block.content
+    widths = content.get("widths")
+    lines = ['<div class="lk-columns">']
+    for i, text in enumerate(content["items"]):
+        style = f' style="flex-grow:{100 * widths[i]:.2f}"' if widths else ""
+        lines += [f'<div class="lk-column"{style}>', "", str(text).strip(), "", "</div>"]
+    lines += ["</div>", ""]
+    return lines
+
+
 def _row(block):
     """A row of side-by-side image figures.
 
@@ -669,6 +687,7 @@ BLOCK_RENDERERS = {
     "table": _table,
     "architecture": _architecture,
     "row": _row,
+    "columns": _columns,
 }
 
 

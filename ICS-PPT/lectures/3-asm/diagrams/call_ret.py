@@ -150,7 +150,7 @@ def snapshot(y, k):
 def build():
     out, stack_top, stack_bottom = address_space()
     top = TOP - 6
-    panel = [text(PX + PW / 2, top + 20, "运行时栈的顶部（放大）", 14, INK, "bold")]
+    panel = [text(PX + PW / 2, top + 20, "运行时栈的顶部", 14, INK, "bold")]
     y = top + 28
     for k in range(3):
         panel += snapshot(y, k)

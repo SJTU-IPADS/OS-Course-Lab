@@ -19,7 +19,7 @@ from .text import escape, inline, markdown
 #: in, and `except_=["transcript"]` takes any of them out.
 TRANSCRIPT_KINDS = {
     "slide", "code", "link", "image", "side_image", "sidenote", "aside",
-    "table", "architecture", "row", "highlight",
+    "table", "architecture", "row", "columns", "highlight",
 }
 
 _PSEUDO_CLASSES = {"keyword": "kw", "message": "msg", "state": "st", "comment": "cm"}
@@ -84,6 +84,14 @@ def _slide(block: model.Block, embedder: Embedder) -> str:
         )
         body = f'<span class="tx-float">{floated}</span>{body}'
     return f'<div class="tx-slide">{body}</div>'
+
+
+def _columns(block: model.Block, embedder: Embedder) -> str:
+    """Slide text the deck sets side by side; the sheet prints it in order."""
+    return "".join(
+        f'<div class="tx-slide">{markdown(text)}</div>'
+        for text in block.content["items"]
+    )
 
 
 def _aside(block: model.Block, embedder: Embedder) -> str:
@@ -240,6 +248,7 @@ _RENDERERS = {
     "image": _image,
     "side_image": _side_image,
     "row": _row,
+    "columns": _columns,
     "table": _table,
     "architecture": _architecture,
 }

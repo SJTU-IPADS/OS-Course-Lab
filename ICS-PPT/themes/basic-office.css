@@ -1006,6 +1006,22 @@ section > figure.lk-row > figcaption {
   color: var(--color-dk2);
 }
 
+/* Slide text in side-by-side columns (p.columns): a flex track across the
+   content width. Columns share it evenly; a weighted column carries its share
+   as an inline flex-grow. Each column keeps the paragraph and list rhythm of
+   slide text, so the block ends with the same margin a slide block does. */
+.lk-columns {
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  gap: 2em;
+}
+
+.lk-column {
+  flex: 1 1 0;
+  min-width: 0;       /* a long code span wraps instead of widening its column */
+}
+
 /* --- An image column on the left (p.side_image(..., side="left")) ---
    Marp's split background moves the whole slide into the other column, the
    title with it; on the left that takes the title away from the slide's left

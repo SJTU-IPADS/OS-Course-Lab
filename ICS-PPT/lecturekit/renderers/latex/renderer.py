@@ -148,17 +148,18 @@ def _opted_out_of_prose(page: model.Page) -> bool:
 def _would_supply_prose(block: model.Block) -> bool:
     if block.kind == "prose":
         return True
-    return (block.kind == "slide"
+    return (block.kind in model.SLIDE_TEXT_KINDS
             and block.only is not None and "latex" in block.only)
 
 
 def _is_body_text(block: model.Block) -> bool:
     """Does this block supply the page's book prose?
 
-    A `slide` reaches the book only when the author forced it in with
-    `only=["latex"]`, which is a deliberate "use this text as the prose".
+    Slide text (`slide`, `columns`) reaches the book only when the author
+    forced it in with `only=["latex"]`, which is a deliberate "use this text as
+    the prose".
     """
-    return block.kind in ("prose", "slide")
+    return block.kind == "prose" or block.kind in model.SLIDE_TEXT_KINDS
 
 
 def _document(book: BookModel, includes: list[str]) -> str:

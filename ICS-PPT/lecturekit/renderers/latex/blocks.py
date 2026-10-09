@@ -206,6 +206,12 @@ def _prose(block: model.Block, ctx: Ctx) -> str:
     return md_blocks(block.content, refs=ctx.resolve_ref) + _footnotes(block, ctx)
 
 
+def _columns(block: model.Block, ctx: Ctx) -> str:
+    """Slide text the deck sets side by side; the book prints it in order."""
+    text = "\n\n".join(str(item).strip() for item in block.content["items"])
+    return md_blocks(text, refs=ctx.resolve_ref) + _footnotes(block, ctx)
+
+
 def _aside(block: model.Block, ctx: Ctx) -> str:
     body = md_blocks(block.content, refs=ctx.resolve_ref) + _footnotes(block, ctx)
     return "\\begin{quote}\n\\small %s\n\\end{quote}" % body
@@ -438,6 +444,8 @@ _EMITTERS = {
     # content is the same markdown string a prose block holds, so it renders the
     # same way; without this entry that documented escape hatch raises.
     "slide": _prose,
+    # The same escape hatch for slide text in columns.
+    "columns": _columns,
     "aside": _aside,
     "highlight": _highlight,
     "code": _code,

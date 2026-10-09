@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-31 0 1120 262" width="1120" height="262">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="60.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">低地址</text>
+<text x="810.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">高地址</text>
+<text x="435.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">原来的返回地址</text>
+<rect x="60.0" y="30.0" width="300.0" height="44.0" rx="2" fill="#ffffff" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="210.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">填充（覆盖缓冲区）</text>
+<rect x="360.0" y="30.0" width="150.0" height="44.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="382.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">片段 </text>
+<text x="420.2" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">A</text>
+<text x="429.2" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的地址</text>
+<rect x="510.0" y="30.0" width="150.0" height="44.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="532.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">片段 </text>
+<text x="570.2" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">B</text>
+<text x="579.2" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的地址</text>
+<rect x="660.0" y="30.0" width="150.0" height="44.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="682.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">片段 </text>
+<text x="720.2" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">C</text>
+<text x="729.2" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的地址</text>
+<text x="824.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">输入写入栈中的数据</text>
+<rect x="320.0" y="124.0" width="650.0" height="128.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="336.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">程序中已有的代码（例如 libc）</text>
+<rect x="360.0" y="146.0" width="150.0" height="70.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<text x="372.0" y="168.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">片段 </text>
+<text x="410.2" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">A</text>
+<text x="372.0" y="188.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">...</text>
+<text x="372.0" y="207.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">ret</text>
+<path d="M 435.0 76 L 435.0 86 L 435.0 104 L 435.0 143" fill="none" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ah-c0392b)"/>
+<rect x="570.0" y="146.0" width="150.0" height="70.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<text x="582.0" y="168.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">片段 </text>
+<text x="620.2" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">B</text>
+<text x="582.0" y="188.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">...</text>
+<text x="582.0" y="207.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">ret</text>
+<path d="M 585.0 76 L 585.0 86 L 645.0 104 L 645.0 143" fill="none" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ah-c0392b)"/>
+<rect x="780.0" y="146.0" width="150.0" height="70.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<text x="792.0" y="168.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">片段 </text>
+<text x="830.2" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">C</text>
+<text x="792.0" y="188.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">...</text>
+<text x="792.0" y="207.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">ret</text>
+<path d="M 735.0 76 L 735.0 86 L 855.0 104 L 855.0 143" fill="none" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ah-c0392b)"/>
+<text x="447.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">① </text>
+<text x="461.3" y="116.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">bar</text>
+<text x="484.7" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的 ret 弹出 A</text>
+<text x="657.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">② </text>
+<text x="671.3" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">片段 A</text>
+<text x="711.6" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的 ret 弹出 B</text>
+<text x="867.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">③ </text>
+<text x="881.3" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">片段 B</text>
+<text x="921.6" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的 ret 弹出 C</text>
+</svg>

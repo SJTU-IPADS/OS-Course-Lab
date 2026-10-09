@@ -2352,52 +2352,51 @@ text = 'Function calls and jumps: similarities and differences'
 # src: 函数调用与跳转的相同点与不同点
 
 ['call-vs-jump.slide.1']
-src_hash = '1aefca85'
+src_hash = '3eb835c7'
 text = '''
-**Similarity**: a call transfers control from the instructions of `main` to the first instruction of `dot_product`. This is an unconditional jump, and `jmp dot_product` can do it.
+**A function call is another kind of unconditional jump.**
 
-**Differences**: a call must also do four things, none of which a jump instruction does:
+**Same**: control is transferred from one part of the program to another. `jmp dot_product` is enough to transfer control from `main` to the first instruction of `dot_product`.
+
+**Different**:
 1. **Return**: when `dot_product` finishes, control returns to the instruction after the call site in `main`;
-2. **Passing data**: `main` hands the arguments `w`, `x` and `4` to `dot_product`, and `dot_product` hands the return value to `main`;
-3. **Registers**: the two functions use the same set of 16 registers, and a value `main` keeps in a register may be overwritten by `dot_product`;
-4. **Local variables**: the arrays `w` and `x` of `main` keep their values during the call, and `sum` and `i` of `dot_product` exist only during this call.
+2. **Passing data (arguments, return values)**: the arguments `w`, `x` and `4` go from `main` to `dot_product`, and the return value goes from `dot_product` to `main`;
+3. **Registers**: all functions share the same set of 16 registers, and a value `main` keeps in a register may be overwritten by `dot_product`;
+4. **Local variables**: every call has its own copy of the local variables. `sum` and `i` of `dot_product` exist during this call, and the arrays `w` and `x` of `main` keep their values during the call.
 '''
 # src:
 # 
-# **相同点**：调用把执行流从 `main` 的指令转移到 `dot_product` 的第一条指令。这是一次无条件跳转，`jmp dot_product` 就能做到。
+# **函数调用是另一种无条件跳转。**
 # 
-# **不同点**：一次调用还要完成四件事，跳转指令都不做：
-# 1. **返回**：`dot_product` 执行完毕后，执行流回到 `main` 中调用点的下一条指令；
-# 2. **传递数据**：`main` 把参数 `w`、`x`、`4` 交给 `dot_product`，`dot_product` 把返回值交给 `main`；
-# 3. **寄存器**：两个函数使用同一组 16 个寄存器，`main` 放在寄存器中的值可能被 `dot_product` 改写；
-# 4. **局部变量**：`main` 的数组 `w` 与 `x` 在调用期间保持原值，`dot_product` 的 `sum` 与 `i` 只在这次调用期间存在。
+# **相同点**：控制从程序的一个部分转移到另一个部分。`jmp dot_product` 就能把控制从 `main` 转移到 `dot_product` 的第一条指令。
+# 
+# **不同点**：
+# 1. **返回**：`dot_product` 执行完毕后，控制回到 `main` 中调用点的下一条指令；
+# 2. **传递数据（参数、返回值）**：参数 `w`、`x`、`4` 由 `main` 交给 `dot_product`，返回值由 `dot_product` 交给 `main`；
+# 3. **寄存器**：全部函数共用同一组 16 个寄存器，`main` 放在寄存器中的值可能被 `dot_product` 改写；
+# 4. **局部变量**：每次调用有自己的一份局部变量。`dot_product` 的 `sum` 与 `i` 在这次调用期间存在，`main` 的数组 `w` 与 `x` 在调用期间保持原值。
 
 ['call-vs-jump.notes.1']
-src_hash = 'c0e4f360'
-text = 'A function call is first of all a jump; beyond the jump it adds four things: return, passing data, registers and local variables. Part 3 takes these five things in order.'
+src_hash = '28cb7cf5'
+text = 'A function call is another kind of unconditional jump, and it differs from a jump in four ways: return, passing data, registers and local variables. Part 3 covers the jump itself and these four differences in turn.'
 # src:
 # 
-# 函数调用首先是一次跳转，在跳转之外多出返回、传递数据、寄存器、局部变量四件事。第三部分按这五件事的顺序展开。
+# 函数调用是另一种无条件跳转，它与跳转有四个不同点：返回、传递数据、寄存器、局部变量。第三部分依次讲解跳转本身与这四个不同点。
 
 ['call-checklist.title']
-src_hash = 'b1b187d6'
-text = 'Implementing a function call: five problems'
-# src: 函数调用的实现：五个问题
+src_hash = 'ab3c3240'
+text = 'Implementing a function call'
+# src: 函数调用的实现
 
 ['call-checklist.table.1.cell.0.0']
-src_hash = '33a8618c'
-text = 'Problem'
-# src: 问题
+src_hash = '7a688306'
+text = 'Item'
+# src: 内容
 
 ['call-checklist.table.1.cell.0.1']
-src_hash = '73ab504d'
-text = 'What must be done'
-# src: 要做到的事
-
-['call-checklist.table.1.cell.0.2']
-src_hash = 'b10009bf'
-text = 'Solution'
-# src: 解决的方式
+src_hash = '268d6546'
+text = 'Requirement'
+# src: 要求
 
 ['call-checklist.table.1.cell.1.0']
 src_hash = '33008a52'
@@ -2405,14 +2404,9 @@ text = '**Calling the callee**'
 # src: **调用被调用者**
 
 ['call-checklist.table.1.cell.1.1']
-src_hash = '6e5b1a7e'
-text = '**Control enters the callee at its first instruction**'
-# src: **执行流进入被调用者的第一条指令**
-
-['call-checklist.table.1.cell.1.2']
-src_hash = 'f422e721'
-text = '**?**'
-# src: **?**
+src_hash = '392c1ec2'
+text = '**Control is transferred to the entry of the callee**'
+# src: **控制转移到被调用者的入口**
 
 ['call-checklist.table.1.cell.2.0']
 src_hash = '35f2526d'
@@ -2420,14 +2414,9 @@ text = '**Returning to the caller**'
 # src: **返回调用者**
 
 ['call-checklist.table.1.cell.2.1']
-src_hash = 'ed341c6b'
+src_hash = 'a45161f5'
 text = '**Control returns to the instruction after the call site**'
-# src: **执行流回到调用点的下一条指令**
-
-['call-checklist.table.1.cell.2.2']
-src_hash = 'f422e721'
-text = '**?**'
-# src: **?**
+# src: **控制回到调用点的下一条指令**
 
 ['call-checklist.table.1.cell.3.0']
 src_hash = '55c1ba71'
@@ -2439,11 +2428,6 @@ src_hash = '8faa4f7d'
 text = 'Arguments go to the callee, the return value goes to the caller'
 # src: 参数交给被调用者，返回值交给调用者
 
-['call-checklist.table.1.cell.3.2']
-src_hash = '8a8de823'
-text = '?'
-# src: ?
-
 ['call-checklist.table.1.cell.4.0']
 src_hash = '46bbb6e9'
 text = 'Registers'
@@ -2454,11 +2438,6 @@ src_hash = '0c95b945'
 text = 'Values the caller keeps in registers remain usable after the call'
 # src: 调用者放在寄存器中的值，调用之后仍可使用
 
-['call-checklist.table.1.cell.4.2']
-src_hash = '8a8de823'
-text = '?'
-# src: ?
-
 ['call-checklist.table.1.cell.5.0']
 src_hash = '15f4afd7'
 text = 'Local variables'
@@ -2466,33 +2445,28 @@ text = 'Local variables'
 
 ['call-checklist.table.1.cell.5.1']
 src_hash = '6b5c9d48'
-text = 'Each call has its own copy of the local variables'
+text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
 
-['call-checklist.table.1.cell.5.2']
-src_hash = '8a8de823'
-text = '?'
-# src: ?
-
 ['call-checklist.slide.1']
-src_hash = '61073af6'
+src_hash = 'ae82f0af'
 text = '''
-**Where the five problems come from**: the first is the jump itself, and the other four are the four things a call adds to a jump. As each problem is solved, its solution is filled into the corresponding row of the table.
+**Where the five rows come from**: the first is the jump itself, and the other four are the four differences between a function call and a jump.
 
-**The first two problems are solved first**: how does control enter `dot_product`, and how does it return to `main` when that function finishes?
+**The first two rows come first**: how is control transferred to `dot_product`, and how does it return to `main` when `dot_product` finishes?
 '''
 # src:
 # 
-# **五个问题的来源**：第一个是跳转本身，后四个是调用比跳转多出的四件事。每解决一个问题，表中相应的一行填上解决的方式。
+# **五行的来源**：第一行是跳转本身，后四行是函数调用与跳转的四个不同点。
 # 
-# **先解决前两个问题**：执行流如何进入 `dot_product`，执行完毕后又如何回到 `main`？
+# **先讲前两行**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
 
 ['call-checklist.notes.1']
-src_hash = '9698deda'
-text = 'This table appears once at the start of each of the following subsections; the rows already solved carry a check mark, and the row in bold is the problem that subsection solves.'
+src_hash = '94d931d3'
+text = 'This table appears once at the start of each of the following subsections; the row in bold is what that subsection covers.'
 # src:
 # 
-# 这张表在后面每一小节的开头出现一次，已经解决的行标上对勾，加粗的一行是这一小节要解决的问题。
+# 这张表在后面每一小节的开头出现一次，加粗的一行是这一小节要讲的内容。
 
 ['section.part3-call.title']
 src_hash = '31f626c6'
@@ -2505,7 +2479,7 @@ text = 'The return address: the address of the instruction after the call site'
 # src: 返回地址：调用点下一条指令的地址
 
 ['return-address.slide.1']
-src_hash = '90cbdf1f'
+src_hash = '7dd31073'
 text = '''
 **Returning to the caller**: when `dot_product` finishes, it jumps to the instruction after the call site.
 - `dot_product` can be called from several places in a program, and the instruction after each call site has a different address;
@@ -2514,10 +2488,10 @@ text = '''
 '''
 # src:
 # 
-# **回到调用者**：`dot_product` 执行完毕后跳到调用点的下一条指令。
+# **返回调用者**：`dot_product` 执行完毕后跳转到调用点的下一条指令。
 # - `dot_product` 可以在程序的多处被调用，各个调用点的下一条指令地址不同；
 # - `jmp` 的目标写在指令中，只能是其中一个；
-# - 调用发生时因此要把调用点下一条指令的地址保存起来，返回时跳到保存的地址。这个地址称为**返回地址（Return Address）**。
+# - 调用发生时因此要把调用点下一条指令的地址保存起来，返回时跳转到保存的地址。这个地址称为**返回地址（Return Address）**。
 
 ['return-address.slide.2']
 src_hash = '472dd0de'
@@ -2527,7 +2501,7 @@ text = '**Question**: where is the return address saved?'
 # **问题**：返回地址保存在哪里？
 
 ['return-address.notes.1']
-src_hash = '346d3962'
+src_hash = '6ff29baf'
 text = '''
 Entering dot_product can be done with an existing instruction: jmp dot_product writes the address of its first instruction into %rip. Returning to the caller is the new problem.
 Call site A is in main and call site B is in another function; both call dot_product. Where dot_product returns to when it ends depends on who made this call and cannot be determined when dot_product is compiled.
@@ -2535,7 +2509,7 @@ The target of the jump on return is an address saved at run time; this is the in
 '''
 # src:
 # 
-# 进入 dot_product 用已有的指令就能做到：jmp dot_product 把它第一条指令的地址写入 %rip。回到调用者是新的问题。
+# 进入 dot_product 用已有的指令就能做到：jmp dot_product 把它第一条指令的地址写入 %rip。返回调用者是新的问题。
 # 调用点 A 在 main 中，调用点 B 在另一个函数中，两处都调用 dot_product。dot_product 结束时回到哪里由这一次是谁调用决定，编译 dot_product 时无法确定。
 # 返回时跳转的目标是运行时保存下来的一个地址，这是第二部分讲过的间接跳转。
 
@@ -2550,7 +2524,7 @@ text = 'contain'
 # src: contain
 
 ['runtime-stack.slide.1']
-src_hash = '96417634'
+src_hash = '210d8c47'
 text = '''
 **Calls can nest**: `main` calls function `f`, and `f` in turn calls function `g`.
 - Two return addresses must be kept at the same time: the address for returning to `main` is saved first, and the address for returning to `f` is saved second;
@@ -2570,7 +2544,7 @@ text = '''
 # 
 # **运行时栈（Stack）**：按后进先出的顺序存取数据的一段内存。
 # - **位置**：在进程地址空间的高地址一端；
-# - **栈顶指针 `%rsp`**：保存栈顶的地址，即栈中最后存入的数据的地址；
+# - **栈指针 `%rsp`**：保存栈顶的地址，即栈中最后存入的数据的地址；
 # - **向低地址生长**：存入 8 字节时 `%rsp` 减 8，取出 8 字节时 `%rsp` 加 8；
 # - 地址不低于 `%rsp` 的部分正在使用，地址低于 `%rsp` 的部分尚未使用。
 
@@ -2592,67 +2566,63 @@ src_hash = '8c60d78b'
 text = 'Stack instructions: pushq and popq'
 # src: 栈操作指令：pushq 与 popq
 
-['push-pop.slide.1']
-src_hash = '2ce4b0cf'
+['push-pop.columns.1.col.1']
+src_hash = 'f82ae9ba'
 text = '''
 **`pushq S`**: stores the 8-byte `S` at the top of the stack.
 1. Subtract 8 from `%rsp`;
 2. Write `S` into the 8 bytes `%rsp` points to.
-
-**`popq D`**: retrieves 8 bytes from the top of the stack and writes them to `D`.
-1. Read the 8 bytes `%rsp` points to and write them to `D`;
-2. Add 8 to `%rsp`.
-
-**Operands, flags and equivalent instructions**:
-- `S` can be a register, a memory operand or an immediate (32 bits, sign-extended to 64 bits); `D` can be a register or a memory operand;
-- `pushq` and `popq` do not change the flags;
-- Taking `%rbx` as the example: in its effect on `%rsp` and the stack, `pushq %rbx` is the same as the two instructions `subq $8, %rsp` and `movq %rbx, (%rsp)`, and `popq %rbx` is the same as the two instructions `movq (%rsp), %rbx` and `addq $8, %rsp`; `pushq %rbx` takes 1 byte, and the two equivalent instructions take 8 bytes in total.
 '''
 # src:
 # 
 # **`pushq S`**：把 8 字节的 `S` 存入栈顶。
 # 1. `%rsp` 减 8；
 # 2. 把 `S` 写入 `%rsp` 所指的 8 个字节。
+
+['push-pop.columns.1.col.2']
+src_hash = 'b1bac7bf'
+text = '''
+**`popq D`**: retrieves 8 bytes from the top of the stack and writes them to `D`.
+1. Read the 8 bytes `%rsp` points to and write them to `D`;
+2. Add 8 to `%rsp`.
+'''
+# src:
 # 
 # **`popq D`**：从栈顶取出 8 字节，写入 `D`。
 # 1. 读出 `%rsp` 所指的 8 个字节，写入 `D`；
 # 2. `%rsp` 加 8。
+
+['push-pop.slide.1']
+src_hash = '5410ebca'
+text = '''
+**Operands**: `S` can be a register, a memory operand or an immediate (32 bits, sign-extended to 64 bits); `D` can be a register or a memory operand.
+
+**Flags**: `pushq` and `popq` do not change the flags.
+'''
+# src:
 # 
-# **操作数、标志位与等效的指令**：
-# - `S` 可以是寄存器、内存操作数或立即数（32 位，符号扩展为 64 位），`D` 可以是寄存器或内存操作数；
-# - `pushq` 与 `popq` 不改变标志位；
-# - 以 `%rbx` 为例：对 `%rsp` 与栈的效果，`pushq %rbx` 与 `subq $8, %rsp`、`movq %rbx, (%rsp)` 两条指令相同，`popq %rbx` 与 `movq (%rsp), %rbx`、`addq $8, %rsp` 两条指令相同；`pushq %rbx` 占 1 字节，等效的两条指令共 8 字节。
+# **操作数**：`S` 可以是寄存器、内存操作数或立即数（32 位，符号扩展为 64 位），`D` 可以是寄存器或内存操作数。
+# 
+# **标志位**：`pushq` 与 `popq` 不改变标志位。
 
 ['push-pop.notes.1']
-src_hash = 'f98910be'
+src_hash = 'fb1040b6'
 text = '''
 pushq and popq each perform two steps in one instruction: updating %rsp, and reading or writing the top of the stack. The x86-64 stack works in units of 8 bytes, and the operands of both instructions are 64 bits.
-In the equivalent pairs of instructions, subq and addq set the flags; pushq and popq do not. For a memory operand there is no such pair of instructions: movq cannot have two memory operands.
+In the figure high addresses are at the top, and the dashed arrow is %rsp before the step. The left half shows the two steps of pushq: 8 is first subtracted from %rsp, then S is written to the new top of the stack. The right half shows the two steps of popq: the 8 bytes at the top of the stack are read first, then 8 is added to %rsp.
+After popq the original 8 bytes are still in memory; %rsp has moved past them, and these 8 bytes no longer belong to the part of the stack in use.
+The instruction above each step in the figure has the same effect on %rsp and the stack as that step: pushq S is equivalent to the two instructions subq $8, %rsp and movq S, (%rsp), and popq D is equivalent to the two instructions movq (%rsp), D and addq $8, %rsp. Of these, subq and addq set the flags; pushq and popq do not. For a memory operand there is no such pair of instructions: movq cannot have two memory operands.
 When the operand is %rsp, pushq %rsp pushes the value %rsp had before 8 was subtracted.
-The byte counts come from the assembler output: pushq %rbx is 53 and popq %rbx is 5b; subq $8, %rsp is 48 83 ec 08 and movq %rbx, (%rsp) is 48 89 1c 24.
+pushq %rbx takes 1 byte (53); the two equivalent instructions subq $8, %rsp (48 83 ec 08) and movq %rbx, (%rsp) (48 89 1c 24) take 8 bytes in total. The byte counts come from the assembler output.
 '''
 # src:
 # 
 # pushq 与 popq 各用一条指令完成两步：改写 %rsp，读写栈顶。x86-64 的栈以 8 字节为单位，两条指令的操作数都是 64 位。
-# 等效的两条指令中 subq 与 addq 会设置标志位，pushq 与 popq 不会。操作数是内存操作数时没有这样的两条指令：movq 不能有两个内存操作数。
-# 操作数是 %rsp 时，pushq %rsp 压入的是减 8 之前的值。
-# 字节数来自汇编器的输出：pushq %rbx 是 53，popq %rbx 是 5b；subq $8, %rsp 是 48 83 ec 08，movq %rbx, (%rsp) 是 48 89 1c 24。
-
-['push-pop-fig.title']
-src_hash = '8c60d78b'
-text = 'Stack instructions: pushq and popq'
-# src: 栈操作指令：pushq 与 popq
-
-['push-pop-fig.notes.1']
-src_hash = '2be402a0'
-text = '''
-The left half shows the two steps of pushq: 8 is first subtracted from %rsp, then Src is written to the new top of the stack. The right half shows the two steps of popq: the 8 bytes at the top of the stack are read first, then 8 is added to %rsp.
-After popq the original 8 bytes are still in memory; %rsp has moved past them, and these 8 bytes no longer belong to the part of the stack in use.
-'''
-# src:
-# 
-# 左半是 pushq 的两步：%rsp 先减 8，再把 Src 写入新的栈顶。右半是 popq 的两步：先读出栈顶的 8 个字节，%rsp 再加 8。
+# 图中上方为高地址，虚线箭头是这一步之前的 %rsp。左半是 pushq 的两步：%rsp 先减 8，再把 S 写入新的栈顶。右半是 popq 的两步：先读出栈顶的 8 个字节，%rsp 再加 8。
 # popq 之后原来的 8 个字节仍在内存中，%rsp 已经越过它，这 8 个字节不再属于栈中正在使用的部分。
+# 图中每一步上方的指令对 %rsp 与栈的效果与这一步相同：pushq S 相当于 subq $8, %rsp 与 movq S, (%rsp) 两条指令，popq D 相当于 movq (%rsp), D 与 addq $8, %rsp 两条指令。其中 subq 与 addq 会设置标志位，pushq 与 popq 不会。操作数是内存操作数时没有这样的两条指令：movq 不能有两个内存操作数。
+# 操作数是 %rsp 时，pushq %rsp 压入的是减 8 之前的值。
+# pushq %rbx 占 1 字节（53），相当的两条指令 subq $8, %rsp（48 83 ec 08）与 movq %rbx, (%rsp)（48 89 1c 24）共 8 字节；字节数来自汇编器的输出。
 
 ['call-emulate.title']
 src_hash = '3736caad'
@@ -2674,31 +2644,31 @@ text = '**Return**: pop the return address from the top of the stack, and jump t
 # **返回**：从栈顶弹出返回地址，用间接跳转跳到这个地址：
 
 ['call-emulate.slide.3']
-src_hash = 'b83b8969'
+src_hash = '8811f602'
 text = '''
 - The call takes 3 instructions and 13 bytes, the return takes 2 instructions and 3 bytes, and each occupies one register;
 - The return address is the address of the next instruction. The CPU already computes it during sequential execution (`%rip` plus the instruction length), and the program computes it again with `leaq`.
 
-**x86-64 provides one instruction for each of the two**: `call dot_product` takes 5 bytes, `ret` takes 1 byte, and neither occupies a general-purpose register.
+**x86-64 provides one new instruction each for the call and the return**: `call dot_product` takes 5 bytes, `ret` takes 1 byte, and neither occupies a general-purpose register.
 '''
 # src:
 # 
 # - 调用用 3 条指令共 13 字节，返回用 2 条指令共 3 字节，各占用一个寄存器；
 # - 返回地址是下一条指令的地址，CPU 顺序执行时已经在计算它（`%rip` 加指令长度），程序用 `leaq` 又计算了一遍。
 # 
-# **x86-64 为这两件事各提供一条指令**：`call dot_product` 占 5 字节，`ret` 占 1 字节，都不占用通用寄存器。
+# **x86-64 为调用与返回各提供一条新指令**：`call dot_product` 占 5 字节，`ret` 占 1 字节，都不占用通用寄存器。
 
 ['call-emulate.notes.1']
-src_hash = '2e5590bd'
+src_hash = 'c04f3098'
 text = '''
-.Lnext(%rip) is the PC-relative addressing of Part 1; leaq computes the address of the label .Lnext, that is, the address of the instruction after the jmp.
-The byte counts come from the assembler output: leaq 7 bytes, pushq %rax 1 byte, jmp dot_product 5 bytes; popq %rcx 1 byte, jmp *%rcx 2 bytes.
+.Lnext(%rip) is assembler notation for the address of the label .Lnext, that is, the address of the instruction after the jmp. The assembler stores in the instruction the difference between .Lnext and the address of the next instruction: after leaq come the 1-byte pushq and the 5-byte jmp, so the difference is 6 and the machine code is lea 0x6(%rip), %rax. When leaq executes, %rip is the address of pushq, and %rip + 6 is the address of .Lnext. The 0x2f1c(%rip) in the objdump output of Part 1 is the same addressing.
+The byte counts come from the assembler output: leaq 7 bytes, pushq %rax 1 byte, jmp dot_product 5 bytes; popq %rcx 1 byte, jmp *%rcx 2 bytes. The 5-byte jmp is the form with a 4-byte offset, the same as call; when the target is within 127 bytes and in the same file, the assembler chooses the 2-byte form.
 With call and ret the CPU performs these two groups of actions directly. The CPU also predicts the return address from the pairing of call and ret, which Lecture 4 explains.
 '''
 # src:
 # 
-# .Lnext(%rip) 是第一部分的 PC 相对寻址，leaq 算出标号 .Lnext 的地址，即 jmp 之后那条指令的地址。
-# 字节数来自汇编器的输出：leaq 7 字节，pushq %rax 1 字节，jmp dot_product 5 字节；popq %rcx 1 字节，jmp *%rcx 2 字节。
+# .Lnext(%rip) 是汇编器的写法，表示标号 .Lnext 的地址，即 jmp 之后那条指令的地址。汇编器把 .Lnext 与下一条指令地址的差填入指令：leaq 之后是 1 字节的 pushq 与 5 字节的 jmp，差是 6，机器码是 lea 0x6(%rip), %rax。执行 leaq 时 %rip 是 pushq 的地址，%rip + 6 就是 .Lnext 的地址。第一部分 objdump 输出中的 0x2f1c(%rip) 是同一种寻址。
+# 字节数来自汇编器的输出：leaq 7 字节，pushq %rax 1 字节，jmp dot_product 5 字节；popq %rcx 1 字节，jmp *%rcx 2 字节。jmp 的 5 字节是 4 字节偏移量的形式，与 call 相同；目标在 127 字节以内并且在同一个文件中时，汇编器选用 2 字节的形式。
 # call 与 ret 由 CPU 直接完成这两组动作。CPU 还按 call 与 ret 的配对预测返回地址，第四讲说明。
 
 ['call-ret.title']
@@ -2737,56 +2707,17 @@ text = '''
 # **`call *Operand`** 是间接调用：目标地址从寄存器或内存中读出，例如 `call *%rax`。
 
 ['call-ret.notes.1']
-src_hash = '3647b6b3'
+src_hash = 'dbec289b'
 text = '''
 The addresses in the figure on the left are taken from the executable linked from main.c and dot.c: the call in main is at 0x401156, the next instruction addq $40, %rsp is at 0x40115b, dot_product starts at 0x401160, and its ret is at 0x401199.
 Three moments: ① before call executes; ② after call, the return address 0x40115b occupies the 8 bytes at the top of the stack and %rip points to the entry of dot_product; ③ after ret, the return address has been popped and %rip is back at 0x40115b.
-An indirect call is written the same way as an indirect jump. In C, a call through a function pointer compiles to an indirect call.
+call Label is a direct call, with the target written in the instruction; an indirect call is written the same way as an indirect jump. In C, a call through a function pointer compiles to an indirect call.
 '''
 # src:
 # 
 # 左图的地址取自 main.c 与 dot.c 链接成的可执行文件：main 中的 call 位于 0x401156，下一条指令 addq $40, %rsp 位于 0x40115b，dot_product 从 0x401160 开始，它的 ret 位于 0x401199。
 # 三个时刻：① 执行 call 之前；② call 之后，返回地址 0x40115b 占栈顶的 8 字节，%rip 指向 dot_product 的入口；③ ret 之后，返回地址已弹出，%rip 回到 0x40115b。
-# 间接调用的写法与间接跳转相同。C 语言通过函数指针的调用编译为间接调用。
-
-['call-ret-2.title']
-src_hash = 'b82151bd'
-text = 'call and ret: the two instructions for call and return'
-# src: call 与 ret：调用与返回的两条指令
-
-['call-ret-2.side_image.1.alt']
-src_hash = 'dd9245cc'
-text = 'contain'
-# src: contain
-
-['call-ret-2.demo.1.name']
-src_hash = 'd60d8c65'
-text = 'Look at the call and the return address at the top of the stack'
-# src: 查看 call 与栈顶的返回地址
-
-['call-ret-2.slide.1']
-src_hash = '397fcceb'
-text = '''
-- **The two `objdump` lines**: `call` is at `0x401156` and takes 5 bytes, and the next instruction is at `0x40115b`;
-- **The `gdb` line**: the program stops at the entry of `dot_product`, and the 8 bytes `%rsp` points to are `0x40115b`, the return address.
-'''
-# src:
-# 
-# - **`objdump` 的两行**：`call` 位于 `0x401156`，占 5 字节，下一条指令位于 `0x40115b`；
-# - **`gdb` 的一行**：程序停在 `dot_product` 的入口，`%rsp` 所指的 8 个字节是 `0x40115b`，即返回地址。
-
-['call-ret-2.notes.1']
-src_hash = '924fb30b'
-text = '''
--no-pie makes the addresses in the executable the same as the addresses after loading into memory. objdump -d disassembles, --no-show-raw-insn omits the machine-code bytes, and grep -A1 extracts the call line and the line after it.
-The three -ex options of gdb run three commands in order: set a breakpoint at the first instruction of dot_product (*dot_product is the address of this instruction), run the program, and print the 8 bytes %rsp points to in hexadecimal (x/gx); tail -1 keeps only the last line.
-In the last line, the part before the colon is the address of the top of the stack, which varies with the run-time environment; the return address after the colon does not change. With another compiler version the three addresses change, and the address of the instruction after call still equals the 8 bytes at the top of the stack.
-'''
-# src:
-# 
-# -no-pie 使可执行文件中的地址就是装入内存后的地址。objdump -d 反汇编，--no-show-raw-insn 不打印机器码字节，grep -A1 取出 call 一行与它的下一行。
-# gdb 的三个 -ex 依次执行三条命令：在 dot_product 的第一条指令处设置断点（*dot_product 是这条指令的地址），运行程序，以十六进制打印 %rsp 所指的 8 个字节（x/gx）；tail -1 只保留最后一行。
-# 最后一行冒号之前是栈顶的地址，随运行环境变化；冒号之后的返回地址不变。换用其他版本的编译器，三个地址会变化，call 的下一条指令的地址与栈顶的 8 个字节仍然相同。
+# call Label 是直接调用，目标写在指令中；间接调用的写法与间接跳转相同。C 语言通过函数指针的调用编译为间接调用。
 
 ['stack-frames.title']
 src_hash = '10e5f7bf'
@@ -2809,11 +2740,11 @@ text = '''
 # - 调用按后进先出的顺序返回，栈帧的建立与释放也按后进先出的顺序进行。
 
 ['stack-frames.slide.2']
-src_hash = '9d9ff84b'
-text = '**Other data in a stack frame**: besides the return address, a stack frame holds arguments passed on the stack, saved register values and local variables, as determined by the solutions to the remaining three problems.'
+src_hash = '5b62cc0d'
+text = '**Other data in a stack frame**: besides the return address, a stack frame holds arguments passed on the stack, saved register values and local variables, which correspond to three rows of the table "Implementing a function call": passing data, registers and local variables.'
 # src:
 # 
-# **栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量，由后面三个问题的解决方式决定。
+# **栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量，分别对应「函数调用的实现」一表中的传递数据、寄存器、局部变量三行。
 
 ['stack-frames.notes.1']
 src_hash = '6b94d852'
@@ -2827,29 +2758,24 @@ After g returns its stack frame is freed; when f then calls h, the stack frame o
 # g 返回后它的栈帧释放，f 再调用 h 时，h 的栈帧使用同一段内存。
 
 ['section.part3-data.title']
-src_hash = '34deafab'
-text = 'Passing data: registers and the stack'
-# src: 传递数据：寄存器与栈
+src_hash = '69b57322'
+text = 'Passing data: registers, stack'
+# src: 传递数据：寄存器、栈
 
 ['call-checklist-2.title']
-src_hash = 'b1b187d6'
-text = 'Implementing a function call: five problems'
-# src: 函数调用的实现：五个问题
+src_hash = 'ab3c3240'
+text = 'Implementing a function call'
+# src: 函数调用的实现
 
 ['call-checklist-2.table.1.cell.0.0']
-src_hash = '33a8618c'
-text = 'Problem'
-# src: 问题
+src_hash = '7a688306'
+text = 'Item'
+# src: 内容
 
 ['call-checklist-2.table.1.cell.0.1']
-src_hash = '73ab504d'
-text = 'What must be done'
-# src: 要做到的事
-
-['call-checklist-2.table.1.cell.0.2']
-src_hash = 'b10009bf'
-text = 'Solution'
-# src: 解决的方式
+src_hash = '268d6546'
+text = 'Requirement'
+# src: 要求
 
 ['call-checklist-2.table.1.cell.1.0']
 src_hash = 'be0232a5'
@@ -2857,14 +2783,9 @@ text = 'Calling the callee'
 # src: 调用被调用者
 
 ['call-checklist-2.table.1.cell.1.1']
-src_hash = '4c820d67'
-text = 'Control enters the callee at its first instruction'
-# src: 执行流进入被调用者的第一条指令
-
-['call-checklist-2.table.1.cell.1.2']
-src_hash = '021fc374'
-text = '✓ The `call` instruction'
-# src: ✓ `call` 指令
+src_hash = '1bcd9202'
+text = 'Control is transferred to the entry of the callee'
+# src: 控制转移到被调用者的入口
 
 ['call-checklist-2.table.1.cell.2.0']
 src_hash = '4e334e32'
@@ -2872,14 +2793,9 @@ text = 'Returning to the caller'
 # src: 返回调用者
 
 ['call-checklist-2.table.1.cell.2.1']
-src_hash = '60fd25cc'
+src_hash = '4b46ffdf'
 text = 'Control returns to the instruction after the call site'
-# src: 执行流回到调用点的下一条指令
-
-['call-checklist-2.table.1.cell.2.2']
-src_hash = '30ee457b'
-text = '✓ The `ret` instruction'
-# src: ✓ `ret` 指令
+# src: 控制回到调用点的下一条指令
 
 ['call-checklist-2.table.1.cell.3.0']
 src_hash = 'f1252948'
@@ -2891,11 +2807,6 @@ src_hash = '16de5904'
 text = '**Arguments go to the callee, the return value goes to the caller**'
 # src: **参数交给被调用者，返回值交给调用者**
 
-['call-checklist-2.table.1.cell.3.2']
-src_hash = 'f422e721'
-text = '**?**'
-# src: **?**
-
 ['call-checklist-2.table.1.cell.4.0']
 src_hash = '46bbb6e9'
 text = 'Registers'
@@ -2906,11 +2817,6 @@ src_hash = '0c95b945'
 text = 'Values the caller keeps in registers remain usable after the call'
 # src: 调用者放在寄存器中的值，调用之后仍可使用
 
-['call-checklist-2.table.1.cell.4.2']
-src_hash = '8a8de823'
-text = '?'
-# src: ?
-
 ['call-checklist-2.table.1.cell.5.0']
 src_hash = '15f4afd7'
 text = 'Local variables'
@@ -2918,13 +2824,8 @@ text = 'Local variables'
 
 ['call-checklist-2.table.1.cell.5.1']
 src_hash = '6b5c9d48'
-text = 'Each call has its own copy of the local variables'
+text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
-
-['call-checklist-2.table.1.cell.5.2']
-src_hash = '8a8de823'
-text = '?'
-# src: ?
 
 ['call-checklist-2.slide.1']
 src_hash = '758f6b33'
@@ -2934,11 +2835,11 @@ text = '**Question**: where does `main` put `w`, `x` and `4` so that `dot_produc
 # **问题**：`main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
 
 ['call-checklist-2.notes.1']
-src_hash = 'c4f2a064'
-text = 'The first two problems are solved by the two instructions call and ret, and the return address is saved on the run-time stack.'
+src_hash = '8033f5aa'
+text = 'The first two rows are implemented by the two new instructions call and ret, and the return address is saved on the run-time stack.'
 # src:
 # 
-# 前两个问题由 call 与 ret 两条指令解决，返回地址保存在运行时栈中。
+# 前两行由 call 与 ret 两条新指令实现，返回地址保存在运行时栈中。
 
 ['param-regs.title']
 src_hash = '484c6f42'
@@ -3134,7 +3035,7 @@ text = '`%r9b`'
 # src: `%r9b`
 
 ['param-regs.slide.2']
-src_hash = '94258a91'
+src_hash = 'fc3d210c'
 text = '''
 **Return value**: placed in `%rax`, using `%rax`, `%eax`, `%ax` or `%al` according to the width of the return value.
 
@@ -3144,7 +3045,7 @@ text = '''
 # 
 # **返回值**：放入 `%rax`，按返回值的宽度使用 `%rax`、`%eax`、`%ax` 或 `%al`。
 # 
-# **约定的出处**：System V AMD64 ABI。应用二进制接口（ABI）规定分别编译的模块之间如何配合，其中关于函数调用的规定称为调用规约。
+# **约定的出处**：System V AMD64 ABI。应用二进制接口（ABI）规定分别编译的模块之间如何配合，其中关于函数调用的规定称为调用约定。
 
 ['param-regs.notes.1']
 src_hash = 'b9634c75'
@@ -3185,16 +3086,18 @@ text = '''
 # - 数组 `w` 的地址是 `%rsp` 加 16，`x` 的地址是 `%rsp`，在「局部变量」一节说明。
 
 ['dot-params.notes.1']
-src_hash = '1248631b'
+src_hash = '68027068'
 text = '''
 The figure maps the prototype of dot_product to the convention: the two pointer arguments use the 64-bit %rdi and %rsi, the int argument n uses the 32-bit %edx, and the int return value uses %eax.
 sed -n '/movq/,/call/p' prints only the four lines from movq to call in the listing of main. @PLT is a marker used in linking, explained in Lecture 5; call dot_product@PLT calls dot_product.
+The comments after # in the four lines were added on the page; the command does not print them. main stores the array x at the address in %rsp and w at %rsp + 16, so both addresses are computed from %rsp; why local variables are stored there is covered in the subsection on local variables.
 For the callee side, see the listing of dot_product in Part 2: the movl %r9d, %eax before the return puts sum in %eax; the dot.c button opens its source. main uses the return value of dot_product as its own return value and does not overwrite %eax after the call.
 '''
 # src:
 # 
 # 图是 dot_product 的原型与约定的对应：两个指针参数用 64 位的 %rdi 与 %rsi，int 参数 n 用 32 位的 %edx，int 返回值用 %eax。
 # sed -n '/movq/,/call/p' 只打印 main 的清单中从 movq 到 call 的四行。@PLT 是链接用的记号，第五讲说明；call dot_product@PLT 调用的就是 dot_product。
+# 四行中 # 之后的注释是页面上添加的说明，命令的输出中没有。main 把数组 x 存放在 %rsp 所指处，w 存放在 %rsp + 16 处，所以两个数组的地址由 %rsp 得到；局部变量为什么存放在这里，到「局部变量」一节再讲。
 # 被调用者一侧见第二部分 dot_product 的清单，返回前的 movl %r9d, %eax 把 sum 放入 %eax；dot.c 按钮打开它的源码。main 把 dot_product 的返回值作为自己的返回值，call 之后没有改写 %eax。
 
 ['stack-args.title']
@@ -3208,7 +3111,7 @@ text = 'contain'
 # src: contain
 
 ['stack-args.slide.1']
-src_hash = '46ebce15'
+src_hash = 'a114c29b'
 text = '''
 **The caller pushes the 7th and later arguments onto the stack**:
 - The pushes happen before `call`, from right to left: the last argument is pushed first and the 7th argument is pushed last;
@@ -3221,7 +3124,7 @@ text = '''
 # src:
 # 
 # **第 7 个及以后的参数由调用者压入栈**：
-# - 压栈在 `call` 之前进行，顺序从右向左：最后一个参数最先压入，第 7 个参数最后压入；
+# - 压栈在 `call` 之前进行，顺序从右到左：最后一个参数最先压入，第 7 个参数最后压入；
 # - 每个参数占 8 字节，宽度不足 8 字节的参数也占 8 字节；
 # - `call` 再压入返回地址。进入被调用者时，`(%rsp)` 是返回地址，`8(%rsp)` 是参数 7，`16(%rsp)` 是参数 8，依此类推；
 # - 调用返回后，调用者增大 `%rsp`，释放这些参数。
@@ -3229,14 +3132,14 @@ text = '''
 # **例子**：`use8` 调用 `last2(1, 2, 3, 4, 5, 6, 7, 8)`，`last2` 返回第 7 个参数减第 8 个参数的差。左图是进入 `last2` 时的栈。
 
 ['stack-args.notes.1']
-src_hash = 'c3af8b93'
+src_hash = '6089a3e5'
 text = '''
 Pushing from right to left puts the 7th argument closest to the top of the stack, and the callee reads at fixed offsets: argument 7 is always at 8(%rsp), whatever the total number of arguments.
 In the figure on the left, the left side of each row shows how last2 refers to that location, and the right side shows the instruction in use8 that writes it. All three locations belong to the stack frame of use8.
 '''
 # src:
 # 
-# 从右向左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
+# 从右到左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
 # 左图各行左侧是 last2 访问该位置的写法，右侧是 use8 中写入该位置的指令。三个位置都属于 use8 的栈帧。
 
 ['stack-args-2.title']
@@ -3271,24 +3174,19 @@ text = 'Registers: the usage convention'
 # src: 寄存器：使用惯例
 
 ['call-checklist-3.title']
-src_hash = 'b1b187d6'
-text = 'Implementing a function call: five problems'
-# src: 函数调用的实现：五个问题
+src_hash = 'ab3c3240'
+text = 'Implementing a function call'
+# src: 函数调用的实现
 
 ['call-checklist-3.table.1.cell.0.0']
-src_hash = '33a8618c'
-text = 'Problem'
-# src: 问题
+src_hash = '7a688306'
+text = 'Item'
+# src: 内容
 
 ['call-checklist-3.table.1.cell.0.1']
-src_hash = '73ab504d'
-text = 'What must be done'
-# src: 要做到的事
-
-['call-checklist-3.table.1.cell.0.2']
-src_hash = 'b10009bf'
-text = 'Solution'
-# src: 解决的方式
+src_hash = '268d6546'
+text = 'Requirement'
+# src: 要求
 
 ['call-checklist-3.table.1.cell.1.0']
 src_hash = 'be0232a5'
@@ -3296,14 +3194,9 @@ text = 'Calling the callee'
 # src: 调用被调用者
 
 ['call-checklist-3.table.1.cell.1.1']
-src_hash = '4c820d67'
-text = 'Control enters the callee at its first instruction'
-# src: 执行流进入被调用者的第一条指令
-
-['call-checklist-3.table.1.cell.1.2']
-src_hash = '021fc374'
-text = '✓ The `call` instruction'
-# src: ✓ `call` 指令
+src_hash = '1bcd9202'
+text = 'Control is transferred to the entry of the callee'
+# src: 控制转移到被调用者的入口
 
 ['call-checklist-3.table.1.cell.2.0']
 src_hash = '4e334e32'
@@ -3311,14 +3204,9 @@ text = 'Returning to the caller'
 # src: 返回调用者
 
 ['call-checklist-3.table.1.cell.2.1']
-src_hash = '60fd25cc'
+src_hash = '4b46ffdf'
 text = 'Control returns to the instruction after the call site'
-# src: 执行流回到调用点的下一条指令
-
-['call-checklist-3.table.1.cell.2.2']
-src_hash = '30ee457b'
-text = '✓ The `ret` instruction'
-# src: ✓ `ret` 指令
+# src: 控制回到调用点的下一条指令
 
 ['call-checklist-3.table.1.cell.3.0']
 src_hash = '55c1ba71'
@@ -3330,11 +3218,6 @@ src_hash = '8faa4f7d'
 text = 'Arguments go to the callee, the return value goes to the caller'
 # src: 参数交给被调用者，返回值交给调用者
 
-['call-checklist-3.table.1.cell.3.2']
-src_hash = 'a37cac36'
-text = '✓ Convention: registers and the stack'
-# src: ✓ 约定：寄存器与栈
-
 ['call-checklist-3.table.1.cell.4.0']
 src_hash = 'a040c59e'
 text = '**Registers**'
@@ -3342,13 +3225,8 @@ text = '**Registers**'
 
 ['call-checklist-3.table.1.cell.4.1']
 src_hash = '26ad8205'
-text = '**Values the caller keeps in registers are still usable after the call**'
+text = '**Values the caller keeps in registers remain usable after the call**'
 # src: **调用者放在寄存器中的值，调用之后仍可使用**
-
-['call-checklist-3.table.1.cell.4.2']
-src_hash = 'f422e721'
-text = '**?**'
-# src: **?**
 
 ['call-checklist-3.table.1.cell.5.0']
 src_hash = '15f4afd7'
@@ -3357,13 +3235,8 @@ text = 'Local variables'
 
 ['call-checklist-3.table.1.cell.5.1']
 src_hash = '6b5c9d48'
-text = 'Each call has its own copy of the local variables'
+text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
-
-['call-checklist-3.table.1.cell.5.2']
-src_hash = '8a8de823'
-text = '?'
-# src: ?
 
 ['call-checklist-3.slide.1']
 src_hash = 'e826aabc'
@@ -3373,11 +3246,11 @@ text = '**Question**: are the values the caller keeps in registers still there a
 # **问题**：调用者放在寄存器中的值，在被调用者执行之后是否还在？
 
 ['call-checklist-3.notes.1']
-src_hash = '92e2a1a5'
-text = 'Passing data is settled by a convention: the first 6 arguments and the return value use registers, and the remaining arguments are passed on the stack.'
+src_hash = '067f98f1'
+text = 'Passing data uses registers and the stack: the first 6 arguments and the return value use registers, and the remaining arguments are passed on the stack.'
 # src:
 # 
-# 数据的传递由约定解决：前 6 个参数与返回值使用寄存器，其余参数经栈传递。
+# 传递数据使用寄存器与栈：前 6 个参数与返回值使用寄存器，其余参数经栈传递。
 
 ['reg-conflict.title']
 src_hash = 'f5e47341'
@@ -3418,12 +3291,12 @@ The dot_bias on this page has only three instructions and was written to show th
 # 这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在本节最后一页。
 
 ['saved-regs.title']
-src_hash = '0cb45755'
+src_hash = 'b7937f93'
 text = 'Register usage convention: caller-saved and callee-saved'
-# src: 寄存器使用惯例：调用者保存与被调用者保存
+# src: 寄存器使用惯例：caller-saved 与 callee-saved
 
 ['saved-regs.slide.1']
-src_hash = 'fbfb2902'
+src_hash = '6655d43d'
 text = '''
 **Callee-saved registers**: `%rbx`, `%rbp`, `%r12`, `%r13`, `%r14`, `%r15`
 - Convention: when a function returns, these registers hold the same values as when the function was called;
@@ -3437,36 +3310,36 @@ text = '''
 '''
 # src:
 # 
-# **被调用者保存寄存器（Callee-saved）**：`%rbx`、`%rbp`、`%r12`、`%r13`、`%r14`、`%r15`
+# **callee-saved 寄存器**：`%rbx`、`%rbp`、`%r12`、`%r13`、`%r14`、`%r15`
 # - 约定：函数返回时，这些寄存器的值与函数被调用时相同；
-# - 被调用者要使用其中一个时，先把原值保存到栈上，返回前恢复。
+# - 被调用者（callee）要使用其中一个时，先把原值保存到栈上，返回前恢复。
 # 
-# **调用者保存寄存器（Caller-saved）**：`%rax`、6 个参数寄存器、`%r10`、`%r11`
+# **caller-saved 寄存器**：`%rax`、6 个参数寄存器、`%r10`、`%r11`
 # - 约定：被调用者可以直接改写这些寄存器；
-# - 调用者在调用之后还要使用其中的值时，在 `call` 之前把它保存到栈上，或者移到一个被调用者保存寄存器中。
+# - 调用者（caller）在调用之后还要使用其中的值时，在 `call` 之前把它保存到栈上，或者移到一个 callee-saved 寄存器中。
 # 
-# **栈顶指针 `%rsp`**：函数返回后，`%rsp` 的值与执行 `call` 之前相同。
+# **栈指针 `%rsp`**：函数返回后，`%rsp` 的值与执行 `call` 之前相同。
 
 ['saved-regs.notes.1']
-src_hash = '228d614e'
+src_hash = '1f605f65'
 text = '''
-This convention belongs to the System V AMD64 ABI, together with the convention for arguments. The names of the two classes of register say who is responsible for saving the values in them.
+This convention belongs to the System V AMD64 ABI, together with the convention for arguments. The names of the two classes of register say who is responsible for saving the values in them: callee-saved registers are saved by the callee, caller-saved registers by the caller.
 The 6 argument registers are %rdi, %rsi, %rdx, %rcx, %r8 and %r9; there are 9 caller-saved registers in all.
 A callee-saved register is saved only when the callee uses it; a function that does not use them has no save and restore instructions.
 '''
 # src:
 # 
-# 这项约定与参数的约定同属 System V AMD64 ABI。两类寄存器的名称说明由谁负责保存其中的值。
-# 6 个参数寄存器是 %rdi、%rsi、%rdx、%rcx、%r8、%r9，调用者保存寄存器共 9 个。
-# 被调用者保存寄存器只在被调用者要使用时才保存；一个函数没有用到它们，就没有保存与恢复的指令。
+# 这项约定与参数的约定同属 System V AMD64 ABI。两类寄存器的名称说明由谁负责保存其中的值：callee-saved 寄存器由被调用者（callee）保存，caller-saved 寄存器由调用者（caller）保存。
+# 6 个参数寄存器是 %rdi、%rsi、%rdx、%rcx、%r8、%r9，caller-saved 寄存器共 9 个。
+# callee-saved 寄存器只在被调用者要使用时才保存；一个函数没有用到它们，就没有保存与恢复的指令。
 
 ['saved-regs-fig.title']
-src_hash = '0cb45755'
+src_hash = 'b7937f93'
 text = 'Register usage convention: caller-saved and callee-saved'
-# src: 寄存器使用惯例：调用者保存与被调用者保存
+# src: 寄存器使用惯例：caller-saved 与 callee-saved
 
 ['saved-regs-fig.slide.1']
-src_hash = '5ebc8d7e'
+src_hash = '57cd1582'
 text = '''
 **The `b` of `dot_bias` is in the caller-saved `%ecx` and is still needed after the call; there are two ways to keep it**:
 - Push `b` onto the stack before the call and pop it after the call;
@@ -3474,20 +3347,20 @@ text = '''
 '''
 # src:
 # 
-# **`dot_bias` 的 `b` 在调用者保存的 `%ecx` 中，调用之后还要使用，有两种做法**：
+# **`dot_bias` 的 `b` 在 caller-saved 的 `%ecx` 中，调用之后还要使用，有两种做法**：
 # - 调用之前把 `b` 压入栈，调用之后弹出；
-# - 调用之前把 `b` 移到一个被调用者保存寄存器中，按约定 `dot_product` 返回时它的值不变。`dot_bias` 自己也是被调用者，使用这个寄存器之前要先保存它的原值。
+# - 调用之前把 `b` 移到一个 callee-saved 寄存器中，按约定 `dot_product` 返回时它的值不变。`dot_bias` 自己也是被调用者，使用这个寄存器之前要先保存它的原值。
 
 ['saved-regs-fig.notes.1']
-src_hash = '4110e37e'
+src_hash = '093f69d3'
 text = '''
 The 16 general-purpose registers fall into three groups: 9 caller-saved, 6 callee-saved, plus the stack pointer %rsp.
 Both ways access the stack once: the first saves b, the second saves the original value of the callee-saved register.
 '''
 # src:
 # 
-# 16 个通用寄存器分为三组：9 个调用者保存，6 个被调用者保存，加上栈顶指针 %rsp。
-# 两种做法都要访问一次栈：第一种保存的是 b，第二种保存的是被调用者保存寄存器的原值。
+# 16 个通用寄存器分为三组：9 个 caller-saved，6 个 callee-saved，加上栈指针 %rsp。
+# 两种做法都要访问一次栈：第一种保存的是 b，第二种保存的是 callee-saved 寄存器的原值。
 
 ['callee-example.title']
 src_hash = '4122ccac'
@@ -3505,7 +3378,7 @@ text = 'Compile dot_bias.c'
 # src: 编译 dot_bias.c
 
 ['callee-example.slide.1']
-src_hash = '9ec3a4a5'
+src_hash = 'e3942475'
 text = '''
 - **`movl %ecx, %ebx`**: `b` is moved to the callee-saved `%ebx`, and its value is unchanged after `dot_product` returns;
 - **`pushq %rbx` and `popq %rbx`**: `dot_bias` saves the original value before overwriting `%rbx` and restores it before returning;
@@ -3513,12 +3386,12 @@ text = '''
 '''
 # src:
 # 
-# - **`movl %ecx, %ebx`**：`b` 移到被调用者保存的 `%ebx`，`dot_product` 返回后它的值不变；
+# - **`movl %ecx, %ebx`**：`b` 移到 callee-saved 的 `%ebx`，`dot_product` 返回后它的值不变；
 # - **`pushq %rbx` 与 `popq %rbx`**：`dot_bias` 改写 `%rbx` 之前保存原值，返回前恢复；
-# - **`dot_product`** 只改写调用者保存寄存器，没有保存与恢复的指令。
+# - **`dot_product`** 只改写 caller-saved 寄存器，没有保存与恢复的指令。
 
 ['callee-example.notes.1']
-src_hash = '435b3ca6'
+src_hash = 'bb398f7f'
 text = '''
 The figure on the left is the stack while dot_product executes: the stack frame of dot_bias has two items, the saved %rbx and the return address pushed by call, 16 bytes in all.
 gcc chose the second way from the previous page. b stays in a register, so no memory access is needed to read or write b before or after the call; the entry and the exit each gain one instruction, pushq and popq.
@@ -3529,33 +3402,28 @@ examples/asm.sed deletes the assembler directives (.file, .cfi_* and so on) and 
 # 
 # 左图是 dot_product 执行期间的栈：dot_bias 的栈帧有两项，保存的 %rbx 与 call 压入的返回地址，共 16 字节。
 # gcc 选用上一页的第二种做法。b 放在寄存器中，调用前后都不需要访存来读写 b；入口与出口各多一条 pushq 与 popq。
-# dot_product 改写的寄存器可以在第二部分的清单中核对：%eax、%ecx、%r8、%r9d，都是调用者保存寄存器。
+# dot_product 改写的寄存器可以在第二部分的清单中核对：%eax、%ecx、%r8、%r9d，都是 caller-saved 寄存器。
 # examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号。
 
 ['section.part3-locals.title']
-src_hash = '21cd3168'
-text = 'Local variables: allocation and freeing in the stack frame'
-# src: 局部变量：栈帧中的分配与释放
+src_hash = '64e9b168'
+text = 'Local variables: stack'
+# src: 局部变量：栈
 
 ['call-checklist-4.title']
-src_hash = 'b1b187d6'
-text = 'Implementing a function call: five problems'
-# src: 函数调用的实现：五个问题
+src_hash = 'ab3c3240'
+text = 'Implementing a function call'
+# src: 函数调用的实现
 
 ['call-checklist-4.table.1.cell.0.0']
-src_hash = '33a8618c'
-text = 'Problem'
-# src: 问题
+src_hash = '7a688306'
+text = 'Item'
+# src: 内容
 
 ['call-checklist-4.table.1.cell.0.1']
-src_hash = '73ab504d'
-text = 'What must be done'
-# src: 要做到的事
-
-['call-checklist-4.table.1.cell.0.2']
-src_hash = 'b10009bf'
-text = 'Solution'
-# src: 解决的方式
+src_hash = '268d6546'
+text = 'Requirement'
+# src: 要求
 
 ['call-checklist-4.table.1.cell.1.0']
 src_hash = 'be0232a5'
@@ -3563,14 +3431,9 @@ text = 'Calling the callee'
 # src: 调用被调用者
 
 ['call-checklist-4.table.1.cell.1.1']
-src_hash = '4c820d67'
-text = 'Control enters the callee at its first instruction'
-# src: 执行流进入被调用者的第一条指令
-
-['call-checklist-4.table.1.cell.1.2']
-src_hash = '021fc374'
-text = '✓ The `call` instruction'
-# src: ✓ `call` 指令
+src_hash = '1bcd9202'
+text = 'Control is transferred to the entry of the callee'
+# src: 控制转移到被调用者的入口
 
 ['call-checklist-4.table.1.cell.2.0']
 src_hash = '4e334e32'
@@ -3578,14 +3441,9 @@ text = 'Returning to the caller'
 # src: 返回调用者
 
 ['call-checklist-4.table.1.cell.2.1']
-src_hash = '60fd25cc'
+src_hash = '4b46ffdf'
 text = 'Control returns to the instruction after the call site'
-# src: 执行流回到调用点的下一条指令
-
-['call-checklist-4.table.1.cell.2.2']
-src_hash = '30ee457b'
-text = '✓ The `ret` instruction'
-# src: ✓ `ret` 指令
+# src: 控制回到调用点的下一条指令
 
 ['call-checklist-4.table.1.cell.3.0']
 src_hash = '55c1ba71'
@@ -3597,11 +3455,6 @@ src_hash = '8faa4f7d'
 text = 'Arguments go to the callee, the return value goes to the caller'
 # src: 参数交给被调用者，返回值交给调用者
 
-['call-checklist-4.table.1.cell.3.2']
-src_hash = 'a37cac36'
-text = '✓ Convention: registers and the stack'
-# src: ✓ 约定：寄存器与栈
-
 ['call-checklist-4.table.1.cell.4.0']
 src_hash = '46bbb6e9'
 text = 'Registers'
@@ -3612,11 +3465,6 @@ src_hash = '0c95b945'
 text = 'Values the caller keeps in registers remain usable after the call'
 # src: 调用者放在寄存器中的值，调用之后仍可使用
 
-['call-checklist-4.table.1.cell.4.2']
-src_hash = 'a2994913'
-text = '✓ Convention: caller-saved and callee-saved'
-# src: ✓ 约定：调用者保存与被调用者保存
-
 ['call-checklist-4.table.1.cell.5.0']
 src_hash = 'c71095c0'
 text = '**Local variables**'
@@ -3624,13 +3472,8 @@ text = '**Local variables**'
 
 ['call-checklist-4.table.1.cell.5.1']
 src_hash = '4330c51b'
-text = '**Each call has its own copy of the local variables**'
+text = '**Every call has its own copy of the local variables**'
 # src: **每次调用有自己的一份局部变量**
-
-['call-checklist-4.table.1.cell.5.2']
-src_hash = 'f422e721'
-text = '**?**'
-# src: **?**
 
 ['call-checklist-4.slide.1']
 src_hash = '9eb520f4'
@@ -3640,11 +3483,11 @@ text = '**Question**: where are the arrays `w` and `x` of `main` stored?'
 # **问题**：`main` 的数组 `w` 与 `x` 存放在哪里？
 
 ['call-checklist-4.notes.1']
-src_hash = '9083db83'
-text = 'The register problem is settled by the usage convention: the 6 callee-saved registers hold the same values before and after a call, and the rest are saved by the caller when needed.'
+src_hash = '1d823c37'
+text = 'The usage conventions divide the registers into two classes: the 6 callee-saved registers hold the same values before and after a call, and the 9 caller-saved registers are saved by the caller when needed.'
 # src:
 # 
-# 寄存器的问题由使用惯例解决：6 个被调用者保存寄存器的值在调用前后相同，其余的由调用者在需要时保存。
+# 寄存器按使用惯例分为两类：6 个 callee-saved 寄存器的值在调用前后相同，9 个 caller-saved 寄存器由调用者在需要时保存。
 
 ['local-vars.title']
 src_hash = 'df37a868'
@@ -3709,16 +3552,16 @@ text = 'Compile main.c with gcc -Og'
 # src: 用 gcc -Og 编译 main.c
 
 ['stack-frame.notes.1']
-src_hash = 'b65f315b'
+src_hash = '26bf7c83'
 text = '''
 The listing has four parts: line 2 allocates the stack frame, lines 3 to 10 write the 8 elements of the two arrays, lines 11 to 14 set up the arguments and call dot_product, and line 15 frees the stack frame.
--fno-stack-protector turns off stack protection, so the stack frame holds only the local arrays; the stack protection of a default compilation is explained in the section "Buffer overflow and stack protection" of this part.
+-fno-stack-protector turns off stack protection, so the stack frame holds only the local arrays; the stack protection of a default compilation is explained in the section "Thwarting buffer overflow attacks" of this part.
 The main.c button opens the source on the right, for comparison with the stack frame on the left.
 '''
 # src:
 # 
 # 清单分四段：第 2 行分配栈帧，第 3 到 10 行写入两个数组的 8 个元素，第 11 到 14 行准备参数并调用 dot_product，第 15 行释放栈帧。
-# -fno-stack-protector 关闭栈保护，栈帧中只有局部数组；默认编译时的栈保护在本部分「缓冲区溢出与栈保护」一节说明。
+# -fno-stack-protector 关闭栈保护，栈帧中只有局部数组；默认编译时的栈保护在本部分「对抗缓冲区溢出攻击」一节说明。
 # main.c 按钮在右侧打开源码，与左侧的栈帧对照。
 
 ['stack-frame-2.title']
@@ -3747,12 +3590,12 @@ text = '''
 # 3. **释放**：`addq $40, %rsp` 把 `%rsp` 加回 40，栈帧随之释放，其中的数据不需要清除。
 
 ['stack-frame-2.aside.1']
-src_hash = '778586ce'
+src_hash = '6d315094'
 text = 'Offsets 32 ~ 39 are unused: the calling convention requires `%rsp` to be a multiple of 16 when `call` executes. On entry to `main` the top of the stack is the 8-byte return address, and 40 + 8 = 48 is a multiple of 16.'
-# src: 偏移 32 ~ 39 未被使用：调用规约要求执行 `call` 时 `%rsp` 是 16 的倍数。进入 `main` 时栈顶是 8 字节的返回地址，40 + 8 = 48 是 16 的倍数。
+# src: 偏移 32 ~ 39 未被使用：调用约定要求执行 `call` 时 `%rsp` 是 16 的倍数。进入 `main` 时栈顶是 8 字节的返回地址，40 + 8 = 48 是 16 的倍数。
 
 ['stack-frame-2.notes.1']
-src_hash = '022b4948'
+src_hash = 'f0bfd56f'
 text = '''
 The offsets are fixed at compile time and %rsp differs from call to call, so the same instructions access the local variables of the current call.
 The stack frame of main holds no saved registers: it uses no callee-saved register, and after calling dot_product it no longer uses any value in a caller-saved register.
@@ -3761,8 +3604,8 @@ In use8 on the page "More than 6 arguments", %rsp is a multiple of 16 plus 8 whe
 # src:
 # 
 # 偏移在编译时确定，每次调用的 %rsp 不同，同一段指令因此访问本次调用的局部变量。
-# main 的栈帧中没有保存的寄存器：它没有使用被调用者保存寄存器，调用 dot_product 之后也不再使用调用者保存寄存器中的值。
-# 「超过 6 个参数」一页的 use8 执行 call 时 %rsp 是 16 的倍数加 8：last2 与 use8 在同一个文件中，gcc 看到 last2 不依赖栈的对齐，省去了调整 %rsp 的指令（选项 -fipa-stack-alignment，默认开启）。被调用者在另一个文件中时，gcc 按规约对齐。
+# main 的栈帧中没有保存的寄存器：它没有使用 callee-saved 寄存器，调用 dot_product 之后也不再使用 caller-saved 寄存器中的值。
+# 「超过 6 个参数」一页的 use8 执行 call 时 %rsp 是 16 的倍数加 8：last2 与 use8 在同一个文件中，gcc 看到 last2 不依赖栈的对齐，省去了调整 %rsp 的指令（选项 -fipa-stack-alignment，默认开启）。被调用者在另一个文件中时，gcc 按约定对齐。
 
 ['section.part3-together.title']
 src_hash = 'ff0484d5'
@@ -3770,24 +3613,19 @@ text = 'Putting it together: the complete steps of one call'
 # src: 综合起来：一次调用的完整步骤
 
 ['call-checklist-5.title']
-src_hash = 'b1b187d6'
-text = 'Implementing a function call: five problems'
-# src: 函数调用的实现：五个问题
+src_hash = 'ab3c3240'
+text = 'Implementing a function call'
+# src: 函数调用的实现
 
 ['call-checklist-5.table.1.cell.0.0']
-src_hash = '33a8618c'
-text = 'Problem'
-# src: 问题
+src_hash = '7a688306'
+text = 'Item'
+# src: 内容
 
 ['call-checklist-5.table.1.cell.0.1']
-src_hash = '73ab504d'
-text = 'What must be done'
-# src: 要做到的事
-
-['call-checklist-5.table.1.cell.0.2']
-src_hash = 'b10009bf'
-text = 'Solution'
-# src: 解决的方式
+src_hash = '268d6546'
+text = 'Requirement'
+# src: 要求
 
 ['call-checklist-5.table.1.cell.1.0']
 src_hash = 'be0232a5'
@@ -3795,14 +3633,9 @@ text = 'Calling the callee'
 # src: 调用被调用者
 
 ['call-checklist-5.table.1.cell.1.1']
-src_hash = '4c820d67'
-text = 'Control enters the callee at its first instruction'
-# src: 执行流进入被调用者的第一条指令
-
-['call-checklist-5.table.1.cell.1.2']
-src_hash = '021fc374'
-text = '✓ The `call` instruction'
-# src: ✓ `call` 指令
+src_hash = '1bcd9202'
+text = 'Control is transferred to the entry of the callee'
+# src: 控制转移到被调用者的入口
 
 ['call-checklist-5.table.1.cell.2.0']
 src_hash = '4e334e32'
@@ -3810,14 +3643,9 @@ text = 'Returning to the caller'
 # src: 返回调用者
 
 ['call-checklist-5.table.1.cell.2.1']
-src_hash = '60fd25cc'
+src_hash = '4b46ffdf'
 text = 'Control returns to the instruction after the call site'
-# src: 执行流回到调用点的下一条指令
-
-['call-checklist-5.table.1.cell.2.2']
-src_hash = '30ee457b'
-text = '✓ The `ret` instruction'
-# src: ✓ `ret` 指令
+# src: 控制回到调用点的下一条指令
 
 ['call-checklist-5.table.1.cell.3.0']
 src_hash = '55c1ba71'
@@ -3829,11 +3657,6 @@ src_hash = '8faa4f7d'
 text = 'Arguments go to the callee, the return value goes to the caller'
 # src: 参数交给被调用者，返回值交给调用者
 
-['call-checklist-5.table.1.cell.3.2']
-src_hash = 'a37cac36'
-text = '✓ Convention: registers and the stack'
-# src: ✓ 约定：寄存器与栈
-
 ['call-checklist-5.table.1.cell.4.0']
 src_hash = '46bbb6e9'
 text = 'Registers'
@@ -3844,11 +3667,6 @@ src_hash = '0c95b945'
 text = 'Values the caller keeps in registers remain usable after the call'
 # src: 调用者放在寄存器中的值，调用之后仍可使用
 
-['call-checklist-5.table.1.cell.4.2']
-src_hash = 'a2994913'
-text = '✓ Convention: caller-saved and callee-saved'
-# src: ✓ 约定：调用者保存与被调用者保存
-
 ['call-checklist-5.table.1.cell.5.0']
 src_hash = '15f4afd7'
 text = 'Local variables'
@@ -3856,35 +3674,30 @@ text = 'Local variables'
 
 ['call-checklist-5.table.1.cell.5.1']
 src_hash = '6b5c9d48'
-text = 'Each call has its own copy of the local variables'
+text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
 
-['call-checklist-5.table.1.cell.5.2']
-src_hash = '42d3687c'
-text = '✓ Allocated and freed in the stack frame'
-# src: ✓ 在栈帧中分配与释放
-
 ['call-checklist-5.slide.1']
-src_hash = '11ddf1ac'
+src_hash = '7b6cf0b9'
 text = '''
-**The solutions of the five problems fall into three kinds**:
-- **Two instructions**: `call` and `ret`, whose behavior is specified by the ISA;
-- **Two conventions**: passing data and the use of registers, followed by the compiler when it generates instructions;
-- **The run-time stack**: the return address, the arguments passed on the stack, the saved register values and the local variables are all stored in the stack frame.
+**The five rows are implemented in three ways**:
+- **Two new instructions**: `call` and `ret`, whose behavior is specified by the ISA;
+- **Two conventions**: where data is passed and the usage conventions for registers, followed by the compiler when it generates instructions;
+- **The run-time stack**: the return address, arguments passed on the stack, saved register values and local variables are all stored in stack frames.
 '''
 # src:
 # 
-# **五个问题的解决方式分为三类**：
-# - **两条指令**：`call` 与 `ret`，行为由 ISA 规定；
-# - **两项约定**：数据的传递与寄存器的使用，由编译器在生成指令时遵守；
+# **五行的实现分为三类**：
+# - **两条新指令**：`call` 与 `ret`，行为由 ISA 规定；
+# - **两项约定**：传递数据的位置与寄存器的使用惯例，由编译器在生成指令时遵守；
 # - **运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都存放在栈帧中。
 
 ['call-checklist-5.notes.1']
-src_hash = 'f5e6752d'
-text = 'All five problems are solved. Next they are arranged in the time order of one call.'
+src_hash = '02304ad5'
+text = 'All five rows have been covered. Next they are arranged in the time order of one call.'
 # src:
 # 
-# 五个问题都已解决。接下来把它们按一次调用的时间顺序排列。
+# 五行都已讲完。接下来把它们按一次调用的时间顺序排列。
 
 ['call-sequence.title']
 src_hash = 'ff0484d5'
@@ -3897,39 +3710,39 @@ text = 'contain'
 # src: contain
 
 ['call-sequence.slide.1']
-src_hash = '9fa98a1e'
+src_hash = '7282b54c'
 text = '''
 **The caller, before the call**:
 1. Save the caller-saved registers still needed after the call;
 2. Push the arguments from the 7th on onto the stack, from right to left;
 3. Put the first 6 arguments into registers;
-4. `call`: push the return address and jump to the callee.
+4. `call`: save the return address and transfer control to the callee.
 
 **The callee**:
 
 5. `pushq`: save the callee-saved registers it will use;
-6. `subq`: decrease `%rsp` to allocate the local variables;
-7. Execute the function body and put the return value into `%rax`;
+6. `subq`: decrease `%rsp` to allocate space for the local variables;
+7. Execute the function body and save the return value in `%rax`;
 8. `addq`: increase `%rsp` to free the local variables;
 9. `popq`: restore the callee-saved registers;
-10. `ret`: pop the return address and return to the caller.
+10. `ret`: pop the return address and transfer control to the caller.
 '''
 # src:
 # 
 # **调用者，在调用之前**：
-# 1. 保存调用后还要用的调用者保存寄存器；
-# 2. 第 7 个起的参数从右向左压入栈；
+# 1. 保存调用后还要用的 caller-saved 寄存器；
+# 2. 第 7 个起的参数从右到左压入栈中；
 # 3. 前 6 个参数放入寄存器；
-# 4. `call`：压入返回地址，跳到被调用者。
+# 4. `call`：保存返回地址，将控制转移给被调用者。
 # 
 # **被调用者**：
 # 
-# 5. `pushq`：保存要用的被调用者保存寄存器；
-# 6. `subq`：减小 `%rsp`，分配局部变量；
-# 7. 执行函数体，把返回值放入 `%rax`；
+# 5. `pushq`：保存要用的 callee-saved 寄存器；
+# 6. `subq`：减小 `%rsp`，为局部变量分配空间；
+# 7. 执行函数体，将返回值保存在 `%rax` 中；
 # 8. `addq`：增大 `%rsp`，释放局部变量；
-# 9. `popq`：恢复被调用者保存寄存器；
-# 10. `ret`：弹出返回地址，回到调用者。
+# 9. `popq`：恢复 callee-saved 寄存器；
+# 10. `ret`：弹出返回地址，将控制转移给调用者。
 
 ['call-sequence.notes.1']
 src_hash = '51199e87'
@@ -3950,7 +3763,7 @@ text = 'Instructions and conventions: behavior specified by the ISA, usage speci
 # src: 指令与约定：ISA 规定的行为，ABI 规定的用法
 
 ['abi-isa.slide.1']
-src_hash = 'faf4ecc4'
+src_hash = 'c48b4de2'
 text = '''
 **The ISA specifies the behavior of instructions**: `call` pushes the return address and rewrites `%rip`; `ret` pops the return address into `%rip`. The CPU carries out these actions when it executes the instructions, and the compiler cannot change them.
 
@@ -3964,7 +3777,7 @@ text = '''
 # 
 # **ABI 规定寄存器与栈的用法**：参数与返回值的位置，寄存器由哪一方保存，执行 `call` 时 `%rsp` 是 16 的倍数。这些规定由编译器生成指令时遵守，CPU 执行时不检查。
 # 
-# **同一种 CPU 上的两套约定**：Linux 与 Windows 使用相同的指令，调用规约不同：
+# **同一种 CPU 上的两套约定**：Linux 与 Windows 使用相同的指令，调用约定不同：
 
 ['abi-isa.table.1.cell.0.0']
 src_hash = 'e63cfb4a'
@@ -4002,14 +3815,14 @@ text = '`%rsi` and `%rdi`'
 # src: `%rsi` 与 `%rdi`
 
 ['abi-isa.table.1.cell.2.1']
-src_hash = '20a98a5a'
+src_hash = '3ddb053a'
 text = 'Caller-saved'
-# src: 调用者保存
+# src: caller-saved
 
 ['abi-isa.table.1.cell.2.2']
-src_hash = '17854343'
+src_hash = '2988ba31'
 text = 'Callee-saved'
-# src: 被调用者保存
+# src: callee-saved
 
 ['abi-isa.table.1.cell.3.0']
 src_hash = '66fc87a5'
@@ -4034,7 +3847,7 @@ text = 'A function compiled under one convention cannot directly call a function
 # 按一套约定编译的函数，不能直接调用按另一套约定编译的函数。
 
 ['abi-isa.notes.1']
-src_hash = 'a2fb6bf5'
+src_hash = '8d005374'
 text = '''
 The behavior of instructions is written in the ISA manual and carried out by the CPU; the use of registers and the stack is written in the ABI document and followed by the compiler. That pushq and popq use %rsp as the stack pointer is also behavior specified by the ISA.
 On x86-64, GCC provides __attribute__((ms_abi)), so a function in the same Linux program can be compiled and called under the Windows convention, which shows that the convention is chosen by the compiler.
@@ -4042,131 +3855,611 @@ The 32 bytes of Windows are called the shadow space; the caller reserves them be
 '''
 # src:
 # 
-# 指令的行为写在 ISA 手册中，由 CPU 执行；寄存器与栈的用法写在 ABI 文档中，由编译器遵守。pushq 与 popq 以 %rsp 为栈顶指针，也是 ISA 规定的行为。
+# 指令的行为写在 ISA 手册中，由 CPU 执行；寄存器与栈的用法写在 ABI 文档中，由编译器遵守。pushq 与 popq 以 %rsp 为栈指针，也是 ISA 规定的行为。
 # GCC 在 x86-64 上提供 __attribute__((ms_abi))，同一个 Linux 程序中的函数可以按 Windows 的约定编译与调用，说明约定由编译器选择。
 # Windows 的 32 字节称为影子空间（shadow space），调用者在 call 之前预留，被调用者可以把 4 个寄存器参数存入其中。
 
 ['bridge-part3-overflow.title']
-src_hash = '22e0298c'
-text = 'Buffer overflow and stack protection'
-# src: 缓冲区溢出与栈保护
+src_hash = '87620a27'
+text = 'Buffer overflow'
+# src: 缓冲区溢出
 
 ['bridge-part3-overflow.bridge.1']
-src_hash = 'fecd8e6f'
-text = '''
-Buffer overflow and stack protection
-The local arrays and the return address share the stack frame
-What does an out-of-bounds write overwrite?
-'''
-# src:
-# 缓冲区溢出与栈保护
-# 局部数组与返回地址同在栈帧中
-# 越界写入会改写什么？
+src_hash = '87620a27'
+text = 'Buffer overflow'
+# src: 缓冲区溢出
 
 ['section.part3-overflow.title']
-src_hash = '22e0298c'
-text = 'Buffer overflow and stack protection'
-# src: 缓冲区溢出与栈保护
+src_hash = '87620a27'
+text = 'Buffer overflow'
+# src: 缓冲区溢出
 
-['buffer-overflow.title']
+['gets-no-bound.title']
+src_hash = 'eaea0d75'
+text = 'The library function gets: reads a line, does not check the size of the buffer'
+# src: 库函数 gets：读入一行，不检查缓冲区的大小
+
+['gets-no-bound.slide.1']
+src_hash = 'f8da909f'
+text = '''
+- **Buffer**: an array that holds input data. The only parameter of `gets` is the start address `s` of the buffer; the size of the buffer is not passed;
+- **The number of bytes written is decided by the input line**: when the line is longer than the buffer, the extra characters are written past the end of the buffer;
+- **C does not check whether an array reference is out of bounds**: `*dest++ = c` writes to a location outside the buffer as it writes to any other.
+'''
+# src:
+# 
+# - **缓冲区（buffer）**：存放输入数据的数组。`gets` 的参数只有缓冲区的起始地址 `s`，没有缓冲区的大小；
+# - **写入的字节数由输入的一行决定**：这一行比缓冲区长时，多出的字符写到缓冲区之外；
+# - **C 语言不检查数组引用是否越界**：`*dest++ = c` 对缓冲区之外的位置照常写入。
+
+['gets-no-bound.notes.1']
+src_hash = 'ba7c26ef'
+text = '''
+gets reads one line from standard input and writes it character by character to the location s points to; it stops at a newline or at end of file, and then writes the string terminator.
+Every program that calls gets can write out of bounds: the input line is supplied by the user of the program.
+The C11 standard removed gets. gcc 15 compiles as C23 by default; <stdio.h> has no declaration of gets, and calling it is a compile error; examples/echo.c therefore contains this implementation. fgets(buf, size, stdin) takes the size of the buffer as its second argument.
+strcpy, strcat and sprintf likewise have no parameter for the size of the destination buffer.
+'''
+# src:
+# 
+# gets 从标准输入读入一行，逐个字符写入 s 所指的位置，遇到换行符或文件结束时停止，最后写入字符串的结束符。
+# 调用 gets 的程序都可能发生越界写入：输入的一行由程序的使用者提供。
+# C11 标准删去了 gets。gcc 15 默认按 C23 编译，<stdio.h> 中没有 gets 的声明，调用它是编译错误；examples/echo.c 因此包含这份实现。fgets(buf, size, stdin) 用第二个参数给出缓冲区的大小。
+# strcpy、strcat、sprintf 同样没有表示目的缓冲区大小的参数。
+
+['echo-buf.title']
+src_hash = '204a061f'
+text = 'The function echo: reads one input line into an 8-byte buffer with gets'
+# src: 函数 echo：用 gets 把一行输入读入 8 字节的缓冲区
+
+['echo-buf.demo.1.name']
+src_hash = '5e790724'
+text = 'Enter lines of different lengths'
+# src: 输入不同长度的一行
+
+['echo-buf.slide.1']
+src_hash = 'd2f1d5c7'
+text = '**Question**: 15 and 23 characters both exceed the 8 bytes of `buf`. Where are the extra characters written?'
+# src:
+# 
+# **问题**：15 个与 23 个字符都超出了 `buf` 的 8 字节。多出的字符写到了哪里？
+
+['echo-buf.notes.1']
+src_hash = '14c0bfc4'
+text = '''
+echo reads one line from standard input and writes it back unchanged. buf has 8 bytes and holds 7 characters and 1 terminator. The gets in echo.c is the implementation on the page "The library function gets", and main only calls echo.
+run uses <<< to pass a string followed by a newline as the standard input of ./echo, and then prints the length of the string and the exit status of ./echo with the echo command of the shell. 2>&1 | cat keeps the job message of the shell out of the output when the program crashes, and the exit status is taken from PIPESTATUS[0].
+With 23 characters the line is not printed: when standard output is a pipe, the text of puts stays in the buffer of the C library, and the process is terminated before the buffer is written out. When ./echo is run directly in a terminal, the line is printed first and the process then receives SIGSEGV; in both cases gets and puts have finished, and the instruction that fails is the ret of echo.
+'''
+# src:
+# 
+# echo 从标准输入读入一行并原样输出。buf 有 8 字节，容纳 7 个字符与 1 个结束符。echo.c 中的 gets 是「库函数 gets」一页的实现，main 只调用 echo。
+# run 用 <<< 把一个字符串加上换行符作为 ./echo 的标准输入，再用 shell 的 echo 命令打印字符串的长度与 ./echo 的退出状态。2>&1 | cat 使崩溃时 shell 的作业提示不进入输出，退出状态由 PIPESTATUS[0] 取得。
+# 23 个字符时这一行没有输出：标准输出接到管道时，puts 的内容先留在 C 库的缓冲区中，进程在写出之前被终止。在终端中直接运行 ./echo 时，这一行先输出，然后进程收到 SIGSEGV；两种情况下 gets 与 puts 都已执行完，出错的是 echo 的 ret。
+
+['echo-frame.title']
 src_hash = '30f29ed1'
-text = 'Buffer overflow: out-of-bounds writes overwrite adjacent data in the stack frame'
+text = 'Buffer overflow: out-of-bounds writes overwrite the adjacent data in the stack frame'
 # src: 缓冲区溢出：越界写入覆盖栈帧中的相邻数据
 
-['buffer-overflow.demo.1.name']
-src_hash = '73614f61'
-text = 'Pass different numbers of arguments'
-# src: 给出不同个数的实参
-
-['buffer-overflow.notes.1']
-src_hash = '24ffa559'
+['echo-frame.slide.1']
+src_hash = '8ace3a5b'
 text = '''
-fill writes each number on the command line into one element of x; the number of writes is decided by argc and is never compared with the 4 elements of x.
-The program returns the dot product as its exit status, so $? shows directly whether the result has changed; with 4 arguments it is 1*5 + 2*6 + 3*7 + 4*8 = 70.
-2>&1 | cat keeps the shell's job message about the crash out of the output, and the exit code is taken from PIPESTATUS[0].
+- **15 characters**: the 8 bytes beyond `buf` overwrite the saved `%rbx`. `echo` returns as usual and reports no error, and `popq %rbx` restores the overwritten value;
+- **23 characters**: the writes reach the return address, `ret` jumps to the overwritten address, and the process receives `SIGSEGV` (exit code 139).
+
+**Buffer overflow**: the data written exceeds the size of the buffer, and the excess is written to the adjacent locations in the stack frame.
 '''
 # src:
 # 
-# fill 把命令行上的每个数写入 x 的一个元素，写入的个数由 argc 决定，没有与 x 的 4 个元素比较。
-# 程序把点积作为退出状态返回，因此 $? 直接显示结果是否被改变；4 个实参时 1*5 + 2*6 + 3*7 + 4*8 = 70。
-# 2>&1 | cat 使崩溃时 shell 的作业提示不进入输出，退出码由 PIPESTATUS[0] 取得。
+# - **15 个字符**：超出 `buf` 的 8 字节覆盖保存的 `%rbx`。`echo` 照常返回，不报任何错误，`popq %rbx` 恢复的是被改写的值；
+# - **23 个字符**：写入到达返回地址，`ret` 跳向被改写的地址，进程收到 `SIGSEGV`（退出码 139）。
+# 
+# **缓冲区溢出（buffer overflow）**：写入的数据超出缓冲区的大小，多出的部分写入栈帧中相邻的位置。
 
-['buffer-overflow-fig.title']
-src_hash = '30f29ed1'
-text = 'Buffer overflow: out-of-bounds writes overwrite adjacent data in the stack frame'
-# src: 缓冲区溢出：越界写入覆盖栈帧中的相邻数据
-
-['buffer-overflow-fig.slide.1']
-src_hash = '9742788c'
+['echo-frame.notes.1']
+src_hash = '58c67fa9'
 text = '''
-- **8 arguments**: the 4 extra ones overwrite the adjacent local array `w`; the result changes from 70 to 26, and the program returns normally without reporting any error;
-- **12 arguments**: the writes reach the return address, `ret` jumps to the overwritten address, and the process receives `SIGSEGV` (exit code 139).
+The offsets come from cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S echo.c -o - | sed -f asm.sed:
+after pushq %rbx and subq $16, %rsp in echo, leaq 8(%rsp), %rbx takes the address of buf; buf is the 8 bytes starting at 8(%rsp), the 8 bytes starting at (%rsp) are unused, and the saved %rbx is at 16(%rsp). The return address pushed by call echo in main is at 24(%rsp), and the 8 bytes main allocated with subq $8, %rsp are at 32(%rsp).
+echo keeps the address of buf in %rbx for the call to puts after gets returns; %rbx is a callee-saved register, so echo saves it at its entry.
+gets writes 1 byte for each character it reads and 1 byte for the terminator at the end: 7 characters write 8 bytes, 15 characters write 16 bytes, 23 characters write 24 bytes.
+With 15 characters the overwritten value belongs to the caller of main; the result of this run did not change, and errors of this kind are hard to notice.
+With 23 characters the return address is rewritten to 0x0033323130393837, the codes of the characters 7890123 followed by the terminator; when ret jumps to this address the process receives SIGSEGV.
+In CS:APP Section 3.10.3 gcc places buf at (%rsp), with 16 unused bytes between buf and the return address; gcc 15 on this machine places the saved %rbx between buf and the return address.
 '''
 # src:
 # 
-# - **8 个实参**：多出的 4 个覆盖相邻的局部数组 `w`，结果由 70 变为 26，程序照常返回，不报任何错误；
-# - **12 个实参**：写入到达返回地址，`ret` 跳向被改写的地址，进程收到 `SIGSEGV`（退出码 139）。
+# 偏移来自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S echo.c -o - | sed -f asm.sed：
+# echo 的 pushq %rbx 与 subq $16, %rsp 之后，leaq 8(%rsp), %rbx 取 buf 的地址，buf 在 8(%rsp) 起的 8 字节，(%rsp) 起的 8 字节没有使用，保存的 %rbx 在 16(%rsp)。main 的 call echo 压入的返回地址在 24(%rsp)，main 用 subq $8, %rsp 分配的 8 字节在 32(%rsp)。
+# echo 用 %rbx 存放 buf 的地址，供 gets 返回之后调用 puts 时使用；%rbx 是 callee-saved 寄存器，所以 echo 在入口保存它。
+# gets 每读入一个字符写 1 字节，最后写入 1 字节的结束符：7 个字符写 8 字节，15 个字符写 16 字节，23 个字符写 24 字节。
+# 15 个字符时被改写的值属于 main 的调用者；这次运行的结果没有变化，这类错误不容易被发现。
+# 23 个字符时返回地址被改写为 0x0033323130393837，即字符 7890123 的编码与结束符；ret 跳转到这个地址时进程收到 SIGSEGV。
+# CS:APP 3.10.3 节中 gcc 把 buf 放在 (%rsp)，buf 与返回地址之间是 16 字节未使用的空间；本机的 gcc 15 把保存的 %rbx 放在 buf 与返回地址之间。
 
-['buffer-overflow-fig.notes.1']
-src_hash = 'befbfb0d'
+['overflow-attack.title']
+src_hash = '1d5202d4'
+text = 'Malicious use of a buffer overflow: overwrite the return address, execute code from the input'
+# src: 缓冲区溢出的恶意使用：改写返回地址，执行输入的代码
+
+['overflow-attack.slide.1']
+src_hash = 'f15c6bda'
 text = '''
-The listing comes from cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S overflow.c -o - | sed -f asm.sed:
-the pushq %rbx and subq $32, %rsp of main give the offsets in the figure; x is passed to fill by movq %rsp, %rdi, and w is written in the 16 bytes starting at 16(%rsp).
-With 8 arguments w becomes {1, 1, 1, 1}, and the dot product is 5 + 6 + 7 + 8 = 26.
+- **The input has three parts**: the machine code of the attack code, padding, and the address B. The length of the padding places B exactly on the return address A;
+- **When `bar` returns**: `ret` pops B, and control transfers to the attack code in `buf`;
+- **Precondition**: the attacker knows B, the address of `buf` on the stack.
+
+**Question**: how does the attacker obtain this address?
 '''
 # src:
 # 
-# 清单由 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S overflow.c -o - | sed -f asm.sed 得到：
-# main 的 pushq %rbx 与 subq $32, %rsp 给出图中的偏移，x 由 movq %rsp, %rdi 传给 fill，w 写在 16(%rsp) 起的 16 字节。
-# 8 个实参时 w 变为 {1, 1, 1, 1}，点积即 5 + 6 + 7 + 8 = 26。
+# - **输入的数据有三部分**：攻击代码的机器码、填充、地址 B。填充的长度使 B 恰好写在返回地址 A 的位置；
+# - **`bar` 返回时**：`ret` 弹出的是 B，控制转移到 `buf` 中的攻击代码；
+# - **前提**：攻击者知道 `buf` 在栈上的地址 B。
+# 
+# **问题**：攻击者怎样得到这个地址？
+
+['overflow-attack.notes.1']
+src_hash = '9fa76ad0'
+text = '''
+foo calls bar, and bar reads one input line into the 64-byte buf with gets. Low addresses are on the left of the figure, drawn at 8 pixels per byte: buf is the stack frame of bar; the return address A and the other data of foo are the stack frame of foo.
+A is the address of the instruction after call bar in foo. The first 64 bytes of the input fill buf, and the next 8 bytes overwrite A.
+The attack code executes with the privileges of the attacked program.
+On early Linux systems the stack of a program was at the same address on every run, and on every machine; an attacker who ran the same program on their own machine obtained B.
+'''
+# src:
+# 
+# foo 调用 bar，bar 用 gets 把一行输入读入 64 字节的 buf。图中左边是低地址，按 1 字节 8 像素绘制：buf 是 bar 的栈帧，返回地址 A 与 foo 的其他数据是 foo 的栈帧。
+# A 是 foo 中 call bar 的下一条指令的地址。输入的前 64 字节填满 buf，其后的 8 字节覆盖 A。
+# 攻击代码以被攻击程序的权限执行。
+# 早期的 Linux 上，同一个程序每次运行时栈都在相同的地址，在不同的机器上也相同；攻击者在自己的机器上运行同一个程序，就得到 B。
+
+['morris-worm.title']
+src_hash = '52123ff9'
+text = 'The Internet worm of November 1988: a buffer overflow attack on fingerd'
+# src: 1988 年 11 月的互联网蠕虫：对 fingerd 的缓冲区溢出攻击
+
+['morris-worm.slide.1']
+src_hash = '0a8ed14f'
+text = '''
+**One of the 4 ways the worm gained access to other computers was a buffer overflow attack on `fingerd`**:
+1. `fingerd` is the service that answers queries about users; it reads a request with `gets` into a 512-byte buffer on the stack;
+2. The worm sends the `fingerd` of a remote computer a string longer than 512 bytes, which overwrites the return address;
+3. When the function of `fingerd` returns, it jumps to code inside the string, and the worm thereby gains access to that computer;
+4. The worm goes on to spread to other computers; the same computer is infected again and again, and its computing resources are almost exhausted.
+
+**Consequences**:
+- Thousands of computers were infected, and many of them could not work normally;
+- The author, Robert T. Morris, was sentenced to 3 years of probation, 400 hours of community service and a fine of $10,050;
+- He later joined the faculty of MIT and received tenure in 2006.
+'''
+# src:
+# 
+# **蠕虫获取其他计算机访问权的 4 种方式之一，是对 `fingerd` 的缓冲区溢出攻击**：
+# 1. `fingerd` 是查询用户信息的服务程序，用 `gets` 把请求读入栈上 512 字节的缓冲区；
+# 2. 蠕虫向远程计算机的 `fingerd` 发送一个超过 512 字节的字符串，覆盖返回地址；
+# 3. `fingerd` 的函数返回时跳转到字符串中的代码，蠕虫由此获得这台计算机的访问权；
+# 4. 蠕虫继续向其他计算机传播；同一台计算机被反复感染，计算资源几乎耗尽。
+# 
+# **后果**：
+# - 数千台计算机被感染，其中许多无法正常工作；
+# - 作者 Robert T. Morris 被判处 3 年缓刑、400 小时社区服务与 10,050 美元罚款；
+# - 他后来在 MIT 任教，2006 年获终身教职。
+
+['morris-worm.notes.1']
+src_hash = '884b4c2d'
+text = '''
+The other three ways were the debug feature of sendmail, the trust relationships between hosts, and password guessing (the statement of facts in United States v. Morris, 928 F.2d 504).
+The string the worm sent to fingerd was 536 bytes long, and the code in it started a shell (the analysis report Spafford wrote in 1988).
+The number of infected computers is an estimate: counts made at the time range from 2,000 to 6,000.
+The amount of the fine is taken from the court opinion cited above.
+'''
+# src:
+# 
+# 另外三种方式是 sendmail 的调试功能、主机之间的信任关系与猜测口令（United States v. Morris, 928 F.2d 504 的事实陈述）。
+# 蠕虫发送给 fingerd 的字符串长 536 字节，其中的代码启动一个 shell（Spafford 1988 年的分析报告）。
+# 被感染的计算机数量是估计值：当时的统计在 2,000 台到 6,000 台之间。
+# 罚款数额取自上述判决书。
+
+['section.part3-defense.title']
+src_hash = '8bbdb824'
+text = 'Thwarting buffer overflow attacks'
+# src: 对抗缓冲区溢出攻击
+
+['stack-random.title']
+src_hash = 'faa31de2'
+text = 'Defense 1: stack randomization'
+# src: 防御一：栈随机化
+
+['stack-random.demo.1.name']
+src_hash = '1859c1ad'
+text = 'Run this program three times'
+# src: 把这个程序运行三次
+
+['stack-random.slide.1']
+src_hash = '59b18a50'
+text = '''
+- **Stack randomization**: each time a program runs, the stack is placed at a different location in memory. The address of `buf` differs on every run, so the fixed address B written by the attacker no longer points to the attack code;
+- **Address-space layout randomization (ASLR)**: each time a program runs, the code, data, heap, library code and stack are loaded into different regions of memory. Stack randomization is one part of it.
+'''
+# src:
+# 
+# - **栈随机化**：程序每次运行时，栈被放在内存的不同位置。`buf` 的地址每次运行都不同，攻击者写入的固定地址 B 不再指向攻击代码；
+# - **地址空间布局随机化（ASLR）**：程序每次运行时，代码、数据、堆、库代码与栈被加载到内存的不同区域。栈随机化是其中的一项。
+
+['stack-random.notes.1']
+src_hash = 'f8fab8f0'
+text = '''
+local is a local variable of main and lies in the stack frame of main; its address shows where the stack is in this run.
+The three addresses differ on every run; the page shows the record of one run.
+setarch -R ./local turns randomization off for this process, and every run then prints the same address (0x7fffffffd6e0 on this machine).
+When /proc/sys/kernel/randomize_va_space is 2, Linux randomizes the positions of the stack, the heap, the libraries and the program code.
+'''
+# src:
+# 
+# local 是 main 的局部变量，位于 main 的栈帧中，它的地址反映栈在本次运行中的位置。
+# 三个地址每次运行都不同，页面上是一次运行的记录。
+# setarch -R ./local 关闭这个进程的随机化，此时每次运行的输出相同（本机为 0x7fffffffd6e0）。
+# Linux 的 /proc/sys/kernel/randomize_va_space 为 2 时，栈、堆、库与程序代码的位置都随机化。
+
+['stack-random-range.title']
+src_hash = 'a286468b'
+text = 'Stack randomization: the range of stack addresses'
+# src: 栈随机化：栈地址的变化范围
+
+['stack-random-range.demo.1.name']
+src_hash = 'd0bf7333'
+text = 'Run 10,000 times and print the lowest and the highest address'
+# src: 运行 10,000 次，打印最低与最高的地址
+
+['stack-random-range.table.1.cell.0.0']
+src_hash = '423f51a2'
+text = 'Environment'
+# src: 运行环境
+
+['stack-random-range.table.1.cell.0.1']
+src_hash = '54805b65'
+text = 'Lowest address'
+# src: 最低地址
+
+['stack-random-range.table.1.cell.0.2']
+src_hash = '2a7cf228'
+text = 'Highest address'
+# src: 最高地址
+
+['stack-random-range.table.1.cell.0.3']
+src_hash = 'b55fd22f'
+text = 'Range'
+# src: 变化范围
+
+['stack-random-range.table.1.cell.1.0']
+src_hash = '3ac3540c'
+text = '32-bit Linux (CS:APP, Section 3.10.4)'
+# src: 32 位 Linux（CS:APP 3.10.4 节）
+
+['stack-random-range.table.1.cell.1.1']
+src_hash = '0b7d3275'
+text = '`0xff7fc59c`'
+# src: `0xff7fc59c`
+
+['stack-random-range.table.1.cell.1.2']
+src_hash = '00d50242'
+text = '`0xffffd09c`'
+# src: `0xffffd09c`
+
+['stack-random-range.table.1.cell.1.3']
+src_hash = '29725a84'
+text = 'about $2^{23}$ bytes'
+# src: 约 $2^{23}$ 字节
+
+['stack-random-range.table.1.cell.2.0']
+src_hash = 'c0289c64'
+text = '64-bit Linux (the demo above)'
+# src: 64 位 Linux（上面的演示）
+
+['stack-random-range.table.1.cell.2.1']
+src_hash = '3cf3ae0b'
+text = '`0x7ffc000028a0`'
+# src: `0x7ffc000028a0`
+
+['stack-random-range.table.1.cell.2.2']
+src_hash = '0f2e1de8'
+text = '`0x7fffffdf9d10`'
+# src: `0x7fffffdf9d10`
+
+['stack-random-range.table.1.cell.2.3']
+src_hash = '66190256'
+text = 'about $2^{34}$ bytes'
+# src: 约 $2^{34}$ 字节
+
+['stack-random-range.slide.1']
+src_hash = 'edbe4879'
+text = '''
+**The work of the attacker**: the address of `buf` varies within this range. The attack code executes only when the address B written by the attacker equals the address of `buf` in this run.
+
+**Question**: the attacker writes a single address; can more addresses be made to lead to the attack code?
+'''
+# src:
+# 
+# **攻击者的工作量**：`buf` 的地址在这个范围内变化。攻击者写入的地址 B 与本次运行中 `buf` 的地址相同时，攻击代码才被执行。
+# 
+# **问题**：攻击者写入的地址只有一个，能否让更多的地址都通向攻击代码？
+
+['stack-random-range.notes.1']
+src_hash = 'fde0479f'
+text = '''
+The two lines of output are the lowest and the highest address of 10,000 runs: all addresses have the same number of digits, so sorting them as text sorts them by value. The command takes about 5 seconds on this machine, and the two addresses differ slightly from one measurement to the next.
+0x7fffffdf9d10 - 0x7ffc000028a0 is about 1.7 * 10^10, that is 2^34 (16 GB); 0xffffd09c - 0xff7fc59c is about 8.4 * 10^6, that is 2^23 (8 MB).
+The 32-bit row is taken from Section 3.10.4 of CS:APP, the result of running the same program 10,000 times on 32-bit Linux; this machine has no 32-bit C library installed, and the measurement was not repeated.
+The 64-bit measurement in CS:APP runs from 0x7fff0001b698 to 0x7ffffffaa4a8, about 2^32; the range on this machine (Linux 7.0) is 4 times as large.
+'''
+# src:
+# 
+# 两行输出是 10,000 次运行中最低与最高的地址：各行的地址位数相同，按字符排序即按数值排序。本机运行约需 5 秒，每次得到的两个地址略有不同。
+# 0x7fffffdf9d10 - 0x7ffc000028a0 约为 1.7 * 10^10，即 2^34（16 GB）；0xffffd09c - 0xff7fc59c 约为 8.4 * 10^6，即 2^23（8 MB）。
+# 32 位一行取自 CS:APP 第 3.10.4 节，同一个程序在 32 位 Linux 上运行 10,000 次的结果；本机没有安装 32 位的 C 库，没有重新测量。
+# CS:APP 中 64 位的测量结果是 0x7fff0001b698 到 0x7ffffffaa4a8，约 2^32；本机（Linux 7.0）的范围是它的 4 倍。
+
+['nop-sled.title']
+src_hash = '08d1baf4'
+text = 'An attack against stack randomization: the nop sled'
+# src: 针对栈随机化的攻击：nop sled
+
+['nop-sled.slide.1']
+src_hash = '4bea7dec'
+text = '''
+- **`nop`**: the no-operation instruction; its encoding is the single byte `0x90`, and executing it only adds 1 to `%rip`;
+- **nop sled**: a long sequence of `nop` placed before the attack code. Wherever the return address lands on one of these `nop`, the CPU executes them one after another and reaches the attack code;
+- **Number of addresses to try**: with a nop sled of 256 ($2^8$) bytes, $2^{23} / 2^8 = 2^{15}$ on a 32-bit system and $2^{34} / 2^8 = 2^{26}$ on a 64-bit system;
+- **Conclusion**: stack randomization increases the work of an attack, and does not completely prevent it.
+'''
+# src:
+# 
+# - **`nop`**：空操作指令，编码是 1 个字节 `0x90`，执行它只使 `%rip` 加 1；
+# - **nop sled**：在攻击代码之前放一长串 `nop`。返回地址落在其中任何一条 `nop` 上，CPU 都逐条执行到攻击代码；
+# - **需要尝试的地址个数**：nop sled 长 256（$2^8$）字节时，32 位系统上是 $2^{23} / 2^8 = 2^{15}$ 个，64 位系统上是 $2^{34} / 2^8 = 2^{26}$ 个；
+# - **结论**：栈随机化增加了攻击的工作量，不能完全阻止攻击。
+
+['nop-sled.notes.1']
+src_hash = '5d8e8842'
+text = '''
+The figure is drawn at 3 pixels per byte: the 256-byte nop sled, the attack code, and the 8-byte address written over the return address.
+2^15 = 32,768, which can be tried one by one; 2^26 is about 67 million.
+Question: can the attacker use a much larger nop sled? The nop sled and the attack code are written by the same overflow; its length is limited by the length of the input the program reads, and by the stack space allocated above the buffer: a write past the highest address of the stack makes the process receive SIGSEGV.
+'''
+# src:
+# 
+# 图按 1 字节 3 像素绘制：256 字节的 nop sled，攻击代码，以及写在返回地址位置上的 8 字节地址。
+# 2^15 = 32,768，逐个尝试是可行的；2^26 约为 6,700 万。
+# 问题：攻击者能否使用大得多的 nop sled？nop sled 与攻击代码由同一次溢出写入，它的长度受程序读入的输入长度限制，也受缓冲区上方已分配的栈空间限制：写入超出栈的最高地址时进程收到 SIGSEGV。
 
 ['canary.title']
-src_hash = '6cc09ccc'
-text = 'Stack protection: the canary value'
-# src: 栈保护机制：金丝雀值
+src_hash = '999c4319'
+text = 'Defense 2: stack corruption detection'
+# src: 防御二：栈破坏检测
 
 ['canary.slide.1']
-src_hash = '41cbe4c2'
-text = '**On by default**: the overflow experiment above used `-fno-stack-protector`; recompiled without this option, the overflow of the same source program is detected before the return:'
-# src:
-# 
-# **默认编译即开启**：前面的溢出实验使用了 `-fno-stack-protector`；去掉这个选项重新编译，同一份源程序的溢出在返回之前就被发现：
-
-['canary.demo.1.name']
-src_hash = '7649125a'
-text = 'Recompile with stack protection on'
-# src: 开启栈保护后重新编译
-
-['canary.slide.2']
-src_hash = '261beb6b'
+src_hash = '9911e2c6'
 text = '''
-**How the stack canary protects the frame**:
-1. **Written at the entry**: `movq %fs:40, %rax` reads a random value, different on every run, from thread-local storage, and `movq %rax, 40(%rsp)` stores it between the local array and the return address;
-2. **Checked before returning**: `movq 40(%rsp), %rdx` and `subq %fs:40, %rdx` compare whether the value is still the same;
-3. **Terminated if not equal**: when `jne` is taken, `call __stack_chk_fail@PLT` executes, and the process is terminated with exit code 134.
+- **Canary value**: the compiler stores a value in the stack frame, between the local arrays and the saved registers and return address;
+- **Generated at random**: the canary value is generated at random each time the program runs, and the attacker cannot know it in advance;
+- **Checked before returning**: an out-of-bounds write proceeds from the array toward higher addresses and overwrites the canary value before it can reach the return address. The function checks the canary value before `ret` and terminates the process when the value has been overwritten.
 '''
 # src:
 # 
-# **金丝雀值（Stack Canary）的防护机理**：
-# 1. **入口写入**：`movq %fs:40, %rax` 从线程局部存储读取每次运行都不同的随机值，`movq %rax, 40(%rsp)` 把它存入局部数组与返回地址之间；
-# 2. **返回前检验**：`movq 40(%rsp), %rdx` 与 `subq %fs:40, %rdx` 比较该值是否仍然相同；
-# 3. **不相等则终止**：`jne` 成立时执行 `call __stack_chk_fail@PLT`，进程被终止，退出码 134。
+# - **金丝雀值（canary）**：编译器在栈帧中存放一个值，位置在局部数组与保存的寄存器、返回地址之间；
+# - **随机产生**：金丝雀值在程序每次运行时随机产生，攻击者不能预先知道它；
+# - **返回之前检验**：越界写入从数组向高地址进行，先改写金丝雀值，才能到达返回地址。函数在 `ret` 之前检验金丝雀值，值被改写时终止进程。
 
 ['canary.notes.1']
-src_hash = '5283b424'
+src_hash = '9ac7ddb8'
 text = '''
-With stack protection on, the compiler places the arrays on the low-address side of the stack frame; the canary is at 40(%rsp) and the return address at 56(%rsp),
-so an out-of-bounds write must rewrite the canary before it can reach the return address. The canary differs on every run, so getting past it undetected is difficult.
+The figure is the stack of echo with stack protection on (gcc -Og -fcf-protection=none): after pushq %rbx and subq $16, %rsp, buf is the 8 bytes starting at (%rsp), the canary value is at 8(%rsp), the saved %rbx at 16(%rsp), and the return address at 24(%rsp).
+Compared with the build without stack protection, the size of the stack frame of echo is unchanged: buf moves to (%rsp), and the 8 bytes that held buf now hold the canary value.
 '''
 # src:
 # 
-# 开启栈保护后编译器把数组放在栈帧的低地址一侧，金丝雀值位于 40(%rsp)，返回地址位于 56(%rsp)，
-# 因此越界写入先改写金丝雀值，才能到达返回地址。金丝雀值每次运行都不同，越过它而不被发现是困难的。
+# 图是 echo 在开启栈保护时的栈（gcc -Og -fcf-protection=none）：pushq %rbx 与 subq $16, %rsp 之后，buf 在 (%rsp) 起的 8 字节，金丝雀值在 8(%rsp)，保存的 %rbx 在 16(%rsp)，返回地址在 24(%rsp)。
+# 与关闭栈保护时相比，echo 的栈帧大小没有变化：buf 移到 (%rsp)，原来 buf 所在的 8 字节存放金丝雀值。
 
-['canary-fig.title']
-src_hash = '6cc09ccc'
-text = 'Stack protection: the canary value'
-# src: 栈保护机制：金丝雀值
+['canary-asm.title']
+src_hash = '571a241c'
+text = 'Stack corruption detection: the instructions gcc adds at the entry and before the return'
+# src: 栈破坏检测：gcc 在函数入口与返回之前加入的指令
+
+['canary-asm.demo.1.name']
+src_hash = '0ac9c6ab'
+text = 'Compile echo.c (stack protection on) and print the beginning and the end of echo'
+# src: 编译 echo.c（开启栈保护），打印 echo 的开头与结尾
+
+['canary-asm.slide.1']
+src_hash = '922c4bec'
+text = 'Between the two parts are the 4 instructions that call `gets` and `puts`; the command does not print them.'
+# src:
+# 
+# 两段之间是调用 `gets` 与 `puts` 的 4 条指令，命令没有打印它们。
+
+['canary-asm.notes.1']
+src_hash = '31f59c18'
+text = '''
+The command prints two parts of echo: the 6 lines from echo: to xorl, and the 8 lines from movq 8(%rsp), %rax to call __stack_chk_fail@PLT. Between them are movq %rsp, %rdi, call gets, movq %rsp, %rdi and call puts@PLT.
+The comments after # were added on the page; the command does not print them.
+The three instructions at the entry: read the canary value, store it at 8(%rsp), then clear %rax, so that the value remains only at %fs:40 and in the stack frame.
+The three instructions before the return: read the value in the stack frame; subq subtracts the value at %fs:40 from it and sets the flags; when the two values are equal ZF=1, jne is not taken, and the function returns as usual.
+When the two values differ, control jumps to .L11 and calls __stack_chk_fail; this function prints one line and terminates the process, and does not return.
+In this build the address of buf is %rsp itself, and both calls pass it with movq %rsp, %rdi; echo does not use %rbx, and pushq %rbx and popq %rbx are still there.
+'''
+# src:
+# 
+# 命令打印 echo 的两段：从 echo: 到 xorl 的 6 行，以及从 movq 8(%rsp), %rax 到 call __stack_chk_fail@PLT 的 8 行。两段之间是 movq %rsp, %rdi、call gets、movq %rsp, %rdi、call puts@PLT。
+# # 之后的注释是页面上添加的说明，命令的输出中没有。
+# 入口的三条指令：读出金丝雀值，存入 8(%rsp)，再把 %rax 清零，使这个值只留在 %fs:40 与栈帧两处。
+# 返回之前的三条指令：读出栈帧中的值，subq 把它与 %fs:40 处的值相减并设置标志位；两个值相同时 ZF=1，jne 不跳转，函数照常返回。
+# 两个值不同时跳转到 .L11，调用 __stack_chk_fail；这个函数打印一行信息并终止进程，不返回。
+# 这次编译中 buf 的地址就是 %rsp，两次调用都用 movq %rsp, %rdi 传递它；echo 没有使用 %rbx，pushq %rbx 与 popq %rbx 仍然保留。
+
+['canary-run.title']
+src_hash = '109ccd22'
+text = 'Stack corruption detection: the out-of-bounds write is detected before the function returns'
+# src: 栈破坏检测：越界写入在函数返回之前被发现
+
+['canary-run.demo.1.name']
+src_hash = '72f7904e'
+text = 'Remove -fno-stack-protector, recompile and run'
+# src: 去掉 -fno-stack-protector，重新编译并运行
+
+['canary-run.slide.1']
+src_hash = '817912bc'
+text = '''
+- **15 and 23 characters**: the writes beyond `buf` have overwritten the canary value; `echo` calls `__stack_chk_fail` before returning, and the process is terminated (exit code 134);
+- **`%fs:40`**: `%fs` is a segment register and is not one of the 16 general-purpose registers; the address of `%fs:40` is the base that belongs to `%fs` plus 40. The original of the canary value is stored here, outside the stack frame; the out-of-bounds write overwrites the copy in the stack frame, and the two are no longer equal when checked.
+'''
+# src:
+# 
+# - **15 个与 23 个字符**：超出 `buf` 的写入改写了金丝雀值，`echo` 在返回之前调用 `__stack_chk_fail`，进程被终止（退出码 134）；
+# - **`%fs:40`**：`%fs` 是段寄存器，不在 16 个通用寄存器之中；`%fs:40` 的地址是 `%fs` 对应的基址加 40。金丝雀值的原值存放在这里，位置在栈帧之外；越界写入改写的是栈帧中的副本，检验时两者不相等。
+
+['canary-run.notes.1']
+src_hash = 'ac44a975'
+text = '''
+The overflow experiments above used -fno-stack-protector in order to show the consequences of an overflow. The gcc of Ubuntu uses -fstack-protector-strong by default: when a function has an array, or takes the address of a local variable, the writing and the checking of the canary value are added.
+With 8 characters the terminator is written to the lowest byte of the canary value. The lowest byte of the canary value glibc generates is 0, so this write does not change it and the check passes; from 9 characters on the check fails.
+Exit code 134 = 128 + 6, and 6 is the number of the signal SIGABRT.
+The form %fs:40 is called segmented addressing. The 8086 (1978) already had 4 segment registers; the 80286 is the 16-bit processor Intel introduced in 1982, the successor of the 8086, and it introduced segments in protected mode; %fs and %gs were added by the 80386 (1985). CS:APP Section 3.10.4 says that segmented addressing dates back to the 80286.
+On x86-64 the bases of the other segment registers are fixed at 0, and %fs remains in use: Linux makes its base point to a block of data that belongs to the current thread, a use called thread-local storage (TLS); glibc places the canary value at offset 40 in this block.
+On this machine the memory that holds %fs:40 is readable and writable, and its address is lower than the stack; the out-of-bounds write of buf proceeds toward higher addresses and cannot reach this memory.
+The check makes each call execute the 6 instructions at the entry and before the return in addition.
+'''
+# src:
+# 
+# 前面的溢出实验为了显示溢出的后果使用了 -fno-stack-protector。Ubuntu 的 gcc 默认使用 -fstack-protector-strong：函数中有数组，或者对局部变量取地址时，加入金丝雀值的写入与检验。
+# 8 个字符时结束符写入金丝雀值的最低字节。glibc 产生的金丝雀值最低字节是 0，这次写入没有改变它，检验通过；从 9 个字符起检验失败。
+# 退出码 134 = 128 + 6，6 是信号 SIGABRT 的编号。
+# %fs:40 这种写法称为段寻址（segmented addressing）。8086（1978 年）已有 4 个段寄存器；80286 是 Intel 在 1982 年推出的 16 位处理器，8086 的后继，它引入了保护模式下的段；%fs 与 %gs 由 80386（1985 年）加入。CS:APP 3.10.4 节的说法是段寻址可以追溯到 80286。
+# x86-64 上其余段寄存器的基址固定为 0，%fs 保留下来：Linux 让它的基址指向当前线程自己的一块数据，这种用法称为线程局部存储（TLS）；glibc 把金丝雀值放在这块数据中偏移 40 的位置。
+# 本机上 %fs:40 所在的内存可读可写，地址低于栈；buf 的越界写入向高地址进行，到达不了这块内存。
+# 检验使每次调用多执行入口与返回之前的 6 条指令。
+
+['nx-bit.title']
+src_hash = '345d8ed4'
+text = 'Defense 3: limiting executable code regions'
+# src: 防御三：限制可执行代码区域
+
+['nx-bit.slide.1']
+src_hash = 'f94e9ef4'
+text = '''
+- **Access permissions**: the operating system gives each region of memory three permissions: readable (r), writable (w) and executable (x);
+- **Early x86**: readable and executable were controlled by the same bit. The stack has to be readable and writable, so it was executable as well, and attack code written on the stack could execute;
+- **The NX bit (No-eXecute)**: introduced by AMD in x86-64. The stack is marked readable, writable and not executable; when the CPU is about to execute an instruction in such a region it raises an exception, and the process is terminated.
+'''
+# src:
+# 
+# - **访问权限**：操作系统为内存的每个区域设置可读（r）、可写（w）、可执行（x）三种权限；
+# - **早期的 x86**：可读与可执行由同一位控制。栈要可读可写，因此也可执行，写在栈上的攻击代码能够执行；
+# - **NX 位（No-eXecute）**：AMD 在 x86-64 中引入。栈被标记为可读、可写、不可执行；CPU 要执行这种区域中的指令时产生异常，进程被终止。
+
+['nx-bit.demo.1.name']
+src_hash = '99ab1faf'
+text = 'Print the executable regions of the process, and the heap and the stack'
+# src: 打印进程中可执行的区域，以及堆与栈
+
+['nx-bit.notes.1']
+src_hash = '018d284e'
+text = '''
+Each line is one region of the memory of the process: address range, permissions, name. The fourth permission character p means that changes to this region are visible only in this process.
+Only the regions that hold code are executable (r-xp), and these regions are not writable; the heap and the stack are readable and writable and not executable (rw-p).
+regions is the code of the program itself, and libc.so.6 is the code of the C standard library; [vdso] is a small piece of code provided by the kernel, and ld-linux-x86-64.so.2 is the dynamic linker, explained in the lecture on linking. The addresses of the regions differ on every run, as a result of ASLR.
+The check is made by the CPU when it fetches an instruction, and adds no instructions to the program.
+examples/stack_exec.c puts 0xc3, the encoding of ret, into a local array and jumps to it: with the default build the process receives SIGSEGV (exit code 139); linked with gcc -z execstack the stack is executable (regions shows rwxp), and the program ends with exit code 0.
+Question: what about a JIT compiler? A JIT compiler generates machine code at run time, and asks the operating system for a separate block of executable memory to hold this code.
+'''
+# src:
+# 
+# 每行是进程内存中的一个区域：地址范围、权限、名称。权限的第四个字符 p 表示对这个区域的修改只在本进程中可见。
+# 只有存放代码的区域可执行（r-xp），这些区域不可写；堆与栈可读可写，不可执行（rw-p）。
+# regions 是程序自己的代码，libc.so.6 是 C 标准库的代码；[vdso] 是内核提供的一小段代码，ld-linux-x86-64.so.2 是动态链接器，在链接一讲说明。各区域的地址每次运行都不同，这是 ASLR 的结果。
+# 检查由 CPU 在取指令时完成，不增加程序的指令。
+# examples/stack_exec.c 把 ret 指令的编码 0xc3 放在局部数组中并跳转到它：默认编译时进程收到 SIGSEGV（退出码 139）；用 gcc -z execstack 链接后栈可执行（regions 显示 rwxp），程序以退出码 0 结束。
+# 问题：JIT 编译器怎么办？JIT 编译器在运行时生成机器码，它向操作系统另外申请一块可执行的内存来存放这些代码。
+
+['code-reuse.title']
+src_hash = '1b1ae061'
+text = 'Code reuse attacks: ret chains pieces of code already in the program'
+# src: 代码复用攻击：用 ret 连接程序中已有的代码片段
+
+['code-reuse.slide.1']
+src_hash = 'e862bf32'
+text = '''
+- **Return-oriented programming**: when the stack is not executable, the attacker injects no code and uses code already in the program (libc, for example);
+- **Gadget**: a few instructions of the existing code that end in `ret`. The attacker writes the addresses of the gadgets onto the stack in order, and the `ret` at the end of each gadget pops the address of the next one;
+- **Solutions**: a shadow stack, return-less kernels, control-flow integrity.
+'''
+# src:
+# 
+# - **面向返回的编程（Return-oriented Programming）**：栈不可执行时，攻击者不注入代码，使用程序中已有的代码（例如 libc）；
+# - **代码片段（gadget）**：已有代码中以 `ret` 结尾的几条指令。攻击者把各个片段的地址依次写入栈中，每个片段末尾的 `ret` 弹出下一个片段的地址；
+# - **解决方法**：影子栈（shadow stack）、不含返回指令的内核（return-less kernel）、控制流完整性（control-flow integrity）。
+
+['code-reuse.notes.1']
+src_hash = '074320ea'
+text = '''
+ret pops the 8 bytes at the top of the stack and jumps. When the address of gadget A is at the location of the return address, the ret of bar jumps to gadget A; gadget A executes its own few instructions, and the ret at its end pops the address of gadget B. The attacker chooses the gadgets and their order and composes the operations needed; no data on the stack is executed in the process.
+Control-flow integrity: restrict indirect jumps and returns to legal targets only. The endbr64 that gcc adds at the entry of every function by default marks a legal target; the compile commands of this lecture remove this instruction with -fcf-protection=none.
+Return-less kernel: the kernel is compiled without ret instructions, and return addresses are obtained from a table instead.
+The first of the three solutions is explained on the next page.
+'''
+# src:
+# 
+# ret 弹出栈顶的 8 个字节并跳转。返回地址的位置上是片段 A 的地址时，bar 的 ret 跳转到片段 A；片段 A 执行完自己的几条指令，它末尾的 ret 弹出片段 B 的地址。攻击者选择片段及其顺序，组合出所需的操作，整个过程没有执行栈上的数据。
+# 控制流完整性：限制间接跳转与返回只能到达合法的目标。gcc 默认在每个函数入口加入的 endbr64 是合法目标的标记；本讲的编译命令用 -fcf-protection=none 去掉了这条指令。
+# 不含返回指令的内核：编译内核时不生成 ret 指令，返回地址改为查表得到。
+# 三种解决方法中的第一种由下一页说明。
+
+['shadow-stack.title']
+src_hash = 'c1c2bdf1'
+text = 'Defense 4: the shadow stack'
+# src: 防御四：影子栈
+
+['shadow-stack.slide.1']
+src_hash = '270716df'
+text = '''
+- **Shadow stack**: a second stack that holds return addresses only. `call` pushes the return address onto both stacks, and `ret` compares the two return addresses and raises an exception when they differ;
+- **The shadow stack is maintained by the hardware**: only `call` and `ret` can write to this memory, and an instruction such as `movq` raises an exception when it writes there. A buffer overflow overwrites the copy on the ordinary stack;
+- **CET on x86-64**: Control-flow Enforcement Technology of Intel implements the shadow stack in hardware.
+'''
+# src:
+# 
+# - **影子栈（shadow stack）**：另设一个栈，只存放返回地址。`call` 把返回地址同时压入两个栈，`ret` 比较两处的返回地址，两者不相等时产生异常；
+# - **影子栈由硬件维护**：这块内存只有 `call` 与 `ret` 能写入，`movq` 等指令写入时产生异常。缓冲区溢出改写的是普通栈上的那一份；
+# - **x86-64 的 CET**：Intel 的控制流强制技术（Control-flow Enforcement Technology）在硬件中实现影子栈。
+
+['shadow-stack.notes.1']
+src_hash = 'c7e95e87'
+text = '''
+The figure shows the contents of the two stacks after the return address of bar has been overwritten: the return address on the ordinary stack is already the address the attacker wrote, while the shadow stack still holds the A that call pushed. ret reads both values and compares them; when they differ it raises an exception and the process is terminated.
+The shadow stack holds return addresses only, not arguments, local variables or saved register values; its size is decided by the number of return addresses, that is, by the depth of the calls.
+There are two copies of the return address, and the cost of a call and a return grows accordingly; the check is performed by the hardware and adds no instruction to the program.
+The other part of CET is Indirect Branch Tracking, which marks the legal targets of an indirect jump with endbr64 and addresses another kind of attack.
+The CPU of this machine supports shadow stacks for user programs (the flag user_shstk in /proc/cpuinfo), and the kernel enables the support; a program has to be compiled with gcc -fcf-protection=full, and readelf -n then shows the SHSTK property. The compile commands on the other pages of this lecture use -fcf-protection=none, which turns both parts off, and their output therefore has no endbr64.
+'''
+# src:
+# 
+# 图中是 bar 的返回地址被改写之后两个栈的内容：普通栈上的返回地址已经是攻击者写入的地址，影子栈上仍是 call 压入的 A。ret 读出两处的值进行比较，不相等时产生异常，进程被终止。
+# 影子栈只存放返回地址，不存放参数、局部变量与保存的寄存器值；它的大小由返回地址的个数决定，即调用的层数。
+# 返回地址有两份，调用与返回的开销随之增加，这项检查由硬件完成，不增加程序的指令。
+# CET 的另一部分是间接跳转跟踪（Indirect Branch Tracking），用 endbr64 标记间接跳转的合法目标，针对的是另一类攻击。
+# 本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本讲其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
+
+['bridge-part3-summary.title']
+src_hash = '844b8abb'
+text = 'Summary and exercises'
+# src: 小结与练习
+
+['bridge-part3-summary.bridge.1']
+src_hash = '844b8abb'
+text = 'Summary and exercises'
+# src: 小结与练习
 
 ['section.part3-summary.title']
 src_hash = '844b8abb'
@@ -4179,9 +4472,9 @@ text = 'Recap: the instructions and conventions used by function calls'
 # src: 小结：函数调用用到的指令与约定
 
 ['recap-part3.table.1.cell.0.0']
-src_hash = '33a8618c'
-text = 'Problem'
-# src: 问题
+src_hash = '7a688306'
+text = 'Topic'
+# src: 内容
 
 ['recap-part3.table.1.cell.0.1']
 src_hash = '62868ac9'
@@ -4229,9 +4522,9 @@ text = 'Registers'
 # src: 寄存器
 
 ['recap-part3.table.1.cell.3.1']
-src_hash = '3ca79a0c'
-text = '6 saved by the callee, 9 saved by the caller'
-# src: 6 个由被调用者保存，9 个由调用者保存
+src_hash = 'aba4a2e5'
+text = '6 callee-saved, 9 caller-saved'
+# src: 6 个 callee-saved，9 个 caller-saved
 
 ['recap-part3.table.1.cell.3.2']
 src_hash = '50904db8'
@@ -4259,14 +4552,14 @@ text = 'Buffer overflow'
 # src: 缓冲区溢出
 
 ['recap-part3.table.1.cell.5.1']
-src_hash = '0fa9436f'
-text = 'An out-of-bounds write overwrites adjacent data in the stack frame; the canary value is checked before the return'
-# src: 越界写入改写栈帧中相邻的数据；金丝雀值在返回前检验
+src_hash = '5ea8bdff'
+text = 'An out-of-bounds write overwrites the return address; defenses: stack randomization, stack corruption detection, limiting executable code regions, the shadow stack'
+# src: 越界写入改写返回地址；防御：栈随机化、栈破坏检测、限制可执行代码区域、影子栈
 
 ['recap-part3.table.1.cell.5.2']
-src_hash = '2cf1fcf7'
-text = '8 and 12 arguments to `overflow.c`'
-# src: `overflow.c` 的 8 个与 12 个实参
+src_hash = '906c9875'
+text = '15 and 23 characters given to `echo`'
+# src: `echo` 的 15 个与 23 个字符
 
 ['recap-part3.slide.1']
 src_hash = 'f235d51d'
@@ -4276,90 +4569,15 @@ text = '**The run-time stack**: the return address, the arguments passed on the 
 # **运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都在栈帧中，`%rsp` 指向栈顶；栈帧在调用开始时建立，在调用返回时释放。
 
 ['recap-part3.notes.1']
-src_hash = '0d6b848a'
+src_hash = '5837cfbe'
 text = '''
-The recap of Part 3. The first four rows are the solutions of the five problems; the fifth row is the security problem that comes with the layout of the stack frame.
+The recap of Part 3. The first four rows correspond to the five rows of the table "Implementing a function call"; the fifth row is the security problem that comes with the layout of the stack frame.
 The behavior of call and ret is specified by the ISA; the use of arguments, the return value and registers is a convention of the ABI. The 6 callee-saved registers are %rbx, %rbp and %r12 to %r15.
 '''
 # src:
 # 
-# 第三部分的小结。前四行是五个问题的解决方式，第五行是栈帧布局带来的安全问题。
-# call 与 ret 的行为由 ISA 规定，参数、返回值与寄存器的用法由 ABI 约定。被调用者保存的 6 个寄存器是 %rbx、%rbp、%r12 到 %r15。
-
-['reg-exercise.title']
-src_hash = '7788bc98'
-text = 'Exercise: the registers in dot_sum'
-# src: 练习：dot_sum 中的寄存器
-
-['reg-exercise.slide.1']
-src_hash = '3745ccc8'
-text = '''
-`dot_sum` calls `dot_product` twice in turn and adds the two results.
-
-**Answer by the argument convention and the register usage convention**:
-1. On entry to `dot_sum`, which register holds each of `w`, `x`, `y` and `n`?
-2. Before the first call, which registers receive new values? Which argument is overwritten as a result?
-3. Which values are still needed after a call returns? In which class of register should they be kept during the call?
-4. How many registers does the start of `dot_sum` save with `pushq`?
-'''
-# src:
-# 
-# `dot_sum` 先后两次调用 `dot_product`，把两个结果相加。
-# 
-# **按参数的约定与寄存器使用惯例回答**：
-# 1. 进入 `dot_sum` 时，`w`、`x`、`y`、`n` 分别在哪个寄存器中？
-# 2. 第一次调用之前，哪些寄存器要写入新的值？哪个参数因此被覆盖？
-# 3. 哪些值在一次调用返回之后还要使用？调用期间它们应当放在哪一类寄存器中？
-# 4. `dot_sum` 的开头要用 `pushq` 保存几个寄存器？
-
-['reg-exercise.notes.1']
-src_hash = '556c5e60'
-text = '''
-In-class exercise. First analyze by the conventions, then check against the compiler's output.
-The difference between dot_sum and dot_bias: 4 values are still needed after a call, one of which is the return value of the first call.
-'''
-# src:
-# 
-# 课堂练习。先按约定分析，再与编译器的输出核对。
-# dot_sum 与 dot_bias 的区别：调用之后还要使用的值有 4 个，其中一个是第一次调用的返回值。
-
-['reg-exercise-2.title']
-src_hash = '7788bc98'
-text = 'Exercise: the registers in dot_sum'
-# src: 练习：dot_sum 中的寄存器
-
-['reg-exercise-2.demo.1.name']
-src_hash = '44141df0'
-text = 'Compile dot_sum.c and show the instructions before the first call'
-# src: 编译 dot_sum.c，查看第一次调用之前的指令
-
-['reg-exercise-2.slide.1']
-src_hash = 'beab8e1f'
-text = '''
-1. `w`, `x`, `y` and `n` are in `%rdi`, `%rsi`, `%rdx` and `%ecx` in that order;
-2. Only `%edx` receives `n`, and `y`, which was in `%rdx`, is overwritten;
-3. `w`, `y`, `n` and the result of the first call, kept in the callee-saved `%rbx`, `%r15`, `%ebp` and `%r14d`;
-4. Four. `subq $8, %rsp` makes `%rsp` a multiple of 16 when `call` executes.
-'''
-# src:
-# 
-# 1. `w`、`x`、`y`、`n` 依次在 `%rdi`、`%rsi`、`%rdx`、`%ecx` 中；
-# 2. 只有 `%edx` 要写入 `n`，原来在 `%rdx` 中的 `y` 被覆盖；
-# 3. `w`、`y`、`n` 与第一次调用的结果，放在被调用者保存的 `%rbx`、`%r15`、`%ebp`、`%r14d` 中；
-# 4. 4 个。`subq $8, %rsp` 使执行 `call` 时 `%rsp` 是 16 的倍数。
-
-['reg-exercise-2.notes.1']
-src_hash = '833302df'
-text = '''
-sed -n '2,10p' prints lines 2 to 10 of the listing, from the entry up to the first call; after them come call, movl %eax, %r14d, the three argument instructions and the call of the second call, addl, addq $8, %rsp, 4 popq and ret.
-x is used only for the first call and no longer after it, so it need not be saved. The result of the first call is saved by movl %eax, %r14d; it is needed after the second call.
-The alignment: on entry to dot_sum the top of the stack is the 8-byte return address, the 4 pushq add 32 bytes, and the subtraction of 8 brings the total to 48 bytes, a multiple of 16.
-'''
-# src:
-# 
-# sed -n '2,10p' 打印清单的第 2 到 10 行，即入口到第一次 call 之前；之后是 call、movl %eax, %r14d、第二次调用的三条参数指令与 call、addl、addq $8, %rsp、4 条 popq 与 ret。
-# x 只用于第一次调用，调用之后不再使用，不需要保存。第一次调用的结果由 movl %eax, %r14d 保存，它要在第二次调用之后使用。
-# 对齐的计算：进入 dot_sum 时栈顶是 8 字节的返回地址，4 条 pushq 共 32 字节，再减 8，合计 48 字节，是 16 的倍数。
+# 第三部分的小结。前四行对应「函数调用的实现」一表的五行，第五行是栈帧布局带来的安全问题。
+# call 与 ret 的行为由 ISA 规定，参数、返回值与寄存器的用法由 ABI 约定。6 个 callee-saved 寄存器是 %rbx、%rbp、%r12 到 %r15。
 
 ['rec-exercise.title']
 src_hash = '628235a3'
@@ -4405,7 +4623,7 @@ text = 'Exercise: the stack frames of recursive calls'
 # src: 练习：递归调用的栈帧
 
 ['rec-exercise-2.slide.1']
-src_hash = '62f05c0c'
+src_hash = 'c74caa49'
 text = '''
 1. 5 times, with `n` equal to 4, 3, 2, 1 and 0 in turn;
 2. 5: the one pushed first returns to `main`, and the other 4 return to `dot_product_rec`;
@@ -4416,7 +4634,7 @@ text = '''
 # 
 # 1. 5 次，`n` 依次为 4、3、2、1、0；
 # 2. 5 个：最早压入的回到 `main`，其余 4 个回到 `dot_product_rec`；
-# 3. 被调用者保存寄存器；每次调用用 3 条 `pushq` 保存 `%r15`、`%r14`、`%rbx` 的原值；
+# 3. callee-saved 寄存器；每次调用用 3 条 `pushq` 保存 `%r15`、`%r14`、`%rbx` 的原值；
 # 4. 不需要：每次调用有自己的返回地址与保存的寄存器值。
 
 ['rec-exercise-2.notes.1']
@@ -5720,7 +5938,7 @@ text = 'Instruction overview: a quick reference to the core machine-level instru
 # src: 指令总览：本节核心机器级指令分类速查
 
 ['insn-summary-2.slide.1']
-src_hash = '9134e0aa'
+src_hash = '9253526e'
 text = '''
 3. **Comparison and branching**:
    - `cmpl`, `cmpq` (set the flags by subtraction); `testl`, `testq` (set the flags by AND);
@@ -5729,7 +5947,7 @@ text = '''
    - `setX` (conditional set byte); `cmovX` (conditional move, removes a branch).
 4. **Function calls and run-time safety**:
    - `call`, `ret` (push the return address and jump; pop it and resume);
-   - `%fs:40`, `__stack_chk_fail@PLT` (canary protection against stack overflows).
+   - `%fs:40`, `__stack_chk_fail@PLT` (stack corruption detection).
 5. **Vector computation (AVX2 extension)**:
    - `vmovdqu`, `vmovdqa` (unaligned / aligned 256-bit vector loads and stores);
    - `vpmulld`, `vpaddd` (parallel multiply and add of 32-bit integers in 8 lanes);
@@ -5744,7 +5962,7 @@ text = '''
 #    - `setX`（条件设置字节）；`cmovX`（条件传送，消除分支）。
 # 4. **函数调用与运行时安全**：
 #    - `call`, `ret`（返回地址压栈跳转与出栈恢复）；
-#    - `%fs:40`, `__stack_chk_fail@PLT`（金丝雀栈溢出保护）。
+#    - `%fs:40`, `__stack_chk_fail@PLT`（栈破坏检测）。
 # 5. **向量计算（AVX2 扩展）**：
 #    - `vmovdqu`, `vmovdqa`（非对齐/对齐 256 位向量加载与存储）；
 #    - `vpmulld`, `vpaddd`（8 通道 32 位整数并行乘加）；
@@ -5761,7 +5979,7 @@ text = 'Summary of the lecture: the abstraction layers of a computer system and 
 # src: 全节总结：计算机系统的抽象层级与指令集契约
 
 ['summary.slide.1']
-src_hash = '99a526c2'
+src_hash = '11959b64'
 text = '''
 **The abstraction layers of a computer system**:
 1. **High-level language layer (C/C++)**: provides abstractions for expressing algorithms and for structured thinking (loops, functions, arrays), hiding the details of the physical hardware underneath;
@@ -5773,7 +5991,7 @@ text = '''
 # 
 # **计算机系统的抽象层级划分**：
 # 1. **高级语言层（C/C++）**：提供算法表达的抽象与结构化思维（循环、函数、数组），屏蔽底层物理硬件细节；
-# 2. **应用二进制接口（ABI）**：建立在 ISA 之上的软件契约规范（函数调用规约、寄存器保护职责、运行时栈对齐、数据类型大小），同一 ISA 在 Linux 与 Windows 下有不同 ABI；
+# 2. **应用二进制接口（ABI）**：建立在 ISA 之上的软件契约规范（函数调用约定、寄存器保护职责、运行时栈对齐、数据类型大小），同一 ISA 在 Linux 与 Windows 下有不同 ABI；
 # 3. **指令集体系结构（ISA）**：计算机软硬件之间的接口规范（指令格式与编码、架构寄存器、程序员可见状态、内存寻址模式），在代际演进中保持严格的向后兼容；
 # 4. **微架构与硬件电路层（Microarchitecture）**：芯片内部的物理实现（乱序执行流水线、ALU/AGU 算术单元、执行端口、物理总线与晶体管）。
 
@@ -5808,11 +6026,11 @@ text = 'After-class exercise parallel-dot: an AVX2 dot-product function and CUDA
 # src: 课后练习 parallel-dot：AVX2 内积函数与 CUDA kernel
 
 ['exercise.slide.1']
-src_hash = '74c6dc39'
-text = '- The lab directory `parallel-dot/` has two steps, matching solution 1 and solution 2; do them in order, and neither is graded.'
+src_hash = 'be8ccf43'
+text = '- **This lab is not graded.** The lab directory `parallel-dot/` has two steps, matching solution 1 and solution 2; do them in order.'
 # src:
 # 
-# - 实验目录 `parallel-dot/` 分两步，对应方案 1 与方案 2，按顺序完成，都不计分。
+# - **本实验不计分**。实验目录 `parallel-dot/` 分两步，对应方案 1 与方案 2，按顺序完成。
 
 ['exercise.table.1.cell.0.0']
 src_hash = '4ec7d455'
@@ -5886,16 +6104,120 @@ text = '''
 # - 每一步的任务、规则与期望输出见各自目录下的 `README.md`。
 
 ['exercise.notes.1']
-src_hash = '6be1ebc1'
+src_hash = '3ef8e177'
 text = '''
-parallel-dot is the after-class exercise of part four. Each step has its own directory, Makefile and README.md, and the two steps match solution 1 (SIMD) and solution 2 (GPU) of the "Solutions" page.
+parallel-dot is the after-class exercise of part four and is not graded. Each step has its own directory, Makefile and README.md, and the two steps match solution 1 (SIMD) and solution 2 (GPU) of the "Solutions" page.
 The program of step 1 is the mini-ollama of the "Measured" page: its inner loop becomes the function vec_dot_q4_0, the dot product of one Q4_0 row of weights with a float vector. The framework provides a scalar reference that handles one weight at a time; the student writes the AVX2 version, which handles the 32 weights of one Q4_0 block per step. make test runs dot-selftest and needs no model file: it checks the result against the definition, then compares the speed with the scalar reference, and prints all passed at 4 times or more. make run reads the q4_0.gguf that the nano-quant lab of lecture 2 produces with the q4_0 recipe and prints the generation speed; on the i9-11900H a 256-bit implementation reaches 4.5 Token/s and the scalar reference 0.76 Token/s (2026-10-05).
 The 4 kernels of step 2 are dot_kernel, dot_stride_kernel, matvec_row_kernel and matvec_block_kernel. dot_kernel works as the kernel of the page "CUDA programs: the kernel function every thread executes" does. make run prints a table; each row gives the time of one variant or one phase, its speed-up over the scalar CPU version, and whether its result equals the CPU result.
 A machine without an NVIDIA GPU uses make remote to submit the two files under kernels/ to the course server, which compiles and runs them and returns the same table; HOST:PORT is the address of the course server.
 '''
 # src:
 # 
-# parallel-dot 是第四部分的课后练习，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
+# parallel-dot 是第四部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
 # 第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
 # 第二步的 4 个 kernel 是 dot_kernel、dot_stride_kernel、matvec_row_kernel 与 matvec_block_kernel。dot_kernel 的做法与「CUDA 程序：每个线程执行的 kernel 函数」一页的 kernel 相同。make run 输出一张表，每一行是一个版本或一个阶段的耗时、相对 CPU 标量版本的加速比与结果是否和 CPU 一致。
 # 没有 NVIDIA 显卡的机器用 make remote 把 kernels/ 下的两个文件提交到课程服务器，服务器编译、运行后返回同一张表，HOST:PORT 是课程服务器的地址。
+
+['lab-mini-cpu.title']
+src_hash = '5ef16fb8'
+text = 'Lab 1 mini-cpu: an x86-64 instruction interpreter'
+# src: 实验一 mini-cpu：x86-64 指令解释器
+
+['lab-mini-cpu.slide.1']
+src_hash = 'beacf94f'
+text = '- **This lab is graded**, 100 points in total: write the instruction interpreter of `mini-cpu`, which executes the x86-64 instructions of this lecture.'
+# src:
+# 
+# - **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本讲的 x86-64 指令。
+
+['lab-mini-cpu.table.1.cell.0.0']
+src_hash = '39932f24'
+text = 'File'
+# src: 文件
+
+['lab-mini-cpu.table.1.cell.0.1']
+src_hash = '26602e3e'
+text = 'Functions to write'
+# src: 要写的函数
+
+['lab-mini-cpu.table.1.cell.0.2']
+src_hash = '7a688306'
+text = 'Content'
+# src: 内容
+
+['lab-mini-cpu.table.1.cell.1.0']
+src_hash = 'be484502'
+text = '`modrm.c`'
+# src: `modrm.c`
+
+['lab-mini-cpu.table.1.cell.1.1']
+src_hash = 'ff39fd87'
+text = '`modrm_decode`'
+# src: `modrm_decode`
+
+['lab-mini-cpu.table.1.cell.1.2']
+src_hash = '58eeb29e'
+text = 'Parse the operand byte (ModR/M) and the bytes after it to get the operands'
+# src: 解析操作数字节（ModR/M）与其后的字节，得到操作数
+
+['lab-mini-cpu.table.1.cell.2.0']
+src_hash = '585962b6'
+text = '`alu.c`'
+# src: `alu.c`
+
+['lab-mini-cpu.table.1.cell.2.1']
+src_hash = '9159e7c3'
+text = '`x86_add` and 3 more'
+# src: `x86_add` 等 4 个
+
+['lab-mini-cpu.table.1.cell.2.2']
+src_hash = '8f3ab2c8'
+text = 'Results and flags of the arithmetic and logical operations'
+# src: 算术逻辑运算的结果与标志位
+
+['lab-mini-cpu.table.1.cell.3.0']
+src_hash = 'cb0f2b52'
+text = '`interp.c`'
+# src: `interp.c`
+
+['lab-mini-cpu.table.1.cell.3.1']
+src_hash = '8c6bb611'
+text = '`cond`, `interp_run`'
+# src: `cond`、`interp_run`
+
+['lab-mini-cpu.table.1.cell.3.2']
+src_hash = 'e2add792'
+text = 'Evaluating a condition; the main loop: fetch one instruction, then modify registers and memory according to its opcode'
+# src: 条件的判断；主循环：取一条指令，按操作码修改寄存器与内存
+
+['lab-mini-cpu.slide.2']
+src_hash = 'd10b57b1'
+text = '''
+- Once the lab is done, the mini-ollama of the "Measured" page runs on your interpreter.
+- Completion: `make check` prints `lab 1 score 100/100`; submit the `lab1.zip` that `make handin` produces.
+- Work on x86-64 Linux, or in WSL2 on Windows; the handout is `src/lab1/README.md`.
+'''
+# src:
+# 
+# - 完成后，「实测」一页的 mini-ollama 能在你的解释器上运行。
+# - 完成标准：`make check` 输出 `lab 1 score 100/100`；提交 `make handin` 生成的 `lab1.zip`。
+# - 在 x86-64 的 Linux 上完成，Windows 用 WSL2；说明见 `src/lab1/README.md`。
+
+['lab-mini-cpu.notes.1']
+src_hash = 'fff95599'
+text = '''
+Lab 1 is the first of the six mini-cpu labs. It is graded, 100 points in total; the later labs use the code of lab 1. The released archive is mini-cpu-lab1.zip, to be unpacked into an empty directory.
+mini-cpu loads an x86-64 executable from guest/ and executes its instructions. The three source files hold only the functions to write; each function body is a TODO comment plus a call todo("name"), and the interfaces are in include/mcpu.h under the comments that begin with Lab 1:. The suggested order is modrm.c, alu.c, interp.c.
+modrm.c matches the two pages "Exercise: disassembly and decompilation": the operand byte is split into three fields, which give a register number or the address of a memory operand; the lab also has cases those two pages did not cover (an address with a displacement, an address with an index register), and the handout gives their rules. The 4 functions of alu.c are x86_szp, x86_add, x86_sub and x86_logic, matching the definitions of the flags ZF, SF, CF and OF. cond in interp.c matches the conditions of the conditional jumps, and interp_run is the main loop.
+The interpreter executes 7 vector instructions; of them vpxor, vmovdqu, vpmulld and vpaddd are the instructions of the loop body of dot_product_avx2 in the section "The SIMD idea". The other instructions gcc emits (8-bit and 16-bit forms, multiplication and division, shifts and so on) are executed by the framework. Once the lab is done, the programs under guest/ run on the interpreter; guest/mini-ollama is the mini-ollama of the "Measured" page.
+make check has 20 items of 5 points each, and an item scores only when all of it passes; the seed of the random parameters differs from run to run, and the same tests are run when a submission is graded. The lab1.zip that make handin produces holds only the 3 source files under src/lab1, so changes outside src/ have no effect. The reference implementation scores 100/100 with make check in a directory that holds lab 1 only (2026-10-09).
+Environment: x86-64 Linux runs it directly; on x86-64 Windows work in WSL2; on arm64 macOS use an x86-64 Linux container or the course server.
+'''
+# src:
+# 
+# 实验一是 mini-cpu 六个实验中的第一个，计分，满分 100 分；后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
+# mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。建议的顺序是 modrm.c、alu.c、interp.c。
+# modrm.c 对应「练习：反汇编和反编译」两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
+# 解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
+# make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
+# 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。

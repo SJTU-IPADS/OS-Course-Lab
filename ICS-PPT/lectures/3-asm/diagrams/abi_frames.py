@@ -66,9 +66,9 @@ def column(x0, title, regs, shadow, saved):
 
 def build():
     out = column(20, "Linux（System V）", ["%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"],
-                 False, ("调用者保存", BLUE))
+                 False, ("caller-saved", BLUE))
     out += column(590, "Windows（MS x64）", ["%rcx", "%rdx", "%r8", "%r9"],
-                  True, ("被调用者保存", GREEN))
+                  True, ("callee-saved", GREEN))
     out.append(line(575, 16, 575, 390, LINE, 1))
     return out
 

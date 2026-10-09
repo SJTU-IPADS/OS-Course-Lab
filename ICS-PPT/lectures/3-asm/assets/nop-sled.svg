@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="19 0 1120 206" width="1120" height="206">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="92.0" y="82.0" width="768.0" height="48.0" rx="2" fill="#eef2f4" stroke="#c0392b" stroke-width="1.6"/>
+<line x1="136.0" y1="82.0" x2="136.0" y2="130.0" stroke="#c0392b" stroke-width="1"/>
+<line x1="180.0" y1="82.0" x2="180.0" y2="130.0" stroke="#c0392b" stroke-width="1"/>
+<line x1="224.0" y1="82.0" x2="224.0" y2="130.0" stroke="#c0392b" stroke-width="1"/>
+<line x1="268.0" y1="82.0" x2="268.0" y2="130.0" stroke="#c0392b" stroke-width="1"/>
+<text x="114.0" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">nop</text>
+<text x="158.0" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">nop</text>
+<text x="202.0" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">nop</text>
+<text x="246.0" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">nop</text>
+<text x="290.0" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">…</text>
+<text x="464.0" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">nop sled</text>
+<text x="536.0" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">：256 条 </text>
+<text x="607.2" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">nop</text>
+<rect x="860.0" y="82.0" width="144.0" height="48.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="932.0" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">攻击代码</text>
+<rect x="1004.0" y="82.0" width="24.0" height="48.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1038.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">猜测的地址</text>
+<path d="M 1016.0 79 C 1016.0 24 272.0 24 272.0 78" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-c0392b)"/>
+<path d="M 1016.0 79 C 1016.0 34 506.0 34 506.0 78" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-c0392b)"/>
+<path d="M 1016.0 79 C 1016.0 44 734.0 44 734.0 78" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ah-c0392b)"/>
+<text x="506.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">栈的位置每次运行都不同：猜测的地址每次落在不同的位置</text>
+<path d="M 94.0 134.0 L 94.0 140.0 L 858.0 140.0 L 858.0 134.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="476.0" y="158.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle"></text>
+<line x1="272.0" y1="160.0" x2="900.0" y2="160.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<text x="272.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">落在这 256 字节中的任何一处，都逐条执行 nop，到达攻击代码</text>
+<text x="84.0" y="111.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">低地址</text>
+<text x="1038.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">高地址</text>
+</svg>

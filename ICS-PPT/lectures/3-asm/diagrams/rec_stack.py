@@ -36,7 +36,7 @@ def frame(y, ret, pushes):
 def build():
     right = X + RW + 3 * SWD
     out = [text(X + RW / 2, 60, "返回地址（call 压入）", 15, BLUE, "bold"),
-           text(X + RW + 1.5 * SWD, 60, "被调用者保存的寄存器（pushq）", 15, GREEN, "bold"),
+           text(X + RW + 1.5 * SWD, 60, "callee-saved 寄存器（pushq）", 15, GREEN, "bold"),
            text(90, 60, "调用层", 15, MUTED)]
     out.append(rect(X, 70, right - X, 32, FILL_ORANGE, ORANGE, rx=2, width=1.4))
     out.append(text((X + right) / 2, 92, "main 的栈帧", 15, MUTED))

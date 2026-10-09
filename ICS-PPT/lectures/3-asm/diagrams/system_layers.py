@@ -17,7 +17,7 @@ W, H = 1120, 284
 CX, TOPW, GROW, LH = 400, 200, 140, 66
 
 LAYERS = [("高级语言（C/C++）", "sum += w[i] * x[i];", True, FILL_GREY, MUTED),
-          ("ABI", "调用规约、寄存器保护、栈对齐", False, FILL_BLUE, BLUE),
+          ("ABI", "调用约定、寄存器保护、栈对齐", False, FILL_BLUE, BLUE),
           ("ISA", "指令编码、架构寄存器、寻址模式", False, FILL_ORANGE, ORANGE),
           ("微架构与硬件电路", "流水线、ALU / AGU、执行端口", False, FILL_GREEN, GREEN)]
 

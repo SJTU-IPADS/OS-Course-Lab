@@ -23,9 +23,13 @@ DEFAULT_RATIO = "16:9"
 BLOCK_KINDS = frozenset({
     "cover", "slide", "notes", "prose", "code", "link",
     "image", "side_image", "sidenote", "demo", "aside",
-    "table", "architecture", "row", "spacer", "highlight",
+    "table", "architecture", "row", "columns", "spacer", "highlight",
     "bridge",
 })
+
+# Slide text may carry `<mark>`: a `slide` block, and each column of a
+# `columns` block, which is slide text set beside its neighbours.
+SLIDE_TEXT_KINDS = frozenset({"slide", "columns"})
 
 # A bridge (衔接页) is one or two short lines — three is the hard ceiling, so it
 # cannot grow into a title-less free-form page. See dsl.Lecture.bridge.
@@ -697,6 +701,8 @@ def check_block(
         check_architecture(block.content, page_id)
     if block.kind == "row":
         check_row(block.content, page_id)
+    if block.kind == "columns":
+        check_columns(block.content, page_id)
     if block.kind == "cover":
         check_cover(block.content, page_id)
     if block.kind == "spacer":
@@ -745,7 +751,7 @@ def check_mark_text(text: str, *, allowed: bool, where: str, page_id: str) -> No
 
 
 def check_marks(block: Block, page_id: str) -> None:
-    """`<mark>` is legal in `p.slide(...)` text and nowhere else.
+    """`<mark>` is legal in slide text (`p.slide`, `p.columns`) and nowhere else.
 
     Refused rather than stripped: a highlight that silently vanishes looks
     exactly like a word the author never marked, so the mistake would surface on
@@ -762,7 +768,7 @@ def check_marks(block: Block, page_id: str) -> None:
         texts = _prose_strings(block.content)
     for text in texts:
         check_mark_text(
-            text, allowed=block.kind == "slide",
+            text, allowed=block.kind in SLIDE_TEXT_KINDS,
             where=f"the {block.kind} block", page_id=page_id,
         )
     # A footnote or a callout bubble is marginal prose hanging off a block — it
@@ -1047,6 +1053,23 @@ def check_architecture(content: dict, page_id: str) -> None:
                 raise ValidationError(
                     f"Empty architecture module on {page_id}"
                 )
+
+
+def check_columns(content: dict, page_id: str) -> None:
+    items = content.get("items") or []
+    if len(items) < 2:
+        raise ValidationError(
+            f"Columns on {page_id} needs at least two columns, got {len(items)}"
+        )
+    for item in items:
+        if not isinstance(item, str) or not item.strip():
+            raise ValidationError(f"Empty column on {page_id}")
+    widths = content.get("widths")
+    if widths is not None and len(widths) != len(items):
+        raise ValidationError(
+            f"Columns widths on {page_id} has {len(widths)} entries, "
+            f"expected {len(items)}"
+        )
 
 
 def check_row(content: dict, page_id: str) -> None:
