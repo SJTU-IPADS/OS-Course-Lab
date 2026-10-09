@@ -175,10 +175,9 @@ text = '[docs.docker.com/engine/install/ubuntu](https://docs.docker.com/engine/i
 # src: [docs.docker.com/engine/install/ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 
 ['docker-install.slide.1']
-# CHANGED: was 5f041556
 src_hash = 'd0ff265f'
 text = '''
-- **macOS**: there are two installers; a Mac with an Apple chip takes Apple silicon, a Mac with an Intel processor takes Intel chip;
+- **macOS**: a Mac with an Apple chip takes Apple silicon, a Mac with an Intel processor takes Intel chip;
 - **Windows**: on the configuration page of the installer, select Use WSL 2 instead of Hyper-V;
 - **After installing**: start Docker Desktop and run the command below in a terminal; the installation is complete when it prints a version number.
 '''
@@ -216,12 +215,11 @@ text = 'Pulling an image: ubuntu 26.04 for x86-64'
 # src: 拉取镜像：x86-64 的 ubuntu 26.04
 
 ['docker-pull.slide.1']
-# CHANGED: was 23bd77be
 src_hash = '359a5fb3'
 text = '''
 - **Image**: the files a container is created from, downloaded from the registry Docker Hub. `ubuntu` is the name of the image and `26.04` its version;
 - **`--platform linux/amd64`**: selects the x86-64 image; amd64 is another name of x86-64. The instructions this course teaches and the programs of its labs are x86-64;
-- **A Mac with an Apple chip**: without this option it pulls the arm64 image.
+- A Mac with an Apple chip pulls the arm64 image by default when no platform is given.
 '''
 # src:
 # 
@@ -260,13 +258,13 @@ text = 'Run an ubuntu container and execute commands in it'
 # src: 运行 ubuntu 容器，在其中执行命令
 
 ['docker-run.slide.1']
-# CHANGED: was 17a3d21c
 src_hash = 'a742b6ae'
 text = '''
 - **`docker run IMAGE COMMAND`**: creates a container from the image and runs the command in it; here the command is `bash`;
 - **`-it`**: gives the current terminal to the `bash` in the container; it reads what the keyboard types, and its output appears on the terminal;
-- **The prompt `root@ce62d297203a`**: what follows `@` is the id of this container. `uname -m` prints `x86_64`;
-- **`exit`**: ends `bash`; the container stops with it, and its files are kept. `docker ps -a` lists the containers and their names, and `docker start -ai NAME` enters one again.
+- **`--rm`**: removes this container when it stops, together with the files written in it;
+- **The prompt `root@b3bcc8442459`**: what follows `@` is the id of this container. `uname -m` prints `x86_64`;
+- **`exit`**: ends `bash`, and the container stops with it.
 '''
 # src:
 # 
@@ -277,12 +275,11 @@ text = '''
 # - **`exit`**：结束 `bash`，容器随之停止。
 
 ['docker-run.notes.1']
-# CHANGED: was d19c39ca
 src_hash = 'c55c22e9'
 text = '''
 The demo button runs this command on a terminal, and every line typed afterwards is executed by the bash in the container; the output on the page is one run on 2026-10-09, in which three lines were typed: uname -m, head -1 /etc/os-release and exit. The id of the container differs from run to run.
 -i keeps the standard input of the container open and -t allocates a terminal for it; the two are written together as -it.
-Every docker run creates a new container, and docker gives it a random name. After exit the container is stopped, and the software installed and the files written in it are kept; docker start -ai NAME starts the same container and attaches the terminal. A container that is no longer needed is removed with docker rm NAME.
+Every docker run creates a new container. With --rm, the container is removed once bash ends: docker ps -a does not list it, and the software installed and the files written in it are removed with it.
 On a Mac with an Apple chip, Docker Desktop translates the instructions in an x86-64 container into arm64 instructions; uname -m prints x86_64 there as well, and the container runs slower than an arm64 one.
 '''
 # src:
@@ -294,22 +291,27 @@ On a Mac with an Apple chip, Docker Desktop translates the instructions in an x8
 
 ['docker-exec.title']
 src_hash = 'e16c2c2a'
-text = ''
+text = 'A container in the background: docker start and docker exec'
 # src: 后台运行容器：docker start 与 docker exec
 
 ['docker-exec.demo.1.name']
 src_hash = '3ab269dd'
-text = ''
+text = 'Run a container named ics in the background'
 # src: 在后台运行名为 ics 的容器
 
 ['docker-exec.demo.2.name']
 src_hash = 'bc6f3d3f'
-text = ''
+text = 'Start the container, enter it and execute commands'
 # src: 启动容器，进入容器执行命令
 
 ['docker-exec.slide.1']
 src_hash = '9b1408a3'
-text = ''
+text = '''
+- **`-dt`**: `-d` runs the container in the background; `-t` allocates a terminal, `bash` waits for input, and the container keeps running;
+- **`--name ics`**: names the container `ics`. The command has no `--rm`: the container is kept after it stops, and so are its files;
+- **`docker start ics`**: starts a stopped container. After the computer restarts, the container is stopped;
+- **`docker exec -it ics bash`**: starts another `bash` in the container; after `exit` the container keeps running.
+'''
 # src:
 # 
 # - **`-dt`**：`-d` 使容器在后台运行；`-t` 分配终端，`bash` 等待输入，容器保持运行；
@@ -319,7 +321,14 @@ text = ''
 
 ['docker-exec.notes.1']
 src_hash = '96136c91'
-text = ''
+text = '''
+The two groups of commands were run in order on 2026-10-09, and the output on the page is that of this run; before the second group, the container was stopped with docker stop ics.
+The first group: -d makes docker run return without waiting for the container to end, after printing the 64 hexadecimal digits of the container id; -t allocates a terminal for bash, bash waits for input on it, and the container therefore keeps running. With -d alone, bash reads end of input and exits, and the container stops at once. --name ics sets the name of the container, and the later commands name the container by it; without it docker picks a random name, which docker ps -a shows.
+The second group: docker start ics starts the stopped container, and the ics it prints is the name of the container; when the container is already running, the command prints ics as well. docker exec -it ics bash starts another bash in the container ics and gives it the terminal; fbeaf9a5eea5 in the prompt is the first 12 digits of the container id. Two lines were typed: echo hello > /root/a.txt and exit. exit ends this bash; the bash started by docker run is still running, and so is the container.
+docker exec ics COMMAND, without -it, executes one command and returns. docker stop ics stops the container, and takes about 10 seconds. Checked on 2026-10-09: after /root/a.txt was written, docker stop ics, docker start ics and docker exec ics cat /root/a.txt were run in order, and the output was hello.
+While the container is stopped, docker exec reports container … is not running. After the computer restarts or Docker Desktop quits, the container is stopped; run docker start ics first.
+When the name ics is already taken, the docker run of the first group reports Conflict. The container name "/ics" is already in use. docker rm -f ics removes that container together with its files, after which it can be created again.
+'''
 # src:
 # 
 # 两段命令在 2026-10-09 依次执行，页面上的输出是这一次的结果；执行第二段之前用 docker stop ics 停止了容器。
