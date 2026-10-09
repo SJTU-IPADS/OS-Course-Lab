@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""The shadow stack: a second copy of the return address, compared by ret.
+"""The shadow stack: a second copy of the return address, used by ret.
 
 The upper row is the ordinary stack after an overflow: the input has filled
 the buffer and overwritten the return address. The lower row is the shadow
-stack, which holds return addresses only; call pushed A onto both stacks, and
-the overflow could not reach this one. ret compares the two and raises an
-exception when they differ.
+stack, which holds return addresses only; the call stored A on both stacks,
+and the overflow could not reach this one. On return the copy on the shadow
+stack is authoritative: the hardware shadow stack (CET) compares the two and
+raises an exception when they differ, a software one returns to A directly.
+The page's bullets, not the figure, name the two implementations.
 
 Colours as in the other figures of this section: a return address blue, what
 the input wrote red.
@@ -48,17 +50,19 @@ def build():
     out.append(rect(AX, Y2, AW, CH, FILL_BLUE, BLUE, rx=2, width=3))
     out += label_line(AX + 52, Y2 + 32, [("返回地址 ", FONT, BLUE, "bold"),
                                          ("A", MONO, BLUE, "bold")], 15)
-    out.append(text(AX + AW + 14, Y2 + 32, "只有 call 与 ret 能写", 15, BLUE, "bold",
+    out.append(text(AX + AW + 14, Y2 + 32, "缓冲区溢出写不到这里", 15, BLUE, "bold",
                     anchor="start"))
 
-    # ret compares the two slots
+    # on return the shadow copy is authoritative
     out.append(arrow(AX + AW / 2, Y1 + CH + 4, AX + AW / 2, Y2 - 4, INK, 2.4, both=True))
     out += label_line(AX + AW / 2 + 14, (Y1 + CH + Y2) / 2 + 5,
                       [("ret", MONO, INK, "bold"),
-                       (" 比较两处：不相等，产生异常", FONT, INK, "bold")], 15)
-    out.append(mono(BUF_X, Y2 + CH + 26, "call", 15, MUTED))
-    out.append(text(BUF_X + 44, Y2 + CH + 26, "把返回地址同时压入两个栈", 14, MUTED,
-                    anchor="start"))
+                       (" 以影子栈上的 ", FONT, INK, "bold"),
+                       ("A", MONO, INK, "bold"),
+                       (" 为准", FONT, INK, "bold")], 15)
+    out.append(text(BUF_X, Y2 + CH + 26,
+                    "调用时把返回地址多存一份到影子栈：软件实现由编译器插入的指令完成，"
+                    "硬件实现由 call 自动完成", 14, MUTED, anchor="start"))
     return out
 
 

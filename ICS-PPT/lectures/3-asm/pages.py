@@ -1844,29 +1844,34 @@ def code_reuse(p):
     slide(p, r"""
 - **面向返回的编程（Return-oriented Programming）**：栈不可执行时，攻击者不注入代码，使用程序中已有的代码（例如 libc）；
 - **代码片段（gadget）**：已有代码中以 `ret` 结尾的几条指令。攻击者把各个片段的地址依次写入栈中，每个片段末尾的 `ret` 弹出下一个片段的地址。
+
+**问题**：如何防御 ROP 攻击？
 """)
     p.notes("""
 ret 弹出栈顶的 8 个字节并跳转。返回地址的位置上是片段 A 的地址时，bar 的 ret 跳转到片段 A；片段 A 执行完自己的几条指令，它末尾的 ret 弹出片段 B 的地址。攻击者选择片段及其顺序，组合出所需的操作，整个过程没有执行栈上的数据。
+问题的回答在下一页：ROP 的每一步都靠 ret 从栈上取地址，防御的思路是不让被改写的返回地址生效。影子栈另存一份返回地址，返回时以它为准；控制流完整性限制 ret 与间接跳转只能到达合法的目标。此前讲过的栈随机化与金丝雀值也仍然有效：前者让攻击者难以知道片段的地址，后者在 bar 返回之前就发现返回地址被改写。
 """)
 
 
 def shadow_stack(p):
     p.title('防御四：影子栈')
     slide(p, r"""
-**代码复用攻击的解决方法**：影子栈、控制流完整性。
+**代码复用攻击的解决方法**：影子栈、控制流完整性、execute-only code 等。
 """)
     figure(p, "shadow-stack", 960)
     slide(p, r"""
-- **影子栈（shadow stack）**：另设一个栈，只存放返回地址。`call` 把返回地址同时压入两个栈，`ret` 比较两处的返回地址，两者不相等时产生异常；
-- **影子栈由硬件维护**：这块内存只有 `call` 与 `ret` 能写入，`movq` 等指令写入时产生异常。缓冲区溢出改写的是普通栈上的那一份；
-- **x86-64 的 CET**：Intel 的控制流强制技术（Control-flow Enforcement Technology）在硬件中实现影子栈。
+- **影子栈（shadow stack）**：另设一个栈，只存放返回地址。调用时把返回地址多存一份到影子栈，返回时以影子栈上的那份为准；缓冲区溢出改写的是普通栈上的那一份；
+- **软件实现**：编译器在函数入口与返回之前插入存取影子栈的指令，`call` 与 `ret` 不变；靠隐藏影子栈的位置来保护它，每次调用多执行几条指令（LLVM 的 ShadowCallStack）；
+- **硬件实现**：Intel CET、AMD、ARM GCS。`call` 同时压入两个栈，`ret` 比较两处，不相等时产生异常；影子栈的内存只有 `call` 与 `ret` 能写，`movq` 等指令写入时产生异常。
 """)
     p.notes("""
-两种解决方法的英文：影子栈 shadow stack，控制流完整性 control-flow integrity。
+解决方法的英文：影子栈 shadow stack，控制流完整性 control-flow integrity。
 控制流完整性：限制间接跳转与返回只能到达合法的目标。gcc 默认在每个函数入口加入的 endbr64 是合法目标的标记；本讲的编译命令用 -fcf-protection=none 去掉了这条指令。
-图中是 bar 的返回地址被改写之后两个栈的内容：普通栈上的返回地址已经是攻击者写入的地址，影子栈上仍是 call 压入的 A。ret 读出两处的值进行比较，不相等时产生异常，进程被终止。
+execute-only code：代码区域只可执行、不可读。攻击者要拼出 ROP 链，先要读到程序的代码才能找出片段；代码不可读时，加上地址随机化，攻击者无法知道片段的内容与位置。需要硬件支持：ARMv8 的页表支持只执行的页面，x86 用 Intel 的 PKU/MPK 或扩展页表实现。
+图中是 bar 的返回地址被改写之后两个栈的内容：普通栈上的返回地址已经是攻击者写入的地址，影子栈上仍是调用时存入的 A。硬件实现中 ret 读出两处的值进行比较，不相等时产生异常（CET 的 #CP 异常，Linux 上进程收到 SIGSEGV）；软件实现中 ShadowCallStack 直接用影子栈上的 A 返回，普通栈上被改写的那份不被使用。
 影子栈只存放返回地址，不存放参数、局部变量与保存的寄存器值；它的大小由返回地址的个数决定，即调用的层数。
-返回地址有两份，调用与返回的开销随之增加，这项检查由硬件完成，不增加程序的指令。
+软件实现：LLVM 的 -fsanitize=shadow-call-stack，arm64 上用 x18 指向影子栈，入口是 str x30, [x18], #8，返回之前是 ldr x30, [x18, #-8]!。影子栈所在的内存是普通可写内存，安全性来自 x18 的值不写入内存，攻击者不知道影子栈在哪里。Linux 内核的 arm64 版本（CONFIG_SHADOW_CALL_STACK，5.8 起）与 Android 使用它。开销为百分之几：Dang、Maniatis 与 Wagner 2015 年测得传统方案约 10%，并行影子栈约 3.5%。
+硬件实现：Intel CET（Control-flow Enforcement Technology，2020 年的 Tiger Lake 起）、AMD（Zen 3 起）、ARMv9.4 的 GCS（Guarded Control Stack）。影子栈由专门的 SSP 寄存器指向，页面在页表中有特殊标记，普通写入产生异常；call 与 ret 自动完成存取，不增加程序的指令。RISC-V 的 Zicfiss 扩展是例外，用显式的 sspush 与 sspopchk 指令。Linux 6.6 起支持 x86 用户态影子栈。
 CET 的另一部分是间接跳转跟踪（Indirect Branch Tracking），用 endbr64 标记间接跳转的合法目标，针对的是另一类攻击。
 本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本讲其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
 """)

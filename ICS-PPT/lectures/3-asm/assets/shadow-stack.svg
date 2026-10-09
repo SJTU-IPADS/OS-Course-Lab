@@ -16,10 +16,11 @@
 <rect x="652.0" y="166.0" width="210.0" height="54.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="3"/>
 <text x="704.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">返回地址 </text>
 <text x="772.2" y="198.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">A</text>
-<text x="876.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">只有 call 与 ret 能写</text>
+<text x="876.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">缓冲区溢出写不到这里</text>
 <line x1="757.0" y1="116.0" x2="757.0" y2="162.0" stroke="#0e2841" stroke-width="2.4" marker-start="url(#ah-0e2841)" marker-end="url(#ah-0e2841)"/>
 <text x="771.0" y="144.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">ret</text>
-<text x="798.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve"> 比较两处：不相等，产生异常</text>
-<text x="196.0" y="246.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">call</text>
-<text x="240.0" y="246.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">把返回地址同时压入两个栈</text>
+<text x="798.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve"> 以影子栈上的 </text>
+<text x="904.5" y="144.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">A</text>
+<text x="913.5" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve"> 为准</text>
+<text x="196.0" y="246.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">调用时把返回地址多存一份到影子栈：软件实现由编译器插入的指令完成，硬件实现由 call 自动完成</text>
 </svg>
