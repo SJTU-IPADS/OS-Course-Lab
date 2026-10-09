@@ -145,7 +145,7 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("call-sequence", body=pages.call_sequence)
         ss.page("abi-isa", body=pages.abi_isa)
 
-    s.bridge('缓冲区溢出', id="bridge-part3-overflow")
+    s.bridge('缓冲区溢出与 ROP 攻击\nReturn-Oriented Programming', id="bridge-part3-overflow")
     with s.section('缓冲区溢出', id="part3-overflow") as ss:
         ss.page("gets-no-bound", body=pages.gets_no_bound)
         ss.page("echo-buf", body=pages.echo_buf)
@@ -159,7 +159,6 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("nop-sled", body=pages.nop_sled)
         ss.page("canary", body=pages.canary)
         ss.page("canary-asm", body=pages.canary_asm)
-        ss.page("canary-run", body=pages.canary_run)
         ss.page("nx-bit", body=pages.nx_bit)
         ss.page("code-reuse", body=pages.code_reuse)
         ss.page("shadow-stack", body=pages.shadow_stack)
