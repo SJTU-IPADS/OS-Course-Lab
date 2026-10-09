@@ -1670,18 +1670,25 @@ def morris_worm(p):
 2. 蠕虫向远程计算机的 `fingerd` 发送一个超过 512 字节的字符串，覆盖返回地址；
 3. `fingerd` 的函数返回时跳转到字符串中的代码，蠕虫由此获得这台计算机的访问权；
 4. 蠕虫继续向其他计算机传播；同一台计算机被反复感染，计算资源几乎耗尽。
-
-**后果**：
-- 数千台计算机被感染，其中许多无法正常工作；
-- 作者 Robert T. Morris 被判处 3 年缓刑、400 小时社区服务与 10,050 美元罚款；
-- 他后来在 MIT 任教，2006 年获终身教职。
 """)
     p.notes("""
 第一段回答上一页的问题。没有随机化时 B 只取决于程序本身：用调试器在被攻击的函数中打印缓冲区的地址，或者从栈顶的初始值减去各层栈帧的大小算出来。蠕虫攻击的 fingerd 运行在 VAX 与 4.3BSD 上，作者按这一机型与系统版本算出地址，所以蠕虫对其他机型的 fingerd 无效。
 另外三种方式是 sendmail 的调试功能、主机之间的信任关系与猜测口令（United States v. Morris, 928 F.2d 504 的事实陈述）。
 蠕虫发送给 fingerd 的字符串长 536 字节，其中的代码启动一个 shell（Spafford 1988 年的分析报告）。
+""")
+
+
+def morris_worm_2(p):
+    p.title('1988 年 11 月的互联网蠕虫：后果')
+    p.side_image("assets/xyb.png", width="40%", alt="contain")
+    slide(p, r"""
+- 数千台计算机被感染，其中许多无法正常工作；
+- 作者 Robert T. Morris 被判处 3 年缓刑、400 小时社区服务与 10,050 美元罚款；
+- 他后来在 MIT 任教，2006 年获终身教职。
+""")
+    p.notes("""
 被感染的计算机数量是估计值：当时的统计在 2,000 台到 6,000 台之间。
-罚款数额取自上述判决书。
+罚款数额取自 United States v. Morris 的判决书。
 """)
 
 
@@ -1860,71 +1867,6 @@ def shadow_stack(p):
 返回地址有两份，调用与返回的开销随之增加，这项检查由硬件完成，不增加程序的指令。
 CET 的另一部分是间接跳转跟踪（Indirect Branch Tracking），用 endbr64 标记间接跳转的合法目标，针对的是另一类攻击。
 本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本讲其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
-""")
-
-
-def recap_part3(p):
-    p.title('小结：函数调用用到的指令与约定')
-    p.table([
-        ['调用与返回',
-         '`call` 压入返回地址并跳转，`ret` 弹出返回地址并跳转',
-         '`main` 中的 `call dot_product`'],
-        ['传递数据',
-         '前 6 个参数用寄存器，其余经栈传递；返回值用 `%rax`',
-         '`w`、`x`、`n` 在 `%rdi`、`%rsi`、`%edx` 中'],
-        ['寄存器',
-         '6 个 callee-saved，9 个 caller-saved',
-         '`dot_bias` 的 `pushq %rbx` 与 `popq %rbx`'],
-        ['局部变量',
-         '减小 `%rsp` 分配，按偏移访问，增大 `%rsp` 释放',
-         '`main` 的 `subq $40, %rsp`'],
-        ['缓冲区溢出',
-         '越界写入改写返回地址；防御：栈随机化、栈破坏检测、限制可执行代码区域、影子栈',
-         '`echo` 的 15 个与 23 个字符'],
-    ], headers=['内容', '指令与约定', '本部分的例子'], widths=[2, 6, 5])
-    slide(p, r"""
-**运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都在栈帧中，`%rsp` 指向栈顶；栈帧在调用开始时建立，在调用返回时释放。
-""")
-    p.notes("""
-第三部分的小结。前四行对应「函数调用的实现」一表的五行，第五行是栈帧布局带来的安全问题。
-call 与 ret 的行为由 ISA 规定，参数、返回值与寄存器的用法由 ABI 约定。6 个 callee-saved 寄存器是 %rbx、%rbp、%r12 到 %r15。
-""")
-
-
-def rec_exercise(p):
-    p.title('练习：递归调用的栈帧')
-    p.code('c', """int dot_product_rec(const int *w, const int *x, int n) {
-    if (n <= 0) return 0;
-    return dot_product_rec(w, x, n - 1) + w[n - 1] * x[n - 1];
-}""")
-    slide(p, r"""
-**`dot_product_rec` 用递归计算内积**，`main` 调用 `dot_product_rec(w, x, 4)`：
-1. 从 `main` 的这次调用算起，`dot_product_rec` 一共被调用几次？
-2. `n` 为 0 的那次调用执行时，这几次调用的返回地址有几个在栈上？它们各自回到哪个函数？
-3. 递归调用返回之后还要计算 `w[n - 1] * x[n - 1]`。递归调用期间，`w`、`x`、`n` 应当放在哪一类寄存器中？每次调用因此要在栈上保存什么？
-4. 实现递归是否需要 `call`、`ret`、寄存器使用惯例与栈帧之外的机制？
-""")
-    p.demo('编译 dot_rec.c',
-           """cd examples && gcc -Og -fcf-protection=none -fno-stack-protector -S dot_rec.c -o - | sed -f asm.sed""",
-           files=['examples/dot_rec.c', 'examples/asm.sed'])
-    p.notes("""
-课堂练习。递归是同一个函数的多次调用同时处于活动状态，每次调用的返回地址与保存的寄存器值各有一份。
-演示的输出是 dot_product_rec 与 main 的清单，用来核对第 3 题：入口的 testl 与 jle 处理 n <= 0，之后是 3 条 pushq、3 条保存参数的 mov、leal -1(%rdx), %edx 与递归的 call。
-""")
-
-
-def rec_exercise_2(p):
-    p.title('练习：递归调用的栈帧')
-    figure(p, "rec-stack", 880)
-    slide(p, r"""
-1. 5 次，`n` 依次为 4、3、2、1、0；
-2. 5 个：最早压入的回到 `main`，其余 4 个回到 `dot_product_rec`；
-3. callee-saved 寄存器；每次调用用 3 条 `pushq` 保存 `%r15`、`%r14`、`%rbx` 的原值；
-4. 不需要：每次调用有自己的返回地址与保存的寄存器值。
-""")
-    p.notes("""
-图的每一行是一次调用压入栈的内容：调用它的 call 压入的返回地址，以及它自己用 pushq 保存的三个寄存器，每一层递归在栈上增加 32 字节。n 为 0 的调用在 pushq 之前就返回，只有返回地址。
-返回时每一层先用 3 条 popq 恢复寄存器，再用 ret 回到上一层，%eax 中是已经算出的部分和。
 """)
 
 

@@ -152,6 +152,7 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("echo-frame", body=pages.echo_frame)
         ss.page("overflow-attack", body=pages.overflow_attack)
         ss.page("morris-worm", body=pages.morris_worm)
+        ss.page("morris-worm-2", body=pages.morris_worm_2)
 
     with s.section('对抗缓冲区溢出攻击', id="part3-defense") as ss:
         ss.page("stack-random", body=pages.stack_random)
@@ -162,12 +163,6 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("nx-bit", body=pages.nx_bit)
         ss.page("code-reuse", body=pages.code_reuse)
         ss.page("shadow-stack", body=pages.shadow_stack)
-
-    s.bridge('小结与练习', id="bridge-part3-summary")
-    with s.section('小结与练习', id="part3-summary") as ss:
-        ss.page("recap-part3", body=pages.recap_part3)
-        ss.page("rec-exercise", body=pages.rec_exercise)
-        ss.page("rec-exercise-2", body=pages.rec_exercise_2)
 
 lecture.bridge('第四部分：性能瓶颈与向量化\n从标量计算到向量与并发', id="bridge-part4")
 
