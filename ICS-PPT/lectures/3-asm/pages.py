@@ -974,9 +974,7 @@ def call_checklist_table(p, bold=()):
 def call_checklist(p):
     call_checklist_table(p, bold=(0, 1))
     slide(p, r"""
-**五行的来源**：第一行是跳转本身，后四行是函数调用与跳转的四个不同点。
-
-**先讲前两行**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
+**问题**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
 """)
     p.notes("""
 这张表在后面每一小节的开头出现一次，加粗的一行是这一小节要讲的内容。
@@ -1006,11 +1004,6 @@ def runtime_stack(p):
     p.title('运行时栈：按后进先出的顺序保存返回地址')
     p.side_image("assets/address-space.svg", width="30%", alt="contain")
     slide(p, r"""
-**调用可以嵌套**：`main` 调用函数 `f`，`f` 又调用函数 `g`。
-- 两个返回地址同时需要保存：回到 `main` 的地址先保存，回到 `f` 的地址后保存；
-- `g` 最先返回，用到的是后保存的那个地址。保存与取出的顺序是后进先出（LIFO）。
-
-**运行时栈（Stack）**：按后进先出的顺序存取数据的一段内存。
 - **位置**：在进程地址空间的高地址一端；
 - **栈指针 `%rsp`**：保存栈顶的地址，即栈中最后存入的数据的地址；
 - **向低地址生长**：存入 8 字节时 `%rsp` 减 8，取出 8 字节时 `%rsp` 加 8；
@@ -1108,7 +1101,7 @@ def stack_frames(p):
 """)
     figure(p, "frame-lifo", 1120)
     slide(p, r"""
-**栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量，分别对应「函数调用的实现」一表中的传递数据、寄存器、局部变量三行。
+**栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量。
 """)
     p.notes("""
 图中 main 调用 f，f 先后调用 g 与 h。每一列是一个时刻的栈，栈底在上，最下面的栈帧属于正在执行的函数。
@@ -1118,6 +1111,9 @@ g 返回后它的栈帧释放，f 再调用 h 时，h 的栈帧使用同一段�
 
 def call_checklist_2(p):
     call_checklist_table(p, bold=(2,))
+    p.demo('查看源码',
+           '',
+           files=['examples/main.c'])
     slide(p, r"""
 **问题**：`main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
 """)
@@ -1234,6 +1230,12 @@ def call_checklist_3(p):
 """)
 
 
+REG_CONFLICT_ASM = """dot_bias:                              dot_product:    # two instructions of the loop body
+    call   dot_product                     movl   (%rsi,%r8,4), %ecx    # x[i]
+    addl   %ecx, %eax     # b ?            imull  (%rdi,%r8,4), %ecx
+    ret"""
+
+
 def reg_conflict(p):
     p.title('寄存器：调用者的值可能被被调用者改写')
     p.code('c', """int dot_bias(const int *w, const int *x, int n, int b) {
@@ -1242,10 +1244,18 @@ def reg_conflict(p):
     slide(p, r"""
 **进入 `dot_bias` 时**，`w`、`x`、`n`、`b` 依次在 `%rdi`、`%rsi`、`%edx`、`%ecx` 中。前三个正是 `dot_product` 的参数，可以直接 `call`；返回后把 `%ecx` 中的 `b` 加到 `%eax` 上：
 """)
-    p.code('text', """dot_bias:                              dot_product:    # two instructions of the loop body
-    call   dot_product                     movl   (%rsi,%r8,4), %ecx    # x[i]
-    addl   %ecx, %eax     # b ?            imull  (%rdi,%r8,4), %ecx
-    ret""")
+    p.code('text', REG_CONFLICT_ASM)
+    slide(p, r"""
+**问题**：这样写的 `dot_bias`，返回值正确吗？
+""")
+    p.notes("""
+左边是不保存 b 的写法，右边是第二部分 dot_product 清单中循环体的两条指令。先让学生看右边两条指令写的是哪个寄存器，再翻到下一页。
+""")
+
+
+def reg_conflict_2(p):
+    p.title('寄存器：调用者的值可能被被调用者改写')
+    p.code('text', REG_CONFLICT_ASM)
     slide(p, r"""
 - **结果错误**：`dot_product` 的循环体把 `x[i]` 与乘积写入 `%ecx`，`b` 被覆盖；
 - **原因**：寄存器只有一组，所有函数共用；两个函数分别编译，编译一方时看不到另一方使用哪些寄存器。
@@ -1253,7 +1263,6 @@ def reg_conflict(p):
 **需要一项约定**：规定每个寄存器的值在一次调用前后是否保持不变。
 """)
     p.notes("""
-左边是不保存 b 的写法，右边是第二部分 dot_product 清单中循环体的两条指令。
 这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在本节最后一页。
 """)
 
@@ -1319,8 +1328,60 @@ examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等�
 """)
 
 
+def callee_example_why(p):
+    p.title('问题：b 为什么先移到 %rbx，而不是直接存到栈上')
+    p.code('text', """gcc's output:                          b saved on the stack directly:
+dot_bias:                              dot_bias:
+    pushq   %rbx      # save old %rbx      pushq   %rcx      # save b
+    movl    %ecx, %ebx                     call    dot_product
+    call    dot_product                    popq    %rcx      # restore b
+    addl    %ebx, %eax                     addl    %ecx, %eax
+    popq    %rbx      # restore %rbx       ret
+    ret""")
+    slide(p, r"""
+- 两种写法都把一个值存到栈上、调用后再取回，各 1 次 store、1 次 load；
+- 左边存的是 `%rbx` 原来的值，`b` 留在寄存器中；右边存的是 `b` 本身，还少一条 `movl`。
+
+**问题**：右边更短，访存次数相同，gcc 为什么选左边？
+""")
+    p.notes("""
+右边的写法是为说明问题手写的。pushq %rcx 压入 8 个字节，高 32 位是无关的值，popq 之后只用 %ecx，不影响结果。
+先让学生比较两边的指令数与访存次数，再翻到下一页。
+""")
+
+
+def callee_example_rows(p):
+    p.title('例子：调用多次时，b 放在寄存器中与放在栈上的差别')
+    p.code('c', """int dot_bias_rows(const int *w, const int *x, int n, int b, int rows) {
+    int total = 0;
+    for (int r = 0; r < rows; r++)
+        total += dot_product(w + r * n, x, n) + b;   // b is used after every call
+    return total;
+}""")
+    p.code('text', """b in %ebx:                             b on the stack:
+    pushq   %rbx                           subq    $8, %rsp
+    movl    %ecx, %ebx    # store once     movl    %ecx, (%rsp)  # store once
+.L:                                    .L:
+    call    dot_product                    call    dot_product
+    addl    %ebx, %eax    # a register     addl    (%rsp), %eax  # one load per iteration
+    jl      .L                             jl      .L
+    popq    %rbx          # load once      addq    $8, %rsp""")
+    slide(p, r"""
+- 调用 1 次时两种做法代价相同；调用 `rows` 次时，右边每轮多 1 次 load；
+- gcc 的规则：跨越 `call` 之后还要使用的值先分配 callee-saved 寄存器，不够时才放到栈上。
+""")
+    p.notes("""
+两列清单只保留与 b 有关的指令，循环中为 call 准备参数、更新 r 与 total 的指令略去；两列都是为说明问题手写的。
+真实输出见 examples/dot_bias_rows.c：gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed。w、x、n、rows、total、r 六个值占满 6 个 callee-saved 寄存器，b 被放到 12(%rsp)，循环体中是 addl 12(%rsp), %eax，每轮读一次内存。这正是寄存器不够时的后备做法。
+-O2 下的 -fcaller-saves 允许 gcc 在它判断更划算时把 caller-saved 寄存器中的值存在 call 的两侧；dot_bias 在 -O2 下的输出与 -Og 相同，仍用 %rbx。
+""")
+
+
 def call_checklist_4(p):
     call_checklist_table(p, bold=(4,))
+    p.demo('查看源码',
+           '',
+           files=['examples/main.c'])
     slide(p, r"""
 **问题**：`main` 的数组 `w` 与 `x` 存放在哪里？
 """)

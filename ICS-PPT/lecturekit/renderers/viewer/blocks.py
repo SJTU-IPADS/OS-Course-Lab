@@ -590,17 +590,24 @@ def _demo(block):
     output = content.get("output")
     lines = demo_module.prompt_lines(command)
     block_form = len(lines) > 1 or bool(output)
-    button = (
-        '<button class="lk-demo-run" type="button" disabled'
-        ' aria-label="Run this demo">▶</button>'
-    ) + _demo_files(content.get("files"))
+    # A blank command is a file button with nothing to run: no play button and
+    # no `$ …` line. The file buttons are the whole of the block.
+    run = ""
+    if command.strip():
+        run = (
+            '<button class="lk-demo-run" type="button" disabled'
+            ' aria-label="Run this demo">▶</button>'
+        )
+    button = run + _demo_files(content.get("files"))
     name = f'<span class="lk-demo-name">{escape_html(content["name"])}</span>'
     desc = ""
     if content.get("description"):
         desc = f'<span class="lk-demo-desc">{_inline_md(content["description"])}</span>'
     # `lk-demo-cmd` holds the command lines and nothing else — `demo.js` falls
     # back on its first line to label a run whose demo has no name.
-    cmd = f'<code class="lk-demo-cmd">{escape_html(chr(10).join(lines))}</code>'
+    cmd = ""
+    if lines:
+        cmd = f'<code class="lk-demo-cmd">{escape_html(chr(10).join(lines))}</code>'
     open_tag = (
         f'<div class="lk-demo" data-lk-demo="{demo_module.demo_id(command)}"'
         f' data-lk-demo-form="{"block" if block_form else "inline"}">'

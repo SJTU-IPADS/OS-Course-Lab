@@ -126,9 +126,12 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
     with s.section('寄存器：使用惯例', id="part3-regs") as ss:
         ss.page("call-checklist-3", body=pages.call_checklist_3)
         ss.page("reg-conflict", body=pages.reg_conflict)
+        ss.page("reg-conflict-2", body=pages.reg_conflict_2)
         ss.page("saved-regs", body=pages.saved_regs)
         ss.page("saved-regs-fig", body=pages.saved_regs_fig)
         ss.page("callee-example", body=pages.callee_example)
+        ss.page("callee-example-why", body=pages.callee_example_why)
+        ss.page("callee-example-rows", body=pages.callee_example_rows)
 
     with s.section('局部变量：栈', id="part3-locals") as ss:
         ss.page("call-checklist-4", body=pages.call_checklist_4)

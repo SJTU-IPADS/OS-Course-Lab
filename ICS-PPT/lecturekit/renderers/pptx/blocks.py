@@ -620,6 +620,8 @@ def _demo(block, ctx: Ctx) -> None:
 
     vertical_pad_pt = 4
     rows = lines + outputs
+    if not rows:
+        return
     bold = {len(lines) + number for number in content.get("bold") or ()}
     height = Emu(Pt(len(rows) * theme.CODE_PT * LINE_HEIGHT + 2 * vertical_pad_pt))
     box, tf = _textbox(ctx, height)

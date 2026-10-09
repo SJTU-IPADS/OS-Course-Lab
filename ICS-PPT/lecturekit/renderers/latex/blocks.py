@@ -396,6 +396,9 @@ def _demo(block: model.Block, ctx: Ctx) -> str:
         lines.append(inline(content["description"]) + r"\\")
     transcript = demo_module.prompt_lines(str(content["command"]))
     options = ""
+    if not transcript and not content.get("output"):
+        lines.append(r"\end{tcolorbox}")
+        return "\n".join(lines) + _footnotes(block, ctx)
     if content.get("output"):
         outputs = str(content["output"]).strip("\n").split("\n")
         bold = set(content.get("bold") or ())
