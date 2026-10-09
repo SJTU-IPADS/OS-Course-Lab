@@ -2500,17 +2500,11 @@ text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
 
 ['call-checklist.slide.1']
-src_hash = 'ae82f0af'
-text = '''
-**Where the five rows come from**: the first is the jump itself, and the other four are the four differences between a function call and a jump.
-
-**The first two rows come first**: how is control transferred to `dot_product`, and how does it return to `main` when `dot_product` finishes?
-'''
+src_hash = '95054aeb'
+text = '**Question**: how is control transferred to `dot_product`, and how does it return to `main` when `dot_product` finishes?'
 # src:
 # 
-# **五行的来源**：第一行是跳转本身，后四行是函数调用与跳转的四个不同点。
-# 
-# **先讲前两行**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
+# **问题**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
 
 ['call-checklist.notes.1']
 src_hash = '94d931d3'
@@ -2575,13 +2569,8 @@ text = 'contain'
 # src: contain
 
 ['runtime-stack.slide.1']
-src_hash = '210d8c47'
+src_hash = 'f28b9076'
 text = '''
-**Calls can nest**: `main` calls function `f`, and `f` in turn calls function `g`.
-- Two return addresses must be kept at the same time: the address for returning to `main` is saved first, and the address for returning to `f` is saved second;
-- `g` returns first and uses the address saved second. The order of saving and retrieving is last in, first out (LIFO).
-
-**Run-time stack**: a region of memory in which data is stored and retrieved in last-in, first-out order.
 - **Location**: at the high-address end of the process address space;
 - **Stack pointer `%rsp`**: holds the address of the top of the stack, that is, the address of the data stored last on the stack;
 - **Growth toward low addresses**: storing 8 bytes subtracts 8 from `%rsp`, and retrieving 8 bytes adds 8 to `%rsp`;
@@ -2589,11 +2578,6 @@ text = '''
 '''
 # src:
 # 
-# **调用可以嵌套**：`main` 调用函数 `f`，`f` 又调用函数 `g`。
-# - 两个返回地址同时需要保存：回到 `main` 的地址先保存，回到 `f` 的地址后保存；
-# - `g` 最先返回，用到的是后保存的那个地址。保存与取出的顺序是后进先出（LIFO）。
-# 
-# **运行时栈（Stack）**：按后进先出的顺序存取数据的一段内存。
 # - **位置**：在进程地址空间的高地址一端；
 # - **栈指针 `%rsp`**：保存栈顶的地址，即栈中最后存入的数据的地址；
 # - **向低地址生长**：存入 8 字节时 `%rsp` 减 8，取出 8 字节时 `%rsp` 加 8；
@@ -2791,11 +2775,11 @@ text = '''
 # - 调用按后进先出的顺序返回，栈帧的建立与释放也按后进先出的顺序进行。
 
 ['stack-frames.slide.2']
-src_hash = '5b62cc0d'
-text = '**Other data in a stack frame**: besides the return address, a stack frame holds arguments passed on the stack, saved register values and local variables, which correspond to three rows of the table "Implementing a function call": passing data, registers and local variables.'
+src_hash = '4d2e98c2'
+text = '**Other data in a stack frame**: besides the return address, a stack frame holds arguments passed on the stack, saved register values and local variables.'
 # src:
 # 
-# **栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量，分别对应「函数调用的实现」一表中的传递数据、寄存器、局部变量三行。
+# **栈帧中的其他数据**：除返回地址外，栈帧还存放经栈传递的参数、保存的寄存器值与局部变量。
 
 ['stack-frames.notes.1']
 src_hash = '6b94d852'
@@ -2877,6 +2861,11 @@ text = 'Local variables'
 src_hash = '6b5c9d48'
 text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
+
+['call-checklist-2.demo.1.name']
+src_hash = '921c3b62'
+text = 'View the source'
+# src: 查看源码
 
 ['call-checklist-2.slide.1']
 src_hash = '758f6b33'
@@ -3158,9 +3147,7 @@ text = 'Example: last2 has 8 parameters'
 
 ['stack-args.slide.1']
 src_hash = 'ce4615bb'
-text = '''
-`use8` calls `last2` and passes 8 arguments; `last2` returns the 7th argument minus the 8th. The first 6 arguments use the 6 argument registers in order:
-'''
+text = '`use8` calls `last2` and passes 8 arguments; `last2` returns the 7th argument minus the 8th. The first 6 arguments use the 6 argument registers in order:'
 # src:
 # 
 # `use8` 调用 `last2`，传递 8 个参数；`last2` 返回第 7 个参数减第 8 个参数的差。前 6 个参数依次使用 6 个参数寄存器：
@@ -3302,9 +3289,7 @@ text = '?'
 
 ['stack-args.slide.2']
 src_hash = 'd9d8da13'
-text = '''
-**Question**: there are only 6 argument registers; where do the 7th and the 8th argument go?
-'''
+text = '**Question**: there are only 6 argument registers; where do the 7th and the 8th argument go?'
 # src:
 # 
 # **问题**：参数寄存器只有 6 个，第 7 个与第 8 个参数放在哪里？
@@ -3464,6 +3449,27 @@ text = '**On entry to `dot_bias`**, `w`, `x`, `n` and `b` are in `%rdi`, `%rsi`,
 # **进入 `dot_bias` 时**，`w`、`x`、`n`、`b` 依次在 `%rdi`、`%rsi`、`%edx`、`%ecx` 中。前三个正是 `dot_product` 的参数，可以直接 `call`；返回后把 `%ecx` 中的 `b` 加到 `%eax` 上：
 
 ['reg-conflict.slide.2']
+src_hash = '34670ff3'
+text = '**Question**: is the return value of `dot_bias` correct when it is written this way?'
+# src:
+# 
+# **问题**：这样写的 `dot_bias`，返回值正确吗？
+
+['reg-conflict.notes.1']
+src_hash = 'cc269d03'
+text = '''
+On the left is the version that does not save b; on the right are the two instructions of the loop body from the dot_product listing of Part 2. Have the students look at which register the two instructions on the right write, then move to the next page.
+'''
+# src:
+# 
+# 左边是不保存 b 的写法，右边是第二部分 dot_product 清单中循环体的两条指令。先让学生看右边两条指令写的是哪个寄存器，再翻到下一页。
+
+['reg-conflict-2.title']
+src_hash = 'f5e47341'
+text = "Registers: the caller's values may be overwritten by the callee"
+# src: 寄存器：调用者的值可能被被调用者改写
+
+['reg-conflict-2.slide.1']
 src_hash = '11288ca6'
 text = '''
 - **Wrong result**: the loop body of `dot_product` writes `x[i]` and the product into `%ecx`, and `b` is overwritten;
@@ -3478,15 +3484,13 @@ text = '''
 # 
 # **需要一项约定**：规定每个寄存器的值在一次调用前后是否保持不变。
 
-['reg-conflict.notes.1']
-src_hash = '703a96c0'
+['reg-conflict-2.notes.1']
+src_hash = '5c877187'
 text = '''
-On the left is the version that does not save b; on the right are the two instructions of the loop body from the dot_product listing of Part 2.
 The dot_bias on this page has only three instructions and was written to show the problem; the compiler's output is on the last page of this section.
 '''
 # src:
 # 
-# 左边是不保存 b 的写法，右边是第二部分 dot_product 清单中循环体的两条指令。
 # 这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在本节最后一页。
 
 ['saved-regs.title']
@@ -3604,6 +3608,66 @@ examples/asm.sed deletes the assembler directives (.file, .cfi_* and so on) and 
 # dot_product 改写的寄存器可以在第二部分的清单中核对：%eax、%ecx、%r8、%r9d，都是 caller-saved 寄存器。
 # examples/asm.sed 删去 gcc -S 输出中的汇编伪指令（.file、.cfi_* 等）与 .LFB/.LFE 标号，只留下指令与跳转标号。
 
+['callee-example-why.title']
+src_hash = '23ec330d'
+text = 'Question: why is b first moved to %rbx instead of being stored on the stack directly'
+# src: 问题：b 为什么先移到 %rbx，而不是直接存到栈上
+
+['callee-example-why.slide.1']
+src_hash = 'c4001d7e'
+text = '''
+- Both versions store one value on the stack and read it back after the call: 1 store and 1 load each;
+- The left one stores the old value of `%rbx` and keeps `b` in a register; the right one stores `b` itself and has one `movl` fewer.
+
+**Question**: the right one is shorter and accesses memory the same number of times. Why does gcc choose the left one?
+'''
+# src:
+# 
+# - 两种写法都把一个值存到栈上、调用后再取回，各 1 次 store、1 次 load；
+# - 左边存的是 `%rbx` 原来的值，`b` 留在寄存器中；右边存的是 `b` 本身，还少一条 `movl`。
+# 
+# **问题**：右边更短，访存次数相同，gcc 为什么选左边？
+
+['callee-example-why.notes.1']
+src_hash = 'ffa063c2'
+text = '''
+The version on the right was written by hand to show the problem. pushq %rcx pushes 8 bytes whose high 32 bits are an unrelated value; after popq only %ecx is used, so the result is not affected.
+Have the students compare the number of instructions and of memory accesses on the two sides, then move to the next page.
+'''
+# src:
+# 
+# 右边的写法是为说明问题手写的。pushq %rcx 压入 8 个字节，高 32 位是无关的值，popq 之后只用 %ecx，不影响结果。
+# 先让学生比较两边的指令数与访存次数，再翻到下一页。
+
+['callee-example-rows.title']
+src_hash = '4ac19aed'
+text = 'Example: with several calls, the difference between keeping b in a register and on the stack'
+# src: 例子：调用多次时，b 放在寄存器中与放在栈上的差别
+
+['callee-example-rows.slide.1']
+src_hash = '8b7a7f06'
+text = '''
+- With 1 call the two ways cost the same; with `rows` calls the right one does 1 more load in every iteration;
+- The rule of gcc: a value that is still used after a `call` is given a callee-saved register first, and is placed on the stack only when none is left.
+'''
+# src:
+# 
+# - 调用 1 次时两种做法代价相同；调用 `rows` 次时，右边每轮多 1 次 load；
+# - gcc 的规则：跨越 `call` 之后还要使用的值先分配 callee-saved 寄存器，不够时才放到栈上。
+
+['callee-example-rows.notes.1']
+src_hash = 'd271531b'
+text = '''
+The two listings keep only the instructions that involve b; the instructions in the loop that set up the arguments of call and update r and total are left out. Both listings were written by hand to show the problem.
+The real output is in examples/dot_bias_rows.c: gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed. The six values w, x, n, rows, total and r take all 6 callee-saved registers, b is placed at 12(%rsp), and the loop body has addl 12(%rsp), %eax, which reads memory once per iteration. This is the fallback when the registers run out.
+Under -O2, -fcaller-saves lets gcc save the value of a caller-saved register around a call when it judges that to be cheaper; the output for dot_bias under -O2 is the same as under -Og and still uses %rbx.
+'''
+# src:
+# 
+# 两列清单只保留与 b 有关的指令，循环中为 call 准备参数、更新 r 与 total 的指令略去；两列都是为说明问题手写的。
+# 真实输出见 examples/dot_bias_rows.c：gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed。w、x、n、rows、total、r 六个值占满 6 个 callee-saved 寄存器，b 被放到 12(%rsp)，循环体中是 addl 12(%rsp), %eax，每轮读一次内存。这正是寄存器不够时的后备做法。
+# -O2 下的 -fcaller-saves 允许 gcc 在它判断更划算时把 caller-saved 寄存器中的值存在 call 的两侧；dot_bias 在 -O2 下的输出与 -Og 相同，仍用 %rbx。
+
 ['section.part3-locals.title']
 src_hash = '64e9b168'
 text = 'Local variables: stack'
@@ -3673,6 +3737,11 @@ text = '**Local variables**'
 src_hash = '4330c51b'
 text = '**Every call has its own copy of the local variables**'
 # src: **每次调用有自己的一份局部变量**
+
+['call-checklist-4.demo.1.name']
+src_hash = '921c3b62'
+text = 'View the source'
+# src: 查看源码
 
 ['call-checklist-4.slide.1']
 src_hash = '9eb520f4'
@@ -3751,16 +3820,18 @@ text = 'Compile main.c with gcc -Og'
 # src: 用 gcc -Og 编译 main.c
 
 ['stack-frame.notes.1']
-src_hash = '26bf7c83'
+src_hash = 'd9cb7e63'
 text = '''
 The listing has four parts: line 2 allocates the stack frame, lines 3 to 10 write the 8 elements of the two arrays, lines 11 to 14 set up the arguments and call dot_product, and line 15 frees the stack frame.
 -fno-stack-protector turns off stack protection, so the stack frame holds only the local arrays; the stack protection of a default compilation is explained in the section "Thwarting buffer overflow attacks" of this part.
+In the figure on the left every row is 8 bytes, with high addresses at the top. An int is 4 bytes, so a row holds two array elements, the one at the higher address on the left; above each element is its address, the same as the destination operand of the movl in the listing.
 The main.c button opens the source on the right, for comparison with the stack frame on the left.
 '''
 # src:
 # 
 # 清单分四段：第 2 行分配栈帧，第 3 到 10 行写入两个数组的 8 个元素，第 11 到 14 行准备参数并调用 dot_product，第 15 行释放栈帧。
 # -fno-stack-protector 关闭栈保护，栈帧中只有局部数组；默认编译时的栈保护在本部分「对抗缓冲区溢出攻击」一节说明。
+# 左图每行 8 字节，高地址在上。一个 int 占 4 字节，一行存放两个数组元素，行内左侧的地址较高；每格上方是该元素的地址，与清单中 movl 的目的操作数相同。
 # main.c 按钮在右侧打开源码，与左侧的栈帧对照。
 
 ['stack-frame-2.title']
@@ -4111,30 +4182,27 @@ src_hash = '204a061f'
 text = 'The function echo: reads one input line into an 8-byte buffer with gets'
 # src: 函数 echo：用 gets 把一行输入读入 8 字节的缓冲区
 
-['echo-buf.demo.1.name']
-src_hash = '5e790724'
-text = 'Enter lines of different lengths'
-# src: 输入不同长度的一行
-
 ['echo-buf.slide.1']
-src_hash = 'd2f1d5c7'
-text = '**Question**: 15 and 23 characters both exceed the 8 bytes of `buf`. Where are the extra characters written?'
-# src:
-# 
-# **问题**：15 个与 23 个字符都超出了 `buf` 的 8 字节。多出的字符写到了哪里？
-
-['echo-buf.notes.1']
-src_hash = '14c0bfc4'
+src_hash = 'b558ce47'
 text = '''
-echo reads one line from standard input and writes it back unchanged. buf has 8 bytes and holds 7 characters and 1 terminator. The gets in echo.c is the implementation on the page "The library function gets", and main only calls echo.
-run uses <<< to pass a string followed by a newline as the standard input of ./echo, and then prints the length of the string and the exit status of ./echo with the echo command of the shell. 2>&1 | cat keeps the job message of the shell out of the output when the program crashes, and the exit status is taken from PIPESTATUS[0].
-With 23 characters the line is not printed: when standard output is a pipe, the text of puts stays in the buffer of the C library, and the process is terminated before the buffer is written out. When ./echo is run directly in a terminal, the line is printed first and the process then receives SIGSEGV; in both cases gets and puts have finished, and the instruction that fails is the ret of echo.
+- `buf` is a local array of `echo`; it takes 8 bytes in the stack frame of `echo` and holds 7 characters and 1 terminator;
+- `gets(buf)` passes the address of `buf` to `gets`, and `gets` does not receive the size of `buf`.
+
+**Question**: when the input line has more than 7 characters, where are the extra characters written?
 '''
 # src:
 # 
-# echo 从标准输入读入一行并原样输出。buf 有 8 字节，容纳 7 个字符与 1 个结束符。echo.c 中的 gets 是「库函数 gets」一页的实现，main 只调用 echo。
-# run 用 <<< 把一个字符串加上换行符作为 ./echo 的标准输入，再用 shell 的 echo 命令打印字符串的长度与 ./echo 的退出状态。2>&1 | cat 使崩溃时 shell 的作业提示不进入输出，退出状态由 PIPESTATUS[0] 取得。
-# 23 个字符时这一行没有输出：标准输出接到管道时，puts 的内容先留在 C 库的缓冲区中，进程在写出之前被终止。在终端中直接运行 ./echo 时，这一行先输出，然后进程收到 SIGSEGV；两种情况下 gets 与 puts 都已执行完，出错的是 echo 的 ret。
+# - `buf` 是 `echo` 的局部数组，在 `echo` 的栈帧中占 8 字节，容纳 7 个字符与 1 个结束符；
+# - `gets(buf)` 把 `buf` 的地址传给 `gets`，`gets` 得不到 `buf` 的大小。
+# 
+# **问题**：输入的一行超过 7 个字符时，多出的字符写到哪里？
+
+['echo-buf.notes.1']
+src_hash = '851dbbe6'
+text = 'echo reads one line from standard input and writes it back unchanged. The gets in echo.c is the implementation on the page "The library function gets", and main only calls echo.'
+# src:
+# 
+# echo 从标准输入读入一行并原样输出。echo.c 中的 gets 是「库函数 gets」一页的实现，main 只调用 echo。
 
 ['echo-frame.title']
 src_hash = '30f29ed1'
@@ -4142,39 +4210,50 @@ text = 'Buffer overflow: out-of-bounds writes overwrite the adjacent data in the
 # src: 缓冲区溢出：越界写入覆盖栈帧中的相邻数据
 
 ['echo-frame.slide.1']
-src_hash = '8ace3a5b'
+src_hash = 'de40019e'
+text = '`gets` writes from `buf[0]` toward higher addresses: 1 byte for each character, and 1 byte for the terminator at the end.'
+# src:
+# 
+# `gets` 从 `buf[0]` 起向高地址写入：每个字符 1 字节，最后写入 1 字节的结束符。
+
+['echo-frame.slide.2']
+src_hash = 'a7d76557'
 text = '''
-- **15 characters**: the 8 bytes beyond `buf` overwrite the saved `%rbx`. `echo` returns as usual and reports no error, and `popq %rbx` restores the overwritten value;
-- **23 characters**: the writes reach the return address, `ret` jumps to the overwritten address, and the process receives `SIGSEGV` (exit code 139).
+- **The saved `%rbx` is overwritten**: `popq %rbx` restores the overwritten value, and `echo` returns as usual and reports no error;
+- **The return address is overwritten**: `ret` jumps to the overwritten address.
 
 **Buffer overflow**: the data written exceeds the size of the buffer, and the excess is written to the adjacent locations in the stack frame.
 '''
 # src:
 # 
-# - **15 个字符**：超出 `buf` 的 8 字节覆盖保存的 `%rbx`。`echo` 照常返回，不报任何错误，`popq %rbx` 恢复的是被改写的值；
-# - **23 个字符**：写入到达返回地址，`ret` 跳向被改写的地址，进程收到 `SIGSEGV`（退出码 139）。
+# - **保存的 `%rbx` 被改写**：`popq %rbx` 恢复的是被改写的值，`echo` 照常返回，不报任何错误；
+# - **返回地址被改写**：`ret` 跳转到被改写的地址。
 # 
 # **缓冲区溢出（buffer overflow）**：写入的数据超出缓冲区的大小，多出的部分写入栈帧中相邻的位置。
 
 ['echo-frame.notes.1']
-src_hash = '58c67fa9'
+src_hash = 'a1c93876'
 text = '''
+This page has four frames, and the stack stays in the same place. Every row of the figure is 8 bytes, with high addresses at the top and, within a row, on the left; the arrows of buf and %rsp point at the lowest byte of their row, the cell on the right.
+The first frame is the stack before gets writes: the return address pushed by call echo in main is at 24(%rsp), and it is the last item of the stack frame of main; the %rbx saved by echo is at 16(%rsp), buf is the 8 bytes starting at 8(%rsp), and the 8 bytes starting at (%rsp) are unused.
+In the second frame the input has 7 characters: gets writes buf[0] to buf[7], 8 bytes in all, all of them inside buf.
+In the third frame the input has 15 characters: gets writes 16 bytes, and the 8 bytes where buf[8] to buf[15] lie held the saved %rbx. The overwritten value belongs to the caller of main; the execution of echo is not affected, and errors of this kind are hard to notice.
+In the fourth frame the input has 23 characters: gets writes 24 bytes, and the 8 bytes where buf[16] to buf[23] lie held the return address. The return address is rewritten to the codes of these 7 characters followed by the terminator; there is no executable instruction at this address, and the process is terminated after ret.
 The offsets come from cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S echo.c -o - | sed -f asm.sed:
-after pushq %rbx and subq $16, %rsp in echo, leaq 8(%rsp), %rbx takes the address of buf; buf is the 8 bytes starting at 8(%rsp), the 8 bytes starting at (%rsp) are unused, and the saved %rbx is at 16(%rsp). The return address pushed by call echo in main is at 24(%rsp), and the 8 bytes main allocated with subq $8, %rsp are at 32(%rsp).
+the instructions of echo are, in order, pushq %rbx, subq $16, %rsp, leaq 8(%rsp), %rbx, movq %rbx, %rdi, call gets, movq %rbx, %rdi, call puts@PLT, addq $16, %rsp, popq %rbx and ret.
 echo keeps the address of buf in %rbx for the call to puts after gets returns; %rbx is a callee-saved register, so echo saves it at its entry.
-gets writes 1 byte for each character it reads and 1 byte for the terminator at the end: 7 characters write 8 bytes, 15 characters write 16 bytes, 23 characters write 24 bytes.
-With 15 characters the overwritten value belongs to the caller of main; the result of this run did not change, and errors of this kind are hard to notice.
-With 23 characters the return address is rewritten to 0x0033323130393837, the codes of the characters 7890123 followed by the terminator; when ret jumps to this address the process receives SIGSEGV.
 In CS:APP Section 3.10.3 gcc places buf at (%rsp), with 16 unused bytes between buf and the return address; gcc 15 on this machine places the saved %rbx between buf and the return address.
 '''
 # src:
 # 
+# 这一页有四帧，栈的位置不变。图中每行 8 字节，高地址在上，行内左侧的地址较高；buf 与 %rsp 的箭头指向所在一行的最低字节，即最右一格。
+# 第一帧是 gets 写入之前的栈：main 的 call echo 压入的返回地址在 24(%rsp)，它是 main 的栈帧的最后一项；echo 保存的 %rbx 在 16(%rsp)，buf 在 8(%rsp) 起的 8 字节，(%rsp) 起的 8 字节没有使用。
+# 第二帧输入 7 个字符：gets 写入 buf[0] 到 buf[7]，共 8 字节，都在 buf 之内。
+# 第三帧输入 15 个字符：gets 写入 16 字节，buf[8] 到 buf[15] 所在的 8 字节原来存放保存的 %rbx。被改写的值属于 main 的调用者；echo 的执行不受影响，这类错误不容易被发现。
+# 第四帧输入 23 个字符：gets 写入 24 字节，buf[16] 到 buf[23] 所在的 8 字节原来存放返回地址。返回地址被改写为这 7 个字符的编码与结束符，这个地址上没有可以执行的指令，进程在 ret 之后被终止。
 # 偏移来自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S echo.c -o - | sed -f asm.sed：
-# echo 的 pushq %rbx 与 subq $16, %rsp 之后，leaq 8(%rsp), %rbx 取 buf 的地址，buf 在 8(%rsp) 起的 8 字节，(%rsp) 起的 8 字节没有使用，保存的 %rbx 在 16(%rsp)。main 的 call echo 压入的返回地址在 24(%rsp)，main 用 subq $8, %rsp 分配的 8 字节在 32(%rsp)。
+# echo 的指令依次是 pushq %rbx、subq $16, %rsp、leaq 8(%rsp), %rbx、movq %rbx, %rdi、call gets、movq %rbx, %rdi、call puts@PLT、addq $16, %rsp、popq %rbx、ret。
 # echo 用 %rbx 存放 buf 的地址，供 gets 返回之后调用 puts 时使用；%rbx 是 callee-saved 寄存器，所以 echo 在入口保存它。
-# gets 每读入一个字符写 1 字节，最后写入 1 字节的结束符：7 个字符写 8 字节，15 个字符写 16 字节，23 个字符写 24 字节。
-# 15 个字符时被改写的值属于 main 的调用者；这次运行的结果没有变化，这类错误不容易被发现。
-# 23 个字符时返回地址被改写为 0x0033323130393837，即字符 7890123 的编码与结束符；ret 跳转到这个地址时进程收到 SIGSEGV。
 # CS:APP 3.10.3 节中 gcc 把 buf 放在 (%rsp)，buf 与返回地址之间是 16 字节未使用的空间；本机的 gcc 15 把保存的 %rbx 放在 buf 与返回地址之间。
 
 ['overflow-attack.title']
@@ -4467,23 +4546,11 @@ src_hash = '571a241c'
 text = 'Stack corruption detection: the instructions gcc adds at the entry and before the return'
 # src: 栈破坏检测：gcc 在函数入口与返回之前加入的指令
 
-['canary-asm.demo.1.name']
-src_hash = '0ac9c6ab'
-text = 'Compile echo.c (stack protection on) and print the beginning and the end of echo'
-# src: 编译 echo.c（开启栈保护），打印 echo 的开头与结尾
-
-['canary-asm.slide.1']
-src_hash = '922c4bec'
-text = 'Between the two parts are the 4 instructions that call `gets` and `puts`; the command does not print them.'
-# src:
-# 
-# 两段之间是调用 `gets` 与 `puts` 的 4 条指令，命令没有打印它们。
-
 ['canary-asm.notes.1']
-src_hash = '31f59c18'
+src_hash = '008cdf30'
 text = '''
-The command prints two parts of echo: the 6 lines from echo: to xorl, and the 8 lines from movq 8(%rsp), %rax to call __stack_chk_fail@PLT. Between them are movq %rsp, %rdi, call gets, movq %rsp, %rdi and call puts@PLT.
-The comments after # were added on the page; the command does not print them.
+The listing is the assembly of echo with stack protection on, taken from the output of cd examples; gcc -Og -fcf-protection=none -S echo.c -o - | sed -f asm.sed. The comments after # were added on the page.
+The three dots stand for the 4 instructions that call gets and puts: movq %rsp, %rdi, call gets, movq %rsp, %rdi and call puts@PLT.
 The three instructions at the entry: read the canary value, store it at 8(%rsp), then clear %rax, so that the value remains only at %fs:40 and in the stack frame.
 The three instructions before the return: read the value in the stack frame; subq subtracts the value at %fs:40 from it and sets the flags; when the two values are equal ZF=1, jne is not taken, and the function returns as usual.
 When the two values differ, control jumps to .L11 and calls __stack_chk_fail; this function prints one line and terminates the process, and does not return.
@@ -4491,8 +4558,8 @@ In this build the address of buf is %rsp itself, and both calls pass it with mov
 '''
 # src:
 # 
-# 命令打印 echo 的两段：从 echo: 到 xorl 的 6 行，以及从 movq 8(%rsp), %rax 到 call __stack_chk_fail@PLT 的 8 行。两段之间是 movq %rsp, %rdi、call gets、movq %rsp, %rdi、call puts@PLT。
-# # 之后的注释是页面上添加的说明，命令的输出中没有。
+# 清单是开启栈保护时 echo 的汇编，取自 cd examples; gcc -Og -fcf-protection=none -S echo.c -o - | sed -f asm.sed 的输出。# 之后的注释是页面上添加的说明。
+# 三个点处省略了调用 gets 与 puts 的 4 条指令：movq %rsp, %rdi、call gets、movq %rsp, %rdi、call puts@PLT。
 # 入口的三条指令：读出金丝雀值，存入 8(%rsp)，再把 %rax 清零，使这个值只留在 %fs:40 与栈帧两处。
 # 返回之前的三条指令：读出栈帧中的值，subq 把它与 %fs:40 处的值相减并设置标志位；两个值相同时 ZF=1，jne 不跳转，函数照常返回。
 # 两个值不同时跳转到 .L11，调用 __stack_chk_fail；这个函数打印一行信息并终止进程，不返回。
@@ -4520,9 +4587,9 @@ text = '''
 # - **`%fs:40`**：`%fs` 是段寄存器，不在 16 个通用寄存器之中；`%fs:40` 的地址是 `%fs` 对应的基址加 40。金丝雀值的原值存放在这里，位置在栈帧之外；越界写入改写的是栈帧中的副本，检验时两者不相等。
 
 ['canary-run.notes.1']
-src_hash = 'ac44a975'
+src_hash = '2c7038b9'
 text = '''
-The overflow experiments above used -fno-stack-protector in order to show the consequences of an overflow. The gcc of Ubuntu uses -fstack-protector-strong by default: when a function has an array, or takes the address of a local variable, the writing and the checking of the canary value are added.
+The stack in the section "Buffer overflow" is the layout of a build with -fno-stack-protector. The gcc of Ubuntu uses -fstack-protector-strong by default: when a function has an array, or takes the address of a local variable, the writing and the checking of the canary value are added.
 With 8 characters the terminator is written to the lowest byte of the canary value. The lowest byte of the canary value glibc generates is 0, so this write does not change it and the check passes; from 9 characters on the check fails.
 Exit code 134 = 128 + 6, and 6 is the number of the signal SIGABRT.
 The form %fs:40 is called segmented addressing. The 8086 (1978) already had 4 segment registers; the 80286 is the 16-bit processor Intel introduced in 1982, the successor of the 8086, and it introduced segments in protected mode; %fs and %gs were added by the 80386 (1985). CS:APP Section 3.10.4 says that segmented addressing dates back to the 80286.
@@ -4532,7 +4599,7 @@ The check makes each call execute the 6 instructions at the entry and before the
 '''
 # src:
 # 
-# 前面的溢出实验为了显示溢出的后果使用了 -fno-stack-protector。Ubuntu 的 gcc 默认使用 -fstack-protector-strong：函数中有数组，或者对局部变量取地址时，加入金丝雀值的写入与检验。
+# 「缓冲区溢出」一节的栈是用 -fno-stack-protector 编译时的布局。Ubuntu 的 gcc 默认使用 -fstack-protector-strong：函数中有数组，或者对局部变量取地址时，加入金丝雀值的写入与检验。
 # 8 个字符时结束符写入金丝雀值的最低字节。glibc 产生的金丝雀值最低字节是 0，这次写入没有改变它，检验通过；从 9 个字符起检验失败。
 # 退出码 134 = 128 + 6，6 是信号 SIGABRT 的编号。
 # %fs:40 这种写法称为段寻址（segmented addressing）。8086（1978 年）已有 4 个段寄存器；80286 是 Intel 在 1982 年推出的 16 位处理器，8086 的后继，它引入了保护模式下的段；%fs 与 %gs 由 80386（1985 年）加入。CS:APP 3.10.4 节的说法是段寻址可以追溯到 80286。
@@ -6420,6 +6487,3 @@ Environment: x86-64 Linux runs it directly; on x86-64 Windows work in WSL2; on a
 # 解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
 # make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
 # 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。
-
-# orphaned — no longer in the lecture. Kept so a rename does not
-# throw the translation away; delete by hand once you are sure.

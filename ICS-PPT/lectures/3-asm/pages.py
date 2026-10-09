@@ -1484,6 +1484,7 @@ def stack_frame(p):
     p.notes("""
 清单分四段：第 2 行分配栈帧，第 3 到 10 行写入两个数组的 8 个元素，第 11 到 14 行准备参数并调用 dot_product，第 15 行释放栈帧。
 -fno-stack-protector 关闭栈保护，栈帧中只有局部数组；默认编译时的栈保护在本部分「对抗缓冲区溢出攻击」一节说明。
+左图每行 8 字节，高地址在上。一个 int 占 4 字节，一行存放两个数组元素，行内左侧的地址较高；每格上方是该元素的地址，与清单中 movl 的目的操作数相同。
 main.c 按钮在右侧打开源码，与左侧的栈帧对照。
 """)
 
@@ -1602,42 +1603,39 @@ void echo(void) {
     gets(buf);
     puts(buf);
 }""")
-    p.demo('输入不同长度的一行',
-           """cd examples && gcc -Og -fcf-protection=none -fno-stack-protector -o echo echo.c
-run() { ./echo <<< "$1" 2>&1 | cat; echo "  ${#1} characters -> exit ${PIPESTATUS[0]}"; }
-run 1234567; run 123456789012345; run 12345678901234567890123""",
-           output="""1234567
-  7 characters -> exit 0
-123456789012345
-  15 characters -> exit 0
-  23 characters -> exit 139""",
-           files=['examples/echo.c'])
     slide(p, r"""
-**问题**：15 个与 23 个字符都超出了 `buf` 的 8 字节。多出的字符写到了哪里？
+- `buf` 是 `echo` 的局部数组，在 `echo` 的栈帧中占 8 字节，容纳 7 个字符与 1 个结束符；
+- `gets(buf)` 把 `buf` 的地址传给 `gets`，`gets` 得不到 `buf` 的大小。
+
+**问题**：输入的一行超过 7 个字符时，多出的字符写到哪里？
 """)
     p.notes("""
-echo 从标准输入读入一行并原样输出。buf 有 8 字节，容纳 7 个字符与 1 个结束符。echo.c 中的 gets 是「库函数 gets」一页的实现，main 只调用 echo。
-run 用 <<< 把一个字符串加上换行符作为 ./echo 的标准输入，再用 shell 的 echo 命令打印字符串的长度与 ./echo 的退出状态。2>&1 | cat 使崩溃时 shell 的作业提示不进入输出，退出状态由 PIPESTATUS[0] 取得。
-23 个字符时这一行没有输出：标准输出接到管道时，puts 的内容先留在 C 库的缓冲区中，进程在写出之前被终止。在终端中直接运行 ./echo 时，这一行先输出，然后进程收到 SIGSEGV；两种情况下 gets 与 puts 都已执行完，出错的是 echo 的 ret。
+echo 从标准输入读入一行并原样输出。echo.c 中的 gets 是「库函数 gets」一页的实现，main 只调用 echo。
 """)
 
 
 def echo_frame(p):
     p.title('缓冲区溢出：越界写入覆盖栈帧中的相邻数据')
-    figure(p, "echo-frame", 1120)
     slide(p, r"""
-- **15 个字符**：超出 `buf` 的 8 字节覆盖保存的 `%rbx`。`echo` 照常返回，不报任何错误，`popq %rbx` 恢复的是被改写的值；
-- **23 个字符**：写入到达返回地址，`ret` 跳向被改写的地址，进程收到 `SIGSEGV`（退出码 139）。
+`gets` 从 `buf[0]` 起向高地址写入：每个字符 1 字节，最后写入 1 字节的结束符。
+""")
+    p.frames("assets/echo-stack-1.svg", "assets/echo-stack-2.svg",
+             "assets/echo-stack-3.svg", "assets/echo-stack-4.svg", width_px=1120)
+    slide(p, r"""
+- **保存的 `%rbx` 被改写**：`popq %rbx` 恢复的是被改写的值，`echo` 照常返回，不报任何错误；
+- **返回地址被改写**：`ret` 跳转到被改写的地址。
 
 **缓冲区溢出（buffer overflow）**：写入的数据超出缓冲区的大小，多出的部分写入栈帧中相邻的位置。
 """)
     p.notes("""
+这一页有四帧，栈的位置不变。图中每行 8 字节，高地址在上，行内左侧的地址较高；buf 与 %rsp 的箭头指向所在一行的最低字节，即最右一格。
+第一帧是 gets 写入之前的栈：main 的 call echo 压入的返回地址在 24(%rsp)，它是 main 的栈帧的最后一项；echo 保存的 %rbx 在 16(%rsp)，buf 在 8(%rsp) 起的 8 字节，(%rsp) 起的 8 字节没有使用。
+第二帧输入 7 个字符：gets 写入 buf[0] 到 buf[7]，共 8 字节，都在 buf 之内。
+第三帧输入 15 个字符：gets 写入 16 字节，buf[8] 到 buf[15] 所在的 8 字节原来存放保存的 %rbx。被改写的值属于 main 的调用者；echo 的执行不受影响，这类错误不容易被发现。
+第四帧输入 23 个字符：gets 写入 24 字节，buf[16] 到 buf[23] 所在的 8 字节原来存放返回地址。返回地址被改写为这 7 个字符的编码与结束符，这个地址上没有可以执行的指令，进程在 ret 之后被终止。
 偏移来自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S echo.c -o - | sed -f asm.sed：
-echo 的 pushq %rbx 与 subq $16, %rsp 之后，leaq 8(%rsp), %rbx 取 buf 的地址，buf 在 8(%rsp) 起的 8 字节，(%rsp) 起的 8 字节没有使用，保存的 %rbx 在 16(%rsp)。main 的 call echo 压入的返回地址在 24(%rsp)，main 用 subq $8, %rsp 分配的 8 字节在 32(%rsp)。
+echo 的指令依次是 pushq %rbx、subq $16, %rsp、leaq 8(%rsp), %rbx、movq %rbx, %rdi、call gets、movq %rbx, %rdi、call puts@PLT、addq $16, %rsp、popq %rbx、ret。
 echo 用 %rbx 存放 buf 的地址，供 gets 返回之后调用 puts 时使用；%rbx 是 callee-saved 寄存器，所以 echo 在入口保存它。
-gets 每读入一个字符写 1 字节，最后写入 1 字节的结束符：7 个字符写 8 字节，15 个字符写 16 字节，23 个字符写 24 字节。
-15 个字符时被改写的值属于 main 的调用者；这次运行的结果没有变化，这类错误不容易被发现。
-23 个字符时返回地址被改写为 0x0033323130393837，即字符 7890123 的编码与结束符；ret 跳转到这个地址时进程收到 SIGSEGV。
 CS:APP 3.10.3 节中 gcc 把 buf 放在 (%rsp)，buf 与返回地址之间是 16 字节未使用的空间；本机的 gcc 15 把保存的 %rbx 放在 buf 与返回地址之间。
 """)
 
@@ -1778,30 +1776,34 @@ def canary(p):
 
 def canary_asm(p):
     p.title('栈破坏检测：gcc 在函数入口与返回之前加入的指令')
-    p.demo('编译 echo.c（开启栈保护），打印 echo 的开头与结尾',
-           """cd examples && gcc -Og -fcf-protection=none -S echo.c -o - | sed -f asm.sed \\
-    | sed -n '/^echo:/,/xorl/p; /8(%rsp), %rax/,/chk_fail/p'""",
-           output="""echo:
+    p.code('assembly', """echo:
 	pushq	%rbx
 	subq	$16, %rsp
 	movq	%fs:40, %rax            # read the canary
 	movq	%rax, 8(%rsp)           # store it above buf
 	xorl	%eax, %eax              # clear the copy in %rax
-	movq	8(%rsp), %rax           # after the two calls: read the stored value
+	...
+	movq	8(%rsp), %rax           # read the stored value
 	subq	%fs:40, %rax            # compare it with the canary
 	jne	.L11                    # not equal: the frame has been overwritten
 	addq	$16, %rsp
 	popq	%rbx
 	ret
 .L11:
-	call	__stack_chk_fail@PLT    # print a message and terminate the process""",
-           files=['examples/echo.c', 'examples/asm.sed'])
+	call	__stack_chk_fail@PLT    # print a message and terminate the process""")
     slide(p, r"""
-两段之间是调用 `gets` 与 `puts` 的 4 条指令，命令没有打印它们。
+**金丝雀值**：原值在 `%fs:40`；`echo` 在入口把它复制到 `8(%rsp)`，即上一页图中「金丝雀值」一格，返回之前再与原值比较。
+
+**问题**：如何攻破金丝雀防御？
 """)
     p.notes("""
-命令打印 echo 的两段：从 echo: 到 xorl 的 6 行，以及从 movq 8(%rsp), %rax 到 call __stack_chk_fail@PLT 的 8 行。两段之间是 movq %rsp, %rdi、call gets、movq %rsp, %rdi、call puts@PLT。
-# 之后的注释是页面上添加的说明，命令的输出中没有。
+问题的回答：检验只比较栈帧中的副本与 %fs:40 处的原值，攻击者让两者在 ret 之前仍然相等，或者不经过这次检验，就能绕过它。
+1. 读出金丝雀值：程序另有一处漏洞把栈上的内容打印出来（例如 printf(buf) 这样的格式化字符串漏洞，或者越界读），攻击者得到金丝雀值，溢出时在同一位置写回原值。
+2. 逐字节猜测：fork 产生的子进程与父进程的金丝雀值相同。服务器为每个请求 fork 一个子进程时，攻击者每次只覆盖金丝雀值的 1 个字节，子进程没有崩溃说明这个字节猜对了；8 个字节最多尝试 8 × 256 次，而不是 2^64 次。
+3. 不经过检验：改写金丝雀值以下的数据，例如栈上的函数指针，在函数返回之前就被使用；或者程序另有任意地址写的漏洞，直接改写返回地址而不触及金丝雀值。gcc 把数组放在其他局部变量之上，减少前一种情况。
+4. 改写原值：线程的栈与它的线程局部存储区相邻，在非主线程的栈上溢出足够长时，能同时改写 %fs:40 处的原值。
+清单是开启栈保护时 echo 的汇编，取自 cd examples; gcc -Og -fcf-protection=none -S echo.c -o - | sed -f asm.sed 的输出。# 之后的注释是页面上添加的说明。
+三个点处省略了调用 gets 与 puts 的 4 条指令：movq %rsp, %rdi、call gets、movq %rsp, %rdi、call puts@PLT。
 入口的三条指令：读出金丝雀值，存入 8(%rsp)，再把 %rax 清零，使这个值只留在 %fs:40 与栈帧两处。
 返回之前的三条指令：读出栈帧中的值，subq 把它与 %fs:40 处的值相减并设置标志位；两个值相同时 ZF=1，jne 不跳转，函数照常返回。
 两个值不同时跳转到 .L11，调用 __stack_chk_fail；这个函数打印一行信息并终止进程，不返回。
