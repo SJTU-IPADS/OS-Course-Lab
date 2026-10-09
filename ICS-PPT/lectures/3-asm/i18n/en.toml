@@ -2298,6 +2298,57 @@ text = '`%edi` holds the parameter `a`, `%esi` holds the parameter `b`, and `%ea
 # 
 # `%edi` 保存参数 `a`，`%esi` 保存参数 `b`，`%eax` 保存返回值（对应规则在第三部分讲解）。
 
+['cmov-timing.title']
+src_hash = '0b1126ae'
+text = 'sidebar: cmov and timing attacks'
+# src: sidebar：cmov 与计时攻击
+
+['cmov-timing.slide.1']
+src_hash = '6002f5b2'
+text = '`max_jl` and `max_cmov` each call `max` $2^{20}$ times; the `max` in them is compiled with `-Og` and with `-O2`.'
+# src:
+# 
+# `max_jl` 与 `max_cmov` 各调用 `max` $2^{20}$ 次，其中的 `max` 分别用 `-Og`、`-O2` 编译。
+
+['cmov-timing.demo.1.name']
+src_hash = '85c33a60'
+text = 'The running time of max on two sets of data'
+# src: max 在两组数据上的运行时间
+
+['cmov-timing.slide.2']
+src_hash = 'ca66c77d'
+text = '''
+- **`jl`**: the data in which `a < b` holds at random takes about 4 times as long as the data in which it holds every time. The processor predicts the direction of the jump, and a wrong prediction costs extra time;
+- **`cmovge`**: both sets of data execute the same sequence of instructions, and the running time is the same;
+- **Timing attack**: when the condition is decided by secret data, an attacker chooses the inputs, measures the running time, and infers the secret data from the time. It is one kind of side-channel attack;
+- Code that handles secret data selects with `cmov`, and its running time is independent of the condition.
+'''
+# src:
+# 
+# - **`jl`**：`a < b` 随机成立的一组数据用时约为每次都成立的一组的 4 倍。处理器预测跳转的方向，预测错误时多用时间；
+# - **`cmovge`**：两组数据执行同一串指令，运行时间相同；
+# - **计时攻击（timing attack）**：条件由保密数据决定时，攻击者选取输入、测量运行时间，由时间推知保密数据。它是侧信道攻击（side-channel attack）的一种；
+# - 处理保密数据的代码用 `cmov` 实现选择，运行时间与条件无关。
+
+['cmov-timing.notes.1']
+src_hash = 'e7137668'
+text = '''
+Extension material. max_time.c calls max 2 to the 20th times, repeats this 50 times, takes the fastest pass and prints the time per call. max.c is compiled twice: -Og gives the listing on the left of the previous page (jl), -O2 the listing on the right (cmovge); max_time.c is compiled with -O2 both times, see the Makefile.
+The two sets of data: in the first, a = 0 and b = 1, so a < b holds in every call; in the second, a is 0 or 2 at random, so a < b holds in a random half of the calls. The numbers on the page are one run on this machine (Core i9-11900H) on 2026-10-09 and differ slightly from run to run: the two lines of jl lie within 0.9 ~ 1.5 ns and 3.7 ~ 5.3 ns, and the two lines of cmovge differ by at most 0.2 ns.
+The difference in the time of jl comes from predicting the direction of the jump: when the second set of data is changed so that a < b holds every other call, each direction is again taken half of the time, and the time equals that of the first set (1.0 ~ 1.2 ns, checked on 2026-10-09). The prediction is right when the condition is the same every time or follows a pattern, and wrong about half of the time when it is random. A correctly predicted conditional jump takes about as long as cmov, which is why compilers still use conditional jumps widely.
+The conditions of a timing attack: the condition of a conditional jump is decided by secret data (one bit of a key, one character of a password), and the attacker can run this code many times and measure the time. A single difference is a few nanoseconds; the attacker repeats the measurement many times and reads the difference from the average. Kocher's 1996 paper, Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems, recovers private keys this way.
+The basis for cmov: Intel's Guidelines for Mitigating Timing Side Channels Against Cryptographic Implementations states that the running time of CMOVcc is independent of its operands, and recommends instructions of the CMOV family for a selection decided by secret data. OpenSSL's assembly implementation of P-256 (crypto/ec/asm/ecp_nistz256-x86_64.pl) selects the result with cmovc and cmovz after a modular addition or subtraction.
+Whether one piece of C code is compiled into jl or into cmovge is decided by the compiler and its options; the two programs of this page come from the same max.c. The guidelines therefore require checking the assembly the compiler produced. cmov removes the difference in time caused by a conditional jump; other sources of a running time that varies with secret data need separate treatment.
+'''
+# src:
+# 
+# 拓展内容。max_time.c 对 max 调用 2 的 20 次方次，重复 50 遍取最快的一遍，输出每次调用的时间。max.c 编译两次：-Og 得到上一页左边的清单（jl），-O2 得到右边的清单（cmovge）；max_time.c 两次都用 -O2 编译，见 Makefile。
+# 两组数据：第一组 a = 0、b = 1，a < b 每次都成立；第二组 a 随机取 0 或 2，a < b 随机成立一半。页面上的数字是 2026-10-09 在本机（Core i9-11900H）的一次运行，每次运行略有不同：jl 的两行在 0.9 ~ 1.5 ns 与 3.7 ~ 5.3 ns 之间，cmovge 的两行相差不超过 0.2 ns。
+# jl 的时间差别来自对跳转方向的预测：把第二组数据改成 a < b 隔一次成立一次，两个方向同样各占一半，用时与第一组相同（1.0 ~ 1.2 ns，2026-10-09 核对）。条件每次相同或有规律时预测正确，随机时约一半预测错误。预测正确的条件跳转与 cmov 用时相近，编译器因此仍然大量使用条件跳转。
+# 计时攻击的条件：条件跳转的条件由保密数据（如密钥的一位、口令的一个字符）决定，攻击者能够多次运行这段代码并测量时间。单次的时间差别是几纳秒，攻击者重复测量多次，从平均值中得到差别。Kocher 在 1996 年的论文 Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems 中用这种方法恢复私钥。
+# cmov 的依据：Intel 的 Guidelines for Mitigating Timing Side Channels Against Cryptographic Implementations 写明 CMOVcc 的运行时间与它的操作数无关，建议用 CMOV 一类指令实现由保密数据决定的选择。OpenSSL 的 P-256 汇编实现（crypto/ec/asm/ecp_nistz256-x86_64.pl）在模加、模减之后用 cmovc、cmovz 选出结果。
+# 同一份 C 代码编译成 jl 还是 cmovge 由编译器与编译选项决定，本页的两个程序就来自同一个 max.c；这份指南因此要求检查编译得到的汇编。cmov 消除的是条件跳转带来的时间差别，运行时间随保密数据变化的其他来源需要另行处理。
+
 ['bridge-part3.title']
 src_hash = '1feaab31'
 text = 'Part 3: Function calls'
@@ -3101,46 +3152,173 @@ For the callee side, see the listing of dot_product in Part 2: the movl %r9d, %e
 # 被调用者一侧见第二部分 dot_product 的清单，返回前的 movl %r9d, %eax 把 sum 放入 %eax；dot.c 按钮打开它的源码。main 把 dot_product 的返回值作为自己的返回值，call 之后没有改写 %eax。
 
 ['stack-args.title']
-src_hash = 'a218658b'
-text = 'More than 6 arguments: the 7th and later are passed on the stack'
-# src: 超过 6 个参数：第 7 个起经栈传递
-
-['stack-args.side_image.1.alt']
-src_hash = 'dd9245cc'
-text = 'contain'
-# src: contain
+src_hash = '7ac065a6'
+text = 'Example: last2 has 8 parameters'
+# src: 实例：last2 有 8 个参数
 
 ['stack-args.slide.1']
-src_hash = 'a114c29b'
+src_hash = 'ce4615bb'
 text = '''
-**The caller pushes the 7th and later arguments onto the stack**:
-- The pushes happen before `call`, from right to left: the last argument is pushed first and the 7th argument is pushed last;
-- Each argument takes 8 bytes; an argument narrower than 8 bytes also takes 8 bytes;
-- `call` then pushes the return address. On entry to the callee, `(%rsp)` is the return address, `8(%rsp)` is argument 7, `16(%rsp)` is argument 8, and so on;
-- After the call returns, the caller increases `%rsp` to free these arguments.
-
-**Example**: `use8` calls `last2(1, 2, 3, 4, 5, 6, 7, 8)`, and `last2` returns the 7th argument minus the 8th argument. The figure on the left shows the stack on entry to `last2`.
+`use8` calls `last2` and passes 8 arguments; `last2` returns the 7th argument minus the 8th. The first 6 arguments use the 6 argument registers in order:
 '''
 # src:
 # 
-# **第 7 个及以后的参数由调用者压入栈**：
-# - 压栈在 `call` 之前进行，顺序从右到左：最后一个参数最先压入，第 7 个参数最后压入；
-# - 每个参数占 8 字节，宽度不足 8 字节的参数也占 8 字节；
-# - `call` 再压入返回地址。进入被调用者时，`(%rsp)` 是返回地址，`8(%rsp)` 是参数 7，`16(%rsp)` 是参数 8，依此类推；
-# - 调用返回后，调用者增大 `%rsp`，释放这些参数。
+# `use8` 调用 `last2`，传递 8 个参数；`last2` 返回第 7 个参数减第 8 个参数的差。前 6 个参数依次使用 6 个参数寄存器：
+
+['stack-args.table.1.cell.0.0']
+src_hash = '9634fb08'
+text = 'Parameter'
+# src: 参数
+
+['stack-args.table.1.cell.0.1']
+src_hash = '709c34c6'
+text = '`a1`'
+# src: `a1`
+
+['stack-args.table.1.cell.0.2']
+src_hash = '3ab8671c'
+text = '`a2`'
+# src: `a2`
+
+['stack-args.table.1.cell.0.3']
+src_hash = 'dd8d52f1'
+text = '`a3`'
+# src: `a3`
+
+['stack-args.table.1.cell.0.4']
+src_hash = 'fa28a55f'
+text = '`a4`'
+# src: `a4`
+
+['stack-args.table.1.cell.0.5']
+src_hash = '120124e6'
+text = '`a5`'
+# src: `a5`
+
+['stack-args.table.1.cell.0.6']
+src_hash = '82d3c615'
+text = '`a6`'
+# src: `a6`
+
+['stack-args.table.1.cell.0.7']
+src_hash = 'f5c83e4d'
+text = '`a7`'
+# src: `a7`
+
+['stack-args.table.1.cell.0.8']
+src_hash = 'ae17c73c'
+text = '`a8`'
+# src: `a8`
+
+['stack-args.table.1.cell.1.0']
+src_hash = '52f921c3'
+text = 'Value passed'
+# src: 传递的值
+
+['stack-args.table.1.cell.1.1']
+src_hash = '14381611'
+text = '`1`'
+# src: `1`
+
+['stack-args.table.1.cell.1.2']
+src_hash = '7725d4c8'
+text = '`2`'
+# src: `2`
+
+['stack-args.table.1.cell.1.3']
+src_hash = '2ce9ffc9'
+text = '`3`'
+# src: `3`
+
+['stack-args.table.1.cell.1.4']
+src_hash = 'ea719e95'
+text = '`4`'
+# src: `4`
+
+['stack-args.table.1.cell.1.5']
+src_hash = '07dc7ac1'
+text = '`5`'
+# src: `5`
+
+['stack-args.table.1.cell.1.6']
+src_hash = 'e386c312'
+text = '`6`'
+# src: `6`
+
+['stack-args.table.1.cell.1.7']
+src_hash = '2afcf500'
+text = '`7`'
+# src: `7`
+
+['stack-args.table.1.cell.1.8']
+src_hash = 'ec73f376'
+text = '`8`'
+# src: `8`
+
+['stack-args.table.1.cell.2.0']
+src_hash = '1fb4d574'
+text = 'Location'
+# src: 位置
+
+['stack-args.table.1.cell.2.1']
+src_hash = '2907ee3b'
+text = '`%rdi`'
+# src: `%rdi`
+
+['stack-args.table.1.cell.2.2']
+src_hash = 'ec730db4'
+text = '`%rsi`'
+# src: `%rsi`
+
+['stack-args.table.1.cell.2.3']
+src_hash = '409b39c5'
+text = '`%rdx`'
+# src: `%rdx`
+
+['stack-args.table.1.cell.2.4']
+src_hash = '3c9418a2'
+text = '`%rcx`'
+# src: `%rcx`
+
+['stack-args.table.1.cell.2.5']
+src_hash = '000e67f5'
+text = '`%r8`'
+# src: `%r8`
+
+['stack-args.table.1.cell.2.6']
+src_hash = 'dc959025'
+text = '`%r9`'
+# src: `%r9`
+
+['stack-args.table.1.cell.2.7']
+src_hash = 'd6a4e79b'
+text = '?'
+# src: ？
+
+['stack-args.table.1.cell.2.8']
+src_hash = 'd6a4e79b'
+text = '?'
+# src: ？
+
+['stack-args.slide.2']
+src_hash = 'd9d8da13'
+text = '''
+**Question**: there are only 6 argument registers; where do the 7th and the 8th argument go?
+'''
+# src:
 # 
-# **例子**：`use8` 调用 `last2(1, 2, 3, 4, 5, 6, 7, 8)`，`last2` 返回第 7 个参数减第 8 个参数的差。左图是进入 `last2` 时的栈。
+# **问题**：参数寄存器只有 6 个，第 7 个与第 8 个参数放在哪里？
 
 ['stack-args.notes.1']
-src_hash = '6089a3e5'
+src_hash = '13f621d6'
 text = '''
-Pushing from right to left puts the 7th argument closest to the top of the stack, and the callee reads at fixed offsets: argument 7 is always at 8(%rsp), whatever the total number of arguments.
-In the figure on the left, the left side of each row shows how last2 refers to that location, and the right side shows the instruction in use8 that writes it. All three locations belong to the stack frame of use8.
+The code is the whole of examples/args8.c. The parameters have type long, 8 bytes wide, so the 64-bit register names are used.
+The first 6 columns of the table are the convention of the previous two pages; the last two columns are the question this page raises, and the next page answers it.
 '''
 # src:
 # 
-# 从右到左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
-# 左图各行左侧是 last2 访问该位置的写法，右侧是 use8 中写入该位置的指令。三个位置都属于 use8 的栈帧。
+# 代码是 examples/args8.c 的全部内容。参数的类型是 long，宽度 8 字节，使用 64 位的寄存器名。
+# 表的前 6 列是上两页的约定；后两列是本页提出的问题，下一页回答。
 
 ['stack-args-2.title']
 src_hash = 'a218658b'
@@ -3152,20 +3330,41 @@ src_hash = 'dd9245cc'
 text = 'contain'
 # src: contain
 
+['stack-args-2.slide.1']
+src_hash = '303359ef'
+text = '''
+- The caller pushes the 7th and later arguments onto the stack before `call`, from right to left;
+- Each argument takes 8 bytes;
+- On entry to `last2`, `8(%rsp)` is argument 7 and `16(%rsp)` is argument 8;
+- After the return the caller frees them: it increases `%rsp`.
+'''
+# src:
+# 
+# - 第 7 个起的参数由调用者在 `call` 之前压入栈，从右到左；
+# - 每个参数占 8 字节；
+# - 进入 `last2` 时，`8(%rsp)` 是参数 7，`16(%rsp)` 是参数 8；
+# - 返回后由调用者释放：增大 `%rsp`。
+
 ['stack-args-2.demo.1.name']
 src_hash = '1be067c3'
 text = 'Compile args8.c'
 # src: 编译 args8.c
 
 ['stack-args-2.notes.1']
-src_hash = '89bce8c8'
+src_hash = 'fbdbeb6a'
 text = '''
-The five lines in bold are the part passed on the stack: use8 pushes 8 first and then 7; last2 reads argument 7 from 8(%rsp) and argument 8 from 16(%rsp); after the return, addq $16, %rsp frees the two arguments.
+The figure is the stack on entry to last2, high addresses at the top. The left side of each row shows how last2 refers to that location, and the right side shows the instruction in use8 that writes it. All three locations belong to the stack frame of use8.
+The rule: the pushes happen before call, from right to left; the last argument is pushed first and the 7th argument is pushed last. An argument narrower than 8 bytes also takes 8 bytes. call then pushes the return address, so on entry to the callee (%rsp) is the return address, 8(%rsp) is argument 7, 16(%rsp) is argument 8, and so on.
+Pushing from right to left puts the 7th argument closest to the top of the stack, and the callee reads at fixed offsets: argument 7 is always at 8(%rsp), whatever the total number of arguments.
+The five lines in bold in the listing are the part passed on the stack: use8 pushes 8 first and then 7; last2 reads argument 7 from 8(%rsp) and argument 8 from 16(%rsp); after the return, addq $16, %rsp frees the two arguments.
 The other six movl instructions put the first 6 arguments in registers. last2 does not change %rsp, so its two arguments stay at 8(%rsp) and 16(%rsp).
 '''
 # src:
 # 
-# 加粗的五行是经栈传递的部分：use8 先压入 8，再压入 7；last2 从 8(%rsp) 读出参数 7，从 16(%rsp) 读出参数 8；返回后 addq $16, %rsp 释放两个参数。
+# 图是进入 last2 时的栈，高地址在上。各行左侧是 last2 访问该位置的写法，右侧是 use8 中写入该位置的指令。三个位置都属于 use8 的栈帧。
+# 规则：压栈在 call 之前进行，顺序从右到左，最后一个参数最先压入，第 7 个参数最后压入。宽度不足 8 字节的参数也占 8 字节。call 再压入返回地址，所以进入被调用者时 (%rsp) 是返回地址，8(%rsp) 是参数 7，16(%rsp) 是参数 8，依此类推。
+# 从右到左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
+# 清单中加粗的五行是经栈传递的部分：use8 先压入 8，再压入 7；last2 从 8(%rsp) 读出参数 7，从 16(%rsp) 读出参数 8；返回后 addq $16, %rsp 释放两个参数。
 # 其余六条 movl 把前 6 个参数放入寄存器。last2 没有改写 %rsp，它的两个参数始终在 8(%rsp) 与 16(%rsp)。
 
 ['section.part3-regs.title']
@@ -6221,3 +6420,6 @@ Environment: x86-64 Linux runs it directly; on x86-64 Windows work in WSL2; on a
 # 解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
 # make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
 # 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。
+
+# orphaned — no longer in the lecture. Kept so a rename does not
+# throw the translation away; delete by hand once you are sure.

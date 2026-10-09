@@ -1192,6 +1192,25 @@ class BlockHandle:
         )
         return self
 
+    def under_side_image(self) -> "BlockHandle":
+        """Set this slide block in the image column, under the side image.
+
+        The page's ``p.side_image(..., side="left")`` then sits at the top of
+        its column at the column's width, and this text fills the space below
+        it; the other blocks keep the text column. It is for a figure that is
+        much shorter than the slide. Only valid on a ``slide`` block, and only
+        on a page whose side image is on the left (checked when the lecture is
+        validated). Returns ``self`` so it chains with ``footnote``.
+        """
+        block = self._builder.blocks[self._index]
+        if block.kind != "slide":
+            raise model.ValidationError(
+                "under_side_image may only be attached to a slide block, "
+                f"got {block.kind!r}"
+            )
+        self._builder.blocks[self._index] = replace(block, in_side=True)
+        return self
+
 
 class NewsHandle:
     """A reference to a page-level news item.

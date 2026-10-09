@@ -10,7 +10,8 @@ last2 writes it and on the right with the instruction of use8 that wrote it.
 All three slots belong to use8's frame.
 
 Colours as in the other stack figures: stack data orange, the return address
-blue. Tall and narrow, for the side column.
+blue. The figure has no title line: it sits at the top of the side column,
+under the page title, with the rule as slide text below it.
 Run it to refresh ../assets/stack-args.svg.
 """
 
@@ -22,9 +23,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, FONT, INK, LINE, MONO, MUTED, ORANGE,
                     arrow, label_line, mono, rect, save, text, vbrace)
 
-W, H = 520, 380
+W, H = 520, 270
 CX, CW = 112, 190                   # cell column: left edge, width
-TOP, DATA, SLOT = 62, 130, 48       # top edge, use8's other data, one 8-byte slot
+TOP, DATA, SLOT = 14, 72, 48        # top edge, use8's other data, one 8-byte slot
 
 SLOTS = [("参数 8：8", "16(%rsp)", FILL_ORANGE, ORANGE, "pushq $8"),
          ("参数 7：7", "8(%rsp)", FILL_ORANGE, ORANGE, "pushq $7"),
@@ -32,8 +33,7 @@ SLOTS = [("参数 8：8", "16(%rsp)", FILL_ORANGE, ORANGE, "pushq $8"),
 
 
 def build():
-    out = [text(W / 2, 30, "进入 last2 时的栈（高地址在上）", 18, INK, "bold")]
-    out.append(rect(CX, TOP, CW, DATA, FILL_ORANGE, ORANGE, rx=2, width=1.4))
+    out = [rect(CX, TOP, CW, DATA, FILL_ORANGE, ORANGE, rx=2, width=1.4)]
     out += label_line(CX + 36, TOP + DATA / 2 + 6, [("use8", MONO, MUTED, "normal"),
                                                     (" 的其他数据", FONT, MUTED, "normal")], 16)
     y = TOP + DATA

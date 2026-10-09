@@ -636,15 +636,27 @@ def render_marp_page(
         block for block in visible_blocks
         if block.kind == "side_image" and block.content.get("side") == "left"
     ]
+    # Slide text set under that image (`under_side_image`) is drawn in the same
+    # column and leaves the flow. With no image column in this target, it stays
+    # where it was written.
+    side_texts = [block for block in visible_blocks if block.in_side] if left_sides else []
+    if side_texts:
+        visible_blocks = [block for block in visible_blocks if not block.in_side]
     if left_sides:
         classes.append("lk-side-left")
     if classes:
         out.extend([f"<!-- _class: {' '.join(classes)} -->", ""])
     out.extend([f"# {_title_html(page.title)}", ""])
-    if left_sides:
-        out.extend(side_column(left_sides, width))
     footnotes: list[str] = []
     annotation_rules: list[str] = []
+    if left_sides:
+        texts = []
+        for block in side_texts:
+            start = len(footnotes) + 1
+            numbers = tuple(range(start, start + len(block.footnotes)))
+            footnotes.extend(block.footnotes)
+            texts.append(render_block(block, footnote_numbers=numbers))
+        out.extend(side_column(left_sides, width, texts))
     if page.gap is not None:
         out.extend(
             _render_gap_flow(

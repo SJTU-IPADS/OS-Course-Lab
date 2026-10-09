@@ -55,6 +55,7 @@ def _block(block: model.Block) -> dict:
         "footnotes": list(block.footnotes),
         "annotations": [_annotation(note) for note in block.annotations],
         "float_image": block.float_image,
+        "in_side": block.in_side,
         "reveal": block.reveal,
         "autobold": block.autobold,
         "after_frames": block.after_frames,

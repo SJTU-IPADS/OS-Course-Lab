@@ -15,10 +15,13 @@ echo_sp
 dot_intrin
 dot_omp
 dot_cuda
+vecadd_cuda
 matvec_scalar
 matvec_avx2
 equal
 shift
 max
+max_jl
+max_cmov
 times
 *.exe

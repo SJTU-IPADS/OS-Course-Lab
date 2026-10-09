@@ -199,6 +199,11 @@ class Block:
     # A small image floated to the right of a slide block's text; the text
     # wraps around it. Only set on slide blocks. See dsl.BlockHandle.image_right.
     float_image: dict | None = None
+    # When True, this slide block is set in the page's left image column,
+    # under the ``side_image``, instead of in the text column beside it. Only
+    # set on slide blocks, and only on a page with a ``side_image`` on the
+    # left. See dsl.BlockHandle.under_side_image.
+    in_side: bool = False
     # How finely this block steps in the live preview's reveal-on-Enter mode;
     # one of REVEAL_MODES. Only a slide block may carry "items". Live preview
     # only — no exported target reads it. See dsl.PageBuilder.slide.
@@ -569,6 +574,7 @@ def validate_lecture(lecture: Lecture) -> None:
             keys: set[str] = set()
             for block in node.blocks:
                 check_block(block, page_id=node.id, refs=seen_refs, keys=keys)
+            check_side_text(node)
             for item in node.news:
                 check_news_item(item, page_id=node.id)
             return
@@ -578,6 +584,24 @@ def validate_lecture(lecture: Lecture) -> None:
             check_node(child)
 
     check_node(lecture)
+
+
+def check_side_text(page: Page) -> None:
+    """Slide text set under a side image needs that image, and on the left.
+
+    A column on the right is Marp's split background, which holds a picture
+    and nothing else; only the left column is drawn by the theme.
+    """
+    if not any(block.in_side for block in page.blocks):
+        return
+    if not any(
+        block.kind == "side_image" and block.content.get("side") == "left"
+        for block in page.blocks
+    ):
+        raise ValidationError(
+            "under_side_image needs a side_image on the left "
+            f"(p.side_image(..., side=\"left\")) on the same page: {page.id}"
+        )
 
 
 def check_bridge_page(page: Page) -> None:
