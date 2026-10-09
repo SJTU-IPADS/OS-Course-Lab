@@ -19,5 +19,15 @@ matvec_scalar: matvec_q4.c
 matvec_avx2: matvec_q4.c
 	$(CC) -O2 -mavx2 -fopenmp $(CFLAGS) matvec_q4.c -o matvec_avx2
 
+# max.c compiled twice: -Og selects with a conditional jump (jl), -O2 with
+# a conditional move (cmovge). max_time.c is compiled with -O2 both times.
+max_jl: max.c max_time.c
+	$(CC) -Og $(CFLAGS) -c max.c -o max_jl.o
+	$(CC) -O2 $(CFLAGS) max_time.c max_jl.o -o max_jl
+
+max_cmov: max.c max_time.c
+	$(CC) -O2 $(CFLAGS) -c max.c -o max_cmov.o
+	$(CC) -O2 $(CFLAGS) max_time.c max_cmov.o -o max_cmov
+
 clean:
-	rm -f *.o dot_scalar dot_avx2 matvec_scalar matvec_avx2
+	rm -f *.o dot_scalar dot_avx2 matvec_scalar matvec_avx2 max_jl max_cmov

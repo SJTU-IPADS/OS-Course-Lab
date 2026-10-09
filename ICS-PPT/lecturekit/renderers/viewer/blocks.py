@@ -246,7 +246,7 @@ def side_width_px(width, slide_width: int) -> int:
         return slide_width // 2
 
 
-def side_column(sides: list, slide_width: int) -> list[str]:
+def side_column(sides: list, slide_width: int, texts: list = ()) -> list[str]:
     """The image column of a page whose ``side_image`` blocks sit on the left.
 
     Marp's split background moves the whole slide into the other column, the
@@ -255,6 +255,12 @@ def side_column(sides: list, slide_width: int) -> list[str]:
     (``section.lk-side-left``): the title keeps the slide's width, and the
     images share one column that starts under it. The scoped style hands the
     theme that column's width, set by the first image.
+
+    ``texts`` is the rendered markdown of the slide blocks set under the image
+    (``under_side_image``), one list of lines per block. With any, the column
+    is a stack (``lk-side-stack``): the images across its top at the column's
+    width, the text below. Each text sits between blank lines so Marp parses it
+    as markdown (an HTML block ends at a blank line).
     """
     width = side_width_px(sides[0].content.get("width"), slide_width)
     images = []
@@ -266,14 +272,17 @@ def side_column(sides: list, slide_width: int) -> list[str]:
             f'<img src="{escape_html(block.content["src"])}" '
             f'alt="{escape_html(alt)}"{fit}>'
         )
-    return [
-        f'<figure class="lk-side">{"".join(images)}</figure>',
-        "",
-        "<style scoped>",
-        f"section {{ --lk-side-width: {width}px; }}",
-        "</style>",
+    style = ["<style scoped>", f"section {{ --lk-side-width: {width}px; }}", "</style>", ""]
+    if not texts:
+        return [f'<figure class="lk-side">{"".join(images)}</figure>', "", *style]
+    lines = [
+        '<div class="lk-side lk-side-stack">',
+        f'<div class="lk-side-images">{"".join(images)}</div>',
         "",
     ]
+    for text in texts:
+        lines += [*text, ""]
+    return [*lines, "</div>", "", *style]
 
 
 def _aside(block):

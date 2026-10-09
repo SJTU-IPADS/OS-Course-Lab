@@ -99,6 +99,7 @@ with lecture.section('第二部分：循环控制与跳转指令', id="part2") a
     s.page("switch-table-3", body=pages.switch_table_3)
     s.page("cmov", body=pages.cmov)
     s.page("cmov-fig", body=pages.cmov_fig)
+    s.page("cmov-timing", body=pages.cmov_timing)
 
 lecture.bridge('第三部分：函数调用', id="bridge-part3")
 

@@ -966,7 +966,7 @@ def _fitted(block) -> bool:
     return bool({"contain", "fit"} & set(str(block.content.get("alt") or "").split()))
 
 
-def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
+def draw_side_images(sides: list, ctx: Ctx, top: int = 0, texts: list = ()) -> None:
     """Draw a page's ``side_image`` blocks into their column, from ``top`` down.
 
     The column is the slide's full height on the right (``top`` 0) and starts
@@ -978,7 +978,13 @@ def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
     A covering image is a backdrop and bleeds to the slide's edges. A fitted
     one is a figure beside the text, so its column is first drawn in to the
     slide's margins: the picture then sits nearer the text than the edge.
+
+    ``texts`` are the slide blocks set under the image (``under_side_image``);
+    with any, the column is a stack, see `_draw_side_stack`.
     """
+    if texts:
+        _draw_side_stack(sides, texts, ctx, top)
+        return
     layout = ctx.layout
     column, width = _side_column(sides[0], layout)
     bottom = layout.height
@@ -1007,6 +1013,36 @@ def draw_side_images(sides: list, ctx: Ctx, top: int = 0) -> None:
         pic.crop_left = pic.crop_right = crop_x
         pic.crop_top = pic.crop_bottom = crop_y
         pic.width, pic.height = cell, height
+
+
+def _draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
+    """The left image column as a stack: the images across its top, text below.
+
+    The theme's ``.lk-side-stack``. The column keeps the slide's margins, as a
+    fitted image's box does; each image is as wide as its share of the column
+    and as tall as its aspect ratio makes it; the slide blocks follow, laid out
+    in the column's width by the ordinary drawers.
+    """
+    layout = ctx.layout
+    _, width = _side_column(sides[0], layout)
+    column = layout.content_left
+    width = max(width - column + px(_SIDE_FIT_GAP), len(sides))
+    top = max(top, layout.content_top)
+    cell, bottom = width // len(sides), top
+    for i, block in enumerate(sides):
+        path = _resolve_image(block.content["src"], ctx)
+        if path is None:
+            continue
+        pic = ctx.slide.shapes.add_picture(str(path), column + i * cell, top)
+        pic.width, pic.height = cell, round(pic.height * cell / pic.width)
+        bottom = max(bottom, top + pic.height)
+    main = ctx.layout, ctx.cursor
+    ctx.layout = replace(layout, content_left=column, content_width=width)
+    ctx.cursor = Cursor(ctx.layout)
+    ctx.cursor.top = bottom + _GAP
+    for block in texts:
+        draw_block(block, ctx)
+    ctx.layout, ctx.cursor = main
 
 
 def _caption(text: str, align: str, ctx: Ctx) -> None:

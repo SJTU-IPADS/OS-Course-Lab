@@ -912,6 +912,36 @@ def cmov_fig(p):
     figure(p, "cmov-mux", 1120)
 
 
+def cmov_timing(p):
+    p.title('sidebar：cmov 与计时攻击')
+    slide(p, r"""
+`max_jl` 与 `max_cmov` 各调用 `max` $2^{20}$ 次，其中的 `max` 分别用 `-Og`、`-O2` 编译。
+""")
+    p.demo('max 在两组数据上的运行时间',
+           """cd examples
+make -s max_jl max_cmov && ./max_jl && ./max_cmov""",
+           output="""./max_jl    a < b in every call          1.2 ns per call
+./max_jl    a < b in a random half       4.6 ns per call
+./max_cmov  a < b in every call          0.8 ns per call
+./max_cmov  a < b in a random half       0.8 ns per call""",
+           bold=[2],
+           files=['examples/max.c', 'examples/max_time.c', 'examples/Makefile'])
+    slide(p, r"""
+- **`jl`**：`a < b` 随机成立的一组数据用时约为每次都成立的一组的 4 倍。处理器预测跳转的方向，预测错误时多用时间；
+- **`cmovge`**：两组数据执行同一串指令，运行时间相同；
+- **计时攻击（timing attack）**：条件由保密数据决定时，攻击者选取输入、测量运行时间，由时间推知保密数据。它是侧信道攻击（side-channel attack）的一种；
+- 处理保密数据的代码用 `cmov` 实现选择，运行时间与条件无关。
+""")
+    p.notes("""
+拓展内容。max_time.c 对 max 调用 2 的 20 次方次，重复 50 遍取最快的一遍，输出每次调用的时间。max.c 编译两次：-Og 得到上一页左边的清单（jl），-O2 得到右边的清单（cmovge）；max_time.c 两次都用 -O2 编译，见 Makefile。
+两组数据：第一组 a = 0、b = 1，a < b 每次都成立；第二组 a 随机取 0 或 2，a < b 随机成立一半。页面上的数字是 2026-10-09 在本机（Core i9-11900H）的一次运行，每次运行略有不同：jl 的两行在 0.9 ~ 1.5 ns 与 3.7 ~ 5.3 ns 之间，cmovge 的两行相差不超过 0.2 ns。
+jl 的时间差别来自对跳转方向的预测：把第二组数据改成 a < b 隔一次成立一次，两个方向同样各占一半，用时与第一组相同（1.0 ~ 1.2 ns，2026-10-09 核对）。条件每次相同或有规律时预测正确，随机时约一半预测错误。预测正确的条件跳转与 cmov 用时相近，编译器因此仍然大量使用条件跳转。
+计时攻击的条件：条件跳转的条件由保密数据（如密钥的一位、口令的一个字符）决定，攻击者能够多次运行这段代码并测量时间。单次的时间差别是几纳秒，攻击者重复测量多次，从平均值中得到差别。Kocher 在 1996 年的论文 Timing Attacks on Implementations of Diffie-Hellman, RSA, DSS, and Other Systems 中用这种方法恢复私钥。
+cmov 的依据：Intel 的 Guidelines for Mitigating Timing Side Channels Against Cryptographic Implementations 写明 CMOVcc 的运行时间与它的操作数无关，建议用 CMOV 一类指令实现由保密数据决定的选择。OpenSSL 的 P-256 汇编实现（crypto/ec/asm/ecp_nistz256-x86_64.pl）在模加、模减之后用 cmovc、cmovz 选出结果。
+同一份 C 代码编译成 jl 还是 cmovge 由编译器与编译选项决定，本页的两个程序就来自同一个 max.c；这份指南因此要求检查编译得到的汇编。cmov 消除的是条件跳转带来的时间差别，运行时间随保密数据变化的其他来源需要另行处理。
+""")
+
+
 def procedure_need(p):
     p.title('函数调用：main 如何调用 dot_product')
     p.code('c', """int dot_product(const int *w, const int *x, int n);
@@ -1173,26 +1203,39 @@ sed -n '/movq/,/call/p' 只打印 main 的清单中从 movq 到 call 的四行�
 
 
 def stack_args(p):
-    p.title('超过 6 个参数：第 7 个起经栈传递')
-    p.side_image("assets/stack-args.svg", width="42%", alt="contain", side="left")
-    slide(p, r"""
-**第 7 个及以后的参数由调用者压入栈**：
-- 压栈在 `call` 之前进行，顺序从右到左：最后一个参数最先压入，第 7 个参数最后压入；
-- 每个参数占 8 字节，宽度不足 8 字节的参数也占 8 字节；
-- `call` 再压入返回地址。进入被调用者时，`(%rsp)` 是返回地址，`8(%rsp)` 是参数 7，`16(%rsp)` 是参数 8，依此类推；
-- 调用返回后，调用者增大 `%rsp`，释放这些参数。
+    p.title('实例：last2 有 8 个参数')
+    p.code('c', """long last2(long a1, long a2, long a3, long a4, long a5, long a6, long a7, long a8) {
+    return a7 - a8;
+}
 
-**例子**：`use8` 调用 `last2(1, 2, 3, 4, 5, 6, 7, 8)`，`last2` 返回第 7 个参数减第 8 个参数的差。左图是进入 `last2` 时的栈。
+long use8(void) {
+    return last2(1, 2, 3, 4, 5, 6, 7, 8);
+}""")
+    slide(p, r"""
+`use8` 调用 `last2`，传递 8 个参数；`last2` 返回第 7 个参数减第 8 个参数的差。前 6 个参数依次使用 6 个参数寄存器：
+""")
+    p.table([
+        ['传递的值', '`1`', '`2`', '`3`', '`4`', '`5`', '`6`', '`7`', '`8`'],
+        ['位置', '`%rdi`', '`%rsi`', '`%rdx`', '`%rcx`', '`%r8`', '`%r9`', '？', '？'],
+    ], headers=['参数', '`a1`', '`a2`', '`a3`', '`a4`', '`a5`', '`a6`', '`a7`', '`a8`'])
+    slide(p, r"""
+**问题**：参数寄存器只有 6 个，第 7 个与第 8 个参数放在哪里？
 """)
     p.notes("""
-从右到左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
-左图各行左侧是 last2 访问该位置的写法，右侧是 use8 中写入该位置的指令。三个位置都属于 use8 的栈帧。
+代码是 examples/args8.c 的全部内容。参数的类型是 long，宽度 8 字节，使用 64 位的寄存器名。
+表的前 6 列是上两页的约定；后两列是本页提出的问题，下一页回答。
 """)
 
 
 def stack_args_2(p):
     p.title('超过 6 个参数：第 7 个起经栈传递')
     p.side_image("assets/stack-args.svg", width="42%", alt="contain", side="left")
+    slide(p, r"""
+- 第 7 个起的参数由调用者在 `call` 之前压入栈，从右到左；
+- 每个参数占 8 字节；
+- 进入 `last2` 时，`8(%rsp)` 是参数 7，`16(%rsp)` 是参数 8；
+- 返回后由调用者释放：增大 `%rsp`。
+""").under_side_image()
     p.demo('编译 args8.c',
            """cd examples && gcc -Og -fcf-protection=none \\
     -S args8.c -o - | sed -f asm.sed""",
@@ -1215,7 +1258,10 @@ use8:
            bold=[2, 3, 6, 7, 15],
            files=['examples/args8.c', 'examples/asm.sed'])
     p.notes("""
-加粗的五行是经栈传递的部分：use8 先压入 8，再压入 7；last2 从 8(%rsp) 读出参数 7，从 16(%rsp) 读出参数 8；返回后 addq $16, %rsp 释放两个参数。
+图是进入 last2 时的栈，高地址在上。各行左侧是 last2 访问该位置的写法，右侧是 use8 中写入该位置的指令。三个位置都属于 use8 的栈帧。
+规则：压栈在 call 之前进行，顺序从右到左，最后一个参数最先压入，第 7 个参数最后压入。宽度不足 8 字节的参数也占 8 字节。call 再压入返回地址，所以进入被调用者时 (%rsp) 是返回地址，8(%rsp) 是参数 7，16(%rsp) 是参数 8，依此类推。
+从右到左压栈使第 7 个参数离栈顶最近，被调用者按固定的偏移读取：参数 7 总在 8(%rsp)，与参数的总数无关。
+清单中加粗的五行是经栈传递的部分：use8 先压入 8，再压入 7；last2 从 8(%rsp) 读出参数 7，从 16(%rsp) 读出参数 8；返回后 addq $16, %rsp 释放两个参数。
 其余六条 movl 把前 6 个参数放入寄存器。last2 没有改写 %rsp，它的两个参数始终在 8(%rsp) 与 16(%rsp)。
 """)
 

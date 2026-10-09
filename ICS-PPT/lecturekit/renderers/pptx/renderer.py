@@ -79,6 +79,10 @@ class PptxRenderer:
             sides = [block for block in visible_blocks if block.kind == "side_image"]
             visible_blocks = [b for b in visible_blocks if b.kind != "side_image"]
             on_left = bool(sides) and sides[0].content.get("side") == "left"
+            # Slide text set under a left side image is drawn in its column.
+            side_texts = [b for b in visible_blocks if b.in_side] if on_left else []
+            if side_texts:
+                visible_blocks = [b for b in visible_blocks if not b.in_side]
             if sides and not on_left:
                 draw_side_images(sides, ctx)
                 ctx.layout = side_layout(sides, layout)
@@ -86,11 +90,13 @@ class PptxRenderer:
             draw_title(page.title, ctx)
             if on_left:
                 under_title = ctx.cursor.top
-                draw_side_images(sides, ctx, top=under_title)
+                draw_side_images(sides, ctx, top=under_title, texts=side_texts)
                 ctx.layout = side_layout(sides, layout)
                 ctx.cursor = Cursor(ctx.layout)
                 ctx.cursor.top = under_title
-            footnotes: list[str] = [note for block in sides for note in block.footnotes]
+            footnotes: list[str] = [
+                note for block in (*sides, *side_texts) for note in block.footnotes
+            ]
             block_shapes: list[list[object]] = []
             for block in visible_blocks:
                 before = len(slide.shapes)

@@ -1,13 +1,14 @@
 # ICS 辅导课 · Docker Intro
 
 介绍操作系统、Linux、虚拟机虚拟化与容器虚拟化，结论是 ICS 课程用 docker 在 Mac 或 Windows 上运行
-ubuntu 容器；最后一节给出 docker 的下载地址、拉取 x86-64 的 ubuntu 镜像的命令与运行容器的命令。
+ubuntu 容器；最后一节给出 docker 的下载地址、拉取 x86-64 的 ubuntu 镜像的命令、运行容器的命令，
+以及在后台运行容器并用 `docker start`、`docker exec` 进入它的命令。
 
 本讲由 [`../ICS1/ICS-tutorial-1-env/`](../ICS1/ICS-tutorial-1-env/) 复制后裁剪而来，保留
 LINUX 一节，即原课件 `refs/ppts/ICS1/ICS-tutorial-1-env.pdf` 的第 8–13 页。
 封面与课程其他各讲（如 `3-asm`）的写法相同，只有标题不同。
 讲义 id 是 `tut-linux-docker`，与目录名相同。
-「安装 docker，运行 ubuntu 容器」一节的 4 张幻灯片是 2026-10-09 新写的，不在原课件中。
+「安装 docker，运行 ubuntu 容器」一节的 5 张幻灯片是 2026-10-09 新写的，不在原课件中。
 
 中文是基线（写在 Python 里），英文是 `i18n/en.toml` 翻译覆盖层。第 8–13 页的原文是英文，
 `en.toml` 里逐字保留原文，Python 里是中文译文；封面的作者与单位是中文原文，`en.toml` 里是英文译文。
@@ -26,16 +27,17 @@ LINUX 一节，即原课件 `refs/ppts/ICS1/ICS-tutorial-1-env.pdf` 的第 8–1
 | 8 | `bridge-docker` | 安装 docker，运行 ubuntu 容器 | 分节页 |
 | 9 | `docker-install` | 安装 docker：下载地址 | 三行的表（macOS、Windows、Linux 各自安装的软件与 Docker 官方文档的安装页）；三条说明；演示 `docker --version` |
 | 10 | `docker-pull` | 拉取镜像：x86-64 的 ubuntu 26.04 | 镜像、`--platform linux/amd64`、Apple 芯片的 Mac 三条说明；演示 `docker pull --platform linux/amd64 ubuntu:26.04` 与查看镜像架构的命令 |
-| 11 | `docker-run` | 运行容器：在 ubuntu 容器中启动 bash | 交互式演示 `docker run -it --platform linux/amd64 ubuntu:26.04 bash`；四条说明（`docker run`、`-it`、提示符、`exit` 之后再次进入） |
+| 11 | `docker-run` | 运行容器：在 ubuntu 容器中启动 bash | 交互式演示 `docker run -it --rm --platform linux/amd64 ubuntu:26.04 bash`；五条说明（`docker run`、`-it`、`--rm`、提示符、`exit`） |
+| 12 | `docker-exec` | 后台运行容器：docker start 与 docker exec | 演示 `docker run -dt --name ics --platform linux/amd64 ubuntu:26.04 bash`；交互式演示 `docker start ics` 与 `docker exec -it ics bash`；四条说明（`-dt`、`--name ics`、`docker start`、`docker exec`） |
 
-共 11 张幻灯片：1 个封面、2 个分节页、5 个原课件的编号页、3 个新写的页。第 6、7 张标题相同，在大纲里合为一行。
+共 12 张幻灯片：1 个封面、2 个分节页、5 个原课件的编号页、4 个新写的页。第 6、7 张标题相同，在大纲里合为一行。
 
 ## 目录
 
 | 路径 | 内容 |
 | --- | --- |
 | `lecture.py` | 页序：封面、LINUX 一节、「安装 docker，运行 ubuntu 容器」一节 |
-| `pages.py` | 每页一个函数，原课件第 N 页是 `sNN`，新写的页是 `docker_install`、`docker_pull`、`docker_run` |
+| `pages.py` | 每页一个函数，原课件第 N 页是 `sNN`，新写的页是 `docker_install`、`docker_pull`、`docker_run`、`docker_exec` |
 | `assets/` | 插图，文件名以所在页的 `sNNN` 开头 |
 | `i18n/en.toml` | 英文覆盖层 |
 
@@ -69,11 +71,12 @@ LINUX 一节，即原课件 `refs/ppts/ICS1/ICS-tutorial-1-env.pdf` 的第 8–1
 - **自动加粗**：`pages.py` 的 `slide(...)` 以 `autobold=False` 调用 `p.slide(...)`，加粗全部手写。
 - **分节页**：只有一行标题的原页用 `lecture.bridge(...)`，其后各页放进同名的 `section`。
 
-**新写的三页**（`docker-install`、`docker-pull`、`docker-run`）：
+**新写的四页**（`docker-install`、`docker-pull`、`docker-run`、`docker-exec`）：
 
 - **页面 id** 用内容命名，不用 `sNN`；标题写这一页的内容，正文的写法与课程其他各讲相同（`**词**：说明`）。
 - **命令都用 `p.demo`**，`output=` 是 2026-10-09 在本机（Docker 29.8.2，x86-64 的 Ubuntu 26.04）执行这条命令得到的输出。`docker-pull` 的输出是第一次拉取结束时终端上留下的内容，下载过程中每一层的进度行没有列出；镜像已在本机时输出是 `Status: Image is up to date for ubuntu:26.04`。
-- **`docker-run` 是交互式演示**（`interactive=True, timeout=0`）：演示按钮打开一个终端，输入的每一行由容器中的 bash 执行；页面上的输出是输入 `uname -m`、`head -1 /etc/os-release`、`exit` 三行的一次运行。每按一次按钮创建一个新的容器，`exit` 之后它处于停止状态，用 `docker rm` 删除。
+- **`docker-run` 是交互式演示**（`interactive=True, timeout=0`）：演示按钮打开一个终端，输入的每一行由容器中的 bash 执行；页面上的输出是输入 `uname -m`、`head -1 /etc/os-release`、`exit` 三行的一次运行。命令带 `--rm`：每按一次按钮创建一个新的容器，`exit` 之后这个容器被删除。
+- **`docker-exec` 有两个演示，按顺序运行**：第一个 `docker run -dt --name ics …` 创建名为 `ics` 的容器并让它在后台运行；第二个是交互式演示，先 `docker start ics`，再 `docker exec -it ics bash`，页面上的输出是输入 `echo hello > /root/a.txt`、`exit` 两行的一次运行。容器 `ics` 在演示之后保留；名字已被占用时第一个演示报告 `Conflict`，再次演示之前执行 `docker rm -f ics`。记录页面上的输出之后，本机的容器 `ics` 已删除。
 - **镜像固定为 `ubuntu:26.04`**，与讲义各页输出所用的系统相同；命令中的 `--platform linux/amd64` 使 Apple 芯片的 Mac 也得到 x86-64 的镜像。
 - **下载地址**是 Docker 官方文档的三个安装页，表中显示不带 `https://` 的地址，点击打开；2026-10-09 核对过三个地址都能打开。
 

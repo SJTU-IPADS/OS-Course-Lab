@@ -813,6 +813,30 @@ The PPTX export draws the same layouts: the picture fills (or, with `contain`,
 fits into the inset box of) its column, and the other blocks are laid out in
 the rest of the slide.
 
+`p.slide(...).under_side_image()` sets that slide block in the image column,
+under the picture, instead of in the text column. It is for a figure much
+shorter than the slide, which would otherwise sit in the middle of an empty
+column:
+
+```python
+p.side_image("assets/stack.svg", width="42%", alt="contain", side="left")
+p.slide("""
+- the rule the figure shows
+- in a few short lines
+""").under_side_image()
+p.demo("compile it", "gcc -S args8.c -o -", output="...")   # the text column
+```
+
+The column is then a stack: the picture at its top, as wide as the column and
+as tall as its aspect ratio makes it, and the text below it at the column's
+width. The column keeps the slide's margins, as a fitted image's box does, and
+it is not a reveal step. The handle is valid **only on a `slide` block**, and
+the page needs a `side_image` with `side="left"`; either mistake is a
+`ValidationError`. A column on the right is Marp's split background and holds
+a picture only. In a target that does not draw the image column (the block
+filtered out with `only=`), the text stays where it was written. The PPTX
+export draws the same stack; the transcript prints the text in source order.
+
 `p.slide(...).image_right(src, *, alt="", width_px=None, width_pct=None,
 height_px=None, height_pct=None)` floats a **small** image on the right of that
 slide block's text, sharing the same horizontal band; the text wraps to its left

@@ -1080,6 +1080,30 @@ section.lk-side-left > .lk-side:has(> img.lk-side-fit) {
   bottom: 40px;
 }
 
+/* Slide text under the image (p.slide(...).under_side_image()). The column
+   is then a stack: the images across its top, as wide as the column and as
+   tall as their aspect ratio makes them, and the text below. It keeps the
+   slide's margins, as a fitted image's box does. */
+section.lk-side-left > .lk-side.lk-side-stack {
+  display: block;
+  left: 80px;
+  width: calc(var(--lk-side-width) - 40px);
+  bottom: 40px;
+}
+
+.lk-side-stack > .lk-side-images {
+  display: flex;              /* several images share the column side by side */
+  margin: 0 0 0.5em;
+}
+
+.lk-side-stack > .lk-side-images > img {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  margin: 0;
+}
+
 /* The same box for Marp's split on the right, which runs the slide's full
    height: there the top margin is the slide's top padding (44px). */
 section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split="right"]
