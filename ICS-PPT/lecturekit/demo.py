@@ -216,6 +216,9 @@ def collect(lecture: model.Lecture) -> dict[str, Spec]:
     ``only=``/``except_=`` are *not* consulted — a command that no target draws
     simply has no button to press, and keeping the filter here would mean
     duplicating the renderer's visibility rules in a second place.
+
+    A block whose command is blank is left out as well: it is drawn for its
+    file buttons and has nothing to run.
     """
     table: dict[str, Spec] = {}
     for page in model.flatten_pages(lecture.children):
@@ -223,6 +226,8 @@ def collect(lecture: model.Lecture) -> dict[str, Spec]:
             if block.kind != "demo" or block.disabled:
                 continue
             command = str(block.content["command"])
+            if not command.strip():
+                continue
             table[demo_id(command)] = Spec(
                 command=command,
                 timeout=_timeout_field(block.content.get("timeout")),
@@ -268,7 +273,11 @@ def prompt_lines(command: str) -> list[str]:
     left a quote open — a ``curl -d '{...}'`` whose JSON runs over three lines is
     one command, and printing a prompt in the middle of its argument would be
     saying otherwise. Continuation lines keep the author's own indentation.
+
+    A blank command has no lines: a block without a command draws no prompt.
     """
+    if not command.strip():
+        return []
     lines: list[str] = []
     quote: str | None = None
     prompt = True

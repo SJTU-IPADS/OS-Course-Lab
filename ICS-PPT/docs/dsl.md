@@ -1250,6 +1250,18 @@ session the ▶ button is; the file is read when it is pressed, so
 an edit made during the lecture shows up on the next press. A path that leaves
 the lecture directory is refused when the deck is built.
 
+`command` may be `""` (or blank) when the block is there for its `files=` alone:
+a page that explains a listing and wants the source one press away.
+
+```python
+p.demo("查看源码", "", files=["examples/main.c"])
+```
+
+Such a block has nothing to run. The deck draws the file buttons and the name,
+without ▶ and without a `$` line; the PPTX and the book print the name and the
+description and no listing; `demos.json` does not list it. An `output=` is
+still shown when one is given.
+
 The **deck** draws a one-line chip for a bare one-liner, and a transcript box —
 `pre`'s own box, so a page that used to hold a `p.code(...)` of the same thing
 keeps its proportions — as soon as the command runs to several lines or carries

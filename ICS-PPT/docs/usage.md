@@ -547,6 +547,9 @@ slide, press `Escape`, or turn the page — and the panel goes away. With the de
 drawer up as well, the first `Escape` or outside click puts away the panel and
 the second the drawer.
 
+A block whose command is `""` draws the file buttons without ▶: it opens its
+files and runs nothing.
+
 The file is read **when the button is pressed**, so editing a source file during
 a lecture and pressing the button again shows the edit — the same file the ▶
 beside it would compile.
