@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """main's frame drawn as a stack, high addresses at the top.
 
-Same frame as main_frame.py (gcc -Og -fcf-protection=none -fno-stack-protector):
+The frame gcc gives main (gcc -Og -fcf-protection=none -fno-stack-protector):
 after `subq $40, %rsp`, x[0..3] at (%rsp)..12(%rsp), w[0..3] at 16..28(%rsp),
 32..39 unused. What lies at 40(%rsp) and above was on the stack before main
 started and is not named here.

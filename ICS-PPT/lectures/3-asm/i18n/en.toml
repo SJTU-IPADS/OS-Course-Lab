@@ -197,9 +197,9 @@ Compiling a program yields binary machine code. To execute it, the CPU must reco
 #   - ...
 
 ['isa-contract.notes.1']
-src_hash = '107fffef'
-text = 'The contract definition of the instruction set architecture (ISA), the programmer-visible state, and the decoupling of the ISA from its microarchitectural implementations.'
-# src: 指令集架构（ISA）的契约定义、程序员可见状态，以及 ISA 与微架构实现的解耦关系。
+src_hash = '373d07e0'
+text = 'The contract definition of the instruction set architecture (ISA) and the programmer-visible state.'
+# src: 指令集架构（ISA）的契约定义、程序员可见状态。
 
 ['isa-contract-fig.title']
 src_hash = 'f68debb0'
@@ -216,6 +216,11 @@ text = '''
 # 
 # - **ISA 是接口（Interface）**：规定处理器能执行什么；
 # - **微架构是实现（Implementation）**：规定处理器在物理电路层面如何执行。
+
+['isa-contract-fig.notes.1']
+src_hash = 'c748374d'
+text = 'The decoupling of the ISA from its microarchitectural implementations.'
+# src: ISA 与微架构实现的解耦关系。
 
 ['bridge-part1.title']
 src_hash = 'b24efcfd'
@@ -317,9 +322,9 @@ text = '''
 #   - **虚拟内存空间**：通过地址总线访问的代码、全局变量与栈内存。
 
 ['visible-state.notes.1']
-src_hash = '168a9c38'
-text = 'The definition of programmer-visible state, and why hardware strictly limits the number of general-purpose registers inside the CPU.'
-# src: 程序员可见状态的定义，以及 CPU 内部通用寄存器数量受到硬件严格限制的原因。
+src_hash = '9177cc04'
+text = 'The definition of programmer-visible state.'
+# src: 程序员可见状态的定义。
 
 ['register-slices-fig.title']
 src_hash = '34e38a19'
@@ -343,6 +348,11 @@ text = '''
 # **通用寄存器数量为什么只有 16 个**：
 # - **指令编码字段限制**：指令中寄存器字段的位数有限，在定长字段中指定一个寄存器，16 个寄存器只需 4 位二进制（$2^4 = 16$），若扩展到上千个，指令编码将急剧膨胀；
 # - **硬件布线与延迟瓶颈**：寄存器数量过多会导致内部走线与多路选择器延迟增大，降低最高工作频率。
+
+['visible-state-2.notes.1']
+src_hash = 'd717fa73'
+text = 'Why hardware strictly limits the number of general-purpose registers inside the CPU.'
+# src: CPU 内部通用寄存器数量受到硬件严格限制的原因。
 
 ['bridge-part1-address.title']
 src_hash = '58a99597'
@@ -1229,19 +1239,19 @@ text = '''
 # - 两个参数的字节都是 `0xF0` 时，`%edi` 为 $-16$，`%esi` 为 $240$，比较结果为不相等。
 
 ['extension-example.notes.1']
-src_hash = '90e32281'
+src_hash = '7413d18d'
 text = '''
 The page "Mixed comparisons: comparing operands of different widths" in Lecture 2 gives this rule: a type narrower than `int` is first promoted to `int`, and whether 0 or the sign bit is filled in is decided by the original type. After promotion both operands are `int`, and the comparison is made as `int`.
 The listing comes from cd examples; gcc -Og -fcf-protection=none -S equal.c -o - | sed -f asm.sed, and the comments were added for the explanation.
 `%dil` holds the parameter `a`, `%sil` holds the parameter `b`, and `%eax` holds the return value; Part 3 covers these rules in detail.
-The last three instructions compare the two 32-bit values and produce the return value; Part 2 covers them in detail.
+The three instructions after the extensions, `cmpl`, `sete` and `movzbl`, compare the two 32-bit values and produce the return value; Part 2 covers them in detail.
 '''
 # src:
 # 
 # 第二讲「混合比较：宽度不同的操作数进行比较」一页给出这条规则：先把窄于 `int` 的类型提升为 `int`，补 0 还是补符号位由原类型决定。两个操作数提升后都是 `int`，比较按 `int` 进行。
 # 清单由 cd examples; gcc -Og -fcf-protection=none -S equal.c -o - | sed -f asm.sed 得到，注释为讲解所加。
 # `%dil` 保存参数 `a`，`%sil` 保存参数 `b`，`%eax` 保存返回值，对应规则在第三部分详细讲。
-# 后三条指令比较两个 32 位值并产生返回值，在第二部分详细讲。
+# 扩展之后的 `cmpl`、`sete`、`movzbl` 三条指令比较两个 32 位值并产生返回值，在第二部分详细讲。
 
 ['int-arith.title']
 src_hash = '985130c6'
@@ -1315,9 +1325,9 @@ text = '''
 # - `addl %eax, (%rdi)`：目的是内存操作数，读出 `*w`、相加、写回，一条指令完成 `*w += t`。
 
 ['int-arith-2.notes.1']
-src_hash = '29de41b9'
-text = 'The format, width and flags of the add instruction. The ALU figure on the previous page applies to addl as well: the operands enter the adder, the sum is written back to a register, and the flags are written to RFLAGS.'
-# src: 加法指令的格式、位宽与标志位。上一页的 ALU 示意图同样适用于 addl：操作数进入加法器，和写回寄存器，标志位写入 RFLAGS。
+src_hash = '086d6876'
+text = 'The format and width of the add instruction. The ALU figure on the previous page applies to addl as well: the operands enter the adder, the sum is written back to a register, and the flags are written to RFLAGS.'
+# src: 加法指令的格式与位宽。上一页的 ALU 示意图同样适用于 addl：操作数进入加法器，和写回寄存器，标志位写入 RFLAGS。
 
 ['insn-table.title']
 src_hash = 'eb068745'
@@ -1487,9 +1497,9 @@ text = '''
 #   - 硬件重命名优化：现代 CPU 译码器识别到自异或时，直接在寄存器别名表（RAT）中将其映射至物理零，**执行延迟为 0 周期，不占用 ALU 资源**。
 
 ['xor-strength.notes.1']
-src_hash = '6697a7bc'
-text = 'Machine-level optimization idioms compilers often use in basic arithmetic: clearing with XOR, and strength reduction of multiplication by a constant.'
-# src: 编译器在基础算术中常用的机器级优化惯用法：异或清零与乘常数强度削减。
+src_hash = '5a9ed47c'
+text = 'Machine-level optimization idioms compilers often use in basic arithmetic: clearing with XOR.'
+# src: 编译器在基础算术中常用的机器级优化惯用法：异或清零。
 
 ['xor-strength-2.title']
 src_hash = '7a5194c2'
@@ -1515,6 +1525,11 @@ text = '''
 #   - `x * 9` $\to$ `leal (%rax,%rax,8), %eax`（$x + x \times 8$）；
 #   - `x * 12` $\to$ `leal (%rax,%rax,2), %eax` 随后 `sall $2, %eax`。
 
+['xor-strength-2.notes.1']
+src_hash = '3a379aff'
+text = 'Machine-level optimization idioms compilers often use in basic arithmetic: strength reduction of multiplication by a constant.'
+# src: 编译器在基础算术中常用的机器级优化惯用法：乘常数强度削减。
+
 ['insn-bytes.title']
 src_hash = '3a156dbd'
 text = 'Instruction encoding: the bytes of an instruction consist of an "opcode" and "operands"'
@@ -1535,7 +1550,7 @@ text = 'An x86-64 instruction generally begins with its opcode. The CPU identifi
 # x86-64 指令的开头一般是操作码。CPU 由操作码识别这是哪一条指令，并据此读取其后长度可变的操作数字段。
 
 ['insn-bytes.notes.1']
-src_hash = 'a7d1e99b'
+src_hash = '8ce6f8d4'
 text = '''
 In the three x86-64 instructions the field boundaries coincide with byte boundaries: `ret` has only an opcode; the opcode `b8` of `movl $0, %eax` contains the register number and is followed by a 4-byte immediate; the second byte of `xorl %eax, %eax` describes the two register operands.
 `c0` is `11 000 000` in binary: the first 2 bits say that both operands are registers, and each of the two 3-bit groups after them is the number of `%eax`. An instruction with a memory operand encodes the register number together with the addressing mode in the operand bytes; the rules are in volume 2, chapter 2 of the Intel manual, and this lecture does not go into them.
@@ -1545,7 +1560,7 @@ The x86-64 bytes can be obtained with `echo 'ret; movl $0, %eax; xorl %eax, %eax
 # src:
 # 
 # x86-64 的三条指令，字段的边界与字节的边界重合：`ret` 只有操作码；`movl $0, %eax` 的操作码 `b8` 含寄存器编号，其后是 4 字节立即数；`xorl %eax, %eax` 的第二个字节描述两个寄存器操作数。
-# `c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。带内存操作数的指令把寄存器编号与寻址方式合并编码在操作数字节中，规则见 Intel 手册第 2 卷第 2 章，本讲不展开。
+# `c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。带内存操作数的指令把寄存器编号与寻址方式合并编码在操作数字节中，规则见 Intel 手册第 2 卷第 2 章，本节不展开。
 # Y86-64 是教材 CS:APP 第 4 章为教学设计的指令集，指令的功能与 x86-64 相近，编码规则更简单：第 1 字节是操作码，第 2 字节的两个十六进制位是两个寄存器编号（F 表示没有寄存器），其后是 8 字节常数。`irmovq $0, %rax` 与 `movl $0, %eax` 是同一操作：把常数 0 写入寄存器 `%rax`。Y86-64 只有 64 位运算，常数占 8 字节，所以整条指令 10 字节，x86-64 的 5 字节编码更紧凑。寄存器编号与 x86-64 相同：`%rax` 为 0。
 # x86-64 的字节可用 `echo 'ret; movl $0, %eax; xorl %eax, %eax' | gcc -c -x assembler - -o t.o && objdump -d t.o` 得到。
 
@@ -1764,15 +1779,15 @@ $$\%rip \leftarrow \%rip + \text{instruction length}$$
 # $$\%rip \leftarrow \%rip + \text{指令长度}$$
 
 ['loop-need.notes.1']
-src_hash = 'e82bee73'
+src_hash = '7b796e38'
 text = '''
 Part 2 introduces control flow through the loop. First, sequential execution: the CPU increments %rip as it executes each instruction, and the program contains no instruction for this.
-The figure shows the positions in memory of the 7 instructions of the loop body of dot_product (gcc -Og); the addresses and lengths come from objdump -d dot.o. Fetching in order of increasing address, the execution flow only advances to higher addresses.
+The figure shows the positions in memory of the 5 instructions of the loop body of dot_product (gcc -Og) and the cmpl and jl after them, 7 instructions in all; the addresses and lengths come from objdump -d dot.o. Fetching in order of increasing address, the execution flow only advances to higher addresses.
 '''
 # src:
 # 
 # 第二部分从循环引入控制流。先说明顺序执行：%rip 的递增由 CPU 在执行每条指令时完成，程序中没有对应的指令。
-# 图中是 dot_product（gcc -Og）循环体的 7 条指令在内存中的位置，地址与长度来自 objdump -d dot.o。按地址递增依次取指，执行流只会前进到更高的地址。
+# 图中是 dot_product（gcc -Og）循环体的 5 条指令与其后的 cmpl、jl 共 7 条指令在内存中的位置，地址与长度来自 objdump -d dot.o。按地址递增依次取指，执行流只会前进到更高的地址。
 
 ['loop-need-2.title']
 src_hash = '8aaee2a3'
@@ -2202,19 +2217,19 @@ text = '`%edi` holds `op`; `.L9` to `.L3` are the code of the 6 `case` branches,
 # `%edi` 保存 `op`；`.L9` 到 `.L3` 是 6 个 `case` 的代码，`.L10` 是 `return 0`。`.quad` 一行在内存中放一个 8 字节的地址。
 
 ['switch-table-2.notes.1']
-src_hash = '782c1825'
+src_hash = '43bb1e27'
 text = '''
 The first sed expression keeps the .quad lines, and asm.sed deletes the other assembler directives; sed -n '1,12p' takes only the entry and the jump table, after which come the six blocks of case code, each ending with ret.
--fno-pie makes the jump table hold absolute addresses directly; the default PIE compilation stores relative offsets, the entry has two more instructions, and the indirect jump is written as jmp *%rax.
+-fno-pie makes the jump table hold absolute addresses directly; the default PIE compilation stores relative offsets, the entry has three more instructions, and the indirect jump is written as jmp *%rax.
 '''
 # src:
 # 
 # sed 的第一个表达式保留 .quad 行，asm.sed 删去其余伪指令；sed -n '1,12p' 只取入口与跳转表，其后是六段 case 代码，各自以 ret 结束。
-# -fno-pie 使跳转表中直接存放绝对地址；默认的 PIE 编译存放的是相对偏移，入口多两条指令，间接跳转写为 jmp *%rax。
+# -fno-pie 使跳转表中直接存放绝对地址；默认的 PIE 编译存放的是相对偏移，入口多三条指令，间接跳转写为 jmp *%rax。
 
 ['switch-table-3.title']
 src_hash = '168a4a29'
-text = 'The switch statement: jump table and indirect jump'
+text = 'The switch statement: jump tables and indirect jumps'
 # src: switch 语句：跳转表与间接跳转
 
 ['switch-table-3.slide.1']
@@ -2300,12 +2315,12 @@ text = '`%edi` holds the parameter `a`, `%esi` holds the parameter `b`, and `%ea
 
 ['cmov-timing.title']
 src_hash = '0b1126ae'
-text = 'sidebar: cmov and timing attacks'
+text = 'Sidebar: cmov and timing attacks'
 # src: sidebar：cmov 与计时攻击
 
 ['cmov-timing.slide.1']
 src_hash = '6002f5b2'
-text = '`max_jl` and `max_cmov` each call `max` $2^{20}$ times; the `max` in them is compiled with `-Og` and with `-O2`.'
+text = '`max_jl` and `max_cmov` each call `max` $2^{20}$ times; the `max` in them is compiled with `-Og` and with `-O2` respectively.'
 # src:
 # 
 # `max_jl` 与 `max_cmov` 各调用 `max` $2^{20}$ 次，其中的 `max` 分别用 `-Og`、`-O2` 编译。
@@ -2507,11 +2522,11 @@ text = '**Question**: how is control transferred to `dot_product`, and how does 
 # **问题**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
 
 ['call-checklist.notes.1']
-src_hash = '94d931d3'
-text = 'This table appears once at the start of each of the following subsections; the row in bold is what that subsection covers.'
+src_hash = '6770c573'
+text = 'The two rows in bold on this page are what the section "Call and return: call and ret" covers. The table appears once at the start of each of the three sections "Passing data: registers, stack", "Registers: the usage convention" and "Local variables: stack", where the row in bold is what that section covers; it appears once more at the start of "Putting it together: the complete steps of one call", with no row in bold.'
 # src:
 # 
-# 这张表在后面每一小节的开头出现一次，加粗的一行是这一小节要讲的内容。
+# 这一页加粗的两行是「调用与返回：call 与 ret」一节的内容。这张表在「传递数据：寄存器、栈」「寄存器：使用惯例」「局部变量：栈」三节的开头各出现一次，加粗的一行是那一节的内容；在「综合起来：一次调用的完整步骤」一节的开头再出现一次，五行都不加粗。
 
 ['section.part3-call.title']
 src_hash = '31f626c6'
@@ -2584,7 +2599,7 @@ text = '''
 # - 地址不低于 `%rsp` 的部分正在使用，地址低于 `%rsp` 的部分尚未使用。
 
 ['runtime-stack.notes.1']
-src_hash = '600f5578'
+src_hash = '397d1ce2'
 text = '''
 Return addresses are saved and retrieved in last-in, first-out order, so they are kept on a stack. The stack is a region of memory; %rsp is one of the 16 general-purpose registers and holds the address of the top of the stack.
 The figure on the right is the address space of a process: the code segment holds instructions, the data segment holds global variables, the heap is allocated by malloc, and the stack is at the high-address end. The heap grows toward high addresses and the stack grows toward low addresses; the space between them is used by whichever of the two reaches it first.
@@ -2594,7 +2609,7 @@ This lecture uses the addresses in the figure as memory addresses; address trans
 # 
 # 返回地址的保存与取出是后进先出的，因此放在栈中。栈是内存中的一段区域，%rsp 是 16 个通用寄存器之一，用来保存栈顶的地址。
 # 右图是进程的地址空间：代码段存放指令，数据段存放全局变量，堆由 malloc 分配，栈在高地址一端。堆向高地址生长，栈向低地址生长，两者之间的空间由先用到的一方使用。
-# 本讲把图中的地址当作内存地址使用，地址的翻译在后面的讲次说明。
+# 本节把图中的地址当作内存地址使用，地址的翻译在后面的讲次说明。
 
 ['push-pop.title']
 src_hash = '8c60d78b'
@@ -2862,17 +2877,12 @@ src_hash = '6b5c9d48'
 text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
 
-['call-checklist-2.demo.1.name']
-src_hash = '921c3b62'
-text = 'View the source'
-# src: 查看源码
-
 ['call-checklist-2.slide.1']
-src_hash = '758f6b33'
-text = '**Question**: where does `main` put `w`, `x` and `4` so that `dot_product` can read them? And where does `dot_product` put its result to hand it to `main`?'
+src_hash = '4f385267'
+text = '**Question**: where does `main` in [main.c](file:examples/main.c) put `w`, `x` and `4` so that `dot_product` can read them? And where does `dot_product` put its result to hand it to `main`?'
 # src:
 # 
-# **问题**：`main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
+# **问题**：[main.c](file:examples/main.c) 中的 `main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
 
 ['call-checklist-2.notes.1']
 src_hash = '8033f5aa'
@@ -3088,7 +3098,7 @@ text = '''
 # **约定的出处**：System V AMD64 ABI。应用二进制接口（ABI）规定分别编译的模块之间如何配合，其中关于函数调用的规定称为调用约定。
 
 ['param-regs.notes.1']
-src_hash = 'b9634c75'
+src_hash = '43d9f594'
 text = '''
 The locations of the arguments and the return value are a convention that both sides of a call follow; the CPU does not check it. The convention prefers registers: reading and writing a register needs no memory access.
 The System V AMD64 ABI is the ABI used by Linux on x86-64; ABI stands for Application Binary Interface.
@@ -3099,7 +3109,7 @@ The convention of 32-bit x86 puts all arguments on the stack. x86-64 has 16 gene
 # 
 # 参数与返回值的位置是调用双方共同遵守的约定，CPU 不检查。约定优先使用寄存器：读写寄存器不需要访问内存。
 # System V AMD64 ABI 是 x86-64 上的 Linux 使用的 ABI，ABI 是 Application Binary Interface 的缩写。
-# 浮点参数使用另一组寄存器 %xmm0 到 %xmm7，浮点返回值使用 %xmm0；本讲的例子都是整数与指针。
+# 浮点参数使用另一组寄存器 %xmm0 到 %xmm7，浮点返回值使用 %xmm0；本节的例子都是整数与指针。
 # 32 位 x86 的约定把全部参数放在栈中。x86-64 有 16 个通用寄存器，改为用寄存器传递前 6 个参数，减少每次调用的访存。
 
 ['dot-params.title']
@@ -3295,14 +3305,14 @@ text = '**Question**: there are only 6 argument registers; where do the 7th and 
 # **问题**：参数寄存器只有 6 个，第 7 个与第 8 个参数放在哪里？
 
 ['stack-args.notes.1']
-src_hash = '13f621d6'
+src_hash = 'a945a569'
 text = '''
-The code is the whole of examples/args8.c. The parameters have type long, 8 bytes wide, so the 64-bit register names are used.
+The code is the whole of examples/args8.c except the comment at the top. The parameters have type long, 8 bytes wide, so the 64-bit register names are used.
 The first 6 columns of the table are the convention of the previous two pages; the last two columns are the question this page raises, and the next page answers it.
 '''
 # src:
 # 
-# 代码是 examples/args8.c 的全部内容。参数的类型是 long，宽度 8 字节，使用 64 位的寄存器名。
+# 代码是 examples/args8.c 除开头的注释外的全部内容。参数的类型是 long，宽度 8 字节，使用 64 位的寄存器名。
 # 表的前 6 列是上两页的约定；后两列是本页提出的问题，下一页回答。
 
 ['stack-args-2.title']
@@ -3457,9 +3467,7 @@ text = '**Question**: is the return value of `dot_bias` correct when it is writt
 
 ['reg-conflict.notes.1']
 src_hash = 'cc269d03'
-text = '''
-On the left is the version that does not save b; on the right are the two instructions of the loop body from the dot_product listing of Part 2. Have the students look at which register the two instructions on the right write, then move to the next page.
-'''
+text = 'On the left is the version that does not save b; on the right are the two instructions of the loop body from the dot_product listing of Part 2. Have the students look at which register the two instructions on the right write, then move to the next page.'
 # src:
 # 
 # 左边是不保存 b 的写法，右边是第二部分 dot_product 清单中循环体的两条指令。先让学生看右边两条指令写的是哪个寄存器，再翻到下一页。
@@ -3485,13 +3493,11 @@ text = '''
 # **需要一项约定**：规定每个寄存器的值在一次调用前后是否保持不变。
 
 ['reg-conflict-2.notes.1']
-src_hash = '5c877187'
-text = '''
-The dot_bias on this page has only three instructions and was written to show the problem; the compiler's output is on the last page of this section.
-'''
+src_hash = '763cd6c0'
+text = "The dot_bias on this page has only three instructions and was written to show the problem; the compiler's output is on the page \"Example: %rbx in dot_bias\"."
 # src:
 # 
-# 这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在本节最后一页。
+# 这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在「实例：dot_bias 中的 %rbx」一页。
 
 ['saved-regs.title']
 src_hash = 'b7937f93'
@@ -3656,16 +3662,16 @@ text = '''
 # - gcc 的规则：跨越 `call` 之后还要使用的值先分配 callee-saved 寄存器，不够时才放到栈上。
 
 ['callee-example-rows.notes.1']
-src_hash = 'd271531b'
+src_hash = 'd14c262f'
 text = '''
 The two listings keep only the instructions that involve b; the instructions in the loop that set up the arguments of call and update r and total are left out. Both listings were written by hand to show the problem.
-The real output is in examples/dot_bias_rows.c: gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed. The six values w, x, n, rows, total and r take all 6 callee-saved registers, b is placed at 12(%rsp), and the loop body has addl 12(%rsp), %eax, which reads memory once per iteration. This is the fallback when the registers run out.
+For the real output see examples/dot_bias_rows.c: gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed. The six values w, n, b, rows, total and r take all 6 callee-saved registers, x is placed at 8(%rsp), and the loop body has movq 8(%rsp), %rsi, which reads memory once per iteration. This is the fallback when the registers run out.
 Under -O2, -fcaller-saves lets gcc save the value of a caller-saved register around a call when it judges that to be cheaper; the output for dot_bias under -O2 is the same as under -Og and still uses %rbx.
 '''
 # src:
 # 
 # 两列清单只保留与 b 有关的指令，循环中为 call 准备参数、更新 r 与 total 的指令略去；两列都是为说明问题手写的。
-# 真实输出见 examples/dot_bias_rows.c：gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed。w、x、n、rows、total、r 六个值占满 6 个 callee-saved 寄存器，b 被放到 12(%rsp)，循环体中是 addl 12(%rsp), %eax，每轮读一次内存。这正是寄存器不够时的后备做法。
+# 真实输出见 examples/dot_bias_rows.c：gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed。w、n、b、rows、total、r 六个值占满 6 个 callee-saved 寄存器，x 被放到 8(%rsp)，循环体中是 movq 8(%rsp), %rsi，每轮读一次内存。这正是寄存器不够时的后备做法。
 # -O2 下的 -fcaller-saves 允许 gcc 在它判断更划算时把 caller-saved 寄存器中的值存在 call 的两侧；dot_bias 在 -O2 下的输出与 -Og 相同，仍用 %rbx。
 
 ['section.part3-locals.title']
@@ -3738,17 +3744,12 @@ src_hash = '4330c51b'
 text = '**Every call has its own copy of the local variables**'
 # src: **每次调用有自己的一份局部变量**
 
-['call-checklist-4.demo.1.name']
-src_hash = '921c3b62'
-text = 'View the source'
-# src: 查看源码
-
 ['call-checklist-4.slide.1']
-src_hash = '9eb520f4'
-text = '**Question**: where are the arrays `w` and `x` of `main` stored?'
+src_hash = 'bdfdbe4b'
+text = '**Question**: where are the arrays `w` and `x` of `main` in [main.c](file:examples/main.c) stored?'
 # src:
 # 
-# **问题**：`main` 的数组 `w` 与 `x` 存放在哪里？
+# **问题**：[main.c](file:examples/main.c) 中 `main` 的数组 `w` 与 `x` 存放在哪里？
 
 ['call-checklist-4.notes.1']
 src_hash = '1d823c37'
@@ -3763,10 +3764,8 @@ text = 'Local variables: kept in registers, or allocated in the stack frame'
 # src: 局部变量：放在寄存器中，或在栈帧中分配
 
 ['local-vars.slide.1']
-src_hash = 'a36ec279'
+src_hash = '24df3134'
 text = '''
-**A local variable that can be kept in a register takes no memory**: the `sum` of `dot_product` is in `%r9d` and `i` in `%eax`, and the function allocates no space on the stack.
-
 **Three cases in which a local variable must be in memory**:
 1. Not enough registers: more local variables are in use at the same time than there are registers available;
 2. The local variable is an array or a struct: its elements are accessed by address; `w[4]` and `x[4]` of `main` are this case;
@@ -3779,8 +3778,6 @@ text = '''
 - Each call allocates its own; several calls of the same function (recursion, for example) each have their own copy of the local variables.
 '''
 # src:
-# 
-# **能放在寄存器中的局部变量不占用内存**：`dot_product` 的 `sum` 在 `%r9d` 中，`i` 在 `%eax` 中，函数没有在栈上分配空间。
 # 
 # **局部变量必须放在内存中的三种情况**：
 # 1. 寄存器不够用：同时使用的局部变量多于可用的寄存器；
@@ -3948,18 +3945,16 @@ text = 'Every call has its own copy of the local variables'
 # src: 每次调用有自己的一份局部变量
 
 ['call-checklist-5.slide.1']
-src_hash = '7b6cf0b9'
+src_hash = 'c2a64b2e'
 text = '''
-**The five rows are implemented in three ways**:
 - **Two new instructions**: `call` and `ret`, whose behavior is specified by the ISA;
-- **Two conventions**: where data is passed and the usage conventions for registers, followed by the compiler when it generates instructions;
+- **Software conventions**: where data is passed and the usage conventions for registers, followed by the compiler when it generates instructions;
 - **The run-time stack**: the return address, arguments passed on the stack, saved register values and local variables are all stored in stack frames.
 '''
 # src:
 # 
-# **五行的实现分为三类**：
 # - **两条新指令**：`call` 与 `ret`，行为由 ISA 规定；
-# - **两项约定**：传递数据的位置与寄存器的使用惯例，由编译器在生成指令时遵守；
+# - **软件约定**：传递数据的位置与寄存器的使用惯例，由编译器在生成指令时遵守；
 # - **运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都存放在栈帧中。
 
 ['call-checklist-5.notes.1']
@@ -4130,14 +4125,19 @@ The 32 bytes of Windows are called the shadow space; the caller reserves them be
 # Windows 的 32 字节称为影子空间（shadow space），调用者在 call 之前预留，被调用者可以把 4 个寄存器参数存入其中。
 
 ['bridge-part3-overflow.title']
-src_hash = '87620a27'
-text = 'Buffer overflow'
-# src: 缓冲区溢出
+src_hash = 'a783212a'
+text = 'Buffer overflow and ROP attacks'
+# src: 缓冲区溢出与 ROP 攻击
 
 ['bridge-part3-overflow.bridge.1']
-src_hash = '87620a27'
-text = 'Buffer overflow'
-# src: 缓冲区溢出
+src_hash = '57f3cae3'
+text = '''
+Buffer overflow and ROP attacks
+Return-Oriented Programming
+'''
+# src:
+# 缓冲区溢出与 ROP 攻击
+# Return-Oriented Programming
 
 ['section.part3-overflow.title']
 src_hash = '87620a27'
@@ -4152,7 +4152,7 @@ text = 'The library function gets: reads a line, does not check the size of the 
 ['gets-no-bound.slide.1']
 src_hash = 'f8da909f'
 text = '''
-- **Buffer**: an array that holds input data. The only parameter of `gets` is the start address `s` of the buffer; the size of the buffer is not passed;
+- **Buffer**: an array that holds input data. The only parameter of `gets` is the starting address `s` of the buffer; the size of the buffer is not passed;
 - **The number of bytes written is decided by the input line**: when the line is longer than the buffer, the extra characters are written past the end of the buffer;
 - **C does not check whether an array reference is out of bounds**: `*dest++ = c` writes to a location outside the buffer as it writes to any other.
 '''
@@ -4279,19 +4279,19 @@ text = '''
 # **问题**：攻击者怎样得到这个地址？
 
 ['overflow-attack.notes.1']
-src_hash = '9fa76ad0'
+src_hash = '3bb65884'
 text = '''
 foo calls bar, and bar reads one input line into the 64-byte buf with gets. Low addresses are on the left of the figure, drawn at 8 pixels per byte: buf is the stack frame of bar; the return address A and the other data of foo are the stack frame of foo.
 A is the address of the instruction after call bar in foo. The first 64 bytes of the input fill buf, and the next 8 bytes overwrite A.
 The attack code executes with the privileges of the attacked program.
-On early Linux systems the stack of a program was at the same address on every run, and on every machine; an attacker who ran the same program on their own machine obtained B.
+On early Linux systems the stack of a program was at the same address on every run, and on every machine of the same kind; an attacker who ran the same program on their own machine obtained B.
 '''
 # src:
 # 
 # foo 调用 bar，bar 用 gets 把一行输入读入 64 字节的 buf。图中左边是低地址，按 1 字节 8 像素绘制：buf 是 bar 的栈帧，返回地址 A 与 foo 的其他数据是 foo 的栈帧。
 # A 是 foo 中 call bar 的下一条指令的地址。输入的前 64 字节填满 buf，其后的 8 字节覆盖 A。
 # 攻击代码以被攻击程序的权限执行。
-# 早期的 Linux 上，同一个程序每次运行时栈都在相同的地址，在不同的机器上也相同；攻击者在自己的机器上运行同一个程序，就得到 B。
+# 早期的 Linux 上，同一个程序每次运行时栈都在相同的地址，在同类机器上也相同；攻击者在自己的机器上运行同一个程序，就得到 B。
 
 ['morris-worm.title']
 src_hash = '52123ff9'
@@ -4299,46 +4299,72 @@ text = 'The Internet worm of November 1988: a buffer overflow attack on fingerd'
 # src: 1988 年 11 月的互联网蠕虫：对 fingerd 的缓冲区溢出攻击
 
 ['morris-worm.slide.1']
-src_hash = '0a8ed14f'
+src_hash = '90571ccc'
 text = '''
+**How the attacker obtains the address B**: at the time the position of the stack was fixed, and the same program had its stack at the same address on every run and on every machine of the same kind; the attacker runs the same program on a machine of their own and obtains B.
+
 **One of the 4 ways the worm gained access to other computers was a buffer overflow attack on `fingerd`**:
 1. `fingerd` is the service that answers queries about users; it reads a request with `gets` into a 512-byte buffer on the stack;
 2. The worm sends the `fingerd` of a remote computer a string longer than 512 bytes, which overwrites the return address;
 3. When the function of `fingerd` returns, it jumps to code inside the string, and the worm thereby gains access to that computer;
 4. The worm goes on to spread to other computers; the same computer is infected again and again, and its computing resources are almost exhausted.
-
-**Consequences**:
-- Thousands of computers were infected, and many of them could not work normally;
-- The author, Robert T. Morris, was sentenced to 3 years of probation, 400 hours of community service and a fine of $10,050;
-- He later joined the faculty of MIT and received tenure in 2006.
 '''
 # src:
+# 
+# **攻击者怎样得到地址 B**：当时栈的位置固定，同一个程序每次运行、在同类机器上都在同一地址；攻击者在自己的机器上运行同一个程序，就得到 B。
 # 
 # **蠕虫获取其他计算机访问权的 4 种方式之一，是对 `fingerd` 的缓冲区溢出攻击**：
 # 1. `fingerd` 是查询用户信息的服务程序，用 `gets` 把请求读入栈上 512 字节的缓冲区；
 # 2. 蠕虫向远程计算机的 `fingerd` 发送一个超过 512 字节的字符串，覆盖返回地址；
 # 3. `fingerd` 的函数返回时跳转到字符串中的代码，蠕虫由此获得这台计算机的访问权；
 # 4. 蠕虫继续向其他计算机传播；同一台计算机被反复感染，计算资源几乎耗尽。
+
+['morris-worm.notes.1']
+src_hash = '83b8837c'
+text = '''
+The first paragraph answers the question of the previous page. Without randomization B depends only on the program itself: print the address of the buffer in the attacked function with a debugger, or compute it by subtracting the sizes of the stack frames from the initial value of the top of the stack. The fingerd the worm attacked ran on a VAX under 4.3BSD; the author computed the address for this machine type and system version, so the worm had no effect on the fingerd of other machine types.
+The other three ways were the debug feature of sendmail, the trust relationships between hosts, and password guessing (the statement of facts in United States v. Morris, 928 F.2d 504).
+The string the worm sent to fingerd was 536 bytes long, and the code in it started a shell (the analysis report Spafford wrote in 1988).
+'''
+# src:
 # 
-# **后果**：
+# 第一段回答上一页的问题。没有随机化时 B 只取决于程序本身：用调试器在被攻击的函数中打印缓冲区的地址，或者从栈顶的初始值减去各层栈帧的大小算出来。蠕虫攻击的 fingerd 运行在 VAX 与 4.3BSD 上，作者按这一机型与系统版本算出地址，所以蠕虫对其他机型的 fingerd 无效。
+# 另外三种方式是 sendmail 的调试功能、主机之间的信任关系与猜测口令（United States v. Morris, 928 F.2d 504 的事实陈述）。
+# 蠕虫发送给 fingerd 的字符串长 536 字节，其中的代码启动一个 shell（Spafford 1988 年的分析报告）。
+
+['morris-worm-2.title']
+src_hash = '9decf4ff'
+text = 'The Internet worm of November 1988: consequences'
+# src: 1988 年 11 月的互联网蠕虫：后果
+
+['morris-worm-2.side_image.1.alt']
+src_hash = 'dd9245cc'
+text = 'contain'
+# src: contain
+
+['morris-worm-2.slide.1']
+src_hash = '65bef149'
+text = '''
+- Thousands of computers were infected, and many of them could not work normally;
+- The author, Robert T. Morris, was sentenced to 3 years of probation, 400 hours of community service and a fine of $10,050;
+- He later joined the faculty of MIT and received tenure in 2006.
+'''
+# src:
+# 
 # - 数千台计算机被感染，其中许多无法正常工作；
 # - 作者 Robert T. Morris 被判处 3 年缓刑、400 小时社区服务与 10,050 美元罚款；
 # - 他后来在 MIT 任教，2006 年获终身教职。
 
-['morris-worm.notes.1']
-src_hash = '884b4c2d'
+['morris-worm-2.notes.1']
+src_hash = 'a0d4c016'
 text = '''
-The other three ways were the debug feature of sendmail, the trust relationships between hosts, and password guessing (the statement of facts in United States v. Morris, 928 F.2d 504).
-The string the worm sent to fingerd was 536 bytes long, and the code in it started a shell (the analysis report Spafford wrote in 1988).
 The number of infected computers is an estimate: counts made at the time range from 2,000 to 6,000.
-The amount of the fine is taken from the court opinion cited above.
+The amount of the fine is taken from the court opinion in United States v. Morris.
 '''
 # src:
 # 
-# 另外三种方式是 sendmail 的调试功能、主机之间的信任关系与猜测口令（United States v. Morris, 928 F.2d 504 的事实陈述）。
-# 蠕虫发送给 fingerd 的字符串长 536 字节，其中的代码启动一个 shell（Spafford 1988 年的分析报告）。
 # 被感染的计算机数量是估计值：当时的统计在 2,000 台到 6,000 台之间。
-# 罚款数额取自上述判决书。
+# 罚款数额取自 United States v. Morris 的判决书。
 
 ['section.part3-defense.title']
 src_hash = '8bbdb824'
@@ -4485,12 +4511,14 @@ text = 'An attack against stack randomization: the nop sled'
 # src: 针对栈随机化的攻击：nop sled
 
 ['nop-sled.slide.1']
-src_hash = '4bea7dec'
+src_hash = 'f8316f39'
 text = '''
 - **`nop`**: the no-operation instruction; its encoding is the single byte `0x90`, and executing it only adds 1 to `%rip`;
 - **nop sled**: a long sequence of `nop` placed before the attack code. Wherever the return address lands on one of these `nop`, the CPU executes them one after another and reaches the attack code;
 - **Number of addresses to try**: with a nop sled of 256 ($2^8$) bytes, $2^{23} / 2^8 = 2^{15}$ on a 32-bit system and $2^{34} / 2^8 = 2^{26}$ on a 64-bit system;
 - **Conclusion**: stack randomization increases the work of an attack, and does not completely prevent it.
+
+**Question**: can the nop sled be made very large, so that fewer attempts are needed?
 '''
 # src:
 # 
@@ -4498,19 +4526,23 @@ text = '''
 # - **nop sled**：在攻击代码之前放一长串 `nop`。返回地址落在其中任何一条 `nop` 上，CPU 都逐条执行到攻击代码；
 # - **需要尝试的地址个数**：nop sled 长 256（$2^8$）字节时，32 位系统上是 $2^{23} / 2^8 = 2^{15}$ 个，64 位系统上是 $2^{34} / 2^8 = 2^{26}$ 个；
 # - **结论**：栈随机化增加了攻击的工作量，不能完全阻止攻击。
+# 
+# **问题**：nop sled 能否设置得非常大，从而减少尝试次数？
 
 ['nop-sled.notes.1']
-src_hash = '5d8e8842'
+src_hash = 'daf4438d'
 text = '''
 The figure is drawn at 3 pixels per byte: the 256-byte nop sled, the attack code, and the 8-byte address written over the return address.
 2^15 = 32,768, which can be tried one by one; 2^26 is about 67 million.
-Question: can the attacker use a much larger nop sled? The nop sled and the attack code are written by the same overflow; its length is limited by the length of the input the program reads, and by the stack space allocated above the buffer: a write past the highest address of the stack makes the process receive SIGSEGV.
+Answer to the question: the number of attempts is the range of the randomization divided by the length of the nop sled; a longer sled means fewer attempts, and the length has an upper limit. The nop sled and the attack code are written by the same overflow: placed inside buf they are limited by the size of buf; written toward higher addresses they are limited by the top of the stack, since a write past the highest address of the stack makes the process receive SIGSEGV before the function has returned. The usable length is a few hundred bytes to a few KB.
+On a 32-bit system this is enough. On a 64-bit system, bringing the number of attempts down to 2^15 needs a nop sled of 2^34 / 2^15 = 2^19 bytes (512 KB), and bringing it down to 1 needs 2^34 bytes (16 GB); both exceed the buffer and also the default 8 MB stack. Attacks on 64-bit systems therefore obtain the address through an information leak, or use the code reuse attack covered later.
 '''
 # src:
 # 
 # 图按 1 字节 3 像素绘制：256 字节的 nop sled，攻击代码，以及写在返回地址位置上的 8 字节地址。
 # 2^15 = 32,768，逐个尝试是可行的；2^26 约为 6,700 万。
-# 问题：攻击者能否使用大得多的 nop sled？nop sled 与攻击代码由同一次溢出写入，它的长度受程序读入的输入长度限制，也受缓冲区上方已分配的栈空间限制：写入超出栈的最高地址时进程收到 SIGSEGV。
+# 问题的回答：尝试次数是随机化范围除以 nop sled 的长度，sled 越长次数越少，但长度有上限。nop sled 与攻击代码由同一次溢出写入：放在 buf 中时受 buf 的大小限制；向高地址写时受栈顶限制，写入超出栈的最高地址时进程收到 SIGSEGV，函数还没有返回。实际能用的长度是几百字节到几 KB。
+# 32 位系统上这已经够用。64 位系统上，要把尝试次数降到 2^15，nop sled 需要 2^34 / 2^15 = 2^19 字节（512 KB）；降到 1 次需要 2^34 字节（16 GB），都超过缓冲区，也超过默认 8 MB 的栈。所以 64 位上的攻击改用信息泄露得到地址，或者用后面的代码复用攻击。
 
 ['canary.title']
 src_hash = '999c4319'
@@ -4546,9 +4578,27 @@ src_hash = '571a241c'
 text = 'Stack corruption detection: the instructions gcc adds at the entry and before the return'
 # src: 栈破坏检测：gcc 在函数入口与返回之前加入的指令
 
-['canary-asm.notes.1']
-src_hash = '008cdf30'
+['canary-asm.slide.1']
+src_hash = '32df1119'
 text = '''
+**Canary value**: the original is at `%fs:40`; at its entry `echo` copies it to `8(%rsp)`, the cell labelled "canary value" in the figure of the previous page, and compares it with the original before returning.
+
+**Question**: how can the canary defense be defeated?
+'''
+# src:
+# 
+# **金丝雀值**：原值在 `%fs:40`；`echo` 在入口把它复制到 `8(%rsp)`，即上一页图中「金丝雀值」一格，返回之前再与原值比较。
+# 
+# **问题**：如何攻破金丝雀防御？
+
+['canary-asm.notes.1']
+src_hash = 'ffee1d9c'
+text = '''
+Answer to the question: the check only compares the copy in the stack frame with the original at %fs:40; an attacker who keeps the two equal until ret, or who does not pass through this check, gets around it.
+1. Reading the canary value: another vulnerability of the program prints the contents of the stack (a format string vulnerability such as printf(buf), or an out-of-bounds read); the attacker obtains the canary value and writes the original value back at the same position during the overflow.
+2. Guessing byte by byte: a child process created by fork has the same canary value as its parent. When a server forks a child for every request, the attacker overwrites only 1 byte of the canary value each time, and a child that does not crash means the byte was guessed correctly; 8 bytes take at most 8 × 256 attempts instead of 2^64.
+3. Not passing through the check: overwrite data below the canary value, such as a function pointer on the stack, which is used before the function returns; or the program has another vulnerability that writes to an arbitrary address, which overwrites the return address without touching the canary value. gcc places arrays above the other local variables, which reduces the former case.
+4. Overwriting the original: the stack of a thread is adjacent to its thread-local storage area, and a long enough overflow on the stack of a non-main thread can overwrite the original at %fs:40 as well.
 The listing is the assembly of echo with stack protection on, taken from the output of cd examples; gcc -Og -fcf-protection=none -S echo.c -o - | sed -f asm.sed. The comments after # were added on the page.
 The three dots stand for the 4 instructions that call gets and puts: movq %rsp, %rdi, call gets, movq %rsp, %rdi and call puts@PLT.
 The three instructions at the entry: read the canary value, store it at 8(%rsp), then clear %rax, so that the value remains only at %fs:40 and in the stack frame.
@@ -4558,54 +4608,17 @@ In this build the address of buf is %rsp itself, and both calls pass it with mov
 '''
 # src:
 # 
+# 问题的回答：检验只比较栈帧中的副本与 %fs:40 处的原值，攻击者让两者在 ret 之前仍然相等，或者不经过这次检验，就能绕过它。
+# 1. 读出金丝雀值：程序另有一处漏洞把栈上的内容打印出来（例如 printf(buf) 这样的格式化字符串漏洞，或者越界读），攻击者得到金丝雀值，溢出时在同一位置写回原值。
+# 2. 逐字节猜测：fork 产生的子进程与父进程的金丝雀值相同。服务器为每个请求 fork 一个子进程时，攻击者每次只覆盖金丝雀值的 1 个字节，子进程没有崩溃说明这个字节猜对了；8 个字节最多尝试 8 × 256 次，而不是 2^64 次。
+# 3. 不经过检验：改写金丝雀值以下的数据，例如栈上的函数指针，在函数返回之前就被使用；或者程序另有任意地址写的漏洞，直接改写返回地址而不触及金丝雀值。gcc 把数组放在其他局部变量之上，减少前一种情况。
+# 4. 改写原值：线程的栈与它的线程局部存储区相邻，在非主线程的栈上溢出足够长时，能同时改写 %fs:40 处的原值。
 # 清单是开启栈保护时 echo 的汇编，取自 cd examples; gcc -Og -fcf-protection=none -S echo.c -o - | sed -f asm.sed 的输出。# 之后的注释是页面上添加的说明。
 # 三个点处省略了调用 gets 与 puts 的 4 条指令：movq %rsp, %rdi、call gets、movq %rsp, %rdi、call puts@PLT。
 # 入口的三条指令：读出金丝雀值，存入 8(%rsp)，再把 %rax 清零，使这个值只留在 %fs:40 与栈帧两处。
 # 返回之前的三条指令：读出栈帧中的值，subq 把它与 %fs:40 处的值相减并设置标志位；两个值相同时 ZF=1，jne 不跳转，函数照常返回。
 # 两个值不同时跳转到 .L11，调用 __stack_chk_fail；这个函数打印一行信息并终止进程，不返回。
 # 这次编译中 buf 的地址就是 %rsp，两次调用都用 movq %rsp, %rdi 传递它；echo 没有使用 %rbx，pushq %rbx 与 popq %rbx 仍然保留。
-
-['canary-run.title']
-src_hash = '109ccd22'
-text = 'Stack corruption detection: the out-of-bounds write is detected before the function returns'
-# src: 栈破坏检测：越界写入在函数返回之前被发现
-
-['canary-run.demo.1.name']
-src_hash = '72f7904e'
-text = 'Remove -fno-stack-protector, recompile and run'
-# src: 去掉 -fno-stack-protector，重新编译并运行
-
-['canary-run.slide.1']
-src_hash = '817912bc'
-text = '''
-- **15 and 23 characters**: the writes beyond `buf` have overwritten the canary value; `echo` calls `__stack_chk_fail` before returning, and the process is terminated (exit code 134);
-- **`%fs:40`**: `%fs` is a segment register and is not one of the 16 general-purpose registers; the address of `%fs:40` is the base that belongs to `%fs` plus 40. The original of the canary value is stored here, outside the stack frame; the out-of-bounds write overwrites the copy in the stack frame, and the two are no longer equal when checked.
-'''
-# src:
-# 
-# - **15 个与 23 个字符**：超出 `buf` 的写入改写了金丝雀值，`echo` 在返回之前调用 `__stack_chk_fail`，进程被终止（退出码 134）；
-# - **`%fs:40`**：`%fs` 是段寄存器，不在 16 个通用寄存器之中；`%fs:40` 的地址是 `%fs` 对应的基址加 40。金丝雀值的原值存放在这里，位置在栈帧之外；越界写入改写的是栈帧中的副本，检验时两者不相等。
-
-['canary-run.notes.1']
-src_hash = '2c7038b9'
-text = '''
-The stack in the section "Buffer overflow" is the layout of a build with -fno-stack-protector. The gcc of Ubuntu uses -fstack-protector-strong by default: when a function has an array, or takes the address of a local variable, the writing and the checking of the canary value are added.
-With 8 characters the terminator is written to the lowest byte of the canary value. The lowest byte of the canary value glibc generates is 0, so this write does not change it and the check passes; from 9 characters on the check fails.
-Exit code 134 = 128 + 6, and 6 is the number of the signal SIGABRT.
-The form %fs:40 is called segmented addressing. The 8086 (1978) already had 4 segment registers; the 80286 is the 16-bit processor Intel introduced in 1982, the successor of the 8086, and it introduced segments in protected mode; %fs and %gs were added by the 80386 (1985). CS:APP Section 3.10.4 says that segmented addressing dates back to the 80286.
-On x86-64 the bases of the other segment registers are fixed at 0, and %fs remains in use: Linux makes its base point to a block of data that belongs to the current thread, a use called thread-local storage (TLS); glibc places the canary value at offset 40 in this block.
-On this machine the memory that holds %fs:40 is readable and writable, and its address is lower than the stack; the out-of-bounds write of buf proceeds toward higher addresses and cannot reach this memory.
-The check makes each call execute the 6 instructions at the entry and before the return in addition.
-'''
-# src:
-# 
-# 「缓冲区溢出」一节的栈是用 -fno-stack-protector 编译时的布局。Ubuntu 的 gcc 默认使用 -fstack-protector-strong：函数中有数组，或者对局部变量取地址时，加入金丝雀值的写入与检验。
-# 8 个字符时结束符写入金丝雀值的最低字节。glibc 产生的金丝雀值最低字节是 0，这次写入没有改变它，检验通过；从 9 个字符起检验失败。
-# 退出码 134 = 128 + 6，6 是信号 SIGABRT 的编号。
-# %fs:40 这种写法称为段寻址（segmented addressing）。8086（1978 年）已有 4 个段寄存器；80286 是 Intel 在 1982 年推出的 16 位处理器，8086 的后继，它引入了保护模式下的段；%fs 与 %gs 由 80386（1985 年）加入。CS:APP 3.10.4 节的说法是段寻址可以追溯到 80286。
-# x86-64 上其余段寄存器的基址固定为 0，%fs 保留下来：Linux 让它的基址指向当前线程自己的一块数据，这种用法称为线程局部存储（TLS）；glibc 把金丝雀值放在这块数据中偏移 40 的位置。
-# 本机上 %fs:40 所在的内存可读可写，地址低于栈；buf 的越界写入向高地址进行，到达不了这块内存。
-# 检验使每次调用多执行入口与返回之前的 6 条指令。
 
 ['nx-bit.title']
 src_hash = '345d8ed4'
@@ -4655,32 +4668,30 @@ text = 'Code reuse attacks: ret chains pieces of code already in the program'
 # src: 代码复用攻击：用 ret 连接程序中已有的代码片段
 
 ['code-reuse.slide.1']
-src_hash = 'e862bf32'
+src_hash = '9dea92d0'
 text = '''
 - **Return-oriented programming**: when the stack is not executable, the attacker injects no code and uses code already in the program (libc, for example);
-- **Gadget**: a few instructions of the existing code that end in `ret`. The attacker writes the addresses of the gadgets onto the stack in order, and the `ret` at the end of each gadget pops the address of the next one;
-- **Solutions**: a shadow stack, return-less kernels, control-flow integrity.
+- **Gadget**: a few instructions of the existing code that end in `ret`. The attacker writes the addresses of the gadgets onto the stack in order, and the `ret` at the end of each gadget pops the address of the next one.
+
+**Question**: how can ROP attacks be defended against?
 '''
 # src:
 # 
 # - **面向返回的编程（Return-oriented Programming）**：栈不可执行时，攻击者不注入代码，使用程序中已有的代码（例如 libc）；
-# - **代码片段（gadget）**：已有代码中以 `ret` 结尾的几条指令。攻击者把各个片段的地址依次写入栈中，每个片段末尾的 `ret` 弹出下一个片段的地址；
-# - **解决方法**：影子栈（shadow stack）、不含返回指令的内核（return-less kernel）、控制流完整性（control-flow integrity）。
+# - **代码片段（gadget）**：已有代码中以 `ret` 结尾的几条指令。攻击者把各个片段的地址依次写入栈中，每个片段末尾的 `ret` 弹出下一个片段的地址。
+# 
+# **问题**：如何防御 ROP 攻击？
 
 ['code-reuse.notes.1']
-src_hash = '074320ea'
+src_hash = 'fc302327'
 text = '''
 ret pops the 8 bytes at the top of the stack and jumps. When the address of gadget A is at the location of the return address, the ret of bar jumps to gadget A; gadget A executes its own few instructions, and the ret at its end pops the address of gadget B. The attacker chooses the gadgets and their order and composes the operations needed; no data on the stack is executed in the process.
-Control-flow integrity: restrict indirect jumps and returns to legal targets only. The endbr64 that gcc adds at the entry of every function by default marks a legal target; the compile commands of this lecture remove this instruction with -fcf-protection=none.
-Return-less kernel: the kernel is compiled without ret instructions, and return addresses are obtained from a table instead.
-The first of the three solutions is explained on the next page.
+The answer to the question is on the next page: every step of ROP relies on ret taking an address from the stack, and the idea of the defense is to keep an overwritten return address from taking effect. A shadow stack keeps a second copy of the return address and uses that copy on return; control-flow integrity restricts ret and indirect jumps to legal targets only. Stack randomization and the canary value covered earlier remain effective as well: the former makes it hard for the attacker to know the addresses of the gadgets, and the latter detects that the return address has been overwritten before bar returns.
 '''
 # src:
 # 
 # ret 弹出栈顶的 8 个字节并跳转。返回地址的位置上是片段 A 的地址时，bar 的 ret 跳转到片段 A；片段 A 执行完自己的几条指令，它末尾的 ret 弹出片段 B 的地址。攻击者选择片段及其顺序，组合出所需的操作，整个过程没有执行栈上的数据。
-# 控制流完整性：限制间接跳转与返回只能到达合法的目标。gcc 默认在每个函数入口加入的 endbr64 是合法目标的标记；本讲的编译命令用 -fcf-protection=none 去掉了这条指令。
-# 不含返回指令的内核：编译内核时不生成 ret 指令，返回地址改为查表得到。
-# 三种解决方法中的第一种由下一页说明。
+# 问题的回答在下一页：ROP 的每一步都靠 ret 从栈上取地址，防御的思路是不让被改写的返回地址生效。影子栈另存一份返回地址，返回时以它为准；控制流完整性限制 ret 与间接跳转只能到达合法的目标。此前讲过的栈随机化与金丝雀值也仍然有效：前者让攻击者难以知道片段的地址，后者在 bar 返回之前就发现返回地址被改写。
 
 ['shadow-stack.title']
 src_hash = 'c1c2bdf1'
@@ -4688,251 +4699,859 @@ text = 'Defense 4: the shadow stack'
 # src: 防御四：影子栈
 
 ['shadow-stack.slide.1']
-src_hash = '270716df'
+src_hash = '6c230d7e'
+text = '**Solutions to code reuse attacks**: shadow stacks, control-flow integrity, execute-only code, and others.'
+# src:
+# 
+# **代码复用攻击的解决方法**：影子栈、控制流完整性、execute-only code 等。
+
+['shadow-stack.slide.2']
+src_hash = '8b4fda11'
 text = '''
-- **Shadow stack**: a second stack that holds return addresses only. `call` pushes the return address onto both stacks, and `ret` compares the two return addresses and raises an exception when they differ;
-- **The shadow stack is maintained by the hardware**: only `call` and `ret` can write to this memory, and an instruction such as `movq` raises an exception when it writes there. A buffer overflow overwrites the copy on the ordinary stack;
-- **CET on x86-64**: Control-flow Enforcement Technology of Intel implements the shadow stack in hardware.
+- **Shadow stack**: a second stack that holds return addresses only. A call stores one more copy of the return address on the shadow stack, and a return uses the copy on the shadow stack; a buffer overflow overwrites the copy on the ordinary stack;
+- **Software implementation**: the compiler inserts instructions that access the shadow stack at the entry of a function and before its return, and `call` and `ret` are unchanged; the shadow stack is protected by hiding its location, and every call executes a few more instructions (ShadowCallStack of LLVM);
+- **Hardware implementation**: Intel CET, AMD, ARM GCS. `call` pushes onto both stacks, and `ret` compares the two copies and raises an exception when they differ; only `call` and `ret` can write to the memory of the shadow stack, and an instruction such as `movq` raises an exception when it writes there.
 '''
 # src:
 # 
-# - **影子栈（shadow stack）**：另设一个栈，只存放返回地址。`call` 把返回地址同时压入两个栈，`ret` 比较两处的返回地址，两者不相等时产生异常；
-# - **影子栈由硬件维护**：这块内存只有 `call` 与 `ret` 能写入，`movq` 等指令写入时产生异常。缓冲区溢出改写的是普通栈上的那一份；
-# - **x86-64 的 CET**：Intel 的控制流强制技术（Control-flow Enforcement Technology）在硬件中实现影子栈。
+# - **影子栈（shadow stack）**：另设一个栈，只存放返回地址。调用时把返回地址多存一份到影子栈，返回时以影子栈上的那份为准；缓冲区溢出改写的是普通栈上的那一份；
+# - **软件实现**：编译器在函数入口与返回之前插入存取影子栈的指令，`call` 与 `ret` 不变；靠隐藏影子栈的位置来保护它，每次调用多执行几条指令（LLVM 的 ShadowCallStack）；
+# - **硬件实现**：Intel CET、AMD、ARM GCS。`call` 同时压入两个栈，`ret` 比较两处，不相等时产生异常；影子栈的内存只有 `call` 与 `ret` 能写，`movq` 等指令写入时产生异常。
 
 ['shadow-stack.notes.1']
-src_hash = 'c7e95e87'
+src_hash = '26998ad1'
 text = '''
-The figure shows the contents of the two stacks after the return address of bar has been overwritten: the return address on the ordinary stack is already the address the attacker wrote, while the shadow stack still holds the A that call pushed. ret reads both values and compares them; when they differ it raises an exception and the process is terminated.
+Names of the solutions: shadow stack, control-flow integrity.
+Control-flow integrity: restrict indirect jumps and returns to legal targets only. The endbr64 that gcc adds at the entry of every function by default marks a legal target; the compile commands of this lecture remove this instruction with -fcf-protection=none.
+Execute-only code: the code region can be executed and cannot be read. To assemble a ROP chain the attacker first has to read the code of the program to find gadgets; when the code cannot be read and addresses are randomized, the attacker cannot know the contents and positions of the gadgets. It needs hardware support: the page tables of ARMv8 support execute-only pages, and x86 implements it with Intel PKU/MPK or extended page tables.
+The figure shows the contents of the two stacks after the return address of bar has been overwritten: the return address on the ordinary stack is already the address the attacker wrote, while the shadow stack still holds the A stored at the call. In a hardware implementation ret reads both values and compares them, and raises an exception when they differ (the #CP exception of CET; on Linux the process receives SIGSEGV); in a software implementation ShadowCallStack returns with the A on the shadow stack directly, and the overwritten copy on the ordinary stack is not used.
 The shadow stack holds return addresses only, not arguments, local variables or saved register values; its size is decided by the number of return addresses, that is, by the depth of the calls.
-There are two copies of the return address, and the cost of a call and a return grows accordingly; the check is performed by the hardware and adds no instruction to the program.
+Software implementation: -fsanitize=shadow-call-stack of LLVM; on arm64 x18 points to the shadow stack, the entry is str x30, [x18], #8 and the code before the return is ldr x30, [x18, #-8]!. The memory of the shadow stack is ordinary writable memory; the security comes from the value of x18 never being written to memory, so the attacker does not know where the shadow stack is. The arm64 Linux kernel (CONFIG_SHADOW_CALL_STACK, since 5.8) and Android use it. The overhead is a few percent: in 2015 Dang, Maniatis and Wagner measured about 10% for the traditional scheme and about 3.5% for a parallel shadow stack.
+Hardware implementation: Intel CET (Control-flow Enforcement Technology, since Tiger Lake of 2020), AMD (since Zen 3), and GCS (Guarded Control Stack) of ARMv9.4. The shadow stack is pointed to by a dedicated register, SSP; its pages carry a special mark in the page table, and an ordinary write raises an exception; call and ret do the storing and loading themselves and add no instruction to the program. The Zicfiss extension of RISC-V is the exception and uses explicit sspush and sspopchk instructions. Linux supports user-space shadow stacks on x86 since 6.6.
 The other part of CET is Indirect Branch Tracking, which marks the legal targets of an indirect jump with endbr64 and addresses another kind of attack.
 The CPU of this machine supports shadow stacks for user programs (the flag user_shstk in /proc/cpuinfo), and the kernel enables the support; a program has to be compiled with gcc -fcf-protection=full, and readelf -n then shows the SHSTK property. The compile commands on the other pages of this lecture use -fcf-protection=none, which turns both parts off, and their output therefore has no endbr64.
 '''
 # src:
 # 
-# 图中是 bar 的返回地址被改写之后两个栈的内容：普通栈上的返回地址已经是攻击者写入的地址，影子栈上仍是 call 压入的 A。ret 读出两处的值进行比较，不相等时产生异常，进程被终止。
+# 解决方法的英文：影子栈 shadow stack，控制流完整性 control-flow integrity。
+# 控制流完整性：限制间接跳转与返回只能到达合法的目标。gcc 默认在每个函数入口加入的 endbr64 是合法目标的标记；本节的编译命令用 -fcf-protection=none 去掉了这条指令。
+# execute-only code：代码区域只可执行、不可读。攻击者要拼出 ROP 链，先要读到程序的代码才能找出片段；代码不可读时，加上地址随机化，攻击者无法知道片段的内容与位置。需要硬件支持：ARMv8 的页表支持只执行的页面，x86 用 Intel 的 PKU/MPK 或扩展页表实现。
+# 图中是 bar 的返回地址被改写之后两个栈的内容：普通栈上的返回地址已经是攻击者写入的地址，影子栈上仍是调用时存入的 A。硬件实现中 ret 读出两处的值进行比较，不相等时产生异常（CET 的 #CP 异常，Linux 上进程收到 SIGSEGV）；软件实现中 ShadowCallStack 直接用影子栈上的 A 返回，普通栈上被改写的那份不被使用。
 # 影子栈只存放返回地址，不存放参数、局部变量与保存的寄存器值；它的大小由返回地址的个数决定，即调用的层数。
-# 返回地址有两份，调用与返回的开销随之增加，这项检查由硬件完成，不增加程序的指令。
+# 软件实现：LLVM 的 -fsanitize=shadow-call-stack，arm64 上用 x18 指向影子栈，入口是 str x30, [x18], #8，返回之前是 ldr x30, [x18, #-8]!。影子栈所在的内存是普通可写内存，安全性来自 x18 的值不写入内存，攻击者不知道影子栈在哪里。Linux 内核的 arm64 版本（CONFIG_SHADOW_CALL_STACK，5.8 起）与 Android 使用它。开销为百分之几：Dang、Maniatis 与 Wagner 2015 年测得传统方案约 10%，并行影子栈约 3.5%。
+# 硬件实现：Intel CET（Control-flow Enforcement Technology，2020 年的 Tiger Lake 起）、AMD（Zen 3 起）、ARMv9.4 的 GCS（Guarded Control Stack）。影子栈由专门的 SSP 寄存器指向，页面在页表中有特殊标记，普通写入产生异常；call 与 ret 自动完成存取，不增加程序的指令。RISC-V 的 Zicfiss 扩展是例外，用显式的 sspush 与 sspopchk 指令。Linux 6.6 起支持 x86 用户态影子栈。
 # CET 的另一部分是间接跳转跟踪（Indirect Branch Tracking），用 endbr64 标记间接跳转的合法目标，针对的是另一类攻击。
-# 本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本讲其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
+# 本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本节其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
 
-['bridge-part3-summary.title']
+['bridge-part4.title']
+src_hash = 'e70c8785'
+text = 'Part 4: Arrays and structs'
+# src: 第四部分：数组与结构体
+
+['bridge-part4.bridge.1']
+src_hash = 'e70c8785'
+text = 'Part 4: Arrays and structs'
+# src: 第四部分：数组与结构体
+
+['section.part4.title']
+src_hash = 'e70c8785'
+text = 'Part 4: Arrays and structs'
+# src: 第四部分：数组与结构体
+
+['matrix-need.title']
+src_hash = 'a20fa2df'
+text = 'Matrix times vector: dot_product is called on every row of the matrix'
+# src: 矩阵乘向量：对矩阵的每一行调用 dot_product
+
+['matrix-need.slide.1']
+src_hash = 'ba73ddb5'
+text = '''
+**Matrix times vector**: the `w` of the first three parts is one row of weights. The weights of a model are arranged as a matrix `W`; element `r` of $y = Wx$ is the dot product of row `r` of `W` and `x`, and `matvec` calls `dot_product` once for each row.
+
+**Question**: in what order are the 12 `int` of `W` stored in the stack frame? How is the address of `W[r]` computed? How does the assembly code access `W[r][j]`?
+'''
+# src:
+# 
+# **矩阵乘向量**：前三部分的 `w` 是一行权重。模型的权重排成矩阵 `W`，$y = Wx$ 的第 `r` 个元素是 `W` 的第 `r` 行与 `x` 的内积，`matvec` 对每一行调用一次 `dot_product`。
+# 
+# **问题**：`W` 的 12 个 `int` 在栈帧中按什么顺序存放？`W[r]` 的地址如何计算？汇编代码中如何访问 `W[r][j]`？
+
+['matrix-need.notes.1']
+src_hash = '5848f2b7'
+text = '''
+The example of part four is main calling matvec, which calls dot_product on every row of W. The two functions are in examples/mat_main.c and examples/matvec.c.
+The three elements of y are 70, 174 and 278; 70 equals the result of main calling dot_product in part three, because row 0 of W is the w used there.
+This part has no new instructions; it covers the layout of data in memory and how the compiler accesses the data with the addressing modes of part one.
+'''
+# src:
+# 
+# 第四部分的例子是 main 调用 matvec，matvec 对 W 的每一行调用 dot_product。两个函数分别在 examples/mat_main.c 与 examples/matvec.c 中。
+# y 的三个元素是 70、174、278；70 与第三部分 main 调用 dot_product 的结果相同，因为 W 的第 0 行就是那里的 w。
+# 这一部分没有新的指令，讲的是数据在内存中的布局，以及编译器怎样用第一部分的寻址模式访问它们。
+
+['section.part4-array.title']
+src_hash = '685bb17f'
+text = 'Arrays'
+# src: 数组
+
+['array-decl.title']
+src_hash = '56172c16'
+text = 'Array declarations and pointer arithmetic'
+# src: 数组声明与指针运算
+
+['array-decl.slide.1']
+src_hash = '305b4eb8'
+text = '''
+- **Array declaration** `T A[N];`: allocates a contiguous region of memory, `sizeof(T) * N` bytes in size;
+- **Starting address**: the identifier `A` can be used as a pointer to the beginning of the array; the value of this pointer is written $x_A$;
+- **Array access**: array element `i` is stored at address $x_A + \text{sizeof}(T) \cdot i$, and `A[i]` is the same as `*(A+i)`.
+
+`E` is an array of `int`, $x_E$ is in `%rdx` and `i` in `%rcx`; $M[a]$ is the content of memory at address $a$:
+'''
+# src:
+# 
+# - **数组声明** `T A[N];`：在内存中分配一段连续的区域，大小为 `sizeof(T) * N` 字节；
+# - **起始地址**：标识符 `A` 可以用作指向数组开头的指针，这个指针的值记为 $x_A$；
+# - **访问数组**：数组元素 `i` 存放在地址 $x_A + \text{sizeof}(T) \cdot i$，`A[i]` 与 `*(A+i)` 相同。
+# 
+# `E` 是 `int` 数组，$x_E$ 在 `%rdx` 中，`i` 在 `%rcx` 中；$M[a]$ 是地址 $a$ 处的内存内容：
+
+['array-decl.table.1.cell.0.0']
+src_hash = 'ea2fc789'
+text = 'Expression'
+# src: 表达式
+
+['array-decl.table.1.cell.0.1']
+src_hash = 'ba40014f'
+text = 'Type'
+# src: 类型
+
+['array-decl.table.1.cell.0.2']
+src_hash = 'cda1d55c'
+text = 'Value'
+# src: 值
+
+['array-decl.table.1.cell.0.3']
+src_hash = 'ec197e79'
+text = 'Assembly code'
+# src: 汇编代码
+
+['array-decl.table.1.cell.1.0']
+src_hash = '1361899c'
+text = '`E`'
+# src: `E`
+
+['array-decl.table.1.cell.1.1']
+src_hash = 'c6709f7a'
+text = '`int *`'
+# src: `int *`
+
+['array-decl.table.1.cell.1.2']
+src_hash = '36c1da3c'
+text = '$x_E$'
+# src: $x_E$
+
+['array-decl.table.1.cell.1.3']
+src_hash = 'a70988b5'
+text = '`movq %rdx, %rax`'
+# src: `movq %rdx, %rax`
+
+['array-decl.table.1.cell.2.0']
+src_hash = 'e640ea72'
+text = '`E[i]`'
+# src: `E[i]`
+
+['array-decl.table.1.cell.2.1']
+src_hash = 'b8c82b8f'
+text = '`int`'
+# src: `int`
+
+['array-decl.table.1.cell.2.2']
+src_hash = 'c9c53b06'
+text = '$M[x_E + 4i]$'
+# src: $M[x_E + 4i]$
+
+['array-decl.table.1.cell.2.3']
+src_hash = '34004435'
+text = '`movl (%rdx,%rcx,4), %eax`'
+# src: `movl (%rdx,%rcx,4), %eax`
+
+['array-decl.table.1.cell.3.0']
+src_hash = '1568482f'
+text = '`E+i-1`'
+# src: `E+i-1`
+
+['array-decl.table.1.cell.3.1']
+src_hash = 'c6709f7a'
+text = '`int *`'
+# src: `int *`
+
+['array-decl.table.1.cell.3.2']
+src_hash = '00d817db'
+text = '$x_E + 4i - 4$'
+# src: $x_E + 4i - 4$
+
+['array-decl.table.1.cell.3.3']
+src_hash = 'b6b718b3'
+text = '`leaq -4(%rdx,%rcx,4), %rax`'
+# src: `leaq -4(%rdx,%rcx,4), %rax`
+
+['array-decl.table.1.cell.4.0']
+src_hash = '679eb535'
+text = '`*(E+i-3)`'
+# src: `*(E+i-3)`
+
+['array-decl.table.1.cell.4.1']
+src_hash = 'b8c82b8f'
+text = '`int`'
+# src: `int`
+
+['array-decl.table.1.cell.4.2']
+src_hash = '213ba59f'
+text = '$M[x_E + 4i - 12]$'
+# src: $M[x_E + 4i - 12]$
+
+['array-decl.table.1.cell.4.3']
+src_hash = '9ebc4e22'
+text = '`movl -12(%rdx,%rcx,4), %eax`'
+# src: `movl -12(%rdx,%rcx,4), %eax`
+
+['array-decl.table.1.cell.5.0']
+src_hash = '0e93da22'
+text = '`&E[i]-E`'
+# src: `&E[i]-E`
+
+['array-decl.table.1.cell.5.1']
+src_hash = '3612186d'
+text = '`long`'
+# src: `long`
+
+['array-decl.table.1.cell.5.2']
+src_hash = '566ce354'
+text = '$i$'
+# src: $i$
+
+['array-decl.table.1.cell.5.3']
+src_hash = 'c67cde3c'
+text = '`leaq 0(,%rcx,4), %rax` and `sarq $2, %rax`'
+# src: `leaq 0(,%rcx,4), %rax` 与 `sarq $2, %rax`
+
+['array-decl.notes.1']
+src_hash = 'c7b55250'
+text = '''
+The three bullets are taken from three pages of the ICS1 deck: array declaration, the starting address of an array, and array access. The formula of the page "The mathematical mapping from an array index to a base address and stride" in part one is the case where T is int: sizeof(int) is 4.
+Adding an integer to a pointer or subtracting one changes the address by that integer times sizeof(T): the address of E+i-1 is xE + 4i - 4. An expression whose result is a pointer computes an address with leaq; an expression whose result is a value reads memory with movl.
+Subtracting two pointers gives the number of elements between them, of type long. For the last row gcc 15.2 first computes the difference of the addresses, 4i, with leaq and then shifts it right arithmetically by 2 bits, that is, divides it by sizeof(int); the table in section 3.8.2 of CS:APP has movq %rcx, %rax in this row.
+The assembly in the table was compiled with gcc -Og: E is the third argument of a function and i the fourth, so they are in %rdx and %rcx.
+'''
+# src:
+# 
+# 前三条取自旧讲义的数组声明、数组的起始地址、访问数组三页。第一部分「数组下标与基址步长的数学映射」一页的公式是 T 为 int 的情况：sizeof(int) 是 4。
+# 指针加减一个整数，地址变化的是这个整数乘以 sizeof(T)：E+i-1 的地址是 xE + 4i - 4。结果是指针的表达式用 leaq 计算地址，结果是数值的表达式用 movl 读内存。
+# 两个指针相减得到它们之间相隔的元素个数，类型是 long。最后一行 gcc 15.2 先用 leaq 算出地址之差 4i，再算术右移 2 位，即除以 sizeof(int)；CS:APP 3.8.2 节的表中这一行是 movq %rcx, %rax。
+# 表中的汇编由 gcc -Og 编译得到：E 是函数的第三个参数，i 是第四个参数，所以在 %rdx 与 %rcx 中。
+
+['nested-array.title']
+src_hash = 'c1c16ba8'
+text = 'Nested arrays: stored in row-major order'
+# src: 嵌套的数组：按行优先顺序存放
+
+['nested-array.slide.1']
+src_hash = '117ea679'
+text = '''
+- `int W[3][4];` declares a two-dimensional array of 3 rows and 4 columns, whose elements are referred to as `W[0][0]` to `W[2][3]`;
+- **An array of arrays**: `W` has 3 elements, each an array of 4 `int` that needs 16 bytes; the total size of `W` is 48 bytes;
+- **Row-major**: the elements are laid out in memory in row-major order; the 4 elements of `W[0]` are followed by the 4 elements of `W[1]`.
+'''
+# src:
+# 
+# - `int W[3][4];` 声明一个二维数组，有 3 行 4 列，引用形式为 `W[0][0]` 到 `W[2][3]`；
+# - **数组的数组**：`W` 包含 3 个元素，每个元素是 4 个 `int` 的数组，需要 16 字节；`W` 的总大小为 48 字节；
+# - **行优先**：元素在内存中按行优先顺序排列，`W[0]` 的 4 个元素之后是 `W[1]` 的 4 个元素。
+
+['nested-array.slide.2']
+src_hash = 'a454fcec'
+text = '**Address of an element**: for `T D[R][C];`, `D[i][j]` is at address $x_D + L \cdot (C \cdot i + j)$, where $L$ is `sizeof(T)`. `W[r][j]` is at $x_W + 16r + 4j$.'
+# src:
+# 
+# **元素的地址**：对 `T D[R][C];`，`D[i][j]` 位于地址 $x_D + L \cdot (C \cdot i + j)$，$L$ 是 `sizeof(T)`。`W[r][j]` 位于 $x_W + 16r + 4j$。
+
+['nested-array.notes.1']
+src_hash = 'e4c7d14d'
+text = '''
+"An array of arrays" can be written with typedef: typedef int row4_t[4]; row4_t W[3]; is the same declaration as int W[3][4];.
+Each cell of the figure is one int of 4 bytes, with low addresses on the left. The numbers below are offsets from the starting address of W; the bold 0, 16 and 32 are where the three rows start.
+Substituting L = 4 and C = 4 into the formula: xW + 4 × (4r + j) = xW + 16r + 4j. The outlined W[1][2] in the figure is at offset 16 × 1 + 4 × 2 = 24.
+C specifies row-major order only; Fortran stores arrays in column-major order.
+'''
+# src:
+# 
+# 「数组的数组」可以用 typedef 写出来：typedef int row4_t[4]; row4_t W[3];，与 int W[3][4]; 是同一个声明。
+# 图中每格是一个 int，占 4 字节，左边是低地址。下方的数字是相对 W 起始地址的偏移，加粗的 0、16、32 是三行的起始位置。
+# 公式代入 L = 4、C = 4：xW + 4 × (4r + j) = xW + 16r + 4j。图中加框的 W[1][2] 位于偏移 16 × 1 + 4 × 2 = 24。
+# C 语言只规定行优先这一种顺序；Fortran 的数组按列优先存放。
+
+['matrix-stack.title']
+src_hash = 'd81eaf37'
+text = 'Example: main allocates W, x and y in its stack frame'
+# src: 实例：main 在栈帧中分配 W、x 与 y
+
+['matrix-stack.side_image.1.alt']
+src_hash = 'dd9245cc'
+text = 'contain'
+# src: contain
+
+['matrix-stack.slide.1']
+src_hash = '17596f5f'
+text = 'The assembly of [mat_main.c](file:examples/mat_main.c):'
+# src:
+# 
+# [mat_main.c](file:examples/mat_main.c) 的汇编：
+
+['matrix-stack.notes.1']
+src_hash = '63758250'
+text = '''
+The listing is taken from the output of cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S mat_main.c -o - | sed -f asm.sed, 25 lines in all; the three ... omit the 9 movl that write the other elements of W and the 3 movl that write x[1] to x[3], and the last movl that writes W is movl $12, 76(%rsp). The comments after # were added on the page.
+main allocates 88 bytes with subq $88, %rsp: W takes the 48 bytes from 32(%rsp), x the 16 bytes from 16(%rsp), y the 12 bytes from 4(%rsp); the 4 bytes from (%rsp) and the 8 bytes from 80(%rsp) are unused. On entry to main the top of the stack holds the 8-byte return address, and 88 + 8 = 96 is a multiple of 16.
+The elements of W are written in row-major order: W[r][j] is at 32 + 16r + 4j, and W[1][2] at 32 + 16 × 1 + 4 × 2 = 56, which is movl $7, 56(%rsp) in the listing; the comment writes this sum as 32+16+8.
+Each row of the figure on the left is 8 bytes, with high addresses at the top and the higher address on the left within a row; above each cell is the address of the element, the same as the destination operand of the movl in the listing.
+The three arguments passed to matvec are all starting addresses of arrays, computed with leaq. As an argument the array name W is a pointer to W[0], and its value is the starting address of W, 32(%rsp).
+The return value y[2] is at the starting address of y plus 8, that is, 12(%rsp).
+'''
+# src:
+# 
+# 清单取自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S mat_main.c -o - | sed -f asm.sed 的输出，共 25 行；三处 ... 省略的是写入 W 其余元素的 9 条 movl 与写入 x[1] 到 x[3] 的 3 条 movl，其中最后一条写入 W 的是 movl $12, 76(%rsp)。# 之后的注释是页面上添加的说明。
+# main 用 subq $88, %rsp 分配 88 字节：W 占 32(%rsp) 起的 48 字节，x 占 16(%rsp) 起的 16 字节，y 占 4(%rsp) 起的 12 字节，(%rsp) 起的 4 字节与 80(%rsp) 起的 8 字节没有使用。进入 main 时栈顶是 8 字节的返回地址，88 + 8 = 96 是 16 的倍数。
+# W 的元素按行优先写入：W[r][j] 在 32 + 16r + 4j，W[1][2] 在 32 + 16 × 1 + 4 × 2 = 56，清单中是 movl $7, 56(%rsp)，注释把这个和写成 32+16+8。
+# 左图每行 8 字节，高地址在上，行内左侧的地址较高；每格上方是该元素的地址，与清单中 movl 的目的操作数相同。
+# 传给 matvec 的三个参数都是数组的起始地址，用 leaq 计算。数组名 W 作为参数时是指向 W[0] 的指针，值是 W 的起始地址 32(%rsp)。
+# 返回值 y[2] 在 y 的起始地址加 8 处，即 12(%rsp)。
+
+['matrix-access.title']
+src_hash = '3cd02a02'
+text = 'Accessing W[r][j]: the address of W[r] is computed first'
+# src: 访问 W[r][j]：先计算 W[r] 的地址
+
+['matrix-access.slide.1']
+src_hash = 'ef74e630'
+text = 'The assembly of `elem` in [matvec.c](file:examples/matvec.c):'
+# src:
+# 
+# [matvec.c](file:examples/matvec.c) 中 `elem` 的汇编：
+
+['matrix-access.slide.2']
+src_hash = '676263c8'
+text = '''
+- **16 is a constant**: one row of 4 `int` is 16 bytes, known at compile time, and the multiplication by 16 is done with a left shift by 4 bits;
+- **`W[r]` is a one-dimensional array**: the first two instructions give its starting address $x_W + 16r$. `matvec` computes the address of `W[r]` with the same two instructions and passes it to `dot_product` as the first argument.
+'''
+# src:
+# 
+# - **16 是常数**：一行 4 个 `int` 共 16 字节，在编译时已知，乘以 16 用左移 4 位完成；
+# - **`W[r]` 是一维数组**：前两条指令得到它的起始地址 $x_W + 16r$。`matvec` 用同样的两条指令计算 `W[r]` 的地址，作为第一个参数传给 `dot_product`。
+
+['matrix-access.notes.1']
+src_hash = 'c8fd018a'
+text = '''
+The listing is the part for elem in the output of cd examples; gcc -Og -fcf-protection=none -S matvec.c -o - | sed -f asm.sed. The comments after // and # were added on the page: the starting address xW of W is in %rdi, r in %rsi and j in %rdx.
+The three instructions match the three terms of the formula xW + 16r + 4j in order: salq computes 16r, addq adds xW, and the scaled indexed operand of movl adds 4j and reads 4 bytes.
+In the loop body of matvec in the same file, r is in %rbx and the starting address of W in %r12: movq %rbx, %rdi copies r into %rdi, and salq $4, %rdi and addq %r12, %rdi are the same two instructions; they put xW + 16r into %rdi as the first argument of dot_product. r, W, x and y are still needed after the call, so they are kept in callee-saved registers.
+When the parameter is written int W[3][4], the compiler uses only the number of columns, 4; the number of rows, 3, takes no part in the address computation.
+The numbers of rows and columns of a matrix in a model file are read only at run time, and the parameter of the function then cannot be written int W[3][4].
+'''
+# src:
+# 
+# 清单取自 cd examples; gcc -Og -fcf-protection=none -S matvec.c -o - | sed -f asm.sed 的输出中 elem 的一段。// 与 # 之后的注释是页面上添加的说明：W 的起始地址 xW 在 %rdi 中，r 在 %rsi 中，j 在 %rdx 中。
+# 三条指令依次对应公式 xW + 16r + 4j 的三项：salq 算出 16r，addq 加上 xW，movl 的比例变址操作数加上 4j 并读出 4 字节。
+# 同一个文件中 matvec 的循环体里，r 在 %rbx 中，W 的起始地址在 %r12 中：movq %rbx, %rdi 把 r 复制到 %rdi，salq $4, %rdi 与 addq %r12, %rdi 是同样的两条指令，把 xW + 16r 放入 %rdi，作为 dot_product 的第一个参数。r、W、x、y 在调用之后还要使用，所以放在 callee-saved 寄存器中。
+# 参数写成 int W[3][4] 时，编译器只用到列数 4；行数 3 不参与地址计算。
+# 模型文件中矩阵的行数与列数在运行时才读出，这时函数的参数不能写成 int W[3][4]。
+
+['section.part4-struct.title']
+src_hash = 'eaace0a9'
+text = 'Structs'
+# src: 结构体
+
+['struct-tensor.title']
+src_hash = 'ce1d3e57'
+text = 'Structs: combining several objects into one object'
+# src: 结构体：将多个对象组合成一个对象
+
+['struct-tensor.slide.1']
+src_hash = 'afbf45c1'
+text = '''
+- A **struct** combines several objects into one object; each object is called a **field** and is referred to by name: `t.rows`. Through a pointer to the struct it is written `w->rows`, that is, `(*w).rows`;
+- **Memory layout**: all fields are stored in one contiguous region, and a pointer to the struct is the address of its first byte.
+'''
+# src:
+# 
+# - **结构体**将多个对象组合成一个对象，每个对象称为一个**字段**，通过名字引用：`t.rows`。通过指向结构体的指针引用时写 `w->rows`，即 `(*w).rows`；
+# - **内存布局**：所有字段存放在一段连续的区域内，指向结构体的指针是第一个字节的地址。
+
+['struct-tensor.notes.1']
+src_hash = '58bd3db7'
+text = '''
+A matrix whose numbers of rows and columns are read only at run time is described by a struct: the number of rows, the number of columns and the starting address form one struct tensor, and matvec receives a pointer to it. The definition is in examples/tensor.h and matvec in examples/matvec_t.c.
+The figure shows the 24 bytes of struct tensor: rows at offset 0, cols at offset 8 and data at offset 16, 8 bytes each; w points to offset 0.
+The starting address of row r is w->data + r * w->cols: a pointer plus an integer, which increases the address by 4 × r × cols bytes.
+mini-ollama describes a weight matrix with a struct of the same name (examples/mini-ollama/mini_ollama.h): there the numbers of rows and columns have type size_t, and data points to bytes in the Q4_0 format.
+The ICS1 deck calls the parts of a struct elements, and also fields; this lecture calls them fields throughout and uses elements for arrays only.
+'''
+# src:
+# 
+# 行数与列数在运行时才读出的矩阵用结构体描述：行数、列数与起始地址组成一个 struct tensor，matvec 接收指向它的指针。定义在 examples/tensor.h 中，matvec 在 examples/matvec_t.c 中。
+# 图中是 struct tensor 的 24 字节：rows 在偏移 0，cols 在偏移 8，data 在偏移 16，各占 8 字节；w 指向偏移 0 处。
+# 行 r 的起始地址是 w->data + r * w->cols：指针加整数，地址增加 4 × r × cols 字节。
+# mini-ollama 用同名的结构体描述一个权重矩阵（examples/mini-ollama/mini_ollama.h）：那里行数与列数的类型是 size_t，data 指向 Q4_0 格式的字节。
+# 旧讲义把结构体的组成部分称为元素，也称为字段；本节统一称为字段，元素只用于数组。
+
+['struct-access.title']
+src_hash = '19d41ca1'
+text = 'Referring to a field of a struct: the starting address plus the offset of the field'
+# src: 引用结构体的字段：起始地址加字段的偏移
+
+['struct-access.slide.1']
+src_hash = '48c2d8d4'
+text = 'The assembly of `row` in [matvec_t.c](file:examples/matvec_t.c) [tensor.h](file:examples/tensor.h):'
+# src:
+# 
+# [matvec_t.c](file:examples/matvec_t.c) [tensor.h](file:examples/tensor.h) 中 `row` 的汇编：
+
+['struct-access.slide.2']
+src_hash = 'f77448d0'
+text = '''
+- **The address of a field** is the starting address of the struct plus the offset of the field, and the offset is fixed at compile time;
+- `w->cols` is `8(%rdi)` and `w->data` is `16(%rdi)`: a machine instruction carries no field names, only offsets;
+- **The number of columns is read only at run time**: the multiplication by it uses `imulq`; for the fixed-size `W[3][4]` the multiplication by 16 uses `salq $4`.
+'''
+# src:
+# 
+# - **字段的地址**是结构体的起始地址加字段的偏移，偏移在编译时确定；
+# - `w->cols` 是 `8(%rdi)`，`w->data` 是 `16(%rdi)`：机器指令中没有字段的名字，只有偏移；
+# - **列数在运行时才读出**：乘以列数用 `imulq`；定长的 `W[3][4]` 乘以 16 用 `salq $4`。
+
+['struct-access.notes.1']
+src_hash = '025400e8'
+text = '''
+The listing is the part for row in the output of cd examples; gcc -Og -fcf-protection=none -S matvec_t.c -o - | sed -f asm.sed. The comments after // and # were added on the page: w is in %rdi and r in %rsi.
+8(%rdi) and 16(%rdi) are the "base + displacement" addressing mode of part one: the base is the starting address of the struct, and the displacement is the position of the field in the struct. The offset of rows is 0, and w->rows is written (%rdi).
+The offset of the row is 4 × r × cols bytes: imulq computes r × cols, and salq $2 then multiplies by sizeof(int).
+In the same file the loop condition r < w->rows of matvec compiles to cmpq %rbx, 0(%rbp): w is in %rbp and rows at offset 0. A memory operand with %rbp as its base must carry a displacement in the machine code, so gcc writes the 0.
+The variable-length array int A[n][n] of the ICS1 deck leads to the same conclusion: n is known only at run time, and computing the address of A[i][j] needs a multiply instruction, imulq.
+'''
+# src:
+# 
+# 清单取自 cd examples; gcc -Og -fcf-protection=none -S matvec_t.c -o - | sed -f asm.sed 的输出中 row 的一段。// 与 # 之后的注释是页面上添加的说明：w 在 %rdi 中，r 在 %rsi 中。
+# 8(%rdi) 与 16(%rdi) 是第一部分寻址模式中的「基址 + 偏移」：基址是结构体的起始地址，偏移是字段在结构体中的位置。rows 的偏移是 0，w->rows 写成 (%rdi)。
+# 行的偏移是 4 × r × cols 字节：imulq 算出 r × cols，salq $2 再乘以 sizeof(int)。
+# 同一个文件中 matvec 的循环条件 r < w->rows 编译为 cmpq %rbx, 0(%rbp)：w 在 %rbp 中，rows 在偏移 0。以 %rbp 为基址的内存操作数在机器码中必须带偏移，gcc 因此写出 0。
+# 旧讲义的变长数组 int A[n][n] 得到同样的结论：n 在运行时才确定，计算 A[i][j] 的地址需要一条乘法指令 imulq。
+
+['struct-stack.title']
+src_hash = 'dee0e49c'
+text = 'Example: main allocates the struct t in its stack frame'
+# src: 实例：main 在栈帧中分配结构体 t
+
+['struct-stack.side_image.1.alt']
+src_hash = 'dd9245cc'
+text = 'contain'
+# src: contain
+
+['struct-stack.slide.1']
+src_hash = 'f2d624ed'
+text = 'The definition of `t` and the assembly of `main` in [tensor_main.c](file:examples/tensor_main.c):'
+# src:
+# 
+# [tensor_main.c](file:examples/tensor_main.c) 中 `t` 的定义与 `main` 的汇编：
+
+['struct-stack.slide.2']
+src_hash = '69f7bdb7'
+text = '**Question**: a 1-byte field `kind` is added to `struct tensor` in [tensor.h](file:examples/tensor.h); how many bytes is the struct then?'
+# src:
+# 
+# **问题**：给 [tensor.h](file:examples/tensor.h) 中的 `struct tensor` 增加一个 1 字节的字段 `kind`，结构体的大小是多少字节？
+
+['struct-stack.notes.1']
+src_hash = 'c56688af'
+text = '''
+The listing is taken from the output of cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S tensor_main.c -o - | sed -f asm.sed. The ... omits the 16 movl that write W and x, and three instructions follow the call: movl 44(%rsp), %eax, addq $120, %rsp and ret. The comments after # were added on the page.
+Compared with the page "Example: main allocates W, x and y in its stack frame", main has one more local variable, the 24-byte t, and the stack frame grows from 88 bytes to 120 bytes: 120 + 8 = 128 is a multiple of 16. W is at 64(%rsp), x at 48(%rsp), y at 36(%rsp), and t takes the 24 bytes from (%rsp); the 12 bytes from 24(%rsp) and the 8 bytes from 112(%rsp) are unused.
+t.data holds the starting address of W, 64(%rsp), and the arrow in the figure goes from t.data to W[0][0]. The address is first computed into %rax with leaq and then written with movq: the destination operand of leaq can only be a register.
+A struct that is a local variable is allocated and freed the same way as a local array: t takes 24 bytes of the stack frame, and its three fields are written at offsets 0, 8 and 16. The call in main is matvec(y, &t, x);, and the starting address of t, %rsp, is passed to matvec as the second argument.
+'''
+# src:
+# 
+# 清单取自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S tensor_main.c -o - | sed -f asm.sed 的输出。... 处省略写入 W 与 x 的 16 条 movl，call 之后还有 movl 44(%rsp), %eax、addq $120, %rsp 与 ret 三条。# 之后的注释是页面上添加的说明。
+# main 比「实例：main 在栈帧中分配 W、x 与 y」一页多一个 24 字节的局部变量 t，栈帧由 88 字节增至 120 字节：120 + 8 = 128 是 16 的倍数。W 在 64(%rsp)，x 在 48(%rsp)，y 在 36(%rsp)，t 在 (%rsp) 起的 24 字节；24(%rsp) 起的 12 字节与 112(%rsp) 起的 8 字节没有使用。
+# t.data 中存放的是 W 的起始地址 64(%rsp)，图中的箭头从 t.data 指向 W[0][0]。地址先用 leaq 算到 %rax 中，再用 movq 写入：leaq 的目的操作数只能是寄存器。
+# 结构体作为局部变量，分配与释放的方式和局部数组相同：t 在栈帧中占 24 字节，三个字段按偏移 0、8、16 写入。main 中的调用是 matvec(y, &t, x);，t 的起始地址 %rsp 作为第二个参数传给 matvec。
+
+['section.part4-align.title']
+src_hash = 'fd5fb78b'
+text = 'Alignment'
+# src: 对齐
+
+['alignment.title']
+src_hash = 'c8b207b2'
+text = 'Alignment restrictions: the address of a primitive type is a multiple of its size'
+# src: 对齐限制：基本类型的地址是其大小的倍数
+
+['alignment.slide.1']
+src_hash = 'b074eb2e'
+text = '''
+- **Alignment restriction**: for objects of certain types, the address must be a multiple of some value $k$ (usually 2, 4 or 8);
+- **Purpose**: it simplifies the design of the hardware that forms the interface between the processor and the memory system, and improves the performance of the memory system;
+- **Alignment restrictions on Linux**: the address of a primitive type is a multiple of its size.
+'''
+# src:
+# 
+# - **对齐限制**：某些类型的对象，地址必须是某个值 $k$（通常是 2、4 或 8）的倍数；
+# - **作用**：简化处理器与内存系统之间接口的硬件设计，提高内存系统的性能；
+# - **Linux 的对齐限制**：基本类型的地址是其大小的倍数。
+
+['alignment.table.1.cell.0.0']
+src_hash = '678bc41b'
+text = 'Size of the data'
+# src: 数据的大小
+
+['alignment.table.1.cell.0.1']
+src_hash = 'ba40014f'
+text = 'Type'
+# src: 类型
+
+['alignment.table.1.cell.0.2']
+src_hash = '37aac5b4'
+text = 'Address'
+# src: 地址
+
+['alignment.table.1.cell.1.0']
+src_hash = '40cd09ac'
+text = '1 byte'
+# src: 1 字节
+
+['alignment.table.1.cell.1.1']
+src_hash = '477071f8'
+text = '`char`'
+# src: `char`
+
+['alignment.table.1.cell.1.2']
+src_hash = '4724ee88'
+text = 'any address'
+# src: 任意地址
+
+['alignment.table.1.cell.2.0']
+src_hash = 'a4bbc59b'
+text = '2 bytes'
+# src: 2 字节
+
+['alignment.table.1.cell.2.1']
+src_hash = '8cfbf398'
+text = '`short`'
+# src: `short`
+
+['alignment.table.1.cell.2.2']
+src_hash = '5b907747'
+text = 'a multiple of 2'
+# src: 2 的倍数
+
+['alignment.table.1.cell.3.0']
+src_hash = '1f7ebe31'
+text = '4 bytes'
+# src: 4 字节
+
+['alignment.table.1.cell.3.1']
+src_hash = '8c7faf89'
+text = '`int`, `float`'
+# src: `int`、`float`
+
+['alignment.table.1.cell.3.2']
+src_hash = 'd10ef75c'
+text = 'a multiple of 4'
+# src: 4 的倍数
+
+['alignment.table.1.cell.4.0']
+src_hash = '2519bda6'
+text = '8 bytes'
+# src: 8 字节
+
+['alignment.table.1.cell.4.1']
+src_hash = '70337651'
+text = '`long`, `double`, pointers'
+# src: `long`、`double`、指针
+
+['alignment.table.1.cell.4.2']
+src_hash = 'ceffded9'
+text = 'a multiple of 8'
+# src: 8 的倍数
+
+['alignment.slide.2']
+src_hash = '3dca8de4'
+text = '''
+- **Alignment of a struct**: a **gap** may have to be inserted between fields, and **padding** may have to be added at the end of the struct;
+- **Principle**: every field of a primitive type is aligned, and the whole struct is aligned to the largest alignment requirement among its fields.
+'''
+# src:
+# 
+# - **结构体的对齐**：字段之间可能需要插入**间隙**，结构体的末尾可能需要添加**填充**；
+# - **原则**：对齐每个基本类型的字段，并按字段中最大的对齐要求对齐整个结构体。
+
+['alignment.notes.1']
+src_hash = '0c38da1d'
+text = '''
+The content is taken from the four "alignment" pages of the ICS1 deck. The rules on Linux are those of the System V AMD64 ABI, which the compiler follows when it places global variables, local variables and the fields of structs.
+The hardware of x86-64 works correctly when data is not aligned (some vector instructions excepted), and aligned data improves the performance of the memory system; many other architectures enforce alignment.
+In "Example: the stack frame of main" of part three, %rsp is a multiple of 16 before the call, which is the alignment the calling convention requires of the stack; this page is about the alignment each data type requires for itself.
+Aligned data does not cross an 8-byte boundary, and the processor obtains it with one read or write; 8 bytes of unaligned data may need two accesses to memory.
+'''
+# src:
+# 
+# 内容取自旧讲义「对齐」的四页。Linux 的规则是 System V AMD64 ABI 的规定，编译器在安排全局变量、局部变量与结构体的字段时遵守。
+# x86-64 的硬件在数据没有对齐时也能正确工作（部分向量指令除外），对齐的数据可以提高内存系统的性能；许多其他体系结构强制要求对齐。
+# 第三部分「实例：main 的栈帧」中 call 之前 %rsp 是 16 的倍数，是调用约定对栈的对齐要求；这一页是每种数据类型自己的对齐要求。
+# 对齐的数据不会跨越两个 8 字节的边界，处理器一次读写就能取到；没有对齐的 8 字节数据可能需要访问内存两次。
+
+['alignment-example.title']
+src_hash = 'e996381b'
+text = 'Example: the 1-byte field kind placed first and placed last'
+# src: 实例：1 字节的字段 kind 放在最前与放在最后
+
+['alignment-example.demo.1.name']
+src_hash = '81861634'
+text = 'Print the sizes of three structs and the offsets of their fields'
+# src: 打印三个结构体的大小与各字段的偏移
+
+['alignment-example.slide.1']
+src_hash = '4c697780'
+text = '''
+- **`kind` first**: the offset of `rows` must be a multiple of 8, and a gap of 7 bytes is left after `kind`;
+- **`kind` last**: the size of the struct must be a multiple of 8, and 7 bytes of padding are added at the end.
+'''
+# src:
+# 
+# - **`kind` 在最前**：`rows` 的偏移必须是 8 的倍数，`kind` 之后留出 7 字节的间隙；
+# - **`kind` 在最后**：结构体的大小必须是 8 的倍数，末尾添加 7 字节的填充。
+
+['alignment-example.notes.1']
+src_hash = '8b03b55e'
+text = '''
+The question at the end of the page "Example: main allocates the struct t in its stack frame": with the 1-byte field added, the size of the struct is 32 bytes, whether the field is placed first or last.
+examples/align.c defines three structs: struct tensor; struct kind_first, which adds char kind before the other fields; and struct kind_last, which adds char kind after them. It prints the sizes and offsets with sizeof and offsetof.
+The two bands of the figure are drawn at 30 pixels per byte, and the numbers below are offsets; a dashed box marks bytes that no field uses.
+When the starting address of a struct is a multiple of 8, a field whose offset is a multiple of 8 also has an address that is a multiple of 8; the compiler therefore only has to arrange the offsets.
+rows is a long and is aligned to 8; the struct is aligned to 8, the largest alignment requirement among its fields. The padding at the end makes sizeof a multiple of 8, so in an array of structs the fields of the next element remain aligned: in the array struct kind_last a[2], the starting address of a[1] is the starting address of a[0] plus 32, still a multiple of 8.
+'''
+# src:
+# 
+# 「实例：main 在栈帧中分配结构体 t」一页末尾的问题：增加 1 字节的字段后，结构体的大小是 32 字节，放在最前与放在最后都如此。
+# examples/align.c 定义三个结构体：struct tensor，在其他字段之前增加 char kind 的 struct kind_first，在其他字段之后增加 char kind 的 struct kind_last；用 sizeof 与 offsetof 打印大小与偏移。
+# 图中两条带按 1 字节 30 像素绘制，下方的数字是偏移；虚线框是没有字段使用的字节。
+# 结构体的起始地址是 8 的倍数时，偏移是 8 的倍数的字段，地址也是 8 的倍数；所以编译器只需要安排偏移。
+# rows 是 long，按 8 对齐；结构体按字段中最大的对齐要求 8 对齐。末尾的填充使 sizeof 是 8 的倍数，在结构体的数组中后一个元素的各字段因此仍然对齐：数组 struct kind_last a[2] 中，a[1] 的起始地址是 a[0] 的起始地址加 32，仍是 8 的倍数。
+
+['section.part4-summary.title']
 src_hash = '844b8abb'
 text = 'Summary and exercises'
 # src: 小结与练习
 
-['bridge-part3-summary.bridge.1']
-src_hash = '844b8abb'
-text = 'Summary and exercises'
-# src: 小结与练习
+['recap-part4.title']
+src_hash = 'f7e84efb'
+text = 'Summary: layout of and access to arrays and structs'
+# src: 小结：数组与结构体的布局与访问
 
-['section.part3-summary.title']
-src_hash = '844b8abb'
-text = 'Summary and exercises'
-# src: 小结与练习
-
-['recap-part3.title']
-src_hash = 'ba50cbbd'
-text = 'Recap: the instructions and conventions used by function calls'
-# src: 小结：函数调用用到的指令与约定
-
-['recap-part3.table.1.cell.0.0']
+['recap-part4.table.1.cell.0.0']
 src_hash = '7a688306'
 text = 'Topic'
 # src: 内容
 
-['recap-part3.table.1.cell.0.1']
-src_hash = '62868ac9'
-text = 'Instructions and conventions'
-# src: 指令与约定
+['recap-part4.table.1.cell.0.1']
+src_hash = '1326382a'
+text = 'Memory layout'
+# src: 内存布局
 
-['recap-part3.table.1.cell.0.2']
-src_hash = '09f1a298'
-text = 'Example in this part'
-# src: 本部分的例子
+['recap-part4.table.1.cell.0.2']
+src_hash = 'abb364ed'
+text = 'Address of an element or field'
+# src: 元素或字段的地址
 
-['recap-part3.table.1.cell.1.0']
-src_hash = 'b9945f2c'
-text = 'Call and return'
-# src: 调用与返回
+['recap-part4.table.1.cell.1.0']
+src_hash = '13eb9b9d'
+text = 'Array `T A[N]`'
+# src: 数组 `T A[N]`
 
-['recap-part3.table.1.cell.1.1']
-src_hash = '110ed893'
-text = '`call` pushes the return address and jumps; `ret` pops the return address and jumps'
-# src: `call` 压入返回地址并跳转，`ret` 弹出返回地址并跳转
+['recap-part4.table.1.cell.1.1']
+src_hash = '17c1c8c6'
+text = '`sizeof(T) * N` contiguous bytes'
+# src: 连续的 `sizeof(T) * N` 字节
 
-['recap-part3.table.1.cell.1.2']
-src_hash = '7c55cbc4'
-text = '`call dot_product` in `main`'
-# src: `main` 中的 `call dot_product`
+['recap-part4.table.1.cell.1.2']
+src_hash = '67ed56b6'
+text = '$x_A + \text{sizeof}(T) \cdot i$'
+# src: $x_A + \text{sizeof}(T) \cdot i$
 
-['recap-part3.table.1.cell.2.0']
-src_hash = '55c1ba71'
-text = 'Passing data'
-# src: 传递数据
+['recap-part4.table.1.cell.2.0']
+src_hash = '576fbeb4'
+text = 'Nested array `T D[R][C]`'
+# src: 嵌套的数组 `T D[R][C]`
 
-['recap-part3.table.1.cell.2.1']
-src_hash = 'e5a212ea'
-text = 'The first 6 arguments in registers, the rest on the stack; the return value in `%rax`'
-# src: 前 6 个参数用寄存器，其余经栈传递；返回值用 `%rax`
+['recap-part4.table.1.cell.2.1']
+src_hash = '399f967a'
+text = 'Row-major'
+# src: 行优先
 
-['recap-part3.table.1.cell.2.2']
-src_hash = '5646457d'
-text = '`w`, `x`, `n` in `%rdi`, `%rsi`, `%edx`'
-# src: `w`、`x`、`n` 在 `%rdi`、`%rsi`、`%edx` 中
+['recap-part4.table.1.cell.2.2']
+src_hash = 'e9abb0da'
+text = '$x_D + L \cdot (C \cdot i + j)$; `W[r][j]` is at $x_W + 16r + 4j$'
+# src: $x_D + L \cdot (C \cdot i + j)$，`W[r][j]` 位于 $x_W + 16r + 4j$
 
-['recap-part3.table.1.cell.3.0']
-src_hash = '46bbb6e9'
-text = 'Registers'
-# src: 寄存器
+['recap-part4.table.1.cell.3.0']
+src_hash = 'eaace0a9'
+text = 'Struct'
+# src: 结构体
 
-['recap-part3.table.1.cell.3.1']
-src_hash = 'aba4a2e5'
-text = '6 callee-saved, 9 caller-saved'
-# src: 6 个 callee-saved，9 个 caller-saved
+['recap-part4.table.1.cell.3.1']
+src_hash = 'f7ff59f9'
+text = 'Fields in one contiguous region'
+# src: 字段在一段连续的区域内
 
-['recap-part3.table.1.cell.3.2']
-src_hash = '50904db8'
-text = '`pushq %rbx` and `popq %rbx` of `dot_bias`'
-# src: `dot_bias` 的 `pushq %rbx` 与 `popq %rbx`
+['recap-part4.table.1.cell.3.2']
+src_hash = 'f89524cc'
+text = 'Starting address plus the offset of the field: `w->cols` is `8(%rdi)`'
+# src: 起始地址加字段的偏移：`w->cols` 是 `8(%rdi)`
 
-['recap-part3.table.1.cell.4.0']
-src_hash = '15f4afd7'
-text = 'Local variables'
-# src: 局部变量
+['recap-part4.table.1.cell.4.0']
+src_hash = 'fd5fb78b'
+text = 'Alignment'
+# src: 对齐
 
-['recap-part3.table.1.cell.4.1']
-src_hash = '93574793'
-text = 'Decrease `%rsp` to allocate, access by offset, increase `%rsp` to free'
-# src: 减小 `%rsp` 分配，按偏移访问，增大 `%rsp` 释放
+['recap-part4.table.1.cell.4.1']
+src_hash = '2624cd88'
+text = 'The address of a primitive type is a multiple of its size'
+# src: 基本类型的地址是其大小的倍数
 
-['recap-part3.table.1.cell.4.2']
-src_hash = '818a7ba2'
-text = '`subq $40, %rsp` of `main`'
-# src: `main` 的 `subq $40, %rsp`
+['recap-part4.table.1.cell.4.2']
+src_hash = '3a94e0b1'
+text = 'Gaps between fields, padding at the end'
+# src: 字段之间插入间隙，末尾添加填充
 
-['recap-part3.table.1.cell.5.0']
-src_hash = '87620a27'
-text = 'Buffer overflow'
-# src: 缓冲区溢出
-
-['recap-part3.table.1.cell.5.1']
-src_hash = '5ea8bdff'
-text = 'An out-of-bounds write overwrites the return address; defenses: stack randomization, stack corruption detection, limiting executable code regions, the shadow stack'
-# src: 越界写入改写返回地址；防御：栈随机化、栈破坏检测、限制可执行代码区域、影子栈
-
-['recap-part3.table.1.cell.5.2']
-src_hash = '906c9875'
-text = '15 and 23 characters given to `echo`'
-# src: `echo` 的 15 个与 23 个字符
-
-['recap-part3.slide.1']
-src_hash = 'f235d51d'
-text = '**The run-time stack**: the return address, the arguments passed on the stack, the saved register values and the local variables are all in the stack frame, and `%rsp` points to the top of the stack; a stack frame is set up when a call begins and freed when the call returns.'
-# src:
-# 
-# **运行时栈**：返回地址、经栈传递的参数、保存的寄存器值与局部变量都在栈帧中，`%rsp` 指向栈顶；栈帧在调用开始时建立，在调用返回时释放。
-
-['recap-part3.notes.1']
-src_hash = '5837cfbe'
+['recap-part4.slide.1']
+src_hash = 'a8942593'
 text = '''
-The recap of Part 3. The first four rows correspond to the five rows of the table "Implementing a function call"; the fifth row is the security problem that comes with the layout of the stack frame.
-The behavior of call and ret is specified by the ISA; the use of arguments, the return value and registers is a convention of the ABI. The 6 callee-saved registers are %rbx, %rbp and %r12 to %r15.
+**Local arrays and structs are allocated in the stack frame**: `main` allocates the space with `subq`, writes the elements and fields at offsets relative to `%rsp`, and passes the starting address to the callee.
+
+**This part has no new instructions**: offsets and strides are fixed by the compiler at compile time, and the accesses use the addressing modes of part one, `leaq`, `imulq` and the shift instructions.
 '''
 # src:
 # 
-# 第三部分的小结。前四行对应「函数调用的实现」一表的五行，第五行是栈帧布局带来的安全问题。
-# call 与 ret 的行为由 ISA 规定，参数、返回值与寄存器的用法由 ABI 约定。6 个 callee-saved 寄存器是 %rbx、%rbp、%r12 到 %r15。
+# **局部的数组与结构体在栈帧中分配**：`main` 用 `subq` 分配空间，按相对 `%rsp` 的偏移写入各元素与各字段，传给被调用者的是起始地址。
+# 
+# **本部分没有新指令**：偏移与步长由编译器在编译时确定，访问使用第一部分的寻址模式、`leaq`、`imulq` 与移位指令。
 
-['rec-exercise.title']
-src_hash = '628235a3'
-text = 'Exercise: the stack frames of recursive calls'
-# src: 练习：递归调用的栈帧
-
-['rec-exercise.slide.1']
-src_hash = '3f0b9883'
+['recap-part4.notes.1']
+src_hash = '52125c0f'
 text = '''
-**`dot_product_rec` computes the dot product by recursion**, and `main` calls `dot_product_rec(w, x, 4)`:
-1. Counting from this call in `main`, how many times is `dot_product_rec` called in all?
-2. While the call with `n` equal to 0 executes, how many return addresses of these calls are on the stack? Which function does each of them return to?
-3. After the recursive call returns, `w[n - 1] * x[n - 1]` still has to be computed. During the recursive call, in which class of register should `w`, `x` and `n` be kept? What does each call therefore have to save on the stack?
-4. Does implementing recursion need any mechanism beyond `call`, `ret`, the register usage convention and stack frames?
+The summary of part four. The first two rows of the table correspond to the two pages "Array declarations and pointer arithmetic" and "Nested arrays: stored in row-major order" of the section "Arrays", the third row to the section "Structs" and the fourth row to the section "Alignment".
+The function matvec in examples/mini-ollama of this lecture likewise takes a pointer to struct tensor as its parameter.
 '''
 # src:
 # 
-# **`dot_product_rec` 用递归计算内积**，`main` 调用 `dot_product_rec(w, x, 4)`：
-# 1. 从 `main` 的这次调用算起，`dot_product_rec` 一共被调用几次？
-# 2. `n` 为 0 的那次调用执行时，这几次调用的返回地址有几个在栈上？它们各自回到哪个函数？
-# 3. 递归调用返回之后还要计算 `w[n - 1] * x[n - 1]`。递归调用期间，`w`、`x`、`n` 应当放在哪一类寄存器中？每次调用因此要在栈上保存什么？
-# 4. 实现递归是否需要 `call`、`ret`、寄存器使用惯例与栈帧之外的机制？
+# 第四部分的小结。表的前两行对应「数组」一节的「数组声明与指针运算」与「嵌套的数组：按行优先顺序存放」两页，第三行对应「结构体」一节，第四行对应「对齐」一节。
+# 本节 examples/mini-ollama 中的函数 matvec，参数同样是指向 struct tensor 的指针。
 
-['rec-exercise.demo.1.name']
-src_hash = 'e3e58e40'
-text = 'Compile dot_rec.c'
-# src: 编译 dot_rec.c
+['struct-exercise.title']
+src_hash = '09d8c28c'
+text = 'Exercise: layout of struct Node and access to its fields'
+# src: 练习：结构体 Node 的布局与字段的访问
 
-['rec-exercise.notes.1']
-src_hash = '744a571c'
+['struct-exercise.slide.1']
+src_hash = '6f2b515c'
 text = '''
-In-class exercise. In recursion, several calls of the same function are active at the same time, and each call has its own return address and saved register values.
-The output of the demo is the listing of dot_product_rec and main, used to check question 3: the testl and jle at the entry handle n <= 0, followed by 3 pushq, 3 mov that save the arguments, leal -1(%rdx), %edx and the recursive call.
+`p` is a pointer to `struct Node` and is in `%rdi`; `i` is in `%rsi`:
+1. Write the offsets of the four fields `name`, `val`, `next` and `flags`, and `sizeof(struct Node)`;
+2. Write the instructions that read `p->val[i]` into `%eax`;
+3. Write the instructions that read `p->name[i]` into `%eax` (the `char` sign-extended to `int`);
+4. Which C statement do the 3 instructions below correspond to?
 '''
 # src:
 # 
-# 课堂练习。递归是同一个函数的多次调用同时处于活动状态，每次调用的返回地址与保存的寄存器值各有一份。
-# 演示的输出是 dot_product_rec 与 main 的清单，用来核对第 3 题：入口的 testl 与 jle 处理 n <= 0，之后是 3 条 pushq、3 条保存参数的 mov、leal -1(%rdx), %edx 与递归的 call。
+# `p` 是指向 `struct Node` 的指针，在 `%rdi` 中；`i` 在 `%rsi` 中：
+# 1. 写出 `name`、`val`、`next`、`flags` 四个字段的偏移与 `sizeof(struct Node)`；
+# 2. 写出把 `p->val[i]` 读入 `%eax` 的指令；
+# 3. 写出把 `p->name[i]` 读入 `%eax` 的指令（`char` 符号扩展为 `int`）；
+# 4. 下面 3 条指令对应哪一条 C 语句？
 
-['rec-exercise-2.title']
-src_hash = '628235a3'
-text = 'Exercise: the stack frames of recursive calls'
-# src: 练习：递归调用的栈帧
-
-['rec-exercise-2.slide.1']
-src_hash = 'c74caa49'
+['struct-exercise.notes.1']
+src_hash = 'df96e258'
 text = '''
-1. 5 times, with `n` equal to 4, 3, 2, 1 and 0 in turn;
-2. 5: the one pushed first returns to `main`, and the other 4 return to `dot_product_rec`;
-3. Callee-saved registers; each call saves the original values of `%r15`, `%r14` and `%rbx` with 3 `pushq`;
-4. No: each call has its own return address and saved register values.
+An in-class exercise. The four fields of struct Node are, in order, a pointer, an array of 3 int, a pointer and a char, with sizes of 8, 12, 8 and 1 bytes; next points to another struct Node.
+Question 1 needs the rules of the two pages on alignment. Questions 2 and 3 are written the same way in C; val is an array and name is a pointer, and the numbers of instructions they need differ.
+The 3 instructions of question 4 are the body of the function set_val in examples/node.c.
 '''
 # src:
 # 
-# 1. 5 次，`n` 依次为 4、3、2、1、0；
-# 2. 5 个：最早压入的回到 `main`，其余 4 个回到 `dot_product_rec`；
-# 3. callee-saved 寄存器；每次调用用 3 条 `pushq` 保存 `%r15`、`%r14`、`%rbx` 的原值；
-# 4. 不需要：每次调用有自己的返回地址与保存的寄存器值。
+# 课堂练习。struct Node 的四个字段依次是指针、3 个 int 的数组、指针、char，大小是 8、12、8、1 字节；next 指向另一个 struct Node。
+# 第 1 题要用到「对齐」两页的规则。第 2 题与第 3 题的写法相同，val 是数组，name 是指针，需要的指令条数不同。
+# 第 4 题的 3 条指令是 examples/node.c 中函数 set_val 的函数体。
 
-['rec-exercise-2.notes.1']
-src_hash = 'e61bf5eb'
+['struct-exercise-2.title']
+src_hash = '09d8c28c'
+text = 'Exercise: layout of struct Node and access to its fields'
+# src: 练习：结构体 Node 的布局与字段的访问
+
+['struct-exercise-2.slide.1']
+src_hash = '9f62e0c3'
 text = '''
-Each row of the figure is what one call pushes onto the stack: the return address pushed by the call that invoked it, and the three registers it saves itself with pushq; each level of recursion adds 32 bytes to the stack. The call with n equal to 0 returns before any pushq, so it has only the return address.
-On the way back, each level first restores the registers with 3 popq, then returns to the level above with ret, with the partial sum computed so far in %eax.
+1. The offsets are 0, 8, 24 and 32, and `sizeof(struct Node)` is 40: there is a gap of 4 bytes after `val` and 7 bytes of padding after `flags`;
+2. `movl 8(%rdi,%rsi,4), %eax`: the 3 elements of `val` are stored inside the struct, and one instruction reads the element;
+3. `movq (%rdi), %rax` reads the pointer `p->name`, and `movsbl (%rax,%rsi), %eax` reads character `i` of what it points to: the struct holds only this pointer;
+4. `p->next->val[i] = p->flags;`: `movq` reads `p->next`, `movsbl` reads the 1-byte `flags` and sign-extends it, and `movl` writes `val[i]`.
 '''
 # src:
 # 
-# 图的每一行是一次调用压入栈的内容：调用它的 call 压入的返回地址，以及它自己用 pushq 保存的三个寄存器，每一层递归在栈上增加 32 字节。n 为 0 的调用在 pushq 之前就返回，只有返回地址。
-# 返回时每一层先用 3 条 popq 恢复寄存器，再用 ret 回到上一层，%eax 中是已经算出的部分和。
+# 1. 偏移是 0、8、24、32，`sizeof(struct Node)` 是 40：`val` 之后有 4 字节的间隙，`flags` 之后有 7 字节的填充；
+# 2. `movl 8(%rdi,%rsi,4), %eax`：`val` 的 3 个元素存放在结构体内，一条指令读出；
+# 3. `movq (%rdi), %rax` 读出指针 `p->name`，`movsbl (%rax,%rsi), %eax` 读出它所指的第 `i` 个字符：结构体内只有这个指针；
+# 4. `p->next->val[i] = p->flags;`：`movq` 读出 `p->next`，`movsbl` 读出 1 字节的 `flags` 并符号扩展，`movl` 写入 `val[i]`。
 
-['bridge-part4.title']
-src_hash = '6531f12d'
-text = 'Part 4: Performance bottlenecks and vectorization'
-# src: 第四部分：性能瓶颈与向量化
-
-['bridge-part4.bridge.1']
-src_hash = '009c4eff'
+['struct-exercise-2.notes.1']
+src_hash = '8b7dbbb6'
 text = '''
-Part 4: Performance bottlenecks and vectorization
+The figure shows the 40 bytes of struct Node, drawn at 24 pixels per byte; the numbers below are offsets.
+Question 1: val takes the 12 bytes at offsets 8 to 19. next is a pointer and its offset must be a multiple of 8, so it is at 24, and the 4 bytes at offsets 20 to 23 are a gap. flags is at 32 and takes 1 byte; the struct is aligned to 8 and its size must be a multiple of 8, so 7 bytes of padding are added at the end.
+The one memory operand of question 2 uses all four parts of the addressing mode: the displacement 8 is the position of the field val, the base is %rdi, and the index %rsi times the scale 4 is the position of val[i] within the array.
+Question 3: name is a pointer, and the struct holds only the 8-byte address; the characters are stored elsewhere. The address is read first and then used as the base to read the character, two accesses to memory. The size of char is 1, so the index is not scaled. gcc treats char as a signed type on x86-64 Linux, and the extension to int uses movsbl.
+Question 4: p->next is the starting address of another struct; once read it serves as the base, and the offset of its val[i] is the same as in question 2. flags is a char and is sign-extended to 32 bits before it is assigned to an int.
+With flags moved to just after val, flags is at offset 20, the gap is 3 bytes, next is still at 24, there is no padding at the end, and sizeof(struct Node) is 32.
+The four questions are checked with examples/node.c: cd examples; gcc -Og -fcf-protection=none -S node.c -o - | sed -f asm.sed prints the listings of the four functions size, val_at, name_at and set_val; size returns sizeof(struct Node), which is movl $40, %eax in the listing.
+'''
+# src:
+# 
+# 图中是 struct Node 的 40 字节，按 1 字节 24 像素绘制，下方的数字是偏移。
+# 第 1 题：val 占偏移 8 到 19 的 12 字节。next 是指针，偏移必须是 8 的倍数，所以在 24，偏移 20 到 23 的 4 字节是间隙。flags 在 32，占 1 字节；结构体按 8 对齐，大小必须是 8 的倍数，末尾填充 7 字节。
+# 第 2 题的一个内存操作数用到寻址模式的全部四个部分：偏移 8 是字段 val 的位置，基址 %rdi，变址 %rsi 乘以比例 4 是 val[i] 在数组中的位置。
+# 第 3 题：name 是指针，结构体内只有 8 字节的地址，字符存放在别处；先读出地址，再以它为基址读出字符，访问内存两次。char 的大小是 1，变址不乘比例。gcc 在 x86-64 Linux 上把 char 当作有符号类型，扩展为 int 用 movsbl。
+# 第 4 题：p->next 是另一个结构体的起始地址，读出后作为基址；它的 val[i] 的偏移与第 2 题相同。flags 是 char，赋给 int 之前符号扩展为 32 位。
+# 把 flags 移到 val 之后，flags 在偏移 20，间隙是 3 字节，next 仍在 24，末尾没有填充，sizeof(struct Node) 是 32。
+# 四道题用 examples/node.c 核对：cd examples; gcc -Og -fcf-protection=none -S node.c -o - | sed -f asm.sed 输出 size、val_at、name_at、set_val 四个函数的清单；size 返回 sizeof(struct Node)，清单中是 movl $40, %eax。
+
+['bridge-part5.title']
+src_hash = 'd82f75af'
+text = 'Part 5: Performance bottlenecks and vectorization'
+# src: 第五部分：性能瓶颈与向量化
+
+['bridge-part5.bridge.1']
+src_hash = '3ac98742'
+text = '''
+Part 5: Performance bottlenecks and vectorization
 From scalar computation to vectors and concurrency
 '''
 # src:
-# 第四部分：性能瓶颈与向量化
+# 第五部分：性能瓶颈与向量化
 # 从标量计算到向量与并发
 
-['section.part4.title']
-src_hash = 'e88b29f3'
-text = 'Part 4: Performance bottlenecks and vectorization — from scalar computation to vectors and concurrency'
-# src: 第四部分：性能瓶颈与向量化——从标量计算到向量与并发
+['section.part5.title']
+src_hash = '5a706782'
+text = 'Part 5: Performance bottlenecks and vectorization — from scalar computation to vectors and concurrency'
+# src: 第五部分：性能瓶颈与向量化——从标量计算到向量与并发
 
 ['flops-estimate.title']
 src_hash = '921a94b8'
@@ -5083,7 +5702,7 @@ text = '''
 # - Qwen3-VL-2B（Q4_0）：$I \approx 3.6$ FLOP/Byte，位于访存受限区，上限 53 Token/s。
 
 ['hw-peak.notes.1']
-src_hash = '38715a6d'
+src_hash = 'a6beb427'
 text = '''
 320 GFLOPS is taken from Intel's APP Metrics for Intel Microprocessors (Intel Core Processors, Revision 8, January 6, 2026), a document that lists the GFLOPS of every model for export compliance.
 51.2 GB/s is taken from the Max Memory Bandwidth entry for the i9-11900H on Intel's product specifications page; the memory specification is dual-channel, up to 3200 MT/s.
@@ -5097,7 +5716,7 @@ The hollow circle in the figure is the bandwidth limit of the language model of 
 # 320 GFLOPS 取自 Intel 的 APP Metrics for Intel Microprocessors（Intel Core Processors，Revision 8，2026 年 1 月 6 日），这份文档为出口合规列出每个型号的 GFLOPS。
 # 51.2 GB/s 取自 Intel 产品规格页中 i9-11900H 的 Max Memory Bandwidth 一项，内存规格为双通道、最高 3200 MT/s。
 # 算术强度 I 是计算量与访存量之比（第二讲），1 次乘加计 2 次运算。I 低于平衡点的程序处于访存受限区，速率上限是 B × I；高于平衡点的程序处于算力受限区，上限是 P。
-# 这份文档的 GFLOPS 按 64 位浮点运算计数。本讲沿用第二讲的约定，各种数据类型的乘加都按 1 次乘加 2 次运算计数。
+# 这份文档的 GFLOPS 按 64 位浮点运算计数。本节沿用第二讲的约定，各种数据类型的乘加都按 1 次乘加 2 次运算计数。
 # 平衡点是第二讲的名称，第二讲中 RTX 5090 的平衡点约为 117 FLOP/Byte。
 # 图中的空心圆是 Qwen3-VL-2B 语言模型的带宽上限：算术强度 3.44 ÷ 0.968 ≈ 3.55 FLOP/Byte，51.2 GB/s × 3.55 FLOP/Byte ≈ 182 GFLOPS，即 51.2 ÷ 0.968 ≈ 53 Token/s。
 
@@ -5165,24 +5784,24 @@ text = 'Photos, from left to right, from Wikimedia Commons by D-Kuru (CC BY-SA 4
 # src: 照片从左到右来自 Wikimedia Commons 的 D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。
 
 ['system-limits.notes.1']
-src_hash = 'ee909658'
+src_hash = '593fdeac'
 text = '''
 The skeleton of the figure is the figure of the page "The CPU fetches instructions and data from memory to compute" at the start of this lecture, with the CPU expanded into three parts: a register, the arithmetic units and the execution of instructions.
 Red: the memory bandwidth of 51.2 GB/s limits the path that carries the weights from memory to the CPU. For every token generated, 0.968 GB of weights pass along this path once, so the generation speed is at most 53 Token/s.
 Blue: the peak compute of 320 GFLOPS is the rate when the arithmetic units of all 8 cores operate at the same time and every instruction uses all 256 bits of the register.
 Green: ollama on one thread uses 1 core, and one of its instructions uses all 256 bits of the register. The compute limit of 1 core is 320 ÷ 8 = 40 GFLOPS, and the measured rate is about 37 GFLOPS. In libggml-cpu-icelake.so, the library this machine loads, the main loop of its Q4_0 dot product function ggml_vec_dot_q4_0_q8_0 executes 22 instructions for 32 weights per iteration, and one of them, vpdpbusd, multiplies 32 pairs of 8-bit integers and accumulates the products.
 Orange: mini-ollama uses 1 core; one of its instructions processes 1 weight and uses only the low 32 bits of the register. The inner loop of matvec executes 20 instructions for 2 weights per iteration.
-Execution of instructions: the number of instructions a CPU can start to execute in one clock cycle has a limit, so the more instructions one multiply-add needs, the fewer multiply-adds are completed per second. A core contains several sets of arithmetic units and can process several mutually independent instructions at the same time; the page "Superscalar" in part 6 of lecture 4 covers this. Instructions per multiply-add: 20 ÷ 2 = 10 for mini-ollama and 22 ÷ 32 ≈ 0.69 for ollama, a factor of 14.5; the measured generation speeds differ by a factor of 14.
+Execution of instructions: the number of instructions a CPU can start to execute in one clock cycle has a limit, so the more instructions one multiply-add needs, the fewer multiply-adds are completed per second. A core contains several sets of arithmetic units and can process several mutually independent instructions at the same time; the page "Superscalar" in part 5 of lecture 4 covers this. Instructions per multiply-add: 20 ÷ 2 = 10 for mini-ollama and 22 ÷ 32 ≈ 0.69 for ollama, a factor of 14.5; the measured generation speeds differ by a factor of 14.
 The 256-bit register and the vector instructions that process several data items in one instruction are covered by the pages that start with "The vector system: the SIMD idea and the 256-bit YMM registers".
 '''
 # src:
 # 
-# 图的骨架是本讲开头「CPU从内存中获取指令与数据进行计算」一页的图，CPU 展开为寄存器、运算单元与指令执行三部分。
+# 图的骨架是本节开头「CPU从内存中获取指令与数据进行计算」一页的图，CPU 展开为寄存器、运算单元与指令执行三部分。
 # 红色：内存带宽 51.2 GB/s 限制权重从内存到 CPU 的通路。每生成一个 Token，0.968 GB 权重经过这条通路一次，生成速度至多 53 Token/s。
 # 蓝色：峰值算力 320 GFLOPS 是 8 个核心的运算单元全部同时运算、每条指令都使用寄存器全部 256 位时的速率。
 # 绿色：单线程的 ollama 使用 1 个核心，它的一条指令使用寄存器的全部 256 位。1 个核心的算力上限是 320 ÷ 8 = 40 GFLOPS，实测约 37 GFLOPS。它计算 Q4_0 内积的函数 ggml_vec_dot_q4_0_q8_0 在本机使用的 libggml-cpu-icelake.so 中，主循环每轮 22 条指令处理 32 个权重，其中一条 vpdpbusd 完成 32 对 8 位整数的乘法并把乘积累加。
 # 橙色：mini-ollama 使用 1 个核心，它的一条指令处理 1 个权重，只使用寄存器的低 32 位。matvec 的内层循环每轮 20 条指令处理 2 个权重。
-# 指令执行：CPU 每个时钟周期能开始执行的指令条数有上限，完成一次乘加需要的指令越多，每秒完成的乘加越少。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第六部分的「超标量」一页讲解。每次乘加的指令条数：mini-ollama 是 20 ÷ 2 = 10 条，ollama 是 22 ÷ 32 ≈ 0.69 条，相差 14.5 倍；实测的生成速度相差 14 倍。
+# 指令执行：CPU 每个时钟周期能开始执行的指令条数有上限，完成一次乘加需要的指令越多，每秒完成的乘加越少。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。每次乘加的指令条数：mini-ollama 是 20 ÷ 2 = 10 条，ollama 是 22 ÷ 32 ≈ 0.69 条，相差 14.5 倍；实测的生成速度相差 14 倍。
 # 256 位的寄存器与一条指令处理多个数据的向量指令，由后面「向量体系：SIMD 思想与 256 位 YMM 寄存器」起的几页讲解。
 
 ['insn-mix.title']
@@ -5288,11 +5907,11 @@ text = '''
 # **结论**：这个上限来自 CPU 的时钟：主频是每秒的周期数，每个周期最多有 5 条指令开始执行，每秒能执行的指令条数因此有上限，与指令的功能无关。两个程序的速度差距主要来自每次乘加的指令条数，减少条数可以提高运算速率。
 
 ['insn-mix.notes.1']
-src_hash = 'e199c81a'
+src_hash = '2878e6e8'
 text = '''
 The loop in the table is the inner loop of matvec, taken from objdump -d mini-ollama and generated by gcc -O2 -fno-tree-vectorize: 20 instructions, 79 bytes. Each iteration processes 1 byte of weights and completes 2 multiply-adds, an average of 10 instructions per multiply-add.
 4 instructions perform the multiplications and the accumulation: 2 mulss each read 1 activation from memory and multiply, and 2 addss accumulate. The other 16 read the weights (1), extract the two 4-bit stored values (6), convert them to float and multiply them by the scale factor d (6), and control the loop (3).
-At most 5 instructions start to execute in a core per cycle. An instruction takes 1 or several cycles from the start of its execution to its result (mulss takes 4 cycles), and the executions of several instructions overlap. A core contains several sets of arithmetic units and can process several mutually independent instructions at the same time; the page "Superscalar" in part 6 of lecture 4 covers this.
+At most 5 instructions start to execute in a core per cycle. An instruction takes 1 or several cycles from the start of its execution to its result (mulss takes 4 cycles), and the executions of several instructions overlap. A core contains several sets of arithmetic units and can process several mutually independent instructions at the same time; the page "Superscalar" in part 5 of lecture 4 covers this.
 With 5 instructions per cycle and 10 instructions per multiply-add, at most 0.5 multiply-adds complete per cycle, that is, each iteration needs at least 4 cycles. cmp and jne are fused into 1 inside the core; counted as 19 instructions, each iteration needs at least 3.8 cycles, and the page estimates with 20.
 The clock frequency of about 3.8 GHz was read from scaling_cur_freq under /sys while mini-ollama was running. 1.9 × 10⁹ multiply-adds per second is 3.8 GFLOPS; divided by the 1.72 × 10⁹ multiply-adds of one token it gives 1.1 Token/s.
 A clock cycle is the unit of time in which the circuits inside a CPU work in step; at 3.8 GHz one cycle is about 0.26 nanoseconds. A core executes at most 5 × 3.8 × 10⁹ = 1.9 × 10¹⁰ instructions per second, and this number does not depend on what the instructions do: the shr and and that extract a 4-bit weight count as 1 each, as does the mulss that multiplies. Of the 10 instructions mini-ollama spends on one multiply-add, 8 read the weights, restore the float weights and control the loop.
@@ -5304,7 +5923,7 @@ The main loop of ggml_vec_dot_q4_0_q8_0 in ollama (icelake build) executes 22 in
 # 
 # 表中的循环取自 objdump -d mini-ollama 中 matvec 的内层循环，由 gcc -O2 -fno-tree-vectorize 生成，共 20 条指令、79 字节，每轮处理 1 字节权重，完成 2 次乘加，平均每次乘加 10 条。
 # 完成乘法与累加的是 4 条：2 条 mulss 各从内存读取 1 个激活值并相乘，2 条 addss 累加。其余 16 条读取权重（1 条）、拆出两个 4 位存储值（6 条）、把它们转换为 float 并乘以缩放因子 d（6 条）、控制循环（3 条）。
-# 核心每个周期最多有 5 条指令开始执行。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第六部分的「超标量」一页讲解。
+# 核心每个周期最多有 5 条指令开始执行。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。
 # 每个周期 5 条、每次乘加 10 条，每个周期至多完成 0.5 次乘加，即每轮循环至少 4 个周期。cmp 与 jne 在核心内部合并为 1 条，按 19 条计算每轮至少 3.8 个周期，页面按 20 条估算。
 # 主频约 3.8 GHz 是运行 mini-ollama 时读取 /sys 下的 scaling_cur_freq 得到的。每秒 1.9 × 10⁹ 次乘加即 3.8 GFLOPS，除以每个 Token 的 1.72 × 10⁹ 次乘加得到 1.1 Token/s。
 # 时钟周期是 CPU 内部电路同步工作的时间单位，主频 3.8 GHz 时一个周期约 0.26 纳秒。一个核心每秒至多执行 5 × 3.8 × 10⁹ = 1.9 × 10¹⁰ 条指令，这个数与指令的功能无关：拆出 4 位权重的 shr、and 与完成乘法的 mulss 各计 1 条。mini-ollama 每次乘加的 10 条指令中，8 条用于读取权重、还原为 float 权重与控制循环。
@@ -5411,7 +6030,7 @@ text = '''
 # 2. **提高每个周期完成的乘加次数**：需要更多的运算单元，即 GPU（CUDA）。
 
 ['speedup-plan.notes.1']
-src_hash = 'b0a27579'
+src_hash = 'c2ccfce8'
 text = '''
 The first two columns of the table are those of the page "Bottleneck analysis: instructions executed per multiply-add"; the third column states whether each factor can be changed.
 The number of instructions per multiply-add is determined by the instructions the program uses. A 256-bit vector register can hold 8 32-bit integers or 32 8-bit integers, and one vector instruction performs the same operation on each of its elements, so this number falls below 1; the 0.69 of ollama is obtained this way. From "The evolution of vectors: from MMX and SSE to AVX and AVX-512" on, this lecture covers these instructions.
@@ -5423,7 +6042,7 @@ The pages on vector instructions keep the integer dot product sum += w[i] * x[i]
 # src:
 # 
 # 表的前两列与「瓶颈分析：每次乘加执行的指令条数」一页相同，第三列说明每个因素能否改变。
-# 每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本讲接下来从「向量演进：从 MMX、SSE 到 AVX 与 AVX-512」起讲解这类指令。
+# 每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本节接下来从「向量演进：从 MMX、SSE 到 AVX 与 AVX-512」起讲解这类指令。
 # 每个周期开始执行的指令条数由硬件决定，一个核心是 5 条。提高它需要更多同时工作的运算单元。i9-11900H 有 8 个核心，ollama 用 8 个线程时实测 31.4 Token/s，是 1 个线程的 2.9 倍；GPU 的运算核心数量比 CPU 多三个数量级，由「线程并行：CPU 多核与 GPU」起的各页讲解。
 # 主频的提高受电路延迟与功耗限制。每个 Token 的乘加次数由模型的权重数决定，推理程序不改变它。
 # 两个方案提高的都是运算速率，在 CPU 上共同的上限是「硬件上限」一页的带宽上限 53 Token/s。GPU 使用自己的显存，它的带宽上限由显存带宽决定（第二讲）。
@@ -5439,7 +6058,7 @@ src_hash = '8f1857de'
 text = 'The SIMD idea: data parallelism'
 # src: SIMD 思想：数据并行
 
-['section.part4-simd.title']
+['section.part5-simd.title']
 src_hash = '8f1857de'
 text = 'The SIMD idea: data parallelism'
 # src: SIMD 思想：数据并行
@@ -5499,7 +6118,7 @@ text = '''
 - The hardware provides 16 256-bit vector registers: `%ymm0` ~ `%ymm15`;
 - **Backward-compatible mapping**: the low 128 bits of each `%ymm` register are mapped to the `%xmm` register of the same name;
 - A single 256-bit `%ymm` register can hold at once:
-  - **8 32-bit integers (int32)** $\leftarrow$ the `dot_product` of this section;
+  - **8 32-bit integers (int32)** $\leftarrow$ the `dot_product` of this lecture;
   - or 8 single-precision floating-point numbers (float32);
   - or 4 64-bit integers / double-precision floating-point numbers;
   - or 32 8-bit integers (int8 / characters).
@@ -5779,7 +6398,7 @@ src_hash = 'b2565505'
 text = 'The SIMT idea: thread parallelism'
 # src: SIMT 思想：线程并行
 
-['section.part4-simt.title']
+['section.part5-simt.title']
 src_hash = 'b2565505'
 text = 'The SIMT idea: thread parallelism'
 # src: SIMT 思想：线程并行
@@ -6245,19 +6864,19 @@ text = 'Summary of the lecture: the abstraction layers of a computer system and 
 # src: 全节总结：计算机系统的抽象层级与指令集契约
 
 ['summary.slide.1']
-src_hash = '11959b64'
+src_hash = '15338e44'
 text = '''
 **The abstraction layers of a computer system**:
-1. **High-level language layer (C/C++)**: provides abstractions for expressing algorithms and for structured thinking (loops, functions, arrays), hiding the details of the physical hardware underneath;
-2. **Application binary interface (ABI)**: the software contract built on top of the ISA (function calling conventions, responsibilities for preserving registers, run-time stack alignment, sizes of data types); the same ISA has different ABIs on Linux and Windows;
+1. **High-level language layer (C/C++)**: provides abstractions for expressing algorithms and for structured thinking (loops, functions, arrays, structs), hiding the details of the physical hardware underneath;
+2. **Application binary interface (ABI)**: the software contract built on top of the ISA (function calling conventions, responsibilities for preserving registers, run-time stack alignment, sizes and alignment of data types, layout of structs); the same ISA has different ABIs on Linux and Windows;
 3. **Instruction set architecture (ISA)**: the interface specification between the software and the hardware of a computer (instruction formats and encodings, architectural registers, programmer-visible state, memory addressing modes), which keeps strict backward compatibility across generations;
 4. **Microarchitecture and hardware circuit layer**: the physical implementation inside the chip (out-of-order execution pipeline, ALU/AGU arithmetic units, execution ports, physical buses and transistors).
 '''
 # src:
 # 
 # **计算机系统的抽象层级划分**：
-# 1. **高级语言层（C/C++）**：提供算法表达的抽象与结构化思维（循环、函数、数组），屏蔽底层物理硬件细节；
-# 2. **应用二进制接口（ABI）**：建立在 ISA 之上的软件契约规范（函数调用约定、寄存器保护职责、运行时栈对齐、数据类型大小），同一 ISA 在 Linux 与 Windows 下有不同 ABI；
+# 1. **高级语言层（C/C++）**：提供算法表达的抽象与结构化思维（循环、函数、数组、结构体），屏蔽底层物理硬件细节；
+# 2. **应用二进制接口（ABI）**：建立在 ISA 之上的软件契约规范（函数调用约定、寄存器保护职责、运行时栈对齐、数据类型的大小与对齐、结构体的布局），同一 ISA 在 Linux 与 Windows 下有不同 ABI；
 # 3. **指令集体系结构（ISA）**：计算机软硬件之间的接口规范（指令格式与编码、架构寄存器、程序员可见状态、内存寻址模式），在代际演进中保持严格的向后兼容；
 # 4. **微架构与硬件电路层（Microarchitecture）**：芯片内部的物理实现（乱序执行流水线、ALU/AGU 算术单元、执行端口、物理总线与晶体管）。
 
@@ -6370,16 +6989,16 @@ text = '''
 # - 每一步的任务、规则与期望输出见各自目录下的 `README.md`。
 
 ['exercise.notes.1']
-src_hash = '3ef8e177'
+src_hash = '7aa408c7'
 text = '''
-parallel-dot is the after-class exercise of part four and is not graded. Each step has its own directory, Makefile and README.md, and the two steps match solution 1 (SIMD) and solution 2 (GPU) of the "Solutions" page.
+parallel-dot is the after-class exercise of part five and is not graded. Each step has its own directory, Makefile and README.md, and the two steps match solution 1 (SIMD) and solution 2 (GPU) of the "Solutions" page.
 The program of step 1 is the mini-ollama of the "Measured" page: its inner loop becomes the function vec_dot_q4_0, the dot product of one Q4_0 row of weights with a float vector. The framework provides a scalar reference that handles one weight at a time; the student writes the AVX2 version, which handles the 32 weights of one Q4_0 block per step. make test runs dot-selftest and needs no model file: it checks the result against the definition, then compares the speed with the scalar reference, and prints all passed at 4 times or more. make run reads the q4_0.gguf that the nano-quant lab of lecture 2 produces with the q4_0 recipe and prints the generation speed; on the i9-11900H a 256-bit implementation reaches 4.5 Token/s and the scalar reference 0.76 Token/s (2026-10-05).
 The 4 kernels of step 2 are dot_kernel, dot_stride_kernel, matvec_row_kernel and matvec_block_kernel. dot_kernel works as the kernel of the page "CUDA programs: the kernel function every thread executes" does. make run prints a table; each row gives the time of one variant or one phase, its speed-up over the scalar CPU version, and whether its result equals the CPU result.
 A machine without an NVIDIA GPU uses make remote to submit the two files under kernels/ to the course server, which compiles and runs them and returns the same table; HOST:PORT is the address of the course server.
 '''
 # src:
 # 
-# parallel-dot 是第四部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
+# parallel-dot 是第五部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
 # 第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
 # 第二步的 4 个 kernel 是 dot_kernel、dot_stride_kernel、matvec_row_kernel 与 matvec_block_kernel。dot_kernel 的做法与「CUDA 程序：每个线程执行的 kernel 函数」一页的 kernel 相同。make run 输出一张表，每一行是一个版本或一个阶段的耗时、相对 CPU 标量版本的加速比与结果是否和 CPU 一致。
 # 没有 NVIDIA 显卡的机器用 make remote 把 kernels/ 下的两个文件提交到课程服务器，服务器编译、运行后返回同一张表，HOST:PORT 是课程服务器的地址。
@@ -6390,11 +7009,11 @@ text = 'Lab 1 mini-cpu: an x86-64 instruction interpreter'
 # src: 实验一 mini-cpu：x86-64 指令解释器
 
 ['lab-mini-cpu.slide.1']
-src_hash = 'beacf94f'
+src_hash = '91d32407'
 text = '- **This lab is graded**, 100 points in total: write the instruction interpreter of `mini-cpu`, which executes the x86-64 instructions of this lecture.'
 # src:
 # 
-# - **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本讲的 x86-64 指令。
+# - **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本节的 x86-64 指令。
 
 ['lab-mini-cpu.table.1.cell.0.0']
 src_hash = '39932f24'
@@ -6470,11 +7089,11 @@ text = '''
 # - 在 x86-64 的 Linux 上完成，Windows 用 WSL2；说明见 `src/lab1/README.md`。
 
 ['lab-mini-cpu.notes.1']
-src_hash = 'fff95599'
+src_hash = 'a5beadad'
 text = '''
 Lab 1 is the first of the six mini-cpu labs. It is graded, 100 points in total; the later labs use the code of lab 1. The released archive is mini-cpu-lab1.zip, to be unpacked into an empty directory.
 mini-cpu loads an x86-64 executable from guest/ and executes its instructions. The three source files hold only the functions to write; each function body is a TODO comment plus a call todo("name"), and the interfaces are in include/mcpu.h under the comments that begin with Lab 1:. The suggested order is modrm.c, alu.c, interp.c.
-modrm.c matches the two pages "Exercise: disassembly and decompilation": the operand byte is split into three fields, which give a register number or the address of a memory operand; the lab also has cases those two pages did not cover (an address with a displacement, an address with an index register), and the handout gives their rules. The 4 functions of alu.c are x86_szp, x86_add, x86_sub and x86_logic, matching the definitions of the flags ZF, SF, CF and OF. cond in interp.c matches the conditions of the conditional jumps, and interp_run is the main loop.
+modrm.c matches the first two pages of "Exercise: disassembly and decompilation": the operand byte is split into three fields, which give a register number or the address of a memory operand; the lab also has cases those two pages did not cover (an address with a displacement, an address with an index register), and the handout gives their rules. The 4 functions of alu.c are x86_szp, x86_add, x86_sub and x86_logic, matching the definitions of the flags ZF, SF, CF and OF. cond in interp.c matches the conditions of the conditional jumps, and interp_run is the main loop.
 The interpreter executes 7 vector instructions; of them vpxor, vmovdqu, vpmulld and vpaddd are the instructions of the loop body of dot_product_avx2 in the section "The SIMD idea". The other instructions gcc emits (8-bit and 16-bit forms, multiplication and division, shifts and so on) are executed by the framework. Once the lab is done, the programs under guest/ run on the interpreter; guest/mini-ollama is the mini-ollama of the "Measured" page.
 make check has 20 items of 5 points each, and an item scores only when all of it passes; the seed of the random parameters differs from run to run, and the same tests are run when a submission is graded. The lab1.zip that make handin produces holds only the 3 source files under src/lab1, so changes outside src/ have no effect. The reference implementation scores 100/100 with make check in a directory that holds lab 1 only (2026-10-09).
 Environment: x86-64 Linux runs it directly; on x86-64 Windows work in WSL2; on arm64 macOS use an x86-64 Linux container or the course server.
@@ -6483,7 +7102,7 @@ Environment: x86-64 Linux runs it directly; on x86-64 Windows work in WSL2; on a
 # 
 # 实验一是 mini-cpu 六个实验中的第一个，计分，满分 100 分；后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
 # mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。建议的顺序是 modrm.c、alu.c、interp.c。
-# modrm.c 对应「练习：反汇编和反编译」两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
+# modrm.c 对应「练习：反汇编和反编译」的前两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
 # 解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
 # make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
 # 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。

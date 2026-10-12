@@ -331,7 +331,9 @@ handle for chaining (see [Footnotes](#footnotes) and
 | `p.demo(name, command, output=…, bold=…, timeout=…, interactive=…, files=…)` | `demo` | A command, shown as a transcript; the deck can [run it and stream the output](usage.md#running-a-demo-from-the-deck), take typed input when it is `interactive=True`, and [show the files it names](usage.md#showing-a-source-file-from-the-deck). |
 
 `slide`, `aside`, and the inline `**bold**`/`*italic*`/`` `code` ``/`[label](url)`
-markdown inside cells and callouts pass straight through to the renderer.
+markdown inside cells and callouts pass straight through to the renderer. A
+link whose address begins `file:` is the one exception: it is a
+[file button](#file-buttons-in-text-labelfilepath), not a hyperlink.
 
 ### The `pseudo` language
 
@@ -622,6 +624,49 @@ projector.
 All three targets draw it: the viewer (and so PDF/PNG), PowerPoint (via its own
 text highlight, so it stays editable), and the book. The book only ever sees one
 through `p.slide(..., only=["latex"])` — a slide never reaches it otherwise.
+
+### File buttons in text (`[label](file:path)`)
+
+A page that explains a listing wants the source file one press away. Where a
+command works on the file, [`p.demo(..., files=[...])`](#demos) hangs the button
+on the command. Where a sentence only *mentions* the file, the sentence names
+it: a link whose address is `file:` followed by the path.
+
+```python
+p.slide("""
+`main` 的定义在 [main.c](file:examples/main.c) 中。
+- 结构体的定义在 [tensor.h](file:examples/tensor.h) 中；
+""")
+p.table([["[Makefile](file:Makefile)", "构建规则"]], headers=["文件", "内容"])
+```
+
+The path is relative to the lecture's own directory, as an entry of `files=` is,
+and the label is whatever the sentence needs — the file's name, `查看源码`, a
+`` `code span` ``. In a `view --watch` session the label is a button that opens
+the file in the [panel](usage.md#showing-a-source-file-from-the-deck) a demo's
+file button opens; the two share one table of files, so the same path is the
+same button. The button is a pill with a page icon before the label, tinted in
+the theme's accent and filled when the pointer is over it. A rendered bundle,
+the PDF and the PNG keep the pill and the icon in a grey outline with nothing
+behind them, so a file still reads as a file. **PowerPoint, the book and the
+transcript sheet print the label as the text it is**: nothing can be pressed
+there, and the sentence still reads.
+
+The pill is wider than its label by the icon and the padding, about two
+characters. A line that was full before the button went in wraps.
+
+**It is legal in `p.slide(...)`, in each column of `p.columns(...)` and in the
+cells of `p.table(...)`, and nowhere else** — not in a title, a caption, a
+sidenote, a footnote, a callout bubble, a chip, `notes` or `prose`. These three
+are the text every target reads as inline markdown and sets as a line of the
+page. A `code` block, a demo's `output=` and an inline `` `code span` `` are
+verbatim, so they may *show* the syntax.
+
+Checked when the deck is built, and a `ValidationError` on any of: the link
+outside those three places; a path that is absolute or leaves the lecture
+directory through `..`; a near miss such as `[](file:a.c)` (no label) or
+`[a.c](file: a.c)` (a space in the address), which markdown would otherwise
+print as the characters they are.
 
 ### Math in slides
 
@@ -1261,6 +1306,10 @@ Such a block has nothing to run. The deck draws the file buttons and the name,
 without ▶ and without a `$` line; the PPTX and the book print the name and the
 description and no listing; `demos.json` does not list it. An `output=` is
 still shown when one is given.
+
+A file that a sentence already mentions needs no block: the sentence names it,
+`[main.c](file:examples/main.c)`, and its label is the button (see
+[File buttons in text](#file-buttons-in-text-labelfilepath)).
 
 The **deck** draws a one-line chip for a bare one-liner, and a transcript box —
 `pre`'s own box, so a page that used to hold a `p.code(...)` of the same thing

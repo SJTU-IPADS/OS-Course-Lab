@@ -3,7 +3,9 @@
 A demo runs a command; the file the command compiles is the other half of the
 same point, and a lecture that cannot put it on screen sends the room to a
 terminal instead. ``p.demo(..., files=[...])`` names those files, and the deck
-grows a button per file that opens it in a panel.
+grows a button per file that opens it in a panel. A file a sentence mentions is
+named where it is mentioned, ``[label](file:path)`` (see
+`lecturekit.filelinks`), and its label is a button onto the same panel.
 
 The trust model is `lecturekit.demo`'s, for the same reason: the page is HTML in
 a browser, so it carries an **identifier** and the server maps it back to the
@@ -30,7 +32,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
-from . import model
+from . import filelinks, model
 
 #: The table of viewable files, written next to the deck by the viewer renderer
 #: and read back by the dev server. Rewritten on every render — always, even
@@ -99,11 +101,9 @@ def normalize(files) -> list[str]:
         path = str(entry).strip()
         if not path:
             raise model.ValidationError("demo files must not be empty")
-        pure = PurePosixPath(path)
-        if pure.is_absolute() or ".." in pure.parts:
-            raise model.ValidationError(
-                f"demo file must be relative to the lecture directory, got {path!r}"
-            )
+        problem = filelinks.path_problem(path)
+        if problem:
+            raise model.ValidationError(f"demo file {problem}, got {path!r}")
         if path not in out:
             out.append(path)
     return out
@@ -119,8 +119,19 @@ class Source:
         return {"path": self.path}
 
 
+def paths(block: model.Block) -> list[str]:
+    """The files ``block`` names: a demo's ``files=``, a text's file links."""
+    if block.kind == "demo":
+        return normalize(block.content.get("files"))
+    return [
+        path
+        for text in model.file_link_texts(block)
+        for _label, path in filelinks.find(text)
+    ]
+
+
 def collect(lecture: model.Lecture) -> dict[str, Source]:
-    """``source id -> file`` for every file the lecture's demo blocks still name.
+    """``source id -> file`` for every file the lecture's blocks still name.
 
     Disabled blocks are left out, on `lecturekit.demo.collect`'s reasoning: a
     block taken out of every target is not part of this deck.
@@ -128,9 +139,9 @@ def collect(lecture: model.Lecture) -> dict[str, Source]:
     table: dict[str, Source] = {}
     for page in model.flatten_pages(lecture.children):
         for block in page.blocks:
-            if block.kind != "demo" or block.disabled:
+            if block.disabled:
                 continue
-            for path in normalize(block.content.get("files")):
+            for path in paths(block):
                 table[source_id(path)] = Source(path=path)
     return table
 

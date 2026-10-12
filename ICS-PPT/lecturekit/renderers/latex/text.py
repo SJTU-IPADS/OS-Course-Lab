@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import re
 
-from ... import marks
+from ... import filelinks, marks
 
 # Tone -> the \definecolor name of the marker ink `\lkmark` draws with, shared
 # with the marked code line `blocks.py` washes with `\lkpshl` — a marked word and
@@ -99,8 +99,12 @@ def inline(text: str, refs=None) -> str:
             rendered = r"\texttt{%s}" % escape(raw[1:-1])
         elif kind == "link":
             label, url = _LINK_PARTS_RE.match(raw).groups()
-            # The label is prose (escape it); the URL is a URL (leave it be).
-            rendered = r"\href{%s}{%s}" % (url, inline(label, refs=refs))
+            if filelinks.path_of(url) is not None:
+                # A file button has nothing to open on paper: its label is text.
+                rendered = inline(label, refs=refs)
+            else:
+                # The label is prose (escape it); the URL is a URL (leave it be).
+                rendered = r"\href{%s}{%s}" % (url, inline(label, refs=refs))
         elif kind == "ref":
             rendered = refs(raw[2:-1]) if refs else escape(raw)
         else:

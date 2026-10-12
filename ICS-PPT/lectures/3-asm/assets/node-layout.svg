@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 108" width="1120" height="108">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="113.0" y="36.0" width="192.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="209.0" y="63.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">name</text>
+<text x="113.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<rect x="305.0" y="36.0" width="96.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="353.0" y="63.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">val[0]</text>
+<text x="305.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
+<rect x="401.0" y="36.0" width="96.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="449.0" y="63.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">val[1]</text>
+<text x="401.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">12</text>
+<rect x="497.0" y="36.0" width="96.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="545.0" y="63.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">val[2]</text>
+<text x="497.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">16</text>
+<rect x="593.0" y="36.0" width="96.0" height="42.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="641.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">间隙，4 字节</text>
+<text x="593.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">20</text>
+<rect x="689.0" y="36.0" width="192.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="785.0" y="63.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">next</text>
+<text x="689.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">24</text>
+<rect x="881.0" y="36.0" width="24.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="893.0" y="20.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">flags</text>
+<line x1="893.0" y1="25.0" x2="893.0" y2="34.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="881.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">32</text>
+<rect x="905.0" y="36.0" width="168.0" height="42.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="989.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">填充，7 字节</text>
+<text x="905.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">33</text>
+<text x="1073.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">40</text>
+<line x1="57.0" y1="57.0" x2="108.0" y2="57.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<text x="49.0" y="62.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">p</text>
+</svg>

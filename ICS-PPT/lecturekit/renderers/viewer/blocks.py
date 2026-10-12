@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from lecturekit import model, pseudo
+from lecturekit import filelinks, model, pseudo
 
 
 def escape_html(text: str) -> str:
@@ -78,8 +78,31 @@ def _float_image_html(image: dict) -> str:
     return f'<img src="{src}" alt="{alt}" style="{style};" />'
 
 
+def _file_button(label: str, path: str) -> str:
+    """One ``[label](file:path)`` as the button the live preview arms.
+
+    The markup of a demo block's file button, for the same reasons: an id and
+    not a path, and ``disabled`` until ``source.js`` has a server behind it. It
+    sits in a line markdown-it still parses, so its label is rendered here and
+    made inert on the way out.
+    """
+    from lecturekit import source as source_module
+
+    return (
+        '<button class="lk-text-file" type="button" disabled'
+        f' data-lk-source="{source_module.source_id(path)}"'
+        f' aria-label="Show {_inert_md(escape_html(path))}">'
+        f"{_inert_md(_inline_md(label))}</button>"
+    )
+
+
+def _file_buttons(text: str) -> str:
+    """Markdown with each file link drawn as its button. See `lecturekit.filelinks`."""
+    return filelinks.replace(text, _file_button)
+
+
 def _slide(block):
-    content = str(block.content).strip()
+    content = _file_buttons(str(block.content).strip())
     image = block.float_image
     if image:
         # The theme lays the slide body out as a flex column, where a bare
@@ -295,7 +318,7 @@ _ALIGN_DELIMITERS = {"left": ":---", "center": ":---:", "right": "---:"}
 def _table_cell(text: str) -> str:
     # Keep cell markdown intact for Marp; only neutralize the two characters
     # that would break the single-line row syntax.
-    return str(text).replace("|", "\\|").replace("\n", " ")
+    return _file_buttons(str(text)).replace("|", "\\|").replace("\n", " ")
 
 
 def _table(block):
@@ -473,7 +496,10 @@ def _columns(block):
     lines = ['<div class="lk-columns">']
     for i, text in enumerate(content["items"]):
         style = f' style="flex-grow:{100 * widths[i]:.2f}"' if widths else ""
-        lines += [f'<div class="lk-column"{style}>', "", str(text).strip(), "", "</div>"]
+        lines += [
+            f'<div class="lk-column"{style}>', "",
+            _file_buttons(str(text).strip()), "", "</div>",
+        ]
     lines += ["</div>", ""]
     return lines
 
@@ -515,11 +541,11 @@ _MD_ACTIVE_RE = re.compile("[*_`\\\\]")
 def _inert_md(html: str) -> str:
     """Neutralize what markdown would still read as markup in rendered HTML.
 
-    Only the math form of the chip needs this: that one is emitted on a markdown
-    line rather than as a raw HTML block, so markdown-it reads the text a second
-    time, and a stray `_` in it is not emphasis the author asked for. Entities
-    are the safe spelling — they survive inside an attribute (a link's href) as
-    well as in text.
+    For HTML that is emitted on a markdown line rather than as a raw HTML block
+    — the math form of the chip, a file button in a sentence — where markdown-it
+    reads the text a second time, and a stray `_` in it is not emphasis the
+    author asked for. Entities are the safe spelling — they survive inside an
+    attribute (a link's href) as well as in text.
     """
     return _MD_ACTIVE_RE.sub(lambda m: _MD_INERT[m.group()], html)
 

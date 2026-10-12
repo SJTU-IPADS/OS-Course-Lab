@@ -1,8 +1,12 @@
 """ICS 第 3 章：程序的机器级表示与执行。
 
-以向量内积 dot_product 为唯一主线，分四部分推进：
+以向量内积 dot_product 为唯一主线，前导概览之后分五部分推进，最后是总结与实验任务：
 单次乘加（寄存器、寻址、数据传送与算术指令），循环控制（%rip、跳转指令、标志位、条件跳转、跳转表与间接跳转），
-函数调用（call/ret 与运行时栈、参数传递、寄存器使用惯例、局部变量与栈帧、缓冲区溢出、金丝雀），向量化（YMM、AVX2、perf 实测、CUDA）。
+函数调用（call/ret 与运行时栈、参数传递、寄存器使用惯例、局部变量与栈帧、缓冲区溢出及其防御），
+数组与结构体（嵌套的数组、栈帧中的数组与结构体、字段的偏移、对齐），
+性能瓶颈与向量化（YMM、AVX2、perf 实测、GPU 与 CUDA）。
+
+页面函数在 pages.py 中，顺序与本文件中页面的顺序相同。
 """
 
 from lecturekit.dsl import Lecture
@@ -164,10 +168,36 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("code-reuse", body=pages.code_reuse)
         ss.page("shadow-stack", body=pages.shadow_stack)
 
-lecture.bridge('第四部分：性能瓶颈与向量化\n从标量计算到向量与并发', id="bridge-part4")
+lecture.bridge('第四部分：数组与结构体', id="bridge-part4")
 
 
-with lecture.section('第四部分：性能瓶颈与向量化——从标量计算到向量与并发', id="part4") as s:
+with lecture.section('第四部分：数组与结构体', id="part4") as s:
+    s.page("matrix-need", body=pages.matrix_need)
+
+    with s.section('数组', id="part4-array") as ss:
+        ss.page("array-decl", body=pages.array_decl)
+        ss.page("nested-array", body=pages.nested_array)
+        ss.page("matrix-stack", body=pages.matrix_stack)
+        ss.page("matrix-access", body=pages.matrix_access)
+
+    with s.section('结构体', id="part4-struct") as ss:
+        ss.page("struct-tensor", body=pages.struct_tensor)
+        ss.page("struct-access", body=pages.struct_access)
+        ss.page("struct-stack", body=pages.struct_stack)
+
+    with s.section('对齐', id="part4-align") as ss:
+        ss.page("alignment", body=pages.alignment)
+        ss.page("alignment-example", body=pages.alignment_example)
+
+    with s.section('小结与练习', id="part4-summary") as ss:
+        ss.page("recap-part4", body=pages.recap_part4)
+        ss.page("struct-exercise", body=pages.struct_exercise)
+        ss.page("struct-exercise-2", body=pages.struct_exercise_2)
+
+lecture.bridge('第五部分：性能瓶颈与向量化\n从标量计算到向量与并发', id="bridge-part5")
+
+
+with lecture.section('第五部分：性能瓶颈与向量化——从标量计算到向量与并发', id="part5") as s:
     s.page("flops-estimate", body=pages.flops_estimate)
     s.page("hw-peak", body=pages.hw_peak)
     s.page("measured-speed", body=pages.measured_speed)
@@ -175,7 +205,7 @@ with lecture.section('第四部分：性能瓶颈与向量化——从标量计�
     s.page("insn-mix", body=pages.insn_mix)
     s.page("speedup-plan", body=pages.speedup_plan)
     s.bridge('SIMD 思想：数据并行', id="bridge-simd")
-    with s.section('SIMD 思想：数据并行', id="part4-simd") as ss:
+    with s.section('SIMD 思想：数据并行', id="part5-simd") as ss:
         ss.page("simd-history", body=pages.simd_history)
         ss.page("simd-history-fig", body=pages.simd_history_fig)
         ss.page("ymm", body=pages.ymm)
@@ -187,7 +217,7 @@ with lecture.section('第四部分：性能瓶颈与向量化——从标量计�
         ss.page("perf", body=pages.perf)
         ss.page("perf-2", body=pages.perf_2)
     s.bridge('SIMT 思想：线程并行', id="bridge-simt")
-    with s.section('SIMT 思想：线程并行', id="part4-simt") as ss:
+    with s.section('SIMT 思想：线程并行', id="part5-simt") as ss:
         ss.page("gpu-why", body=pages.gpu_why)
         ss.page("gpu-arch", body=pages.gpu_arch)
         ss.page("gpu-arch-fig", body=pages.gpu_arch_fig)

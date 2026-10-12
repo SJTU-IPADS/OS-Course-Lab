@@ -1,9 +1,13 @@
 """ICS 第 3 章：程序的机器级表示与执行。
 
-一页排不下时按语义拆成几页，拆出的页沿用同一个页面标题；
-每页的配图由 diagrams/ 下的同名脚本生成，放在正文之后：
-与正文放得进一页时放在同一页，否则放在同标题的下一页。
-过渡页写成 lecture.bridge，见 lecture.py：只放页面标题。
+页面函数的顺序与 lecture.py 中页面的顺序相同，函数名把下划线换成连字符就是页面的 id；
+每一部分的第一个页面函数之前有一行注释，写明这一部分的名称。
+几页共用的表格与清单写成辅助函数或常量，放在第一个用到它的页面函数之前。
+
+一页排不下时按语义拆成几页，拆出的页沿用同一个页面标题，内容另成一题的页另起标题。
+配图由 diagrams/ 下的脚本生成，脚本与图同名；struct_layout.py、mat_stack.py、echo_stack.py 各生成几张图。
+配图与正文放得进一页时放在同一页，否则放在同标题的下一页。
+过渡页写成 lecture.bridge，见 lecture.py：只有过渡页的文字，没有页面函数。
 
 排版约定：
 - 粗体在文案里逐处写明，slide() 因此关闭自动加粗。
@@ -25,10 +29,11 @@ def columns(p, *md, **kw):
 
 
 def figure(p, name, width):
-    """页面的配图，由 diagrams/ 下的同名脚本生成。"""
+    """页面的配图 assets/<name>.svg，由 diagrams/ 下的脚本生成。"""
     return p.image(f"assets/{name}.svg", width_px=width)
 
 
+# 前导概览：硬件系统与程序映射。
 def problem(p):
     p.title('问题提出')
     slide(p, r"""
@@ -121,7 +126,7 @@ def isa_contract(p):
   - **支持的数据类型与寻址模式**。
   - ...
 """)
-    p.notes('指令集架构（ISA）的契约定义、程序员可见状态，以及 ISA 与微架构实现的解耦关系。')
+    p.notes('指令集架构（ISA）的契约定义、程序员可见状态。')
 
 
 def isa_contract_fig(p):
@@ -131,8 +136,10 @@ def isa_contract_fig(p):
 - **微架构是实现（Implementation）**：规定处理器在物理电路层面如何执行。
 """)
     figure(p, "isa-contract", 1040)
+    p.notes('ISA 与微架构实现的解耦关系。')
 
 
+# 第一部分：执行单次计算。
 def single_mac(p):
     p.title('单次乘加：w[0] * x[0] 的执行过程')
     slide(p, r"""
@@ -173,7 +180,12 @@ def visible_state(p):
   - **虚拟内存空间**：通过地址总线访问的代码、全局变量与栈内存。
 """)
     figure(p, "visible-state", 1120)
-    p.notes('程序员可见状态的定义，以及 CPU 内部通用寄存器数量受到硬件严格限制的原因。')
+    p.notes('程序员可见状态的定义。')
+
+
+def register_slices_fig(p):
+    p.title('寄存器切片：16 个通用寄存器及其命名规则')
+    figure(p, "register-table", 1120)
 
 
 def visible_state_2(p):
@@ -183,11 +195,7 @@ def visible_state_2(p):
 - **指令编码字段限制**：指令中寄存器字段的位数有限，在定长字段中指定一个寄存器，16 个寄存器只需 4 位二进制（$2^4 = 16$），若扩展到上千个，指令编码将急剧膨胀；
 - **硬件布线与延迟瓶颈**：寄存器数量过多会导致内部走线与多路选择器延迟增大，降低最高工作频率。
 """)
-
-
-def register_slices_fig(p):
-    p.title('寄存器切片：16 个通用寄存器及其命名规则')
-    figure(p, "register-table", 1120)
+    p.notes('CPU 内部通用寄存器数量受到硬件严格限制的原因。')
 
 
 def effective_address(p):
@@ -283,7 +291,7 @@ def width_write(p):
 
 
 def load_example_state(p):
-    """课堂示例三张幻灯片共用的内存与寄存器初值。"""
+    """「练习：内存字节、寻址与数据加载」三页共用的内存与寄存器初值。"""
     p.table([
         ['字节', '`0x78`', '`0x56`', '`0x34`', '`0x12`', '`0xF0`', '`0xFF`', '`0xFF`', '`0xFF`'],
     ], headers=['地址', '`0x100`', '`0x101`', '`0x102`', '`0x103`', '`0x104`', '`0x105`', '`0x106`', '`0x107`'])
@@ -388,7 +396,7 @@ def extension_example(p):
 第二讲「混合比较：宽度不同的操作数进行比较」一页给出这条规则：先把窄于 `int` 的类型提升为 `int`，补 0 还是补符号位由原类型决定。两个操作数提升后都是 `int`，比较按 `int` 进行。
 清单由 cd examples; gcc -Og -fcf-protection=none -S equal.c -o - | sed -f asm.sed 得到，注释为讲解所加。
 `%dil` 保存参数 `a`，`%sil` 保存参数 `b`，`%eax` 保存返回值，对应规则在第三部分详细讲。
-后三条指令比较两个 32 位值并产生返回值，在第二部分详细讲。
+扩展之后的 `cmpl`、`sete`、`movzbl` 三条指令比较两个 32 位值并产生返回值，在第二部分详细讲。
 """)
 
 
@@ -425,7 +433,7 @@ def int_arith_2(p):
 - `addl $1, %eax`：加立即数，`i++` 编译为这一条指令；
 - `addl %eax, (%rdi)`：目的是内存操作数，读出 `*w`、相加、写回，一条指令完成 `*w += t`。
 """)
-    p.notes('加法指令的格式、位宽与标志位。上一页的 ALU 示意图同样适用于 addl：操作数进入加法器，和写回寄存器，标志位写入 RFLAGS。')
+    p.notes('加法指令的格式与位宽。上一页的 ALU 示意图同样适用于 addl：操作数进入加法器，和写回寄存器，标志位写入 RFLAGS。')
 
 
 def insn_table(p):
@@ -458,7 +466,7 @@ def xor_strength(p):
   - 编码长度：`xorl %eax, %eax` 仅需 2 字节（`31 c0`），而 `movl $0, %eax` 占用 5 字节（`b8 00 00 00 00`）；
   - 硬件重命名优化：现代 CPU 译码器识别到自异或时，直接在寄存器别名表（RAT）中将其映射至物理零，**执行延迟为 0 周期，不占用 ALU 资源**。
 """)
-    p.notes('编译器在基础算术中常用的机器级优化惯用法：异或清零与乘常数强度削减。')
+    p.notes('编译器在基础算术中常用的机器级优化惯用法：异或清零。')
 
 
 def xor_strength_2(p):
@@ -472,6 +480,7 @@ def xor_strength_2(p):
   - `x * 12` $\to$ `leal (%rax,%rax,2), %eax` 随后 `sall $2, %eax`。
 """)
     figure(p, "xor-lea", 1120)
+    p.notes('编译器在基础算术中常用的机器级优化惯用法：乘常数强度削减。')
 
 
 def insn_bytes(p):
@@ -485,7 +494,7 @@ x86-64 指令的开头一般是操作码。CPU 由操作码识别这是哪一条
 """)
     p.notes("""
 x86-64 的三条指令，字段的边界与字节的边界重合：`ret` 只有操作码；`movl $0, %eax` 的操作码 `b8` 含寄存器编号，其后是 4 字节立即数；`xorl %eax, %eax` 的第二个字节描述两个寄存器操作数。
-`c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。带内存操作数的指令把寄存器编号与寻址方式合并编码在操作数字节中，规则见 Intel 手册第 2 卷第 2 章，本讲不展开。
+`c0` 的二进制是 `11 000 000`：前 2 位表示两个操作数都是寄存器，后两段各 3 位，是两个 `%eax` 的编号。带内存操作数的指令把寄存器编号与寻址方式合并编码在操作数字节中，规则见 Intel 手册第 2 卷第 2 章，本节不展开。
 Y86-64 是教材 CS:APP 第 4 章为教学设计的指令集，指令的功能与 x86-64 相近，编码规则更简单：第 1 字节是操作码，第 2 字节的两个十六进制位是两个寄存器编号（F 表示没有寄存器），其后是 8 字节常数。`irmovq $0, %rax` 与 `movl $0, %eax` 是同一操作：把常数 0 写入寄存器 `%rax`。Y86-64 只有 64 位运算，常数占 8 字节，所以整条指令 10 字节，x86-64 的 5 字节编码更紧凑。寄存器编号与 x86-64 相同：`%rax` 为 0。
 x86-64 的字节可用 `echo 'ret; movl $0, %eax; xorl %eax, %eax' | gcc -c -x assembler - -o t.o && objdump -d t.o` 得到。
 """)
@@ -607,6 +616,7 @@ ret                     # return t;""")
 """)
 
 
+# 第二部分：循环控制与跳转指令。
 def loop_need(p):
     p.title('向量内积和控制流')
     slide(p, r"""
@@ -622,7 +632,7 @@ $$\%rip \leftarrow \%rip + \text{指令长度}$$
     figure(p, "pc-increment", 1120)
     p.notes("""
 第二部分从循环引入控制流。先说明顺序执行：%rip 的递增由 CPU 在执行每条指令时完成，程序中没有对应的指令。
-图中是 dot_product（gcc -Og）循环体的 7 条指令在内存中的位置，地址与长度来自 objdump -d dot.o。按地址递增依次取指，执行流只会前进到更高的地址。
+图中是 dot_product（gcc -Og）循环体的 5 条指令与其后的 cmpl、jl 共 7 条指令在内存中的位置，地址与长度来自 objdump -d dot.o。按地址递增依次取指，执行流只会前进到更高的地址。
 """)
 
 
@@ -865,7 +875,7 @@ gcc -O1 -fno-pie -fcf-protection=none -S calc.c -o - | sed -e '/\\.quad/b' -f as
 """)
     p.notes("""
 sed 的第一个表达式保留 .quad 行，asm.sed 删去其余伪指令；sed -n '1,12p' 只取入口与跳转表，其后是六段 case 代码，各自以 ret 结束。
--fno-pie 使跳转表中直接存放绝对地址；默认的 PIE 编译存放的是相对偏移，入口多两条指令，间接跳转写为 jmp *%rax。
+-fno-pie 使跳转表中直接存放绝对地址；默认的 PIE 编译存放的是相对偏移，入口多三条指令，间接跳转写为 jmp *%rax。
 """)
 
 
@@ -942,6 +952,7 @@ cmov 的依据：Intel 的 Guidelines for Mitigating Timing Side Channels Agains
 """)
 
 
+# 第三部分：函数调用。
 def procedure_need(p):
     p.title('函数调用：main 如何调用 dot_product')
     p.code('c', """int dot_product(const int *w, const int *x, int n);
@@ -1007,7 +1018,7 @@ def call_checklist(p):
 **问题**：控制如何转移到 `dot_product`，`dot_product` 执行完毕后又如何返回 `main`？
 """)
     p.notes("""
-这张表在后面每一小节的开头出现一次，加粗的一行是这一小节要讲的内容。
+这一页加粗的两行是「调用与返回：call 与 ret」一节的内容。这张表在「传递数据：寄存器、栈」「寄存器：使用惯例」「局部变量：栈」三节的开头各出现一次，加粗的一行是那一节的内容；在「综合起来：一次调用的完整步骤」一节的开头再出现一次，五行都不加粗。
 """)
 
 
@@ -1042,7 +1053,7 @@ def runtime_stack(p):
     p.notes("""
 返回地址的保存与取出是后进先出的，因此放在栈中。栈是内存中的一段区域，%rsp 是 16 个通用寄存器之一，用来保存栈顶的地址。
 右图是进程的地址空间：代码段存放指令，数据段存放全局变量，堆由 malloc 分配，栈在高地址一端。堆向高地址生长，栈向低地址生长，两者之间的空间由先用到的一方使用。
-本讲把图中的地址当作内存地址使用，地址的翻译在后面的讲次说明。
+本节把图中的地址当作内存地址使用，地址的翻译在后面的讲次说明。
 """)
 
 
@@ -1141,11 +1152,8 @@ g 返回后它的栈帧释放，f 再调用 h 时，h 的栈帧使用同一段�
 
 def call_checklist_2(p):
     call_checklist_table(p, bold=(2,))
-    p.demo('查看源码',
-           '',
-           files=['examples/main.c'])
     slide(p, r"""
-**问题**：`main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
+**问题**：[main.c](file:examples/main.c) 中的 `main` 把 `w`、`x`、`4` 放在哪里，`dot_product` 才能读到？`dot_product` 的结果又放在哪里交给 `main`？
 """)
     p.notes("""
 前两行由 call 与 ret 两条新指令实现，返回地址保存在运行时栈中。
@@ -1173,7 +1181,7 @@ def param_regs(p):
     p.notes("""
 参数与返回值的位置是调用双方共同遵守的约定，CPU 不检查。约定优先使用寄存器：读写寄存器不需要访问内存。
 System V AMD64 ABI 是 x86-64 上的 Linux 使用的 ABI，ABI 是 Application Binary Interface 的缩写。
-浮点参数使用另一组寄存器 %xmm0 到 %xmm7，浮点返回值使用 %xmm0；本讲的例子都是整数与指针。
+浮点参数使用另一组寄存器 %xmm0 到 %xmm7，浮点返回值使用 %xmm0；本节的例子都是整数与指针。
 32 位 x86 的约定把全部参数放在栈中。x86-64 有 16 个通用寄存器，改为用寄存器传递前 6 个参数，减少每次调用的访存。
 """)
 
@@ -1222,7 +1230,7 @@ long use8(void) {
 **问题**：参数寄存器只有 6 个，第 7 个与第 8 个参数放在哪里？
 """)
     p.notes("""
-代码是 examples/args8.c 的全部内容。参数的类型是 long，宽度 8 字节，使用 64 位的寄存器名。
+代码是 examples/args8.c 除开头的注释外的全部内容。参数的类型是 long，宽度 8 字节，使用 64 位的寄存器名。
 表的前 6 列是上两页的约定；后两列是本页提出的问题，下一页回答。
 """)
 
@@ -1309,7 +1317,7 @@ def reg_conflict_2(p):
 **需要一项约定**：规定每个寄存器的值在一次调用前后是否保持不变。
 """)
     p.notes("""
-这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在本节最后一页。
+这一页的 dot_bias 只有三条指令，是为说明问题写的；编译器的输出在「实例：dot_bias 中的 %rbx」一页。
 """)
 
 
@@ -1418,18 +1426,15 @@ def callee_example_rows(p):
 """)
     p.notes("""
 两列清单只保留与 b 有关的指令，循环中为 call 准备参数、更新 r 与 total 的指令略去；两列都是为说明问题手写的。
-真实输出见 examples/dot_bias_rows.c：gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed。w、x、n、rows、total、r 六个值占满 6 个 callee-saved 寄存器，b 被放到 12(%rsp)，循环体中是 addl 12(%rsp), %eax，每轮读一次内存。这正是寄存器不够时的后备做法。
+真实输出见 examples/dot_bias_rows.c：gcc -Og -fcf-protection=none -S dot_bias_rows.c -o - | sed -f asm.sed。w、n、b、rows、total、r 六个值占满 6 个 callee-saved 寄存器，x 被放到 8(%rsp)，循环体中是 movq 8(%rsp), %rsi，每轮读一次内存。这正是寄存器不够时的后备做法。
 -O2 下的 -fcaller-saves 允许 gcc 在它判断更划算时把 caller-saved 寄存器中的值存在 call 的两侧；dot_bias 在 -O2 下的输出与 -Og 相同，仍用 %rbx。
 """)
 
 
 def call_checklist_4(p):
     call_checklist_table(p, bold=(4,))
-    p.demo('查看源码',
-           '',
-           files=['examples/main.c'])
     slide(p, r"""
-**问题**：`main` 的数组 `w` 与 `x` 存放在哪里？
+**问题**：[main.c](file:examples/main.c) 中 `main` 的数组 `w` 与 `x` 存放在哪里？
 """)
     p.notes("""
 寄存器按使用惯例分为两类：6 个 callee-saved 寄存器的值在调用前后相同，9 个 caller-saved 寄存器由调用者在需要时保存。
@@ -1654,7 +1659,7 @@ def overflow_attack(p):
 foo 调用 bar，bar 用 gets 把一行输入读入 64 字节的 buf。图中左边是低地址，按 1 字节 8 像素绘制：buf 是 bar 的栈帧，返回地址 A 与 foo 的其他数据是 foo 的栈帧。
 A 是 foo 中 call bar 的下一条指令的地址。输入的前 64 字节填满 buf，其后的 8 字节覆盖 A。
 攻击代码以被攻击程序的权限执行。
-早期的 Linux 上，同一个程序每次运行时栈都在相同的地址，在不同的机器上也相同；攻击者在自己的机器上运行同一个程序，就得到 B。
+早期的 Linux 上，同一个程序每次运行时栈都在相同的地址，在同类机器上也相同；攻击者在自己的机器上运行同一个程序，就得到 B。
 """)
 
 
@@ -1866,17 +1871,352 @@ def shadow_stack(p):
 """)
     p.notes("""
 解决方法的英文：影子栈 shadow stack，控制流完整性 control-flow integrity。
-控制流完整性：限制间接跳转与返回只能到达合法的目标。gcc 默认在每个函数入口加入的 endbr64 是合法目标的标记；本讲的编译命令用 -fcf-protection=none 去掉了这条指令。
+控制流完整性：限制间接跳转与返回只能到达合法的目标。gcc 默认在每个函数入口加入的 endbr64 是合法目标的标记；本节的编译命令用 -fcf-protection=none 去掉了这条指令。
 execute-only code：代码区域只可执行、不可读。攻击者要拼出 ROP 链，先要读到程序的代码才能找出片段；代码不可读时，加上地址随机化，攻击者无法知道片段的内容与位置。需要硬件支持：ARMv8 的页表支持只执行的页面，x86 用 Intel 的 PKU/MPK 或扩展页表实现。
 图中是 bar 的返回地址被改写之后两个栈的内容：普通栈上的返回地址已经是攻击者写入的地址，影子栈上仍是调用时存入的 A。硬件实现中 ret 读出两处的值进行比较，不相等时产生异常（CET 的 #CP 异常，Linux 上进程收到 SIGSEGV）；软件实现中 ShadowCallStack 直接用影子栈上的 A 返回，普通栈上被改写的那份不被使用。
 影子栈只存放返回地址，不存放参数、局部变量与保存的寄存器值；它的大小由返回地址的个数决定，即调用的层数。
 软件实现：LLVM 的 -fsanitize=shadow-call-stack，arm64 上用 x18 指向影子栈，入口是 str x30, [x18], #8，返回之前是 ldr x30, [x18, #-8]!。影子栈所在的内存是普通可写内存，安全性来自 x18 的值不写入内存，攻击者不知道影子栈在哪里。Linux 内核的 arm64 版本（CONFIG_SHADOW_CALL_STACK，5.8 起）与 Android 使用它。开销为百分之几：Dang、Maniatis 与 Wagner 2015 年测得传统方案约 10%，并行影子栈约 3.5%。
 硬件实现：Intel CET（Control-flow Enforcement Technology，2020 年的 Tiger Lake 起）、AMD（Zen 3 起）、ARMv9.4 的 GCS（Guarded Control Stack）。影子栈由专门的 SSP 寄存器指向，页面在页表中有特殊标记，普通写入产生异常；call 与 ret 自动完成存取，不增加程序的指令。RISC-V 的 Zicfiss 扩展是例外，用显式的 sspush 与 sspopchk 指令。Linux 6.6 起支持 x86 用户态影子栈。
 CET 的另一部分是间接跳转跟踪（Indirect Branch Tracking），用 endbr64 标记间接跳转的合法目标，针对的是另一类攻击。
-本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本讲其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
+本机的 CPU 支持用户程序的影子栈（/proc/cpuinfo 中有 user_shstk 标志），内核也开启了这项支持；程序要用 gcc -fcf-protection=full 编译，readelf -n 能看到 SHSTK 标记。本节其余各页的编译命令用 -fcf-protection=none 关闭了这两项，输出中因此没有 endbr64。
 """)
 
 
+# 第四部分：数组与结构体。讲解顺序与用语取自 lectures/ICS1 的 9-array 与
+# 10-struct；例子是本节的矩阵 W 与 struct tensor（examples/ 下的 mat_main.c、
+# matvec.c、tensor.h、matvec_t.c、tensor_main.c、align.c、node.c）。
+def matrix_need(p):
+    p.title('矩阵乘向量：对矩阵的每一行调用 dot_product')
+    p.code('c', """int main(void) {
+    int W[3][4] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
+    int x[4] = {5, 6, 7, 8};
+    int y[3];
+    matvec(y, W, x);
+    return y[2];
+}
+
+void matvec(int *y, int W[3][4], const int *x) {
+    for (long r = 0; r < 3; r++)
+        y[r] = dot_product(W[r], x, 4);     // row r of W times x
+}""")
+    slide(p, r"""
+**矩阵乘向量**：前三部分的 `w` 是一行权重。模型的权重排成矩阵 `W`，$y = Wx$ 的第 `r` 个元素是 `W` 的第 `r` 行与 `x` 的内积，`matvec` 对每一行调用一次 `dot_product`。
+
+**问题**：`W` 的 12 个 `int` 在栈帧中按什么顺序存放？`W[r]` 的地址如何计算？汇编代码中如何访问 `W[r][j]`？
+""")
+    p.notes("""
+第四部分的例子是 main 调用 matvec，matvec 对 W 的每一行调用 dot_product。两个函数分别在 examples/mat_main.c 与 examples/matvec.c 中。
+y 的三个元素是 70、174、278；70 与第三部分 main 调用 dot_product 的结果相同，因为 W 的第 0 行就是那里的 w。
+这一部分没有新的指令，讲的是数据在内存中的布局，以及编译器怎样用第一部分的寻址模式访问它们。
+""")
+
+
+def array_decl(p):
+    p.title('数组声明与指针运算')
+    slide(p, r"""
+- **数组声明** `T A[N];`：在内存中分配一段连续的区域，大小为 `sizeof(T) * N` 字节；
+- **起始地址**：标识符 `A` 可以用作指向数组开头的指针，这个指针的值记为 $x_A$；
+- **访问数组**：数组元素 `i` 存放在地址 $x_A + \text{sizeof}(T) \cdot i$，`A[i]` 与 `*(A+i)` 相同。
+
+`E` 是 `int` 数组，$x_E$ 在 `%rdx` 中，`i` 在 `%rcx` 中；$M[a]$ 是地址 $a$ 处的内存内容：
+""")
+    p.table([
+        ['`E`', '`int *`', '$x_E$', '`movq %rdx, %rax`'],
+        ['`E[i]`', '`int`', '$M[x_E + 4i]$', '`movl (%rdx,%rcx,4), %eax`'],
+        ['`E+i-1`', '`int *`', '$x_E + 4i - 4$', '`leaq -4(%rdx,%rcx,4), %rax`'],
+        ['`*(E+i-3)`', '`int`', '$M[x_E + 4i - 12]$', '`movl -12(%rdx,%rcx,4), %eax`'],
+        ['`&E[i]-E`', '`long`', '$i$', '`leaq 0(,%rcx,4), %rax` 与 `sarq $2, %rax`'],
+    ], headers=['表达式', '类型', '值', '汇编代码'])
+    p.notes("""
+前三条取自旧讲义的数组声明、数组的起始地址、访问数组三页。第一部分「数组下标与基址步长的数学映射」一页的公式是 T 为 int 的情况：sizeof(int) 是 4。
+指针加减一个整数，地址变化的是这个整数乘以 sizeof(T)：E+i-1 的地址是 xE + 4i - 4。结果是指针的表达式用 leaq 计算地址，结果是数值的表达式用 movl 读内存。
+两个指针相减得到它们之间相隔的元素个数，类型是 long。最后一行 gcc 15.2 先用 leaq 算出地址之差 4i，再算术右移 2 位，即除以 sizeof(int)；CS:APP 3.8.2 节的表中这一行是 movq %rcx, %rax。
+表中的汇编由 gcc -Og 编译得到：E 是函数的第三个参数，i 是第四个参数，所以在 %rdx 与 %rcx 中。
+""")
+
+
+def nested_array(p):
+    p.title('嵌套的数组：按行优先顺序存放')
+    slide(p, r"""
+- `int W[3][4];` 声明一个二维数组，有 3 行 4 列，引用形式为 `W[0][0]` 到 `W[2][3]`；
+- **数组的数组**：`W` 包含 3 个元素，每个元素是 4 个 `int` 的数组，需要 16 字节；`W` 的总大小为 48 字节；
+- **行优先**：元素在内存中按行优先顺序排列，`W[0]` 的 4 个元素之后是 `W[1]` 的 4 个元素。
+""")
+    figure(p, "nested-array", 1120)
+    slide(p, r"""
+**元素的地址**：对 `T D[R][C];`，`D[i][j]` 位于地址 $x_D + L \cdot (C \cdot i + j)$，$L$ 是 `sizeof(T)`。`W[r][j]` 位于 $x_W + 16r + 4j$。
+""")
+    p.notes("""
+「数组的数组」可以用 typedef 写出来：typedef int row4_t[4]; row4_t W[3];，与 int W[3][4]; 是同一个声明。
+图中每格是一个 int，占 4 字节，左边是低地址。下方的数字是相对 W 起始地址的偏移，加粗的 0、16、32 是三行的起始位置。
+公式代入 L = 4、C = 4：xW + 4 × (4r + j) = xW + 16r + 4j。图中加框的 W[1][2] 位于偏移 16 × 1 + 4 × 2 = 24。
+C 语言只规定行优先这一种顺序；Fortran 的数组按列优先存放。
+""")
+
+
+def matrix_stack(p):
+    p.title('实例：main 在栈帧中分配 W、x 与 y')
+    p.side_image("assets/mat-stack.svg", width="38%", alt="contain", side="left")
+    slide(p, r"""
+[mat_main.c](file:examples/mat_main.c) 的汇编：
+""")
+    p.code('assembly', """main:
+	subq	$88, %rsp       # 88-byte frame
+	movl	$1, 32(%rsp)    # W[0][0]
+	movl	$2, 36(%rsp)    # W[0][1]
+	...
+	movl	$7, 56(%rsp)    # W[1][2]: 32+16+8
+	...
+	movl	$5, 16(%rsp)    # x[0]
+	...
+	leaq	16(%rsp), %rdx  # 3rd argument: x
+	leaq	32(%rsp), %rsi  # 2nd argument: W
+	leaq	4(%rsp), %rdi   # 1st argument: y
+	call	matvec@PLT
+	movl	12(%rsp), %eax  # return y[2]
+	addq	$88, %rsp       # free the frame
+	ret""")
+    p.notes("""
+清单取自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S mat_main.c -o - | sed -f asm.sed 的输出，共 25 行；三处 ... 省略的是写入 W 其余元素的 9 条 movl 与写入 x[1] 到 x[3] 的 3 条 movl，其中最后一条写入 W 的是 movl $12, 76(%rsp)。# 之后的注释是页面上添加的说明。
+main 用 subq $88, %rsp 分配 88 字节：W 占 32(%rsp) 起的 48 字节，x 占 16(%rsp) 起的 16 字节，y 占 4(%rsp) 起的 12 字节，(%rsp) 起的 4 字节与 80(%rsp) 起的 8 字节没有使用。进入 main 时栈顶是 8 字节的返回地址，88 + 8 = 96 是 16 的倍数。
+W 的元素按行优先写入：W[r][j] 在 32 + 16r + 4j，W[1][2] 在 32 + 16 × 1 + 4 × 2 = 56，清单中是 movl $7, 56(%rsp)，注释把这个和写成 32+16+8。
+左图每行 8 字节，高地址在上，行内左侧的地址较高；每格上方是该元素的地址，与清单中 movl 的目的操作数相同。
+传给 matvec 的三个参数都是数组的起始地址，用 leaq 计算。数组名 W 作为参数时是指向 W[0] 的指针，值是 W 的起始地址 32(%rsp)。
+返回值 y[2] 在 y 的起始地址加 8 处，即 12(%rsp)。
+""")
+
+
+def matrix_access(p):
+    p.title('访问 W[r][j]：先计算 W[r] 的地址')
+    p.code('c', """int elem(int W[3][4], long r, long j) {     // x_W in %rdi, r in %rsi, j in %rdx
+    return W[r][j];
+}""")
+    slide(p, r"""
+[matvec.c](file:examples/matvec.c) 中 `elem` 的汇编：
+""")
+    p.code('assembly', """elem:
+	salq	$4, %rsi                # 16 * r
+	addq	%rsi, %rdi              # x_W + 16r, the address of W[r]
+	movl	(%rdi,%rdx,4), %eax     # read M[x_W + 16r + 4j]
+	ret""")
+    slide(p, r"""
+- **16 是常数**：一行 4 个 `int` 共 16 字节，在编译时已知，乘以 16 用左移 4 位完成；
+- **`W[r]` 是一维数组**：前两条指令得到它的起始地址 $x_W + 16r$。`matvec` 用同样的两条指令计算 `W[r]` 的地址，作为第一个参数传给 `dot_product`。
+""")
+    p.notes("""
+清单取自 cd examples; gcc -Og -fcf-protection=none -S matvec.c -o - | sed -f asm.sed 的输出中 elem 的一段。// 与 # 之后的注释是页面上添加的说明：W 的起始地址 xW 在 %rdi 中，r 在 %rsi 中，j 在 %rdx 中。
+三条指令依次对应公式 xW + 16r + 4j 的三项：salq 算出 16r，addq 加上 xW，movl 的比例变址操作数加上 4j 并读出 4 字节。
+同一个文件中 matvec 的循环体里，r 在 %rbx 中，W 的起始地址在 %r12 中：movq %rbx, %rdi 把 r 复制到 %rdi，salq $4, %rdi 与 addq %r12, %rdi 是同样的两条指令，把 xW + 16r 放入 %rdi，作为 dot_product 的第一个参数。r、W、x、y 在调用之后还要使用，所以放在 callee-saved 寄存器中。
+参数写成 int W[3][4] 时，编译器只用到列数 4；行数 3 不参与地址计算。
+模型文件中矩阵的行数与列数在运行时才读出，这时函数的参数不能写成 int W[3][4]。
+""")
+
+
+def struct_tensor(p):
+    p.title('结构体：将多个对象组合成一个对象')
+    p.code('c', """struct tensor {
+    long rows, cols;
+    const int *data;            // rows * cols ints, one row after another
+};
+
+void matvec(int *y, const struct tensor *w, const int *x) {
+    for (long r = 0; r < w->rows; r++)
+        y[r] = dot_product(w->data + r * w->cols, x, w->cols);
+}""")
+    slide(p, r"""
+- **结构体**将多个对象组合成一个对象，每个对象称为一个**字段**，通过名字引用：`t.rows`。通过指向结构体的指针引用时写 `w->rows`，即 `(*w).rows`；
+- **内存布局**：所有字段存放在一段连续的区域内，指向结构体的指针是第一个字节的地址。
+""")
+    figure(p, "tensor-layout", 900)
+    p.notes("""
+行数与列数在运行时才读出的矩阵用结构体描述：行数、列数与起始地址组成一个 struct tensor，matvec 接收指向它的指针。定义在 examples/tensor.h 中，matvec 在 examples/matvec_t.c 中。
+图中是 struct tensor 的 24 字节：rows 在偏移 0，cols 在偏移 8，data 在偏移 16，各占 8 字节；w 指向偏移 0 处。
+行 r 的起始地址是 w->data + r * w->cols：指针加整数，地址增加 4 × r × cols 字节。
+mini-ollama 用同名的结构体描述一个权重矩阵（examples/mini-ollama/mini_ollama.h）：那里行数与列数的类型是 size_t，data 指向 Q4_0 格式的字节。
+旧讲义把结构体的组成部分称为元素，也称为字段；本节统一称为字段，元素只用于数组。
+""")
+
+
+def struct_access(p):
+    p.title('引用结构体的字段：起始地址加字段的偏移')
+    p.code('c', """const int *row(const struct tensor *w, long r) {    // w in %rdi, r in %rsi
+    return w->data + r * w->cols;
+}""")
+    slide(p, r"""
+[matvec_t.c](file:examples/matvec_t.c) [tensor.h](file:examples/tensor.h) 中 `row` 的汇编：
+""")
+    p.code('assembly', """row:
+	movq	%rsi, %rax
+	imulq	8(%rdi), %rax       # r * w->cols
+	salq	$2, %rax            # 4 * r * w->cols
+	addq	16(%rdi), %rax      # w->data + 4 * r * w->cols
+	ret""")
+    slide(p, r"""
+- **字段的地址**是结构体的起始地址加字段的偏移，偏移在编译时确定；
+- `w->cols` 是 `8(%rdi)`，`w->data` 是 `16(%rdi)`：机器指令中没有字段的名字，只有偏移；
+- **列数在运行时才读出**：乘以列数用 `imulq`；定长的 `W[3][4]` 乘以 16 用 `salq $4`。
+""")
+    p.notes("""
+清单取自 cd examples; gcc -Og -fcf-protection=none -S matvec_t.c -o - | sed -f asm.sed 的输出中 row 的一段。// 与 # 之后的注释是页面上添加的说明：w 在 %rdi 中，r 在 %rsi 中。
+8(%rdi) 与 16(%rdi) 是第一部分寻址模式中的「基址 + 偏移」：基址是结构体的起始地址，偏移是字段在结构体中的位置。rows 的偏移是 0，w->rows 写成 (%rdi)。
+行的偏移是 4 × r × cols 字节：imulq 算出 r × cols，salq $2 再乘以 sizeof(int)。
+同一个文件中 matvec 的循环条件 r < w->rows 编译为 cmpq %rbx, 0(%rbp)：w 在 %rbp 中，rows 在偏移 0。以 %rbp 为基址的内存操作数在机器码中必须带偏移，gcc 因此写出 0。
+旧讲义的变长数组 int A[n][n] 得到同样的结论：n 在运行时才确定，计算 A[i][j] 的地址需要一条乘法指令 imulq。
+""")
+
+
+def struct_stack(p):
+    p.title('实例：main 在栈帧中分配结构体 t')
+    p.side_image("assets/tensor-stack.svg", width="38%", alt="contain", side="left")
+    slide(p, r"""
+[tensor_main.c](file:examples/tensor_main.c) 中 `t` 的定义与 `main` 的汇编：
+""")
+    p.code('c', """struct tensor t = {3, 4, &W[0][0]};""")
+    p.code('assembly', """main:
+	subq	$120, %rsp
+	...
+	movq	$3, (%rsp)      # t.rows
+	movq	$4, 8(%rsp)     # t.cols
+	leaq	64(%rsp), %rax  # &W[0][0]
+	movq	%rax, 16(%rsp)  # t.data
+	leaq	48(%rsp), %rdx  # 3rd argument: x
+	movq	%rsp, %rsi      # 2nd argument: &t
+	leaq	36(%rsp), %rdi  # 1st argument: y
+	call	matvec@PLT""")
+    slide(p, r"""
+**问题**：给 [tensor.h](file:examples/tensor.h) 中的 `struct tensor` 增加一个 1 字节的字段 `kind`，结构体的大小是多少字节？
+""")
+    p.notes("""
+清单取自 cd examples; gcc -Og -fcf-protection=none -fno-stack-protector -S tensor_main.c -o - | sed -f asm.sed 的输出。... 处省略写入 W 与 x 的 16 条 movl，call 之后还有 movl 44(%rsp), %eax、addq $120, %rsp 与 ret 三条。# 之后的注释是页面上添加的说明。
+main 比「实例：main 在栈帧中分配 W、x 与 y」一页多一个 24 字节的局部变量 t，栈帧由 88 字节增至 120 字节：120 + 8 = 128 是 16 的倍数。W 在 64(%rsp)，x 在 48(%rsp)，y 在 36(%rsp)，t 在 (%rsp) 起的 24 字节；24(%rsp) 起的 12 字节与 112(%rsp) 起的 8 字节没有使用。
+t.data 中存放的是 W 的起始地址 64(%rsp)，图中的箭头从 t.data 指向 W[0][0]。地址先用 leaq 算到 %rax 中，再用 movq 写入：leaq 的目的操作数只能是寄存器。
+结构体作为局部变量，分配与释放的方式和局部数组相同：t 在栈帧中占 24 字节，三个字段按偏移 0、8、16 写入。main 中的调用是 matvec(y, &t, x);，t 的起始地址 %rsp 作为第二个参数传给 matvec。
+""")
+
+
+def alignment(p):
+    p.title('对齐限制：基本类型的地址是其大小的倍数')
+    slide(p, r"""
+- **对齐限制**：某些类型的对象，地址必须是某个值 $k$（通常是 2、4 或 8）的倍数；
+- **作用**：简化处理器与内存系统之间接口的硬件设计，提高内存系统的性能；
+- **Linux 的对齐限制**：基本类型的地址是其大小的倍数。
+""")
+    p.table([
+        ['1 字节', '`char`', '任意地址'],
+        ['2 字节', '`short`', '2 的倍数'],
+        ['4 字节', '`int`、`float`', '4 的倍数'],
+        ['8 字节', '`long`、`double`、指针', '8 的倍数'],
+    ], headers=['数据的大小', '类型', '地址'])
+    slide(p, r"""
+- **结构体的对齐**：字段之间可能需要插入**间隙**，结构体的末尾可能需要添加**填充**；
+- **原则**：对齐每个基本类型的字段，并按字段中最大的对齐要求对齐整个结构体。
+""")
+    p.notes("""
+内容取自旧讲义「对齐」的四页。Linux 的规则是 System V AMD64 ABI 的规定，编译器在安排全局变量、局部变量与结构体的字段时遵守。
+x86-64 的硬件在数据没有对齐时也能正确工作（部分向量指令除外），对齐的数据可以提高内存系统的性能；许多其他体系结构强制要求对齐。
+第三部分「实例：main 的栈帧」中 call 之前 %rsp 是 16 的倍数，是调用约定对栈的对齐要求；这一页是每种数据类型自己的对齐要求。
+对齐的数据不会跨越两个 8 字节的边界，处理器一次读写就能取到；没有对齐的 8 字节数据可能需要访问内存两次。
+""")
+
+
+def alignment_example(p):
+    p.title('实例：1 字节的字段 kind 放在最前与放在最后')
+    p.demo('打印三个结构体的大小与各字段的偏移',
+           """cd examples && gcc -o align align.c && ./align""",
+           output="""tensor      size 24            rows  0  cols  8  data 16
+kind_first  size 32   kind  0  rows  8  cols 16  data 24
+kind_last   size 32   kind 24  rows  0  cols  8  data 16""",
+           files=['examples/align.c'])
+    figure(p, "align-layout", 1120)
+    slide(p, r"""
+- **`kind` 在最前**：`rows` 的偏移必须是 8 的倍数，`kind` 之后留出 7 字节的间隙；
+- **`kind` 在最后**：结构体的大小必须是 8 的倍数，末尾添加 7 字节的填充。
+""")
+    p.notes("""
+「实例：main 在栈帧中分配结构体 t」一页末尾的问题：增加 1 字节的字段后，结构体的大小是 32 字节，放在最前与放在最后都如此。
+examples/align.c 定义三个结构体：struct tensor，在其他字段之前增加 char kind 的 struct kind_first，在其他字段之后增加 char kind 的 struct kind_last；用 sizeof 与 offsetof 打印大小与偏移。
+图中两条带按 1 字节 30 像素绘制，下方的数字是偏移；虚线框是没有字段使用的字节。
+结构体的起始地址是 8 的倍数时，偏移是 8 的倍数的字段，地址也是 8 的倍数；所以编译器只需要安排偏移。
+rows 是 long，按 8 对齐；结构体按字段中最大的对齐要求 8 对齐。末尾的填充使 sizeof 是 8 的倍数，在结构体的数组中后一个元素的各字段因此仍然对齐：数组 struct kind_last a[2] 中，a[1] 的起始地址是 a[0] 的起始地址加 32，仍是 8 的倍数。
+""")
+
+
+def recap_part4(p):
+    p.title('小结：数组与结构体的布局与访问')
+    p.table([
+        ['数组 `T A[N]`',
+         '连续的 `sizeof(T) * N` 字节',
+         '$x_A + \\text{sizeof}(T) \\cdot i$'],
+        ['嵌套的数组 `T D[R][C]`',
+         '行优先',
+         '$x_D + L \\cdot (C \\cdot i + j)$，`W[r][j]` 位于 $x_W + 16r + 4j$'],
+        ['结构体',
+         '字段在一段连续的区域内',
+         '起始地址加字段的偏移：`w->cols` 是 `8(%rdi)`'],
+        ['对齐',
+         '基本类型的地址是其大小的倍数',
+         '字段之间插入间隙，末尾添加填充'],
+    ], headers=['内容', '内存布局', '元素或字段的地址'], widths=[5, 7, 8])
+    slide(p, r"""
+**局部的数组与结构体在栈帧中分配**：`main` 用 `subq` 分配空间，按相对 `%rsp` 的偏移写入各元素与各字段，传给被调用者的是起始地址。
+
+**本部分没有新指令**：偏移与步长由编译器在编译时确定，访问使用第一部分的寻址模式、`leaq`、`imulq` 与移位指令。
+""")
+    p.notes("""
+第四部分的小结。表的前两行对应「数组」一节的「数组声明与指针运算」与「嵌套的数组：按行优先顺序存放」两页，第三行对应「结构体」一节，第四行对应「对齐」一节。
+本节 examples/mini-ollama 中的函数 matvec，参数同样是指向 struct tensor 的指针。
+""")
+
+
+NODE_C = """struct Node {
+    char *name;
+    int val[3];
+    struct Node *next;
+    char flags;
+};"""
+
+
+def struct_exercise(p):
+    p.title('练习：结构体 Node 的布局与字段的访问')
+    p.code('c', NODE_C)
+    slide(p, r"""
+`p` 是指向 `struct Node` 的指针，在 `%rdi` 中；`i` 在 `%rsi` 中：
+1. 写出 `name`、`val`、`next`、`flags` 四个字段的偏移与 `sizeof(struct Node)`；
+2. 写出把 `p->val[i]` 读入 `%eax` 的指令；
+3. 写出把 `p->name[i]` 读入 `%eax` 的指令（`char` 符号扩展为 `int`）；
+4. 下面 3 条指令对应哪一条 C 语句？
+""")
+    p.code('assembly', """	movq	24(%rdi), %rax
+	movsbl	32(%rdi), %edx
+	movl	%edx, 8(%rax,%rsi,4)""")
+    p.notes("""
+课堂练习。struct Node 的四个字段依次是指针、3 个 int 的数组、指针、char，大小是 8、12、8、1 字节；next 指向另一个 struct Node。
+第 1 题要用到「对齐」两页的规则。第 2 题与第 3 题的写法相同，val 是数组，name 是指针，需要的指令条数不同。
+第 4 题的 3 条指令是 examples/node.c 中函数 set_val 的函数体。
+""")
+
+
+def struct_exercise_2(p):
+    p.title('练习：结构体 Node 的布局与字段的访问')
+    figure(p, "node-layout", 1120)
+    slide(p, r"""
+1. 偏移是 0、8、24、32，`sizeof(struct Node)` 是 40：`val` 之后有 4 字节的间隙，`flags` 之后有 7 字节的填充；
+2. `movl 8(%rdi,%rsi,4), %eax`：`val` 的 3 个元素存放在结构体内，一条指令读出；
+3. `movq (%rdi), %rax` 读出指针 `p->name`，`movsbl (%rax,%rsi), %eax` 读出它所指的第 `i` 个字符：结构体内只有这个指针；
+4. `p->next->val[i] = p->flags;`：`movq` 读出 `p->next`，`movsbl` 读出 1 字节的 `flags` 并符号扩展，`movl` 写入 `val[i]`。
+""")
+    p.notes("""
+图中是 struct Node 的 40 字节，按 1 字节 24 像素绘制，下方的数字是偏移。
+第 1 题：val 占偏移 8 到 19 的 12 字节。next 是指针，偏移必须是 8 的倍数，所以在 24，偏移 20 到 23 的 4 字节是间隙。flags 在 32，占 1 字节；结构体按 8 对齐，大小必须是 8 的倍数，末尾填充 7 字节。
+第 2 题的一个内存操作数用到寻址模式的全部四个部分：偏移 8 是字段 val 的位置，基址 %rdi，变址 %rsi 乘以比例 4 是 val[i] 在数组中的位置。
+第 3 题：name 是指针，结构体内只有 8 字节的地址，字符存放在别处；先读出地址，再以它为基址读出字符，访问内存两次。char 的大小是 1，变址不乘比例。gcc 在 x86-64 Linux 上把 char 当作有符号类型，扩展为 int 用 movsbl。
+第 4 题：p->next 是另一个结构体的起始地址，读出后作为基址；它的 val[i] 的偏移与第 2 题相同。flags 是 char，赋给 int 之前符号扩展为 32 位。
+把 flags 移到 val 之后，flags 在偏移 20，间隙是 3 字节，next 仍在 24，末尾没有填充，sizeof(struct Node) 是 32。
+四道题用 examples/node.c 核对：cd examples; gcc -Og -fcf-protection=none -S node.c -o - | sed -f asm.sed 输出 size、val_at、name_at、set_val 四个函数的清单；size 返回 sizeof(struct Node)，清单中是 movl $40, %eax。
+""")
+
+
+# 第五部分：性能瓶颈与向量化。
 def flops_estimate(p):
     p.title('回顾：生成一个 Token 的乘加次数与读取字节数')
     slide(p, r"""
@@ -1915,7 +2255,7 @@ def hw_peak(p):
 320 GFLOPS 取自 Intel 的 APP Metrics for Intel Microprocessors（Intel Core Processors，Revision 8，2026 年 1 月 6 日），这份文档为出口合规列出每个型号的 GFLOPS。
 51.2 GB/s 取自 Intel 产品规格页中 i9-11900H 的 Max Memory Bandwidth 一项，内存规格为双通道、最高 3200 MT/s。
 算术强度 I 是计算量与访存量之比（第二讲），1 次乘加计 2 次运算。I 低于平衡点的程序处于访存受限区，速率上限是 B × I；高于平衡点的程序处于算力受限区，上限是 P。
-这份文档的 GFLOPS 按 64 位浮点运算计数。本讲沿用第二讲的约定，各种数据类型的乘加都按 1 次乘加 2 次运算计数。
+这份文档的 GFLOPS 按 64 位浮点运算计数。本节沿用第二讲的约定，各种数据类型的乘加都按 1 次乘加 2 次运算计数。
 平衡点是第二讲的名称，第二讲中 RTX 5090 的平衡点约为 117 FLOP/Byte。
 图中的空心圆是 Qwen3-VL-2B 语言模型的带宽上限：算术强度 3.44 ÷ 0.968 ≈ 3.55 FLOP/Byte，51.2 GB/s × 3.55 FLOP/Byte ≈ 182 GFLOPS，即 51.2 ÷ 0.968 ≈ 53 Token/s。
 """)
@@ -1949,12 +2289,12 @@ def system_limits(p):
     p.title('瓶颈定位：内存带宽、峰值算力与指令条数各自限制的位置')
     figure(p, "system-limits", 1120).footnote('照片从左到右来自 Wikimedia Commons 的 D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。')
     p.notes("""
-图的骨架是本讲开头「CPU从内存中获取指令与数据进行计算」一页的图，CPU 展开为寄存器、运算单元与指令执行三部分。
+图的骨架是本节开头「CPU从内存中获取指令与数据进行计算」一页的图，CPU 展开为寄存器、运算单元与指令执行三部分。
 红色：内存带宽 51.2 GB/s 限制权重从内存到 CPU 的通路。每生成一个 Token，0.968 GB 权重经过这条通路一次，生成速度至多 53 Token/s。
 蓝色：峰值算力 320 GFLOPS 是 8 个核心的运算单元全部同时运算、每条指令都使用寄存器全部 256 位时的速率。
 绿色：单线程的 ollama 使用 1 个核心，它的一条指令使用寄存器的全部 256 位。1 个核心的算力上限是 320 ÷ 8 = 40 GFLOPS，实测约 37 GFLOPS。它计算 Q4_0 内积的函数 ggml_vec_dot_q4_0_q8_0 在本机使用的 libggml-cpu-icelake.so 中，主循环每轮 22 条指令处理 32 个权重，其中一条 vpdpbusd 完成 32 对 8 位整数的乘法并把乘积累加。
 橙色：mini-ollama 使用 1 个核心，它的一条指令处理 1 个权重，只使用寄存器的低 32 位。matvec 的内层循环每轮 20 条指令处理 2 个权重。
-指令执行：CPU 每个时钟周期能开始执行的指令条数有上限，完成一次乘加需要的指令越多，每秒完成的乘加越少。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第六部分的「超标量」一页讲解。每次乘加的指令条数：mini-ollama 是 20 ÷ 2 = 10 条，ollama 是 22 ÷ 32 ≈ 0.69 条，相差 14.5 倍；实测的生成速度相差 14 倍。
+指令执行：CPU 每个时钟周期能开始执行的指令条数有上限，完成一次乘加需要的指令越多，每秒完成的乘加越少。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。每次乘加的指令条数：mini-ollama 是 20 ÷ 2 = 10 条，ollama 是 22 ÷ 32 ≈ 0.69 条，相差 14.5 倍；实测的生成速度相差 14 倍。
 256 位的寄存器与一条指令处理多个数据的向量指令，由后面「向量体系：SIMD 思想与 256 位 YMM 寄存器」起的几页讲解。
 """)
 
@@ -1979,7 +2319,7 @@ def insn_mix(p):
     p.notes("""
 表中的循环取自 objdump -d mini-ollama 中 matvec 的内层循环，由 gcc -O2 -fno-tree-vectorize 生成，共 20 条指令、79 字节，每轮处理 1 字节权重，完成 2 次乘加，平均每次乘加 10 条。
 完成乘法与累加的是 4 条：2 条 mulss 各从内存读取 1 个激活值并相乘，2 条 addss 累加。其余 16 条读取权重（1 条）、拆出两个 4 位存储值（6 条）、把它们转换为 float 并乘以缩放因子 d（6 条）、控制循环（3 条）。
-核心每个周期最多有 5 条指令开始执行。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第六部分的「超标量」一页讲解。
+核心每个周期最多有 5 条指令开始执行。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。
 每个周期 5 条、每次乘加 10 条，每个周期至多完成 0.5 次乘加，即每轮循环至少 4 个周期。cmp 与 jne 在核心内部合并为 1 条，按 19 条计算每轮至少 3.8 个周期，页面按 20 条估算。
 主频约 3.8 GHz 是运行 mini-ollama 时读取 /sys 下的 scaling_cur_freq 得到的。每秒 1.9 × 10⁹ 次乘加即 3.8 GFLOPS，除以每个 Token 的 1.72 × 10⁹ 次乘加得到 1.1 Token/s。
 时钟周期是 CPU 内部电路同步工作的时间单位，主频 3.8 GHz 时一个周期约 0.26 纳秒。一个核心每秒至多执行 5 × 3.8 × 10⁹ = 1.9 × 10¹⁰ 条指令，这个数与指令的功能无关：拆出 4 位权重的 shr、and 与完成乘法的 mulss 各计 1 条。mini-ollama 每次乘加的 10 条指令中，8 条用于读取权重、还原为 float 权重与控制循环。
@@ -2006,7 +2346,7 @@ def speedup_plan(p):
 """)
     p.notes("""
 表的前两列与「瓶颈分析：每次乘加执行的指令条数」一页相同，第三列说明每个因素能否改变。
-每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本讲接下来从「向量演进：从 MMX、SSE 到 AVX 与 AVX-512」起讲解这类指令。
+每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本节接下来从「向量演进：从 MMX、SSE 到 AVX 与 AVX-512」起讲解这类指令。
 每个周期开始执行的指令条数由硬件决定，一个核心是 5 条。提高它需要更多同时工作的运算单元。i9-11900H 有 8 个核心，ollama 用 8 个线程时实测 31.4 Token/s，是 1 个线程的 2.9 倍；GPU 的运算核心数量比 CPU 多三个数量级，由「线程并行：CPU 多核与 GPU」起的各页讲解。
 主频的提高受电路延迟与功耗限制。每个 Token 的乘加次数由模型的权重数决定，推理程序不改变它。
 两个方案提高的都是运算速率，在 CPU 上共同的上限是「硬件上限」一页的带宽上限 53 Token/s。GPU 使用自己的显存，它的带宽上限由显存带宽决定（第二讲）。
@@ -2380,6 +2720,7 @@ Windows 上在 Git Bash 中执行，curl 随 Git for Windows 安装。
 """)
 
 
+# 总结与实验任务。
 def insn_summary(p):
     p.title('指令总览：本节核心机器级指令分类速查')
     slide(p, r"""
@@ -2425,8 +2766,8 @@ def summary(p):
     p.title('全节总结：计算机系统的抽象层级与指令集契约')
     slide(p, r"""
 **计算机系统的抽象层级划分**：
-1. **高级语言层（C/C++）**：提供算法表达的抽象与结构化思维（循环、函数、数组），屏蔽底层物理硬件细节；
-2. **应用二进制接口（ABI）**：建立在 ISA 之上的软件契约规范（函数调用约定、寄存器保护职责、运行时栈对齐、数据类型大小），同一 ISA 在 Linux 与 Windows 下有不同 ABI；
+1. **高级语言层（C/C++）**：提供算法表达的抽象与结构化思维（循环、函数、数组、结构体），屏蔽底层物理硬件细节；
+2. **应用二进制接口（ABI）**：建立在 ISA 之上的软件契约规范（函数调用约定、寄存器保护职责、运行时栈对齐、数据类型的大小与对齐、结构体的布局），同一 ISA 在 Linux 与 Windows 下有不同 ABI；
 3. **指令集体系结构（ISA）**：计算机软硬件之间的接口规范（指令格式与编码、架构寄存器、程序员可见状态、内存寻址模式），在代际演进中保持严格的向后兼容；
 4. **微架构与硬件电路层（Microarchitecture）**：芯片内部的物理实现（乱序执行流水线、ALU/AGU 算术单元、执行端口、物理总线与晶体管）。
 """)
@@ -2464,7 +2805,7 @@ make remote SERVER=http://HOST:PORT    # step 2 without an NVIDIA GPU""")
 - 每一步的任务、规则与期望输出见各自目录下的 `README.md`。
 """)
     p.notes("""
-parallel-dot 是第四部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
+parallel-dot 是第五部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
 第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
 第二步的 4 个 kernel 是 dot_kernel、dot_stride_kernel、matvec_row_kernel 与 matvec_block_kernel。dot_kernel 的做法与「CUDA 程序：每个线程执行的 kernel 函数」一页的 kernel 相同。make run 输出一张表，每一行是一个版本或一个阶段的耗时、相对 CPU 标量版本的加速比与结果是否和 CPU 一致。
 没有 NVIDIA 显卡的机器用 make remote 把 kernels/ 下的两个文件提交到课程服务器，服务器编译、运行后返回同一张表，HOST:PORT 是课程服务器的地址。
@@ -2474,7 +2815,7 @@ parallel-dot 是第四部分的课后练习，不计分，两步各有自己的�
 def lab_mini_cpu(p):
     p.title('实验一 mini-cpu：x86-64 指令解释器')
     slide(p, r"""
-- **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本讲的 x86-64 指令。
+- **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本节的 x86-64 指令。
 """)
     p.table([
         ['`modrm.c`', '`modrm_decode`', '解析操作数字节（ModR/M）与其后的字节，得到操作数'],
@@ -2493,7 +2834,7 @@ make handin               # pack src/lab1 into lab1.zip, the file to submit""")
     p.notes("""
 实验一是 mini-cpu 六个实验中的第一个，计分，满分 100 分；后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
 mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。建议的顺序是 modrm.c、alu.c、interp.c。
-modrm.c 对应「练习：反汇编和反编译」两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
+modrm.c 对应「练习：反汇编和反编译」的前两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
 解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
 make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。

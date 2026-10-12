@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from ... import marks
+from ... import filelinks, marks
 from . import omml
 
 
@@ -151,7 +151,11 @@ def parse_inline(text: str) -> list[Run]:
             latex = match.group("math")
             runs.append(Run(omml.plain_text(latex), math=latex))
         elif match.group("ltext") is not None:
-            runs.append(Run(match.group("ltext"), link=match.group("lurl")))
+            if filelinks.path_of(match.group("lurl")) is not None:
+                # A file button has nothing to open here: its label is text.
+                runs.extend(parse_inline(match.group("ltext")))
+            else:
+                runs.append(Run(match.group("ltext"), link=match.group("lurl")))
         elif match.group("bold") is not None:
             runs.extend(emphasize(parse_inline(match.group("bold")), bold=True))
         elif match.group("italic") is not None:

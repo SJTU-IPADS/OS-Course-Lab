@@ -1,8 +1,9 @@
 (function () {
   "use strict";
 
-  // Arms the file buttons a `p.demo(..., files=[...])` block rendered, and
-  // shows the file one of them names in a panel down the right-hand side.
+  // Arms the file buttons a `p.demo(..., files=[...])` block rendered and the
+  // ones a `[label](file:path)` link became in a line of text, and shows the
+  // file one of them names in a panel down the right-hand side.
   //
   // The button carries `data-lk-source="<id>"` and nothing else: the id is a
   // hash of the path, and the server maps it back to the file the author named
@@ -324,7 +325,7 @@
   // ---- arming -------------------------------------------------------------
 
   function arm() {
-    var buttons = document.querySelectorAll(".lk-demo-file[data-lk-source]");
+    var buttons = document.querySelectorAll("button[data-lk-source]");
     for (var i = 0; i < buttons.length; i++) {
       (function (button) {
         if (button.getAttribute("data-lk-armed")) return;
@@ -355,9 +356,12 @@
   // panel — the one on top, which is this one. It is loaded first for exactly
   // that reason (see dev_server.inject_source).
 
+  // A file button in a line of text stands outside any `.lk-demo`, and a press
+  // on it is a request for its file — the panel changes hands or goes away in
+  // `open`, so the press must reach the button.
   function elsewhere(target) {
     var node = target && target.nodeType === 1 ? target : null;
-    return !node || !node.closest("[data-lk-chrome], .lk-demo");
+    return !node || !node.closest("[data-lk-chrome], .lk-demo, [data-lk-source]");
   }
 
   document.addEventListener(

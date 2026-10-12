@@ -5,7 +5,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
-from . import marks
+from . import filelinks, marks
 
 
 # Deck-level aspect-ratio presets, anchored on a fixed 720px height so the pixel
@@ -30,6 +30,11 @@ BLOCK_KINDS = frozenset({
 # Slide text may carry `<mark>`: a `slide` block, and each column of a
 # `columns` block, which is slide text set beside its neighbours.
 SLIDE_TEXT_KINDS = frozenset({"slide", "columns"})
+
+# Text that may carry a file link, `[label](file:path)`: slide text and the
+# cells of a table — what every renderer reads as inline markdown and sets as a
+# line of the page. See `lecturekit.filelinks`.
+FILE_LINK_KINDS = SLIDE_TEXT_KINDS | {"table"}
 
 # A bridge (衔接页) is one or two short lines — three is the hard ceiling, so it
 # cannot grow into a title-less free-form page. See dsl.Lecture.bridge.
@@ -740,6 +745,7 @@ def check_block(
     if block.kind == "bridge":
         check_bridge(block, page_id)
     check_marks(block, page_id)
+    check_file_links(block, page_id)
 
 
 # Content values that are never author prose: a path, a URL, an enum, a shell
@@ -806,6 +812,50 @@ def check_marks(block: Block, page_id: str) -> None:
             str(block.float_image.get("alt") or ""),
             allowed=False, where="an image_right alt", page_id=page_id,
         )
+
+
+def file_link_texts(block: Block) -> list[str]:
+    """The strings of ``block`` that may carry a file link; none for most kinds."""
+    if block.kind not in FILE_LINK_KINDS:
+        return []
+    if isinstance(block.content, str):
+        return [block.content]
+    return _prose_strings(block.content)
+
+
+def check_file_link_text(text: str, *, allowed: bool, where: str, page_id: str) -> None:
+    for problem in filelinks.errors(text, allowed=allowed):
+        raise ValidationError(f"{problem} — on {page_id}, in {where}")
+
+
+def check_file_links(block: Block, page_id: str) -> None:
+    """A file link is legal in slide text and table cells, and names a file
+    inside the lecture directory.
+
+    Refused elsewhere on `check_marks`' reasoning: the targets that cannot draw
+    the button print the label, and a surface no renderer reads as inline
+    markdown would print the markup itself. A `code` block is verbatim and is
+    not scanned, and neither is a demo's recorded ``output``.
+    """
+    where = f"the {block.kind} block"
+    for text in file_link_texts(block):
+        check_file_link_text(text, allowed=True, where=where, page_id=page_id)
+    if block.kind == "code" or block.kind in FILE_LINK_KINDS:
+        texts: list[str] = []
+    elif isinstance(block.content, str):
+        texts = [block.content]
+    elif block.kind == "demo":
+        texts = _prose_strings(
+            {name: value for name, value in block.content.items() if name != "output"}
+        )
+    else:
+        texts = _prose_strings(block.content)
+    for text in texts:
+        check_file_link_text(text, allowed=False, where=where, page_id=page_id)
+    for footnote in block.footnotes:
+        check_file_link_text(footnote, allowed=False, where="a footnote", page_id=page_id)
+    for note in block.annotations:
+        check_file_link_text(note.text, allowed=False, where="an annotation", page_id=page_id)
 
 
 def check_block_key(block: Block, page_id: str, keys: set[str] | None) -> None:

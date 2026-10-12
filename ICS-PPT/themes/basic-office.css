@@ -760,6 +760,70 @@ span.lk-highlight {
   cursor: default;
 }
 
+/* The same button in a line of text: `[label](file:path)` in a slide, a column
+   or a table cell. It has to read as something to press among words that are
+   not: a tinted pill led by a page icon, which no code span or marked word
+   carries, and which fills in under the pointer. It takes its size from the
+   line it sits in and stays under that line's height, so a sentence with a
+   file in it is as tall as one without. */
+.lk-text-file {
+  display: inline-block;
+  margin: 0 0.15em;
+  padding: 0 0.55em 0 0.45em;
+  border: 1.5px solid var(--color-accent4);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent4) 14%, var(--color-bg));
+  color: var(--color-accent1);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  font-weight: 400;
+  line-height: 1.3;
+  vertical-align: 0.06em;
+  cursor: pointer;
+}
+
+/* The page icon, drawn as a mask so it takes the label's colour in every
+   state: a sheet with a folded corner and two lines of text. */
+.lk-text-file {
+  --lk-file-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14' fill='none' stroke='black' stroke-width='1.3' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M1.5 1h5.5l3.5 3.5V13h-9z'/%3E%3Cpath d='M7 1v3.5h3.5'/%3E%3Cpath d='M3.8 8h4.4M3.8 10.4h4.4'/%3E%3C/svg%3E");
+}
+
+.lk-text-file::before {
+  content: "";
+  display: inline-block;
+  width: 0.72em;
+  height: 0.86em;
+  margin-right: 0.38em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  -webkit-mask: var(--lk-file-icon) center / contain no-repeat;
+  mask: var(--lk-file-icon) center / contain no-repeat;
+}
+
+.lk-text-file:not([disabled]):hover {
+  background: var(--color-accent4);
+  color: var(--color-bg);
+}
+
+/* With no server behind the page there is nothing to press, and the pill says
+   so by losing its colour. It keeps its outline and its icon: the reader of a
+   PDF still sees that the word names a file. */
+.lk-text-file[disabled] {
+  border-color: #9a9a9a;
+  background: var(--color-bg);
+  color: inherit;
+  cursor: default;
+}
+
+/* A label written as a code span is already set in the button's own face. */
+.lk-text-file code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
 .lk-demo-name {
   font-weight: 700;
   color: var(--color-dk2);

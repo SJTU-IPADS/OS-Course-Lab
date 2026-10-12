@@ -83,7 +83,9 @@ those lines of it in bold, and the deck draws the rest light.
 Pressing it opens that file, line-numbered, in a panel down the right-hand side
 of the deck, so the source a command compiles can be read in the room; it is
 read at the press, so an edit made mid-lecture shows. The page carries a hash of
-the path rather than the path, on the same terms as the command.
+the path rather than the path, on the same terms as the command. A file that a
+sentence mentions is named in the sentence, `[sizes.c](file:examples/sizes.c)`,
+and its label is the same button.
 
 `view` opens the lecture as its outline. Click a row to jump to that slide,
 `←`/`→` to page, `≡ 大纲` to come back.

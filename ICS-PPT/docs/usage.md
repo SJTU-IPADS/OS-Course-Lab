@@ -550,6 +550,11 @@ the second the drawer.
 A block whose command is `""` draws the file buttons without ▶: it opens its
 files and runs nothing.
 
+A [`[label](file:path)`](dsl.md#file-buttons-in-text-labelfilepath) link in
+slide text or a table cell is the same button drawn in its sentence. It opens
+the same panel: with the panel up, a press on another file's button — in the
+text or beside a ▶ — shows that file instead.
+
 The file is read **when the button is pressed**, so editing a source file during
 a lecture and pressing the button again shows the edit — the same file the ▶
 beside it would compile.

@@ -17,7 +17,7 @@ from __future__ import annotations
 import html
 import re
 
-from lecturekit import marks
+from lecturekit import filelinks, marks
 
 from .math import math_html
 
@@ -75,8 +75,12 @@ def inline(text: str) -> str:
         elif match.group("math") is not None:
             out.append(math_html(match.group("math")))
         elif match.group("ltext") is not None:
-            url = html.escape(match.group("lurl"), quote=True)
-            out.append(f'<a href="{url}">{inline(match.group("ltext"))}</a>')
+            if filelinks.path_of(match.group("lurl")) is not None:
+                # A file button has nothing to open on a sheet: its label is text.
+                out.append(inline(match.group("ltext")))
+            else:
+                url = html.escape(match.group("lurl"), quote=True)
+                out.append(f'<a href="{url}">{inline(match.group("ltext"))}</a>')
         elif match.group("bold") is not None:
             out.append(f"<strong>{inline(match.group('bold'))}</strong>")
         elif match.group("italic") is not None:
