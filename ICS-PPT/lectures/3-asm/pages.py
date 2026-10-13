@@ -2220,7 +2220,7 @@ def struct_exercise_2(p):
 def flops_estimate(p):
     p.title('回顾：生成一个 Token 的乘加次数与读取字节数')
     slide(p, r"""
-**以第二讲实验 `nano-quant` 量化的模型为例**：
+**以第二讲的 hands-on lab `nano-quant` 量化的模型为例**：
 - Qwen3-VL-2B-Instruct 的语言模型有 28 层，17.2 亿个权重；
 - 权重采用第二讲的 Q4_0 格式，每 32 个权重占 18 字节，平均每个权重 4.5 位；
 - 生成一个 Token 时，输入向量与每个权重矩阵各做一次矩阵向量乘 $y = Wx$，$y$ 的每个元素是 $W$ 的一行与 $x$ 的内积；
@@ -2235,7 +2235,7 @@ def flops_estimate(p):
 """)
     p.notes("""
 两个数量与第二讲的带宽估算口径相同：只计权重，KV cache 与激活的读取未计入。
-权重数 1 720 574 976 与 Q4_0 的字节数 968 249 344 取自 nano-quant 实验：前者是 nano-quant plan 的汇总，后者是 tests/expected-qwen3vl.txt 中的 q4_0_nq_bytes。
+权重数 1 720 574 976 与 Q4_0 的字节数 968 249 344 取自 hands-on lab nano-quant：前者是 nano-quant plan 的汇总，后者是 tests/expected-qwen3vl.txt 中的 q4_0_nq_bytes。
 这个模型的词表矩阵 embed_tokens 同时充当输出层，生成一个 Token 时参与一次矩阵向量乘。一维的归一化系数保持 F32，共 0.5 MB。
 """)
 
@@ -2272,7 +2272,7 @@ def measured_speed(p):
 """)
     figure(p, "roofline-measured", 1120)
     p.notes("""
-mini-ollama 的源码在 examples/mini-ollama/ 下，共约 850 行 C：mini_ollama.c 是主循环与一层之内的运算，model.c 把 GGUF 文件载入内存（Linux 上用 mmap 映射，Windows 上用 fread 读入）并找到其中的张量，tokenizer.c 是分词器。它读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf（974 196 320 字节），逐个 Token 生成回答。
+mini-ollama 的源码在 examples/mini-ollama/ 下，共约 850 行 C：mini_ollama.c 是主循环与一层之内的运算，model.c 把 GGUF 文件载入内存（Linux 上用 mmap 映射，Windows 上用 fread 读入）并找到其中的张量，tokenizer.c 是分词器。它读取第二讲的 hands-on lab nano-quant 按 q4_0 配方得到的 q4_0.gguf（974 196 320 字节），逐个 Token 生成回答。
 主循环每一轮让一个 Token 经过 28 层，每层 attention 做 4 次矩阵向量乘，feed_forward 做 3 次，输出层 1 次，生成一个 Token 共 197 次矩阵向量乘、1 720 451 072 次乘加，与 1.72 × 10⁹ 一致。这些乘加都在函数 matvec 中完成，它占运行时间的 99.7%。
 make run 编译并运行 mini-ollama，一次约 40 秒。输出的 eval rate 是生成回答的速度，名字与 ollama run --verbose 的输出相同；matvec rate 是全部矩阵向量乘的运算速率。Makefile 使用 -O2 -fno-tree-vectorize：GCC 12 起在 -O2 下会把这个循环的一部分自动向量化，这个选项使它保持每次处理一个权重。
 make run-ollama 先执行 ollama create nq-q4-0 -f Modelfile，再执行 ollama run nq-q4-0 --verbose，需要 ollama serve 已在运行。Modelfile 让 ollama 加载同一个 q4_0.gguf，num_gpu 0 使它只使用 CPU，num_thread 1 使它只用 1 个线程，temperature 0 使每一步取分数最高的 Token，与 mini-ollama 相同。
@@ -2562,7 +2562,7 @@ def gpu_why(p):
 SIMD 是一条指令处理多个数据，SIMT 是多个线程执行同一段代码。CPU 的多核并行属于后一种：每个核心运行 1 个线程，各自处理数据的一段。i9-11900H 有 8 个核心，每个核心 2 个硬件线程，至多 16 个线程同时运行；ollama 用 8 个线程实测 31.4 Token/s，是 1 个线程的 2.9 倍。
 RTX 5090 的 21760 个运算核心是 NVIDIA 规格表中的 CUDA Cores，等于 170 个 SM 乘以每个 SM 的 128 个。一个 CUDA 核心只完成一个线程的一次运算，取指令、译码与调度由同组的 32 个核心共用一套逻辑；CPU 的每个核心各有一套完整的控制逻辑与缓存。两种核心的功能不同，数量的对比说明的是可以同时执行的线程数。
 RTX 5090 的显存是 32 GB 的 GDDR7，总线宽度 512 位，每条数据线的速率是 28 Gbit/s，峰值带宽为 28 × 512 ÷ 8 = 1792 GB/s；内存带宽 51.2 GB/s 是「硬件上限」一页的数值。
-实验 parallel-dot 第二步的参考结果在 i9-11900H 与 RTX 3060 Laptop（3840 个运算核心）上测得，32768 × 4096 的矩阵向量乘：CPU 1 个线程的标量循环 59.8 ms，CPU 16 个线程并使用向量指令 4.5 ms，GPU 0.81 ms，依次是 1 倍、13.4 倍、73.5 倍。
+hands-on lab parallel-dot 第二步的参考结果在 i9-11900H 与 RTX 3060 Laptop（3840 个运算核心）上测得，32768 × 4096 的矩阵向量乘：CPU 1 个线程的标量循环 59.8 ms，CPU 16 个线程并使用向量指令 4.5 ms，GPU 0.81 ms，依次是 1 倍、13.4 倍、73.5 倍。
 图像渲染中，顶点的坐标变换是 4 × 4 矩阵与向量的乘法，每个像素的颜色由同一段着色程序计算，两者都是对大量数据执行相同的运算。
 """)
 
@@ -2653,7 +2653,7 @@ for (int b = 0; b < blocks; b++)
 dot_cuda.cu 的 main 函数中调用 CUDA 的部分；CHECK 是文件中定义的宏，检查每次调用的返回值，出错时打印原因并退出。
 cudaMalloc 在显存中分配空间，返回的指针 dw、dx、dpart 指向显存，只能传给 kernel 或 cudaMemcpy，主机端代码不能直接读写。cudaMemcpy 的最后一个参数给出拷贝方向。
 kernel 的启动写成 函数名<<<线程块个数, 每块线程数>>>(参数)。启动之后 main 继续执行，第 3 步的 cudaMemcpy 等待 kernel 结束后再拷贝。
-两个用时的实测值取自实验 parallel-dot 第二步的参考结果（RTX 3060 Laptop，元素个数同为 2²⁴）：把 w、x 共 128 MiB 拷入显存 24.4 ms（5.5 GB/s，普通 malloc 内存经 PCIe 的拷贝速率），kernel 0.66 ms，拷贝是 kernel 的 37 倍。矩阵向量乘的权重留在显存中，每个 Token 只拷贝输入与输出向量，拷贝所占的比例很小。
+两个用时的实测值取自 hands-on lab parallel-dot 第二步的参考结果（RTX 3060 Laptop，元素个数同为 2²⁴）：把 w、x 共 128 MiB 拷入显存 24.4 ms（5.5 GB/s，普通 malloc 内存经 PCIe 的拷贝速率），kernel 0.66 ms，拷贝是 kernel 的 37 倍。矩阵向量乘的权重留在显存中，每个 Token 只拷贝输入与输出向量，拷贝所占的比例很小。
 """)
 
 
@@ -2716,7 +2716,7 @@ timeout，超过时间限制被终止；output-limit，输出超过 1 MiB 被终
 没有 /etc 与 /home，没有网络接口。到时间限制时，隔离环境中的全部进程被终止，GPU 交给下一个任务。
 curl 的选项：-sS 只显示错误信息；-N 关闭输出缓冲，服务器每返回一行就显示一行；-H 添加请求头；--data-binary @文件 把文件内容原样作为请求正文。
 Windows 上在 Git Bash 中执行，curl 随 Git for Windows 安装。
-实验 parallel-dot 第二步的 make remote 使用同一个服务器的 POST /run，提交的是两个 kernel 文件。
+hands-on lab parallel-dot 第二步的 make remote 使用同一个服务器的 POST /run，提交的是两个 kernel 文件。
 """)
 
 
@@ -2786,9 +2786,9 @@ def summary_2(p):
 
 
 def exercise(p):
-    p.title('课后练习 parallel-dot：AVX2 内积函数与 CUDA kernel')
+    p.title('hands-on lab parallel-dot：AVX2 内积函数与 CUDA kernel')
     slide(p, r"""
-- **本实验不计分**。实验目录 `parallel-dot/` 分两步，对应方案 1 与方案 2，按顺序完成。
+- **hands-on lab 不计分**。`parallel-dot/` 分两步，对应方案 1 与方案 2，按顺序完成。
 """)
     p.table([
         ['第一步', '`simd/`', '`vec_dot_q4_0`：用 AVX2 实现 Q4_0 内积', '`make test` 输出 `all passed`'],
@@ -2805,37 +2805,35 @@ make remote SERVER=http://HOST:PORT    # step 2 without an NVIDIA GPU""")
 - 每一步的任务、规则与期望输出见各自目录下的 `README.md`。
 """)
     p.notes("""
-parallel-dot 是第五部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
-第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
+parallel-dot 是第五部分的 hands-on lab，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
+第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲的 hands-on lab nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
 第二步的 4 个 kernel 是 dot_kernel、dot_stride_kernel、matvec_row_kernel 与 matvec_block_kernel。dot_kernel 的做法与「CUDA 程序：每个线程执行的 kernel 函数」一页的 kernel 相同。make run 输出一张表，每一行是一个版本或一个阶段的耗时、相对 CPU 标量版本的加速比与结果是否和 CPU 一致。
 没有 NVIDIA 显卡的机器用 make remote 把 kernels/ 下的两个文件提交到课程服务器，服务器编译、运行后返回同一张表，HOST:PORT 是课程服务器的地址。
 """)
 
 
 def lab_mini_cpu(p):
-    p.title('实验一 mini-cpu：x86-64 指令解释器')
+    p.title('scoring lab mini-cpu 实验一：x86-64 指令解释器')
     slide(p, r"""
-- **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本节的 x86-64 指令。
+- **scoring lab 计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本节的 x86-64 指令。
 """)
     p.table([
-        ['`modrm.c`', '`modrm_decode`', '解析操作数字节（ModR/M）与其后的字节，得到操作数'],
-        ['`alu.c`', '`x86_add` 等 4 个', '算术逻辑运算的结果与标志位'],
-        ['`interp.c`', '`cond`、`interp_run`', '条件的判断；主循环：取一条指令，按操作码修改寄存器与内存'],
-    ], headers=['文件', '要写的函数', '内容'], widths=[13, 21, 66])
-    p.code('bash', """make                      # build mini-cpu and the guest programs
-./mini-cpu guest/hello    # run a guest program on your interpreter
-make check                # run the tests, print the score of every item and the total
-make handin               # pack src/lab1 into lab1.zip, the file to submit""")
+        ['1', '`modrm.c`', '`modrm_decode`：解析操作数字节（ModR/M），得到操作数', '30'],
+        ['2', '`alu.c`', '`x86_add` 等 10 个函数：整数运算的结果与标志位', '30'],
+        ['3', '`interp.c`', '`cond`、`interp_run`：主循环与整数指令；完成后运行 mini-ollama', '30'],
+        ['4', '`interp.c`', '`interp_run`：7 条向量指令；完成后运行 SIMD 版的 mini-ollama', '10'],
+    ], headers=['部分', '文件', '要写的内容', '分值'], widths=[8, 13, 69, 10])
+    p.code('bash', """make && ./mini-cpu guest/hello    # build, then run a guest program on your interpreter
+make check                        # run the tests, print the score of every item and the total""")
     slide(p, r"""
-- 完成后，「实测」一页的 mini-ollama 能在你的解释器上运行。
 - 完成标准：`make check` 输出 `lab 1 score 100/100`；提交 `make handin` 生成的 `lab1.zip`。
 - 在 x86-64 的 Linux 上完成，Windows 用 WSL2；说明见 `src/lab1/README.md`。
 """)
     p.notes("""
-实验一是 mini-cpu 六个实验中的第一个，计分，满分 100 分；后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
-mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。建议的顺序是 modrm.c、alu.c、interp.c。
-modrm.c 对应「练习：反汇编和反编译」的前两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
-解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
-make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
+mini-cpu 的实验一是 scoring lab，满分 100 分；它是 mini-cpu 六个实验中的第一个，后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
+mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。实验分四个部分，按顺序完成：modrm.c（30 分）、alu.c（30 分）、interp.c 的主循环与整数指令（30 分）、interp.c 的 7 条向量指令（10 分）。一个部分的评测项目只依赖这一部分与它之前的部分，前三部分不涉及向量指令。
+modrm.c 对应「练习：反汇编和反编译」的前两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 10 个函数计算整数运算的结果与标志位：x86_szp、x86_add、x86_sub、x86_logic 对应标志位 ZF、SF、CF、OF 的定义；x86_inc、x86_dec、x86_neg 各调用一次 x86_add 或 x86_sub；x86_shift、x86_mul、x86_div 计算移位、乘法与除法。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
+解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架取出操作数并写回结果，其中 inc、dec、neg、移位与乘除法的结果和标志位调用 alu.c 的函数。第三部分完成后 guest/mini-ollama 在解释器上运行，它是「实测」一页的 mini-ollama；第四部分完成后 guest/mini-ollama-simd 也能运行，它的矩阵向量乘用向量指令每次处理一个 Q4_0 块的 32 个权重。
+make check 按四个部分列出 21 项：前两个部分各 3 项、每项 10 分，第三部分 10 项、每项 3 分，第四部分 5 项、每项 2 分；一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-13）。
 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。
 """)
