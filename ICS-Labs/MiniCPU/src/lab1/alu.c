@@ -23,6 +23,10 @@
  * x86_sub with one operand fixed; x86_shift and x86_mul compute CF and OF
  * themselves and take the other three flags from x86_szp.
  *
+ * Four of them are written out as examples: x86_add, x86_inc, x86_div,
+ * and in x86_shift the branch of shl and sal (the default of the switch).
+ * You write the other six and the shr and sar cases of x86_shift.
+ *
  * The interpreter of this lab and the CPU of lab 2 call them for every
  * integer instruction: the first four through x86_alu (frame/arith.c),
  * which picks one by the number of the operation, the other six directly
@@ -59,7 +63,7 @@ uint64_t x86_logic(uint64_t *f, uint64_t r, int size)
 
 uint64_t x86_add(uint64_t *f, uint64_t a, uint64_t b, int size, int carry)
 {
-    /* TODO: r = a + b + carry on size bytes; set the five flags in *f and
+    /* r = a + b + carry on size bytes; set the five flags in *f and
      * return r truncated to size bytes. Truncate a and b first.
      *
      *   ZF SF PF  x86_szp
@@ -76,8 +80,12 @@ uint64_t x86_add(uint64_t *f, uint64_t a, uint64_t b, int size, int carry)
      * and with carry 1:
      *   0x00 + 0xff = 0x00   CF ZF PF
      */
-    (void)f; (void)a; (void)b; (void)size; (void)carry;
-    todo("x86_add");
+    uint64_t ta = trunc_val(a, size), tb = trunc_val(b, size);
+    uint64_t r = trunc_val(ta + tb + (uint64_t)carry, size);
+    *f = x86_szp(*f, r, size);
+    *f = flag(*f, CF, r < ta || (carry && r == ta));
+    *f = flag(*f, OF, (~(ta ^ tb) & (ta ^ r) & msb(size)) != 0);
+    return r;
 }
 
 uint64_t x86_sub(uint64_t *f, uint64_t a, uint64_t b, int size, int borrow)
@@ -104,7 +112,7 @@ uint64_t x86_sub(uint64_t *f, uint64_t a, uint64_t b, int size, int borrow)
 
 uint64_t x86_inc(uint64_t *f, uint64_t v, int size)
 {
-    /* TODO: v + 1 on size bytes. inc sets ZF, SF, PF and OF as add does
+    /* v + 1 on size bytes. inc sets ZF, SF, PF and OF as add does
      * and leaves CF as it was: call x86_add, then put the CF of before the
      * call back into *f.
      *
@@ -112,8 +120,10 @@ uint64_t x86_inc(uint64_t *f, uint64_t v, int size)
      *   0xff + 1 = 0x00   ZF PF, CF as before (add would set it)
      *   0x7f + 1 = 0x80   OF SF, CF as before
      */
-    (void)f; (void)v; (void)size;
-    todo("x86_inc");
+    uint64_t cf = *f & CF;
+    uint64_t r = x86_add(f, v, 1, size, 0);
+    *f = (*f & ~(uint64_t)CF) | cf;
+    return r;
 }
 
 uint64_t x86_dec(uint64_t *f, uint64_t v, int size)
@@ -143,7 +153,7 @@ uint64_t x86_neg(uint64_t *f, uint64_t v, int size)
 
 uint64_t x86_shift(uint64_t *f, int sub, uint64_t v, unsigned n, int size)
 {
-    /* TODO: v shifted by n bits on size bytes; sub is 4 shl, 5 shr,
+    /* v shifted by n bits on size bytes; sub is 4 shl, 5 shr,
      * 6 sal (the same as shl), 7 sar.
      *
      *   1. Keep the low 6 bits of n when size is 8, the low 5 bits
@@ -169,8 +179,30 @@ uint64_t x86_shift(uint64_t *f, int sub, uint64_t v, unsigned n, int size)
      *   sar 0x81 by 9 = 0xff   CF SF PF
      *   shl 0x01 by 9 = 0x00   ZF PF
      */
-    (void)f; (void)sub; (void)v; (void)n; (void)size;
-    todo("x86_shift");
+    unsigned bits = (unsigned)size * 8;
+    n &= size == 8 ? 63 : 31;
+    v = trunc_val(v, size);
+    if (!n)
+        return v;                                       /* flags unchanged */
+    uint64_t r;
+    int cf, of;
+    switch (sub) {
+    case 5:                                             /* shr */
+        /* TODO: cf, r and of of shr, by the table of step 3 */
+        todo("shr in x86_shift");
+    case 7:                                             /* sar */
+        /* TODO: cf, r and of of sar, by the table of step 3 */
+        todo("sar in x86_shift");
+    default:                                            /* shl, sal */
+        cf = n <= bits ? (int)(v >> (bits - n)) & 1 : 0;
+        r = trunc_val(v << n, size);
+        of = !!(r & msb(size)) ^ cf;
+        break;
+    }
+    *f = x86_szp(*f, r, size);
+    *f = flag(*f, CF, cf);
+    *f = flag(*f, OF, of);
+    return r;
 }
 
 void x86_mul(uint64_t *f, int sub, uint64_t a, uint64_t b, int size,
@@ -203,7 +235,7 @@ void x86_mul(uint64_t *f, int sub, uint64_t a, uint64_t b, int size,
 int x86_div(int sub, uint64_t hi, uint64_t lo, uint64_t v, int size,
             uint64_t *q, uint64_t *r)
 {
-    /* TODO: the dividend hi:lo, 2 * size bytes long, divided by the low
+    /* the dividend hi:lo, 2 * size bytes long, divided by the low
      * size bytes of v; sub is 6 div (unsigned), 7 idiv (signed). No flag
      * changes.
      *
@@ -231,6 +263,29 @@ int x86_div(int sub, uint64_t hi, uint64_t lo, uint64_t v, int size,
      *   idiv  0xfff9 / 0x02      q 0xfd, r 0xff   (-7 / 2 = -3, remainder -1)
      *   idiv  0xff80 / 0xff      -1: -128 / -1 = 128 is not an int8_t
      */
-    (void)sub; (void)hi; (void)lo; (void)v; (void)size; (void)q; (void)r;
-    todo("x86_div");
+    int bits = size * 8;
+    v = trunc_val(v, size);
+    if (v == 0)
+        return -1;
+    if (sub == 6) {
+        unsigned __int128 nn = ((unsigned __int128)trunc_val(hi, size) << bits) | trunc_val(lo, size);
+        unsigned __int128 qq = nn / v;
+        if (qq > trunc_val(~0ULL, size))
+            return -1;
+        *q = (uint64_t)qq;
+        *r = (uint64_t)(nn % v);
+    } else {
+        __int128 nn = size == 8
+            ? (__int128)(((unsigned __int128)hi << 64) | lo)
+            : (__int128)sext((trunc_val(hi, size) << bits) | trunc_val(lo, size), size * 2);
+        __int128 dv = sext(v, size);
+        if (dv == -1 && nn == (__int128)((unsigned __int128)1 << 127))
+            return -1;                                  /* the quotient is 2^127 */
+        __int128 qq = nn / dv;
+        if (qq != (__int128)sext((uint64_t)qq, size))
+            return -1;
+        *q = trunc_val((uint64_t)qq, size);
+        *r = trunc_val((uint64_t)(nn % dv), size);
+    }
+    return 0;
 }

@@ -18,6 +18,10 @@
  * frame/x86rest.c. Flags are computed by alu.c; cond() decides a
  * condition code from them.
  *
+ * The loop is written out, with six cases as examples: the eight
+ * operations with an immediate (0x81, 0x83), push, the two jmp, and of
+ * part 4 vphaddd and vextracti128. You write cond() and the other cases.
+ *
  * When an instruction faults (a page fault in load or store, an illegal
  * opcode), x86_end restores R[] as it was before the instruction, so a
  * case may write registers before a later access fails.
@@ -51,39 +55,18 @@ int cond(uint64_t f, int cc)
 
 void interp_run(mcpu *c)
 {
-    /* TODO: the loop and its switch.
-     *
-     *     x86 x;
-     *     while (!c->halted && !(opt_max && c->icount >= opt_max)) {
-     *         unsigned op = x86_begin(c, &x);
-     *         switch (op) {
-     *         case ...:              one case per line of the two tables
-     *                                below: part 3, then part 4
-     *         default:
-     *             x86_other(&x);
-     *             break;
-     *         }
-     *         if (x86_end(&x) < 0)
-     *             break;
-     *     }
-     *
-     * Three cases, as examples of the helpers; the third belongs to
-     * part 4:
+    /* The loop and its switch are below; the switch has one case per line
+     * of the two lists that follow. Two more cases, as examples of the
+     * helpers; the second belongs to part 4:
      *
      *     case 0x89:                              mov: rm = reg
      *         modrm(&x);
      *         rm_set(&x, get(&x, x.reg));
      *         break;
      *
-     *     case 0x50: ... case 0x57:               push (eight labels)
-     *         v = R[(op & 7) | ((x.rex & 1) << 3)];
-     *         store(&x, R[RSP] - 8, 8, v);
-     *         R[RSP] -= 8;
-     *         break;
-     *
      *     case 0x11ef:                            vpxor: ymm reg = ymm v ^ rm
      *         modrm(&x);
-     *         rm_vget(&x, &b, x.vlen);            u256 b, r
+     *         rm_vget(&x, &b, x.vlen);
      *         for (int i = 0; i < 4; ++i)
      *             r.q[i] = Y[x.v].q[i] ^ b.q[i];
      *         vset(&x, x.reg, &r, x.vlen);
@@ -174,6 +157,77 @@ void interp_run(mcpu *c)
      * whose rip is the address of the instruction, which
      * mini-cpu --disasm and objdump -d show.
      */
-    (void)c;
-    todo("interp_run");
+    x86 x;
+    uint64_t v;
+    int64_t rel;
+    u256 a, b, r;
+
+    while (!c->halted && !(opt_max && c->icount >= opt_max)) {
+        unsigned op = x86_begin(c, &x);
+
+        switch (op) {
+        /* the eight operations: rm = rm OP imm; the number of the
+           operation is x.sub, and cmp (7) writes no operand */
+        case 0x81: case 0x83:
+            modrm(&x);
+            v = op == 0x83 ? (uint64_t)(int64_t)(int8_t)fetch8(&x) : fetch_imm(&x);
+            v = x86_alu(&R[RFLAGS], x.sub, rm_get(&x), v, x.size);
+            if (x.sub != 7)
+                rm_set(&x, v);
+            break;
+
+        /* push: the register is (op & 7) | ((x.rex & 1) << 3) */
+        case 0x50: case 0x51: case 0x52: case 0x53:
+        case 0x54: case 0x55: case 0x56: case 0x57:
+            v = R[(op & 7) | ((x.rex & 1) << 3)];
+            store(&x, R[RSP] - 8, 8, v);
+            R[RSP] -= 8;
+            break;
+
+        /* jmp: a 1-byte offset (0xeb) or a 4-byte offset (0xe9) */
+        case 0xeb:
+            rel = (int8_t)fetch8(&x);
+            R[RIP] += (uint64_t)rel;
+            break;
+        case 0xe9:
+            rel = (int32_t)fetch32(&x);
+            R[RIP] += (uint64_t)rel;
+            break;
+
+        /* TODO: part 3, the other cases of the integer list above */
+
+        /* vphaddd, xmm only: reg = { v0+v1, v2+v3, rm0+rm1, rm2+rm3 } */
+        case 0x1202:
+            modrm(&x);
+            rm_vget(&x, &b, 16);
+            a = Y[x.v];
+            memset(&r, 0, sizeof r);
+            r.d[0] = a.d[0] + a.d[1];
+            r.d[1] = a.d[2] + a.d[3];
+            r.d[2] = b.d[0] + b.d[1];
+            r.d[3] = b.d[2] + b.d[3];
+            vset(&x, x.reg, &r, 16);
+            break;
+
+        /* vextracti128: xmm rm (or 16 bytes of memory) <- the low (0) or
+           high (1) half of ymm reg, by bit 0 of the immediate */
+        case 0x1339:
+            modrm(&x);
+            v = fetch8(&x);
+            memset(&r, 0, sizeof r);
+            r.q[0] = Y[x.reg].q[(v & 1) * 2];
+            r.q[1] = Y[x.reg].q[(v & 1) * 2 + 1];
+            rm_vset(&x, &r, 16);
+            break;
+
+        /* TODO: part 4, the other five vector instructions */
+
+        default:
+            x86_other(&x);
+            break;
+        }
+
+        if (x86_end(&x) < 0)
+            break;
+    }
 }

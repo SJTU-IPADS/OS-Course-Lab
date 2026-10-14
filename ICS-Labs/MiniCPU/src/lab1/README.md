@@ -1,28 +1,28 @@
 # 实验一：x86-64 指令解释器
 
-本实验由三个文件组成，每个文件只有你要写的函数，函数体是一段 `TODO` 注释加一个 `todo("名字")` 调用：
+本实验由三个文件组成。你要写的函数与 `case` 是一段 `TODO` 注释加一个 `todo("名字")` 调用；另有几个函数与 `case` 已经写出，作为示例，它们保留了说明做法的注释：
 
-| 文件       | 函数                                                                                                             | 内容                                                                             |
-| ---------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `modrm.c`  | `modrm_decode`                                                                                                   | 解析 ModRM 字节以及随后的 SIB 字节与位移，得到指令的操作数                       |
-| `alu.c`    | `x86_szp`、`x86_add`、`x86_sub`、`x86_logic`、`x86_inc`、`x86_dec`、`x86_neg`、`x86_shift`、`x86_mul`、`x86_div` | 整数运算的结果与标志位：加、减、逻辑运算、`inc`、`dec`、`neg`、移位、乘法与除法  |
-| `interp.c` | `cond`、`interp_run`                                                                                             | 条件码的判断；解释器的主循环，每次循环取出一条指令，按操作码直接修改寄存器与内存 |
+| 文件       | 你要写的                                                                                               | 已经写出的示例                                                                                                     | 内容                                                                             |
+| ---------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| `modrm.c`  | `modrm_decode`                                                                                         | 无                                                                                                                 | 解析 ModRM 字节以及随后的 SIB 字节与位移，得到指令的操作数                       |
+| `alu.c`    | `x86_szp`、`x86_logic`、`x86_sub`、`x86_dec`、`x86_neg`、`x86_mul`；`x86_shift` 中 `shr`、`sar` 的部分 | `x86_add`、`x86_inc`、`x86_div`；`x86_shift` 中 `shl`、`sal` 的部分                                                | 整数运算的结果与标志位：加、减、逻辑运算、`inc`、`dec`、`neg`、移位、乘法与除法  |
+| `interp.c` | `cond`；`interp_run` 中其余指令的 `case`                                                               | `interp_run` 的主循环；`case`：带立即数的八种运算（`0x81`、`0x83`）、`push`、两种 `jmp`、`vphaddd`、`vextracti128` | 条件码的判断；解释器的主循环，每次循环取出一条指令，按操作码直接修改寄存器与内存 |
 
 实验分为五个部分，你按顺序完成。前四个部分计分，共 100 分，一个部分的评测项目只依赖这一部分与它之前的部分；第五部分不计分：
 
 | 部分     | 文件       | 你要写的内容                                                             | 分值   |
 | -------- | ---------- | ------------------------------------------------------------------------ | ------ |
 | 第一部分 | `modrm.c`  | `modrm_decode`                                                           | 30     |
-| 第二部分 | `alu.c`    | 十个整数运算函数                                                         | 30     |
-| 第三部分 | `interp.c` | `cond`，`interp_run` 的主循环与整数指令                                  | 30     |
-| 第四部分 | `interp.c` | `interp_run` 的七条向量指令                                              | 10     |
+| 第二部分 | `alu.c`    | 十个整数运算函数中尚未写出的六个，以及 `shr`、`sar` 两种移位             | 30     |
+| 第三部分 | `interp.c` | `cond`，`interp_run` 中其余的整数指令                                    | 30     |
+| 第四部分 | `interp.c` | `interp_run` 中其余的五条向量指令                                        | 10     |
 | 第五部分 | 无         | 没有要写的代码：用解释器运行真实模型，与同一个程序直接在本机运行比较用时 | 不计分 |
 
 前三部分不涉及向量指令。第三部分完成后，`guest/` 下的 `hello`、`sum`、`matmul`、`heap`、`pattern` 与 `mini-ollama` 能够正确运行，`deep` 在栈溢出处报告缺页；第四部分完成后，使用向量指令的 `simd`、`tinytf` 与 `mini-ollama-simd` 也能正确运行。`guest/mini-ollama` 与 `guest/mini-ollama-simd` 是第三讲的 `mini_ollama`，第五部分用它们在你的解释器上读入第二讲实验生成的模型并生成回答。
 
-每个函数的接口与要求写在 `include/mcpu.h` 中以 `Lab 1:` 开头的注释里，`TODO` 注释列出实现的步骤。运行到尚未完成的函数时，`todo` 在 stderr 上打印 `名字 is not implemented yet`，程序以状态 3 退出。你需要读的只有本文件、`mcpu.h` 中 `Lab 1:` 注释所在的三段与三个源文件的注释；`frame/` 中的代码你不需要读。
+每个函数的接口与要求写在 `include/mcpu.h` 中以 `Lab 1:` 开头的注释里，`TODO` 注释列出实现的步骤。已经写出的示例按同样的接口与要求实现，评测项目检查整个文件，示例也在其中，因此你修改示例时要保持它们正确。运行到尚未完成的函数时，`todo` 在 stderr 上打印 `名字 is not implemented yet`，程序以状态 3 退出。你需要读的只有本文件、`mcpu.h` 中 `Lab 1:` 注释所在的三段与三个源文件的注释；`frame/` 中的代码你不需要读。
 
-解释器实现课堂上讲过的指令。第三部分是 `mov`、`lea`、八种算术逻辑运算、`test`、`push`、`pop`、`call`、`ret`、`jmp` 与条件跳转；第四部分是 `guest/linear.s` 中向量循环 `linear_simd` 使用的七条向量指令。七条中的 `vpxor`、`vmovdqu`、`vpmulld`、`vpaddd` 四条是第三讲 SIMD 一节 `dot_product_avx2`（`examples/dot_intrin.c`）循环体的指令；另外三条 `vextracti128`、`vphaddd`、`vmovd` 把八个通道的和相加，讲义中这一步是用内建函数写的 C 函数 `sum_lanes`，`linear.s` 用汇编写出。`gcc` 生成的其余指令（8 位与 16 位形式、乘除法、移位、`movzx`、`cmov`、`endbr64`、`syscall` 等）与单精度浮点运算的 SSE 指令由框架的 `x86_other` 执行；其中 `inc`、`dec`、`neg`、移位、乘法与除法的操作数由 `x86_other` 取出，结果与标志位由你在 `alu.c` 中写的函数计算。
+解释器实现课堂上讲过的指令。第三部分是 `mov`、`lea`、八种算术逻辑运算、`test`、`push`、`pop`、`call`、`ret`、`jmp` 与条件跳转；第四部分是 `guest/linear.s` 中向量循环 `linear_simd` 使用的七条向量指令。七条中的 `vpxor`、`vmovdqu`、`vpmulld`、`vpaddd` 四条是第三讲 SIMD 一节 `dot_product_avx2`（`examples/dot_intrin.c`）循环体的指令；另外三条 `vextracti128`、`vphaddd`、`vmovd` 把八个通道的和相加，讲义中这一步是用内建函数写的 C 函数 `sum_lanes`，`linear.s` 用汇编写出。`gcc` 生成的其余指令（8 位与 16 位形式、乘除法、移位、`movzx`、`cmov`、`endbr64`、`syscall` 等）与单精度浮点运算的 SSE 指令由框架的 `x86_other` 执行；其中 `inc`、`dec`、`neg`、移位、乘法与除法的操作数由 `x86_other` 取出，结果与标志位由 `alu.c` 中的函数计算。
 
 前四个部分的顺序就是依赖的顺序：解释器的 `modrm` 调用 `modrm_decode`，条件跳转读取 `alu.c` 设置的标志位，向量指令的 `case` 写在第三部分的主循环中。每一部分完成后你可以做的检查：
 
@@ -149,6 +149,8 @@ VEX 前缀中的 R、X、B 位已经由调用者换算成 `rex` 的对应位，`
 | `inc`、`dec`、`neg` | `x86_inc`、`x86_dec`、`x86_neg`              | `x86_add`、`x86_sub`，各调用一次                                            |
 | 移位、乘法与除法    | `x86_shift`、`x86_mul`、`x86_div`            | 前两个自己计算 CF、OF，用 `x86_szp` 设置 ZF、SF、PF；`x86_div` 不改变标志位 |
 
+其中 `x86_add`、`x86_inc`、`x86_div` 三个函数与 `x86_shift` 中 `shl`、`sal` 的分支（`switch` 的 `default`）已经写出。你写其余六个函数与 `x86_shift` 中 `shr`、`sar` 的两个 `case`：`x86_sub` 的结构与 `x86_add` 相同，CF 与 OF 的条件不同；`x86_dec` 的结构与 `x86_inc` 相同；`shr`、`sar` 的两个 `case` 与 `default` 一样算出 `cf`、`r`、`of`，三者的值见“移位”一节的表。`x86_add` 与 `x86_inc` 调用 `x86_szp`，因此 `x86_szp` 完成之前它们也会打印 `x86_szp is not implemented yet`。
+
 ### 加、减与逻辑运算
 
 | 函数                             | 作用                                                                                                                                                                             |
@@ -254,7 +256,7 @@ uint64_t lo = (uint64_t)p, hi = (uint64_t)(p >> 64);
 
 ## 第三部分：`interp.c` 的整数指令
 
-这一部分完成 `cond` 与 `interp_run`：主循环，以及整数指令的 `case`。向量指令的 `case` 留到第四部分；这一部分完成后，除 `simd`、`tinytf` 与 `mini-ollama-simd` 外的客户机程序都能正确运行。
+这一部分完成 `cond` 与 `interp_run` 中整数指令的 `case`。主循环与四个整数指令的 `case` 已经写出；向量指令的 `case` 留到第四部分；这一部分完成后，除 `simd`、`tinytf` 与 `mini-ollama-simd` 外的客户机程序都能正确运行。
 
 ### `cond`
 
@@ -262,14 +264,14 @@ uint64_t lo = (uint64_t)p, hi = (uint64_t)(p >> 64);
 
 ### 主循环
 
-`interp_run(c)` 是一个循环，每次循环执行一条指令，直到客户机退出或发生异常，或者 `--max` 给出的指令数已经执行（`opt_max`，`mcpu.h` 中声明的选项变量，为 0 时不限）：
+`interp_run(c)` 的主循环已经写在 `interp.c` 中。它每次循环执行一条指令，直到客户机退出或发生异常，或者 `--max` 给出的指令数已经执行（`opt_max`，`mcpu.h` 中声明的选项变量，为 0 时不限）：
 
 ```c
 x86 x;
 while (!c->halted && !(opt_max && c->icount >= opt_max)) {
     unsigned op = x86_begin(c, &x);
     switch (op) {
-    case 0x89: ...
+    case 0x81: case 0x83: ...
     default: x86_other(&x); break;
     }
     if (x86_end(&x) < 0)
@@ -353,7 +355,7 @@ while (!c->halted && !(opt_max && c->icount >= opt_max)) {
 
 ### `interp_run`
 
-主循环与 `switch` 整体由你完成。`interp.c` 的 `TODO` 注释给出了三个 `case`，其中 `mov`（`0x89`）与 `push`（`0x50`..`0x57`）是整数指令，你新增指令时可以参照：
+`interp.c` 中已经写出四个整数指令的 `case`：带立即数的八种运算（`0x81` 与 `0x83`）、`push`（`0x50`..`0x57`）与两种 `jmp`（`0xeb` 与 `0xe9`）。`interp_run` 开头的注释另给出 `mov`（`0x89`）的写法。你新增指令时可以参照它们：
 
 ```c
 case 0x89:                                  /* mov: rm = reg */
@@ -361,22 +363,24 @@ case 0x89:                                  /* mov: rm = reg */
     rm_set(&x, get(&x, x.reg));
     break;
 
-case 0x50: ... case 0x57:                   /* push */
-    v = R[(op & 7) | ((x.rex & 1) << 3)];
-    store(&x, R[RSP] - 8, 8, v);
-    R[RSP] -= 8;
+case 0x81: case 0x83:                       /* rm = rm OP imm */
+    modrm(&x);
+    v = op == 0x83 ? (uint64_t)(int64_t)(int8_t)fetch8(&x) : fetch_imm(&x);
+    v = x86_alu(&R[RFLAGS], x.sub, rm_get(&x), v, x.size);
+    if (x.sub != 7)
+        rm_set(&x, v);
     break;
 ```
 
-需要你写 `case` 的整数指令按操作码之后还有哪些字节分为五组。各表中“例子”一列是 `objdump -d` 打印的字节与汇编，最后一列是 `guest/` 下首先执行到这条指令的程序（顺序为 hello、sum、matmul、heap、pattern、block、deep）。
+整数指令按操作码之后还有哪些字节分为五组，已经写出的 `case` 在“做的事”一列中注明，其余的由你写。各表中“例子”一列是 `objdump -d` 打印的字节与汇编，最后一列是 `guest/` 下首先执行到这条指令的程序（顺序为 hello、sum、matmul、heap、pattern、block、deep）。
 
 **第一组：只有操作码。** `case` 中没有读指令的调用。`push` 与 `pop` 的寄存器编号是 `(op & 7) | ((x.rex & 1) << 3)`。
 
-| `op`           | 指令   | 做的事                                  | 例子                                    | 首先用到 |
-| -------------- | ------ | --------------------------------------- | --------------------------------------- | -------- |
-| `0x50`..`0x57` | `push` | 上面的 `case`                           | `55`：`push %rbp`；`41 54`：`push %r12` | block    |
-| `0x58`..`0x5f` | `pop`  | 寄存器 = 栈顶的 8 字节，`R[RSP]` 加 8   | `5d`：`pop %rbp`；`41 5c`：`pop %r12`   | block    |
-| `0xc3`         | `ret`  | `R[RIP]` = 栈顶的 8 字节，`R[RSP]` 加 8 | `c3`：`ret`                             | hello    |
+| `op`           | 指令   | 做的事                                     | 例子                                    | 首先用到 |
+| -------------- | ------ | ------------------------------------------ | --------------------------------------- | -------- |
+| `0x50`..`0x57` | `push` | `R[RSP]` 减 8，新的栈顶 = 寄存器；已经写出 | `55`：`push %rbp`；`41 54`：`push %r12` | block    |
+| `0x58`..`0x5f` | `pop`  | 寄存器 = 栈顶的 8 字节，`R[RSP]` 加 8      | `5d`：`pop %rbp`；`41 5c`：`pop %r12`   | block    |
+| `0xc3`         | `ret`  | `R[RIP]` = 栈顶的 8 字节，`R[RSP]` 加 8    | `c3`：`ret`                             | hello    |
 
 **第二组：操作码之后是操作数字节。** `case` 的第一句是 `modrm(&x)`。操作数字节给出两个操作数：reg 是编号为 `x.reg` 的寄存器，用 `get(&x, x.reg)`、`set(&x, x.reg, v)` 读写；rm 是一个寄存器或一处内存，用 `rm_get(&x)`、`rm_set(&x, v)` 读写。两个操作数中哪一个是目标由操作码决定：`mov %rax,%rdi` 的操作码是 `89`，目标是 rm；`mov (%rsp),%rdi` 的操作码是 `8b`，目标是 reg。内存操作数只能是 rm，所以寄存器写入内存用 `89`，内存读入寄存器用 `8b`。
 
@@ -393,11 +397,11 @@ case 0x50: ... case 0x57:                   /* push */
 
 **第三组：操作码之后是操作数字节，再是立即数。** `case` 先调用 `modrm(&x)`，再读立即数，最后才调用 `rm_get`、`rm_set`。这一组的指令只有 rm 一个操作数。操作数字节中 reg 的三位在 `0x81` 与 `0x83` 中存放运算编号，值在 `x.sub` 中；在 `0xc7` 中为 0。
 
-| `op`   | 指令           | 读立即数的调用                    | 做的事                                  | 例子                                                                 | 首先用到 |
-| ------ | -------------- | --------------------------------- | --------------------------------------- | -------------------------------------------------------------------- | -------- |
-| `0xc7` | `mov`          | `fetch_imm(&x)`                   | rm = 立即数                             | `48 c7 04 f5 20 30 40 00 00 00 00 00`：`movq $0x0,0x403020(,%rsi,8)` | block    |
-| `0x81` | 上面的八种运算 | `fetch_imm(&x)`                   | rm = rm 运算 立即数，运算编号是 `x.sub` | `48 81 ec 08 04 00 00`：`sub $0x408,%rsp`                            | deep     |
-| `0x83` | 上面的八种运算 | `(int8_t)fetch8(&x)`，总是 1 字节 | 同 `0x81`                               | `48 83 e4 f0`：`and $0xfffffffffffffff0,%rsp`                        | hello    |
+| `op`   | 指令           | 读立即数的调用                    | 做的事                                            | 例子                                                                 | 首先用到 |
+| ------ | -------------- | --------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------- | -------- |
+| `0xc7` | `mov`          | `fetch_imm(&x)`                   | rm = 立即数                                       | `48 c7 04 f5 20 30 40 00 00 00 00 00`：`movq $0x0,0x403020(,%rsi,8)` | block    |
+| `0x81` | 上面的八种运算 | `fetch_imm(&x)`                   | rm = rm 运算 立即数，运算编号是 `x.sub`；已经写出 | `48 81 ec 08 04 00 00`：`sub $0x408,%rsp`                            | deep     |
+| `0x83` | 上面的八种运算 | `(int8_t)fetch8(&x)`，总是 1 字节 | 同 `0x81`；已经写出                               | `48 83 e4 f0`：`and $0xfffffffffffffff0,%rsp`                        | hello    |
 
 `48 83 e4 f0` 的操作数字节 `e4` 是二进制 `11 100 100`：中间三位是 4，运算是 and；最后三位是 4，rm 是 `%rsp`。立即数 `f0` 符号扩展为 -16，`objdump` 把它写作 `0xfffffffffffffff0`。
 
@@ -412,8 +416,8 @@ case 0x50: ... case 0x57:                   /* push */
 | `op`             | 指令                                | 位移   | 做的事                                        | 例子                                         | 首先用到 |
 | ---------------- | ----------------------------------- | ------ | --------------------------------------------- | -------------------------------------------- | -------- |
 | `0xe8`           | `call`                              | 4 字节 | 压入 `R[RIP]`，然后 `R[RIP] += rel`           | 40100d 处的 `e8 e9 00 00 00`：`call 4010fb`  | hello    |
-| `0xeb`           | `jmp`                               | 1 字节 | `R[RIP] += rel`                               | 401107 处的 `eb 0b`：`jmp 401114`            | hello    |
-| `0xe9`           | `jmp`                               | 4 字节 | `R[RIP] += rel`                               | 4011be 处的 `e9 d2 00 00 00`：`jmp 401295`   | block    |
+| `0xeb`           | `jmp`                               | 1 字节 | `R[RIP] += rel`；已经写出                     | 401107 处的 `eb 0b`：`jmp 401114`            | hello    |
+| `0xe9`           | `jmp`                               | 4 字节 | `R[RIP] += rel`；已经写出                     | 4011be 处的 `e9 d2 00 00 00`：`jmp 401295`   | block    |
 | `0x70`..`0x7f`   | `jo`、`jno`、`jb` 等十六种条件跳转  | 1 字节 | `cond(R[RFLAGS], op)` 为 1 时 `R[RIP] += rel` | 40111b 处的 `75 f3`：`jne 401110`            | hello    |
 | `0x180`..`0x18f` | 同上十六种，字节是 `0f 80`..`0f 8f` | 4 字节 | 同上                                          | 401046 处的 `0f 88 96 00 00 00`：`js 4010e2` | hello    |
 
@@ -447,7 +451,7 @@ case 0x50: ... case 0x57:                   /* push */
 
 ## 第四部分：`interp.c` 的向量指令
 
-这一部分在第三部分的 `switch` 中增加七条向量指令的 `case`。增加之前，向量指令进入 `default`，`x86_other` 报告非法指令：`./mini-cpu guest/simd` 打印 `scalar = -28`，执行 660 条指令之后在 `linear_simd` 的第一条向量指令 `vpxor`（地址 401222）处停止。
+七条向量指令中 `vphaddd` 与 `vextracti128` 的 `case` 已经写出，这一部分在 `switch` 中增加其余五条的 `case`。增加之前，这五条指令进入 `default`，`x86_other` 报告非法指令：`./mini-cpu guest/simd` 打印 `scalar = -28`，执行 660 条指令之后在 `linear_simd` 的第一条向量指令 `vpxor`（地址 401222）处停止。
 
 ### 操作码与字段
 
@@ -471,7 +475,7 @@ case 0x50: ... case 0x57:                   /* push */
 
 ### 七条指令
 
-`interp.c` 的 `TODO` 注释中的第三个 `case` 是 `vpxor`：
+`interp_run` 开头的注释给出 `vpxor` 的写法；已经写出的 `vphaddd` 与 `vextracti128` 两个 `case` 也可以参照：
 
 ```c
 case 0x11ef:                                /* vpxor: reg = v ^ rm */
@@ -487,15 +491,15 @@ case 0x11ef:                                /* vpxor: reg = v ^ rm */
 
 七条向量指令都出现在 `guest/linear.s` 的 `linear_simd` 中，`guest/simd` 与 `guest/tinytf` 调用它；`tests/lab1/vecops.py` 生成的程序以随机的操作数使用这七条指令。reg、v、rm 分别是 `x.reg`、`x.v` 与 rm 操作数：
 
-| `op`     | 指令           | 语义                                                                                            | 例子                                                 |
-| -------- | -------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `0x11ef` | `vpxor`        | reg = v ^ rm，见上面的例子                                                                      | `c5 ed ef d2`：`vpxor %ymm2,%ymm2,%ymm2`             |
-| `0x116f` | `vmovdqu`      | reg = rm，宽度 `vlen`；rm 可以是内存                                                            | `c4 a1 7e 6f 04 87`：`vmovdqu (%rdi,%r8,4),%ymm0`    |
-| `0x11fe` | `vpaddd`       | reg = v + rm，按 32 位通道逐个相加，共 `vlen / 4` 个通道                                        | `c5 ed fe d0`：`vpaddd %ymm0,%ymm2,%ymm2`            |
-| `0x1240` | `vpmulld`      | reg = v × rm，每个通道保留乘积的低 32 位                                                        | `c4 e2 7d 40 c1`：`vpmulld %ymm1,%ymm0,%ymm0`        |
-| `0x1202` | `vphaddd`      | 只有 xmm 形式：reg 的四个通道依次为 v0+v1、v2+v3、rm0+rm1、rm2+rm3                              | `c4 e2 69 02 d2`：`vphaddd %xmm2,%xmm2,%xmm2`        |
-| `0x1339` | `vextracti128` | 8 位立即数的最低位为 0 时取 ymm reg 的低 128 位，为 1 时取高 128 位，写入 xmm rm 或 16 字节内存 | `c4 e3 7d 39 d1 01`：`vextracti128 $0x1,%ymm2,%xmm1` |
-| `0x117e` | `vmovd`        | rm（32 位的寄存器或内存）= xmm reg 的通道 0，用 `rm_set` 写入                                   | `c4 c1 79 7e d1`：`vmovd %xmm2,%r9d`                 |
+| `op`     | 指令           | 语义                                                                                                      | 例子                                                 |
+| -------- | -------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `0x11ef` | `vpxor`        | reg = v ^ rm，见上面的例子                                                                                | `c5 ed ef d2`：`vpxor %ymm2,%ymm2,%ymm2`             |
+| `0x116f` | `vmovdqu`      | reg = rm，宽度 `vlen`；rm 可以是内存                                                                      | `c4 a1 7e 6f 04 87`：`vmovdqu (%rdi,%r8,4),%ymm0`    |
+| `0x11fe` | `vpaddd`       | reg = v + rm，按 32 位通道逐个相加，共 `vlen / 4` 个通道                                                  | `c5 ed fe d0`：`vpaddd %ymm0,%ymm2,%ymm2`            |
+| `0x1240` | `vpmulld`      | reg = v × rm，每个通道保留乘积的低 32 位                                                                  | `c4 e2 7d 40 c1`：`vpmulld %ymm1,%ymm0,%ymm0`        |
+| `0x1202` | `vphaddd`      | 只有 xmm 形式：reg 的四个通道依次为 v0+v1、v2+v3、rm0+rm1、rm2+rm3；已经写出                              | `c4 e2 69 02 d2`：`vphaddd %xmm2,%xmm2,%xmm2`        |
+| `0x1339` | `vextracti128` | 8 位立即数的最低位为 0 时取 ymm reg 的低 128 位，为 1 时取高 128 位，写入 xmm rm 或 16 字节内存；已经写出 | `c4 e3 7d 39 d1 01`：`vextracti128 $0x1,%ymm2,%xmm1` |
+| `0x117e` | `vmovd`        | rm（32 位的寄存器或内存）= xmm reg 的通道 0，用 `rm_set` 写入                                             | `c4 c1 79 7e d1`：`vmovd %xmm2,%r9d`                 |
 
 例子是 `linear_simd` 中的指令。三个操作数在 `objdump` 的写法中依次是 rm、v、reg：`vpaddd %ymm0,%ymm2,%ymm2` 的 rm 是 `%ymm0`，v 与 reg 都是 `%ymm2`。`vextracti128` 与 `vmovd` 的目标是 rm：`c4 e3 7d 39 d1 01` 的操作码字节是 `39`，操作数字节是 `d1`，立即数是 `01`，reg 是 `%ymm2`，rm 是 `%xmm1`。
 
@@ -506,7 +510,7 @@ case 0x11ef:                                /* vpxor: reg = v ^ rm */
 - 向量运算先把结果算到局部的 `u256` 中，再用 `vset` 或 `rm_vset` 写出：`vpaddd %ymm0,%ymm2,%ymm2` 这样的指令，目标同时是源操作数。
 - `vextracti128` 的立即数在 ModRM 与位移之后，要在 `rm_vset` 之前读出，与整数指令先读立即数的规则相同。
 
-七条指令完成后，`guest/simd`、`guest/tinytf` 与 `guest/mini-ollama-simd` 能够正确运行。`guest/mini-ollama-simd` 的 `dot_q4`（`guest/ollama/dot_q4.s`）使用其中的 `vpmulld`、`vpaddd`、`vextracti128`、`vphaddd`、`vmovd` 五条，另外三条 `vpmovzxbd`、`vpand`、`vpsrld` 由 `x86_other` 执行。
+其余五条完成后，`guest/simd`、`guest/tinytf` 与 `guest/mini-ollama-simd` 能够正确运行。`guest/mini-ollama-simd` 的 `dot_q4`（`guest/ollama/dot_q4.s`）使用其中的 `vpmulld`、`vpaddd`、`vextracti128`、`vphaddd`、`vmovd` 五条，另外三条 `vpmovzxbd`、`vpand`、`vpsrld` 由 `x86_other` 执行。
 
 ## 第五部分：在解释器上运行真实模型
 
@@ -531,7 +535,7 @@ export MODEL=path/to/q4_0.gguf
 
 ### 直接运行
 
-`guest/mini-ollama-simd` 的系统调用与 Linux 的编号、参数相同，因此这个文件可以直接在本机运行。你先直接运行一次，确认模型文件可用：
+`guest/mini-ollama-simd` 的系统调用与 Linux 的编号、参数相同，因此这个文件可以直接在本机运行。请先直接运行一次，确认模型文件可用：
 
 ```bash
 time guest/mini-ollama-simd "用一句话介绍你自己。" < "$MODEL"
@@ -608,7 +612,7 @@ make LAB=1
 ./mini-cpu guest/hello
 ```
 
-你刚取得的框架代码运行 `guest/hello` 时打印 `interp_run is not implemented yet`，以状态 3 退出。你写出主循环之后，遇到 `switch` 中尚未实现的指令时，程序报告 `fault (illegal instruction)` 并打印寄存器，其中 `rip` 是该指令的地址；`switch` 只有 `default` 时，第一条指令就是 `8b`：
+主循环已经写出，因此你刚取得的框架代码就能开始执行 `guest/hello`。遇到 `switch` 中没有 `case` 的指令时，程序报告 `fault (illegal instruction)` 并打印寄存器，其中 `rip` 是该指令的地址；执行到已经写出的 `case` 而它调用的函数尚未完成时（例如 `0x83` 的 `case` 调用 `modrm_decode`），程序打印 `名字 is not implemented yet`，以状态 3 退出。`guest/hello` 的第一条指令 `8b` 还没有 `case`：
 
 ```
 fault (illegal instruction) after 0 instructions:
@@ -821,8 +825,8 @@ make handin
 | 文件                                  | 作用                                                                                                                                                                                                                                                                       |
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/lab1/modrm.c`                    | 你的代码：`modrm_decode`                                                                                                                                                                                                                                                   |
-| `src/lab1/alu.c`                      | 你的代码：`x86_szp`、`x86_add`、`x86_sub`、`x86_logic`、`x86_inc`、`x86_dec`、`x86_neg`、`x86_shift`、`x86_mul`、`x86_div`                                                                                                                                                 |
-| `src/lab1/interp.c`                   | 你的代码：`cond`、`interp_run`                                                                                                                                                                                                                                             |
+| `src/lab1/alu.c`                      | 你的代码：`x86_szp`、`x86_logic`、`x86_sub`、`x86_dec`、`x86_neg`、`x86_mul`，`x86_shift` 的 `shr`、`sar`；已经写出的示例：`x86_add`、`x86_inc`、`x86_div`，`x86_shift` 的 `shl`、`sal`                                                                                    |
+| `src/lab1/interp.c`                   | 你的代码：`cond`，`interp_run` 中其余指令的 `case`；已经写出的示例：主循环，`0x81`、`0x83`、`push`、`jmp`、`vphaddd`、`vextracti128` 的 `case`                                                                                                                             |
 | `include/mcpu.h`                      | `mcpu`（寄存器）、`modrm_t`（ModRM 的解析结果）与 `x86`（一条指令）的定义；你要写的函数的接口；辅助函数的声明；内联的 `flag`、`msb`、`parity`                                                                                                                              |
 | `frame/x86.c`                         | 辅助函数：取指、`modrm`、按操作数大小读写寄存器、读写内存，`x86_begin` 与 `x86_end`                                                                                                                                                                                        |
 | `frame/x86rest.c`                     | `x86_other`：`interp.c` 之外的指令；整数运算的结果与标志位调用 `alu.c`                                                                                                                                                                                                     |
