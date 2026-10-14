@@ -449,6 +449,47 @@ With no bash found at all, a press says to install Git for Windows. A
 checkout has to keep `lecturekit/demo_prologue.bash` in LF line endings, which
 `.gitattributes` asks for; a copy converted to CRLF stops every demo.
 
+**What a demo leaves behind.** A demo that compiles writes its products where
+it runs, beside the sources under `examples/`, and they stay there on purpose:
+a page often goes on to look at the `.s`, the `.o` or the program. Each lecture
+whose demos or Makefiles build something ignores the products itself, in
+`examples/.gitignore`, so that a course repository tracking the lecture takes
+its sources and no binaries. The repository's own `.gitignore` covers only the
+`.i`, `.s` and `.o` directly under `examples/`; a program, a product in a
+subdirectory, a `.so` or a `.a` is the lecture's to ignore. The rule goes by
+extension, so a new demo needs no new line:
+
+```gitignore
+*
+!*/
+!*.*
+!Makefile
+*.o
+*.i
+*.s
+*.exe
+a.out
+__pycache__/
+```
+
+Every extensionless file (a program) is ignored and every file with an
+extension (a source, a script, sample data) is kept. An extensionless file
+that belongs in the repository is kept by a `!` line naming it: `Makefile`,
+a `Modelfile`, a hand-written `.s`, a binary the lecture ships on purpose (a
+lab's program the pages read). The products that do have an extension are
+ignored again after `!*.*`, which would bring them back, `__pycache__/` with
+them. `lectures/3-asm/examples/.gitignore` is a complete one. To check a
+lecture, list what `git add` would take, and look for binaries in it:
+
+```bash
+git ls-files --others --exclude-standard "$LEC/examples" | xargs -r file | grep -v text
+```
+
+A file that this lists and is not meant to be shipped is a product the
+`.gitignore` misses. A file the course repository already tracks stays tracked
+whatever the `.gitignore` says, until `git rm --cached` takes it out of the
+index.
+
 **Several at once.** Every press of ▶ starts a *new* run and gives it a tab
 along the top of the drawer, and runs on the same slide run side by side. That
 is what a page needs when one of its commands is a server: `ollama serve` holds

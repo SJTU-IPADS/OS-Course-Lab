@@ -8,10 +8,11 @@
    Q4_0. The answer goes to standard output as it is generated, the timing to
    standard error, under the names `ollama run --verbose` prints.
 
-   Every step is written in the plainest way: one thread, and matvec()
+   Every step is written in the plainest way: one thread, and vec_dot_q4_0()
    decodes one weight, multiplies it and adds it. A generated token takes 197
    products of a matrix with a vector (7 in each of the 28 layers and one for
-   the output), so nearly all the time is spent in matvec(). The next token
+   the output), so nearly all the time is spent in matvec(), which calls
+   vec_dot_q4_0() once per row. The next token
    is the one with the largest score, which is what ollama does at
    temperature 0. */
 #include <math.h>
@@ -24,24 +25,32 @@
 
 static uint64_t n_weights;              /* weights multiplied so far */
 
-/* y = W x, one weight at a time. A Q4_0 block holds 32 weights in 18 bytes:
-   a half-precision scale d, then 16 bytes. Byte j has weight j in its low
-   4 bits and weight j + 16 in its high 4 bits; a stored value q means the
-   weight d * (q - 8). */
+/* The inner product of n weights in Q4_0 with x, one weight at a time.
+   A Q4_0 block holds 32 weights in 18 bytes: a half-precision scale d,
+   then 16 bytes. Byte j has weight j in its low 4 bits and weight j + 16
+   in its high 4 bits; a stored value q means the weight d * (q - 8).
+   Not static: gcc -O2 merges a static function called from one place into
+   its caller, and objdump -d is to show this one under its own name. */
+float vec_dot_q4_0(const uint8_t *w, const float *x, size_t n)
+{
+    float sum = 0;
+    for (size_t c = 0; c < n; c += 32, w += 18) {
+        float d = fp16[w[0] | w[1] << 8];
+        for (int j = 0; j < 16; j++) {
+            int lo = (w[2 + j] & 15) - 8, hi = (w[2 + j] >> 4) - 8;
+            sum += d * lo * x[c + j] + d * hi * x[c + j + 16];
+        }
+    }
+    return sum;
+}
+
+/* y = W x: one inner product per row. A row of cols weights is cols / 32
+   blocks of 18 bytes. */
 static void matvec(float *y, const struct tensor *w, const float *x)
 {
-    const uint8_t *blk = w->data;
-    for (size_t r = 0; r < w->rows; r++) {
-        float sum = 0;
-        for (size_t c = 0; c < w->cols; c += 32, blk += 18) {
-            float d = fp16[blk[0] | blk[1] << 8];
-            for (int j = 0; j < 16; j++) {
-                int lo = (blk[2 + j] & 15) - 8, hi = (blk[2 + j] >> 4) - 8;
-                sum += d * lo * x[c + j] + d * hi * x[c + j + 16];
-            }
-        }
-        y[r] = sum;
-    }
+    size_t row_bytes = w->cols / 32 * 18;
+    for (size_t r = 0; r < w->rows; r++)
+        y[r] = vec_dot_q4_0(w->data + r * row_bytes, x, w->cols);
     n_weights += w->rows * w->cols;
 }
 

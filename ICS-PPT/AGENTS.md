@@ -55,7 +55,7 @@ A lecture is a directory, by default `lectures/<name>/`:
 | `pages.py` | one function per page, filling a `PageBuilder` |
 | `assets/` | figures the pages load |
 | `diagrams/` | sources of the generated figures (`*.dot`, `*.py`) and `render.sh` |
-| `examples/` | source files and scripts the `p.demo(...)` blocks run |
+| `examples/` | source files and scripts the `p.demo(...)` blocks run; when they build anything, `examples/.gitignore` ignores the products (programs, `.o`, `.so`, ...), see `docs/usage.md`, "What a demo leaves behind" |
 | `i18n/en.toml` | the English overlay; Chinese in Python is the baseline |
 | `README.md` | structure, build commands, conventions of this lecture |
 | `RELEASE` | marks the lecture for the CI PDF release (`docs/release.md`) |

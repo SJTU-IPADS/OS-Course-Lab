@@ -1,23 +1,16 @@
-# What the demos leave behind: `gcc dot.c main.c` writes a.out, `make` writes
-# the binaries perf measures, and the other examples write the program
-# named in their header comment. The .o, .i and .s files are ignored by
-# the top-level .gitignore.
-a.out
-add
-dot_scalar
-dot_avx2
-dot_product
-dot_dbg
-echo
-echo_sp
-dot_intrin
-dot_cuda
-vecadd_cuda
-equal
-shift
-max
-max_jl
-max_cmov
-times
+# What the demos and the Makefiles here build, in place. A program has no
+# extension: every extensionless file is ignored, every file with one is
+# kept (sources, scripts, data). The extensionless sources are kept by
+# name, and the products that do have an extension are ignored again: the
+# .o, .i and .s of the compile demos, a.out, and .exe on Windows.
+*
+!*/
+!*.*
+!Makefile
+!mini-ollama/Modelfile
+*.o
+*.i
+*.s
 *.exe
-align
+a.out
+__pycache__/
