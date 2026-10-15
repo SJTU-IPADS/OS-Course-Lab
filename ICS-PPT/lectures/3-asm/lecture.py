@@ -204,11 +204,11 @@ with lecture.section('第五部分：性能瓶颈与向量化——从标量计�
     s.page("measured-speed", body=pages.measured_speed)
     s.page("system-limits", body=pages.system_limits)
     s.page("insn-mix", body=pages.insn_mix)
+    s.page("insn-mix-2", body=pages.insn_mix_2)
     s.page("speedup-plan", body=pages.speedup_plan)
     s.bridge('SIMD 思想：数据并行', id="bridge-simd")
     with s.section('SIMD 思想：数据并行', id="part5-simd") as ss:
         ss.page("simd-history", body=pages.simd_history)
-        ss.page("simd-history-fig", body=pages.simd_history_fig)
         ss.page("ymm", body=pages.ymm)
         ss.page("vector-naming", body=pages.vector_naming)
         ss.page("vector-arith", body=pages.vector_arith)
@@ -216,7 +216,6 @@ with lecture.section('第五部分：性能瓶颈与向量化——从标量计�
         ss.page("intrinsics", body=pages.intrinsics)
         ss.page("vector-loop", body=pages.vector_loop)
         ss.page("perf", body=pages.perf)
-        ss.page("perf-2", body=pages.perf_2)
     s.bridge('SIMT 思想：线程并行', id="bridge-simt")
     with s.section('SIMT 思想：线程并行', id="part5-simt") as ss:
         ss.page("gpu-why", body=pages.gpu_why)
@@ -226,6 +225,7 @@ with lecture.section('第五部分：性能瓶颈与向量化——从标量计�
         ss.page("cuda-host", body=pages.cuda_host)
         ss.page("cuda-build", body=pages.cuda_build)
         ss.page("cuda-remote", body=pages.cuda_remote)
+        ss.page("softmax-exercise", body=pages.softmax_exercise)
 
 lecture.bridge('总结与实验任务', id="bridge-wrapup")
 

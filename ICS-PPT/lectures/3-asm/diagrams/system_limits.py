@@ -18,7 +18,7 @@ One colour per limit:
           Q4_0 inner product (ggml_vec_dot_q4_0_q8_0, icelake build) runs
           22 instructions for 32 multiply-adds
   orange  what mini-ollama uses: one core, the low 32 bits of the register;
-          matvec() runs 20 instructions for 2 multiply-adds
+          vec_dot_q4_0() runs 20 instructions for 2 multiply-adds
 
 The photos are embedded from ../assets/photo-*.jpg, scaled down from
 Wikimedia Commons originals:

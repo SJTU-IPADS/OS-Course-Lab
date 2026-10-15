@@ -2220,7 +2220,7 @@ def struct_exercise_2(p):
 def flops_estimate(p):
     p.title('回顾：生成一个 Token 的乘加次数与读取字节数')
     slide(p, r"""
-**以第二讲实验 `nano-quant` 量化的模型为例**：
+**以第二讲的 hands-on lab `nano-quant` 量化的模型为例**：
 - Qwen3-VL-2B-Instruct 的语言模型有 28 层，17.2 亿个权重；
 - 权重采用第二讲的 Q4_0 格式，每 32 个权重占 18 字节，平均每个权重 4.5 位；
 - 生成一个 Token 时，输入向量与每个权重矩阵各做一次矩阵向量乘 $y = Wx$，$y$ 的每个元素是 $W$ 的一行与 $x$ 的内积；
@@ -2235,7 +2235,7 @@ def flops_estimate(p):
 """)
     p.notes("""
 两个数量与第二讲的带宽估算口径相同：只计权重，KV cache 与激活的读取未计入。
-权重数 1 720 574 976 与 Q4_0 的字节数 968 249 344 取自 nano-quant 实验：前者是 nano-quant plan 的汇总，后者是 tests/expected-qwen3vl.txt 中的 q4_0_nq_bytes。
+权重数 1 720 574 976 与 Q4_0 的字节数 968 249 344 取自 hands-on lab nano-quant：前者是 nano-quant plan 的汇总，后者是 tests/expected-qwen3vl.txt 中的 q4_0_nq_bytes。
 这个模型的词表矩阵 embed_tokens 同时充当输出层，生成一个 Token 时参与一次矩阵向量乘。一维的归一化系数保持 F32，共 0.5 MB。
 """)
 
@@ -2272,8 +2272,8 @@ def measured_speed(p):
 """)
     figure(p, "roofline-measured", 1120)
     p.notes("""
-mini-ollama 的源码在 examples/mini-ollama/ 下，共约 850 行 C：mini_ollama.c 是主循环与一层之内的运算，model.c 把 GGUF 文件载入内存（Linux 上用 mmap 映射，Windows 上用 fread 读入）并找到其中的张量，tokenizer.c 是分词器。它读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf（974 196 320 字节），逐个 Token 生成回答。
-主循环每一轮让一个 Token 经过 28 层，每层 attention 做 4 次矩阵向量乘，feed_forward 做 3 次，输出层 1 次，生成一个 Token 共 197 次矩阵向量乘、1 720 451 072 次乘加，与 1.72 × 10⁹ 一致。这些乘加都在函数 matvec 中完成，它占运行时间的 99.7%。
+mini-ollama 的源码在 examples/mini-ollama/ 下，共约 850 行 C：mini_ollama.c 是主循环与一层之内的运算，model.c 把 GGUF 文件载入内存（Linux 上用 mmap 映射，Windows 上用 fread 读入）并找到其中的张量，tokenizer.c 是分词器。它读取第二讲的 hands-on lab nano-quant 按 q4_0 配方得到的 q4_0.gguf（974 196 320 字节），逐个 Token 生成回答。
+主循环每一轮让一个 Token 经过 28 层，每层 attention 做 4 次矩阵向量乘，feed_forward 做 3 次，输出层 1 次，生成一个 Token 共 197 次矩阵向量乘、1 720 451 072 次乘加，与 1.72 × 10⁹ 一致。这些乘加都在点积函数 vec_dot_q4_0 中完成，matvec 对每一行调用它一次；matvec 与 vec_dot_q4_0 合计占运行时间的 99.7%。
 make run 编译并运行 mini-ollama，一次约 40 秒。输出的 eval rate 是生成回答的速度，名字与 ollama run --verbose 的输出相同；matvec rate 是全部矩阵向量乘的运算速率。Makefile 使用 -O2 -fno-tree-vectorize：GCC 12 起在 -O2 下会把这个循环的一部分自动向量化，这个选项使它保持每次处理一个权重。
 make run-ollama 先执行 ollama create nq-q4-0 -f Modelfile，再执行 ollama run nq-q4-0 --verbose，需要 ollama serve 已在运行。Modelfile 让 ollama 加载同一个 q4_0.gguf，num_gpu 0 使它只使用 CPU，num_thread 1 使它只用 1 个线程，temperature 0 使每一步取分数最高的 Token，与 mini-ollama 相同。
 ollama 的回答是「我是一个虚拟助手，没有实体，但我可以用文字与你交流，为你提供帮助和解答。」前 9 个 Token 与 mini-ollama 相同；第 10 个 Token 上分数最高的两个候选相差 0.008，ollama 把激活量化为 8 位整数再计算，数值误差改变了这一步的选择。
@@ -2293,16 +2293,52 @@ def system_limits(p):
 红色：内存带宽 51.2 GB/s 限制权重从内存到 CPU 的通路。每生成一个 Token，0.968 GB 权重经过这条通路一次，生成速度至多 53 Token/s。
 蓝色：峰值算力 320 GFLOPS 是 8 个核心的运算单元全部同时运算、每条指令都使用寄存器全部 256 位时的速率。
 绿色：单线程的 ollama 使用 1 个核心，它的一条指令使用寄存器的全部 256 位。1 个核心的算力上限是 320 ÷ 8 = 40 GFLOPS，实测约 37 GFLOPS。它计算 Q4_0 内积的函数 ggml_vec_dot_q4_0_q8_0 在本机使用的 libggml-cpu-icelake.so 中，主循环每轮 22 条指令处理 32 个权重，其中一条 vpdpbusd 完成 32 对 8 位整数的乘法并把乘积累加。
-橙色：mini-ollama 使用 1 个核心，它的一条指令处理 1 个权重，只使用寄存器的低 32 位。matvec 的内层循环每轮 20 条指令处理 2 个权重。
+橙色：mini-ollama 使用 1 个核心，它的一条指令处理 1 个权重，只使用寄存器的低 32 位。vec_dot_q4_0 的内层循环每轮 20 条指令处理 2 个权重。
 指令执行：CPU 每个时钟周期能开始执行的指令条数有上限，完成一次乘加需要的指令越多，每秒完成的乘加越少。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。每次乘加的指令条数：mini-ollama 是 20 ÷ 2 = 10 条，ollama 是 22 ÷ 32 ≈ 0.69 条，相差 14.5 倍；实测的生成速度相差 14 倍。
 256 位的寄存器与一条指令处理多个数据的向量指令，由后面「向量体系：SIMD 思想与 256 位 YMM 寄存器」起的几页讲解。
 """)
 
 
+VEC_DOT = """float vec_dot_q4_0(const uint8_t *w, const float *x, size_t n)
+{
+    float sum = 0;
+    for (size_t c = 0; c < n; c += 32, w += 18) {
+        float d = fp16[w[0] | w[1] << 8];
+        for (int j = 0; j < 16; j++) {
+            int lo = (w[2 + j] & 15) - 8, hi = (w[2 + j] >> 4) - 8;
+            sum += d * lo * x[c + j] + d * hi * x[c + j + 16];
+        }
+    }
+    return sum;
+}"""
+
+
 def insn_mix(p):
     p.title('瓶颈分析：每次乘加执行的指令条数')
     slide(p, r"""
-**按指令条数估算 mini-ollama 的速度上限**（`matvec` 的内层循环，取自 `objdump -d`）：
+**mini-ollama 的乘加全部在点积函数 `vec_dot_q4_0` 中完成**（[mini_ollama.c](file:examples/mini-ollama/mini_ollama.c)）：
+""")
+    p.code('c', VEC_DOT)
+    slide(p, r"""
+- 与 `dot_product` 相同：`matvec` 对每一行调用它一次，`sum` 逐个累加权重与 `x` 的乘积；
+- 权重以 Q4_0 存放：一块 18 字节，缩放因子 $d$ 占 2 字节，32 个 4 位存储值占 16 字节；
+- **内层循环**每轮读取 1 字节，完成 **2 次乘加**，编译后每轮 **20 条指令**。
+""")
+    p.notes("""
+vec_dot_q4_0 求 n 个 Q4_0 权重与 x 的内积，w 指向这一行的第一块。matvec 计算 y = Wx：W 按行存放，每行 cols 个权重占 cols ÷ 32 块，matvec 对每一行调用一次 vec_dot_q4_0，与第四部分 matvec 对每一行调用 dot_product 的结构相同。
+外层循环每次处理一块，w 随之前进 18 字节；内层循环每轮处理一块中的 1 个字节。
+每块的前 2 字节 w[0]、w[1] 是半精度的缩放因子 d。fp16 是 65 536 项的表，fp16[h] 是 16 位半精度位模式 h 表示的 float 值，由 model.c 在载入模型时填好；w[0] | w[1] << 8 按小端序把两个字节拼成 16 位。
+其后 16 字节中，第 j 字节的低 4 位与高 4 位分别是第 j 个与第 j + 16 个权重的存储值 q，权重等于 d × (q − 8)：lo 与 hi 是 q − 8，乘以 d 得到权重。x[c + j] 与 x[c + j + 16] 是与这两个权重相乘的激活值。
+dot_product 的权重是一个 int，读出即可相乘；这里的权重要先还原：读出字节，拆出 4 位，减 8，转换为 float，乘以 d。
+内层循环的指令取自 objdump -d mini-ollama 中的 vec_dot_q4_0，由 gcc -O2 -fno-tree-vectorize 生成，共 20 条指令、75 字节，每轮处理 1 字节权重，完成 2 次乘加，平均每次乘加 10 条。
+完成乘法与累加的是 4 条：2 条 mulss 各从内存读取 1 个激活值并相乘，2 条 addss 累加。其余 16 条读取权重（1 条）、拆出两个 4 位存储值（6 条）、把它们转换为 float 并乘以缩放因子 d（6 条）、控制循环（3 条）。
+""")
+
+
+def insn_mix_2(p):
+    p.title('瓶颈分析：每次乘加执行的指令条数')
+    slide(p, r"""
+**按指令条数估算 mini-ollama 的速度上限**：
 """)
     p.table([
         ['每次乘加的指令条数', '每轮循环 20 条指令，完成 2 次乘加', '$20 \\div 2 = 10$ 条'],
@@ -2317,8 +2353,6 @@ def insn_mix(p):
 **结论**：这个上限来自 CPU 的时钟：主频是每秒的周期数，每个周期最多有 5 条指令开始执行，每秒能执行的指令条数因此有上限，与指令的功能无关。两个程序的速度差距主要来自每次乘加的指令条数，减少条数可以提高运算速率。
 """)
     p.notes("""
-表中的循环取自 objdump -d mini-ollama 中 matvec 的内层循环，由 gcc -O2 -fno-tree-vectorize 生成，共 20 条指令、79 字节，每轮处理 1 字节权重，完成 2 次乘加，平均每次乘加 10 条。
-完成乘法与累加的是 4 条：2 条 mulss 各从内存读取 1 个激活值并相乘，2 条 addss 累加。其余 16 条读取权重（1 条）、拆出两个 4 位存储值（6 条）、把它们转换为 float 并乘以缩放因子 d（6 条）、控制循环（3 条）。
 核心每个周期最多有 5 条指令开始执行。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。
 每个周期 5 条、每次乘加 10 条，每个周期至多完成 0.5 次乘加，即每轮循环至少 4 个周期。cmp 与 jne 在核心内部合并为 1 条，按 19 条计算每轮至少 3.8 个周期，页面按 20 条估算。
 主频约 3.8 GHz 是运行 mini-ollama 时读取 /sys 下的 scaling_cur_freq 得到的。每秒 1.9 × 10⁹ 次乘加即 3.8 GFLOPS，除以每个 Token 的 1.72 × 10⁹ 次乘加得到 1.1 Token/s。
@@ -2347,7 +2381,7 @@ def speedup_plan(p):
     p.notes("""
 表的前两列与「瓶颈分析：每次乘加执行的指令条数」一页相同，第三列说明每个因素能否改变。
 每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本节接下来从「向量演进：从 MMX、SSE 到 AVX 与 AVX-512」起讲解这类指令。
-每个周期开始执行的指令条数由硬件决定，一个核心是 5 条。提高它需要更多同时工作的运算单元。i9-11900H 有 8 个核心，ollama 用 8 个线程时实测 31.4 Token/s，是 1 个线程的 2.9 倍；GPU 的运算核心数量比 CPU 多三个数量级，由「线程并行：CPU 多核与 GPU」起的各页讲解。
+每个周期开始执行的指令条数由硬件决定，一个核心是 5 条。提高它需要更多同时工作的运算单元。i9-11900H 有 8 个核心，ollama 用 8 个线程时实测 31.4 Token/s，是 1 个线程的 2.9 倍；GPU 的运算核心数量比 CPU 多几个数量级，由「线程并行：CPU 多核与 GPU」起的各页讲解。
 主频的提高受电路延迟与功耗限制。每个 Token 的乘加次数由模型的权重数决定，推理程序不改变它。
 两个方案提高的都是运算速率，在 CPU 上共同的上限是「硬件上限」一页的带宽上限 53 Token/s。GPU 使用自己的显存，它的带宽上限由显存带宽决定（第二讲）。
 向量指令各页沿用第二部分的整数内积 sum += w[i] * x[i]；dot.c 的 -O2 标量循环每次乘加执行 6 条指令。
@@ -2362,17 +2396,9 @@ def simd_history(p):
 2. **SSE 系列（1999–2006 年）**：引入 16 个独立的 128 位寄存器 `%xmm0` ~ `%xmm15`，全面支持单双精度浮点与整型；
 3. **AVX / AVX2（2011–2013 年）**：将寄存器拓宽至 **256 位**（`%ymm0` ~ `%ymm15`），引入 AVX2 整型向量算术与 FMA 乘加融合；
 4. **AVX-512（2016 年至今）**：进一步拓宽至 **512 位**（`%zmm0` ~ `%zmm31`），寄存器增至 32 个，新增 8 个专用的掩码寄存器 `%k0` ~ `%k7`。
-
-**跨架构对比：ARM 体系的向量演进**：
-- **ARM NEON**：固定 128 位宽度的 SIMD 扩展，广泛应用于移动端处理器与 Apple Silicon；
-- **ARM SVE / SVE2**：可伸缩可变长向量架构（Scalable Vector Extension，向量长度由硬件实现决定，程序中不写死）。
 """)
-    p.notes('x86 架构 SIMD 向量扩展指令集的代际演进历程，以及与 ARM 架构向量技术的对比。')
-
-
-def simd_history_fig(p):
-    p.title('向量演进：从 MMX、SSE 到 AVX 与 AVX-512')
     figure(p, "simd-widths", 1120)
+    p.notes('x86 架构 SIMD 向量扩展指令集的代际演进历程。图中各代寄存器的宽度画成长条，长度与位数成正比。')
 
 
 def ymm(p):
@@ -2505,11 +2531,10 @@ vmovdqa %ymm0, %ymm1 在两个寄存器之间拷贝 256 位，源码中没有对
 def perf(p):
     p.title('性能测量：使用 perf 测量指令数与周期数')
     slide(p, r"""
-**实验设置**（`bench.c`）：数组维度 $n = 4096$，循环调用 100,000 次，共约 4.1 亿次乘加。
+**实验设置**：数组维度 $n = 4096$，循环调用 100,000 次，共约 4.1 亿次乘加。
 """)
     p.demo('构建两个版本并用 perf 计数',
-           """cd examples
-make
+           """cd examples && make
 perf stat -e instructions,cycles ./dot_scalar 2>&1 | grep -v -e '^$' -e 'seconds [us]'
 perf stat -e instructions,cycles ./dot_avx2 2>&1 | grep -v -e '^$' -e 'seconds [us]'""",
            output=""" Performance counter stats for './dot_scalar':
@@ -2521,33 +2546,23 @@ perf stat -e instructions,cycles ./dot_avx2 2>&1 | grep -v -e '^$' -e 'seconds [
        103,024,819      cycles                           #    4.286 GHz
        0.024035128 seconds time elapsed""",
            files=['examples/Makefile', 'examples/bench.c', 'examples/dot.c'])
-    slide(p, r"""
-- `dot_scalar` 是 `-O2` 编译的标量版本，`dot_avx2` 是 `-O2 -mavx2` 编译的 AVX2 版本。
-""")
+    figure(p, "perf-bars", 1120)
     p.notes("""
+dot_scalar 是 -O2 编译的标量版本，dot_avx2 是 -O2 -mavx2 编译的 AVX2 版本。
 perf stat 把计数结果写到标准错误，2>&1 把它并入标准输出，grep -v 删去其中的空行与 seconds user、seconds sys 两行。
 perf 需要内核允许普通用户读取硬件计数器：/proc/sys/kernel/perf_event_paranoid 不大于 1。Ubuntu 默认是 4，此时 perf 报告 No supported events found；课前由授课人执行一次 sudo sysctl kernel.perf_event_paranoid=1。
 计数与耗时随 CPU 型号和频率变化，页面上的数值来自 i9-11900H。
 dot_avx2 由 dot.c 加上 -mavx2 编译得到，向量循环由编译器生成，共 6 条指令，比「向量循环」一页的循环少一条 vmovdqa。
+下方的图把两组数画成横向长条：指令数从 24.6 亿减少到 3.1 亿，比值 7.91（标量版 24.6 亿条指令除以每次乘加 6 条，对应 4.1 亿次乘加）；耗时从 0.150 s 降至 0.024 s，比值 6.25。
 """)
-
-
-def perf_2(p):
-    p.title('性能测量：使用 perf 测量指令数与周期数')
-    slide(p, r"""
-**实测指标归纳**：
-- **指令削减**：指令数从 24.6 亿减少到 3.1 亿，指令数比值为 7.91x（标量版 24.6 亿条指令除以每次乘加 6 条，正好对应 4.1 亿次乘加）；
-- **周期与耗时加速**：耗时从 0.150s 降至 0.024s，端到端加速比达到 6.25x。
-""")
-    figure(p, "perf-bars", 1120)
 
 
 def gpu_why(p):
     p.title('线程并行：CPU 多核与 GPU')
     slide(p, r"""
-- **SIMT**（Single Instruction, Multiple Threads）：多个线程执行同一段代码，各处理一份数据。
-- **CPU 的多核可以按 SIMT 的方式工作**：i9-11900H 有 8 个核心，至多 16 个线程同时运行。
-- **GPU 的运算核心比 CPU 多三个数量级**，并且有独立的显存：
+- **SIMT**（Single Instruction, Multiple Threads）：硬件每取出一条指令，交给一组线程同时执行，每个线程处理各自的数据。
+- **CPU 的多核**：每个线程有自己的 `%rip`，各自取指、执行，可以同时进行运算。
+- **GPU 的运算核心比 CPU 多几个数量级**，并且有独立的显存：
 """)
     p.table([
         ['运算核心', '8 个', '21760 个'],
@@ -2559,10 +2574,11 @@ def gpu_why(p):
 - **GPU 为图像渲染设计**：一帧画面的每个顶点、每个像素执行同一段程序，运算以矩阵与向量的乘加为主；神经网络推理的矩阵向量乘是同一类计算。
 """)
     p.notes("""
-SIMD 是一条指令处理多个数据，SIMT 是多个线程执行同一段代码。CPU 的多核并行属于后一种：每个核心运行 1 个线程，各自处理数据的一段。i9-11900H 有 8 个核心，每个核心 2 个硬件线程，至多 16 个线程同时运行；ollama 用 8 个线程实测 31.4 Token/s，是 1 个线程的 2.9 倍。
+SIMD 是一条指令处理多个数据，指令中写明数据的个数；SIMT 是一条指令交给一组线程执行，每个线程有自己的寄存器，程序按一个线程编写。这一组线程在 NVIDIA GPU 上是 32 个，称为 Warp，由下一页讲解。
+CPU 的多核属于 MIMD（多指令流多数据流）：每个硬件线程有自己的 %rip，各自取指、译码、执行。多个线程运行同一段代码、各处理数据的一段时，各线程的进度互不相关，不共用指令。i9-11900H 有 8 个核心，每个核心 2 个硬件线程，至多 16 个线程同时运行；ollama 用 8 个线程实测 31.4 Token/s，是 1 个线程的 2.9 倍。
 RTX 5090 的 21760 个运算核心是 NVIDIA 规格表中的 CUDA Cores，等于 170 个 SM 乘以每个 SM 的 128 个。一个 CUDA 核心只完成一个线程的一次运算，取指令、译码与调度由同组的 32 个核心共用一套逻辑；CPU 的每个核心各有一套完整的控制逻辑与缓存。两种核心的功能不同，数量的对比说明的是可以同时执行的线程数。
 RTX 5090 的显存是 32 GB 的 GDDR7，总线宽度 512 位，每条数据线的速率是 28 Gbit/s，峰值带宽为 28 × 512 ÷ 8 = 1792 GB/s；内存带宽 51.2 GB/s 是「硬件上限」一页的数值。
-实验 parallel-dot 第二步的参考结果在 i9-11900H 与 RTX 3060 Laptop（3840 个运算核心）上测得，32768 × 4096 的矩阵向量乘：CPU 1 个线程的标量循环 59.8 ms，CPU 16 个线程并使用向量指令 4.5 ms，GPU 0.81 ms，依次是 1 倍、13.4 倍、73.5 倍。
+hands-on lab parallel-dot 第二步的参考结果在 i9-11900H 与 RTX 3060 Laptop（3840 个运算核心）上测得，32768 × 4096 的矩阵向量乘：CPU 1 个线程的标量循环 59.8 ms，CPU 16 个线程并使用向量指令 4.5 ms，GPU 0.81 ms，依次是 1 倍、13.4 倍、73.5 倍。
 图像渲染中，顶点的坐标变换是 4 × 4 矩阵与向量的乘法，每个像素的颜色由同一段着色程序计算，两者都是对大量数据执行相同的运算。
 """)
 
@@ -2576,14 +2592,15 @@ def gpu_arch(p):
 
 **程序启动的线程分为三级**：
 - **Thread（线程）**：最基本的执行单元，每个线程把同一个函数（称为 kernel）执行一遍；
-- **Thread Block（线程块）**：一组线程，整块分配给 1 个 SM，块内的线程共用这个 SM 的共享内存；
+- **Thread Block（线程块）**：一组线程，线程数由程序在启动时指定，至多 1024 个；整块分配给 1 个 SM，块内的线程共用这个 SM 的共享内存；
 - **Grid（网格）**：一次启动的全部线程块。
 
-**Warp（线程束）**：SM 把线程块中的线程每 32 个编为一组，同一个 Warp 的 32 个线程在同一时刻执行同一条指令。
+**Warp（线程束）**：SM 把线程块中的线程每 32 个编为一组，同一个 Warp 的 32 个线程在同一时刻执行同一条指令；32 由硬件决定，程序不能改变。
 """)
     p.notes("""
 NVIDIA GPU 的硬件组成与 CUDA 程序的线程组织。RTX 5090 的数值来自 NVIDIA 的规格表：21760 个 CUDA 核心，合 170 个 SM；32 GB 显存；PCIe 5.0。它的计算能力（Compute Capability）是 12.0，CUDA 文档给出这一代的上限：Warp 为 32 个线程，一个线程块至多 1024 个线程，一个 SM 上至多同时有 1536 个线程（48 个 Warp，全卡 261120 个线程），每个 SM 的共享内存 100 KB，一个线程块至多使用 99 KB。
 一个 SM 可以同时容纳多个线程块；线程块的数量多于 SM 能容纳的数量时，其余线程块等待，前面的线程块结束后再分配。线程块在执行期间不更换 SM，块内线程因此可以共用这个 SM 的共享内存。
+线程块的线程数写在启动语句 kernel<<<块数, 每块线程数>>> 中，一般取 32 的倍数：100 个线程占 4 个 Warp，最后一个 Warp 只有 4 个线程工作。Warp 的大小可由内置变量 warpSize 读出，NVIDIA 各代 GPU 都是 32。
 SM 取出一条指令，交给同一个 Warp 的 32 个线程同时执行，这是 SIMT 在硬件上的做法。同一个 Warp 的线程在分支处走向不同路径时，SM 依次执行各条路径，不在当前路径上的线程等待，这种情况称为分支分化（Branch Divergence）。
 """)
 
@@ -2653,7 +2670,7 @@ for (int b = 0; b < blocks; b++)
 dot_cuda.cu 的 main 函数中调用 CUDA 的部分；CHECK 是文件中定义的宏，检查每次调用的返回值，出错时打印原因并退出。
 cudaMalloc 在显存中分配空间，返回的指针 dw、dx、dpart 指向显存，只能传给 kernel 或 cudaMemcpy，主机端代码不能直接读写。cudaMemcpy 的最后一个参数给出拷贝方向。
 kernel 的启动写成 函数名<<<线程块个数, 每块线程数>>>(参数)。启动之后 main 继续执行，第 3 步的 cudaMemcpy 等待 kernel 结束后再拷贝。
-两个用时的实测值取自实验 parallel-dot 第二步的参考结果（RTX 3060 Laptop，元素个数同为 2²⁴）：把 w、x 共 128 MiB 拷入显存 24.4 ms（5.5 GB/s，普通 malloc 内存经 PCIe 的拷贝速率），kernel 0.66 ms，拷贝是 kernel 的 37 倍。矩阵向量乘的权重留在显存中，每个 Token 只拷贝输入与输出向量，拷贝所占的比例很小。
+两个用时的实测值取自 hands-on lab parallel-dot 第二步的参考结果（RTX 3060 Laptop，元素个数同为 2²⁴）：把 w、x 共 128 MiB 拷入显存 24.4 ms（5.5 GB/s，普通 malloc 内存经 PCIe 的拷贝速率），kernel 0.66 ms，拷贝是 kernel 的 37 倍。矩阵向量乘的权重留在显存中，每个 Token 只拷贝输入与输出向量，拷贝所占的比例很小。
 """)
 
 
@@ -2686,37 +2703,75 @@ nvcc 是编译驱动程序，它依次调用几个工具，nvcc --dryrun 列出�
 
 def cuda_remote(p):
     p.title('远程运行：把 CUDA 程序提交到课程服务器')
-    slide(p, r"""
-- 没有 NVIDIA 显卡时，把 `.cu` 文件发送到课程服务器：服务器编译、运行，返回输出。
-""")
-    p.demo('把 dot_cuda.cu 提交到课程服务器',
+    p.demo('没有 NVIDIA 显卡时，把 dot_cuda.cu 提交到课程服务器编译、运行',
            """cd examples
+export GPU_SERVER=https://bomb.hydroiodic.site:18433
 curl -sS -N -H "X-Token: $GPU_TOKEN" --data-binary @dot_cuda.cu $GPU_SERVER/program""",
            output="""# received program.cu (2668 bytes)
-# started limit=60s
+# started limit=30s
 blocks  65536 x 256 threads
 sum     41943040
 check   41943040
-# done status=ok elapsed=1.2""",
+
+real	0m0.468s
+user	0m0.058s
+sys	0m0.348s
+# done status=ok elapsed=1.3""",
            files=['examples/dot_cuda.cu'])
     slide(p, r"""
-- `$GPU_SERVER` 是服务器的地址，`$GPU_TOKEN` 是课程口令；`# ` 开头的行由服务器给出。
-- 一次提交 1 个源文件，至多 64 KiB；编译与运行合计至多 60 s；GPU 每次运行 1 个任务，其余任务排队。
+- `GPU_SERVER` 是服务器的地址，`GPU_TOKEN` 是课上公布的口令；`# ` 开头的行由服务器给出。
+- 源文件至多 256 KiB；编译与运行合计至多 30 s；同时运行的任务数达到上限时排队。
 - 程序在隔离环境中运行：不能读写服务器上的文件，不能访问网络。
 """)
     p.notes("""
 服务器是 lectures/parallel-dot-server，POST /program 接收一个完整的 CUDA 程序：含 kernel 与 main 的一个 .cu 文件。
-服务器把请求正文保存为 program.cu，执行 nvcc -O2 -arch=sm_XY -o program program.cu，再执行 ./program；程序没有参数，标准输入为空。
-回复逐行返回：# received 是收到的字节数；GPU 正在运行其他任务时有一行 # queued position=K；# started 给出时间限制；
-随后是编译器的信息与程序的输出；最后一行是 # done status=… elapsed=…，elapsed 是编译与运行合计的秒数。
+口令不写在幻灯片上，课上公布；先在终端中执行 export GPU_TOKEN=口令，再执行这三行。
+服务器把请求正文保存为 program.cu，执行 nvcc -O2 -arch=sm_XY -o program program.cu，再执行 time ./program；程序没有参数，标准输入为空。
+回复逐行返回：# received 是收到的字节数；GPU 上同时运行的任务数已达上限（课上为 4 个）时有一行 # queued position=K；# started 给出时间限制；
+随后是编译器的信息、程序的输出，以及 time 给出的 real、user、sys 三行（程序运行的时间，不含编译）；最后一行是 # done status=… elapsed=…，elapsed 是编译与运行合计的秒数。
 status 有四个取值：ok；error，编译失败或程序以非零状态退出，这时前一行是 # program: exit status N；
 timeout，超过时间限制被终止；output-limit，输出超过 1 MiB 被终止。
-提交被拒绝时回复一行原因：403 口令错误，413 文件为空或超过 64 KiB，429 提交过于频繁（每个地址每 600 s 至多 6 次），503 等待的任务已有 8 个。
+提交被拒绝时回复一行原因：403 口令错误，413 文件为空或超过 256 KiB，503 等待的任务已有 256 个；课上不限制同一地址的提交次数。
 隔离环境由 bubblewrap 建立：程序只能看到只读的 /usr（编译器与 CUDA 库）、GPU 设备节点、两个存放在内存中的临时目录 /work 与 /tmp；
 没有 /etc 与 /home，没有网络接口。到时间限制时，隔离环境中的全部进程被终止，GPU 交给下一个任务。
 curl 的选项：-sS 只显示错误信息；-N 关闭输出缓冲，服务器每返回一行就显示一行；-H 添加请求头；--data-binary @文件 把文件内容原样作为请求正文。
 Windows 上在 Git Bash 中执行，curl 随 Git for Windows 安装。
-实验 parallel-dot 第二步的 make remote 使用同一个服务器的 POST /run，提交的是两个 kernel 文件。
+hands-on lab parallel-dot 第二步的 make remote 使用同一个服务器的 POST /run，提交的是两个 kernel 文件。
+""")
+
+
+
+def softmax_exercise(p):
+    p.title('课堂练习：用 GPU 计算 softmax')
+    slide(p, r"""
+`softmax` 分三步：求最大值 $m$；求每个 $e^{s_i - m}$ 与它们的和；每一项除以这个和。
+""")
+    p.demo('在 CPU 上计算 50 次 2²⁴ 个分数的 softmax',
+           """cd examples
+gcc -O2 softmax.c -o softmax -lm
+time ./softmax""",
+           output="""y[0]    2.719781e-11
+y[999]  5.931107e-07
+sum     1.000000
+
+real	0m4.390s
+user	0m4.345s
+sys	0m0.044s""",
+           bold=[5],
+           files=['examples/softmax.c'])
+    slide(p, r"""
+- **练习**：写出 [softmax.cu](file:examples/softmax.cu) 中的三个 kernel，比较两次的 `real`。
+- 最大值与和的求法同 `dot_kernel` 的折半相加。
+- 提交页面：[https://bomb.hydroiodic.site:18433/submit](https://bomb.hydroiodic.site:18433/submit)
+""")
+    p.notes("""
+softmax 把 n 个分数变为 n 个和为 1 的正数，用在 mini-ollama 的注意力计算中：一个 Token 的查询与之前每个 Token 的键算出一个分数，softmax 把这些分数变为权重。减去最大值 m 不改变结果，并使 e 的指数都不大于 0，计算 e 的幂时不会溢出。
+examples/softmax.c 中的 softmax 函数与 mini_ollama.c 中的相比有两处改动：结果写入 y，分数保留在 s 中；sum 改为 double，因为 float 只有 24 位有效数字，2²⁴ 个项逐个相加，和变大之后再加上一个小的项，和不再变化。
+分数在 -5.00 到 4.99 之间循环取值。程序对同一组分数计算 50 次 softmax，打印最后一次的结果：y[0] 与 y[999] 是最小分数与最大分数的结果，sum 是全部结果之和，应为 1。mini-ollama 每生成一个 Token，每个注意力头都计算一次 softmax，50 次计算对应这样的重复计算。
+time 是 bash 的命令：执行后面的程序，程序结束后打印三个时间。real 是从启动到结束经过的时间，包括分数的初始化、50 次 softmax 与最后的求和；user 与 sys 是 CPU 在用户态与内核中执行这个程序的时间。只计算 1 次时，real 约为 0.15 s。
+examples/softmax.cu 是 GPU 版的骨架：main 与主机端的 softmax 函数已写好，同样计算 50 次、打印同样的 3 行；三步各是一个 kernel，只有函数头与说明，函数体由学生写出。主机端的 softmax 函数依次启动三个 kernel：block_max 之后把 65536 个块各自的最大值拷回内存，取其中最大的一个；exp_sum 之后拷回 65536 个块各自的和，相加得到总和；再启动 divide。block_max 与 exp_sum 同 dot_kernel，每个线程块在共享内存中折半求 256 个值的最大值或和；divide 中每个线程除一个元素。main 把分数拷入显存一次，50 次计算都使用显存中的分数，最后一次的结果拷回内存。
+服务器也在 time 下运行提交的程序：回复中程序的输出之后是同样的三行，不含编译的时间。GPU 版的 real 还包括 CUDA 的初始化，以及分数拷入显存、结果拷回内存的时间。这些时间只计一次，与 CPU 计算 1 次 softmax 的时间相当；计算 50 次时，两个 real 之差主要来自计算本身。
+提交：点击页面下方的链接，在浏览器中打开课程服务器的提交页面，填入口令，选择 softmax.cu，点击「提交运行」，服务器返回的内容逐行显示在下方。页面由课程服务器提供，服务器运行时才能打开。也可以用 curl 提交，命令同 dot_cuda.cu。
 """)
 
 
@@ -2786,9 +2841,9 @@ def summary_2(p):
 
 
 def exercise(p):
-    p.title('课后练习 parallel-dot：AVX2 内积函数与 CUDA kernel')
+    p.title('hands-on lab parallel-dot：AVX2 内积函数与 CUDA kernel')
     slide(p, r"""
-- **本实验不计分**。实验目录 `parallel-dot/` 分两步，对应方案 1 与方案 2，按顺序完成。
+- **hands-on lab 不计分**。`parallel-dot/` 分两步，对应方案 1 与方案 2，按顺序完成。
 """)
     p.table([
         ['第一步', '`simd/`', '`vec_dot_q4_0`：用 AVX2 实现 Q4_0 内积', '`make test` 输出 `all passed`'],
@@ -2799,43 +2854,41 @@ make test       # step 1: check the result and the speed-up over the scalar refe
 make run        # step 1: answer prompt.txt with the model built in nano-quant
 cd ../cuda
 make run        # step 2: build, run every variant, print the table
-make remote SERVER=http://HOST:PORT    # step 2 without an NVIDIA GPU""")
+make remote SERVER=https://HOST:PORT    # step 2 without an NVIDIA GPU""")
     slide(p, r"""
 - 第一步需要支持 AVX2 的 CPU；第二步需要 NVIDIA 显卡，或者提交到课程服务器。
 - 每一步的任务、规则与期望输出见各自目录下的 `README.md`。
 """)
     p.notes("""
-parallel-dot 是第五部分的课后练习，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
-第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲实验 nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
+parallel-dot 是第五部分的 hands-on lab，不计分，两步各有自己的目录、Makefile 与 README.md，依次对应「解决方案」一页的方案 1（SIMD）与方案 2（GPU）。
+第一步的程序是「实测」一页的 mini-ollama：它的内层循环成为函数 vec_dot_q4_0，即 Q4_0 一行权重与 float 向量的内积，框架给出每次处理一个权重的标量参考实现，要写的是 AVX2 版本，每一步处理一个 Q4_0 块的 32 个权重。make test 运行 dot-selftest，不需要模型文件：先对照定义检查结果，再与标量参考实现比较速度，达到 4 倍以上时输出 all passed。make run 读取第二讲的 hands-on lab nano-quant 按 q4_0 配方得到的 q4_0.gguf，输出生成速度；i9-11900H 上 256 位的实现为 4.5 Token/s，标量参考实现为 0.76 Token/s（2026-10-05）。
 第二步的 4 个 kernel 是 dot_kernel、dot_stride_kernel、matvec_row_kernel 与 matvec_block_kernel。dot_kernel 的做法与「CUDA 程序：每个线程执行的 kernel 函数」一页的 kernel 相同。make run 输出一张表，每一行是一个版本或一个阶段的耗时、相对 CPU 标量版本的加速比与结果是否和 CPU 一致。
 没有 NVIDIA 显卡的机器用 make remote 把 kernels/ 下的两个文件提交到课程服务器，服务器编译、运行后返回同一张表，HOST:PORT 是课程服务器的地址。
 """)
 
 
 def lab_mini_cpu(p):
-    p.title('实验一 mini-cpu：x86-64 指令解释器')
+    p.title('scoring lab mini-cpu 实验一：x86-64 指令解释器')
     slide(p, r"""
-- **本实验计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本节的 x86-64 指令。
+- **scoring lab 计分**，满分 100 分：写 `mini-cpu` 的指令解释器，执行本节的 x86-64 指令。
 """)
     p.table([
-        ['`modrm.c`', '`modrm_decode`', '解析操作数字节（ModR/M）与其后的字节，得到操作数'],
-        ['`alu.c`', '`x86_add` 等 4 个', '算术逻辑运算的结果与标志位'],
-        ['`interp.c`', '`cond`、`interp_run`', '条件的判断；主循环：取一条指令，按操作码修改寄存器与内存'],
-    ], headers=['文件', '要写的函数', '内容'], widths=[13, 21, 66])
-    p.code('bash', """make                      # build mini-cpu and the guest programs
-./mini-cpu guest/hello    # run a guest program on your interpreter
-make check                # run the tests, print the score of every item and the total
-make handin               # pack src/lab1 into lab1.zip, the file to submit""")
+        ['1', '`modrm.c`', '`modrm_decode`：解析操作数字节（ModR/M），得到操作数', '30'],
+        ['2', '`alu.c`', '`x86_add` 等 10 个函数：整数运算的结果与标志位', '30'],
+        ['3', '`interp.c`', '`cond`、`interp_run`：主循环与整数指令；完成后运行 mini-ollama', '30'],
+        ['4', '`interp.c`', '`interp_run`：7 条向量指令；完成后运行 SIMD 版的 mini-ollama', '10'],
+    ], headers=['部分', '文件', '要写的内容', '分值'], widths=[8, 13, 69, 10])
+    p.code('bash', """make && ./mini-cpu guest/hello    # build, then run a guest program on your interpreter
+make check                        # run the tests, print the score of every item and the total""")
     slide(p, r"""
-- 完成后，「实测」一页的 mini-ollama 能在你的解释器上运行。
 - 完成标准：`make check` 输出 `lab 1 score 100/100`；提交 `make handin` 生成的 `lab1.zip`。
 - 在 x86-64 的 Linux 上完成，Windows 用 WSL2；说明见 `src/lab1/README.md`。
 """)
     p.notes("""
-实验一是 mini-cpu 六个实验中的第一个，计分，满分 100 分；后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
-mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。建议的顺序是 modrm.c、alu.c、interp.c。
-modrm.c 对应「练习：反汇编和反编译」的前两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 4 个函数是 x86_szp、x86_add、x86_sub、x86_logic，对应标志位 ZF、SF、CF、OF 的定义。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
-解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架执行。完成后 guest/ 下的程序在解释器上运行，其中 guest/mini-ollama 是「实测」一页的 mini-ollama。
-make check 共 20 项，每项 5 分，一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-09）。
+mini-cpu 的实验一是 scoring lab，满分 100 分；它是 mini-cpu 六个实验中的第一个，后面的实验使用实验一的代码。发布的压缩包是 mini-cpu-lab1.zip，解压到一个空目录中。
+mini-cpu 装入 guest/ 下的 x86-64 可执行文件并执行其中的指令。三个源文件里只有要写的函数，函数体是一段 TODO 注释加一个 todo("名字") 调用，接口写在 include/mcpu.h 以 Lab 1: 开头的注释里。实验分四个部分，按顺序完成：modrm.c（30 分）、alu.c（30 分）、interp.c 的主循环与整数指令（30 分）、interp.c 的 7 条向量指令（10 分）。一个部分的评测项目只依赖这一部分与它之前的部分，前三部分不涉及向量指令。
+modrm.c 对应「练习：反汇编和反编译」的前两页：操作数字节分成三段，得到寄存器编号或内存操作数的地址；实验中另有那两页没有涉及的情况（地址中带偏移、带变址寄存器），规则写在实验说明中。alu.c 的 10 个函数计算整数运算的结果与标志位：x86_szp、x86_add、x86_sub、x86_logic 对应标志位 ZF、SF、CF、OF 的定义；x86_inc、x86_dec、x86_neg 各调用一次 x86_add 或 x86_sub；x86_shift、x86_mul、x86_div 计算移位、乘法与除法。interp.c 的 cond 对应条件跳转的条件，interp_run 是主循环。
+解释器执行的向量指令共 7 条，其中 vpxor、vmovdqu、vpmulld、vpaddd 是「SIMD 思想」一节 dot_product_avx2 循环体的指令；gcc 生成的其余指令（8 位与 16 位形式、乘除法、移位等）由框架取出操作数并写回结果，其中 inc、dec、neg、移位与乘除法的结果和标志位调用 alu.c 的函数。第三部分完成后 guest/mini-ollama 在解释器上运行，它是「实测」一页的 mini-ollama；第四部分完成后 guest/mini-ollama-simd 也能运行，它的矩阵向量乘用向量指令每次处理一个 Q4_0 块的 32 个权重。
+make check 按四个部分列出 21 项：前两个部分各 3 项、每项 10 分，第三部分 10 项、每项 3 分，第四部分 5 项、每项 2 分；一项全部通过才得到该项的分数；随机参数的种子每次不同，判定提交时运行同样的测试。make handin 生成的 lab1.zip 只含 src/lab1 下的 3 个源文件，对 src/ 以外的修改不会生效。参考实现在只含实验一的目录中运行 make check 为 100/100（2026-10-13）。
 运行环境：x86-64 Linux 直接运行；x86-64 Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器或课程服务器。
 """)

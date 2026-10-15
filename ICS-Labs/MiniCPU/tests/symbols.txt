@@ -1,0 +1,39 @@
+# The functions and variables the files of each lab may use, checked by
+# tests/srccheck.sh before make check runs the tests. A lab may also use
+# everything defined in its own files. One "name: symbols" line per group;
+# a lab uses its line and the libc line (lab 6 also libc-io).
+
+libc: memcpy memmove memset memcmp memchr strlen strnlen strcmp strncmp
+libc: strchr strrchr strstr strcpy strncpy strcat strncat strtol strtoul
+libc: strtoll strtoull atoi abs labs llabs qsort bsearch
+libc: printf fprintf sprintf snprintf vfprintf vsnprintf puts fputs putchar
+libc: fputc putc fwrite fflush stdout stderr
+libc: malloc calloc realloc free abort exit __assert_fail __stack_chk_fail
+libc: __printf_chk __fprintf_chk __sprintf_chk __snprintf_chk __vfprintf_chk
+libc: __vsnprintf_chk __memcpy_chk __memmove_chk __memset_chk __strcpy_chk
+libc: __strncpy_chk __strcat_chk __strncat_chk __stpcpy_chk
+libc: __divti3 __modti3 __udivti3 __umodti3 __divmodti4 __udivmodti4
+
+lab1: trunc_val sext x86_alu
+lab1: x86_begin x86_end x86_other fetch8 fetch16 fetch32 fetch64
+lab1: fetch_imm modrm get set rm_get rm_set ea load store rm_vget rm_vset
+lab1: vset vex_known opt_max opt_steps reg_name cpu_dump
+
+lab2: decode compute insn_syscall fetch_bytes mem_read mem_write
+lab2: cpu_commit cpu_trap cpu_dump reg_name pipe_st pipe_pc
+lab2: opt_forward opt_max opt_miss opt_steps cache_misses
+
+lab3: arena_alloc host_lookup guest_write obj_stub obj_secname obj_symname
+lab3: obj_relname
+
+lab4: cache_read cache_write mmu_alloc_frame mmu_cr3
+lab4: tlb_hits tlb_misses page_faults
+
+lab5: dram_line_read dram_line_write
+lab5: cache_hits cache_misses cache_writebacks
+
+lab6: mem_read mem_write mmu_alloc_frame dram_ptr blk_request
+lab6: blk_reads blk_writes ramfs_dir ramfs_ndir
+
+libc-io: open close read write pread pwrite pread64 pwrite64 perror
+libc-io: __read_chk __pread_chk __pread64_chk

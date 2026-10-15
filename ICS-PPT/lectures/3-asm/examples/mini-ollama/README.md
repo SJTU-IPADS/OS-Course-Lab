@@ -87,7 +87,7 @@ objdump -d --no-show-raw-insn /usr/local/lib/ollama/libggml-cpu-icelake.so |
 
 | 程序 | 内积循环每轮的指令条数 | 每轮处理的权重个数 | 每次乘加的指令条数 |
 | --- | --- | --- | --- |
-| mini-ollama 的 `matvec` | 20 | 2 | 10 |
+| mini-ollama 的 `vec_dot_q4_0` | 20 | 2 | 10 |
 | ollama 的 `ggml_vec_dot_q4_0_q8_0`（icelake） | 22 | 32 | 0.69 |
 
 ## 程序结构
@@ -125,8 +125,9 @@ for (pos = 0; pos + 1 < end; pos++) {
 | `feed_forward` | `ffn_gate`、`ffn_up`、`ffn_down` | 37 748 736 |
 | `next_token` | `token_embd` | 311 164 928 |
 
-生成一个 Token 共 28 × 7 + 1 = 197 次矩阵向量乘，1 720 451 072 次乘加。
-这些乘加全部在 `matvec` 中完成，它占运行时间的 99.7%。
+生成一个 Token 共 28 × 7 + 1 = 197 次矩阵向量乘，1 720 451 072 次乘加。`matvec` 对矩阵的每一行调用一次点积函数 `vec_dot_q4_0`，这些乘加全部在 `vec_dot_q4_0` 中完成；`matvec` 与 `vec_dot_q4_0` 合计占运行时间的 99.7%（这个比例在内积循环写在 `matvec` 之内时测得）。`vec_dot_q4_0` 没有写成 `static`：`gcc -O2` 把只在一处调用的 `static` 函数并入调用者，`objdump -d` 中就没有以它命名的一段。
+
+2026-10-15 把内积循环从 `matvec` 中分出，成为 `vec_dot_q4_0`，与第三讲第四部分 `matvec` 逐行调用 `dot_product` 的结构相同。改后生成的回答不变，内层循环仍是同样的 20 条指令（寄存器 `%r12d` 换成 `%ecx`，长度由 79 字节变为 75 字节）；同一时段先后运行改前与改后的程序各两次，生成速度为 0.84、0.81 与 0.85、0.84 Token/s，两者相同。上面 2026-10-05 的实测数值因此保留。
 
 `model.c` 用 `mmap` 把模型文件只读地映射到进程的地址空间，张量、词表都是指向映射区的指针，文件内容没有复制。
 文件的每一页在程序第一次访问时进入内存，第一轮循环因此包含读入权重的时间；
@@ -134,8 +135,7 @@ for (pos = 0; pos + 1 < end; pos++) {
 Windows 没有 `mmap`：`model.c` 在定义了 `_WIN32` 时改用 `fread` 把整个文件读入 `malloc` 得到的缓冲区，
 文件须小于 2 GB。两种方式由同一个函数 `load_file` 提供，其余代码相同。
 
-`Makefile` 使用 `-O2 -fno-tree-vectorize`。GCC 12 起在 `-O2` 下自动向量化部分循环，
-`-fno-tree-vectorize` 使 `matvec` 保持每次处理一个权重。
+`Makefile` 使用 `-O2 -fno-tree-vectorize`。GCC 12 起在 `-O2` 下自动向量化部分循环，`-fno-tree-vectorize` 使 `vec_dot_q4_0` 保持每次处理一个权重。
 
 ## 范围
 

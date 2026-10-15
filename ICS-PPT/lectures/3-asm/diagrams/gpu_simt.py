@@ -46,7 +46,7 @@ def build():
 
     top = 162
     out.append(rect(LX, top, LW, 196, WHITE, ORANGE, rx=6, width=1.8))
-    out.append(text(LX + 14, top + 24, "Thread Block：256 个线程，分为 8 个 Warp",
+    out.append(text(LX + 14, top + 24, "Thread Block（本例 256 个线程）：分为 8 个 Warp",
                     15, INK, "bold", "start"))
     # the opened block hangs from Block 0
     out.append(line(bx, 108, LX, top, ORANGE, 1.2, dash="4 3"))

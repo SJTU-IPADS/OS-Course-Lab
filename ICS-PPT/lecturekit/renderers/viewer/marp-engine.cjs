@@ -1,5 +1,6 @@
 // The engine lecturekit runs marp-cli with: Marp itself, taught the dialects
-// of lecturekit/dialects.json (see lecturekit/dialects.py for what one is).
+// of lecturekit/dialects.json (see lecturekit/dialects.py for what one is),
+// and opening a web link of the slide text in a new tab.
 //
 // Marp highlights a fenced block with highlight.js and leaves a language it
 // does not know uncoloured. A dialect is registered as its base language with
@@ -21,6 +22,19 @@ module.exports = ({ marp }) => {
       language.aliases = []
       return language
     })
+  }
+
+  // [label](https://...) in slide text: followed in place, the link would
+  // take the deck away, so it opens in a new tab as p.link's does. Other
+  // addresses (relative ones, #anchors) keep Marp's rendering.
+  const rules = marp.markdown.renderer.rules
+  const linkOpen = rules.link_open || ((tokens, i, options, env, self) => self.renderToken(tokens, i, options))
+  rules.link_open = (tokens, i, options, env, self) => {
+    if (/^https?:\/\//i.test(tokens[i].attrGet('href') || '')) {
+      tokens[i].attrSet('target', '_blank')
+      tokens[i].attrSet('rel', 'noopener noreferrer')
+    }
+    return linkOpen(tokens, i, options, env, self)
   }
   return marp
 }

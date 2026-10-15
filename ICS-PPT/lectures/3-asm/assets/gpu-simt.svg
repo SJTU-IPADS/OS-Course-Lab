@@ -12,7 +12,7 @@
 <text x="371.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Block 3</text>
 <text x="450.0" y="97.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
 <rect x="20.0" y="162.0" width="480.0" height="196.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.8"/>
-<text x="34.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">Thread Block：256 个线程，分为 8 个 Warp</text>
+<text x="34.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">Thread Block（本例 256 个线程）：分为 8 个 Warp</text>
 <line x1="40.0" y1="108.0" x2="20.0" y2="162.0" stroke="#e97132" stroke-width="1.2" stroke-dasharray="4 3"/>
 <line x1="126.0" y1="108.0" x2="500.0" y2="162.0" stroke="#e97132" stroke-width="1.2" stroke-dasharray="4 3"/>
 <text x="36.0" y="212.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">Warp 0</text>

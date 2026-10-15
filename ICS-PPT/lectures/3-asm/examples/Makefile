@@ -22,4 +22,4 @@ max_cmov: max.c max_time.c
 	$(CC) -O2 $(CFLAGS) max_time.c max_cmov.o -o max_cmov
 
 clean:
-	rm -f *.o dot_scalar dot_avx2 max_jl max_cmov
+	rm -f *.o dot_scalar dot_avx2 max_jl max_cmov softmax

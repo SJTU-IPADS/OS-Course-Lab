@@ -335,6 +335,12 @@ markdown inside cells and callouts pass straight through to the renderer. A
 link whose address begins `file:` is the one exception: it is a
 [file button](#file-buttons-in-text-labelfilepath), not a hyperlink.
 
+In the deck, a `p.link(...)` and a `[label](url)` whose address begins
+`http://` or `https://` open in a new tab, so following one leaves the deck
+where it was; other addresses are left as Marp renders them. Text before an
+inline link stays outside it: `- 提交页面：[https://host/submit](https://host/submit)`
+links the address alone, where `p.link` makes its whole label the link.
+
 ### The `pseudo` language
 
 `p.code(...)` normally hands its `language` to the renderer's own highlighter.
