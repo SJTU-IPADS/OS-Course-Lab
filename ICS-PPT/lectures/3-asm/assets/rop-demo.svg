@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="36.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">低地址</text>
+<text x="1014.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">高地址</text>
+<rect x="36.0" y="26.0" width="240.0" height="48.0" rx="2" fill="#ffffff" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="156.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">24 个 A</text>
+<rect x="292.0" y="26.0" width="230.0" height="48.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="2.2"/>
+<text x="407.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">gadget_pop 的地址</text>
+<rect x="538.0" y="26.0" width="230.0" height="48.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="2.2"/>
+<text x="653.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">整数 42</text>
+<rect x="784.0" y="26.0" width="230.0" height="48.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="2.2"/>
+<text x="899.0" y="56.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">print_num 的地址</text>
+<rect x="292.0" y="168.0" width="230.0" height="86.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.8"/>
+<text x="306.0" y="192.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">gadget_pop:</text>
+<text x="306.0" y="216.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">pop %rdi</text>
+<text x="306.0" y="240.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">ret</text>
+<rect x="784.0" y="168.0" width="230.0" height="86.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.8"/>
+<text x="798.0" y="192.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#156082" text-anchor="start">print_num:</text>
+<text x="798.0" y="216.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">printf("%ld\n", n)</text>
+<text x="798.0" y="240.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">exit(0)</text>
+<line x1="407.0" y1="76.0" x2="407.0" y2="166.0" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ah-c0392b)"/>
+<text x="407.0" y="125.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">①</text>
+<line x1="899.0" y1="76.0" x2="899.0" y2="166.0" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ah-c0392b)"/>
+<text x="899.0" y="125.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">③</text>
+<path d="M 653.0 76.0 L 653.0 216.0 L 528.0 216.0" fill="none" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
+<text x="36.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">① </text>
+<text x="52.5" y="282.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">vuln</text>
+<text x="88.5" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 的 ret 跳到 gadget_pop　　</text>
+<text x="303.8" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">② </text>
+<text x="320.2" y="282.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">pop %rdi</text>
+<text x="392.2" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start" xml:space="preserve"> 取走 42　　</text>
+<text x="485.2" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">③ </text>
+<text x="501.8" y="282.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start">ret</text>
+<text x="528.8" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="start" xml:space="preserve"> 跳到 print_num，打印 42</text>
+</svg>

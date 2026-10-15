@@ -162,10 +162,12 @@ with lecture.section('第三部分：函数调用', id="part3") as s:
         ss.page("stack-random", body=pages.stack_random)
         ss.page("stack-random-range", body=pages.stack_random_range)
         ss.page("nop-sled", body=pages.nop_sled)
+        ss.page("canary-story", body=pages.canary_story)
         ss.page("canary", body=pages.canary)
         ss.page("canary-asm", body=pages.canary_asm)
         ss.page("nx-bit", body=pages.nx_bit)
         ss.page("code-reuse", body=pages.code_reuse)
+        ss.page("rop-demo", body=pages.rop_demo)
         ss.page("shadow-stack", body=pages.shadow_stack)
 
 lecture.bridge('第四部分：数组与结构体', id="bridge-part4")
@@ -190,7 +192,6 @@ with lecture.section('第四部分：数组与结构体', id="part4") as s:
         ss.page("alignment-example", body=pages.alignment_example)
 
     with s.section('小结与练习', id="part4-summary") as ss:
-        ss.page("recap-part4", body=pages.recap_part4)
         ss.page("struct-exercise", body=pages.struct_exercise)
         ss.page("struct-exercise-2", body=pages.struct_exercise_2)
 

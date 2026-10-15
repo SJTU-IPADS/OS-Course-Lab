@@ -10,6 +10,7 @@ dot_product
 dot_dbg
 echo
 echo_sp
+rop
 dot_intrin
 dot_cuda
 vecadd_cuda
