@@ -1,0 +1,103 @@
+[
+ {
+  "name": "win-git-download",
+  "url": "https://git-scm.com/download/win",
+  "highlight": [
+   "a[href$='64-bit.exe']"
+  ]
+ },
+ {
+  "name": "win-python-download",
+  "url": "https://www.python.org/downloads/",
+  "ua": "win",
+  "height": 620,
+  "highlight": [
+   "a[href$='amd64.exe']"
+  ]
+ },
+ {
+  "name": "win-python-files",
+  "url": "https://www.python.org/downloads/release/python-3150/",
+  "ua": "win",
+  "highlightText": [
+   [
+    "a",
+    "Windows installer (64-bit)",
+    "tr"
+   ]
+  ]
+ },
+ {
+  "name": "win-node-download",
+  "url": "https://nodejs.org/zh-cn/download",
+  "ua": "win",
+  "scrollY": 130,
+  "highlight": [
+   "a[href$='x64.msi']"
+  ]
+ },
+ {
+  "name": "mac-git-download",
+  "url": "https://git-scm.com/download/mac",
+  "ua": "mac",
+  "boxAround": "(() => { const h=[...document.querySelectorAll('h4,h3,strong,b')].find(e=>e.innerText.trim()==='Xcode Command Line Tools'); if(!h) return []; const out=[h]; let n=h.nextElementSibling; for(let k=0;k<2&&n&&!/^H[1-6]$/.test(n.tagName);k++){ out.push(n); n=n.nextElementSibling; } return out; })()"
+ },
+ {
+  "name": "mac-python-download",
+  "url": "https://www.python.org/downloads/",
+  "ua": "mac",
+  "height": 620,
+  "highlight": [
+   "a[href$='macos11.pkg']"
+  ]
+ },
+ {
+  "name": "mac-python-files",
+  "url": "https://www.python.org/downloads/release/python-3150/",
+  "ua": "mac",
+  "highlightText": [
+   [
+    "a",
+    "macOS installer",
+    "tr"
+   ]
+  ]
+ },
+ {
+  "name": "mac-node-download",
+  "url": "https://nodejs.org/zh-cn/download",
+  "ua": "mac",
+  "scrollY": 130,
+  "highlight": [
+   "a[href$='.pkg']"
+  ]
+ },
+ {
+  "name": "github-repo",
+  "url": "https://github.com/SJTU-IPADS/OS-Course-Lab",
+  "highlightText": [
+   [
+    "button",
+    "Code"
+   ]
+  ]
+ },
+ {
+  "name": "github-code-dropdown",
+  "url": "https://github.com/SJTU-IPADS/OS-Course-Lab",
+  "clickText": [
+   [
+    "button",
+    "Code"
+   ]
+  ],
+  "evalHighlight": "(() => { const i=[...document.querySelectorAll('input')].find(e=>(e.value||'').includes('github.com/SJTU-IPADS')); if(!i) return []; let o=i; for(let k=0;k<8&&o;k++){ o=o.parentElement; if(o && o.querySelector('button[aria-label*=\"opy\"], button[aria-label*=\"lipboard\"]')) break; } const b=o?o.querySelector('button[aria-label*=\"opy\"], button[aria-label*=\"lipboard\"]'):null; return [i,b].filter(Boolean); })()",
+  "afterClick": "document.querySelectorAll('tool-tip, [role=tooltip], .Tooltip, [data-view-component][popover]:not([open])').forEach(e => e.remove()); document.activeElement && document.activeElement.blur && document.activeElement.blur();"
+ },
+ {
+  "name": "github-ics-ppt",
+  "url": "https://github.com/SJTU-IPADS/OS-Course-Lab/tree/main/ICS-PPT",
+  "scrollY": 250,
+  "boxAround": "(() => { const a=[...document.querySelectorAll('a')].find(e=>e.innerText.trim()==='lectures' && e.closest('tr')); return a? [...a.closest('tr').querySelectorAll('td')] : []; })()"
+ }
+]
