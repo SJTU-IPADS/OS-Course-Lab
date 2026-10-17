@@ -1,0 +1,3 @@
+# prompt.txt is read byte for byte, so every text file keeps LF line ends on
+# Windows as well.
+* text=auto eol=lf

@@ -1,0 +1,10 @@
+# What make leaves behind.
+build/
+mini-ollama-*
+ops-selftest-*
+*.exe
+*.exp
+*.lib
+
+# The model file (README.md), downloaded, moved or linked here.
+*.gguf
