@@ -200,22 +200,19 @@ lecture.bridge('第五部分：性能瓶颈与向量化\n从标量计算到向�
 
 with lecture.section('第五部分：性能瓶颈与向量化——从标量计算到向量与并发', id="part5") as s:
     s.page("flops-estimate", body=pages.flops_estimate)
-    s.page("hw-peak", body=pages.hw_peak)
+    s.page("bandwidth-limit", body=pages.bandwidth_limit)
     s.page("measured-speed", body=pages.measured_speed)
-    s.page("system-limits", body=pages.system_limits)
+    s.page("insn-limit", body=pages.insn_limit)
     s.page("insn-mix", body=pages.insn_mix)
     s.page("insn-mix-2", body=pages.insn_mix_2)
     s.page("speedup-plan", body=pages.speedup_plan)
     s.bridge('SIMD 思想：数据并行', id="bridge-simd")
     with s.section('SIMD 思想：数据并行', id="part5-simd") as ss:
-        ss.page("simd-history", body=pages.simd_history)
-        ss.page("ymm", body=pages.ymm)
-        ss.page("vector-naming", body=pages.vector_naming)
-        ss.page("vector-arith", body=pages.vector_arith)
-        ss.page("vector-arith-fig", body=pages.vector_arith_fig)
-        ss.page("intrinsics", body=pages.intrinsics)
+        ss.page("simd-idea", body=pages.simd_idea)
         ss.page("vector-loop", body=pages.vector_loop)
+        ss.page("vector-loop-fig", body=pages.vector_loop_fig)
         ss.page("perf", body=pages.perf)
+        ss.page("intrinsics", body=pages.intrinsics)
     s.bridge('SIMT 思想：线程并行', id="bridge-simt")
     with s.section('SIMT 思想：线程并行', id="part5-simt") as ss:
         ss.page("gpu-why", body=pages.gpu_why)
@@ -231,9 +228,7 @@ lecture.bridge('总结与实验任务', id="bridge-wrapup")
 
 
 with lecture.section('总结与实验任务', id="wrapup") as s:
-    s.page("insn-summary", body=pages.insn_summary)
-    s.page("insn-summary-2", body=pages.insn_summary_2)
-    s.page("insn-summary-fig", body=pages.insn_summary_fig)
+    s.page("methods", body=pages.methods)
     s.page("summary", body=pages.summary)
     s.page("summary-2", body=pages.summary_2)
     s.page("exercise", body=pages.exercise)

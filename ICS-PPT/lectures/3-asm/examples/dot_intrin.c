@@ -32,14 +32,14 @@ int scalar_tail(const int *w, const int *x, int n) {
 
 __attribute__((target("avx2")))
 int dot_product_avx2(const int *w, const int *x, int n) {
-    __m256i vsum = _mm256_setzero_si256();   // vpxor %xmm1, %xmm1, %xmm1
+    __m256i vsum = _mm256_setzero_si256();                  // vpxor: the 8 sums = 0
     for (int i = 0; i <= n - 8; i += 8) {
-        __m256i va = _mm256_loadu_si256((__m256i*)&w[i]);  // vmovdqu
-        __m256i vb = _mm256_loadu_si256((__m256i*)&x[i]);  // folded into vpmulld as its memory operand
-        __m256i vprod = _mm256_mullo_epi32(va, vb);       // vpmulld
-        vsum = _mm256_add_epi32(vsum, vprod);             // vpaddd
+        __m256i va = _mm256_loadu_si256((__m256i *)&w[i]);  // vmovdqu: 8 ints of w
+        __m256i vb = _mm256_loadu_si256((__m256i *)&x[i]);  // 8 ints of x
+        __m256i vprod = _mm256_mullo_epi32(va, vb);         // vpmulld: 8 products
+        vsum = _mm256_add_epi32(vsum, vprod);               // vpaddd: 8 sums
     }
-    int sum = sum_lanes(vsum) + scalar_tail(w, x, n);  // last n % 8 elements: no vector instructions
+    int sum = sum_lanes(vsum) + scalar_tail(w, x, n);       // 8 sums added, then the tail
     return sum;
 }
 

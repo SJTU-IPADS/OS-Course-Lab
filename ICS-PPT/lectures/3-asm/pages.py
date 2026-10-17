@@ -2218,320 +2218,221 @@ def struct_exercise_2(p):
 
 # 第五部分：性能瓶颈与向量化。
 def flops_estimate(p):
-    p.title('回顾：生成一个 Token 的乘加次数与读取字节数')
+    p.title('回顾：生成一个 Token，17 亿次乘加，读 1 GB 权重')
     slide(p, r"""
-**以第二讲的 hands-on lab `nano-quant` 量化的模型为例**：
-- Qwen3-VL-2B-Instruct 的语言模型有 28 层，17.2 亿个权重；
-- 权重采用第二讲的 Q4_0 格式，每 32 个权重占 18 字节，平均每个权重 4.5 位；
-- 生成一个 Token 时，输入向量与每个权重矩阵各做一次矩阵向量乘 $y = Wx$，$y$ 的每个元素是 $W$ 的一行与 $x$ 的内积；
-- 每个权重参与 **1 次乘加**，并从内存读取 **1 次**。
+**以第二讲 hands-on lab `nano-quant` 量化的 Qwen3-VL-2B 为例**：
+- 模型有 17.2 亿个权重。生成一个 Token 时，每个权重都要与输入相乘、累加一次，就是 `dot_product` 的那一行 `sum += w[i] * x[i]`；
+- 权重以 Q4_0 存放，平均每个 4.5 位。生成每个 Token 都要把全部权重从内存读一遍。
 """)
     p.table([
         ['乘加次数', '$1.72 \\times 10^9$ 次'],
         ['从内存读取的权重', '$1.72 \\times 10^9 \\times 4.5\\text{ bit} \\approx 0.968\\text{ GB}$'],
     ], headers=['每生成 1 个 Token', '数量'])
     slide(p, r"""
-**第二讲的结论**：单请求自回归推理处于访存受限区，生成速度的上限等于内存带宽除以每个 Token 读取的权重字节数。
+**问题**：这台机器（i9-11900H）的内存每秒最多送出 51.2 GB，它每秒最多生成几个 Token？
 """)
     p.notes("""
 两个数量与第二讲的带宽估算口径相同：只计权重，KV cache 与激活的读取未计入。
-权重数 1 720 574 976 与 Q4_0 的字节数 968 249 344 取自 hands-on lab nano-quant：前者是 nano-quant plan 的汇总，后者是 tests/expected-qwen3vl.txt 中的 q4_0_nq_bytes。
-这个模型的词表矩阵 embed_tokens 同时充当输出层，生成一个 Token 时参与一次矩阵向量乘。一维的归一化系数保持 F32，共 0.5 MB。
+权重数 1 720 574 976 与 Q4_0 的字节数 968 249 344 取自 hands-on lab nano-quant：前者是 nano-quant plan 的汇总，后者是 tests/expected-qwen3vl.txt 中的 q4_0_nq_bytes。Q4_0 每 32 个权重占 18 字节：2 字节缩放因子，16 字节装 32 个 4 位的存储值。
+生成一个 Token 时，输入向量与每个权重矩阵各做一次矩阵向量乘 y = Wx，y 的每个元素是 W 的一行与 x 的内积，即第四部分的 matvec 对每一行调用 dot_product。模型有 28 层，词表矩阵同时充当输出层；一维的归一化系数保持 F32，共 0.5 MB。
+答案在下一页：51.2 ÷ 0.968 ≈ 53。
 """)
 
 
-def hw_peak(p):
-    p.title('硬件上限：i9-11900H 的峰值算力、内存带宽与平衡点')
-    p.table([
-        ['峰值算力', '$P$', '320 GFLOPS', 'Intel 出口合规指标文档（APP Metrics）'],
-        ['内存带宽', '$B$', '51.2 GB/s', 'Intel 产品规格页，双通道 DDR4-3200'],
-    ], headers=['硬件上限', '符号', '公开数值', '出处'], widths=[16, 10, 20, 54])
+def bandwidth_limit(p):
+    p.title('上限一：内存每秒只能送出 51.2 GB 的权重')
     slide(p, r"""
-- **平衡点**：$P \div B = 6.25$ FLOP/Byte，算术强度 $I$ 低于它时速率上限是 $B \times I$；
-- Qwen3-VL-2B（Q4_0）：$I \approx 3.6$ FLOP/Byte，位于访存受限区，上限 53 Token/s。
+- 每个 Token 要读 0.968 GB 权重，这台机器的内存带宽是 51.2 GB/s；
+- $51.2 \div 0.968 \approx 53$：**这台机器至多 53 Token/s**。8 个核心一起算也一样，权重送不过来；
+- 第二讲把这叫访存受限。一个线程能跑到多少？下一页实测。
 """)
-    figure(p, "roofline", 1120)
+    figure(p, "bandwidth-pipe", 1120)
     p.notes("""
-320 GFLOPS 取自 Intel 的 APP Metrics for Intel Microprocessors（Intel Core Processors，Revision 8，2026 年 1 月 6 日），这份文档为出口合规列出每个型号的 GFLOPS。
 51.2 GB/s 取自 Intel 产品规格页中 i9-11900H 的 Max Memory Bandwidth 一项，内存规格为双通道、最高 3200 MT/s。
-算术强度 I 是计算量与访存量之比（第二讲），1 次乘加计 2 次运算。I 低于平衡点的程序处于访存受限区，速率上限是 B × I；高于平衡点的程序处于算力受限区，上限是 P。
-这份文档的 GFLOPS 按 64 位浮点运算计数。本节沿用第二讲的约定，各种数据类型的乘加都按 1 次乘加 2 次运算计数。
-平衡点是第二讲的名称，第二讲中 RTX 5090 的平衡点约为 117 FLOP/Byte。
-图中的空心圆是 Qwen3-VL-2B 语言模型的带宽上限：算术强度 3.44 ÷ 0.968 ≈ 3.55 FLOP/Byte，51.2 GB/s × 3.55 FLOP/Byte ≈ 182 GFLOPS，即 51.2 ÷ 0.968 ≈ 53 Token/s。
+第二讲用 roofline 图讲同一件事：算术强度 3.6 FLOP/Byte 低于这台机器的平衡点 6.25 FLOP/Byte，程序处于访存受限区，速率上限是带宽乘以算术强度。本页只做一次除法，结论相同。
+Intel 公布的峰值算力 320 GFLOPS（APP Metrics 文档，按 64 位浮点运算计数）是 8 个核心之和，折算 1 个核心每秒 2 × 10¹⁰ 次乘加、11.6 Token/s；下一页 ollama 单线程的 10.7 Token/s 已接近它。本节不用这个数，后面按指令条数估算。
+53 Token/s 是整台机器的上限：8 个线程的 ollama 实测 31.4 Token/s，在它之下。
 """)
 
 
 def measured_speed(p):
-    p.title('实测：ollama 与 mini-ollama 各用 1 个线程的生成速度')
+    p.title('实测：ollama 10.7 Token/s，mini-ollama 0.77 Token/s')
     p.demo('mini-ollama，1 个线程', 'cd examples/mini-ollama && make run',
            files=['examples/mini-ollama/mini_ollama.c'])
     p.demo('ollama，1 个线程，只使用 CPU', 'cd examples/mini-ollama && make run-ollama')
     slide(p, r"""
-- **mini-ollama**：读取同一个模型文件的 C 程序，每个权重单独还原、相乘、累加；
-- 各用 1 个线程：ollama 的运算速率接近单核算力上限，mini-ollama 是这个上限的 1/15。
+- **mini-ollama**：读取同一个模型文件的 C 程序，一个权重一个权重地还原、相乘、累加，`matvec` 对每一行调用一次点积函数；
+- 都只用 1 个线程，都远低于 53 Token/s：内存带宽还没成为限制。**问题**：同样的乘加次数，ollama 为什么快 14 倍？
 """)
-    figure(p, "roofline-measured", 1120)
+    figure(p, "speed-bars", 1120)
     p.notes("""
 mini-ollama 的源码在 examples/mini-ollama/ 下，共约 850 行 C：mini_ollama.c 是主循环与一层之内的运算，model.c 把 GGUF 文件载入内存（Linux 上用 mmap 映射，Windows 上用 fread 读入）并找到其中的张量，tokenizer.c 是分词器。它读取第二讲的 hands-on lab nano-quant 按 q4_0 配方得到的 q4_0.gguf（974 196 320 字节），逐个 Token 生成回答。
 主循环每一轮让一个 Token 经过 28 层，每层 attention 做 4 次矩阵向量乘，feed_forward 做 3 次，输出层 1 次，生成一个 Token 共 197 次矩阵向量乘、1 720 451 072 次乘加，与 1.72 × 10⁹ 一致。这些乘加都在点积函数 vec_dot_q4_0 中完成，matvec 对每一行调用它一次；matvec 与 vec_dot_q4_0 合计占运行时间的 99.7%。
 make run 编译并运行 mini-ollama，一次约 40 秒。输出的 eval rate 是生成回答的速度，名字与 ollama run --verbose 的输出相同；matvec rate 是全部矩阵向量乘的运算速率。Makefile 使用 -O2 -fno-tree-vectorize：GCC 12 起在 -O2 下会把这个循环的一部分自动向量化，这个选项使它保持每次处理一个权重。
 make run-ollama 先执行 ollama create nq-q4-0 -f Modelfile，再执行 ollama run nq-q4-0 --verbose，需要 ollama serve 已在运行。Modelfile 让 ollama 加载同一个 q4_0.gguf，num_gpu 0 使它只使用 CPU，num_thread 1 使它只用 1 个线程，temperature 0 使每一步取分数最高的 Token，与 mini-ollama 相同。
 ollama 的回答是「我是一个虚拟助手，没有实体，但我可以用文字与你交流，为你提供帮助和解答。」前 9 个 Token 与 mini-ollama 相同；第 10 个 Token 上分数最高的两个候选相差 0.008，ollama 把激活量化为 8 位整数再计算，数值误差改变了这一步的选择。
-图中的运算速率由生成速度乘以每个 Token 的 3.44 × 10⁹ FLOP 得到：10.7 Token/s 约 37 GFLOPS，0.77 Token/s 约 2.6 GFLOPS，两者相差 14 倍。
-1 个线程在 1 个核心上运行。峰值算力 320 GFLOPS 是 8 个核心之和，1 个核心是 320 ÷ 8 = 40 GFLOPS，对应 11.6 Token/s，即图中的虚线。ollama 的 37 GFLOPS 是它的 92%，mini-ollama 的 2.6 GFLOPS 是它的 1/15。
-带宽上限 53 Token/s 是整台机器的上限。单线程的 ollama 每秒读取 10.7 × 0.968 ≈ 10.4 GB 权重，是内存带宽 51.2 GB/s 的 1/5，它的生成速度由 1 个核心的运算速率决定。
-40 GFLOPS 由按 64 位浮点运算计数的峰值算力除以核心数得到。8 位整数的向量指令每条处理的元素多于 64 位浮点指令，单个核心的实际运算速率可以高于 40 GFLOPS；92% 表示 ollama 与单核算力上限处于同一量级。
+图把三个速度画在同一个线性坐标上：53 是整台机器的带宽上限；单线程的 ollama 每秒读取 10.7 × 0.968 ≈ 10.4 GB 权重，是内存带宽的 1/5；mini-ollama 的 0.77 在图上只是一条细线。两个程序都远未碰到带宽上限，差距在 CPU 一侧，下面几页说明差在哪。
+1 个线程在 1 个核心上运行。Intel 公布的峰值算力 320 GFLOPS 折算 1 个核心 11.6 Token/s，ollama 的 10.7 是它的 92%：ollama 已经把一个核心的运算能力用满，mini-ollama 只用了 1/15。这个对照只在讲稿里，页面按指令条数解释差距。
 全部数值于 2026-10-05 在接通电源的 i9-11900H 上测得，gcc 15.2.0，ollama 0.33.2。多次运行中 ollama 在 10.4 ~ 10.9 Token/s 之间，mini-ollama 在 0.75 ~ 0.79 Token/s 之间。
 """)
 
 
-def system_limits(p):
-    p.title('瓶颈定位：内存带宽、峰值算力与指令条数各自限制的位置')
-    figure(p, "system-limits", 1120).footnote('照片从左到右来自 Wikimedia Commons 的 D-Kuru（CC BY-SA 4.0）、PantheraLeo1359531（CC BY 4.0）、Eric Gaba（CC BY-SA 4.0），经裁剪缩放。')
-    p.notes("""
-图的骨架是本节开头「CPU从内存中获取指令与数据进行计算」一页的图，CPU 展开为寄存器、运算单元与指令执行三部分。
-红色：内存带宽 51.2 GB/s 限制权重从内存到 CPU 的通路。每生成一个 Token，0.968 GB 权重经过这条通路一次，生成速度至多 53 Token/s。
-蓝色：峰值算力 320 GFLOPS 是 8 个核心的运算单元全部同时运算、每条指令都使用寄存器全部 256 位时的速率。
-绿色：单线程的 ollama 使用 1 个核心，它的一条指令使用寄存器的全部 256 位。1 个核心的算力上限是 320 ÷ 8 = 40 GFLOPS，实测约 37 GFLOPS。它计算 Q4_0 内积的函数 ggml_vec_dot_q4_0_q8_0 在本机使用的 libggml-cpu-icelake.so 中，主循环每轮 22 条指令处理 32 个权重，其中一条 vpdpbusd 完成 32 对 8 位整数的乘法并把乘积累加。
-橙色：mini-ollama 使用 1 个核心，它的一条指令处理 1 个权重，只使用寄存器的低 32 位。vec_dot_q4_0 的内层循环每轮 20 条指令处理 2 个权重。
-指令执行：CPU 每个时钟周期能开始执行的指令条数有上限，完成一次乘加需要的指令越多，每秒完成的乘加越少。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。每次乘加的指令条数：mini-ollama 是 20 ÷ 2 = 10 条，ollama 是 22 ÷ 32 ≈ 0.69 条，相差 14.5 倍；实测的生成速度相差 14 倍。
-256 位的寄存器与一条指令处理多个数据的向量指令，由后面「向量体系：SIMD 思想与 256 位 YMM 寄存器」起的几页讲解。
+def insn_limit(p):
+    p.title('上限二：一个核心每秒最多执行 1.9 × 10¹⁰ 条指令')
+    slide(p, r"""
+- **每个周期最多有 5 条指令开始执行**：核心里有几套运算部件，怎样做到的由第 4 讲说明；主频 3.8 GHz，每秒 $3.8 \times 10^9$ 个周期；
+- 每秒至多 $5 \times 3.8 \times 10^9 = 1.9 \times 10^{10}$ 条指令，**与指令做什么无关**：一条加法、一条乘法、一条移位各占一个名额；
+- 于是：**生成速度 ≤ 每秒指令条数 ÷ 每次乘加的指令条数 ÷ 每个 Token 的乘加次数**。
+
+**问题**：mini-ollama 每次乘加要执行几条指令？第二部分 `dot_product` 的循环是 7 条：5 条循环体加 `cmpl`、`jl`。
 """)
-
-
-VEC_DOT = """float vec_dot_q4_0(const uint8_t *w, const float *x, size_t n)
-{
-    float sum = 0;
-    for (size_t c = 0; c < n; c += 32, w += 18) {
-        float d = fp16[w[0] | w[1] << 8];
-        for (int j = 0; j < 16; j++) {
-            int lo = (w[2 + j] & 15) - 8, hi = (w[2 + j] >> 4) - 8;
-            sum += d * lo * x[c + j] + d * hi * x[c + j + 16];
-        }
-    }
-    return sum;
-}"""
+    p.notes("""
+核心每个周期最多有 5 条指令开始执行，这是 i9-11900H 这一代微架构的数字。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠；核心内部有多套运算部件，可以同时处理多条互不依赖的指令，第 4 讲「现代的核」一页讲它。页面与讲稿统一写「每个周期最多有 5 条指令开始执行」，说的是吞吐量。
+主频约 3.8 GHz 是运行 mini-ollama 时读取 /sys 下的 scaling_cur_freq 得到的。时钟周期是 CPU 内部电路同步工作的时间单位，3.8 GHz 时一个周期约 0.26 纳秒。主频的提高受电路延迟与功耗限制。
+每秒 1.9 × 10¹⁰ 条指令与指令的功能无关：拆出 4 位权重的 shr、and 与完成乘法的 mulss 各计 1 条。这个上限来自 CPU 的时钟，与第一个上限（内存带宽）互相独立，速度受两者中较小的那个限制。
+不等式把速度拆成三个因素，后面「解决方案」一页逐个看哪个能改。
+""")
 
 
 def insn_mix(p):
-    p.title('瓶颈分析：每次乘加执行的指令条数')
+    p.title('mini-ollama 每次乘加 10 条指令：权重要先还原')
     slide(p, r"""
-**mini-ollama 的乘加全部在点积函数 `vec_dot_q4_0` 中完成**（[mini_ollama.c](file:examples/mini-ollama/mini_ollama.c)）：
+**mini-ollama 的乘加全部在点积函数 `vec_dot_q4_0` 里**（[mini_ollama.c](file:examples/mini-ollama/mini_ollama.c)），内层循环节选：
 """)
-    p.code('c', VEC_DOT)
+    p.code('c', """float d = fp16[w[0] | w[1] << 8];                            // 这一块 32 个权重共用的缩放因子
+for (int j = 0; j < 16; j++) {
+    int lo = (w[2 + j] & 15) - 8, hi = (w[2 + j] >> 4) - 8;  // 1 个字节拆出 2 个 4 位权重
+    sum += d * lo * x[c + j] + d * hi * x[c + j + 16];       // 2 次乘加
+}""")
     slide(p, r"""
-- 与 `dot_product` 相同：`matvec` 对每一行调用它一次，`sum` 逐个累加权重与 `x` 的乘积；
-- 权重以 Q4_0 存放：一块 18 字节，缩放因子 $d$ 占 2 字节，32 个 4 位存储值占 16 字节；
-- **内层循环**每轮读取 1 字节，完成 **2 次乘加**，编译后每轮 **20 条指令**。
+- 权重是 4 位的：先从字节里拆出来、减 8、转成 `float`、乘以 $d$，才能与 `x` 相乘；
+- 编译后每轮 **20 条指令**完成 **2 次乘加**：4 条做乘加，13 条还原权重，3 条控制循环。**每次乘加 10 条**，`dot_product` 的循环是 7 条。
 """)
     p.notes("""
-vec_dot_q4_0 求 n 个 Q4_0 权重与 x 的内积，w 指向这一行的第一块。matvec 计算 y = Wx：W 按行存放，每行 cols 个权重占 cols ÷ 32 块，matvec 对每一行调用一次 vec_dot_q4_0，与第四部分 matvec 对每一行调用 dot_product 的结构相同。
-外层循环每次处理一块，w 随之前进 18 字节；内层循环每轮处理一块中的 1 个字节。
+vec_dot_q4_0 求 n 个 Q4_0 权重与 x 的内积，w 指向这一行的第一块。matvec 计算 y = Wx：W 按行存放，每行 cols 个权重占 cols ÷ 32 块，matvec 对每一行调用一次 vec_dot_q4_0，与第四部分 matvec 对每一行调用 dot_product 的结构相同。页面是函数的节选，完整的函数在 mini_ollama.c 中：外层循环每次处理一块，c 前进 32、w 前进 18 字节；内层循环每轮处理一块中的 1 个字节。
 每块的前 2 字节 w[0]、w[1] 是半精度的缩放因子 d。fp16 是 65 536 项的表，fp16[h] 是 16 位半精度位模式 h 表示的 float 值，由 model.c 在载入模型时填好；w[0] | w[1] << 8 按小端序把两个字节拼成 16 位。
 其后 16 字节中，第 j 字节的低 4 位与高 4 位分别是第 j 个与第 j + 16 个权重的存储值 q，权重等于 d × (q − 8)：lo 与 hi 是 q − 8，乘以 d 得到权重。x[c + j] 与 x[c + j + 16] 是与这两个权重相乘的激活值。
 dot_product 的权重是一个 int，读出即可相乘；这里的权重要先还原：读出字节，拆出 4 位，减 8，转换为 float，乘以 d。
 内层循环的指令取自 objdump -d mini-ollama 中的 vec_dot_q4_0，由 gcc -O2 -fno-tree-vectorize 生成，共 20 条指令、75 字节，每轮处理 1 字节权重，完成 2 次乘加，平均每次乘加 10 条。
-完成乘法与累加的是 4 条：2 条 mulss 各从内存读取 1 个激活值并相乘，2 条 addss 累加。其余 16 条读取权重（1 条）、拆出两个 4 位存储值（6 条）、把它们转换为 float 并乘以缩放因子 d（6 条）、控制循环（3 条）。
+完成乘法与累加的是 4 条：2 条 mulss 各从内存读取 1 个激活值并相乘，2 条 addss 累加。还原权重的 13 条：读取权重 1 条，拆出两个 4 位存储值 6 条，转换为 float 并乘以缩放因子 d 6 条。控制循环 3 条。
+dot_product 的 7 条是第二部分 -Og 清单的循环体 5 条加 cmpl、jl；它的权重是现成的 int，没有还原的开销。
 """)
 
 
 def insn_mix_2(p):
-    p.title('瓶颈分析：每次乘加执行的指令条数')
-    slide(p, r"""
-**按指令条数估算 mini-ollama 的速度上限**：
-""")
+    p.title('算一算：mini-ollama 的上限是 1.1 Token/s，实测 0.77')
     p.table([
-        ['每次乘加的指令条数', '每轮循环 20 条指令，完成 2 次乘加', '$20 \\div 2 = 10$ 条'],
+        ['每次乘加的指令条数', '每轮 20 条指令，完成 2 次乘加', '$20 \\div 2 = 10$ 条'],
         ['每个周期至多完成的乘加', '每个周期最多有 5 条指令开始执行', '$5 \\div 10 = 0.5$ 次'],
-        ['每秒至多完成的乘加', '运行时主频约 3.8 GHz', '$0.5 \\times 3.8 \\times 10^9 = 1.9 \\times 10^9$ 次'],
+        ['每秒至多完成的乘加', '主频约 3.8 GHz', '$0.5 \\times 3.8 \\times 10^9 = 1.9 \\times 10^9$ 次'],
         ['生成速度的上限', '每个 Token $1.72 \\times 10^9$ 次乘加', '$1.9 \\div 1.72 \\approx 1.1$ Token/s'],
     ], headers=['计算步骤', '依据', '算式与结果'])
     slide(p, r"""
-- **实测** 0.77 Token/s，是这个上限的 70%；
-- **ollama** 每次乘加约 0.69 条指令，条数相差 14.5 倍，实测速度相差 14 倍。
+- **实测** 0.77 Token/s，是上限的 70%：指令之间还要互相等待（第 4 讲）；
+- **ollama** 每次乘加只用 0.69 条指令（一条向量指令处理 32 个权重，下一节），按同样的算式上限是 16 Token/s，实测 10.7。
 
-**结论**：这个上限来自 CPU 的时钟：主频是每秒的周期数，每个周期最多有 5 条指令开始执行，每秒能执行的指令条数因此有上限，与指令的功能无关。两个程序的速度差距主要来自每次乘加的指令条数，减少条数可以提高运算速率。
+**结论**：14 倍的差距来自每次乘加的指令条数：10 条对 0.69 条。减少条数，速度就上去。
 """)
     p.notes("""
-核心每个周期最多有 5 条指令开始执行。一条指令从开始执行到得出结果需要 1 个或几个周期（mulss 需要 4 个周期），多条指令的执行过程相互重叠。核心内部有多套运算部件，可以同时处理多条互不依赖的指令，由第四讲第五部分的「超标量」一页讲解。
 每个周期 5 条、每次乘加 10 条，每个周期至多完成 0.5 次乘加，即每轮循环至少 4 个周期。cmp 与 jne 在核心内部合并为 1 条，按 19 条计算每轮至少 3.8 个周期，页面按 20 条估算。
-主频约 3.8 GHz 是运行 mini-ollama 时读取 /sys 下的 scaling_cur_freq 得到的。每秒 1.9 × 10⁹ 次乘加即 3.8 GFLOPS，除以每个 Token 的 1.72 × 10⁹ 次乘加得到 1.1 Token/s。
-时钟周期是 CPU 内部电路同步工作的时间单位，主频 3.8 GHz 时一个周期约 0.26 纳秒。一个核心每秒至多执行 5 × 3.8 × 10⁹ = 1.9 × 10¹⁰ 条指令，这个数与指令的功能无关：拆出 4 位权重的 shr、and 与完成乘法的 mulss 各计 1 条。mini-ollama 每次乘加的 10 条指令中，8 条用于读取权重、还原为 float 权重与控制循环。
-主频的提高受电路延迟与功耗限制，提高运算速率因此依靠减少每次乘加的指令条数与增加核心数。
-这个估算只计指令条数，给出的是上限。指令之间的先后依赖（累加 sum 的 addss 需要 4 个周期，下一轮的累加在它完成后才能开始）、运算单元的数量、读取内存的延迟都会使实际速度低于它；cvtsi2ss 在这个微架构上分为 2 个微操作，实际计入的条数也多于 20。实测 0.77 Token/s（matvec rate 2.64 GFLOPS）是上限的 70%，各项原因所占的比例没有逐项测量。
-ollama 的 ggml_vec_dot_q4_0_q8_0（icelake 版本）主循环每轮 22 条指令完成 32 次乘加，平均每次乘加 22 ÷ 32 ≈ 0.69 条。10 ÷ 0.69 ≈ 14.5，实测生成速度 10.7 ÷ 0.77 ≈ 14。
+每秒 1.9 × 10⁹ 次乘加除以每个 Token 的 1.72 × 10⁹ 次乘加得到 1.1 Token/s（按第二讲 1 次乘加 2 次运算的口径是 3.8 GFLOPS）。
+这个估算只计指令条数，给出的是上限。指令之间的先后依赖（累加 sum 的 addss 需要 4 个周期，下一轮的累加在它完成后才能开始）、运算单元的数量、读取内存的延迟都会使实际速度低于它；cvtsi2ss 在这个微架构上分为 2 个微操作，实际计入的条数也多于 20。实测 0.77 Token/s 是上限的 70%，各项原因所占的比例没有逐项测量。第 4 讲讲指令之间的等待（流水线的停顿）。
+ollama 的 ggml_vec_dot_q4_0_q8_0（icelake 版本）主循环每轮 22 条指令完成 32 次乘加，平均每次乘加 22 ÷ 32 ≈ 0.69 条，其中一条 vpdpbusd 完成 32 对 8 位整数的乘法并累加。按同样的算式：5 ÷ 0.69 ≈ 7.2 次乘加每周期，× 3.8 × 10⁹ ≈ 2.75 × 10¹⁰ 次每秒，÷ 1.72 × 10⁹ ≈ 16 Token/s；实测 10.7 是它的 2/3。
+10 ÷ 0.69 ≈ 14.5，实测生成速度 10.7 ÷ 0.77 ≈ 14：两个程序的差距由每次乘加的指令条数解释。
 """)
 
 
 def speedup_plan(p):
-    p.title('解决方案：生成速度的四个因素与两个提速方案')
+    p.title('解决方案：两个可以改变的因素，两个方案')
     slide(p, r"""
-**估算速度上限的四个因素中有两个可以改变，对应接下来讲解的两个方案**：
+**生成速度 ≤ 每秒指令条数 ÷ 每次乘加的指令条数 ÷ 每个 Token 的乘加次数**，两个因素可以改变：
 """)
     p.table([
-        ['每次乘加的指令条数', '每轮循环 20 条指令，完成 2 次乘加', '**↓ 可以降低**（方案 1）'],
-        ['每个周期至多完成的乘加', '每个周期最多有 5 条指令开始执行', '**↑ 可以提高**，需要改变硬件（方案 2）'],
-        ['每秒至多完成的乘加', '运行时主频约 3.8 GHz', '— 难以提高，受电路延迟与功耗限制'],
-        ['生成速度的上限', '每个 Token $1.72 \\times 10^9$ 次乘加', '— 保持不变，由模型决定'],
-    ], headers=['计算步骤', '依据', '提高速度的方向'])
+        ['每次乘加的指令条数', '10 条', '**↓ 一条指令做多次乘加**：SIMD（方案 1）'],
+        ['每秒执行的指令条数', '1 个核心，$1.9 \\times 10^{10}$ 条', '**↑ 更多核心同时执行**：GPU（方案 2）'],
+        ['每个 Token 的乘加次数', '$1.72 \\times 10^9$ 次', '由模型决定'],
+    ], headers=['因素', 'mini-ollama 现在', '方向'])
     slide(p, r"""
-1. **一条指令完成多次乘加**：每次乘加的指令条数随之降低，即 SIMD（单指令多数据）；
-2. **提高每个周期完成的乘加次数**：需要更多的运算单元，即 GPU（CUDA）。
+1. **SIMD（单指令多数据）**：一条指令同时算 8 个数，每次乘加的指令条数降到 1 以下；
+2. **GPU（CUDA）**：上万个运算核心同时执行，每秒执行的指令条数提高几个数量级。
+
+两个方案提高的都是运算速率；权重每个 Token 读一遍的 **53 Token/s 仍是这台机器的上限**，后面的存储层次一讲再谈。
 """)
     p.notes("""
-表的前两列与「瓶颈分析：每次乘加执行的指令条数」一页相同，第三列说明每个因素能否改变。
-每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本节接下来从「向量演进：从 MMX、SSE 到 AVX 与 AVX-512」起讲解这类指令。
-每个周期开始执行的指令条数由硬件决定，一个核心是 5 条。提高它需要更多同时工作的运算单元。i9-11900H 有 8 个核心，ollama 用 8 个线程时实测 31.4 Token/s，是 1 个线程的 2.9 倍；GPU 的运算核心数量比 CPU 多几个数量级，由「线程并行：CPU 多核与 GPU」起的各页讲解。
-主频的提高受电路延迟与功耗限制。每个 Token 的乘加次数由模型的权重数决定，推理程序不改变它。
-两个方案提高的都是运算速率，在 CPU 上共同的上限是「硬件上限」一页的带宽上限 53 Token/s。GPU 使用自己的显存，它的带宽上限由显存带宽决定（第二讲）。
-向量指令各页沿用第二部分的整数内积 sum += w[i] * x[i]；dot.c 的 -O2 标量循环每次乘加执行 6 条指令。
+不等式是「上限二」一页的那一个，表按三个因素逐个看能否改变。
+每次乘加的指令条数由程序使用的指令决定。256 位向量寄存器可以存放 8 个 32 位整数或 32 个 8 位整数，一条向量指令对其中每个元素执行同一运算，这个条数降到 1 以下，ollama 的 0.69 条即由此得到。本节接下来从「SIMD：一条指令，多条数据」起讲解这类指令。
+每秒执行的指令条数由硬件决定：一个核心每个周期 5 条、主频 3.8 GHz。主频的提高受电路延迟与功耗限制，提高它靠更多同时工作的核心。i9-11900H 有 8 个核心，ollama 用 8 个线程时实测 31.4 Token/s，是 1 个线程的 2.9 倍；GPU 的运算核心数量比 CPU 多几个数量级，由「线程并行：CPU 多核与 GPU」起的各页讲解。
+每个 Token 的乘加次数由模型的权重数决定，推理程序不改变它。
+两个方案提高的都是运算速率，在 CPU 上共同的上限是「上限一」一页的 53 Token/s。GPU 使用自己的显存，它的带宽上限由显存带宽决定（第二讲）。
+向量指令各页沿用全讲的整数内积 sum += w[i] * x[i]，对照的是 dot.c 的 -O2 标量循环（每次乘加 6 条指令）。
 """)
 
 
-def simd_history(p):
-    p.title('向量演进：从 MMX、SSE 到 AVX 与 AVX-512')
+def simd_idea(p):
+    p.title('SIMD：一条指令，多条数据')
     slide(p, r"""
-**x86 SIMD 向量扩展指令集演进脉络**：
-1. **MMX（1996 年）**：引入 64 位宽向量运算（借用 x87 浮点寄存器），支持 8/16 位整型；
-2. **SSE 系列（1999–2006 年）**：引入 16 个独立的 128 位寄存器 `%xmm0` ~ `%xmm15`，全面支持单双精度浮点与整型；
-3. **AVX / AVX2（2011–2013 年）**：将寄存器拓宽至 **256 位**（`%ymm0` ~ `%ymm15`），引入 AVX2 整型向量算术与 FMA 乘加融合；
-4. **AVX-512（2016 年至今）**：进一步拓宽至 **512 位**（`%zmm0` ~ `%zmm31`），寄存器增至 32 个，新增 8 个专用的掩码寄存器 `%k0` ~ `%k7`。
+**第二部分的循环每轮做 1 次乘加**：`imull` 把 1 个 `w[i]` 乘以 1 个 `x[i]`，积放在 32 位的 `%ecx` 里；4096 次乘加要走 4096 轮。
+
+**把 8 个 `int` 并排放进一个 256 位的寄存器**，一条指令对这 8 个数做同一种运算：一条 `vpmulld` 完成 8 次乘法，一条 `vpaddd` 完成 8 次加法。这就是 **SIMD**（Single Instruction, Multiple Data）。
 """)
-    figure(p, "simd-widths", 1120)
-    p.notes('x86 架构 SIMD 向量扩展指令集的代际演进历程。图中各代寄存器的宽度画成长条，长度与位数成正比。')
-
-
-def ymm(p):
-    p.title('向量体系：SIMD 思想与 256 位 YMM 寄存器')
+    figure(p, "simd-idea", 1120)
     slide(p, r"""
-**SIMD（Single Instruction, Multiple Data）执行模型**：
-- 处理器控制单元执行一条向量指令，多个并行算术通道同时对向量中的各个独立数据分量执行相同的操作。
-
-**x86-64 YMM 寄存器体系**：
-- 硬件提供 16 个 256 位宽度的向量寄存器：`%ymm0` ~ `%ymm15`；
-- **向下兼容映射**：每个 `%ymm` 寄存器的低 128 位映射为同名的 `%xmm` 寄存器；
-- 单个 256 位 `%ymm` 寄存器可同时封装容纳：
-  - **8 个 32 位整数（int32）** $\leftarrow$ 本节的 `dot_product`；
-  - 或 8 个单精度浮点数（float32）；
-  - 或 4 个 64 位整数/双精度浮点数；
-  - 或 32 个 8 位整数（int8 / 字符）。
-""")
-    p.notes('单指令多数据流（SIMD）思想、256 位 YMM 寄存器结构与向下兼容映射。')
-
-
-def vector_naming(p):
-    p.title('向量命名：向量指令助记符的组成')
-    slide(p, r"""
-**向量指令助记符命名规律**：
-- `v` 前缀：代表采用 VEX 编码的向量扩展指令，可以写三个操作数，最后一个是目的操作数；
-- `p` 标记：代表 Packed（打包的向量整型数据）；
-- 运算操作名称：如 `add`（加法）、`mul`（乘法）、`xor`（异或）；
-- 元素位宽类型后缀：
-  - `b`（byte，8 位整型）；`w`（word，16 位整型）；
-  - `d`（doubleword，32 位整型）；`q`（quadword，64 位整型）。
-- 实例：`vpmulld` = Vector Packed Multiply Low Doubleword（保留乘积低 32 位）。
-""")
-    figure(p, "mnemonic", 1120)
-    p.notes("""
-向量指令助记符由前缀、数据类别、运算名称与元素位宽后缀组成。
-三操作数的例子：vpmulld (%rsi,%rax), %ymm2, %ymm0 把内存中的 8 个整数与 %ymm2 的对应元素相乘，结果写入最后一个操作数 %ymm0，%ymm2 的内容保持不变。
-""")
-
-
-def vector_arith(p):
-    p.title('向量算术：vmovdqu、vpmulld 与 vpaddd 指令')
-    slide(p, r"""
-**向量加载：`vmovdqu (%rdi,%rax), %ymm2`**
-- 从内存连续读取 256 位（32 字节，即 8 个 `int32`）到寄存器 `%ymm2`；
-- `vmovdqu`（Unaligned）对内存地址没有对齐要求；`vmovdqa`（Aligned）要求地址是 32 的倍数，否则 CPU 触发异常，Linux 下进程收到 `SIGSEGV` 信号。
-
-**向量乘法：`vpmulld (%rsi,%rax), %ymm2, %ymm0`**
-- 同时完成 8 对 32 位整数的乘法，8 个乘积的低 32 位写入 `%ymm0`。
-
-**向量加法：`vpaddd %ymm0, %ymm1, %ymm1`**
-- `%ymm0` 中的 8 个乘积分别加到 `%ymm1` 中的 8 个累加和上。
+x86-64 的 AVX2 提供 16 个这样的寄存器 `%ymm0` ~ `%ymm15`，以及对它们运算的向量指令。
 """)
     p.notes("""
-向量内积循环体中的三条 AVX2 指令：加载、乘法、加法。
-vmovdqa 在地址未对齐时触发通用保护异常（#GP）。vmovdqu 读取的 32 字节跨越两个缓存行时，由硬件分两次读取。
-""")
-
-
-def vector_arith_fig(p):
-    p.title('向量算术：vmovdqu、vpmulld 与 vpaddd 指令')
-    slide(p, r"""
-**每轮循环的向量运算**：$(s_7, \dots, s_1, s_0) \leftarrow (s_7, \dots, s_1, s_0) + (w_{i+7}\,x_{i+7}, \dots, w_{i+1}\,x_{i+1}, w_i\,x_i)$
-""")
-    figure(p, "lanes-mul-add", 1120)
-    p.notes("""
-公式中的 8 个分量同时计算：vpmulld 得到 8 个乘积，vpaddd 把它们加到 8 个累加和上，i 每轮增加 8。
-全部循环结束后，8 个累加和相加得到内积：s₀ + s₁ + … + s₇。
-""")
-
-
-def intrinsics(p):
-    p.title('内建函数：AVX2 Intrinsics 向量点积')
-    slide(p, r"""
-**AVX2 内积核心源码**：
-""")
-    p.code('c', """#include <immintrin.h>
-__m256i vsum = _mm256_setzero_si256();   // vpxor %xmm1, %xmm1, %xmm1
-for (int i = 0; i <= n - 8; i += 8) {
-    __m256i va = _mm256_loadu_si256((__m256i*)&w[i]);  // vmovdqu
-    __m256i vb = _mm256_loadu_si256((__m256i*)&x[i]);  // folded into vpmulld as its memory operand
-    __m256i vprod = _mm256_mullo_epi32(va, vb);       // vpmulld
-    vsum = _mm256_add_epi32(vsum, vprod);             // vpaddd
-}
-int sum = sum_lanes(vsum) + scalar_tail(w, x, n);  // last n % 8 elements: no vector instructions""")
-    slide(p, r"""
-**Intrinsics 与汇编指令的对应关系**：
-- `__m256i` 数据类型 $\longleftrightarrow$ 硬件 256 位 YMM 向量寄存器；
-- `_mm256_loadu_si256` $\longleftrightarrow$ `vmovdqu` 向量非对齐加载指令；
-- `_mm256_mullo_epi32` $\longleftrightarrow$ `vpmulld` 并行低位双字乘法指令；
-- `_mm256_add_epi32` $\longleftrightarrow$ `vpaddd` 并行双字累加指令。
-""")
-    p.notes("""
-Intrinsics 是编译器在 <immintrin.h> 中提供的内建函数，写法与 C 函数调用相同，编译时通常对应特定的向量指令。
-源码取自 examples/dot_intrin.c 的 dot_product_avx2。这个函数带有 __attribute__((target("avx2")))，只有它使用 AVX2 指令，编译时不需要 -mavx2；main 用 __builtin_cpu_supports("avx2") 选择版本，不支持 AVX2 的机器执行标量版本。编译运行：cd examples; gcc -O2 dot_intrin.c -o dot_intrin; ./dot_intrin，输出 avx2 3182690 与 check 3182690 两行，check 一行是标量循环的结果。
-_mm256_setzero_si256 对应的 vpxor 写的是 %xmm1：带 VEX 前缀的指令写 128 位寄存器时把同名 YMM 寄存器的高 128 位清零，%ymm1 的 256 位因此全部为 0。
-循环条件 i <= n - 8 使每一轮都有完整的 8 个元素。循环结束后，sum_lanes 把 vsum 中的 8 个累加和相加；n 不是 8 的倍数时，剩余的 n % 8 个元素由 scalar_tail 处理。
-scalar_tail 是一个普通的 C 循环，从下标 n / 8 * 8 起每次处理一个元素，编译后只有标量指令（movl、imull、addl）。它带有 noinline 属性，保持为单独的函数；被内联进 dot_product_avx2 之后，gcc 会把这个循环也向量化。两个函数的定义都在 examples/dot_intrin.c 中，n 是 8 的倍数时 scalar_tail 返回 0。
+标量指令的操作数是 1 个数：imull 读 1 个 w[i]，乘以 %ecx 里的 1 个 x[i]，写回 1 个积。向量指令的操作数是并排的 8 个数：8 个乘法器同时工作，一条指令写回 8 个积。图的右边是左边的图画了 8 遍。
+名字的读法：v 表示向量指令，p 表示 packed（打包在一起的多个整数），d 表示每个数是 32 位（doubleword）。vpmulld 是 8 个 32 位整数的乘法，l 表示保留积的低 32 位；vpaddd 是 8 个 32 位整数的加法。向量指令写三个操作数，最后一个是目的操作数。
+%ymm0 ~ %ymm15 各 256 位，可以装 8 个 int、8 个 float、4 个 64 位的数或 32 个 8 位整数，本节只用 8 个 int；低 128 位是同名的 %xmm 寄存器。
+这类指令随 x86 的几代扩展加入：MMX（1996 年，64 位）、SSE（128 位，%xmm）、AVX 与 AVX2（2011–2013 年，256 位，%ymm）、AVX-512（512 位，%zmm0 ~ %zmm31）。本节的指令属于 AVX2，Intel 自 2013 年的 Haswell、AMD 自 2015 年起支持。
 """)
 
 
 def vector_loop(p):
-    p.title('向量循环：AVX2 向量主循环的汇编指令')
-    p.demo('编译 dot_intrin.c，查看向量循环',
+    p.title('向量循环：同一个 dot.c，每轮 8 次乘加')
+    p.demo('加上 -mavx2 编译 dot.c，查看向量循环',
            """cd examples
-gcc -O2 -S dot_intrin.c -o - | sed -f asm.sed | sed -n '/vpxor/,/jg/p;/jg/q'""",
-           output="""	vpxor	%xmm1, %xmm1, %xmm1
-.L9:
-	vmovdqu	(%rdi,%rax,4), %ymm0
-	vpmulld	(%rsi,%rax,4), %ymm0, %ymm0
-	addq	$8, %rax
-	vpaddd	%ymm1, %ymm0, %ymm0
-	vmovdqa	%ymm0, %ymm1
-	cmpl	%eax, %edx
-	jg	.L9""",
-           files=['examples/dot_intrin.c', 'examples/asm.sed'])
+gcc -O2 -mavx2 -ftree-vectorize -fcf-protection=none -S dot.c -o - \\
+    | sed -f asm.sed | sed -n '/vmovdqu/,/jne/p;/jne/q'""",
+           files=['examples/dot.c', 'examples/asm.sed'])
+    p.code('text', """# gcc -O2                              # gcc -O2 -mavx2
+.L3:                                   .L4:
+    movl    (%rdi,%rax,4), %ecx            vmovdqu (%rcx,%rax), %ymm2
+    imull   (%rsi,%rax,4), %ecx            vpmulld (%rsi,%rax), %ymm2, %ymm0
+    addq    $1, %rax                       addq    $32, %rax
+    addl    %ecx, %r8d                     vpaddd  %ymm0, %ymm1, %ymm1
+    cmpq    %rax, %rdx                     cmpq    %rdx, %rax
+    jne     .L3                            jne     .L4""")
     slide(p, r"""
-**单循环吞吐量变化**：
-- 循环体从 `.L9` 到 `jg`，由 7 条指令构成，每轮迭代处理 **32 字节（8 个 int32 元素）**；
-- 每完成 1 个内积元素的计算，平均指令消耗从标量的 6 条降为 **$7 / 8 = 0.875\text{ 条指令}$**。
+- **逐行对应**：`vmovdqu` 读 8 个 `int`，`vpmulld` 乘 8 对，`vpaddd` 加 8 对，`%rax` 每轮加 32；
+- **循环体同样是 6 条指令**，每轮从 1 次乘加变为 8 次：4096 次乘加从 4096 轮变为 512 轮；
+- `%ymm1` 里是 8 个部分和，循环结束后相加得到 `sum`。
 """)
     p.notes("""
-演示的输出是 dot_product_avx2 中从 vpxor 到 jg 的一段（gcc 15.2.0）：asm.sed 删去汇编伪指令，sed -n '/vpxor/,/jg/p;/jg/q' 打印从第一个含 vpxor 的行到第一个含 jg 的行，随后退出。这一段不含函数入口，输出与是否使用 -fcf-protection=none 无关，命令中省去了这个选项。
-vpxor 在进入循环之前执行一次，把 %ymm1 中的 8 个累加和清零。它之前还有 leal -7(%rdx), %edx 与 xorl %eax, %eax，使 %edx 等于 n - 7，%eax 中的 i 等于 0；再往前是 cmpl $7, %edx 与 jle，n 小于 8 时不进入循环。
-循环体的 7 条指令中，vmovdqu、vpmulld、vpaddd 对应源码的 4 个 Intrinsics（x 的加载并入 vpmulld 的内存操作数），addq、cmpl、jg 控制循环：addq 使 i 增加 8，cmpl 计算 (n - 7) - i，jg 在结果大于 0 时跳转，条件与源码的 i <= n - 8 相同。操作数 (%rdi,%rax,4) 是基址比例变址寻址，i 每轮增加 8，地址增加 32 字节。
-vmovdqa %ymm0, %ymm1 在两个寄存器之间拷贝 256 位，源码中没有对应的语句：vpaddd 把新的累加和写入 %ymm0，这一条把它拷贝到下一轮使用的 %ymm1。寄存器之间的拷贝没有地址对齐的要求。
-寄存器编号、标号与指令条数取决于编译器版本与优化选项。
+两段清单都由 gcc 11.4 编译 examples/dot.c 得到，asm.sed 删去伪指令。左边是 gcc -O2 -fcf-protection=none，循环体是 .L3 之后的 6 条：与第二部分 -Og 的循环相比少了 movslq（下标直接用 64 位的 %rax），进入循环前先检查一次 n。右边再加上 -mavx2 -ftree-vectorize，循环体是 .L4 之后的 6 条。-mavx2 允许编译器使用 AVX2 指令，-ftree-vectorize 打开自动向量化（GCC 12 起 -O2 自带这个选项，旧版本要写出来）：编译器把每轮处理 1 个元素的循环改写成每轮处理 8 个元素。寄存器编号与标号随编译器版本变化。
+两个清单里 w 与 x 的地址寄存器由编译器分配：标量清单 %rdi 是 w、%rsi 是 x、%r8d 是 sum；向量清单的入口把 %rdi 拷贝到 %rcx，%rcx 是 w、%rsi 是 x，8 个部分和在 %ymm1。
+标量循环的 %rax 是下标 i，内存操作数 (%rdi,%rax,4) 带比例因子 4；向量循环的 %rax 是字节偏移，每轮加 32，操作数 (%rcx,%rax) 没有比例因子，%rdx 是 8 的整数倍个元素占的字节数。
+vmovdqu 的 u 表示 unaligned，地址可以是任意值；对应的 vmovdqa 要求地址是 32 的倍数，否则触发异常，Linux 下进程收到 SIGSEGV。vpmulld 的一个操作数直接是内存，x 的 8 个数由它自己读入，与第一部分 imull 的内存操作数相同。
+进入循环前 vpxor 把 %ymm1 清零。循环只处理 8 的整数倍个元素：n 小于 8 时跳过它，剩下的 n % 8 个元素由循环之后的标量指令完成，8 个部分和也在循环之后相加（vextracti128、vpaddd 等几条指令），本讲不展开。
+演示的命令打印从第一个 vmovdqu 到第一个 jne 的几行，即右边的循环体。没有 AVX2 的机器上可以编译，运行时会收到 SIGILL。
+""")
+
+
+def vector_loop_fig(p):
+    p.title('一轮向量循环：8 个通道同时乘、同时加')
+    slide(p, r"""
+**每轮**：8 个积加到 8 个部分和上；循环结束后 $s_0 + s_1 + \dots + s_7$ 得到 `sum`。
+""")
+    figure(p, "lanes-mul-add", 1120)
+    p.notes("""
+图是向量循环一轮的数据流：vmovdqu 读 8 个 w 到 %ymm2；vpmulld 从内存读 8 个 x，与 %ymm2 的对应元素相乘，8 个积写入 %ymm0；vpaddd 把 %ymm0 的 8 个积加到 %ymm1 的 8 个部分和上。8 个乘法器与 8 个加法器同时工作，三条指令完成 8 次乘加。
+8 个部分和各自累加下标模 8 相同的那些积：s₀ 累加 w₀x₀、w₈x₈、w₁₆x₁₆……，循环结束后 s₀ + … + s₇ 才是内积。这一步由循环之后的几条指令完成，本讲不展开。
 """)
 
 
 def perf(p):
-    p.title('性能测量：使用 perf 测量指令数与周期数')
+    p.title('实测：指令数降到 1/8，耗时降到 1/6')
     slide(p, r"""
-**实验设置**：数组维度 $n = 4096$，循环调用 100,000 次，共约 4.1 亿次乘加。
+**实验设置**：上面两个版本的 `dot.c`，$n = 4096$，各调用 100,000 次，共约 4.1 亿次乘加。
 """)
     p.demo('构建两个版本并用 perf 计数',
            """cd examples && make
@@ -2552,8 +2453,34 @@ dot_scalar 是 -O2 编译的标量版本，dot_avx2 是 -O2 -mavx2 编译的 AVX
 perf stat 把计数结果写到标准错误，2>&1 把它并入标准输出，grep -v 删去其中的空行与 seconds user、seconds sys 两行。
 perf 需要内核允许普通用户读取硬件计数器：/proc/sys/kernel/perf_event_paranoid 不大于 1。Ubuntu 默认是 4，此时 perf 报告 No supported events found；课前由授课人执行一次 sudo sysctl kernel.perf_event_paranoid=1。
 计数与耗时随 CPU 型号和频率变化，页面上的数值来自 i9-11900H。
-dot_avx2 由 dot.c 加上 -mavx2 编译得到，向量循环由编译器生成，共 6 条指令，比「向量循环」一页的循环少一条 vmovdqa。
+dot_avx2 由 dot.c 加上 -mavx2 -ftree-vectorize 编译得到，循环体就是「向量循环」一页右边的 6 条。
 下方的图把两组数画成横向长条：指令数从 24.6 亿减少到 3.1 亿，比值 7.91（标量版 24.6 亿条指令除以每次乘加 6 条，对应 4.1 亿次乘加）；耗时从 0.150 s 降至 0.024 s，比值 6.25。
+耗时的比值小于指令数的比值：按实测的周期数，标量循环每轮约 1.6 个周期，向量循环每轮约 2.0 个周期，每个周期开始执行的指令条数从 3.82 降到 3.02。vpmulld 在这个微架构上分为 2 个微操作，占两个运算单元的位置，是每轮多出的那部分。
+""")
+
+
+def intrinsics(p):
+    p.title('编译器不会向量化时：用 intrinsics 自己写')
+    slide(p, r"""
+**每个 intrinsic 是一个 C 函数，对应一条向量指令**（`<immintrin.h>`）；hands-on lab `parallel-dot` 的第一步用它写 Q4_0 的内积。
+""")
+    p.code('c', """__m256i vsum = _mm256_setzero_si256();                  // vpxor: the 8 sums = 0
+for (int i = 0; i <= n - 8; i += 8) {
+    __m256i va = _mm256_loadu_si256((__m256i *)&w[i]);  // vmovdqu: 8 ints of w
+    __m256i vb = _mm256_loadu_si256((__m256i *)&x[i]);  // 8 ints of x
+    __m256i vprod = _mm256_mullo_epi32(va, vb);         // vpmulld: 8 products
+    vsum = _mm256_add_epi32(vsum, vprod);               // vpaddd: 8 sums
+}
+int sum = sum_lanes(vsum) + scalar_tail(w, x, n);       // 8 sums added, then the tail""")
+    p.demo('编译运行 dot_intrin.c',
+           'cd examples && gcc -O2 dot_intrin.c -o dot_intrin && ./dot_intrin',
+           output="""avx2   3182690
+check  3182690""",
+           files=['examples/dot_intrin.c'])
+    p.notes("""
+Intrinsics 是编译器在 <immintrin.h> 中提供的内建函数，写法与 C 函数调用相同，编译时对应特定的向量指令：__m256i 是一个 256 位的值，放在 %ymm 寄存器里；_mm256_loadu_si256 对应 vmovdqu，_mm256_mullo_epi32 对应 vpmulld，_mm256_add_epi32 对应 vpaddd。x 的加载被编译器并入 vpmulld 的内存操作数。
+代码取自 examples/dot_intrin.c 的 dot_product_avx2，与文件逐行相同。这个函数带有 __attribute__((target("avx2")))，编译时不需要 -mavx2；main 用 __builtin_cpu_supports("avx2") 选择版本，没有 AVX2 的机器执行标量版本，输出的第一行是 scalar 3182690。sum_lanes 把 8 个部分和相加，scalar_tail 逐个处理最后 n % 8 个元素（noinline 使它保持标量）；N = 4100 不是 8 的倍数，尾部也会执行。check 一行是标量循环的结果。
+编译器能向量化 dot.c 这样的简单循环。hands-on lab parallel-dot 第一步的 vec_dot_q4_0 要先从每个字节里拆出两个 4 位的存储值、减 8、转换为 float 再乘以缩放因子，编译器对这样的循环只能部分向量化，实验要求用 intrinsics 写出它。
 """)
 
 
@@ -2577,7 +2504,7 @@ def gpu_why(p):
 SIMD 是一条指令处理多个数据，指令中写明数据的个数；SIMT 是一条指令交给一组线程执行，每个线程有自己的寄存器，程序按一个线程编写。这一组线程在 NVIDIA GPU 上是 32 个，称为 Warp，由下一页讲解。
 CPU 的多核属于 MIMD（多指令流多数据流）：每个硬件线程有自己的 %rip，各自取指、译码、执行。多个线程运行同一段代码、各处理数据的一段时，各线程的进度互不相关，不共用指令。i9-11900H 有 8 个核心，每个核心 2 个硬件线程，至多 16 个线程同时运行；ollama 用 8 个线程实测 31.4 Token/s，是 1 个线程的 2.9 倍。
 RTX 5090 的 21760 个运算核心是 NVIDIA 规格表中的 CUDA Cores，等于 170 个 SM 乘以每个 SM 的 128 个。一个 CUDA 核心只完成一个线程的一次运算，取指令、译码与调度由同组的 32 个核心共用一套逻辑；CPU 的每个核心各有一套完整的控制逻辑与缓存。两种核心的功能不同，数量的对比说明的是可以同时执行的线程数。
-RTX 5090 的显存是 32 GB 的 GDDR7，总线宽度 512 位，每条数据线的速率是 28 Gbit/s，峰值带宽为 28 × 512 ÷ 8 = 1792 GB/s；内存带宽 51.2 GB/s 是「硬件上限」一页的数值。
+RTX 5090 的显存是 32 GB 的 GDDR7，总线宽度 512 位，每条数据线的速率是 28 Gbit/s，峰值带宽为 28 × 512 ÷ 8 = 1792 GB/s；内存带宽 51.2 GB/s 是「上限一」一页的数值。
 hands-on lab parallel-dot 第二步的参考结果在 i9-11900H 与 RTX 3060 Laptop（3840 个运算核心）上测得，32768 × 4096 的矩阵向量乘：CPU 1 个线程的标量循环 59.8 ms，CPU 16 个线程并使用向量指令 4.5 ms，GPU 0.81 ms，依次是 1 倍、13.4 倍、73.5 倍。
 图像渲染中，顶点的坐标变换是 4 × 4 矩阵与向量的乘法，每个像素的颜色由同一段着色程序计算，两者都是对大量数据执行相同的运算。
 """)
@@ -2776,45 +2703,26 @@ examples/softmax.cu 是 GPU 版的骨架：main 与主机端的 softmax 函数�
 
 
 # 总结与实验任务。
-def insn_summary(p):
-    p.title('指令总览：本节核心机器级指令分类速查')
+def methods(p):
+    p.title('这一讲的设计方法')
     slide(p, r"""
-**机器指令全景速查矩阵**：
-1. **数据传送与扩展**：
-   - `movb`, `movw`, `movl`, `movq`（通用数据传送，不可双内存操作数）；
-   - `movzbl`, `movzwl`（零扩展传送）；
-   - `movsbl`, `movswl`, `movslq`, `cltq`（符号扩展传送）；
-   - `pushq`, `popq`（栈操作复合指令）；`leal`, `leaq`（加载有效地址/算术运算）。
-2. **算术与逻辑运算**：
-   - `addl`, `addq`, `subl`, `subq`, `imull`, `imulq`（基础整数算术）；
-   - `incl`, `decl`, `negl`, `notl`（单操作数运算）；
-   - `andl`, `orl`, `xorl`（位逻辑运算，`xorl` 用于高效寄存器清零）；
-   - `sall`/`shll`, `sarl`, `shrl`, `salq`（算术与逻辑移位）。
+复杂的程序由很少几种指令组合出来：
+
+- **数据先搬进寄存器再算**。`movl` 读进寄存器，运算的结果再写回内存；地址由基址、变址与偏移拼出来。
+- **改变执行顺序就是改写 `%rip`**。`cmp` 留下标志位，条件跳转读取它；循环是算完一次再跳回去。
+- **函数调用是一次会回来的跳转**。`call` 记下返回地址，`ret` 取回；参数放在哪、哪些寄存器要保存，是软件约定。
+- **数组与结构体是连续的字节**。按下标或成员偏移算出地址，再用 `movl` 访问。
+- **一条指令可以同时算多个数**。SIMD 减少每次乘加的指令条数，更多核心同时执行提高每秒的指令条数。
 """)
-    p.notes('将全节出现的五类核心机器级指令汇总为结构化速查表。')
-
-
-def insn_summary_2(p):
-    p.title('指令总览：本节核心机器级指令分类速查')
-    slide(p, r"""
-3. **状态比较与分支跳转**：
-   - `cmpl`, `cmpq`（减法设置标志位）；`testl`, `testq`（与逻辑设置标志位）；
-   - `jmp`（无条件跳转，直接/间接）；
-   - `jX`（条件跳转：有符号 `jl/jle/jg/jge`，无符号 `jb/jbe/ja/jae`，零值 `je/jne`）；
-   - `setX`（条件设置字节）；`cmovX`（条件传送，消除分支）。
-4. **函数调用与运行时安全**：
-   - `call`, `ret`（返回地址压栈跳转与出栈恢复）；
-   - `%fs:40`, `__stack_chk_fail@PLT`（栈破坏检测）。
-5. **向量计算（AVX2 扩展）**：
-   - `vmovdqu`, `vmovdqa`（非对齐/对齐 256 位向量加载与存储）；
-   - `vpmulld`, `vpaddd`（8 通道 32 位整数并行乘加）；
-   - `vpxor`（向量寄存器清零）。
+    p.notes("""
+五条分别对应五个部分，每条是那个部分回答的设计问题。
+第一部分：运算在寄存器上进行，内存操作数是把数搬进来的写法，lea 只算地址。
+第二部分：除跳转外 %rip 按指令长度递增；jl 读的是 cmpl 留下的标志位。
+第三部分：call 把返回地址压栈再跳转，ret 把栈顶写入 %rip；System V ABI 规定参数寄存器，以及哪些寄存器由调用者保存、哪些由被调用者保存。
+第四部分：数组按下标乘元素大小寻址，结构体按成员偏移寻址；对齐让一次传输读完一个成员。
+第五部分：两个上限。内存带宽给出 53 Token/s；一个核心每秒的指令条数有上限，速度由每次乘加的指令条数决定。SIMD 减少条数，GPU 增加同时执行的核心。
+实验一要执行的指令清单写在 scoring lab 一页与 src/lab1/README.md。
 """)
-
-
-def insn_summary_fig(p):
-    p.title('指令总览：本节核心机器级指令分类速查')
-    figure(p, "insn-cards", 1120)
 
 
 def summary(p):
