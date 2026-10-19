@@ -21,6 +21,7 @@ CPU=$DIR/mini-cpu
 JIT=$DIR/mini-jit
 UNIT=$DIR/mini-unit
 EXP=tests/lab$LABNO/expected.txt
+G=tests/binary
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 got=0

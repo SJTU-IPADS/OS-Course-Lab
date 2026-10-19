@@ -11,7 +11,7 @@
 | `frame/` | 框架代码：主程序、装载器、物理内存、提交日志、反汇编器，以及后面的实验完成之前使用的替代实现 |
 | `guest/` | 在模拟机器上运行的客户机程序（C 与汇编源码，`mini.h` 提供系统调用）；`guest/ollama/` 是第三讲的 `mini_ollama`，生成 `guest/mini-ollama` 与 `guest/mini-ollama-simd` |
 | `tools/` | `mkmodel.py` 生成 `mini-ollama` 的小模型 |
-| `tests/` | 评测脚本 `labN/run.sh`、参考结果、单个函数的检查程序 `unit.c`（生成 `mini-unit`）、生成客户机程序的 `lab1/*.py`、独立计算参考值的 `reference.py`、源文件检查 `srccheck.sh` 与 `symbols.txt`，见“评测” |
+| `tests/` | 评测脚本 `labN/run.sh`、参考结果、评测运行的客户机程序 `binary/`、单个函数的检查程序 `unit.c`（生成 `mini-unit`）、生成客户机程序的 `lab1/*.py`、独立计算参考值的 `reference.py`、源文件检查 `srccheck.sh` 与 `symbols.txt`，见“评测” |
 
 仓库中的实验目录只含到已发布的实验为止用到的文件，现在发布的是实验一；后面的实验发布时加入各自的文件，本文件随之更新（见“获取代码与更新”）。
 
@@ -67,6 +67,42 @@ make clean
 
 物理内存是当前目录下的文件 `dram.img`，程序运行期间加锁。你在同一目录下同时运行两个模拟器时，后启动的一个报错退出；这时用 `--ram 文件名` 给其中一个指定另一个文件。
 
+## 编写自己的客户机程序
+
+你可以写自己的客户机程序来检查解释器。用 C 写的程序放在 `guest/名字.c` 中，入口是 `guest_main`，它的返回值是程序的退出码；输出用 `mini.h` 中的 `puts`、`putint` 与 `write`。程序不链接 libc，`printf`、`malloc` 等库函数都不能使用。例如 `guest/mine.c`：
+
+```c
+/* guest/mine.c: the sum of the squares of 1 .. 50 */
+#include "mini.h"
+
+int guest_main(int argc, char **argv)
+{
+    (void)argv;
+    long s = 0;
+    for (long i = 1; i <= 50; ++i)
+        s += i * i;
+    putint(s);
+    return argc;
+}
+```
+
+`make guest/名字` 用 `guest/` 中其他程序的编译选项（`Makefile` 中的 `GCFLAGS`）编译它，生成 `guest/名字`。这个程序不依赖 libc，在 host 与 mini-cpu 上都能运行。当你的解释器实现正确时，两次运行的输出与退出码相同：
+
+```bash
+make guest/mine
+./guest/mine > native.txt; echo $?          # 在本机运行，打印退出码
+./mini-cpu guest/mine > mine.txt; echo $?   # 在 mini-cpu 上运行
+cmp native.txt mine.txt                     # 两个文件相同时不打印任何内容
+```
+
+编写时注意以下几点：
+
+- 编译选项中有 `-mno-sse`，`gcc` 把 `float` 与 `double` 的运算编译成 x87 指令，mini-cpu 不执行 x87 指令，报告 `fault (illegal instruction)`，因此程序只能使用整数运算。
+- 数组的整体初始化（例如 `long a[64] = {0};`）可能被编译成 `rep stos`，mini-cpu 同样不执行这条指令，这时请改用循环逐个赋值。
+- 实验一的 mini-cpu 提供的系统调用是 `write`、`brk`、`exit`、`getpid`、`fstat` 与 `mmap`，其余的系统调用返回 `-ENOSYS`。
+- 输出地址的程序以及输出 `getpid` 结果的程序，两次运行的输出不同：hots 上的栈与堆由内核放在随机的位置，mini-cpu 的 `getpid` 返回 1。
+- 你的程序用本机的 `gcc` 编译，不参与评测。
+
 ## 评测
 
 ```bash
@@ -116,11 +152,11 @@ FAIL   0/2   tinytf: seed 1 and two random seeds
         | 
         | fault (illegal instruction) after 69488 instructions:
         | rax  0000000000000000  rcx  0000000000000010  rdx  0000000000000000  rbx  0000000000000000
-        | (guest/tinytf 1 8)
+        | (tests/binary/tinytf 1 8)
 FAIL   0/2   simd, tinytf: commit logs (vector registers)
-        | expected: 2635356908 13470
-        | got:      4261807836 11045
-        | (cksum of the commit log of guest/simd: checksum and size in bytes)
+        | expected: 3814846348 13462
+        | got:      1993288917 11037
+        | (cksum of the commit log of tests/binary/simd: checksum and size in bytes)
 FAIL   0/2   random vector instructions: registers and memory
         | (tests/lab1/vecops.py 16351 60)
         | 
@@ -128,7 +164,7 @@ FAIL   0/2   random vector instructions: registers and memory
         | rax  0000000000000000  rcx  0000000000000000  rdx  0000000000000000  rbx  0000000000000000
         | the output of mini-cpu ends before the record of block 0
 FAIL   0/2   mini-ollama-simd: dot_q4 on ymm registers
-        | (python3 tools/mkmodel.py 7370 > m.gguf; mini-cpu  guest/mini-ollama-simd "the cat in the hat" 10 < m.gguf)
+        | (python3 tools/mkmodel.py 7370 > m.gguf; mini-cpu  tests/binary/mini-ollama-simd "the cat in the hat" 10 < m.gguf)
         | expected: jjjjjjjjjj
         | got:      
         | < prompt tokens:    19

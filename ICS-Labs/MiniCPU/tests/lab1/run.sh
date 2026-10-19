@@ -47,39 +47,39 @@ if has --interp; then MODE=--interp; fi
 
 hello() {
     out "hello from the guest
-argc = 1" cpu $MODE guest/hello &&
-    out "sum = $(python3 tests/reference.py sum 100)" cpu $MODE guest/sum &&
-    out "sum = $(python3 tests/reference.py sum 1000)" cpu $MODE guest/sum x &&
-    hasline "insns 100  syscalls 0  exit 1" cpu $MODE --max 100 --stats guest/sum   # stops after exactly 100
+argc = 1" cpu $MODE $G/hello &&
+    out "sum = $(python3 tests/reference.py sum 100)" cpu $MODE $G/sum &&
+    out "sum = $(python3 tests/reference.py sum 1000)" cpu $MODE $G/sum x &&
+    hasline "insns 100  syscalls 0  exit 1" cpu $MODE --max 100 --stats $G/sum   # stops after exactly 100
 }
 programs() {
-    out "sum = $(python3 tests/reference.py matmul 24)" cpu $MODE guest/matmul &&
-    out "sum = 1566720" cpu $MODE guest/heap &&
-    out "s = 39500" cpu $MODE guest/pattern &&
-    out "sum = 501590016" cpu $MODE guest/block 8
+    out "sum = $(python3 tests/reference.py matmul 24)" cpu $MODE $G/matmul &&
+    out "sum = 1566720" cpu $MODE $G/heap &&
+    out "s = 39500" cpu $MODE $G/pattern &&
+    out "sum = 501590016" cpu $MODE $G/block 8
 }
 # two page faults: past the end of the stack, and a store to the code
 faults() {
-    hasline "fault (page fault) after 2853 instructions:" cpu $MODE guest/deep &&
-    hasline "faulting address 0x7ffffffbec90" cpu $MODE guest/deep &&
-    hasline "fault (page fault) after 2 instructions:" cpu $MODE guest/readonly &&
-    hasline "faulting address 0x401000" cpu $MODE guest/readonly
+    hasline "fault (page fault) after 2853 instructions:" cpu $MODE $G/deep &&
+    hasline "faulting address 0x7ffffffbec80" cpu $MODE $G/deep &&
+    hasline "fault (page fault) after 2 instructions:" cpu $MODE $G/readonly &&
+    hasline "faulting address 0x401000" cpu $MODE $G/readonly
 }
-logs1() { log hello guest/hello && log sum guest/sum; }
+logs1() { log hello $G/hello && log sum $G/sum; }
 logs2() {
-    log matmul guest/matmul && log heap guest/heap &&
-    log pattern guest/pattern && log block8 guest/block 8
+    log matmul $G/matmul && log heap $G/heap &&
+    log pattern $G/pattern && log block8 $G/block 8
 }
 simd() {
     out "scalar = $(python3 tests/reference.py simd 19)
-simd   = $(python3 tests/reference.py simd 19)" cpu $MODE guest/simd &&
+simd   = $(python3 tests/reference.py simd 19)" cpu $MODE $G/simd &&
     out "scalar = $(python3 tests/reference.py simd 1000)
-simd   = $(python3 tests/reference.py simd 1000)" cpu $MODE guest/simd x
+simd   = $(python3 tests/reference.py simd 1000)" cpu $MODE $G/simd x
 }
 # tinytf [SEED N]: the output equals that of tests/reference.py tinytf
 tinytf() {
-    out "$(python3 tests/reference.py tinytf "$@")" cpu $MODE guest/tinytf "$@" && return 0
-    echo "(guest/tinytf ${*:-1 8})"
+    out "$(python3 tests/reference.py tinytf "$@")" cpu $MODE $G/tinytf "$@" && return 0
+    echo "($G/tinytf ${*:-1 8})"
     return 1
 }
 tinytfs() {
@@ -125,9 +125,9 @@ listing() {
 }
 disasm_guests() {
     for g in hello sum matmul heap pattern deep block simd tinytf; do
-        "$CPU" --disasm guest/$g > "$TMP/dis" 2>&1
+        "$CPU" --disasm $G/$g > "$TMP/dis" 2>&1
         is "$(val "disasm-$g")" "$(cksum < "$TMP/dis" | awk '{print $1, $2}')" && continue
-        echo "(mini-cpu --disasm guest/$g: compare with objdump -d guest/$g)"
+        echo "(mini-cpu --disasm $G/$g: compare with objdump -d $G/$g)"
         head -n 2 "$TMP/dis" | grep 'not implemented'
         return 1
     done
@@ -175,7 +175,7 @@ flagnames() {
     [ $(( $1 & 0x800 )) -ne 0 ] && _s="$_s OF"
     echo "${_s:- -}" | cut -c2-
 }
-simdlogs() { log simd guest/simd && log simdx guest/simd x && log tinytf guest/tinytf; }
+simdlogs() { log simd $G/simd && log simdx $G/simd x && log tinytf $G/tinytf; }
 conds()   { condops_make && condops_run; }
 # two programs of random integer instructions, two of vector instructions
 randoms() { for k in 1 2; do randops_make && randops_run || return 1; done; }
@@ -204,12 +204,12 @@ item  3 "commit logs: matmul, heap, pattern, block"    logs2
 item  3 "flags: random operands, against this machine" flags
 item  3 "conditions: jcc, setcc, cmovcc under all flags"  conds
 item  3 "random instructions: registers and memory, against this machine"  randoms
-item  3 "mini-ollama: two small models, against this machine"  ollamas guest/mini-ollama guest/mini-ollama
+item  3 "mini-ollama: two small models, against this machine"  ollamas $G/mini-ollama $G/mini-ollama
 
 part 4 "interp.c, the vector instructions, 10 points"
 item  2 "simd: scalar and vector loops, n = 19 and 1000"  simd
 item  2 "tinytf: seed 1 and two random seeds"          tinytfs
 item  2 "simd, tinytf: commit logs (vector registers)" simdlogs
 item  2 "random vector instructions: registers and memory"  vectors
-item  2 "mini-ollama-simd: dot_q4 on ymm registers"    ollamas guest/mini-ollama-simd guest/mini-ollama-ref
+item  2 "mini-ollama-simd: dot_q4 on ymm registers"    ollamas $G/mini-ollama-simd $G/mini-ollama-ref
 finish
