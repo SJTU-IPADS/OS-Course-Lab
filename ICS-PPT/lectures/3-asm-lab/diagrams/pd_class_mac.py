@@ -3,8 +3,9 @@
 additions driven by two instructions, the figure of lecture 3's vector loop
 with the operands of matvec_q4_0.
 
-Top rows: the 8 floats (q - 8) in a %ymm register and the 8 floats of x
-loaded from memory. The products land in a register and meet the block's
+Top rows: the 8 floats (q - 8) in a %ymm register, each labelled with its
+width, q0-32, as on the page before, and the 8 floats of x loaded from
+memory. The products land in a register and meet the block's
 running sums bsum. Lane 0 is at the right, as in lecture 3.
 Run it to refresh ../assets/pd-class-mac.svg.
 """
@@ -35,10 +36,10 @@ def row(y, fmt, fill, stroke, size=14):
 def build():
     out = []
     out.append(mono(20, 36, "%ymm", 17, INK, "bold"))
-    out.append(text(20, 54, "8 个 (q − 8)，float", 13, MUTED, anchor="start"))
+    out.append(text(20, 54, "8 个 q − 8，32 位 float", 13, MUTED, anchor="start"))
     out.append(text(20, 84, "内存", 17, INK, "bold", anchor="start"))
     out.append(text(20, 102, "x[c+8g .. c+8g+7]", 13, MUTED, anchor="start"))
-    out += row(20, lambda k: f"q{k}−8", FILL_BLUE, BLUE)
+    out += row(20, lambda k: f"q{k}-32", FILL_BLUE, BLUE)
     out += row(66, lambda k: f"x[c+{k}]", FILL_GREY, MUTED)
     for k in range(8):
         cx = X0 + (7 - k) * CW + CW / 2

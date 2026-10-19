@@ -2,7 +2,7 @@
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
 <rect x="20.0" y="14.0" width="330.0" height="272.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
 <text x="36.0" y="40.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">modrm_t m</text>
-<text x="140.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">你的 modrm_decode 填写全部字段</text>
+<text x="140.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">modrm_decode 填写全部字段</text>
 <text x="36.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">mod</text>
 <text x="100.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">0..3</text>
 <text x="36.0" y="88.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">sub</text>
@@ -22,7 +22,7 @@
 <text x="36.0" y="242.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">dsize</text>
 <text x="100.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">0、1、4</text>
 <text x="36.0" y="264.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">disp</text>
-<text x="100.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">符号扩展后的位移</text>
+<text x="100.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">符号扩展后的偏移</text>
 <line x1="350.0" y1="150.0" x2="396.0" y2="150.0" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
 <rect x="400.0" y="14.0" width="340.0" height="272.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
 <text x="416.0" y="40.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">modrm(&amp;x)</text>
@@ -39,15 +39,13 @@
 <line x1="740.0" y1="150.0" x2="786.0" y2="150.0" stroke="#5a6b78" stroke-width="2.2" marker-end="url(#ah-5a6b78)"/>
 <rect x="790.0" y="14.0" width="310.0" height="272.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
 <text x="806.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">case 中读到的操作数</text>
-<text x="806.0" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">get(&amp;x, x.reg)</text>
-<text x="806.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">reg 寄存器</text>
-<text x="806.0" y="100.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">rm_get(&amp;x)</text>
-<text x="806.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">x.rm ≥ 0：寄存器 x.rm</text>
-<text x="806.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">x.rm &lt; 0：内存 ea(&amp;x)</text>
-<text x="806.0" y="160.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">ea(&amp;x)</text>
-<text x="806.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">x.addr；x.riprel 时再加 R[RIP]</text>
-<text x="806.0" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">x.sub</text>
-<text x="806.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">0x81、0x83 的运算编号</text>
-<text x="806.0" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">反汇编器 translate.c 也读这个 modrm_t；</text>
-<text x="806.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">函数只读字节，不访问机器</text>
+<text x="806.0" y="72.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">get(&amp;x, x.reg)</text>
+<text x="806.0" y="92.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">reg 寄存器</text>
+<text x="806.0" y="120.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">rm_get(&amp;x)</text>
+<text x="806.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">x.rm ≥ 0：寄存器 x.rm</text>
+<text x="806.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">x.rm &lt; 0：内存 ea(&amp;x)</text>
+<text x="806.0" y="188.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">ea(&amp;x)</text>
+<text x="806.0" y="208.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">x.addr；x.riprel 时再加 R[RIP]</text>
+<text x="806.0" y="236.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">x.sub</text>
+<text x="806.0" y="256.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">0x81、0x83 的运算编号</text>
 </svg>

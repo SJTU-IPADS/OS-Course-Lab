@@ -40,12 +40,12 @@
 <text x="400.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">index</text>
 <text x="460.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">变址寄存器，REX.X 作第 3 位；得到 4（100 且无 REX.X）表示没有变址，scale 记 1</text>
 <text x="400.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">base</text>
-<text x="460.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">基址寄存器，REX.B 作第 3 位；字段 101 且 mod 00：没有基址，随后 4 字节位移</text>
+<text x="460.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">基址寄存器，REX.B 作第 3 位；字段 101 且 mod 00：没有基址，随后 4 字节偏移</text>
 <text x="400.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">内存操作数的地址 = disp + base + index × scale</text>
 <rect x="20.0" y="192.0" width="1080.0" height="92.0" rx="8" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="5 4"/>
 <text x="36.0" y="218.0" font-family="monospace" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">d5</text>
-<text x="100.0" y="218.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">scale 11 → 8　　index 010 → %rdx　　base 101 且 mod 00 → 没有基址，位移 00403020</text>
-<text x="100.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">地址 = 0x403020 + %rdx × 8；用掉 ModRM、SIB 与位移共 6 字节</text>
+<text x="100.0" y="218.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">scale 11 → 8　　index 010 → %rdx　　base 101 且 mod 00 → 没有基址，偏移 00403020</text>
+<text x="100.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">地址 = 0x403020 + %rdx × 8；用掉 ModRM、SIB 与偏移共 6 字节</text>
 <text x="36.0" y="270.0" font-family="monospace" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">24</text>
 <text x="100.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">scale 00 → 1　　index 100 → 没有变址　　base 100 → %rsp；mov (%rsp),%rdi 的地址 = %rsp，用掉 2 字节</text>
 </svg>

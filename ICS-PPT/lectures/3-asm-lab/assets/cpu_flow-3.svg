@@ -49,6 +49,6 @@
 <line x1="900.0" y1="242.0" x2="900.0" y2="352.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <path d="M 760.0 114.0 L 1040.0 114.0 L 1040.0 352.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <rect x="20.0" y="356.0" width="1080.0" height="60.0" rx="8" fill="#e3f3f3" stroke="#1f8a8a" stroke-width="1.5"/>
-<text x="560.0" y="381.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">位移 dsize：mod 01 为 1 字节，mod 10 为 4 字节，mod 00 为 0 字节，没有基址时 4 字节；disp = 随后 dsize 个字节，小端，符号扩展到 64 位</text>
+<text x="560.0" y="381.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">偏移 dsize：mod 01 为 1 字节，mod 10 为 4 字节，mod 00 为 0 字节，没有基址时 4 字节；disp = 随后 dsize 个字节，小端，符号扩展到 64 位</text>
 <text x="560.0" y="401.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">返回用掉的字节数 1 到 6；读每个字节之前检查它在 n 个字节之内，否则返回 0</text>
 </svg>

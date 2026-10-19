@@ -50,7 +50,7 @@
 <text x="565.0" y="235.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">fetch_imm；x.size 为 8 时 fetch64</text>
 <text x="862.0" y="235.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器 = imm；寄存器编号同 push</text>
 <line x1="20.0" y1="258.0" x2="1100.0" y2="258.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
-<text x="20.0" y="293.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">跳转的位移</text>
+<text x="20.0" y="293.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">跳转的偏移</text>
 <rect x="180.0" y="272.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
 <text x="199.0" y="293.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">7e</text>
 <rect x="218.0" y="272.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>

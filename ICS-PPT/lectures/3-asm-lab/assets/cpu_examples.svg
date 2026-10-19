@@ -25,7 +25,7 @@
 <text x="433.0" y="137.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">24</text>
 <rect x="452.0" y="116.0" width="38.0" height="32.0" rx="2" fill="#e3f3f3" stroke="#1f8a8a" stroke-width="1.2"/>
 <text x="471.0" y="137.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">08</text>
-<text x="300.0" y="172.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">74 = 01 110 100：mod 1 → 1 字节位移；reg 6；rm 100 → SIB 24，同上</text>
+<text x="300.0" y="172.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">74 = 01 110 100：mod 1 → 1 字节偏移；reg 6；rm 100 → SIB 24，同上</text>
 <text x="300.0" y="194.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start" xml:space="preserve">mod 1  sub 6  reg 6  rm -1  base 4  index -1  scale 1  rip 0  dsize 1  disp 8   → 用掉 3 字节</text>
 <line x1="20.0" y1="208.0" x2="1100.0" y2="208.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
 <text x="20.0" y="237.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">mov %rdi,%r9</text>

@@ -37,16 +37,16 @@ def build():
     out.append(text(X + 60, 104, "变址寄存器，REX.X 作第 3 位；得到 4（100 且无 REX.X）表示没有变址，scale 记 1",
                     14, INK, anchor="start"))
     out.append(text(X, 132, "base", 15, PURPLE, "bold", anchor="start"))
-    out.append(text(X + 60, 132, "基址寄存器，REX.B 作第 3 位；字段 101 且 mod 00：没有基址，随后 4 字节位移",
+    out.append(text(X + 60, 132, "基址寄存器，REX.B 作第 3 位；字段 101 且 mod 00：没有基址，随后 4 字节偏移",
                     14, INK, anchor="start"))
     out.append(text(X, 164, "内存操作数的地址 = disp + base + index × scale", 15, INK, "bold",
                     anchor="start"))
     # the two examples read off
     out.append(rect(20, 192, 1080, 92, WHITE, LINE, rx=8, width=1.2, dash="5 4"))
     out.append(text(36, 218, "d5", 15, PURPLE, "bold", anchor="start", font="monospace"))
-    out.append(text(100, 218, "scale 11 → 8　　index 010 → %rdx　　base 101 且 mod 00 → 没有基址，位移 00403020",
+    out.append(text(100, 218, "scale 11 → 8　　index 010 → %rdx　　base 101 且 mod 00 → 没有基址，偏移 00403020",
                     14, INK, anchor="start"))
-    out.append(text(100, 242, "地址 = 0x403020 + %rdx × 8；用掉 ModRM、SIB 与位移共 6 字节", 14, INK,
+    out.append(text(100, 242, "地址 = 0x403020 + %rdx × 8；用掉 ModRM、SIB 与偏移共 6 字节", 14, INK,
                     anchor="start"))
     out.append(text(36, 270, "24", 15, PURPLE, "bold", anchor="start", font="monospace"))
     out.append(text(100, 270, "scale 00 → 1　　index 100 → 没有变址　　base 100 → %rsp；"

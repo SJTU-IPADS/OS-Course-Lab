@@ -138,14 +138,22 @@ src_hash = '6235e025'
 text = 'Scored'
 # src: 计分
 
+['four-labs.slide.1']
+src_hash = '5a4a6fcd'
+text = 'Programming the old way is encouraged: write the code by hand yourself. Discussion with classmates is encouraged, and so is discussion with AI.'
+# src:
+# 
+# 鼓励「古法编程」，鼓励同学之间讨论、与 AI 讨论。
+
 ['four-labs.notes.1']
-src_hash = '78012230'
+src_hash = 'dea01ffb'
 text = '''
 This lecture first explains how to download, install and use the courseware, then explains four labs, one part per lab. The first three labs are after-class exercises and are not scored; every step has a checking program, and output equal to the expected values shows that the step is correct. mini-cpu lab 1 is scored, with a maximum of 100 points.
 nano-quant accompanies lecture 2, "Representing data": impl/nano_quant.cpp implements the functions that read bytes and the encoding and decoding of three 4-bit formats; the framework quantizes the language model of Qwen3-VL-2B-Instruct, assembles it into a GGUF file, and ollama loads and runs it.
 bomb-lab accompanies lecture 3: each student ID has its own bomb without source code, and the input of each of the 8 phases is derived from its machine code. bomb connects to the course server while it runs; every explosion and every defused phase is recorded under the student ID, and ./bomb -s shows the scoreboard.
 parallel-dot accompanies the two speed-up solutions of part five of lecture 3. Both parts write the same operator, the product of a Q4_0 matrix and a vector: part 1 writes the function matvec_q4_0 with AVX2, part 2 writes its CUDA kernel; without an NVIDIA GPU, make remote submits to the course server. The mini-ollama that both parts run reads q4_0.gguf, which is downloaded from the SJTU cloud drive or produced by nano-quant with the q4_0 recipe.
 mini-cpu lab 1 accompanies lecture 3: an x86-64 instruction interpreter is completed in three files, make check gives the score, and the lab1.zip produced by make handin is submitted on the Canvas platform.
+For all four labs, programming the old way is encouraged: write the code by hand yourself. Discussion with classmates is encouraged, and so is discussion with AI.
 '''
 # src:
 # 
@@ -154,6 +162,7 @@ mini-cpu lab 1 accompanies lecture 3: an x86-64 instruction interpreter is compl
 # bomb-lab 配合第三讲：每个学号一个没有源码的 bomb，阅读它的机器码推出 8 个阶段的输入；bomb 运行时连接课程服务器，每一次爆炸与每一个被拆除的阶段都记在学号下，./bomb -s 显示计分板。
 # parallel-dot 配合第三讲第五部分的两个提速方案，两部分写同一个算子，即 Q4_0 矩阵与向量的乘积：第一部分用 AVX2 写函数 matvec_q4_0，第二部分写它的 CUDA kernel；没有 NVIDIA 显卡时用 make remote 提交到课程服务器。两部分运行的 mini-ollama 读取 q4_0.gguf，这个文件从交大云盘下载，或由 nano-quant 按 q4_0 配方生成。
 # mini-cpu 实验一配合第三讲：在三个文件中完成 x86-64 指令解释器，make check 给出得分，make handin 生成的 lab1.zip 提交到 Canvas 平台。
+# 做这四个实验时，鼓励「古法编程」，即代码由自己动手写出；鼓励同学之间讨论，也鼓励与 AI 讨论。
 
 ['bridge-kit.title']
 src_hash = 'b150e0e9'
@@ -382,7 +391,7 @@ text = 'The pipeline: from safetensors to the GGUF that ollama loads'
 # src: 实验的流程：从 safetensors 到 ollama 加载的 GGUF
 
 ['nq-pipeline.slide.1']
-src_hash = '561ae83f'
+src_hash = '658c448e'
 text = '''
 - Subject: the 310 BF16 tensors of the language model in `model.safetensors`, quantized to 4 bits
 - The framework gives the four programs and all file I/O; your functions are called inside `nano-quant quant`, one block at a time
@@ -391,7 +400,7 @@ text = '''
 # src:
 # 
 # - 对象：`model.safetensors` 中语言模型的 310 个 BF16 张量，量化为 4 位
-# - 你的函数在 `nano-quant quant` 中被调用，每次一块
+# - 你的函数在 `nano-quant quant` 中被调用，每个量化块调用一次
 
 ['nq-pipeline.notes.1']
 src_hash = '9b4c5d50'
@@ -1276,19 +1285,19 @@ text = '- **Three steps**: a 128-bit load instruction fetches the 16 code bytes;
 # - **三步**：用 128 位加载指令取出 16 个编码字节；按位与、右移拆出低 4 位与高 4 位；每 8 个编码扩展、减 8、转换为 float 类型。
 
 ['pd-class-decode.notes.1']
-src_hash = 'b29968c5'
+src_hash = '3d344c6f'
 text = '''
 This page has three frames: the first three steps of the TODO comment in simd.c. The first two steps are the same as the given embed in the same file. Step 3 gives q − 8 as floats and does not multiply by d: in this step embed multiplies by d and writes the restored weights to memory; matvec_q4_0 multiplies q − 8 by x directly, and d is multiplied once per block in step 5, the right side of the formula on the previous page.
-Frame 1: the 18 bytes of the block are in memory and q4_0_scale(blk) reads d; _mm_loadu_si128(blk + 2), one 128-bit load, fetches the 16 code bytes into a 128-bit register (%xmm). Only 16 bytes are read: a block has only 16 code bytes, a 256-bit load of the codes would read 16 bytes too many, mini-ollama-simd maps the model file into memory, there may be no readable memory after the last row, and the extra bytes would cause a segmentation fault. The load is unaligned: the codes start at byte 2 of the block, their address is in general not a multiple of 16, and the aligned load _mm_load_si128 would end the program with a segmentation fault.
+Frame 1: the 18 bytes of the block are in memory and q4_0_scale(blk) reads d; _mm_loadu_si128(blk + 2), one 128-bit load, fetches the 16 code bytes into a 128-bit register (%xmm). Only 16 bytes are read: a block has only 16 code bytes, a 256-bit load of the codes would read 16 bytes too many, mini-ollama-simd maps the model file into memory, there may be no readable memory after the last row, and the extra bytes would cause a segmentation fault. The load is unaligned: the codes start at byte 2 of the block, their address is in general not a multiple of 16, and the aligned load _mm_load_si128 would end the program with a segmentation fault. The box at the top right magnifies qs0: one byte holds two 4-bit codes, the low 4 bits the code q0 of weight 0 and the high 4 bits the code q16 of weight 16, written q0-4 and q16-4; the suffix is the width in bits.
 Frame 2: a bitwise and with 0x0f (_mm_and_si128) gives the low 4 bits of every byte, the codes lo of weights 0 to 15; shifting every 16 bits right by 4 (_mm_srli_epi16) and then the bitwise and gives the high 4 bits, the codes hi of weights 16 to 31. The shift works on 16-bit units, so bits of the neighbouring byte move in, and the bitwise and is still needed after the shift.
-Frame 3: every 8 codes are widened to 8 32-bit integers (_mm256_cvtepu8_epi32, which takes the low 8 bytes of a 128-bit register), decreased by 8 (_mm256_sub_epi32) and converted to 8 floats (_mm256_cvtepi32_ps); for the second 8 of lo and of hi the register is first shifted right by 8 bytes (_mm_srli_si128, as written in embed), into the low 8 bytes. In the figure each of the four groups has its own colour, and the %ymm it becomes is drawn below its 8 codes in the same colour, joined to them by two dashed lines; the two groups of hi are outlined, as in the earlier figures. A %ymm is 32 bytes and the %xmm 16; the figure draws the %ymm longer than the %xmm, not to scale. The four groups are weights 0..7, 8..15, 16..23 and 24..31, corresponding to x[c..c+7], x[c+8..c+15], x[c+16..c+23] and x[c+24..c+31], with c = 32b.
+Frame 3: every 8 codes are widened to 8 32-bit integers (_mm256_cvtepu8_epi32, which takes the low 8 bytes of a 128-bit register), decreased by 8 (_mm256_sub_epi32) and converted to 8 floats (_mm256_cvtepi32_ps); for the second 8 of lo and of hi the register is first shifted right by 8 bytes (_mm_srli_si128, as written in embed), into the low 8 bytes. In the figure each of the four groups has its own colour, and the %ymm it becomes is drawn below its 8 codes in the same colour, joined to them by two dashed lines; the two groups of hi are outlined, as in the earlier figures. A %ymm is 32 bytes and the %xmm 16; the figure draws the %ymm longer than the %xmm, not to scale. The four groups are weights 0..7, 8..15, 16..23 and 24..31, corresponding to x[c..c+7], x[c+8..c+15], x[c+16..c+23] and x[c+24..c+31], with c = 32b. In the third frame the number after a code is again its width in bits: in lo and hi each code takes one byte, written q0-8; in a %ymm each code is a 32-bit float, written q0-32, whose value is q − 8.
 '''
 # src:
 # 
 # 这一页三帧，是 simd.c 中 TODO 注释给出的前三步。前两步与同一文件中已给出的 embed 相同。第三步得到的是 q − 8 的 float，不乘 d：embed 在这一步乘以 d，把还原的权重写入内存；matvec_q4_0 把 q − 8 直接与 x 相乘，d 在第五步对整个块乘一次，即上一页公式的右边。
-# 第一帧：块的 18 个字节在内存中，q4_0_scale(blk) 读出 d；_mm_loadu_si128(blk + 2) 一条 128 位的加载取出 16 个编码字节，放入一个 128 位寄存器（%xmm）。只读 16 字节：一个块的编码只有 16 字节，用 256 位加载读编码会多读 16 字节，mini-ollama-simd 把模型文件映射到内存，最后一行之后可能没有可读的内存，多读的字节会引起段错误。用非对齐加载：编码从块的第 2 个字节开始，地址一般不是 16 的倍数，对齐加载 _mm_load_si128 会使程序以段错误终止。
+# 第一帧：块的 18 个字节在内存中，q4_0_scale(blk) 读出 d；_mm_loadu_si128(blk + 2) 一条 128 位的加载取出 16 个编码字节，放入一个 128 位寄存器（%xmm）。只读 16 字节：一个块的编码只有 16 字节，用 256 位加载读编码会多读 16 字节，mini-ollama-simd 把模型文件映射到内存，最后一行之后可能没有可读的内存，多读的字节会引起段错误。用非对齐加载：编码从块的第 2 个字节开始，地址一般不是 16 的倍数，对齐加载 _mm_load_si128 会使程序以段错误终止。右上角放大了 qs0：一个字节含两个 4 位编码，低 4 位是第 0 个权重的编码 q0，高 4 位是第 16 个权重的编码 q16，写作 q0-4 与 q16-4，后缀是位数。
 # 第二帧：与 0x0f 按位与（_mm_and_si128）得到每个字节的低 4 位，即第 0 到 15 个权重的编码 lo；每个 16 位右移 4 位（_mm_srli_epi16）再按位与得到高 4 位，即第 16 到 31 个权重的编码 hi。右移按 16 位进行，相邻字节的位会移入，所以右移之后仍要按位与。
-# 第三帧：每 8 个编码扩展为 8 个 32 位整数（_mm256_cvtepu8_epi32，取 128 位寄存器的低 8 个字节），减 8（_mm256_sub_epi32），转换为 8 个 float（_mm256_cvtepi32_ps）；lo 与 hi 的后 8 个先把寄存器右移 8 个字节（_mm_srli_si128，embed 中的写法），移到低 8 个字节。图中四组各用一种颜色，每组得到的 %ymm 画在这 8 个编码的下方，颜色相同，两条虚线连接两者；hi 的两组与前面的图一样画成空心。一个 %ymm 是 32 字节，%xmm 是 16 字节，图中 %ymm 画得比 %xmm 长，没有按比例。四组依次是权重 0..7、8..15、16..23、24..31，分别与 x[c..c+7]、x[c+8..c+15]、x[c+16..c+23]、x[c+24..c+31] 对应，c = 32b。
+# 第三帧：每 8 个编码扩展为 8 个 32 位整数（_mm256_cvtepu8_epi32，取 128 位寄存器的低 8 个字节），减 8（_mm256_sub_epi32），转换为 8 个 float（_mm256_cvtepi32_ps）；lo 与 hi 的后 8 个先把寄存器右移 8 个字节（_mm_srli_si128，embed 中的写法），移到低 8 个字节。图中四组各用一种颜色，每组得到的 %ymm 画在这 8 个编码的下方，颜色相同，两条虚线连接两者；hi 的两组与前面的图一样画成空心。一个 %ymm 是 32 字节，%xmm 是 16 字节，图中 %ymm 画得比 %xmm 长，没有按比例。四组依次是权重 0..7、8..15、16..23、24..31，分别与 x[c..c+7]、x[c+8..c+15]、x[c+16..c+23]、x[c+24..c+31] 对应，c = 32b。第三帧中编码后的数字同样是位数：lo 与 hi 中每个编码占一个字节，写作 q0-8；%ymm 中每个编码是一个 32 位 float，写作 q0-32，它的值是 q − 8。
 
 ['pd-class-mac.title']
 src_hash = 'f9f9f709'
@@ -1296,16 +1305,16 @@ text = 'One group of 8 weights and 8 floats of x: multiply, accumulate into bsum
 # src: 一组 8 个权重与 x 的 8 个 float：乘，累加到 bsum
 
 ['pd-class-mac.notes.1']
-src_hash = '430a9d8c'
+src_hash = 'c7882cb2'
 text = '''
-This is step 4 of the TODO comment, the float version of lecture 3's page "One round of the vector loop: 8 lanes multiply at once, add at once". The top two rows are the operands: the 8 floats in a %ymm, that is one group of 8 codes minus 8; and the corresponding 8 floats of x, read by _mm256_loadu_ps(x + c + 8g), an unaligned load because the address of x has no alignment guarantee. _mm256_mul_ps completes 8 multiplications in one instruction, the 8 products in one register; _mm256_add_ps adds the 8 products to the 8 partial sums of bsum in one instruction. Lane 0 is at the right, as in the figures of lecture 3.
+This is step 4 of the TODO comment, the float version of lecture 3's page "One round of the vector loop: 8 lanes multiply at once, add at once". The top two rows are the operands: the 8 floats in a %ymm, that is one group of 8 codes minus 8, written q0-32 as on the page before, the suffix being the width in bits; and the corresponding 8 floats of x, read by _mm256_loadu_ps(x + c + 8g), an unaligned load because the address of x has no alignment guarantee. _mm256_mul_ps completes 8 multiplications in one instruction, the 8 products in one register; _mm256_add_ps adds the 8 products to the 8 partial sums of bsum in one instruction. Lane 0 is at the right, as in the figures of lecture 3.
 A block has 4 groups, and these two instructions each run 4 times: every lane of bsum accumulates 4 products, lane k those of weights k, 8 + k, 16 + k and 24 + k, and all 32 weights of the block are counted. bsum is cleared before a block (_mm256_setzero_ps), or the first group initialises it with its products directly.
 Then comes step 5: bsum is multiplied by d (_mm256_set1_ps copies d into the 8 lanes, _mm256_mul_ps multiplies) and _mm256_add_ps accumulates it into the row's 8 accumulator lanes acc. Lecture 3's vector loop processes 8 ints per round; here each block processes 32 weights with 4 multiplications and 4 additions, then 1 more multiplication and 1 more addition.
 The Makefile compiles simd.c with -O2 -mavx2 and without -mfma: the lectures go as far as AVX2, and fused multiply-add gains very little in these operators.
 '''
 # src:
 # 
-# 这是 TODO 注释的第四步，第三讲「一轮向量循环：8 个通道同时乘、同时加」一页的 float 版本。上面两行是操作数：一个 %ymm 中的 8 个 float，即一组 8 个编码减 8 的结果；x 中对应的 8 个 float，由 _mm256_loadu_ps(x + c + 8g) 读入，x 的地址没有对齐的保证，用非对齐加载。_mm256_mul_ps 一条指令完成 8 次乘法，8 个积放在一个寄存器中；_mm256_add_ps 一条指令把 8 个积加到 bsum 的 8 路部分和上。通道 0 在最右边，与第三讲的图相同。
+# 这是 TODO 注释的第四步，第三讲「一轮向量循环：8 个通道同时乘、同时加」一页的 float 版本。上面两行是操作数：一个 %ymm 中的 8 个 float，即一组 8 个编码减 8 的结果，与上一页相同写作 q0-32，后缀是位数；x 中对应的 8 个 float，由 _mm256_loadu_ps(x + c + 8g) 读入，x 的地址没有对齐的保证，用非对齐加载。_mm256_mul_ps 一条指令完成 8 次乘法，8 个积放在一个寄存器中；_mm256_add_ps 一条指令把 8 个积加到 bsum 的 8 路部分和上。通道 0 在最右边，与第三讲的图相同。
 # 一个块有 4 组，这两条指令各做 4 次：bsum 的每一路累加 4 个积，第 k 路累加权重 k、8 + k、16 + k、24 + k 的积，块的 32 个权重全部计入。bsum 在处理一个块之前清零（_mm256_setzero_ps），或者第一组直接用乘积初始化。
 # 之后是第五步：bsum 乘以 d（_mm256_set1_ps 把 d 复制到 8 路，_mm256_mul_ps 相乘），_mm256_add_ps 累加到行的 8 路累加器 acc。第三讲的向量循环每轮处理 8 个 int；这里每个块处理 32 个权重，用 4 次乘、4 次加、再 1 次乘、1 次加。
 # Makefile 以 -O2 -mavx2 编译 simd.c，不加 -mfma：讲义讲到 AVX2 为止，融合乘加在这些算子中的收益很小。
@@ -1454,56 +1463,80 @@ src_hash = '413e07dd'
 text = 'The lab framework'
 # src: 实验框架
 
-['cpu-hello.title']
-src_hash = '0bfb3658'
-text = 'guest/hello: the output is done by the write system call'
-# src: guest/hello：输出由 write 系统调用完成
+['cpu-libc.title']
+src_hash = 'aa29f0ed'
+text = 'printf, libc and syscall'
+# src: printf, libc 和 syscall
 
-['cpu-hello.slide.1']
-src_hash = 'e92a7ed2'
+['cpu-libc.slide.1']
+src_hash = '907604fc'
 text = '''
 
-- **The `syscall` instruction asks the operating system to carry out an operation**: `%rax` holds the number (1 is `write`, 60 is `exit`), the arguments are in `%rdi`, `%rsi`, `%rdx` in order, and the result is written back to `%rax`.
-- `guest/hello` is not linked with the C library; `puts` and `putint` are defined in `guest/mini.h` and each executes one `write`; after `guest_main` returns, `_start` executes `exit`.
-
+- **`printf` is a function of the C standard library libc**: like the program's own functions it consists of ordinary instructions; it converts the arguments into bytes by the format, then calls libc's `write`.
+- **Only the `syscall` instruction enters the operating system**: `write` puts the number and the arguments in registers and executes `syscall`, and the operating system does the output. A guest program is not linked with libc and has no `printf`; its output is done by the `write` of `guest/mini.h`, which executes `syscall` directly.
 '''
 # src:
 # 
-# - **`syscall` 指令请求操作系统完成一项操作**：`%rax` 是编号（1 是 `write`，60 是 `exit`），参数依次在 `%rdi`、`%rsi`、`%rdx` 中，结果写回 `%rax`。
-# - `guest/hello` 不链接 C 库，`puts` 与 `putint` 定义在 `guest/mini.h` 中，各执行一次 `write`；`guest_main` 返回后，`_start` 执行 `exit`。
+# - **`printf` 是 C 标准库 libc 中的函数**：它与程序自己的函数一样由普通指令组成，按格式把参数转为字节，再调用 libc 的 `write`。
+# - **进入操作系统的只有 `syscall` 指令**：`write` 把编号与参数放入寄存器，执行 `syscall`，由操作系统完成输出。guest 程序不链接 libc，没有 `printf`，输出由 `guest/mini.h` 的 `write` 直接执行 `syscall`。
 
-['cpu-hello.notes.1']
-src_hash = '8dfcf663'
+['cpu-libc.notes.1']
+src_hash = '201a5f1e'
 text = '''
-guest/hello is the smallest guest program in guest/; guest_main prints two lines: hello from the guest and argc = 1. A guest program is not linked with the C library, and the only functions it can call are the few in guest/mini.h: puts first finds the length of the string with a loop, then executes write; putint converts the integer into decimal digits, writes them into an array on the stack, then executes write. The two lines take three writes.
-The left of the code block is the statements of guest_main in guest/hello.c, the right the corresponding instructions from objdump -d guest/hello. For the first puts: when the length loop ends, %rdx is 21, the number of bytes of the string; %eax is set to 1, %esi to the address of the string 0x402000, %rdi to 1, standard output; then syscall is executed. 0x402000 is in the read-only data section .rodata; the second string "argc = " follows it, at address 0x402016.
-syscall is an instruction that asks the operating system to carry out an operation the program cannot do itself, such as printing to the terminal or ending the program. The number and the arguments are placed in registers by the Linux x86-64 convention: the number in %rax, the arguments in %rdi, %rsi, %rdx, %r10, %r8, %r9 in order, the return value written back to %rax. The mechanism of system calls is explained in the lecture on exceptions; only this convention is used here.
-The entry of the program is _start in guest/start.S: it takes argc and argv from the top of the stack and calls guest_main; after guest_main returns, _start puts the return value into %edi as the exit code and executes syscall with number 60, exit.
-guest/hello also runs directly on the host: ./guest/hello has Linux execute the same syscalls, with the same output.
+When an ordinary C program on a PC calls printf, the code of printf comes from the C standard library libc (usually glibc on Linux); it is put together with the program at link time and, at run time, is ordinary instructions executed by the CPU, like the program's own functions. printf converts argc into the character 1 by the format string, giving the 9 bytes "argc = 1\n", and puts them into the buffer of stdout; when they are to be output, it calls the function write of libc.
+Operations such as printing to the terminal or ending the program cannot be done by the program's own instructions; the program asks the operating system to do them. The request is the syscall instruction: write puts the number 1 in %rax and the file descriptor, the buffer address and the byte count in %rdi, %rsi, %rdx, executes syscall, and Linux prints these 9 bytes on the terminal. The mechanism of system calls is explained in the lecture on exceptions.
+printf does not call write every time: when stdout is a terminal it prints by lines, calling write once at each newline; when redirected to a file, it calls write only when the buffer is full or the program ends. Running a program on the host under strace -e trace=write shows every write it executes.
+The programs in guest/ are not linked with libc, and library functions such as printf and malloc cannot be used. guest/mini.h writes out the few functions they need: puts finds the length of a string, putint converts an integer into decimal digits, and write executes syscall directly with inline assembly. Both paths in the figure run on the PC, and the two syscalls are executed by the same operating system, Linux; when a guest program runs on mini-cpu, code in frame/ carries out its syscall instead.
 '''
 # src:
 # 
-# guest/hello 是 guest/ 中最小的客户机程序，guest_main 输出两行：hello from the guest 与 argc = 1。客户机程序不链接 C 库，能调用的函数只有 guest/mini.h 中的几个：puts 先用循环求出字符串的长度，再执行 write；putint 把整数转为十进制数字，写入栈上的数组，再执行 write。两行输出共三次 write。
-# 代码块左边是 guest/hello.c 中 guest_main 的语句，右边是 objdump -d guest/hello 中对应的指令。第一个 puts：求长度的循环结束时 %rdx 是 21，即字符串的字节数；%eax 置 1，%esi 置字符串的地址 0x402000，%rdi 置 1，即标准输出；然后执行 syscall。0x402000 在只读数据段 .rodata 中，第二个字符串 "argc = " 紧随其后，地址是 0x402016。
-# syscall 是一条指令，作用是请求操作系统完成程序自己不能完成的操作，例如向终端输出、结束程序。编号与参数按 Linux x86-64 的约定放在寄存器中：编号在 %rax，参数依次在 %rdi、%rsi、%rdx、%r10、%r8、%r9，返回值写回 %rax。系统调用的机制在讲异常时说明，这里只用到这个约定。
-# 程序的入口是 guest/start.S 中的 _start：它从栈顶取出 argc 与 argv，调用 guest_main；guest_main 返回后，_start 把返回值放入 %edi 作为退出码，以编号 60 执行 syscall，即 exit。
-# guest/hello 也能在本机上直接运行：./guest/hello 由 Linux 执行同样的 syscall，输出相同。
+# PC 上一个普通的 C 程序调用 printf 时，printf 的代码来自 C 标准库 libc（Linux 上通常是 glibc），链接时与程序放在一起，运行时与程序自己的函数一样是 CPU 执行的普通指令。printf 按格式串把 argc 转为字符 1，得到 "argc = 1
+# " 这 9 个字节，放入 stdout 的缓冲区；需要输出时，它调用 libc 中的 write 函数。
+# 向终端输出、结束程序这类操作，程序自己的指令不能完成，要请求操作系统完成。请求用的是 syscall 指令：write 函数把编号 1 放入 %rax，把文件描述符、缓冲区地址、字节数放入 %rdi、%rsi、%rdx，执行 syscall，由 Linux 把这 9 个字节输出到终端。系统调用的机制在讲异常时说明。
+# printf 不一定每次都调用 write：stdout 是终端时按行输出，遇到换行调用一次 write；重定向到文件时，缓冲区满或程序结束时才调用。在本机上用 strace -e trace=write 运行一个程序，可以看到它执行的每一次 write。
+# guest/ 中的程序不链接 libc，printf、malloc 这些库函数都不能使用。guest/mini.h 自己写出了用到的几个函数：puts 求出字符串的长度，putint 把整数转为十进制数字，write 用内联汇编直接执行 syscall。图中两条路径都在 PC 上运行，两处 syscall 由同一个操作系统 Linux 执行；guest 程序在 mini-cpu 上运行时，syscall 由 frame/ 中的代码代为完成。
+
+['cpu-hello-syscall.title']
+src_hash = 'e3bf385a'
+text = "The syscall instruction: mini-cpu executes it on the guest's behalf"
+# src: syscall 指令：mini-cpu 代为执行
+
+['cpu-hello-syscall.slide.1']
+src_hash = '3c50119d'
+text = "The `syscall` of guest/hello is only read by mini-cpu; the PC's CPU does not execute it. When mini-cpu reads it, mini-cpu calls libc's `write`, and the PC's CPU executes the `syscall` in `write`: mini-cpu has executed this system call on the guest's behalf."
+# src:
+# 
+# guest/hello 的 `syscall` 只被 mini-cpu 读取，PC 的 CPU 不执行它。mini-cpu 读到它之后调用 libc 的 `write`，PC 的 CPU 执行 `write` 中的 `syscall`：mini-cpu 代为执行了这次系统调用。
+
+['cpu-hello-syscall.notes.1']
+src_hash = '77f2fb96'
+text = '''
+guest/hello is the smallest guest program in guest/; it prints two lines, hello from the guest and argc = 1. On the left are the instructions that print the first line: %eax is set to 1, the number of write; %esi to 0x402000, the address of the string; %rdi to 1, standard output; %rdx already holds 21, the number of bytes. Then it executes the syscall at 40112a, whose bytes are 0f 05.
+When guest/hello runs on mini-cpu, the PC's CPU executes the machine code of mini-cpu; the machine code of guest/hello is data that mini-cpu reads, and the PC's CPU does not execute it. mini-cpu reads the guest's instructions one by one and changes the guest's registers and memory as each instruction specifies. When it reads 0f 05, it learns from the guest's %rax that this is a write, and copies the 21 bytes at 0x402000 in guest memory into an array of its own.
+Then mini-cpu calls libc's write: mini-cpu is a C program linked with libc, and write finally executes syscall, with %rax = 1, again the bytes 0f 05. This one is executed by the PC's CPU and enters Linux, which prints the 21 bytes on the terminal. The return value 21 is written back to the guest's %rax, and mini-cpu goes on to read the next instruction at 40112c.
+This is execution on the guest's behalf: the syscall of guest/hello is only read, and the write it asks for is done by a syscall in mini-cpu. "argc = " and the "1\n" of putint are printed the same way, three writes in all. Last, guest/hello executes syscall with number 60, exit; when mini-cpu reads it, mini-cpu stops executing the guest program and uses the exit code the guest gives as its own exit code.
+'''
+# src:
+# 
+# guest/hello 是 guest/ 中最小的客户机程序，输出 hello from the guest 与 argc = 1 两行。图左是它输出第一行的几条指令：%eax 置 1，即 write 的编号；%esi 置字符串的地址 0x402000；%rdi 置 1，即标准输出；%rdx 此前已经是字节数 21。然后在 40112a 执行 syscall，这条指令的字节是 0f 05。
+# guest/hello 在 mini-cpu 上运行时，PC 的 CPU 执行的是 mini-cpu 的机器码；guest/hello 的机器码是 mini-cpu 读取的数据，PC 的 CPU 不执行它。mini-cpu 逐条读取客户机的指令，按指令的规定修改客户机的寄存器与内存。读到 0f 05 时，它从客户机的 %rax 得知这是一次 write，把客户机内存中 0x402000 处的 21 个字节复制到自己的数组中。
+# 然后 mini-cpu 调用 libc 的 write：mini-cpu 是链接 libc 的 C 程序，write 最终执行 syscall，%rax = 1，字节同样是 0f 05。这一条由 PC 的 CPU 执行，进入 Linux，Linux 把 21 个字节输出到终端。返回值 21 写回客户机的 %rax，mini-cpu 接着读取 40112c 处的下一条指令。
+# 这就是代为执行：guest/hello 的 syscall 只被读取，它要求的 write 由 mini-cpu 中的 syscall 完成。"argc = " 与 putint 输出的 "1\n" 以同样的方式输出，共三次 write。guest/hello 最后以编号 60 执行 syscall，即 exit；mini-cpu 读到它时停止执行客户机程序，把客户机给出的退出码作为自己的退出码。
 
 ['cpu-hello-mem.title']
-src_hash = 'd7563dc6'
-text = 'guest/hello after loading: its memory is in dram.img, its registers in cpu.R[]'
-# src: guest/hello 装入之后：内存在 dram.img 中，寄存器在 cpu.R[] 中
+src_hash = 'd1fd00de'
+text = 'Memory and registers: mini-cpu simulates them in its own memory'
+# src: 内存与寄存器：mini-cpu 在内存中模拟
 
 ['cpu-hello-mem.slide.1']
-src_hash = 'db91d00e'
+src_hash = 'b1d13566'
 text = '''
 
-`frame/loader.c` writes the instructions and the strings of guest/hello into dram.img, writes argc and argv at the top of the stack, and sets `R[RSP]` and `R[RIP]`; `interp_run` executes one instruction after another from `R[RIP]`.
-
+`frame/loader.c` writes the instructions and the strings of guest/hello into dram.img, writes argc and argv at the top of the stack, and sets `R[RSP]` and `R[RIP]`. `interp_run` executes one instruction after another from `R[RIP]`.
 '''
 # src:
 # 
-# `frame/loader.c` 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`；`interp_run` 从 `R[RIP]` 开始逐条执行。
+# `frame/loader.c` 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`。`interp_run` 从 `R[RIP]` 开始逐条执行。
 
 ['cpu-hello-mem.notes.1']
 src_hash = '1c8bc10a'
@@ -1522,95 +1555,10 @@ From then on, every pass of interp_run takes one instruction from guest memory a
 # 寄存器：frame/main.c 的 main 中有局部变量 mcpu cpu，客户机的寄存器就是它的成员 R[18]：R[RAX] 到 R[R15] 是 16 个通用寄存器，R[RFLAGS] 是标志寄存器，R[RIP] 是 rip。interp_run(c) 的参数 c 指向 cpu，interp.c 用宏把 R 定义为 c->R，所以 R[RSP] 就是客户机的 %rsp。装载器把 R[RSP] 置为栈顶 argc 所在的地址 0x7fffffffefc0，R[RIP] 置为入口 0x401000，标志寄存器置为 0x2（第 1 位恒为 1），其余为 0。
 # 之后 interp_run 每次循环按 R[RIP] 从客户机内存取一条指令，执行它，修改 R[] 与客户机内存。guest/hello 的第一条指令在 0x401000，字节是 48 8b 3c 24，即 mov (%rsp),%rdi，把 argc 读入 R[RDI]。
 
-['cpu-hello-syscall.title']
-src_hash = '807af01b'
-text = 'The syscall instruction: interp_run hands it to sys_dispatch of frame/'
-# src: syscall 指令：interp_run 交给 frame/ 的 sys_dispatch 执行
-
-['cpu-hello-syscall.demo.1.name']
-src_hash = 'aa4e00c8'
-text = 'Run hello once the interpreter is complete'
-# src: 解释器完成后运行 hello
-
-['cpu-hello-syscall.notes.1']
-src_hash = '5215d3de'
-text = '''
-When guest/hello reaches the syscall at 40112a, four registers have been set by the instructions before it: R[RAX] = 1 is the number of write, R[RDI] = 1 standard output, R[RSI] = 0x402000 the guest address of the string, R[RDX] = 21 the number of bytes.
-The bytes of syscall are 0f 05, and x86_begin returns the number 0x105. The switch of interp.c has no case for it, so execution goes to default and x86_other (frame/x86rest.c) executes it: it calls syscall_enter, which calls sys_dispatch of frame/sysbase.c. interp.c therefore needs no case for syscall.
-sys_dispatch chooses the system call by R[RAX]. The string is in guest memory, and the host's write cannot use a guest address, so sys_dispatch first reads 21 bytes from guest address 0x402000 with mem_read into buf, an array of mini-cpu itself, then calls the host's write(1, buf, 21); Linux prints these 21 bytes on the terminal. The return value 21 is written back to R[RAX], and the next instruction continues at 40112c.
-"argc = " and the "1\n" of putint are printed the same way, three writes in all. After guest_main returns, _start executes syscall at 401019 with R[RAX] = 60, and sys_dispatch sets c->halted to 1; x86_end returns -1 and the loop of interp_run ends. main uses the low 8 bits of R[RDI] as the exit code of mini-cpu; guest/hello returns 0, so the exit code of mini-cpu is 0.
---stats prints the number of instructions executed, the number of system calls and the exit code at the end: 152 instructions and 4 system calls, three writes and one exit. This is the output once the interpreter is complete.
-'''
-# src:
-# 
-# guest/hello 执行到 40112a 的 syscall 时，四个寄存器已经由前面的指令设好：R[RAX] = 1 是 write 的编号，R[RDI] = 1 是标准输出，R[RSI] = 0x402000 是字符串的客户机地址，R[RDX] = 21 是字节数。
-# syscall 的字节是 0f 05，x86_begin 返回的编号是 0x105。interp.c 的 switch 中没有这个 case，执行进入 default，由 x86_other（frame/x86rest.c）执行：它调用 syscall_enter，再调用 frame/sysbase.c 的 sys_dispatch。所以 interp.c 不需要为 syscall 写 case。
-# sys_dispatch 按 R[RAX] 选择系统调用。字符串在客户机内存中，本机的 write 不能直接使用客户机地址，因此 sys_dispatch 先用 mem_read 从客户机地址 0x402000 读出 21 个字节，放入 mini-cpu 自己的数组 buf，再调用本机的 write(1, buf, 21)，Linux 把这 21 个字节输出到终端。返回值 21 写回 R[RAX]，下一条指令从 40112c 继续。
-# "argc = " 与 putint 输出的 "1\n" 以同样的方式输出，共三次 write。guest_main 返回后，_start 在 401019 以 R[RAX] = 60 执行 syscall，sys_dispatch 把 c->halted 置 1；x86_end 返回 -1，interp_run 的循环结束。main 把 R[RDI] 的低 8 位作为 mini-cpu 的退出码，guest/hello 返回 0，mini-cpu 的退出码就是 0。
-# --stats 在结束时打印执行的指令数、系统调用数与退出码：152 条指令，4 次系统调用，即三次 write 与一次 exit。这是解释器完成之后的输出。
-
-['cpu-parts.title']
-src_hash = '284f7d72'
-text = 'The three files and four parts of lab 1'
-# src: 实验一的三个文件与四个部分
-
-['cpu-parts.slide.1']
-src_hash = '5ae218d7'
-text = 'The three files are in `src/lab1/`; every function is declared in `include/mcpu.h`, and its specification is in the comment at the head of the file and in `src/lab1/README.md`. The four parts are completed in order, and the grading scores them part by part.'
-# src:
-# 
-# 三个文件都在 `src/lab1/`，每个函数在 `include/mcpu.h` 中声明，规格写在文件开头的注释与 `src/lab1/README.md` 中。四个部分按顺序完成，评测按部分计分。
-
-['cpu-parts.notes.1']
-src_hash = '39344d84'
-text = '''
-Part 1 is one function of modrm.c, modrm_decode, which parses the operand bytes, 30 points.
-Part 2 is the integer arithmetic and flags of alu.c; four of its ten functions are already written as examples, 30 points.
-Part 3 is cond and the cases of the integer instructions in interp.c, 30 points; part 4 is the five vector instructions in the same file, 10 points.
-The grey functions are already written; the grading checks them as well, and breaking one loses points.
-The call graph fixes the order of work: without modrm_decode, no instruction with operand bytes can execute; without the flags of alu.c, conditional jumps go the wrong way.
-'''
-# src:
-# 
-# 第一部分是 modrm.c 的一个函数 modrm_decode，解析操作数字节，30 分。
-# 第二部分是 alu.c 的整数运算与标志位，十个函数中四个已经写出作为示例，30 分。
-# 第三部分是 interp.c 的 cond 与整数指令的 case，30 分；第四部分是同一个文件中的五条向量指令，10 分。
-# 灰色的函数已经写出，评测同样检查它们，改坏了会丢分。
-# 调用关系决定了完成的顺序：没有 modrm_decode，带操作数字节的指令一条也不能执行；没有 alu.c 的标志位，条件跳转的方向就不对。
-
-['cpu-state.title']
-src_hash = '053bccc2'
-text = 'The machine state: R[18], Y[16] and the guest memory'
-# src: 机器状态：R[18]、Y[16] 与客户机内存
-
-['cpu-state.slide.1']
-src_hash = '7288130f'
-text = '`include/mcpu.h` defines `mcpu`: the indices of `R[18]` are `RAX` to `R15`, `RFLAGS` and `RIP`; the elements of `Y[16]` are `u256`, accessed as `q[4]`, `d[8]` or `b[32]`; memory is read and written only through the helpers, by virtual address.'
-# src:
-# 
-# `include/mcpu.h` 定义 `mcpu`：`R[18]` 的下标是 `RAX` 到 `R15`、`RFLAGS`、`RIP`；`Y[16]` 的元素是 `u256`，按 `q[4]`、`d[8]` 或 `b[32]` 访问；内存只经辅助函数按虚拟地址读写。
-
-['cpu-state.notes.1']
-src_hash = '97221f91'
-text = '''
-The index of a general register equals its number in the machine code, so the number parsed from ModRM is used as the index directly.
-flags uses five bits only: CF, PF, ZF, SF and OF, at bits 0, 2, 6, 7 and 11; the other bits stay unchanged.
-A vector register is a 256-bit ymm; xmm is its low 128 bits, and writing xmm clears the high 128 bits.
-d[i] of u256 is the i-th 32-bit lane, d[0] at the lowest bits, the rightmost cell in the figure.
-The guest memory is managed by frame/; the physical memory is the file dram.img in the current directory. This lab accesses it only through load, store, rm_get and rm_set, by virtual address; they record page faults.
-'''
-# src:
-# 
-# 通用寄存器的下标与机器码中的寄存器编号相同，所以 ModRM 中解析出的编号直接作下标。
-# flags 只用五位：CF、PF、ZF、SF、OF，位号分别是 0、2、6、7、11；其余位保持不变。
-# 向量寄存器是 256 位的 ymm；xmm 是它的低 128 位，写 xmm 时高 128 位清零。
-# u256 的 d[i] 是第 i 个 32 位通道，d[0] 在最低位，对应图中最右边的一格。
-# 客户机内存由 frame/ 管理，物理内存是当前目录下的文件 dram.img；本实验只通过 load、store、rm_get、rm_set 按虚拟地址访问，缺页由它们记录。
-
 ['cpu-loop.title']
-src_hash = '62ad8cdb'
-text = 'The main loop: x86_begin, switch (op) and x86_end'
-# src: 主循环：x86_begin、switch (op) 与 x86_end
+src_hash = '51d9db9e'
+text = 'The main loop: read, decode, execute, again and again'
+# src: 主循环：不断读取、解析、执行
 
 ['cpu-loop.side_image.1.alt']
 src_hash = 'dd9245cc'
@@ -1618,132 +1566,121 @@ text = 'contain'
 # src: contain
 
 ['cpu-loop.slide.1']
-src_hash = 'bbe7d15a'
-text = '`frame/main.c` loads the program and calls `interp_run(c)`; the loop and `default` are already written, and this lab adds the `case`s.'
+src_hash = '587b62a5'
+text = '`x86_begin` reads up to and including the opcode; the bytes after it are read by the `case`, and the opcode and ModRM decide how many.'
 # src:
 # 
-# `frame/main.c` 装载程序后调用 `interp_run(c)`；循环与 `default` 已经写出，本实验补充 `case`。
+# `x86_begin` 读到操作码为止，其后的字节由 `case` 读取，读多少由操作码与 ModRM 决定。
 
 ['cpu-loop.notes.1']
-src_hash = '0b7079c7'
+src_hash = '2777e1bb'
 text = '''
 One pass of the loop executes one instruction. x86_begin fetches bytes at R[RIP], skips the prefixes, records REX and the operand size, reads the opcode and returns its number op; R[RIP] now points at the first byte after the opcode.
-switch enters one case by op: the case reads the bytes after the opcode, computes, and writes registers and memory.
+switch enters one case by op: the case reads the bytes after the opcode, computes, and writes registers and memory. An opcode without a case goes to default and is executed by x86_other of the framework. The opcode 0f 05 of syscall has no case: x86_other hands it to sys_dispatch of frame/sysbase.c, which carries out the system call by R[RAX] on the guest's behalf (write calls the host libc's write; exit sets c->halted to 1, after which x86_end returns -1), so interp.c needs no case for syscall.
 x86_end counts the instruction and writes the commit log; when the instruction faults midway (a page fault, an illegal instruction), it restores the registers to their values before the instruction, returns -1, and the loop ends with a report.
 case 0x89 is one form of mov, rm = reg: modrm parses the operands first, then the value of register reg is written to rm.
 '''
 # src:
 # 
 # 一次循环执行一条指令。x86_begin 从 R[RIP] 取字节，跳过前缀，记下 REX 与操作数宽度，读出操作码并返回它的编号 op；此时 R[RIP] 指向操作码之后的第一个字节。
-# switch 按 op 进入一个 case：case 读操作码之后的字节，计算，写寄存器与内存。
+# switch 按 op 进入一个 case：case 读操作码之后的字节，计算，写寄存器与内存。没有 case 的操作码进入 default，由框架的 x86_other 执行。syscall 的操作码 0f 05 就没有 case：x86_other 把它交给 frame/sysbase.c 的 sys_dispatch，sys_dispatch 按 R[RAX] 代为执行系统调用（write 调用本机 libc 的 write，exit 把 c->halted 置 1，x86_end 随后返回 -1），所以 interp.c 不需要为 syscall 写 case。
 # x86_end 计数并写提交日志；指令中途出错（缺页、非法指令）时它把寄存器恢复到指令开始前的值，返回 -1，循环结束并打印报告。
 # case 0x89 是 mov 的一种形式，rm = reg：先 modrm 解析操作数，再把 reg 寄存器的值写到 rm。
+
+['cpu-insn-format.title']
+src_hash = '2b8b307f'
+text = 'The segments of an x86-64 instruction and the order they are read in'
+# src: x86-64 指令的组成与读取顺序
+
+['cpu-insn-format.code.1']
+src_hash = 'c97f273a'
+text = '''
+b = next byte
+while (b is a legacy prefix) { record what it selects; b = next byte }
+if (b is a REX prefix 40 .. 4f) { rex = b; b = next byte }
+if (b is a VEX prefix c4 or c5) { vex = b and the 2 or 1 bytes after it; op = next byte }
+else if (b == 0f) op = 0f and the 1 or 2 bytes after it
+else op = b
+if (op takes a ModRM) {
+    modrm = next byte
+    if (a SIB follows modrm) sib = next byte
+    disp = the next 0, 1 or 4 bytes, as many as modrm and sib give
+}
+imm = the next 0, 1, 2, 4 or 8 bytes, as many as op and the operand width give
+'''
+# src:
+# b = 下一个字节
+# while (b 是传统前缀) { 记下它的作用; b = 下一个字节 }
+# if (b 是 REX 前缀 40 .. 4f) { rex = b; b = 下一个字节 }
+# if (b 是 VEX 前缀 c4 或 c5) { vex = b 与其后 2 或 1 个字节; op = 下一个字节 }
+# else if (b == 0f) op = 0f 与其后 1 或 2 个字节
+# else op = b
+# if (op 带 ModRM) {
+#     modrm = 下一个字节
+#     if (modrm 之后有 SIB) sib = 下一个字节
+#     disp = 其后 0、1 或 4 个字节，个数由 modrm 与 sib 决定
+# }
+# imm = 其后 0、1、2、4 或 8 个字节，个数由 op 与操作数宽度决定
+
+['cpu-insn-format.notes.1']
+src_hash = 'a298d4ab'
+text = '''
+An x86-64 instruction consists of at most the seven segments of the figure, in order from left to right, and is at most 15 bytes long; every segment except the opcode may be absent. The widths of the segments in the figure are not to scale.
+66, f2, f3, f0, 67 and the segment prefixes are called legacy prefixes. They fall into four groups, and an instruction uses at most one from each group, so the prefixes take at most 4 bytes: 66 changes the operand width to 2 bytes; f2 and f3 are repeat prefixes and also distinguish some vector instructions; f0 is the lock prefix; 67 changes the address width; 2e, 3e, 26, 36, 64 and 65 are segment prefixes. The REX prefix is one byte from 40 to 4f, directly before the opcode: its W bit changes the operand width to 8 bytes, and its other three bits add a 4th bit to register numbers, covered in the next subsection.
+The opcode has 1 to 3 bytes: one byte; two bytes starting with 0f; three bytes starting with 0f 38 or 0f 3a. AVX instructions start with a VEX prefix: the 2 bytes after c4 carry the bits of REX, the table the opcode belongs to (0f, 0f 38 or 0f 3a) and the choice of 66, f2 or f3; the 1 byte after c5 is its short form, with the table fixed to 0f. A VEX instruction therefore has no REX and no 0f, and the VEX prefix is followed by a one-byte opcode.
+The pseudocode is written in the order of reading. Whether a segment is present, and how many bytes it has, is decided by the bytes before it: the opcode decides whether there is a ModRM and whether there is an immediate; the ModRM decides whether there is a SIB and how many bytes the displacement has. The fields of ModRM and SIB are covered in the next subsection. The length of the immediate is decided by the opcode, for some opcodes together with the operand width: the immediate of opcode 81 is 2 bytes with a 66 prefix and 4 bytes otherwise, still 4 bytes with REX.W, sign-extended to 8 bytes once read. An 8-byte immediate occurs only in two forms of mov: REX.W with b8 to bf writes an 8-byte constant into a register, and a0 to a3 read or write memory at an 8-byte address; objdump writes both as movabs.
+The brackets under the figure show how mini-cpu divides the work. x86_begin reads the prefixes, REX or VEX and the opcode, and returns the number op: it recognises 66, f2, f3, the six segment prefixes, REX and VEX, and on 0f it reads one more byte. The bytes after that are read in the case: modrm(&x) calls your modrm_decode, which reads ModRM, SIB and displacement; the immediate is read by functions such as fetch_imm and fetch8.
+The colour of each segment in the figure stands for the same segment of bytes on every later page: grey prefix (REX and VEX included), orange opcode, green ModRM, purple SIB, teal displacement, blue immediate.
+'''
+# src:
+# 
+# 一条 x86-64 指令最多由图中的七段组成，按从左到右的顺序排列，最长 15 字节；除操作码外，每一段都可以没有。图中各段的宽度不按比例。
+# 66、f2、f3、f0、67 与段前缀称为传统前缀，分四类，一条指令中每一类最多用一个，因此前缀最多 4 个字节：66 把操作数宽度改为 2 字节；f2 与 f3 是重复前缀，也用来区分一部分向量指令；f0 是 lock 前缀；67 改变地址的宽度；2e、3e、26、36、64、65 是段前缀。REX 前缀是 40 到 4f 中的一个字节，紧挨在操作码之前：它的 W 位把操作数宽度改为 8 字节，另外三位给寄存器编号加第 4 位，在下一小节讲。
+# 操作码有 1 到 3 个字节：一个字节；0f 开头的两个字节；0f 38、0f 3a 开头的三个字节。AVX 指令以 VEX 前缀开头：c4 之后的 2 个字节带有 REX 的各位、操作码所在的表（0f、0f 38 或 0f 3a）与 66、f2、f3 的选择，c5 之后的 1 个字节是它的简写，表固定为 0f。VEX 指令因此没有 REX 与 0f，VEX 之后是一个字节的操作码。
+# 伪代码按读取的顺序写出，每一段有没有、有几个字节，由它之前的字节决定：操作码决定有没有 ModRM、有没有立即数；ModRM 决定有没有 SIB、偏移有几个字节，ModRM 与 SIB 的各个字段在下一小节讲。立即数的字节数由操作码决定，部分操作码再看操作数宽度：操作码 81 的立即数在有 66 前缀时是 2 字节，否则是 4 字节，有 REX.W 时仍是 4 字节，读出后符号扩展为 8 字节。8 字节的立即数只出现在两种 mov 中：REX.W 与 b8 到 bf 的组合把一个 8 字节常数写入寄存器，a0 到 a3 以一个 8 字节的地址读写内存；objdump 把两者都写作 movabs。
+# 图下方的括号是 mini-cpu 中的分工。x86_begin 读前缀、REX 或 VEX 与操作码，返回编号 op：它识别 66、f2、f3、六个段前缀、REX 与 VEX，读到 0f 时再读一个字节。其后的字节由 case 读取：modrm(&x) 调用你的 modrm_decode，读 ModRM、SIB 与偏移；立即数由 fetch_imm、fetch8 这些函数读取。
+# 图中各段的颜色在后面每一页都表示同一段字节：灰色前缀（包括 REX 与 VEX）、橙色操作码、绿色 ModRM、紫色 SIB、青色偏移、蓝色立即数。
 
 ['cpu-bytes.title']
 src_hash = '6c2f1000'
 text = 'The bytes of an instruction and the number op'
 # src: 一条指令的字节与 op 的编号
 
-['cpu-bytes.slide.1']
-src_hash = '9a6052ee'
-text = '`x86_begin` reads up to and including the opcode; the bytes after the opcode are read by the `case` itself, and the opcode decides which bytes those are.'
-# src:
-# 
-# `x86_begin` 读到操作码为止；操作码之后的字节由 `case` 自己读，读哪些字节由操作码决定。
-
 ['cpu-bytes.notes.1']
-src_hash = 'b33f8777'
+src_hash = '565b659f'
 text = '''
-The four instructions are taken from the objdump output of the guest programs.
+Every instruction except the second is taken from the objdump output of the guest programs.
 The first has the REX prefix 4c, the opcode 03, the ModRM 04, the SIB d5 and a 4-byte displacement; op is 0x03.
-The second has the ModRM ec and a 4-byte immediate after the opcode 81; op is 0x81.
+The second, add %rax,%r8, has the same REX prefix and opcode as the first, so op is again 0x03; only the ModRM byte differs. ModRM 04 says that the other operand, rm, is in memory and that a SIB and a 4-byte displacement follow; ModRM c0 says that rm is the register %rax and that the instruction ends here. Both instructions write the sum to %r8: the first adds 8 bytes from memory, the second adds %rax. For instructions with the same opcode, ModRM decides whether the other operand is a register or memory and how many bytes follow; the fields of ModRM are the subject of the next subsection. guest/sum contains the same instruction add %rax,%r8, which the assembler encodes as 49 01 c0, with the opcode 01; the 4c 03 c0 here is what the assembler emits for {load} add %rax,%r8, which makes it use the opcode 03, for comparison with the first.
+The third has the ModRM ec and a 4-byte immediate after the opcode 81; op is 0x81.
 The number of the two-byte opcode 0f 88 is 0x100 plus the second byte, 0x188; a 4-byte offset follows.
 The number of a VEX instruction is 0x1000 | map << 8 | opcode byte: c4 e2 7d is the three-byte VEX prefix, map 2 is 0f 38, the opcode is 40, the number 0x1240.
-The same colour stands for the same segment of bytes on every later page: grey prefix, orange opcode, green ModRM, purple SIB, teal displacement, blue immediate.
+The lower half lists the functions that one pass of interp_run calls, in order, for the first instruction, the add. x86_begin reads the prefix 4c and the opcode 03, records x.rex = 0x4c and the operand size x.size = 8, and returns op = 0x03; switch enters case 0x03. The opcode 03 is one form of add, reg = reg + rm: reg is a register, rm a register or memory, and the sum is written to reg; in this instruction reg is %r8 and rm is memory, so 8 bytes in memory are added to %r8. modrm calls your modrm_decode, which reads the ModRM, the SIB and the 4-byte displacement and finds x.reg = 8, that is %r8, and the other operand in memory at the address 0x403020 + %rdx × 8; how these bytes are decoded is the subject of the next subsection. get reads %r8 and rm_get reads 8 bytes at that address; the operation number of x86_alu is 0x03 >> 3 = 0, add, and it returns the sum and sets the flags; set writes the sum to %r8. The second, add %rax,%r8, goes through the same calls, except that modrm finds x.rm = 0 and rm_get reads %rax. Last, x86_end returns 0; R[RIP] has already moved past the displacement and points at the next instruction.
 '''
 # src:
 # 
-# 四条指令都取自客户机程序的 objdump 输出。
-# 第一条有 REX 前缀 4c、操作码 03、ModRM 04、SIB d5 与 4 字节位移；op 是 0x03。
-# 第二条的操作码 81 之后是 ModRM ec 与 4 字节立即数；op 是 0x81。
-# 两字节操作码 0f 88 的编号是 0x100 加第二个字节，即 0x188；之后是 4 字节位移。
+# 除第二条外，各条指令都取自客户机程序的 objdump 输出。
+# 第一条有 REX 前缀 4c、操作码 03、ModRM 04、SIB d5 与 4 字节偏移；op 是 0x03。
+# 第二条 add %rax,%r8 与第一条的 REX 前缀和操作码都相同，op 也是 0x03，只有 ModRM 字节不同。ModRM 04 表示另一个操作数 rm 在内存中，后面还有 SIB 与 4 字节偏移；ModRM c0 表示 rm 是寄存器 %rax，指令到此结束。两条指令都把和写入 %r8：第一条加的是内存中的 8 字节，第二条加的是 %rax。同一个操作码的指令，另一个操作数是寄存器还是内存、后面还有几个字节，由 ModRM 决定；ModRM 的各个字段在下一小节讲。guest/sum 中有同一条指令 add %rax,%r8，汇编器把它编码为 49 01 c0，用的是操作码 01；这里的 4c 03 c0 是用 {load} add %rax,%r8 让汇编器改用操作码 03 得到的，以便与第一条比较。
+# 第三条的操作码 81 之后是 ModRM ec 与 4 字节立即数；op 是 0x81。
+# 两字节操作码 0f 88 的编号是 0x100 加第二个字节，即 0x188；之后是 4 字节偏移。
 # VEX 指令的编号是 0x1000 | map << 8 | 操作码字节：c4 e2 7d 是三字节的 VEX 前缀，map 2 即 0f 38，操作码 40，编号 0x1240。
-# 同一种颜色在后面每一页都表示同一段字节：灰色前缀、橙色操作码、绿色 ModRM、紫色 SIB、青色位移、蓝色立即数。
-
-['cpu-helpers.title']
-src_hash = '9cdf9830'
-text = 'The helpers a case calls'
-# src: case 调用的辅助函数
-
-['cpu-helpers.slide.1']
-src_hash = '0e38b307'
-text = 'The helpers are in `frame/x86.c`, and `include/mcpu.h` states the contract of each. They read and write registers and memory by `x.size`; a `case` writes only the semantics of the instruction.'
-# src:
-# 
-# 辅助函数在 `frame/x86.c` 中，`include/mcpu.h` 有每个函数的约定。它们按 `x.size` 读写寄存器与内存，`case` 只写指令的语义。
-
-['cpu-helpers.notes.1']
-src_hash = '3c4ba244'
-text = '''
-Top left are the functions that read the rest of the instruction, each advancing R[RIP]: fetch8, fetch16, fetch32 and fetch64 read a fixed number of bytes, fetch_imm reads an immediate of the operand size and sign-extends it, modrm reads the operand bytes and fills x.reg, x.sub and x.rm.
-Top right are the registers and flags: get and set read and write register n by x.size; R[RSP], R[RIP] and R[RFLAGS] are read and written directly; x86_alu dispatches the operation number 0 to 7 to the functions of alu.c and sets the flags.
-Bottom left is the rm operand: when rm is a register, rm_get and rm_set use get and set; when it is memory, they read or write x.size bytes at ea; load and store read or write n bytes at any address, and record the page fault and return failure when one occurs.
-Bottom right are the vector registers: rm_vget and rm_vset read and write n bytes of vector rm, vset writes a vector register, clearing the high bits when writing a register; Y[x.v] is the first source operand of VEX.
-'''
-# src:
-# 
-# 左上是读指令其余字节的函数，每个都让 R[RIP] 前进：fetch8、fetch16、fetch32、fetch64 读定长的字节，fetch_imm 按操作数宽度读立即数并符号扩展，modrm 读操作数字节并填 x.reg、x.sub、x.rm。
-# 右上是寄存器与标志位：get 与 set 按 x.size 读写编号为 n 的寄存器；R[RSP]、R[RIP]、R[RFLAGS] 直接读写；x86_alu 把运算编号 0 到 7 分派到 alu.c 的函数并设置标志位。
-# 左下是 rm 操作数：rm 是寄存器时 rm_get 与 rm_set 用 get 与 set，是内存时在 ea 处读写 x.size 字节；load 与 store 读写任意地址的 n 字节，缺页时记录并返回失败。
-# 右下是向量寄存器：rm_vget 与 rm_vset 读写向量 rm 的 n 字节，vset 写一个向量寄存器，写寄存器时高位清零；Y[x.v] 是 VEX 的第一个源操作数。
-
-['cpu-given.title']
-src_hash = '545f284a'
-text = 'The cases already written: 0x81/0x83, push and jmp'
-# src: 已经写出的 case：0x81/0x83、push 与 jmp
-
-['cpu-given.slide.1']
-src_hash = 'b511f86e'
-text = 'Three rules hold for every `case`: a displacement or an immediate is read completely before it is added to `R[RIP]`; `cmp` computes the flags only and writes no operand; `pop` reads the stack first, then moves `R[RSP]`, and writes the register last.'
-# src:
-# 
-# 三条对每个 `case` 都成立的规则：位移与立即数先读完再加到 `R[RIP]` 上；`cmp` 只算标志位，不写操作数；`pop` 先读栈、再移 `R[RSP]`、最后写寄存器。
-
-['cpu-given.notes.1']
-src_hash = '8b41aed6'
-text = '''
-0x81 and 0x83 are the eight operations with an immediate; the operation number is in x.sub. The two differ only in the width of the immediate: that of 0x83 is 1 byte, sign-extended to 64 bits. The case calls modrm first, then reads the immediate, and only then rm_get: a rip-relative address counts from the next instruction, and R[RIP] does not point there until the immediate has been read.
-The register of push is in the low 3 bits of the opcode, with REX.B as the 4th bit; the eight opcodes share one case.
-jmp 0xeb reads a 1-byte offset and adds it to R[RIP]; 0xe9 is the same with a 4-byte offset.
-Write the other cases as these three: read the bytes, compute, write back; a case reads only the bytes of its own group.
-'''
-# src:
-# 
-# 0x81 与 0x83 是带立即数的八种运算，运算编号在 x.sub 中；两者只差立即数的宽度，0x83 的立即数是 1 字节，符号扩展到 64 位。它先 modrm，再读立即数，然后才 rm_get：
-# rip 相对的地址以下一条指令的地址为基准，立即数读完之前 R[RIP] 还没有指向下一条指令。
-# push 的寄存器编号在操作码的低 3 位，REX.B 是第 4 位；八个操作码共用一个 case。
-# jmp 0xeb 读 1 字节的位移，加到 R[RIP] 上；0xe9 相同，位移 4 字节。
-# 写其余的 case 时照这三段的写法：读字节、计算、写回，每个 case 只读自己这一组的字节。
+# 下半部分是第一条 add 在 interp_run 的一次循环中依次调用的函数。x86_begin 读前缀 4c 与操作码 03，记下 x.rex = 0x4c 与操作数宽度 x.size = 8，返回 op = 0x03；switch 进入 case 0x03。操作码 03 是 add 的一种形式，reg = reg + rm：reg 是寄存器，rm 是寄存器或内存，和写入 reg；这一条的 reg 是 %r8，rm 是内存，即把内存中的 8 字节加到 %r8 上。modrm 调用你的 modrm_decode，读 ModRM、SIB 与 4 字节偏移，得出 x.reg = 8 即 %r8，另一个操作数在内存中，地址是 0x403020 + %rdx × 8；这几个字节怎样解析在下一小节讲。get 读 %r8，rm_get 从这个地址读 8 字节；x86_alu 的运算编号是 0x03 >> 3 = 0，即 add，它返回两数之和并设置标志位；set 把和写入 %r8。第二条 add %rax,%r8 经过同样的调用，只是 modrm 得出 x.rm = 0，rm_get 读的是 %rax。最后 x86_end 返回 0，此时 R[RIP] 已经越过偏移，指向下一条指令。
 
 ['bridge-cpu-class.title']
-src_hash = '227d25e0'
-text = 'In class: parsing ModRM and SIB'
-# src: 课上完成：ModRM 与 SIB 的解析
+src_hash = '96d72738'
+text = 'Parsing ModRM and SIB'
+# src: ModRM 与 SIB 的解析
 
 ['bridge-cpu-class.bridge.1']
-src_hash = 'b5ec8f62'
-text = '''
-In class: parsing ModRM and SIB
-modrm_decode of modrm.c
-'''
-# src:
-# 课上完成：ModRM 与 SIB 的解析
-# modrm.c 的 modrm_decode
+src_hash = '96d72738'
+text = 'Parsing ModRM and SIB'
+# src: ModRM 与 SIB 的解析
 
 ['section.cpu-class.title']
-src_hash = '227d25e0'
-text = 'In class: parsing ModRM and SIB'
-# src: 课上完成：ModRM 与 SIB 的解析
+src_hash = 'e5e1dabf'
+text = 'Demonstration in class: parsing ModRM and SIB'
+# src: 课堂演示：ModRM 与 SIB 的解析
 
 ['cpu-modrm-byte.title']
 src_hash = 'd850d733'
@@ -1758,7 +1695,7 @@ text = 'The first byte after the opcode. **mod** says whether the other operand 
 # 操作码之后的第一个字节。**mod** 说明另一个操作数是寄存器还是内存，**reg** 是寄存器编号或扩展的操作码，**rm** 是寄存器编号或基址寄存器的编号。
 
 ['cpu-modrm-byte.notes.1']
-src_hash = 'e35767aa'
+src_hash = '14702f1d'
 text = '''
 ModRM has three fields: the high 2 bits mod, the middle 3 bits reg, the low 3 bits rm.
 With mod 11, rm is a register; with 00, 01 and 10 the other operand is in memory, and mod also decides the width of the displacement: 0, 1 or 4 bytes.
@@ -1770,10 +1707,10 @@ The opcode 8b makes reg the destination, so %rdi = the 8 bytes in memory.
 # src:
 # 
 # ModRM 分三个字段：高 2 位 mod，中间 3 位 reg，低 3 位 rm。
-# mod 为 11 时 rm 是寄存器；00、01、10 时另一个操作数在内存中，mod 同时决定位移的宽度：0、1、4 字节。
+# mod 为 11 时 rm 是寄存器；00、01、10 时另一个操作数在内存中，mod 同时决定偏移的宽度：0、1、4 字节。
 # reg 是寄存器操作数的编号；0x81、0x83 这类组指令没有寄存器操作数，reg 字段扩展操作码，modrm_t 中叫 sub。
-# rm 在内存操作数的情况下是基址寄存器的编号，有两个例外：rm 100 表示随后有 SIB 字节，rm 101 且 mod 00 表示没有基址，随后 4 字节位移，地址相对于下一条指令。
-# 例子是 hello 的第一条指令：3c 是 00 111 100，内存操作数，没有位移，reg 是 %rdi，rm 100 读 SIB 字节 24。
+# rm 在内存操作数的情况下是基址寄存器的编号，有两个例外：rm 100 表示随后有 SIB 字节，rm 101 且 mod 00 表示没有基址，随后 4 字节偏移，地址相对于下一条指令。
+# 例子是 hello 的第一条指令：3c 是 00 111 100，内存操作数，没有偏移，reg 是 %rdi，rm 100 读 SIB 字节 24。
 # 操作码 8b 规定 reg 是目标，所以 %rdi = 内存中的 8 字节。
 
 ['cpu-sib-byte.title']
@@ -1782,14 +1719,14 @@ text = 'The SIB byte: scale, index and base'
 # src: SIB 字节：scale、index、base
 
 ['cpu-sib-byte.slide.1']
-src_hash = '2fdc5bfd'
+src_hash = 'bc38ca23'
 text = 'With rm 100 the SIB byte follows ModRM: address = displacement + base + index × scale. An **index** of 4 means no index register; a **base** field of 101 with mod 00 means no base, and a 4-byte displacement follows.'
 # src:
 # 
-# rm 为 100 时 ModRM 之后是 SIB 字节：地址 = 位移 + base + index × scale。**index** 得到 4 表示没有变址；**base** 字段为 101 且 mod 为 00 表示没有基址，随后 4 字节位移。
+# rm 为 100 时 ModRM 之后是 SIB 字节：地址 = 偏移 + base + index × scale。**index** 得到 4 表示没有变址；**base** 字段为 101 且 mod 为 00 表示没有基址，随后 4 字节偏移。
 
 ['cpu-sib-byte.notes.1']
-src_hash = '8a88740f'
+src_hash = '08b4b589'
 text = '''
 The three fields of SIB are 2, 3 and 3 bits like ModRM: the two bits of scale are the logarithm of the factor, index and base are register numbers.
 An index equal to 4 after REX.X is added means no index register, since %rsp cannot be an index; scale is then recorded as 1.
@@ -1800,7 +1737,7 @@ A base field of 101 with mod 00 means no base and a 4-byte displacement follows;
 # 
 # SIB 的三个字段与 ModRM 同样分 2、3、3 位：scale 两位是比例因子的对数，index 与 base 是寄存器编号。
 # index 加上 REX.X 之后等于 4 表示没有变址寄存器，因为 %rsp 不能作变址；此时 scale 记为 1。
-# base 字段 101 且 mod 00 表示没有基址，随后 4 字节位移，matmul 的这条指令就是这种形式：
+# base 字段 101 且 mod 00 表示没有基址，随后 4 字节偏移，matmul 的这条指令就是这种形式：
 # 地址 = 0x403020 + %rdx × 8。
 # hello 的 (%rsp) 是另一种常见形式：%rsp 作基址必须经过 SIB，SIB 24 是 00 100 100，没有变址，base 是 %rsp。
 
@@ -1842,11 +1779,11 @@ text = '`unsigned modrm_decode(const uint8_t *p, unsigned n, uint8_t rex, modrm_
 # `unsigned modrm_decode(const uint8_t *p, unsigned n, uint8_t rex, modrm_t *m)`：`p` 指向 ModRM 字节，`n` 是可读的字节数，`rex` 是前缀（没有时为 0），结果填入 `*m`。
 
 ['cpu-modrm-flow.notes.1']
-src_hash = 'e05966ba'
+src_hash = 'f0c546cb'
 text = '''
 Frame 1: read the ModRM byte, split out mod, sub and reg, add REX.R to reg. With mod 11, rm is a register, the other fields take their absent values, and the function returns 1.
 Frame 2: a memory operand. With rm field 100, read the SIB byte and split out scale, index and base; an index equal to 4 after REX.X means no index, a base field of 101 with mod 00 means no base.
-With an rm field other than 100, rm 101 with mod 00 is rip-relative; otherwise base = the rm field plus REX.B.
+With an rm field other than 100, rm 101 with mod 00 is %rip-relative; otherwise base = the rm field plus REX.B.
 Frame 3: the width of the displacement is decided by mod; mod 00 has no displacement, except in the two cases without a base, which have 4 bytes; the displacement is read little-endian and sign-extended to 64 bits. Return the number of bytes used, 1 to 6; before reading each byte check that it is within the n bytes, otherwise return 0.
 In class, modrm_decode is written from this figure; the body goes into modrm.c, and the table of examples in the head comment is part of the check cases.
 '''
@@ -1854,8 +1791,8 @@ In class, modrm_decode is written from this figure; the body goes into modrm.c, 
 # 
 # 第一帧：读 ModRM 字节，拆出 mod、sub 与 reg，reg 加 REX.R。mod 为 11 时 rm 是寄存器，其余字段取没有的值，返回 1。
 # 第二帧：内存操作数。rm 字段为 100 时读 SIB 字节，拆出 scale、index 与 base，index 加 REX.X 后等于 4 表示没有变址，base 字段 101 且 mod 00 表示没有基址。
-# rm 字段不是 100 时，rm 101 且 mod 00 是 rip 相对，其余 base = rm 字段加 REX.B。
-# 第三帧：位移的宽度由 mod 决定，mod 00 没有位移，没有基址的两种情况例外，4 字节；位移按小端读出并符号扩展到 64 位。返回用掉的字节数，1 到 6；读每个字节之前检查它在 n 个字节之内，否则返回 0。
+# rm 字段不是 100 时，rm 101 且 mod 00 是 %rip 相对，其余 base = rm 字段加 REX.B。
+# 第三帧：偏移的宽度由 mod 决定，mod 00 没有偏移，没有基址的两种情况例外，4 字节；偏移按小端读出并符号扩展到 64 位。返回用掉的字节数，1 到 6；读每个字节之前检查它在 n 个字节之内，否则返回 0。
 # 课上照这张图写 modrm_decode；函数体写在 modrm.c 中，开头注释的例子表就是检查用例的一部分。
 
 ['cpu-modrm-out.title']
@@ -1864,11 +1801,11 @@ text = 'The fields of modrm_t and how the interpreter uses them'
 # src: modrm_t 的字段与解释器对它的使用
 
 ['cpu-modrm-out.slide.1']
-src_hash = '0a90dff8'
-text = '`modrm_decode` only reads bytes and fills fields, without touching the registers; `modrm()` in `frame/x86.c` computes `x.addr` from these fields, and a `case` takes its operands with `get`, `rm_get` and `ea`.'
+src_hash = '16e7daf9'
+text = '`modrm_decode` only reads bytes and fills fields, without touching the registers; `modrm()` in `frame/x86.c` computes `x.addr` from these fields, and a `case` only has to take its operands with `get`, `rm_get` and `ea`.'
 # src:
 # 
-# `modrm_decode` 只读字节、填字段，不访问寄存器；`frame/x86.c` 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数。
+# `modrm_decode` 只读字节、填字段，不访问寄存器；`frame/x86.c` 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数即可。
 
 ['cpu-modrm-out.notes.1']
 src_hash = '34621f16'
@@ -1892,14 +1829,14 @@ text = 'Three instructions parsed: the mov, lea and REX.B of hello'
 # src: 三条指令的解析结果：hello 的 mov、lea 与 REX.B
 
 ['cpu-examples-1.slide.1']
-src_hash = '6a79ed3a'
-text = 'In class, these three are walked through byte by byte along the flowchart, writing down every field of `modrm_t` and the return value; `./mini-unit modrm` checks 338 inputs of this kind.'
+src_hash = '814f751c'
+text = 'Try writing out every field of `modrm_t` and the return value.'
 # src:
 # 
-# 课上按流程图逐字节走一遍这三条，写出 `modrm_t` 的每个字段与返回值；`./mini-unit modrm` 用 338 组这样的输入检查。
+# 尝试写出 `modrm_t` 的每个字段与返回值。
 
 ['cpu-examples-1.notes.1']
-src_hash = 'ef055245'
+src_hash = '0b9f699a'
 text = '''
 The first, mov (%rsp),%rdi: ModRM 3c is mod 0, reg 7, rm 100, which reads SIB 24; index 100 means no index, base 4; 2 bytes used.
 The second, lea 0x8(%rsp),%rsi: mod of ModRM 74 is 01, a 1-byte displacement 08; the rest as the first; 3 bytes used.
@@ -1909,71 +1846,9 @@ None of the three adds REX.R to reg, because REX.R is 0.
 # src:
 # 
 # 第一条 mov (%rsp),%rdi：ModRM 3c 是 mod 0、reg 7、rm 100，读 SIB 24，index 100 没有变址，base 4，用掉 2 字节。
-# 第二条 lea 0x8(%rsp),%rsi：ModRM 74 的 mod 是 01，1 字节位移 08；其余与第一条相同，用掉 3 字节。
+# 第二条 lea 0x8(%rsp),%rsi：ModRM 74 的 mod 是 01，1 字节偏移 08；其余与第一条相同，用掉 3 字节。
 # 第三条 mov %rdi,%r9：REX 49 的 B 为 1，ModRM f9 的 mod 11，rm 是寄存器 001 加 8 得 9，用掉 1 字节。
 # 三条的 reg 都不加 REX.R，因为 REX.R 为 0。
-
-['cpu-examples-2.title']
-src_hash = 'd741b5bf'
-text = 'Three instructions parsed: rip-relative, a SIB without base, a base under REX.B'
-# src: 三条指令的解析结果：rip 相对、没有基址的 SIB 与 REX.B 的基址
-
-['cpu-examples-2.slide.1']
-src_hash = 'fe14a854'
-text = 'One instruction for each of the three exceptions: rip-relative addressing with rm 101 and mod 00, a SIB without base with base 101 and mod 00, and rm 100 still reading the SIB under REX.B.'
-# src:
-# 
-# 三种例外各一条：rm 101 且 mod 00 的 rip 相对寻址，base 101 且 mod 00 的无基址 SIB，REX.B 之下 rm 100 仍读 SIB。
-
-['cpu-examples-2.notes.1']
-src_hash = '0bcda91c'
-text = '''
-The first, mov 0x1f1f(%rip),%eax: ModRM 05 is mod 0, rm 101, no base, rip recorded as 1, a 4-byte displacement follows; 5 bytes used.
-The second, add 0x403020(,%rdx,8),%r8: R of REX 4c is 1, reg 0 plus 8 gives 8; scale 11 of SIB d5 is 8, index 2, base 101 with mod 00 means no base, a 4-byte displacement follows; 6 bytes used.
-The third, lea -0x1(%r12),%eax: B of REX 41 is 1, the rm field 100 still reads the SIB, base 100 of SIB 24 plus 8 gives 12, the 1-byte displacement ff of mod 01 sign-extends to -1; 3 bytes used.
-'''
-# src:
-# 
-# 第一条 mov 0x1f1f(%rip),%eax：ModRM 05 是 mod 0、rm 101，没有基址，rip 记 1，随后 4 字节位移，用掉 5 字节。
-# 第二条 add 0x403020(,%rdx,8),%r8：REX 4c 的 R 为 1，reg 0 加 8 得 8；SIB d5 的 scale 11 是 8，index 2，base 101 且 mod 00 没有基址，随后 4 字节位移，用掉 6 字节。
-# 第三条 lea -0x1(%r12),%eax：REX 41 的 B 为 1，rm 字段 100 仍读 SIB，SIB 24 的 base 100 加 8 得 12，mod 01 的 1 字节位移 ff 符号扩展为 -1，用掉 3 字节。
-
-['cpu-modrm-check.title']
-src_hash = 'dec86af6'
-text = 'Checking modrm_decode: mini-unit and --disasm'
-# src: 检查 modrm_decode：mini-unit 与 --disasm
-
-['cpu-modrm-check.demo.1.name']
-src_hash = 'b401808b'
-text = 'Check modrm_decode on its own'
-# src: 单独检查 modrm_decode
-
-['cpu-modrm-check.demo.2.name']
-src_hash = 'f99aeb0b'
-text = 'Disassemble the first five instructions of hello'
-# src: 反汇编 hello 的前五条指令
-
-['cpu-modrm-check.slide.1']
-src_hash = 'c13b399c'
-text = '`mini-unit` prints one line per failed case: the input bytes, the operand as written in assembly, the expected and the actual value; when every case passes, only `modrm: 338 checks, 0 failed` is printed. `--disasm` matches `objdump -d` line by line, and the grading compares the checksums.'
-# src:
-# 
-# `mini-unit` 每个失败的用例一行：输入字节、操作数的写法、期望值与实际值，全部通过时只有 `modrm: 338 checks, 0 failed`。`--disasm` 与 `objdump -d` 逐行相同，评测比较校验和。
-
-['cpu-modrm-check.notes.1']
-src_hash = '2be2f326'
-text = '''
-./mini-unit modrm runs no guest program; it calls modrm_decode directly on 338 sets of bytes, covering every form and every truncated length.
-The output on the page is the report of one error: the displacement f8 was not sign-extended and gave 248; each line states the input bytes, the REX, the operand as written in assembly, the expected and the actual value, and the function is fixed from it. When everything passes only the last line is printed, 0 failed.
---disasm disassembles the whole program with the same modrm_decode, in the format of objdump -d, so the two can be compared line by line with diff.
-Part 1 of the grading is exactly these three items: mini-unit modrm, the disassembly of the guest programs, and the disassembly of randomly generated memory operands.
-'''
-# src:
-# 
-# ./mini-unit modrm 不运行客户机程序，直接用 338 组字节调用 modrm_decode，包括每种形式与每种截断的长度。
-# 页面上的输出是一处错误的报告：位移 f8 没有符号扩展，得到 248；每行写明输入的字节、REX、操作数在汇编中的写法、期望值与实际值，按它改函数。全部通过时只打印最后一行，0 failed。
-# --disasm 用同一个 modrm_decode 反汇编整个程序，格式与 objdump -d 相同，所以可以用 diff 逐行比较。
-# 评测的第 1 部分就是这三项：mini-unit modrm、各个客户机程序的反汇编、随机生成的内存操作数的反汇编。
 
 ['bridge-cpu-rest.title']
 src_hash = 'f575f911'
@@ -2001,11 +1876,11 @@ text = 'alu.c: ten functions and five flags'
 # src: alu.c：十个函数与五个标志位
 
 ['cpu-alu-flags.slide.1']
-src_hash = 'ef1e5fa2'
-text = 'Each function returns a result of `size` bytes and changes only these five bits of `*f`. `x86_add` is the written example; `x86_sub` and `x86_logic` follow it, and `inc`, `dec` and `neg` are composed from them.'
+src_hash = '076af282'
+text = 'Each function returns a result of `size` bytes and changes only these five bits of `*f`. `x86_add` is the written example; `x86_sub` and `x86_logic` follow it, and `inc`, `dec` and `neg` can be composed from them.'
 # src:
 # 
-# 每个函数返回 `size` 字节的结果，只改 `*f` 的这五位。`x86_add` 是写出的例子，`x86_sub` 与 `x86_logic` 照它写，`inc`、`dec`、`neg` 由它们组合。
+# 每个函数返回 `size` 字节的结果，只改 `*f` 的这五位。`x86_add` 是写出的例子，`x86_sub` 与 `x86_logic` 照它写，`inc`、`dec`、`neg` 可以由它们组合。
 
 ['cpu-alu-flags.notes.1']
 src_hash = '363da1ee'
@@ -2025,35 +1900,6 @@ There are two callers: x86_alu dispatches the operation numbers 0 to 7 to the fi
 # x86_inc 已经写出：调用 x86_add 但保留 CF；x86_dec 与 x86_neg 同样由 x86_sub 得到。
 # x86_shift 中 shl 已经写出，shr 与 sar 要写；x86_mul 要写，x86_div 已经写出。
 # 调用者有两个：x86_alu 把运算编号 0 到 7 分派到前四个函数；其余六个由框架的 x86_other 调用，它取出 inc、dec、neg、移位、乘除法的操作数并写回结果。
-
-['cpu-cf-of.title']
-src_hash = 'b939b1e5'
-text = 'The definitions of CF and OF'
-# src: CF 与 OF 的定义
-
-['cpu-cf-of.slide.1']
-src_hash = '88887470'
-text = '**CF** is the unsigned result exceeding `size` bytes: the carry out of the top bit for an addition, the borrow for a subtraction. **OF** is two addends of the same sign giving a sum of the opposite sign; for a subtraction a − b, OF is 1 when a and b have opposite signs and the result has the sign opposite to a.'
-# src:
-# 
-# **CF** 是无符号结果超出 `size` 字节：加法是最高位的进位，减法是借位。**OF** 是两个同号加数的和异号；减法 a − b 中 a 与 b 异号且结果与 a 异号时 OF 为 1。
-
-['cpu-cf-of.notes.1']
-src_hash = '3cf2c964'
-text = '''
-Three 8-bit examples. 0xff + 0x01: unsigned 255 + 1 does not fit, CF is 1; signed -1 + 1 = 0 is correct, OF is 0.
-0x7f + 0x01: unsigned 128 is correct, CF is 0; signed 127 + 1 gives -128, the sum of two positive numbers is negative, OF is 1.
-0x80 + 0x80: unsigned 256 does not fit, signed -128 + -128 gives 0, the sum of two negative numbers is non-negative, CF and OF are both 1.
-The test for OF looks at three top bits only: the top bits of a and b are equal and the top bit of r differs from them.
-x86_add already computes these two flags; CF of x86_sub is unsigned a < b + borrow, and OF follows the rule for subtraction.
-'''
-# src:
-# 
-# 三个 8 位的例子。0xff + 0x01：无符号 255 + 1 放不下，CF 为 1；有符号 -1 + 1 = 0 正确，OF 为 0。
-# 0x7f + 0x01：无符号 128 正确，CF 为 0；有符号 127 + 1 得 -128，两个正数的和是负数，OF 为 1。
-# 0x80 + 0x80：无符号 256 放不下，有符号 -128 + -128 得 0，两个负数的和是非负数，CF 与 OF 都为 1。
-# OF 的判断只看三个最高位：a、b 的最高位相同且 r 的最高位与它们不同。
-# x86_add 已经写出了这两个标志位；x86_sub 的 CF 是无符号 a < b + borrow，OF 按减法的规则。
 
 ['cpu-shift.title']
 src_hash = 'd1d7c5a1'
@@ -2088,14 +1934,15 @@ text = 'The integer instructions of interp.c: five groups by the bytes after the
 # src: interp.c 的整数指令：按操作码之后的字节分五组
 
 ['cpu-insn-groups.slide.1']
-src_hash = '4a9adee2'
+# CHANGED: was 4a9adee2
+src_hash = '717d7480'
 text = 'The comment at the head of `interp.c` lists every opcode and its semantics by these five groups; in parentheses is the first guest program that uses it. A `case` reads only the bytes of its own group.'
 # src:
 # 
-# `interp.c` 开头的注释按这五组列出每个操作码与它的语义，括号中是第一个用到它的客户机程序。一个 `case` 只读它这一组的字节。
+# `interp.c` 开头的注释按这五组列出每个操作码的语义，括号中是第一个用到它的客户机程序。
 
 ['cpu-insn-groups.notes.1']
-src_hash = '41a177d4'
+src_hash = '7c4acf4a'
 text = '''
 Opcode only: push, pop, ret. push is written; pop and ret follow it, the register number is in the low 3 bits of the opcode plus REX.B.
 Operand bytes: the two forms of mov, lea, the two forms of the eight operations, test. For rm = rm OP reg, the eight opcodes 01, 09, 11, 19, 21, 29, 31 and 39 have the operation number op >> 3; for reg = reg OP rm the eight are 03, 0b to 3b.
@@ -2110,7 +1957,7 @@ Write one instruction of each group; the others of the group only change the ope
 # 操作数字节：mov 的两种形式、lea、八种运算的两种形式、test。rm = rm OP reg 的八个操作码01、09、11、19、21、29、31、39 的运算编号是 op >> 3；reg = reg OP rm 的八个是 03、0b 到 3b。
 # 操作数字节加立即数：c7 是 mov，81 与 83 已经写出，运算编号在 x.sub。
 # 立即数：b8 到 bf 是 mov 到寄存器，x.size 为 8 时立即数 8 字节。
-# 跳转的位移：call e8、jmp eb 与 e9、jcc 70 到 7f 与 180 到 18f；位移读完后 R[RIP] 是下一条指令，加上 rel。
+# 跳转的偏移：call e8、jmp eb 与 e9、jcc 70 到 7f 与 180 到 18f；偏移读完后 R[RIP] 是下一条指令，加上 rel。
 # 每组写好一条，同组的其余指令只换运算或宽度。
 
 ['cpu-cond-jump.title']
@@ -2119,14 +1966,14 @@ text = 'cond and conditional jumps'
 # src: cond 与条件跳转
 
 ['cpu-cond-jump.slide.1']
-src_hash = '392dbaab'
+src_hash = '8865c4b0'
 text = '`cond(f, cc)` reads the five flags of `f` and returns 1 or 0 by the low 4 bits of the condition code `cc`; the table of the 16 condition codes is in the comment of `interp.c`. The `case` of `jcc` reads the offset first, and `R[RIP] += rel` when `cond` is 1.'
 # src:
 # 
-# `cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 `interp.c` 的注释中。`jcc` 的 `case` 先读位移，`cond` 为 1 时 `R[RIP] += rel`。
+# `cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 `interp.c` 的注释中。`jcc` 的 `case` 先读偏移，`cond` 为 1 时 `R[RIP] += rel`。
 
 ['cpu-cond-jump.notes.1']
-src_hash = '7523a59f'
+src_hash = 'f26fea86'
 text = '''
 The condition code is the low 4 bits of the opcode, and the case of jcc passes op to cond directly.
 e is ZF, ne is !ZF, l is SF != OF, ge is SF == OF; the other 12 are in the head comment of interp.c and in mcpu.h.
@@ -2138,8 +1985,8 @@ x86_other of the frame also calls cond for cmovcc and setcc, so the conditions i
 # 
 # 条件码是操作码的低 4 位，jcc 的 case 直接把 op 传给 cond。
 # e 是 ZF，ne 是 !ZF，l 是 SF != OF，ge 是 SF == OF；其余 12 个在 interp.c 开头的注释与 mcpu.h 中。
-# 例子是 sum 的 jge：操作码 7d 的条件码 d 是 ge，位移 f4 是 -12。
-# 位移读完后 R[RIP] 是 40112c，加 -12 得 401120，循环的开头。
+# 例子是 sum 的 jge：操作码 7d 的条件码 d 是 ge，偏移 f4 是 -12。
+# 偏移读完后 R[RIP] 是 40112c，加 -12 得 401120，循环的开头。
 # 框架的 x86_other 处理 cmovcc 与 setcc 时也调用 cond，所以评测的 conditions 一项同时检查三种指令。
 
 ['cpu-vector.title']
@@ -2172,219 +2019,3 @@ The rm of vmovdqu may be memory; the destination of vmovd is rm, written with rm
 # vpaddd 的 case：modrm 解析 rm，rm_vget 读第二个源，与 Y[x.v] 逐通道相加到局部的 r，vset 写 x.reg。
 # 目标寄存器同时是源，所以先算到局部变量，最后一步才写出；写 xmm 时 vset 清零高 128 位。
 # vmovdqu 的 rm 可以是内存；vmovd 的目标是 rm，用 rm_set 写 4 字节。
-
-['bridge-cpu-check.title']
-src_hash = 'e4862e72'
-text = 'Debugging, grading and submission'
-# src: 调试、评测与提交
-
-['bridge-cpu-check.bridge.1']
-src_hash = 'e4862e72'
-text = 'Debugging, grading and submission'
-# src: 调试、评测与提交
-
-['section.cpu-check.title']
-src_hash = 'e4862e72'
-text = 'Debugging, grading and submission'
-# src: 调试、评测与提交
-
-['cpu-run-fault.title']
-src_hash = '723d9509'
-text = 'The first run: the illegal-instruction report'
-# src: 第一次运行：非法指令的报告
-
-['cpu-run-fault.side_image.1.alt']
-src_hash = 'dd9245cc'
-text = 'contain'
-# src: contain
-
-['cpu-run-fault.demo.1.name']
-src_hash = '38d8a51d'
-text = 'Build lab 1 and run hello'
-# src: 编译实验一并运行 hello
-
-['cpu-run-fault.slide.1']
-src_hash = '3651fa37'
-text = 'An opcode without a `case` is reported by `x86_other` as an illegal instruction, and `rip` is the address of that instruction. After `case 0x8b` is added, the report moves on to the next instruction without a `case`:'
-# src:
-# 
-# 没有 `case` 的操作码由 `x86_other` 报告为非法指令，`rip` 是这条指令的地址。补上 `case 0x8b` 后再运行，报告前进到下一条没有 `case` 的指令：
-
-['cpu-run-fault.notes.1']
-src_hash = '9383d02d'
-text = '''
-The released code already has the main loop, so the first run reaches the first instruction; its opcode 8b has no case, x86_other reports an illegal instruction and prints every register, with rip 401000.
-objdump -d guest/hello shows mov (%rsp),%rdi at that address; add case 0x8b and rebuild.
-On the next run the instruction count becomes 1 and rip becomes 401004, the lea. Add the cases in this order until hello prints its two lines; then move to the next guest program.
---max N stops the interpreter after N instructions; with -v every instruction is shown.
-'''
-# src:
-# 
-# 发布的代码已经有主循环，所以第一次运行就能到达第一条指令；它的操作码 8b 没有 case，x86_other 报告非法指令，打印全部寄存器，rip 是 401000。
-# 用 objdump -d guest/hello 查这个地址，是 mov (%rsp),%rdi，补上 case 0x8b，重新编译。
-# 再运行，报告的指令数变成 1，rip 变成 401004，即 lea。按这个顺序逐条补充，直到 hello 打印它的两行输出；然后换下一个客户机程序。
-# --max N 让解释器执行 N 条指令后停止，配合 -v 可以看到每条指令。
-
-['cpu-trace.title']
-src_hash = '259fea69'
-text = '-v and --commit: what each instruction did'
-# src: -v 与 --commit：看每条指令做了什么
-
-['cpu-trace.demo.1.name']
-src_hash = '9d4392c2'
-text = 'Print the first four instructions of hello one by one'
-# src: 逐条打印 hello 的前四条指令
-
-['cpu-trace.demo.2.name']
-src_hash = '7da1eec1'
-text = 'The first four lines of the commit log'
-# src: 提交日志的前四行
-
-['cpu-trace.slide.1']
-src_hash = '3f3f16a9'
-text = '`-v` prints per line the address, `op` and three registers; the commit log prints per line the address, the memory written and the registers changed.'
-# src:
-# 
-# `-v` 每行：地址、`op`、三个寄存器；提交日志每行：地址、写的内存、改变的寄存器。
-
-['cpu-trace.notes.1']
-src_hash = 'a274ffa9'
-text = '''
--v prints to stderr, one line before each instruction executes; --max 4 stops after four.
---commit - writes the commit log to standard output, one line per instruction, listing only the memory written and the registers whose value changed, without rip.
-The and at 401009 did not change rsp, so only flags appears; the call at 40100d wrote the return address on the stack and rsp.
-A vector register is written in the log as one 256-bit hexadecimal number, the rightmost 8 digits being lane 0.
-The three commit-log items of the grading compare this log with the real execution on this machine; one wrong register in one instruction is found.
-'''
-# src:
-# 
-# -v 打印到 stderr，每条指令执行之前一行；--max 4 执行四条后停止。
-# --commit - 把提交日志写到标准输出，每条指令一行，只列出被写的内存与值变化的寄存器，不含 rip。
-# 401009 的 and 没有改变 rsp，所以只有 flags；40100d 的 call 写了栈上的返回地址与 rsp。
-# 向量寄存器在日志中写作一个 256 位的十六进制数，最右边 8 位是通道 0。
-# 评测的 commit logs 三项用这份日志对照本机的真实执行，一条指令写错一个寄存器就会被发现。
-
-['cpu-make-check.title']
-src_hash = '6250f445'
-text = 'make check: 21 items, 100 points'
-# src: make check：21 项，100 分
-
-['cpu-make-check.demo.1.name']
-src_hash = '3a01594a'
-text = 'Run the grading'
-# src: 运行评测
-
-['cpu-make-check.notes.1']
-src_hash = '449291ce'
-text = '''
-make check first checks the source files, then runs the 21 items in four parts, one line each: PASS or FAIL, the score and the value, the name.
-The first line is the random seed: the random operands, the randomly generated programs and the random models are all decided by it, and SEED=seed make check repeats the same grading.
-An item scores only when it passes completely. Part 1 is the three items of modrm_decode, part 2 the three of alu.c, part 3 ten items of 3 points: cond, the output of the guest programs, page faults, the commit logs, the flags of random operands, the three kinds of conditional instruction, random instructions, two small models; part 4 five items of 2 points, all needing the vector instructions.
-The released code scores 0; this is the output after completion, with the middle left out.
-The time limit of each item is 120 seconds.
-'''
-# src:
-# 
-# make check 先检查源文件，然后按四个部分运行 21 项，每项一行：PASS 或 FAIL、得分与分值、名称。
-# 第一行是随机种子：随机的操作数、随机生成的程序与随机的模型都由它决定，SEED=种子 make check 重复同一次评测。
-# 一项全部通过才得分。第 1 部分是 modrm_decode 的三项，第 2 部分是 alu.c 的三项，第 3 部分十项各 3 分：cond、客户机程序的输出、缺页、提交日志、随机操作数的标志位、三种条件指令、随机指令、两个小模型；第 4 部分五项各 2 分，都要用向量指令。
-# 发布的代码得 0 分；这里是完成后的输出，中间的部分已省略。
-# 每项的运行上限是 120 秒。
-
-['cpu-check-fail.title']
-src_hash = '957273e6'
-text = 'The output of a failing item'
-# src: 一项不通过时的输出
-
-['cpu-check-fail.slide.1']
-src_hash = 'fa80c9ed'
-text = 'The indented lines after `FAIL` are the expected and the actual output, and the command in parentheses reproduces the item; the check of one instruction states its operands, the input flags, the expected and the actual value.'
-# src:
-# 
-# `FAIL` 之后缩进的行是期望的输出与实际的输出，括号中是复现这一项的命令；一条指令的检查写出它的操作数、输入的标志位、期望值与实际值。
-
-['cpu-check-fail.notes.1']
-src_hash = '29753083'
-text = '''
-The first block is the grading without the case of vpmulld: the vector loop of simd reaches it and reports an illegal instruction, all five items of part 4 fail, 90 points.
-expected and got are the expected and the actual output; after fault comes the head of the register report.
-The second block is the report of the flags item: random operands are executed once on this machine as the expected value, and the command in parentheses repeats the item; here addb %cl,%bl on 0xff + 0x7f should set CF but set OF, so x86_add or its caller is wrong.
-The reports of mini-unit have the same format: one line per failed case, the input, the expected and the actual value.
-'''
-# src:
-# 
-# 第一段是缺少 vpmulld 的 case 时的评测：simd 的向量循环遇到它就报告非法指令，第 4 部分的五项全部不通过，90 分。
-# expected 与 got 分别是期望的输出与实际的输出，fault 之后是寄存器报告的开头。
-# 第二段是 flags 一项的报告：随机的操作数在本机执行一次作为期望值，括号中的命令重复这一项；这里 addb %cl,%bl 在 0xff + 0x7f 上应当置 CF，实际置了 OF，说明 x86_add 或它的调用写错了。
-# mini-unit 的报告是同一种格式：每个失败的用例一行，输入、期望值与实际值。
-
-['cpu-rules.title']
-src_hash = '44c87add'
-text = 'The rules of grading: files that may change, the source check and the environment'
-# src: 评测的规则：可改的文件、源文件检查与运行环境
-
-['cpu-rules.slide.1']
-src_hash = 'e73e08b5'
-text = '''
-- **Files that may change**: the three files under `src/lab1/`; changes to `frame/`, `include/` and the `Makefile` have no effect in grading, and new helper functions go into these three files
-- **Source check**: only the names listed in `tests/symbols.txt` are used, defined names do not begin with `__`, code is in `.text` only, and there is no `syscall`; when it fails, no item runs
-- **Run limits**: 120 seconds per item; `tests/`, `tools/` and `guest/*.txt` are read-only during grading
-- **Environment**: x86-64 Linux; on Windows the lab is done in WSL2; on arm64 macOS use an x86-64 Linux container (`docker run --platform linux/amd64`) or the course server
-'''
-# src:
-# 
-# - **可改的文件**：`src/lab1/` 下的三个文件；`frame/`、`include/` 与 `Makefile` 的修改在评测时不生效，新的辅助函数写在这三个文件中
-# - **源文件检查**：只用 `tests/symbols.txt` 列出的名字，定义的名字不以 `__` 开头，代码只在 `.text` 中，没有 `syscall`；不通过时一项也不运行
-# - **运行限制**：每项 120 秒；`tests/`、`tools/` 与 `guest/*.txt` 在评测期间只读
-# - **环境**：x86-64 Linux；Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器（`docker run --platform linux/amd64`）或课程服务器
-
-['cpu-rules.notes.1']
-src_hash = 'a4a80052'
-text = '''
-The grading unpacks the submitted archive into a fresh copy of the framework and runs make check there, so only the three files under src/lab1 count.
-The source check runs before the tests: tests/srccheck.sh checks the names each object file uses and defines, its sections and its instructions, so that the interpreter can reach the machine and the files only through the interfaces of the framework; when it fails the total score is 0 and no item runs.
-The time limit per item is 120 seconds; the environment variable LIMIT can raise it on your own machine, the grading uses the default.
-mini-cpu depends on x86-64 Linux: the guest programs are x86-64 ELF files, the Makefile uses --wrap of GNU ld, and make check runs the generated programs once on this machine for the expected values. None of this exists on macOS, hence the container or the course server.
-'''
-# src:
-# 
-# 评测把提交的压缩包解压到一份新的框架中再运行 make check，因此只有 src/lab1 下的三个文件计入。
-# 源文件检查在测试之前：tests/srccheck.sh 检查每个目标文件使用的名字、定义的名字、节与指令，目的是让解释器只能用框架给的接口访问机器与文件；不通过时 total score 为 0，没有一项运行。
-# 每项的时间上限 120 秒，环境变量 LIMIT 可以在本机放宽，评测时用默认值。
-# mini-cpu 依赖 x86-64 Linux：客户机程序是 x86-64 的 ELF，Makefile 用 GNU ld 的 --wrap，make check 把生成的程序在本机运行一次作为期望值。macOS 上没有这些，所以用容器或课程服务器。
-
-['cpu-handin.title']
-src_hash = 'ab7e1592'
-text = 'Getting the code and submitting'
-# src: 取得代码与提交
-
-['cpu-handin.demo.1.name']
-src_hash = '2f50acf6'
-text = 'Pack lab 1'
-# src: 打包实验一
-
-['cpu-handin.slide.1']
-src_hash = '59ac525b'
-text = '''
-- `make handin` packs the `.c` and `.h` files under `src/lab1/` into `lab1.zip`, which is submitted on the Canvas platform
-- When the framework is updated, run `git pull` in this directory; the files in `src/lab1/` stay as they are
-'''
-# src:
-# 
-# - `make handin` 把 `src/lab1/` 下的 `.c` 与 `.h` 打包为 `lab1.zip`，提交到 Canvas 平台
-# - 框架有更新时在这个目录中运行 `git pull`，`src/lab1/` 中的文件保持不变
-
-['cpu-handin.notes.1']
-src_hash = '3e96a8ac'
-text = '''
-The code is in the directory ICS-Labs/MiniCPU of the GitHub repository SJTU-IPADS/OS-Course-Lab, obtained with git clone.
-make handin lists the files in the archive, only the .c and .h under src/lab1.
-Submit on Canvas; the grading unpacks it into a fresh framework and runs make check, so run it once more in a clean framework before submitting.
-When the framework is updated, get the update with git pull; your own src/lab1 is not affected.
-'''
-# src:
-# 
-# 代码在 GitHub 仓库 SJTU-IPADS/OS-Course-Lab 的 ICS-Labs/MiniCPU 目录中，git clone 取得。
-# make handin 列出压缩包中的文件，只有 src/lab1 下的 .c 与 .h。
-# 提交到 Canvas；评测解压到一份新的框架中运行 make check，所以提交前在干净的框架里再跑一次。
-# 框架有更新时用 git pull 取得，自己的 src/lab1 不受影响。

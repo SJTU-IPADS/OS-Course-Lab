@@ -55,7 +55,7 @@ def build():
         out.append(note(ax + dx, ay + 44, label, 12, anchor="middle"))
     out.append(arrow(ax + 360, ay - 22, ax + 4, ay - 22, BLUE, 2))
     out.append(text(ax + 180, ay - 30, "R[RIP] += rel：0x40112c - 12 = 0x401120", 13, BLUE, "bold"))
-    out.append(note(ax + 440, 200, "位移读完之后 R[RIP] 才是下一条指令的地址，", 13, INK))
+    out.append(note(ax + 440, 200, "偏移读完之后 R[RIP] 才是下一条指令的地址，", 13, INK))
     out.append(note(ax + 440, 220, "因此先读 rel，再加到 R[RIP] 上", 13, INK))
     return out
 

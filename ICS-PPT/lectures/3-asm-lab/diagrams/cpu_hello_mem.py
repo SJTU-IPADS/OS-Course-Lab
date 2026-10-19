@@ -6,8 +6,9 @@ memory at the addresses guest/hello uses, each with the dram.img offset its
 bytes are at; below, the registers as the array R[] of the variable cpu in
 main, with the values the loader sets; interp_run reads and writes both.
 The offsets and values were read on 2026-10-19 from dram.img with od and
-from ./mini-cpu -v, after running guest/hello. Segment and register colours
-are those of cpu_state; interp_run is the student's (orange).
+from ./mini-cpu -v, after running guest/hello. Code orange, read-only data
+grey, stack and general registers blue, flags orange, rip grey; interp_run is
+the student's (orange).
 Run it to refresh ../assets/cpu_hello_mem.svg.
 """
 

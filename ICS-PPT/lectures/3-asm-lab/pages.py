@@ -11,7 +11,7 @@ bomb-lab 的 phase 1、parallel-dot 的 AVX2 版本、mini-cpu 的 ModRM 与 SIB
 解析），页面不给出答案代码；「其余部分与评测」说明课后要完成的部分与检查、评测的
 方法。bomb-lab 没有「其余部分与评测」一节，phase 1 的课堂演示只有 objdump 反汇编、
 地址空间与 lea 三页。parallel-dot 的第三个小节称为「其余部分」，只讲第二部分的
-CUDA kernel。mini-cpu 把调试、评测与提交单独作为一个小节。
+CUDA kernel。mini-cpu 的第三个小节称为「其余部分」，不讲评测与提交。
 
 配图由 diagrams/ 下的同名脚本生成（diagrams/render.sh），脚本与图以 nq_、bomb_、
 pd-/pd_、cpu_ 开头；bomb-lab 的四张终端截图由 tools/shots.sh 生成。
@@ -112,21 +112,16 @@ make test-simd 的输出（第一组全部 pass 之后 matvec_q4_0 is not implem
 
 第五部分 · mini-cpu 实验一
 
-四个小节：实验框架、课上完成的 ModRM 与 SIB 解析、其余部分、调试评测与提交。
-配图由 diagrams/ 下的 cpu_*.py 生成，脚本与图同名；cpu_flow.py 生成三帧，cpu_examples.py 两张。
+三个小节：实验框架、课上完成的 ModRM 与 SIB 解析、其余部分。
+配图由 diagrams/ 下的 cpu_*.py 生成，脚本与图同名；cpu_flow.py 生成三帧。
 
-实验框架一节从 guest/hello 开始：它的输出由 write 系统调用完成；装入之后内存在 dram.img、寄存器在
-main 的变量 cpu 的 R[] 中；syscall 指令经 default 交给 frame/ 的 sys_dispatch。这一部分只讲实验一，
+实验框架一节先说明 printf、libc 与 syscall 的关系，以及 guest/hello 的 syscall 由 mini-cpu 读取、
+由 mini-cpu 调用 libc 的 write 代为执行（这一页不提 dram.img、interp_run 与 switch，它们在后面几页讲；
+syscall 经 default 交给 sys_dispatch 写在主循环一页的讲稿中）；再讲 guest/hello 装入之后内存在 dram.img、寄存器在
+main 的变量 cpu 的 R[] 中。主循环之后一页用中文伪代码写出一条 x86-64 指令的读取顺序（七段的字节数依
+Intel SDM 第 2 卷图 2-1 与 2.2.1 节），伪代码以 translate=True 翻译，英文在 i18n/en.toml 中。这一部分只讲实验一，
 页面、讲稿与图不提及其他实验。客户机地址取自 objdump -d 与 readelf -l guest/hello；dram.img 中的偏移
 与装入后的寄存器值于 2026-10-19 用参考实现运行 guest/hello 之后由 od 与 -v 读出。
-
-演示命令都写成学生在 ../mini-cpu 中运行的形式，每个 p.demo 带录好的 output=，不在课上现场运行：
-- 「第一次运行」的输出来自学生目录按发布状态编译的代码（没有 case 0x8b 的解释器）；
-- 完成后的输出（--stats guest/hello、mini-unit、--disasm、-v、--commit、make check、make handin）来自参考实现
-  编译到 build/scratch-cpu 下的副本，在学生目录的客户机程序上运行，页面上写成 ./mini-cpu；
-- 三段不通过的输出各来自参考实现改动一处的副本：modrm.c 不做符号扩展（mini-unit modrm 一项失败）、
-  interp.c 去掉 case 0x8d（第二次非法指令报告）、interp.c 去掉 case 0x1240（make check 90 分）；
-- FLAGS_FAILURE 是改写之前录好的：x86_add 不设置 CF 与 OF 的 alu.c，make check 中 flags 一项的报告。
 
 用语要求：面向本科课程教学，采用陈述性的技术表述；不使用比喻、口语化措辞。
 
@@ -155,7 +150,7 @@ def figure(p, name, width=1120):
 
 def four_labs(p):
     p.title("四个实验")
-    p.spacer(140)                      # the table alone sits mid-page
+    p.spacer(100)                      # the table and one line sit mid-page
     p.table(
         headers=["实验", "配合", "要做的事", "计分"],
         rows=[
@@ -165,12 +160,17 @@ def four_labs(p):
             ["mini-cpu 实验一", "第三讲", "完成 x86-64 指令解释器", "计分"],
         ],
     )
+    p.spacer(20)
+    slide(p, """
+鼓励「古法编程」，鼓励同学之间讨论、与 AI 讨论。
+""")
     p.notes("""
 本讲先说明课件的下载、安装与使用，再说明四个实验，每个实验一部分。前三个实验是课后练习，不计分，每一步都有检查程序，输出与期望值一致就说明这一步正确；mini-cpu 实验一计分，满分 100 分。
 nano-quant 配合第二讲「数据的表示」：在 impl/nano_quant.cpp 中实现读字节的函数与三种 4 位格式的编解码，框架把 Qwen3-VL-2B-Instruct 的语言模型量化后组装为 GGUF，由 ollama 加载运行。
 bomb-lab 配合第三讲：每个学号一个没有源码的 bomb，阅读它的机器码推出 8 个阶段的输入；bomb 运行时连接课程服务器，每一次爆炸与每一个被拆除的阶段都记在学号下，./bomb -s 显示计分板。
 parallel-dot 配合第三讲第五部分的两个提速方案，两部分写同一个算子，即 Q4_0 矩阵与向量的乘积：第一部分用 AVX2 写函数 matvec_q4_0，第二部分写它的 CUDA kernel；没有 NVIDIA 显卡时用 make remote 提交到课程服务器。两部分运行的 mini-ollama 读取 q4_0.gguf，这个文件从交大云盘下载，或由 nano-quant 按 q4_0 配方生成。
 mini-cpu 实验一配合第三讲：在三个文件中完成 x86-64 指令解释器，make check 给出得分，make handin 生成的 lab1.zip 提交到 Canvas 平台。
+做这四个实验时，鼓励「古法编程」，即代码由自己动手写出；鼓励同学之间讨论，也鼓励与 AI 讨论。
 """)
 
 
@@ -288,7 +288,7 @@ def nq_pipeline(p):
     figure(p, "nq_pipeline", 1120)
     slide(p, """
 - 对象：`model.safetensors` 中语言模型的 310 个 BF16 张量，量化为 4 位
-- 你的函数在 `nano-quant quant` 中被调用，每次一块
+- 你的函数在 `nano-quant quant` 中被调用，每个量化块调用一次
 """)
     p.notes("""
 nano-quant 是第二讲的配套实验：把 Qwen3-VL-2B-Instruct 的 model.safetensors（4.25 GB，625 个 BF16 张量）中语言模型的 310 个张量量化为 4 位，组装为 GGUF，由 ollama 加载运行；视觉塔的 315 个张量全部跳过。
@@ -729,9 +729,9 @@ def pd_class_decode(p):
              "assets/pd-class-decode-3.svg", width_px=1120)
     p.notes("""
 这一页三帧，是 simd.c 中 TODO 注释给出的前三步。前两步与同一文件中已给出的 embed 相同。第三步得到的是 q − 8 的 float，不乘 d：embed 在这一步乘以 d，把还原的权重写入内存；matvec_q4_0 把 q − 8 直接与 x 相乘，d 在第五步对整个块乘一次，即上一页公式的右边。
-第一帧：块的 18 个字节在内存中，q4_0_scale(blk) 读出 d；_mm_loadu_si128(blk + 2) 一条 128 位的加载取出 16 个编码字节，放入一个 128 位寄存器（%xmm）。只读 16 字节：一个块的编码只有 16 字节，用 256 位加载读编码会多读 16 字节，mini-ollama-simd 把模型文件映射到内存，最后一行之后可能没有可读的内存，多读的字节会引起段错误。用非对齐加载：编码从块的第 2 个字节开始，地址一般不是 16 的倍数，对齐加载 _mm_load_si128 会使程序以段错误终止。
+第一帧：块的 18 个字节在内存中，q4_0_scale(blk) 读出 d；_mm_loadu_si128(blk + 2) 一条 128 位的加载取出 16 个编码字节，放入一个 128 位寄存器（%xmm）。只读 16 字节：一个块的编码只有 16 字节，用 256 位加载读编码会多读 16 字节，mini-ollama-simd 把模型文件映射到内存，最后一行之后可能没有可读的内存，多读的字节会引起段错误。用非对齐加载：编码从块的第 2 个字节开始，地址一般不是 16 的倍数，对齐加载 _mm_load_si128 会使程序以段错误终止。右上角放大了 qs0：一个字节含两个 4 位编码，低 4 位是第 0 个权重的编码 q0，高 4 位是第 16 个权重的编码 q16，写作 q0-4 与 q16-4，后缀是位数。
 第二帧：与 0x0f 按位与（_mm_and_si128）得到每个字节的低 4 位，即第 0 到 15 个权重的编码 lo；每个 16 位右移 4 位（_mm_srli_epi16）再按位与得到高 4 位，即第 16 到 31 个权重的编码 hi。右移按 16 位进行，相邻字节的位会移入，所以右移之后仍要按位与。
-第三帧：每 8 个编码扩展为 8 个 32 位整数（_mm256_cvtepu8_epi32，取 128 位寄存器的低 8 个字节），减 8（_mm256_sub_epi32），转换为 8 个 float（_mm256_cvtepi32_ps）；lo 与 hi 的后 8 个先把寄存器右移 8 个字节（_mm_srli_si128，embed 中的写法），移到低 8 个字节。图中四组各用一种颜色，每组得到的 %ymm 画在这 8 个编码的下方，颜色相同，两条虚线连接两者；hi 的两组与前面的图一样画成空心。一个 %ymm 是 32 字节，%xmm 是 16 字节，图中 %ymm 画得比 %xmm 长，没有按比例。四组依次是权重 0..7、8..15、16..23、24..31，分别与 x[c..c+7]、x[c+8..c+15]、x[c+16..c+23]、x[c+24..c+31] 对应，c = 32b。
+第三帧：每 8 个编码扩展为 8 个 32 位整数（_mm256_cvtepu8_epi32，取 128 位寄存器的低 8 个字节），减 8（_mm256_sub_epi32），转换为 8 个 float（_mm256_cvtepi32_ps）；lo 与 hi 的后 8 个先把寄存器右移 8 个字节（_mm_srli_si128，embed 中的写法），移到低 8 个字节。图中四组各用一种颜色，每组得到的 %ymm 画在这 8 个编码的下方，颜色相同，两条虚线连接两者；hi 的两组与前面的图一样画成空心。一个 %ymm 是 32 字节，%xmm 是 16 字节，图中 %ymm 画得比 %xmm 长，没有按比例。四组依次是权重 0..7、8..15、16..23、24..31，分别与 x[c..c+7]、x[c+8..c+15]、x[c+16..c+23]、x[c+24..c+31] 对应，c = 32b。第三帧中编码后的数字同样是位数：lo 与 hi 中每个编码占一个字节，写作 q0-8；%ymm 中每个编码是一个 32 位 float，写作 q0-32，它的值是 q − 8。
 """)
 
 
@@ -740,7 +740,7 @@ def pd_class_mac(p):
     p.spacer(72)                       # the figure alone sits mid-page
     figure(p, "pd-class-mac")
     p.notes("""
-这是 TODO 注释的第四步，第三讲「一轮向量循环：8 个通道同时乘、同时加」一页的 float 版本。上面两行是操作数：一个 %ymm 中的 8 个 float，即一组 8 个编码减 8 的结果；x 中对应的 8 个 float，由 _mm256_loadu_ps(x + c + 8g) 读入，x 的地址没有对齐的保证，用非对齐加载。_mm256_mul_ps 一条指令完成 8 次乘法，8 个积放在一个寄存器中；_mm256_add_ps 一条指令把 8 个积加到 bsum 的 8 路部分和上。通道 0 在最右边，与第三讲的图相同。
+这是 TODO 注释的第四步，第三讲「一轮向量循环：8 个通道同时乘、同时加」一页的 float 版本。上面两行是操作数：一个 %ymm 中的 8 个 float，即一组 8 个编码减 8 的结果，与上一页相同写作 q0-32，后缀是位数；x 中对应的 8 个 float，由 _mm256_loadu_ps(x + c + 8g) 读入，x 的地址没有对齐的保证，用非对齐加载。_mm256_mul_ps 一条指令完成 8 次乘法，8 个积放在一个寄存器中；_mm256_add_ps 一条指令把 8 个积加到 bsum 的 8 路部分和上。通道 0 在最右边，与第三讲的图相同。
 一个块有 4 组，这两条指令各做 4 次：bsum 的每一路累加 4 个积，第 k 路累加权重 k、8 + k、16 + k、24 + k 的积，块的 32 个权重全部计入。bsum 在处理一个块之前清零（_mm256_setzero_ps），或者第一组直接用乘积初始化。
 之后是第五步：bsum 乘以 d（_mm256_set1_ps 把 d 复制到 8 路，_mm256_mul_ps 相乘），_mm256_add_ps 累加到行的 8 路累加器 acc。第三讲的向量循环每轮处理 8 个 int；这里每个块处理 32 个权重，用 4 次乘、4 次加、再 1 次乘、1 次加。
 Makefile 以 -O2 -mavx2 编译 simd.c，不加 -mfma：讲义讲到 AVX2 为止，融合乘加在这些算子中的收益很小。
@@ -767,6 +767,7 @@ make test-simd 编译三个程序，然后运行 ./ops-selftest-simd，不需要
 def pd_rest_grid(p):
     p.title("cuda 版本的做法：一个线程块计算矩阵的一行")
     p.code("cuda", KERNEL_LAUNCH)
+    p.spacer(72)                       # the figure mid-way between code and page foot
     figure(p, "pd-rest-grid")
     p.notes("""
 第二部分写 ops/cuda.cu 中 kernel matvec_q4_0_kernel 的函数体，它初始时是一个 todo() 调用。启动它的主机端函数 matvec_q4_0 已写好：以 rows 个线程块、每块 THREADS = 256 个线程启动，参数是 y、w、x 与 cols；主机端函数与启动配置不修改。
@@ -828,58 +829,58 @@ while (!c->halted && !(opt_max && c->icount >= opt_max)) {
         break;
 }"""
 
-GIVEN_CASES = """case 0x81: case 0x83:                     /* rm = rm OP imm; the operation is x.sub */
-    modrm(&x);
-    v = op == 0x83 ? (uint64_t)(int64_t)(int8_t)fetch8(&x) : fetch_imm(&x);
-    v = x86_alu(&R[RFLAGS], x.sub, rm_get(&x), v, x.size);
-    if (x.sub != 7)                       /* cmp writes no operand */
-        rm_set(&x, v);
-    break;
-case 0x50: ... case 0x57:                 /* push: eight labels */
-    v = R[(op & 7) | ((x.rex & 1) << 3)];
-    store(&x, R[RSP] - 8, 8, v);
-    R[RSP] -= 8;
-    break;
-case 0xeb:                                /* jmp, a 1-byte offset */
-    rel = (int8_t)fetch8(&x);
-    R[RIP] += (uint64_t)rel;
-    break;"""
+# pseudocode in the lecture's language: translated, see p.code(..., translate=True)
+INSN_READ = """b = 下一个字节
+while (b 是传统前缀) { 记下它的作用; b = 下一个字节 }
+if (b 是 REX 前缀 40 .. 4f) { rex = b; b = 下一个字节 }
+if (b 是 VEX 前缀 c4 或 c5) { vex = b 与其后 2 或 1 个字节; op = 下一个字节 }
+else if (b == 0f) op = 0f 与其后 1 或 2 个字节
+else op = b
+if (op 带 ModRM) {
+    modrm = 下一个字节
+    if (modrm 之后有 SIB) sib = 下一个字节
+    disp = 其后 0、1 或 4 个字节，个数由 modrm 与 sib 决定
+}
+imm = 其后 0、1、2、4 或 8 个字节，个数由 op 与操作数宽度决定"""
 
 
-HELLO_ASM = """puts("hello from the guest\\n");     ...                             # strlen: %rdx = 21
-                                    40111d  mov    $0x1,%eax        # 1: write
-                                    401122  mov    $0x402000,%esi   # the string
-                                    401127  mov    %rax,%rdi        # fd 1: stdout
-                                    40112a  syscall
-puts("argc = ");                    ...                             # write, 7 bytes
-putint(argc);                       ...                             # write "1\\n"
-return 0;
-/* _start, guest/start.S */         401012  mov    %eax,%edi        # exit code 0
-                                    401014  mov    $0x3c,%eax       # 60: exit
-                                    401019  syscall"""
-
-
-def cpu_hello(p):
-    p.title("guest/hello：输出由 write 系统调用完成")
-    p.code("text", HELLO_ASM)
+def cpu_libc(p):
+    p.title("printf, libc 和 syscall")
+    p.spacer(56)                       # figure and text mid-page
+    figure(p, "cpu_libc")
+    p.spacer(16)
     slide(p, """
-- **`syscall` 指令请求操作系统完成一项操作**：`%rax` 是编号（1 是 `write`，60 是 `exit`），参数依次在 `%rdi`、`%rsi`、`%rdx` 中，结果写回 `%rax`。
-- `guest/hello` 不链接 C 库，`puts` 与 `putint` 定义在 `guest/mini.h` 中，各执行一次 `write`；`guest_main` 返回后，`_start` 执行 `exit`。
+- **`printf` 是 C 标准库 libc 中的函数**：它与程序自己的函数一样由普通指令组成，按格式把参数转为字节，再调用 libc 的 `write`。
+- **进入操作系统的只有 `syscall` 指令**：`write` 把编号与参数放入寄存器，执行 `syscall`，由操作系统完成输出。guest 程序不链接 libc，没有 `printf`，输出由 `guest/mini.h` 的 `write` 直接执行 `syscall`。
 """)
     p.notes("""
-guest/hello 是 guest/ 中最小的客户机程序，guest_main 输出两行：hello from the guest 与 argc = 1。客户机程序不链接 C 库，能调用的函数只有 guest/mini.h 中的几个：puts 先用循环求出字符串的长度，再执行 write；putint 把整数转为十进制数字，写入栈上的数组，再执行 write。两行输出共三次 write。
-代码块左边是 guest/hello.c 中 guest_main 的语句，右边是 objdump -d guest/hello 中对应的指令。第一个 puts：求长度的循环结束时 %rdx 是 21，即字符串的字节数；%eax 置 1，%esi 置字符串的地址 0x402000，%rdi 置 1，即标准输出；然后执行 syscall。0x402000 在只读数据段 .rodata 中，第二个字符串 "argc = " 紧随其后，地址是 0x402016。
-syscall 是一条指令，作用是请求操作系统完成程序自己不能完成的操作，例如向终端输出、结束程序。编号与参数按 Linux x86-64 的约定放在寄存器中：编号在 %rax，参数依次在 %rdi、%rsi、%rdx、%r10、%r8、%r9，返回值写回 %rax。系统调用的机制在讲异常时说明，这里只用到这个约定。
-程序的入口是 guest/start.S 中的 _start：它从栈顶取出 argc 与 argv，调用 guest_main；guest_main 返回后，_start 把返回值放入 %edi 作为退出码，以编号 60 执行 syscall，即 exit。
-guest/hello 也能在本机上直接运行：./guest/hello 由 Linux 执行同样的 syscall，输出相同。
+PC 上一个普通的 C 程序调用 printf 时，printf 的代码来自 C 标准库 libc（Linux 上通常是 glibc），链接时与程序放在一起，运行时与程序自己的函数一样是 CPU 执行的普通指令。printf 按格式串把 argc 转为字符 1，得到 "argc = 1\n" 这 9 个字节，放入 stdout 的缓冲区；需要输出时，它调用 libc 中的 write 函数。
+向终端输出、结束程序这类操作，程序自己的指令不能完成，要请求操作系统完成。请求用的是 syscall 指令：write 函数把编号 1 放入 %rax，把文件描述符、缓冲区地址、字节数放入 %rdi、%rsi、%rdx，执行 syscall，由 Linux 把这 9 个字节输出到终端。系统调用的机制在讲异常时说明。
+printf 不一定每次都调用 write：stdout 是终端时按行输出，遇到换行调用一次 write；重定向到文件时，缓冲区满或程序结束时才调用。在本机上用 strace -e trace=write 运行一个程序，可以看到它执行的每一次 write。
+guest/ 中的程序不链接 libc，printf、malloc 这些库函数都不能使用。guest/mini.h 自己写出了用到的几个函数：puts 求出字符串的长度，putint 把整数转为十进制数字，write 用内联汇编直接执行 syscall。图中两条路径都在 PC 上运行，两处 syscall 由同一个操作系统 Linux 执行；guest 程序在 mini-cpu 上运行时，syscall 由 frame/ 中的代码代为完成。
+""")
+
+
+def cpu_hello_syscall(p):
+    p.title("syscall 指令：mini-cpu 代为执行")
+    p.spacer(64)
+    figure(p, "cpu_hello_syscall")
+    slide(p, """
+guest/hello 的 `syscall` 只被 mini-cpu 读取，PC 的 CPU 不执行它。mini-cpu 读到它之后调用 libc 的 `write`，PC 的 CPU 执行 `write` 中的 `syscall`：mini-cpu 代为执行了这次系统调用。
+""")
+    p.notes("""
+guest/hello 是 guest/ 中最小的客户机程序，输出 hello from the guest 与 argc = 1 两行。图左是它输出第一行的几条指令：%eax 置 1，即 write 的编号；%esi 置字符串的地址 0x402000；%rdi 置 1，即标准输出；%rdx 此前已经是字节数 21。然后在 40112a 执行 syscall，这条指令的字节是 0f 05。
+guest/hello 在 mini-cpu 上运行时，PC 的 CPU 执行的是 mini-cpu 的机器码；guest/hello 的机器码是 mini-cpu 读取的数据，PC 的 CPU 不执行它。mini-cpu 逐条读取客户机的指令，按指令的规定修改客户机的寄存器与内存。读到 0f 05 时，它从客户机的 %rax 得知这是一次 write，把客户机内存中 0x402000 处的 21 个字节复制到自己的数组中。
+然后 mini-cpu 调用 libc 的 write：mini-cpu 是链接 libc 的 C 程序，write 最终执行 syscall，%rax = 1，字节同样是 0f 05。这一条由 PC 的 CPU 执行，进入 Linux，Linux 把 21 个字节输出到终端。返回值 21 写回客户机的 %rax，mini-cpu 接着读取 40112c 处的下一条指令。
+这就是代为执行：guest/hello 的 syscall 只被读取，它要求的 write 由 mini-cpu 中的 syscall 完成。"argc = " 与 putint 输出的 "1\\n" 以同样的方式输出，共三次 write。guest/hello 最后以编号 60 执行 syscall，即 exit；mini-cpu 读到它时停止执行客户机程序，把客户机给出的退出码作为自己的退出码。
 """)
 
 
 def cpu_hello_mem(p):
-    p.title("guest/hello 装入之后：内存在 dram.img 中，寄存器在 cpu.R[] 中")
+    p.title("内存与寄存器：mini-cpu 在内存中模拟")
     figure(p, "cpu_hello_mem")
     slide(p, """
-`frame/loader.c` 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`；`interp_run` 从 `R[RIP]` 开始逐条执行。
+`frame/loader.c` 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`。`interp_run` 从 `R[RIP]` 开始逐条执行。
 """)
     p.notes("""
 ./mini-cpu guest/hello 启动的 mini-cpu 是本机上的一个普通进程，guest/hello 的内存与寄存器都是这个进程中的数据。
@@ -890,110 +891,47 @@ guest/hello 的指令中出现的地址是 0x401000、0x402000、0x7fffffffefc0 
 """)
 
 
-def cpu_hello_syscall(p):
-    p.title("syscall 指令：interp_run 交给 frame/ 的 sys_dispatch 执行")
-    figure(p, "cpu_hello_syscall")
-    p.demo("解释器完成后运行 hello", """cd ../mini-cpu
-./mini-cpu --stats guest/hello""",
-           output="""hello from the guest
-argc = 1
-insns 152  syscalls 4  exit 0""", bold=[3])
-    p.notes("""
-guest/hello 执行到 40112a 的 syscall 时，四个寄存器已经由前面的指令设好：R[RAX] = 1 是 write 的编号，R[RDI] = 1 是标准输出，R[RSI] = 0x402000 是字符串的客户机地址，R[RDX] = 21 是字节数。
-syscall 的字节是 0f 05，x86_begin 返回的编号是 0x105。interp.c 的 switch 中没有这个 case，执行进入 default，由 x86_other（frame/x86rest.c）执行：它调用 syscall_enter，再调用 frame/sysbase.c 的 sys_dispatch。所以 interp.c 不需要为 syscall 写 case。
-sys_dispatch 按 R[RAX] 选择系统调用。字符串在客户机内存中，本机的 write 不能直接使用客户机地址，因此 sys_dispatch 先用 mem_read 从客户机地址 0x402000 读出 21 个字节，放入 mini-cpu 自己的数组 buf，再调用本机的 write(1, buf, 21)，Linux 把这 21 个字节输出到终端。返回值 21 写回 R[RAX]，下一条指令从 40112c 继续。
-"argc = " 与 putint 输出的 "1\\n" 以同样的方式输出，共三次 write。guest_main 返回后，_start 在 401019 以 R[RAX] = 60 执行 syscall，sys_dispatch 把 c->halted 置 1；x86_end 返回 -1，interp_run 的循环结束。main 把 R[RDI] 的低 8 位作为 mini-cpu 的退出码，guest/hello 返回 0，mini-cpu 的退出码就是 0。
---stats 在结束时打印执行的指令数、系统调用数与退出码：152 条指令，4 次系统调用，即三次 write 与一次 exit。这是解释器完成之后的输出。
-""")
-
-
-def cpu_parts(p):
-    p.title("实验一的三个文件与四个部分")
-    figure(p, "cpu_parts")
-    slide(p, """
-三个文件都在 `src/lab1/`，每个函数在 `include/mcpu.h` 中声明，规格写在文件开头的注释与 `src/lab1/README.md` 中。四个部分按顺序完成，评测按部分计分。
-""")
-    p.notes("""
-第一部分是 modrm.c 的一个函数 modrm_decode，解析操作数字节，30 分。
-第二部分是 alu.c 的整数运算与标志位，十个函数中四个已经写出作为示例，30 分。
-第三部分是 interp.c 的 cond 与整数指令的 case，30 分；第四部分是同一个文件中的五条向量指令，10 分。
-灰色的函数已经写出，评测同样检查它们，改坏了会丢分。
-调用关系决定了完成的顺序：没有 modrm_decode，带操作数字节的指令一条也不能执行；没有 alu.c 的标志位，条件跳转的方向就不对。
-""")
-
-
-def cpu_state(p):
-    p.title("机器状态：R[18]、Y[16] 与客户机内存")
-    figure(p, "cpu_state")
-    slide(p, """
-`include/mcpu.h` 定义 `mcpu`：`R[18]` 的下标是 `RAX` 到 `R15`、`RFLAGS`、`RIP`；`Y[16]` 的元素是 `u256`，按 `q[4]`、`d[8]` 或 `b[32]` 访问；内存只经辅助函数按虚拟地址读写。
-""")
-    p.notes("""
-通用寄存器的下标与机器码中的寄存器编号相同，所以 ModRM 中解析出的编号直接作下标。
-flags 只用五位：CF、PF、ZF、SF、OF，位号分别是 0、2、6、7、11；其余位保持不变。
-向量寄存器是 256 位的 ymm；xmm 是它的低 128 位，写 xmm 时高 128 位清零。
-u256 的 d[i] 是第 i 个 32 位通道，d[0] 在最低位，对应图中最右边的一格。
-客户机内存由 frame/ 管理，物理内存是当前目录下的文件 dram.img；本实验只通过 load、store、rm_get、rm_set 按虚拟地址访问，缺页由它们记录。
-""")
-
-
 def cpu_loop(p):
-    p.title("主循环：x86_begin、switch (op) 与 x86_end")
+    p.title("主循环：不断读取、解析、执行")
     p.side_image("assets/cpu_loop.svg", width="36%", alt="contain", side="left")
     p.code("c", MAIN_LOOP)
     slide(p, """
-`frame/main.c` 装载程序后调用 `interp_run(c)`；循环与 `default` 已经写出，本实验补充 `case`。
+`x86_begin` 读到操作码为止，其后的字节由 `case` 读取，读多少由操作码与 ModRM 决定。
 """)
     p.notes("""
 一次循环执行一条指令。x86_begin 从 R[RIP] 取字节，跳过前缀，记下 REX 与操作数宽度，读出操作码并返回它的编号 op；此时 R[RIP] 指向操作码之后的第一个字节。
-switch 按 op 进入一个 case：case 读操作码之后的字节，计算，写寄存器与内存。
+switch 按 op 进入一个 case：case 读操作码之后的字节，计算，写寄存器与内存。没有 case 的操作码进入 default，由框架的 x86_other 执行。syscall 的操作码 0f 05 就没有 case：x86_other 把它交给 frame/sysbase.c 的 sys_dispatch，sys_dispatch 按 R[RAX] 代为执行系统调用（write 调用本机 libc 的 write，exit 把 c->halted 置 1，x86_end 随后返回 -1），所以 interp.c 不需要为 syscall 写 case。
 x86_end 计数并写提交日志；指令中途出错（缺页、非法指令）时它把寄存器恢复到指令开始前的值，返回 -1，循环结束并打印报告。
 case 0x89 是 mov 的一种形式，rm = reg：先 modrm 解析操作数，再把 reg 寄存器的值写到 rm。
 """)
 
 
+def cpu_insn_format(p):
+    p.title("x86-64 指令的组成与读取顺序")
+    figure(p, "cpu_insn_format")
+    p.code("pseudo", INSN_READ, translate=True)
+    p.notes("""
+一条 x86-64 指令最多由图中的七段组成，按从左到右的顺序排列，最长 15 字节；除操作码外，每一段都可以没有。图中各段的宽度不按比例。
+66、f2、f3、f0、67 与段前缀称为传统前缀，分四类，一条指令中每一类最多用一个，因此前缀最多 4 个字节：66 把操作数宽度改为 2 字节；f2 与 f3 是重复前缀，也用来区分一部分向量指令；f0 是 lock 前缀；67 改变地址的宽度；2e、3e、26、36、64、65 是段前缀。REX 前缀是 40 到 4f 中的一个字节，紧挨在操作码之前：它的 W 位把操作数宽度改为 8 字节，另外三位给寄存器编号加第 4 位，在下一小节讲。
+操作码有 1 到 3 个字节：一个字节；0f 开头的两个字节；0f 38、0f 3a 开头的三个字节。AVX 指令以 VEX 前缀开头：c4 之后的 2 个字节带有 REX 的各位、操作码所在的表（0f、0f 38 或 0f 3a）与 66、f2、f3 的选择，c5 之后的 1 个字节是它的简写，表固定为 0f。VEX 指令因此没有 REX 与 0f，VEX 之后是一个字节的操作码。
+伪代码按读取的顺序写出，每一段有没有、有几个字节，由它之前的字节决定：操作码决定有没有 ModRM、有没有立即数；ModRM 决定有没有 SIB、偏移有几个字节，ModRM 与 SIB 的各个字段在下一小节讲。立即数的字节数由操作码决定，部分操作码再看操作数宽度：操作码 81 的立即数在有 66 前缀时是 2 字节，否则是 4 字节，有 REX.W 时仍是 4 字节，读出后符号扩展为 8 字节。8 字节的立即数只出现在两种 mov 中：REX.W 与 b8 到 bf 的组合把一个 8 字节常数写入寄存器，a0 到 a3 以一个 8 字节的地址读写内存；objdump 把两者都写作 movabs。
+图下方的括号是 mini-cpu 中的分工。x86_begin 读前缀、REX 或 VEX 与操作码，返回编号 op：它识别 66、f2、f3、六个段前缀、REX 与 VEX，读到 0f 时再读一个字节。其后的字节由 case 读取：modrm(&x) 调用你的 modrm_decode，读 ModRM、SIB 与偏移；立即数由 fetch_imm、fetch8 这些函数读取。
+图中各段的颜色在后面每一页都表示同一段字节：灰色前缀（包括 REX 与 VEX）、橙色操作码、绿色 ModRM、紫色 SIB、青色偏移、蓝色立即数。
+""")
+
+
 def cpu_bytes(p):
     p.title("一条指令的字节与 op 的编号")
+    p.spacer(48)
     figure(p, "cpu_bytes")
-    slide(p, """
-`x86_begin` 读到操作码为止；操作码之后的字节由 `case` 自己读，读哪些字节由操作码决定。
-""")
     p.notes("""
-四条指令都取自客户机程序的 objdump 输出。
-第一条有 REX 前缀 4c、操作码 03、ModRM 04、SIB d5 与 4 字节位移；op 是 0x03。
-第二条的操作码 81 之后是 ModRM ec 与 4 字节立即数；op 是 0x81。
-两字节操作码 0f 88 的编号是 0x100 加第二个字节，即 0x188；之后是 4 字节位移。
+除第二条外，各条指令都取自客户机程序的 objdump 输出。
+第一条有 REX 前缀 4c、操作码 03、ModRM 04、SIB d5 与 4 字节偏移；op 是 0x03。
+第二条 add %rax,%r8 与第一条的 REX 前缀和操作码都相同，op 也是 0x03，只有 ModRM 字节不同。ModRM 04 表示另一个操作数 rm 在内存中，后面还有 SIB 与 4 字节偏移；ModRM c0 表示 rm 是寄存器 %rax，指令到此结束。两条指令都把和写入 %r8：第一条加的是内存中的 8 字节，第二条加的是 %rax。同一个操作码的指令，另一个操作数是寄存器还是内存、后面还有几个字节，由 ModRM 决定；ModRM 的各个字段在下一小节讲。guest/sum 中有同一条指令 add %rax,%r8，汇编器把它编码为 49 01 c0，用的是操作码 01；这里的 4c 03 c0 是用 {load} add %rax,%r8 让汇编器改用操作码 03 得到的，以便与第一条比较。
+第三条的操作码 81 之后是 ModRM ec 与 4 字节立即数；op 是 0x81。
+两字节操作码 0f 88 的编号是 0x100 加第二个字节，即 0x188；之后是 4 字节偏移。
 VEX 指令的编号是 0x1000 | map << 8 | 操作码字节：c4 e2 7d 是三字节的 VEX 前缀，map 2 即 0f 38，操作码 40，编号 0x1240。
-同一种颜色在后面每一页都表示同一段字节：灰色前缀、橙色操作码、绿色 ModRM、紫色 SIB、青色位移、蓝色立即数。
-""")
-
-
-def cpu_helpers(p):
-    p.title("case 调用的辅助函数")
-    figure(p, "cpu_helpers")
-    slide(p, """
-辅助函数在 `frame/x86.c` 中，`include/mcpu.h` 有每个函数的约定。它们按 `x.size` 读写寄存器与内存，`case` 只写指令的语义。
-""")
-    p.notes("""
-左上是读指令其余字节的函数，每个都让 R[RIP] 前进：fetch8、fetch16、fetch32、fetch64 读定长的字节，fetch_imm 按操作数宽度读立即数并符号扩展，modrm 读操作数字节并填 x.reg、x.sub、x.rm。
-右上是寄存器与标志位：get 与 set 按 x.size 读写编号为 n 的寄存器；R[RSP]、R[RIP]、R[RFLAGS] 直接读写；x86_alu 把运算编号 0 到 7 分派到 alu.c 的函数并设置标志位。
-左下是 rm 操作数：rm 是寄存器时 rm_get 与 rm_set 用 get 与 set，是内存时在 ea 处读写 x.size 字节；load 与 store 读写任意地址的 n 字节，缺页时记录并返回失败。
-右下是向量寄存器：rm_vget 与 rm_vset 读写向量 rm 的 n 字节，vset 写一个向量寄存器，写寄存器时高位清零；Y[x.v] 是 VEX 的第一个源操作数。
-""")
-
-
-def cpu_given(p):
-    p.title("已经写出的 case：0x81/0x83、push 与 jmp")
-    p.code("c", GIVEN_CASES)
-    slide(p, """
-三条对每个 `case` 都成立的规则：位移与立即数先读完再加到 `R[RIP]` 上；`cmp` 只算标志位，不写操作数；`pop` 先读栈、再移 `R[RSP]`、最后写寄存器。
-""")
-    p.notes("""
-0x81 与 0x83 是带立即数的八种运算，运算编号在 x.sub 中；两者只差立即数的宽度，0x83 的立即数是 1 字节，符号扩展到 64 位。它先 modrm，再读立即数，然后才 rm_get：
-rip 相对的地址以下一条指令的地址为基准，立即数读完之前 R[RIP] 还没有指向下一条指令。
-push 的寄存器编号在操作码的低 3 位，REX.B 是第 4 位；八个操作码共用一个 case。
-jmp 0xeb 读 1 字节的位移，加到 R[RIP] 上；0xe9 相同，位移 4 字节。
-写其余的 case 时照这三段的写法：读字节、计算、写回，每个 case 只读自己这一组的字节。
+下半部分是第一条 add 在 interp_run 的一次循环中依次调用的函数。x86_begin 读前缀 4c 与操作码 03，记下 x.rex = 0x4c 与操作数宽度 x.size = 8，返回 op = 0x03；switch 进入 case 0x03。操作码 03 是 add 的一种形式，reg = reg + rm：reg 是寄存器，rm 是寄存器或内存，和写入 reg；这一条的 reg 是 %r8，rm 是内存，即把内存中的 8 字节加到 %r8 上。modrm 调用你的 modrm_decode，读 ModRM、SIB 与 4 字节偏移，得出 x.reg = 8 即 %r8，另一个操作数在内存中，地址是 0x403020 + %rdx × 8；这几个字节怎样解析在下一小节讲。get 读 %r8，rm_get 从这个地址读 8 字节；x86_alu 的运算编号是 0x03 >> 3 = 0，即 add，它返回两数之和并设置标志位；set 把和写入 %r8。第二条 add %rax,%r8 经过同样的调用，只是 modrm 得出 x.rm = 0，rm_get 读的是 %rax。最后 x86_end 返回 0，此时 R[RIP] 已经越过偏移，指向下一条指令。
 """)
 
 
@@ -1009,10 +947,10 @@ def cpu_modrm_byte(p):
 """)
     p.notes("""
 ModRM 分三个字段：高 2 位 mod，中间 3 位 reg，低 3 位 rm。
-mod 为 11 时 rm 是寄存器；00、01、10 时另一个操作数在内存中，mod 同时决定位移的宽度：0、1、4 字节。
+mod 为 11 时 rm 是寄存器；00、01、10 时另一个操作数在内存中，mod 同时决定偏移的宽度：0、1、4 字节。
 reg 是寄存器操作数的编号；0x81、0x83 这类组指令没有寄存器操作数，reg 字段扩展操作码，modrm_t 中叫 sub。
-rm 在内存操作数的情况下是基址寄存器的编号，有两个例外：rm 100 表示随后有 SIB 字节，rm 101 且 mod 00 表示没有基址，随后 4 字节位移，地址相对于下一条指令。
-例子是 hello 的第一条指令：3c 是 00 111 100，内存操作数，没有位移，reg 是 %rdi，rm 100 读 SIB 字节 24。
+rm 在内存操作数的情况下是基址寄存器的编号，有两个例外：rm 100 表示随后有 SIB 字节，rm 101 且 mod 00 表示没有基址，随后 4 字节偏移，地址相对于下一条指令。
+例子是 hello 的第一条指令：3c 是 00 111 100，内存操作数，没有偏移，reg 是 %rdi，rm 100 读 SIB 字节 24。
 操作码 8b 规定 reg 是目标，所以 %rdi = 内存中的 8 字节。
 """)
 
@@ -1021,12 +959,12 @@ def cpu_sib_byte(p):
     p.title("SIB 字节：scale、index、base")
     figure(p, "cpu_sib")
     slide(p, """
-rm 为 100 时 ModRM 之后是 SIB 字节：地址 = 位移 + base + index × scale。**index** 得到 4 表示没有变址；**base** 字段为 101 且 mod 为 00 表示没有基址，随后 4 字节位移。
+rm 为 100 时 ModRM 之后是 SIB 字节：地址 = 偏移 + base + index × scale。**index** 得到 4 表示没有变址；**base** 字段为 101 且 mod 为 00 表示没有基址，随后 4 字节偏移。
 """)
     p.notes("""
 SIB 的三个字段与 ModRM 同样分 2、3、3 位：scale 两位是比例因子的对数，index 与 base 是寄存器编号。
 index 加上 REX.X 之后等于 4 表示没有变址寄存器，因为 %rsp 不能作变址；此时 scale 记为 1。
-base 字段 101 且 mod 00 表示没有基址，随后 4 字节位移，matmul 的这条指令就是这种形式：
+base 字段 101 且 mod 00 表示没有基址，随后 4 字节偏移，matmul 的这条指令就是这种形式：
 地址 = 0x403020 + %rdx × 8。
 hello 的 (%rsp) 是另一种常见形式：%rsp 作基址必须经过 SIB，SIB 24 是 00 100 100，没有变址，base 是 %rsp。
 """)
@@ -1054,8 +992,8 @@ def cpu_modrm_flow(p):
     p.notes("""
 第一帧：读 ModRM 字节，拆出 mod、sub 与 reg，reg 加 REX.R。mod 为 11 时 rm 是寄存器，其余字段取没有的值，返回 1。
 第二帧：内存操作数。rm 字段为 100 时读 SIB 字节，拆出 scale、index 与 base，index 加 REX.X 后等于 4 表示没有变址，base 字段 101 且 mod 00 表示没有基址。
-rm 字段不是 100 时，rm 101 且 mod 00 是 rip 相对，其余 base = rm 字段加 REX.B。
-第三帧：位移的宽度由 mod 决定，mod 00 没有位移，没有基址的两种情况例外，4 字节；位移按小端读出并符号扩展到 64 位。返回用掉的字节数，1 到 6；读每个字节之前检查它在 n 个字节之内，否则返回 0。
+rm 字段不是 100 时，rm 101 且 mod 00 是 %rip 相对，其余 base = rm 字段加 REX.B。
+第三帧：偏移的宽度由 mod 决定，mod 00 没有偏移，没有基址的两种情况例外，4 字节；偏移按小端读出并符号扩展到 64 位。返回用掉的字节数，1 到 6；读每个字节之前检查它在 n 个字节之内，否则返回 0。
 课上照这张图写 modrm_decode；函数体写在 modrm.c 中，开头注释的例子表就是检查用例的一部分。
 """)
 
@@ -1064,7 +1002,7 @@ def cpu_modrm_out(p):
     p.title("modrm_t 的字段与解释器对它的使用")
     figure(p, "cpu_modrm_t")
     slide(p, """
-`modrm_decode` 只读字节、填字段，不访问寄存器；`frame/x86.c` 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数。
+`modrm_decode` 只读字节、填字段，不访问寄存器；`frame/x86.c` 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数即可。
 """)
     p.notes("""
 modrm_t 有十个字段，全部由 modrm_decode 填写：mod、sub、reg、rm、base、index、scale、rip、dsize、disp。
@@ -1077,52 +1015,15 @@ rip 为 1 时 ea 再把 R[RIP] 加上去，此时 R[RIP] 已经指向下一条�
 
 def cpu_examples_1(p):
     p.title("三条指令的解析结果：hello 的 mov、lea 与 REX.B")
-    figure(p, "cpu_examples-1")
+    figure(p, "cpu_examples")
     slide(p, """
-课上按流程图逐字节走一遍这三条，写出 `modrm_t` 的每个字段与返回值；`./mini-unit modrm` 用 338 组这样的输入检查。
+尝试写出 `modrm_t` 的每个字段与返回值。
 """)
     p.notes("""
 第一条 mov (%rsp),%rdi：ModRM 3c 是 mod 0、reg 7、rm 100，读 SIB 24，index 100 没有变址，base 4，用掉 2 字节。
-第二条 lea 0x8(%rsp),%rsi：ModRM 74 的 mod 是 01，1 字节位移 08；其余与第一条相同，用掉 3 字节。
+第二条 lea 0x8(%rsp),%rsi：ModRM 74 的 mod 是 01，1 字节偏移 08；其余与第一条相同，用掉 3 字节。
 第三条 mov %rdi,%r9：REX 49 的 B 为 1，ModRM f9 的 mod 11，rm 是寄存器 001 加 8 得 9，用掉 1 字节。
 三条的 reg 都不加 REX.R，因为 REX.R 为 0。
-""")
-
-
-def cpu_examples_2(p):
-    p.title("三条指令的解析结果：rip 相对、没有基址的 SIB 与 REX.B 的基址")
-    figure(p, "cpu_examples-2")
-    slide(p, """
-三种例外各一条：rm 101 且 mod 00 的 rip 相对寻址，base 101 且 mod 00 的无基址 SIB，REX.B 之下 rm 100 仍读 SIB。
-""")
-    p.notes("""
-第一条 mov 0x1f1f(%rip),%eax：ModRM 05 是 mod 0、rm 101，没有基址，rip 记 1，随后 4 字节位移，用掉 5 字节。
-第二条 add 0x403020(,%rdx,8),%r8：REX 4c 的 R 为 1，reg 0 加 8 得 8；SIB d5 的 scale 11 是 8，index 2，base 101 且 mod 00 没有基址，随后 4 字节位移，用掉 6 字节。
-第三条 lea -0x1(%r12),%eax：REX 41 的 B 为 1，rm 字段 100 仍读 SIB，SIB 24 的 base 100 加 8 得 12，mod 01 的 1 字节位移 ff 符号扩展为 -1，用掉 3 字节。
-""")
-
-
-def cpu_modrm_check(p):
-    p.title("检查 modrm_decode：mini-unit 与 --disasm")
-    p.demo("单独检查 modrm_decode", """cd ../mini-cpu
-./mini-unit modrm""",
-           output="""modrm: 40 f8 .. rex 00, operand -0x8(%rax): disp expected -8, got 248
-modrm: 338 checks, 1 failed""")
-    p.demo("反汇编 hello 的前五条指令", """cd ../mini-cpu
-./mini-cpu --disasm guest/hello | head -5""",
-           output="""  401000:\t48 8b 3c 24          \tmov    (%rsp),%rdi
-  401004:\t48 8d 74 24 08       \tlea    0x8(%rsp),%rsi
-  401009:\t48 83 e4 f0          \tand    $0xfffffffffffffff0,%rsp
-  40100d:\te8 e9 00 00 00       \tcall   4010fb
-  401012:\t89 c7                \tmov    %eax,%edi""")
-    slide(p, """
-`mini-unit` 每个失败的用例一行：输入字节、操作数的写法、期望值与实际值，全部通过时只有 `modrm: 338 checks, 0 failed`。`--disasm` 与 `objdump -d` 逐行相同，评测比较校验和。
-""")
-    p.notes("""
-./mini-unit modrm 不运行客户机程序，直接用 338 组字节调用 modrm_decode，包括每种形式与每种截断的长度。
-页面上的输出是一处错误的报告：位移 f8 没有符号扩展，得到 248；每行写明输入的字节、REX、操作数在汇编中的写法、期望值与实际值，按它改函数。全部通过时只打印最后一行，0 failed。
---disasm 用同一个 modrm_decode 反汇编整个程序，格式与 objdump -d 相同，所以可以用 diff 逐行比较。
-评测的第 1 部分就是这三项：mini-unit modrm、各个客户机程序的反汇编、随机生成的内存操作数的反汇编。
 """)
 
 
@@ -1132,9 +1033,11 @@ modrm: 338 checks, 1 failed""")
 
 def cpu_alu_flags(p):
     p.title("alu.c：十个函数与五个标志位")
+    p.spacer(64)
     figure(p, "cpu_flags")
+    p.spacer(16)
     slide(p, """
-每个函数返回 `size` 字节的结果，只改 `*f` 的这五位。`x86_add` 是写出的例子，`x86_sub` 与 `x86_logic` 照它写，`inc`、`dec`、`neg` 由它们组合。
+每个函数返回 `size` 字节的结果，只改 `*f` 的这五位。`x86_add` 是写出的例子，`x86_sub` 与 `x86_logic` 照它写，`inc`、`dec`、`neg` 可以由它们组合。
 """)
     p.notes("""
 alu.c 的函数只做算术与标志位，不读指令、不访问内存，所以 mini-unit 可以单独检查它们。
@@ -1143,21 +1046,6 @@ x86_add 已经写出，是 CF 与 OF 的样板；x86_sub 的 CF 是借位，OF �
 x86_inc 已经写出：调用 x86_add 但保留 CF；x86_dec 与 x86_neg 同样由 x86_sub 得到。
 x86_shift 中 shl 已经写出，shr 与 sar 要写；x86_mul 要写，x86_div 已经写出。
 调用者有两个：x86_alu 把运算编号 0 到 7 分派到前四个函数；其余六个由框架的 x86_other 调用，它取出 inc、dec、neg、移位、乘除法的操作数并写回结果。
-""")
-
-
-def cpu_cf_of(p):
-    p.title("CF 与 OF 的定义")
-    figure(p, "cpu_cf_of")
-    slide(p, """
-**CF** 是无符号结果超出 `size` 字节：加法是最高位的进位，减法是借位。**OF** 是两个同号加数的和异号；减法 a − b 中 a 与 b 异号且结果与 a 异号时 OF 为 1。
-""")
-    p.notes("""
-三个 8 位的例子。0xff + 0x01：无符号 255 + 1 放不下，CF 为 1；有符号 -1 + 1 = 0 正确，OF 为 0。
-0x7f + 0x01：无符号 128 正确，CF 为 0；有符号 127 + 1 得 -128，两个正数的和是负数，OF 为 1。
-0x80 + 0x80：无符号 256 放不下，有符号 -128 + -128 得 0，两个负数的和是非负数，CF 与 OF 都为 1。
-OF 的判断只看三个最高位：a、b 的最高位相同且 r 的最高位与它们不同。
-x86_add 已经写出了这两个标志位；x86_sub 的 CF 是无符号 a < b + borrow，OF 按减法的规则。
 """)
 
 
@@ -1179,14 +1067,14 @@ def cpu_insn_groups(p):
     p.title("interp.c 的整数指令：按操作码之后的字节分五组")
     figure(p, "cpu_groups")
     slide(p, """
-`interp.c` 开头的注释按这五组列出每个操作码与它的语义，括号中是第一个用到它的客户机程序。一个 `case` 只读它这一组的字节。
+`interp.c` 开头的注释按这五组列出每个操作码的语义，括号中是第一个用到它的客户机程序。
 """)
     p.notes("""
 只有操作码：push、pop、ret。push 已经写出，pop 与 ret 照它写，寄存器编号在操作码的低 3 位加 REX.B。
 操作数字节：mov 的两种形式、lea、八种运算的两种形式、test。rm = rm OP reg 的八个操作码01、09、11、19、21、29、31、39 的运算编号是 op >> 3；reg = reg OP rm 的八个是 03、0b 到 3b。
 操作数字节加立即数：c7 是 mov，81 与 83 已经写出，运算编号在 x.sub。
 立即数：b8 到 bf 是 mov 到寄存器，x.size 为 8 时立即数 8 字节。
-跳转的位移：call e8、jmp eb 与 e9、jcc 70 到 7f 与 180 到 18f；位移读完后 R[RIP] 是下一条指令，加上 rel。
+跳转的偏移：call e8、jmp eb 与 e9、jcc 70 到 7f 与 180 到 18f；偏移读完后 R[RIP] 是下一条指令，加上 rel。
 每组写好一条，同组的其余指令只换运算或宽度。
 """)
 
@@ -1195,13 +1083,13 @@ def cpu_cond_jump(p):
     p.title("cond 与条件跳转")
     figure(p, "cpu_cond")
     slide(p, """
-`cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 `interp.c` 的注释中。`jcc` 的 `case` 先读位移，`cond` 为 1 时 `R[RIP] += rel`。
+`cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 `interp.c` 的注释中。`jcc` 的 `case` 先读偏移，`cond` 为 1 时 `R[RIP] += rel`。
 """)
     p.notes("""
 条件码是操作码的低 4 位，jcc 的 case 直接把 op 传给 cond。
 e 是 ZF，ne 是 !ZF，l 是 SF != OF，ge 是 SF == OF；其余 12 个在 interp.c 开头的注释与 mcpu.h 中。
-例子是 sum 的 jge：操作码 7d 的条件码 d 是 ge，位移 f4 是 -12。
-位移读完后 R[RIP] 是 40112c，加 -12 得 401120，循环的开头。
+例子是 sum 的 jge：操作码 7d 的条件码 d 是 ge，偏移 f4 是 -12。
+偏移读完后 R[RIP] 是 40112c，加 -12 得 401120，循环的开头。
 框架的 x86_other 处理 cmovcc 与 setcc 时也调用 cond，所以评测的 conditions 一项同时检查三种指令。
 """)
 
@@ -1219,148 +1107,4 @@ VEX 前缀多出一个寄存器操作数 vvvv，x86_begin 记在 x.v 中；L 位
 vpaddd 的 case：modrm 解析 rm，rm_vget 读第二个源，与 Y[x.v] 逐通道相加到局部的 r，vset 写 x.reg。
 目标寄存器同时是源，所以先算到局部变量，最后一步才写出；写 xmm 时 vset 清零高 128 位。
 vmovdqu 的 rm 可以是内存；vmovd 的目标是 rm，用 rm_set 写 4 字节。
-""")
-
-
-# ==============================================================================
-# 4 调试、评测与提交
-# ==============================================================================
-
-def cpu_run_fault(p):
-    p.title("第一次运行：非法指令的报告")
-    p.side_image("assets/cpu_debug.svg", width="36%", alt="contain", side="left")
-    p.demo("编译实验一并运行 hello", """cd ../mini-cpu
-make -s >/dev/null 2>&1
-./mini-cpu guest/hello""",
-           output="""fault (illegal instruction) after 0 instructions:
-...
-rip  0000000000401000  flags -----""", bold=[3])
-    slide(p, """
-没有 `case` 的操作码由 `x86_other` 报告为非法指令，`rip` 是这条指令的地址。补上 `case 0x8b` 后再运行，报告前进到下一条没有 `case` 的指令：
-""")
-    p.code("text", """fault (illegal instruction) after 1 instructions:
-...
-rip  0000000000401004  flags -----""")
-    p.notes("""
-发布的代码已经有主循环，所以第一次运行就能到达第一条指令；它的操作码 8b 没有 case，x86_other 报告非法指令，打印全部寄存器，rip 是 401000。
-用 objdump -d guest/hello 查这个地址，是 mov (%rsp),%rdi，补上 case 0x8b，重新编译。
-再运行，报告的指令数变成 1，rip 变成 401004，即 lea。按这个顺序逐条补充，直到 hello 打印它的两行输出；然后换下一个客户机程序。
---max N 让解释器执行 N 条指令后停止，配合 -v 可以看到每条指令。
-""")
-
-
-def cpu_trace(p):
-    p.title("-v 与 --commit：看每条指令做了什么")
-    p.demo("逐条打印 hello 的前四条指令", """cd ../mini-cpu
-./mini-cpu -v --max 4 guest/hello""",
-           output="""00401000  op 8b  rax=0                rsp=7fffffffefc0 rdi=1
-00401004  op 8d  rax=0                rsp=7fffffffefc0 rdi=1
-00401009  op 83  rax=0                rsp=7fffffffefc0 rdi=1
-0040100d  op e8  rax=0                rsp=7fffffffefb8 rdi=1
-stopped after 4 instructions (--max)""")
-    p.demo("提交日志的前四行", """cd ../mini-cpu
-./mini-cpu --commit - guest/hello | grep '^4010' | head -4""",
-           output="""401000 rdi=1
-401004 rsi=7fffffffefc8
-401009 flags=6
-40100d m[7fffffffefb8]=401012 rsp=7fffffffefb8""")
-    slide(p, """
-`-v` 每行：地址、`op`、三个寄存器；提交日志每行：地址、写的内存、改变的寄存器。
-""")
-    p.notes("""
--v 打印到 stderr，每条指令执行之前一行；--max 4 执行四条后停止。
---commit - 把提交日志写到标准输出，每条指令一行，只列出被写的内存与值变化的寄存器，不含 rip。
-401009 的 and 没有改变 rsp，所以只有 flags；40100d 的 call 写了栈上的返回地址与 rsp。
-向量寄存器在日志中写作一个 256 位的十六进制数，最右边 8 位是通道 0。
-评测的 commit logs 三项用这份日志对照本机的真实执行，一条指令写错一个寄存器就会被发现。
-""")
-
-
-def cpu_make_check(p):
-    p.title("make check：21 项，100 分")
-    figure(p, "cpu_score")
-    p.demo("运行评测", """cd ../mini-cpu
-make -s check""",
-           output="""seed 31274
--- part 1: modrm.c, 30 points
-PASS  10/10  unit: modrm_decode, every form and every truncated length
-PASS  10/10  disasm: the guests
-PASS  10/10  disasm: random memory operands (SIB, displacement)
-...
--- part 4: interp.c, the vector instructions, 10 points
-PASS   2/2   mini-ollama-simd: dot_q4 on ymm registers
-lab 1 score 100/100""", bold=[1, 9])
-    p.notes("""
-make check 先检查源文件，然后按四个部分运行 21 项，每项一行：PASS 或 FAIL、得分与分值、名称。
-第一行是随机种子：随机的操作数、随机生成的程序与随机的模型都由它决定，SEED=种子 make check 重复同一次评测。
-一项全部通过才得分。第 1 部分是 modrm_decode 的三项，第 2 部分是 alu.c 的三项，第 3 部分十项各 3 分：cond、客户机程序的输出、缺页、提交日志、随机操作数的标志位、三种条件指令、随机指令、两个小模型；第 4 部分五项各 2 分，都要用向量指令。
-发布的代码得 0 分；这里是完成后的输出，中间的部分已省略。
-每项的运行上限是 120 秒。
-""")
-
-
-FLAGS_FAILURE = """FAIL   0/3   flags: random operands, against this machine
-        | (tests/lab1/flagops.py 30873 1000, instruction 0)
-        | 0: addb %cl,%bl    %rbx = 0xff, %rcx = 0x7f, flags in: SF OF
-        | want: value 0x000000000000007e, flags: CF PF
-        | got:  value 0x000000000000007e, flags: PF OF"""
-
-
-def cpu_check_fail(p):
-    p.title("一项不通过时的输出")
-    p.code("text", """-- part 4: interp.c, the vector instructions, 10 points
-FAIL   0/2   simd: scalar and vector loops, n = 19 and 1000
-        | expected: scalar = -28
-        | simd   = -28
-        | got:      scalar = -28
-        | simd   =
-        | fault (illegal instruction) after 667 instructions:
-...
-lab 1 score 90/100""")
-    p.code("text", FLAGS_FAILURE)
-    slide(p, """
-`FAIL` 之后缩进的行是期望的输出与实际的输出，括号中是复现这一项的命令；一条指令的检查写出它的操作数、输入的标志位、期望值与实际值。
-""")
-    p.notes("""
-第一段是缺少 vpmulld 的 case 时的评测：simd 的向量循环遇到它就报告非法指令，第 4 部分的五项全部不通过，90 分。
-expected 与 got 分别是期望的输出与实际的输出，fault 之后是寄存器报告的开头。
-第二段是 flags 一项的报告：随机的操作数在本机执行一次作为期望值，括号中的命令重复这一项；这里 addb %cl,%bl 在 0xff + 0x7f 上应当置 CF，实际置了 OF，说明 x86_add 或它的调用写错了。
-mini-unit 的报告是同一种格式：每个失败的用例一行，输入、期望值与实际值。
-""")
-
-
-def cpu_rules(p):
-    p.title("评测的规则：可改的文件、源文件检查与运行环境")
-    slide(p, """
-- **可改的文件**：`src/lab1/` 下的三个文件；`frame/`、`include/` 与 `Makefile` 的修改在评测时不生效，新的辅助函数写在这三个文件中
-- **源文件检查**：只用 `tests/symbols.txt` 列出的名字，定义的名字不以 `__` 开头，代码只在 `.text` 中，没有 `syscall`；不通过时一项也不运行
-- **运行限制**：每项 120 秒；`tests/`、`tools/` 与 `guest/*.txt` 在评测期间只读
-- **环境**：x86-64 Linux；Windows 在 WSL2 中完成；arm64 macOS 用 x86-64 的 Linux 容器（`docker run --platform linux/amd64`）或课程服务器
-""")
-    p.notes("""
-评测把提交的压缩包解压到一份新的框架中再运行 make check，因此只有 src/lab1 下的三个文件计入。
-源文件检查在测试之前：tests/srccheck.sh 检查每个目标文件使用的名字、定义的名字、节与指令，目的是让解释器只能用框架给的接口访问机器与文件；不通过时 total score 为 0，没有一项运行。
-每项的时间上限 120 秒，环境变量 LIMIT 可以在本机放宽，评测时用默认值。
-mini-cpu 依赖 x86-64 Linux：客户机程序是 x86-64 的 ELF，Makefile 用 GNU ld 的 --wrap，make check 把生成的程序在本机运行一次作为期望值。macOS 上没有这些，所以用容器或课程服务器。
-""")
-
-
-def cpu_handin(p):
-    p.title("取得代码与提交")
-    p.code("bash", """git clone https://github.com/SJTU-IPADS/OS-Course-Lab.git
-cd OS-Course-Lab/ICS-Labs/MiniCPU        # updates: git pull""")
-    p.demo("打包实验一", """cd ../mini-cpu
-make -s handin && rm lab1.zip""",
-           output="""src/lab1/interp.c
-src/lab1/modrm.c
-src/lab1/alu.c""")
-    slide(p, """
-- `make handin` 把 `src/lab1/` 下的 `.c` 与 `.h` 打包为 `lab1.zip`，提交到 Canvas 平台
-- 框架有更新时在这个目录中运行 `git pull`，`src/lab1/` 中的文件保持不变
-""")
-    p.notes("""
-代码在 GitHub 仓库 SJTU-IPADS/OS-Course-Lab 的 ICS-Labs/MiniCPU 目录中，git clone 取得。
-make handin 列出压缩包中的文件，只有 src/lab1 下的 .c 与 .h。
-提交到 Canvas；评测解压到一份新的框架中运行 make check，所以提交前在干净的框架里再跑一次。
-框架有更新时用 git pull 取得，自己的 src/lab1 不受影响。
 """)

@@ -49,6 +49,6 @@
 <text x="720.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">下一条 = R[RIP]</text>
 <line x1="720.0" y1="214.0" x2="364.0" y2="214.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
 <text x="540.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">R[RIP] += rel：0x40112c - 12 = 0x401120</text>
-<text x="800.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">位移读完之后 R[RIP] 才是下一条指令的地址，</text>
+<text x="800.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">偏移读完之后 R[RIP] 才是下一条指令的地址，</text>
 <text x="800.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">因此先读 rel，再加到 R[RIP] 上</text>
 </svg>

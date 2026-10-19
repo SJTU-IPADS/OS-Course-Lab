@@ -63,7 +63,7 @@ def build():
     out.append(note(400, 258, "guest/block，地址 401135"))
     out.append(text(36, 284, "REX 41：B = 1　　ModRM 44 = 01 000 100：rm 100 → 读 SIB　　SIB 24 = 00 100 100：index 100 → 没有变址，"
                     "base 100 + 8 = 12，即 %r12", 14, INK, anchor="start"))
-    out.append(text(36, 306, "mod 01 → 1 字节位移 ff，符号扩展为 -1；%r12 作基址需要 SIB 字节，因为 rm 字段 100 已经另有含义",
+    out.append(text(36, 306, "mod 01 → 1 字节偏移 ff，符号扩展为 -1；%r12 作基址需要 SIB 字节，因为 rm 字段 100 已经另有含义",
                     14, INK, anchor="start"))
     return out
 

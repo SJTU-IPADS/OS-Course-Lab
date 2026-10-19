@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 320" width="1120" height="320">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
 <rect x="20.0" y="240.0" width="200.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
 <text x="120.0" y="259.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_szp</text>
@@ -28,19 +28,19 @@
 <line x1="90.0" y1="104.0" x2="90.0" y2="146.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
 <line x1="250.0" y1="104.0" x2="250.0" y2="146.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
 <line x1="410.0" y1="104.0" x2="330.0" y2="146.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
-<rect x="540.0" y="60.0" width="170.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="625.0" y="79.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_shift</text>
-<text x="625.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">shl 已写出；shr、sar 你写</text>
-<rect x="540.0" y="150.0" width="170.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="625.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_mul</text>
-<text x="625.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">CF OF：乘积放不下</text>
-<rect x="540.0" y="240.0" width="170.0" height="44.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
-<text x="625.0" y="259.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_div</text>
-<text x="625.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">已经写出；不改标志位</text>
+<rect x="540.0" y="60.0" width="200.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="640.0" y="79.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_shift</text>
+<text x="640.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">shl 已写出；shr、sar 需要完成</text>
+<rect x="540.0" y="150.0" width="200.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="640.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_mul</text>
+<text x="640.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">CF OF：乘积放不下</text>
+<rect x="540.0" y="240.0" width="200.0" height="44.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="640.0" y="259.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x86_div</text>
+<text x="640.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">已经写出；不改标志位</text>
 <path d="M 540.0 82.0 L 500.0 82.0 L 500.0 262.0 L 480.0 262.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
 <path d="M 540.0 172.0 L 500.0 172.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
 <line x1="500.0" y1="262.0" x2="224.0" y2="262.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
-<text x="300.0" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">ZF SF PF 都来自 x86_szp</text>
+<text x="362.0" y="247.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">ZF SF PF 都来自 x86_szp</text>
 <text x="780.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">每个函数只改 *f 的这五位</text>
 <rect x="780.0" y="54.0" width="44.0" height="24.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
 <text x="802.0" y="71.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">CF</text>
@@ -65,8 +65,7 @@
 <text x="780.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">size 是操作数的字节数：1、2、4、8</text>
 <text x="780.0" y="248.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">辅助：trunc_val、sext、msb、parity、flag</text>
 <rect x="780.0" y="272.0" width="22.0" height="16.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
-<text x="808.0" y="285.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">你写的</text>
+<text x="808.0" y="285.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">需要完成</text>
 <rect x="880.0" y="272.0" width="22.0" height="16.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
 <text x="908.0" y="285.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">已经写出的示例</text>
-<text x="20.0" y="306.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">调用者：前四个由 x86_alu（运算编号 0..7）调用；其余六个由框架的 x86_other 调用，它取出 inc、dec、neg、移位、乘除法的操作数并写回结果</text>
 </svg>

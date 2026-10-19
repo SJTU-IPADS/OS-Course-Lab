@@ -65,5 +65,5 @@
 <text x="36.0" y="258.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">41 8d 44 24 ff   lea -0x1(%r12),%eax</text>
 <text x="400.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">guest/block，地址 401135</text>
 <text x="36.0" y="284.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">REX 41：B = 1　　ModRM 44 = 01 000 100：rm 100 → 读 SIB　　SIB 24 = 00 100 100：index 100 → 没有变址，base 100 + 8 = 12，即 %r12</text>
-<text x="36.0" y="306.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 01 → 1 字节位移 ff，符号扩展为 -1；%r12 作基址需要 SIB 字节，因为 rm 字段 100 已经另有含义</text>
+<text x="36.0" y="306.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 01 → 1 字节偏移 ff，符号扩展为 -1；%r12 作基址需要 SIB 字节，因为 rm 字段 100 已经另有含义</text>
 </svg>

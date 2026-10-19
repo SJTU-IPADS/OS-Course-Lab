@@ -19,13 +19,13 @@ W, H = 1120, 300
 FIELDS = [("mod", "0..3"), ("sub", "reg 字段本身，0..7"), ("reg", "加 REX.R，0..15"),
           ("rm", "寄存器编号，内存时 -1"), ("base", "0..15，没有时 -1"),
           ("index", "0..15，没有时 -1"), ("scale", "1、2、4、8"), ("rip", "1：相对于下一条指令"),
-          ("dsize", "0、1、4"), ("disp", "符号扩展后的位移")]
+          ("dsize", "0、1、4"), ("disp", "符号扩展后的偏移")]
 
 
 def build():
     out = [rect(20, 14, 330, 272, FILL_ORANGE, ORANGE, rx=8, width=1.6),
            code(36, 40, "modrm_t m", 16, INK, "bold"),
-           note(140, 40, "你的 modrm_decode 填写全部字段")]
+           note(140, 40, "modrm_decode 填写全部字段")]
     for k, (name, what) in enumerate(FIELDS):
         y = 66 + k * 22
         out.append(code(36, y, name, 14, INK, "bold"))
@@ -48,16 +48,17 @@ def build():
     out.append(arrow(740, 150, 786, 150, MUTED, 2.2))
     out.append(rect(790, 14, 310, 272, FILL_BLUE, BLUE, rx=8, width=1.6))
     out.append(text(806, 40, "case 中读到的操作数", 16, INK, "bold", anchor="start"))
-    ops = [("get(&x, x.reg)", "reg 寄存器"), ("rm_get(&x)", "x.rm ≥ 0：寄存器 x.rm"),
-           ("", "x.rm < 0：内存 ea(&x)"), ("ea(&x)", "x.addr；x.riprel 时再加 R[RIP]"),
-           ("x.sub", "0x81、0x83 的运算编号")]
-    for k, (fn, what) in enumerate(ops):
-        y = 70 + k * 30
-        if fn:
-            out.append(code(806, y, fn, 14, INK, "bold"))
-        out.append(note(806, y + 16 if fn else y, what, 13, INK))
-    out.append(note(806, 254, "反汇编器 translate.c 也读这个 modrm_t；", 12))
-    out.append(note(806, 270, "函数只读字节，不访问机器", 12))
+    ops = [("get(&x, x.reg)", ["reg 寄存器"]),
+           ("rm_get(&x)", ["x.rm ≥ 0：寄存器 x.rm", "x.rm < 0：内存 ea(&x)"]),
+           ("ea(&x)", ["x.addr；x.riprel 时再加 R[RIP]"]),
+           ("x.sub", ["0x81、0x83 的运算编号"])]
+    y = 72                                      # the four spread over the box
+    for fn, what in ops:
+        out.append(code(806, y, fn, 14, INK, "bold"))
+        for s in what:
+            y += 20
+            out.append(note(806, y, s, 13, INK))
+        y += 28
     return out
 
 

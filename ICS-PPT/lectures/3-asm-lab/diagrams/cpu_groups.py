@@ -26,7 +26,7 @@ GROUPS = [
      "add $0x1,%rax", "modrm(&x)，再 (int8_t)fetch8 或 fetch_imm", "rm = rm + imm；运算编号是 x.sub"),
     ("立即数", [(["ba"], OPCODE), (["e8", "03", "00", "00"], IMM)], "mov $0x3e8,%edx",
      "fetch_imm；x.size 为 8 时 fetch64", "寄存器 = imm；寄存器编号同 push"),
-    ("跳转的位移", [(["7e"], OPCODE), (["12"], IMM)], "jle 401116",
+    ("跳转的偏移", [(["7e"], OPCODE), (["12"], IMM)], "jle 401116",
      "(int8_t)fetch8 或 (int32_t)fetch32", "cond 为 1 时 R[RIP] += rel"),
 ]
 

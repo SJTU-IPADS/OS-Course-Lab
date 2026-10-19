@@ -30,7 +30,7 @@ def build():
     # what each field says
     X = 400
     out.append(text(X, 76, "mod", 15, GREEN, "bold", anchor="start"))
-    out.append(text(X + 50, 76, "11：rm 是寄存器　00、01、10：另一个操作数在内存中，位移为 0、1、4 字节",
+    out.append(text(X + 50, 76, "11：rm 是寄存器　00、01、10：另一个操作数在内存中，偏移为 0、1、4 字节",
                     14, INK, anchor="start"))
     out.append(text(X, 104, "reg", 15, GREEN, "bold", anchor="start"))
     out.append(text(X + 50, 104, "寄存器操作数的编号（m->reg）；0x81、0x83 这类组指令用它扩展操作码（m->sub）",
@@ -39,12 +39,12 @@ def build():
     out.append(text(X + 50, 132, "mod 11：寄存器编号　其余：基址寄存器的编号，两个例外：",
                     14, INK, anchor="start"))
     out.append(text(X + 50, 158, "rm 100：随后是 SIB 字节，基址与变址由它给出", 14, INK, anchor="start"))
-    out.append(text(X + 50, 182, "rm 101 且 mod 00：没有基址，随后 4 字节位移，地址相对于下一条指令（%rip）",
+    out.append(text(X + 50, 182, "rm 101 且 mod 00：没有基址，随后 4 字节偏移，地址相对于下一条指令（%rip）",
                     14, INK, anchor="start"))
     # the example read off
     out.append(rect(20, 212, 1080, 66, WHITE, LINE, rx=8, width=1.2, dash="5 4"))
     out.append(text(36, 238, "这一条", 15, INK, "bold", anchor="start"))
-    out.append(text(100, 238, "mod 00：内存操作数，没有位移　　reg 111：%rdi（REX.R 为 0）　　"
+    out.append(text(100, 238, "mod 00：内存操作数，没有偏移　　reg 111：%rdi（REX.R 为 0）　　"
                     "rm 100：读随后的 SIB 字节 24", 14, INK, anchor="start"))
     out.append(text(100, 264, "操作码 8b 规定 reg 是目标：reg = rm，即 %rdi = 内存中的 8 字节（REX.W）",
                     14, INK, anchor="start"))

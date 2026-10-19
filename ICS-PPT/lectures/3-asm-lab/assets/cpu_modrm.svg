@@ -28,15 +28,15 @@
 <text x="265.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">rm</text>
 <text x="318.0" y="133.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">= 0x3c</text>
 <text x="400.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">mod</text>
-<text x="450.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">11：rm 是寄存器　00、01、10：另一个操作数在内存中，位移为 0、1、4 字节</text>
+<text x="450.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">11：rm 是寄存器　00、01、10：另一个操作数在内存中，偏移为 0、1、4 字节</text>
 <text x="400.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">reg</text>
 <text x="450.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器操作数的编号（m-&gt;reg）；0x81、0x83 这类组指令用它扩展操作码（m-&gt;sub）</text>
 <text x="400.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">rm</text>
 <text x="450.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 11：寄存器编号　其余：基址寄存器的编号，两个例外：</text>
 <text x="450.0" y="158.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">rm 100：随后是 SIB 字节，基址与变址由它给出</text>
-<text x="450.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">rm 101 且 mod 00：没有基址，随后 4 字节位移，地址相对于下一条指令（%rip）</text>
+<text x="450.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">rm 101 且 mod 00：没有基址，随后 4 字节偏移，地址相对于下一条指令（%rip）</text>
 <rect x="20.0" y="212.0" width="1080.0" height="66.0" rx="8" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="5 4"/>
 <text x="36.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">这一条</text>
-<text x="100.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 00：内存操作数，没有位移　　reg 111：%rdi（REX.R 为 0）　　rm 100：读随后的 SIB 字节 24</text>
+<text x="100.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 00：内存操作数，没有偏移　　reg 111：%rdi（REX.R 为 0）　　rm 100：读随后的 SIB 字节 24</text>
 <text x="100.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">操作码 8b 规定 reg 是目标：reg = rm，即 %rdi = 内存中的 8 字节（REX.W）</text>
 </svg>

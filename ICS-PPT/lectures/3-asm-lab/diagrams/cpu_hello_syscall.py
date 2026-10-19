@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""What happens at the syscall instructions of guest/hello.
+"""The syscall of guest/hello is carried out by a syscall in mini-cpu.
 
-Top row: the first write, at 40112a. The registers the guest has set, the
-path through interp_run (default: x86_other, syscall_enter) into
-sys_dispatch of frame/sysbase.c, which copies the string out of guest
-memory and calls write on the host. Bottom row: exit, at 401019, which
-sets halted and ends the loop. Addresses from objdump -d guest/hello; the
-student's code orange, the framework's grey, what comes out green.
+Two listings of machine code. Left: guest/hello, which mini-cpu reads;
+its syscall at 40112a is two bytes 0f 05. Middle: mini-cpu, which the PC's
+CPU executes: its own code calls libc's write, and write executes a syscall
+with the same two bytes, which enters Linux on the right. The two syscall
+rows are on one line. Guest bytes from objdump -d guest/hello; call write
+from objdump -d mini-cpu (write@plt); the syscall of write from objdump -d
+of the host libc.so.6 (glibc 2.43), where write reaches it through an
+internal function, hence the rows "...". Syscall rows orange, as the
+opcode; Linux blue, as on the page before.
 Run it to refresh ../assets/cpu_hello_syscall.svg.
 """
 
@@ -15,75 +18,94 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (FILL_GREEN, GREEN, INK, LINE, MUTED, WHITE, arrow, rect, save, text)
-from cpu_kit import GIVEN, OPCODE, TODO, byte_row, code, note
+from svgkit import (BLUE, FILL_BLUE, FILL_ORANGE, INK, LINE, MUTED, ORANGE, WHITE, arrow,
+                    elbow, rect, save, text)
+from cpu_kit import code, note
 
-W, H = 1120, 284
+W, H = 1120, 318
 
-COLS = [(16, 236), (292, 236), (568, 316), (924, 180)]      # x, width
+TOP, BOT = 32, 310                     # the three boxes
+LX, LW = 16, 404                       # guest/hello
+MX, MW = 478, 400                      # mini-cpu
+KX, KW = 944, 160                      # Linux
+ROW = 32
+SYS = 254                              # the line of both syscall rows
 
-
-def column(k, y, h, colour, title, lines, mono_title=True):
-    x, w = COLS[k]
-    fill, stroke = colour
-    out = [rect(x, y, w, h, fill, stroke, rx=6, width=1.6)]
-    if mono_title:
-        out.append(code(x + 12, y + 22, title, 14, INK, "bold"))
-    else:
-        out.append(text(x + 12, y + 22, title, 14, INK, "bold", anchor="start"))
-    for i, s in enumerate(lines):
-        if isinstance(s, tuple):            # (mono part, note)
-            out.append(code(x + 12, y + 44 + i * 20, s[0], 12.5))
-            out.append(note(x + w - 12, y + 44 + i * 20, s[1], 12, anchor="end"))
-        else:
-            out.append(text(x + 12, y + 44 + i * 20, s, 12.5, INK, anchor="start"))
-    return out
+GUEST = [("", "...", ""),
+         ("40111d", "b8 01 00 00 00", "mov    $0x1,%eax"),
+         ("401122", "be 00 20 40 00", "mov    $0x402000,%esi"),
+         ("401127", "48 89 c7", "mov    %rax,%rdi"),
+         ("40112a", "0f 05", "syscall"),
+         ("", "...", "")]
 
 
-def arrows(y):
-    out = []
-    for (x0, w0), (x1, _) in zip(COLS, COLS[1:]):
-        out.append(arrow(x0 + w0 + 4, y, x1 - 4, y, INK, 1.8))
-    return out
+def highlight(x, y, w):
+    return rect(x, y - 19, w, 28, FILL_ORANGE, ORANGE, rx=4, width=1.6)
 
 
 def build():
     out = []
-    # the first write
-    out.append(text(16, 20, '第一次 write：puts("hello from the guest\\n")', 14, INK, "bold", anchor="start"))
-    y, h = 32, 146
-    out.append(rect(COLS[0][0], y, COLS[0][1], h, WHITE, LINE, rx=6, width=1.6))
-    out.append(code(28, y + 23, "40112a", 14, INK, "bold"))
-    shapes, x = byte_row(92, y + 6, [(["0f", "05"], OPCODE)], cw=30, ch=24, size=13)
-    out += shapes
-    out.append(code(x + 10, y + 23, "syscall", 14, INK, "bold"))
-    for i, (reg, what) in enumerate([("R[RAX] = 1", "write"), ("R[RDI] = 1", "stdout"),
-                                     ("R[RSI] = 0x402000", "字符串"), ("R[RDX] = 21", "字节数")]):
-        out.append(code(28, y + 54 + i * 22, reg, 12.5))
-        out.append(note(COLS[0][0] + COLS[0][1] - 12, y + 54 + i * 22, what, 12, anchor="end"))
-    out += column(1, y, h, TODO, "interp_run",
-                  ["x86_begin：op = 0x105", "switch 中没有 case 0x105，", "进入 default：x86_other(&x)",
-                   "x86_other 调用 syscall_enter，", "再进入 sys_dispatch"])
-    out += column(2, y, h, GIVEN, "sys_dispatch（frame/sysbase.c）",
-                  ["R[RAX] 是 1：write", "mem_read 从客户机地址 0x402000",
-                   "复制 21 个字节到 mini-cpu 的 buf", "调用本机的 write(1, buf, 21)",
-                   "R[RAX] = 21：写出的字节数"], mono_title=False)
-    out.append(rect(COLS[3][0], y, COLS[3][1], h, FILL_GREEN, GREEN, rx=6, width=1.6))
-    out.append(text(COLS[3][0] + 12, y + 22, "终端", 14, INK, "bold", anchor="start"))
-    out.append(code(COLS[3][0] + 12, y + 56, "hello from the guest", 12.5, INK, "bold"))
-    out += arrows(y + h / 2)
 
-    # exit
-    out.append(text(16, 206, "exit：guest_main 返回之后，_start 的最后一个 syscall", 14, INK, "bold", anchor="start"))
-    y, h = 218, 62
-    out.append(rect(COLS[0][0], y, COLS[0][1], h, WHITE, LINE, rx=6, width=1.6))
-    out.append(code(28, y + 23, "401019  syscall", 14, INK, "bold"))
-    out.append(code(28, y + 44, "R[RAX] = 60", 12.5))
-    out.append(note(COLS[0][0] + COLS[0][1] - 12, y + 44, "exit，R[RDI] = 0", 12, anchor="end"))
-    out += column(1, y, h, TODO, "interp_run", ["同样经 x86_other 进入 sys_dispatch"])
-    out += column(2, y, h, GIVEN, "sys_dispatch", ["R[RAX] 是 60：exit，置 c->halted = 1"], mono_title=False)
-    out += column(3, y, h, (FILL_GREEN, GREEN), "循环结束", ["mini-cpu 的退出码 0"], mono_title=False)
-    out += arrows(y + h / 2)
+    # guest/hello: machine code that mini-cpu reads
+    out.append(rect(LX, TOP, LW, BOT - TOP, WHITE, LINE, rx=8, width=1.6))
+    out.append(text(LX + 16, TOP + 26, "guest/hello 的机器码", 15, INK, "bold", anchor="start"))
+    out.append(note(LX + 16, TOP + 46, "由 mini-cpu 读取", 12.5))
+    top = SYS - 4 * ROW
+    for k, (addr, raw, insn) in enumerate(GUEST):
+        y = top + k * ROW
+        bold = "bold" if insn == "syscall" else "normal"
+        if insn == "syscall":
+            out.append(highlight(LX + 8, y, LW - 16))
+        out.append(code(LX + 16, y, addr, 14, MUTED))
+        out.append(code(LX + 76, y, raw, 14, INK, bold))
+        out.append(code(LX + 218, y, insn, 14, INK, bold))
+
+    # mini-cpu: machine code that the PC's CPU executes
+    out.append(rect(MX, TOP, MW, BOT - TOP, WHITE, INK, rx=8, width=1.6))
+    out.append(text(MX + 16, TOP + 26, "mini-cpu 的机器码", 15, INK, "bold", anchor="start"))
+    out.append(note(MX + 16, TOP + 46, "由 PC 的 CPU 执行", 12.5))
+    sx, sw = MX + 12, MW - 24
+    bx, ax = MX + 104, MX + 240            # bytes, instruction
+    ys = [SYS - 4 * ROW - 10, SYS - 3 * ROW - 10, SYS - 2 * ROW - 10]   # mini-cpu's own code
+    yl = [SYS - ROW, SYS, SYS + ROW]                                   # libc's write
+    for (rows, label) in ((ys, ["mini-cpu", "自己的代码"]), (yl, ["libc 的", "write"])):
+        y0 = rows[0] - 20
+        out.append(rect(sx, y0, sw, rows[-1] + 10 - y0, WHITE, LINE, rx=5, width=1.2))
+        mid = (rows[0] + rows[-1]) / 2
+        out.append(text(sx + 12, mid - 4, label[0], 13, INK, "bold", anchor="start"))
+        out.append(text(sx + 12, mid + 14, label[1], 13, INK, "bold", anchor="start"))
+    out.append(code(bx, ys[0], "...", 14))
+    out.append(text(ax, ys[0], "读取客户机的指令", 13, MUTED, anchor="start"))
+    out.append(code(bx, ys[1], "e8 d2 85 ff ff", 14, INK, "bold"))
+    out.append(code(ax, ys[1], "call   write", 14, INK, "bold"))
+    out.append(code(bx, ys[2], "...", 14))
+    out.append(code(bx, yl[0], "...", 14))
+    out.append(highlight(bx - 8, SYS, sx + sw - bx))
+    out.append(code(bx, SYS, "0f 05", 14, INK, "bold"))
+    out.append(code(ax, SYS, "syscall", 14, INK, "bold"))
+    out.append(text(sx + sw - 10, SYS, "代为执行", 14, ORANGE, "bold", anchor="end"))
+    out.append(code(bx, yl[2], "...", 14))
+
+    # read: the guest's syscall is data for mini-cpu
+    vx = (LX + LW + MX) / 2
+    out.append(elbow([(LX + LW - 8, SYS - 5), (vx, SYS - 5), (vx, ys[0] - 5), (sx - 3, ys[0] - 5)],
+                     MUTED, 1.6, dash="5 4"))
+    out.append(rect(vx - 18, (SYS + ys[0]) / 2 - 22, 36, 22, WHITE, WHITE, rx=0, width=0))
+    out.append(text(vx, (SYS + ys[0]) / 2 - 6, "读取", 13, MUTED, "bold"))
+
+    # call: from mini-cpu's code into libc's write
+    cx = sx + sw - 24
+    out.append(elbow([(ax + 108, ys[1] - 5), (cx, ys[1] - 5), (cx, yl[0] - 22)], INK, 1.6))
+    out.append(text(cx - 8, ys[2] + 2, "call", 13, INK, "bold", anchor="end"))
+
+    # the syscall of write enters Linux
+    out.append(arrow(MX + MW + 4, SYS - 5, KX - 4, SYS - 5, ORANGE, 2.6))
+    out.append(code((MX + MW + KX) / 2, SYS - 14, "syscall", 12.5, ORANGE, "bold", anchor="middle"))
+    out.append(rect(KX, TOP, KW, BOT - TOP, FILL_BLUE, BLUE, rx=8, width=1.6))
+    mid = (TOP + BOT) / 2                  # three lines centred in the box
+    out.append(text(KX + KW / 2, mid - 18, "操作系统 Linux", 15, INK, "bold"))
+    out.append(text(KX + KW / 2, mid + 9, "把 21 个字节", 13.5, INK))
+    out.append(text(KX + KW / 2, mid + 29, "输出到终端", 13.5, INK))
     return out
 
 

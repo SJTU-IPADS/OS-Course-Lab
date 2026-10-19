@@ -14,7 +14,7 @@ from svgkit import (FILL_GREY, FILL_ORANGE, INK, LINE, MUTED, ORANGE, WHITE, arr
                     elbow, rect, save, text)
 from cpu_kit import GIVEN, TODO, code, note
 
-W, H = 1120, 320
+W, H = 1120, 300
 BW, BH = 140, 44
 
 
@@ -44,13 +44,13 @@ def build():
     out.append(arrow(250, 104, 250, 146, MUTED, 1.6))
     out.append(arrow(410, 104, 330, 146, MUTED, 1.6))
     # shift, mul, div
-    out += fn(540, 60, "x86_shift", "shl 已写出；shr、sar 你写", TODO, 170)
-    out += fn(540, 150, "x86_mul", "CF OF：乘积放不下", TODO, 170)
-    out += fn(540, 240, "x86_div", "已经写出；不改标志位", GIVEN, 170)
+    out += fn(540, 60, "x86_shift", "shl 已写出；shr、sar 需要完成", TODO, 200)
+    out += fn(540, 150, "x86_mul", "CF OF：乘积放不下", TODO, 200)
+    out += fn(540, 240, "x86_div", "已经写出；不改标志位", GIVEN, 200)
     out.append(elbow([(540, 82), (500, 82), (500, 262), (480, 262)], MUTED, 1.6, head=False))
     out.append(elbow([(540, 172), (500, 172)], MUTED, 1.6, head=False))
     out.append(arrow(500, 262, 224, 262, MUTED, 1.6))
-    out.append(note(300, 230, "ZF SF PF 都来自 x86_szp", 12, anchor="middle"))
+    out.append(note(362, 247, "ZF SF PF 都来自 x86_szp", 12, anchor="middle"))
     # the flags
     fx = 780
     out.append(text(fx, 36, "每个函数只改 *f 的这五位", 15, INK, "bold", anchor="start"))
@@ -65,13 +65,11 @@ def build():
         out.append(note(fx + 110, y + 17, what, 13, INK))
     out.append(note(fx, 226, "size 是操作数的字节数：1、2、4、8", 13))
     out.append(note(fx, 248, "辅助：trunc_val、sext、msb、parity、flag", 13))
-    # legend and callers
+    # legend
     out.append(rect(780, 272, 22, 16, *TODO, rx=3, width=1.2))
-    out.append(text(808, 285, "你写的", 13, INK, anchor="start"))
+    out.append(text(808, 285, "需要完成", 13, INK, anchor="start"))
     out.append(rect(880, 272, 22, 16, *GIVEN, rx=3, width=1.2))
     out.append(text(908, 285, "已经写出的示例", 13, INK, anchor="start"))
-    out.append(note(20, 306, "调用者：前四个由 x86_alu（运算编号 0..7）调用；其余六个由框架的 x86_other 调用，"
-                    "它取出 inc、dec、neg、移位、乘除法的操作数并写回结果", 13))
     return out
 
 
