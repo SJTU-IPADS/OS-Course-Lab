@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 340" width="1120" height="340">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="24.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">操作码之后的字节</text>
+<text x="392.0" y="24.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">guest/sum 中的一条</text>
+<text x="565.0" y="24.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">case 中读指令的调用</text>
+<text x="862.0" y="24.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">做的事</text>
+<text x="20.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">只有操作码</text>
+<rect x="180.0" y="40.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="199.0" y="61.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">c3</text>
+<text x="392.0" y="61.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">ret</text>
+<text x="565.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">不读；push/pop 的寄存器编号在 op 的低 3 位</text>
+<text x="862.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">R[RIP] = 栈顶 8 字节，R[RSP] += 8</text>
+<line x1="20.0" y1="84.0" x2="1100.0" y2="84.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="20.0" y="119.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">操作数字节</text>
+<rect x="180.0" y="98.0" width="38.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="199.0" y="119.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">49</text>
+<rect x="218.0" y="98.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="237.0" y="119.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">01</text>
+<rect x="256.0" y="98.0" width="38.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="275.0" y="119.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">c0</text>
+<text x="392.0" y="119.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">add %rax,%r8</text>
+<text x="565.0" y="119.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">modrm(&amp;x)</text>
+<text x="862.0" y="119.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">rm = rm + reg；运算编号是 op &gt;&gt; 3</text>
+<line x1="20.0" y1="142.0" x2="1100.0" y2="142.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="20.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">操作数字节，立即数</text>
+<rect x="180.0" y="156.0" width="38.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="199.0" y="177.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">48</text>
+<rect x="218.0" y="156.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="237.0" y="177.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">83</text>
+<rect x="256.0" y="156.0" width="38.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="275.0" y="177.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">c0</text>
+<rect x="294.0" y="156.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="313.0" y="177.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">01</text>
+<text x="392.0" y="177.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">add $0x1,%rax</text>
+<text x="565.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">modrm(&amp;x)，再 (int8_t)fetch8 或 fetch_imm</text>
+<text x="862.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">rm = rm + imm；运算编号是 x.sub</text>
+<line x1="20.0" y1="200.0" x2="1100.0" y2="200.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="20.0" y="235.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">立即数</text>
+<rect x="180.0" y="214.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="199.0" y="235.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">ba</text>
+<rect x="218.0" y="214.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="237.0" y="235.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">e8</text>
+<rect x="256.0" y="214.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="275.0" y="235.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">03</text>
+<rect x="294.0" y="214.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="313.0" y="235.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">00</text>
+<rect x="332.0" y="214.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="351.0" y="235.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">00</text>
+<text x="392.0" y="235.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">mov $0x3e8,%edx</text>
+<text x="565.0" y="235.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">fetch_imm；x.size 为 8 时 fetch64</text>
+<text x="862.0" y="235.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器 = imm；寄存器编号同 push</text>
+<line x1="20.0" y1="258.0" x2="1100.0" y2="258.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="20.0" y="293.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">跳转的位移</text>
+<rect x="180.0" y="272.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="199.0" y="293.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">7e</text>
+<rect x="218.0" y="272.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="237.0" y="293.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">12</text>
+<text x="392.0" y="293.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">jle 401116</text>
+<text x="565.0" y="293.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">(int8_t)fetch8 或 (int32_t)fetch32</text>
+<text x="862.0" y="293.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">cond 为 1 时 R[RIP] += rel</text>
+</svg>

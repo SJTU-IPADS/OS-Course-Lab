@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" width="1000" height="320">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="30.0" y="40.0" width="300.0" height="250.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="180.0" y="68.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">本地 PC</text>
+<rect x="50.0" y="90.0" width="260.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="60.0" y="111.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">Makefile</text>
+<text x="300.0" y="111.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">取得 bomb</text>
+<rect x="50.0" y="128.0" width="260.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="60.0" y="149.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">README.md</text>
+<text x="300.0" y="149.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">实验说明</text>
+<rect x="50.0" y="166.0" width="260.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="60.0" y="187.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">bomb-light</text>
+<text x="300.0" y="187.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">课堂演示的程序</text>
+<rect x="50.0" y="216.0" width="260.0" height="54.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="60.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">bomb</text>
+<text x="300.0" y="239.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">这个学号的程序</text>
+<text x="180.0" y="260.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">8 个阶段，运行时保持与服务器的连接</text>
+<rect x="670.0" y="40.0" width="300.0" height="250.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="820.0" y="68.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">课程服务器</text>
+<text x="820.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">按学号链接出一个 bomb</text>
+<text x="820.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">同一个学号每次得到相同的 bomb</text>
+<rect x="690.0" y="166.0" width="260.0" height="104.0" rx="3" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="820.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">计分板</text>
+<text x="820.0" y="214.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">每个 bomb 一行：</text>
+<text x="820.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">已拆除的阶段数、爆炸的次数</text>
+<text x="820.0" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">学号由 8 位十六进制的编号代替</text>
+<line x1="336.0" y1="100.0" x2="664.0" y2="100.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="500.0" y="90.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">make bomb ID=学号</text>
+<text x="500.0" y="120.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">把学号发给服务器</text>
+<line x1="664.0" y1="156.0" x2="336.0" y2="156.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="500.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">传回这个学号的 bomb</text>
+<text x="500.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">保存为当前目录下的文件 bomb</text>
+<line x1="336.0" y1="222.0" x2="664.0" y2="222.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="500.0" y="212.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">./bomb</text>
+<text x="500.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">每个被拆除的阶段、每一次爆炸都记在学号下</text>
+<line x1="664.0" y1="278.0" x2="336.0" y2="278.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="500.0" y="268.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">./bomb -s</text>
+<text x="500.0" y="298.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">读取并显示计分板</text>
+</svg>

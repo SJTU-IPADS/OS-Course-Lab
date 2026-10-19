@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 330" width="1120" height="330">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="14.0" width="360.0" height="150.0" rx="8" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="32.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="start">指令的其余字节（R[RIP] 之后）</text>
+<text x="32.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">fetch8/16/32/64</text>
+<text x="169.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">读 1、2、4、8 字节，R[RIP] 前进</text>
+<text x="32.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">fetch_imm</text>
+<text x="117.4" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">按 x.size 读立即数，符号扩展</text>
+<text x="32.0" y="108.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">modrm</text>
+<text x="83.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">读 ModRM、SIB、位移，填 x.reg x.sub x.rm</text>
+<text x="32.0" y="132.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">ea</text>
+<text x="57.2" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">内存操作数的地址；rip 相对时加 R[RIP]</text>
+<rect x="410.0" y="50.0" width="300.0" height="126.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="560.0" y="80.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">case 的代码</text>
+<text x="560.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">读字节 → 计算 → 写回</text>
+<text x="560.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">读 x.op x.size x.rex x.reg</text>
+<text x="560.0" y="150.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">x.sub x.rm x.v x.vlen</text>
+<line x1="380.0" y1="90.0" x2="406.0" y2="100.0" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah-5a6b78)"/>
+<line x1="714.0" y1="100.0" x2="736.0" y2="90.0" stroke="#156082" stroke-width="2" marker-start="url(#ah-156082)" marker-end="url(#ah-156082)"/>
+<rect x="740.0" y="14.0" width="360.0" height="150.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="752.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="start">寄存器与标志位</text>
+<text x="752.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">get / set</text>
+<text x="837.4" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">按 x.size 读写寄存器 n</text>
+<text x="752.0" y="84.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">R[...]</text>
+<text x="811.6" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">直接读写：R[RSP]、R[RIP]、R[RFLAGS]</text>
+<text x="752.0" y="108.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">x86_alu</text>
+<text x="820.2" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">运算编号 0..7 → alu.c，设置标志位</text>
+<text x="752.0" y="132.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">cond</text>
+<text x="794.4" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">标志位是否满足条件码（你写）</text>
+<rect x="20.0" y="184.0" width="360.0" height="128.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="32.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="start">rm 操作数与内存</text>
+<text x="32.0" y="230.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">rm_get / rm_set</text>
+<text x="169.0" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">rm 是寄存器时用 get/set</text>
+<text x="32.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start"></text>
+<text x="40.0" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">是内存时在 ea 处读写 x.size 字节</text>
+<text x="32.0" y="278.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">load / store</text>
+<text x="143.2" y="278.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">地址 a 处的 n 字节；失败记缺页</text>
+<rect x="740.0" y="184.0" width="360.0" height="128.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="752.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="start">向量寄存器 Y[]</text>
+<text x="752.0" y="230.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">rm_vget</text>
+<text x="820.2" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">读向量 rm 的 n 字节到 u256</text>
+<text x="752.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">rm_vset / vset</text>
+<text x="880.4" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">写 n 字节；写寄存器时高位清零</text>
+<text x="752.0" y="278.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">Y[x.v]</text>
+<text x="811.6" y="278.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">VEX 的第一个源操作数，直接读</text>
+<line x1="380.0" y1="240.0" x2="420.0" y2="180.0" stroke="#2e7d4f" stroke-width="2" marker-start="url(#ah-2e7d4f)" marker-end="url(#ah-2e7d4f)"/>
+<line x1="700.0" y1="180.0" x2="736.0" y2="240.0" stroke="#2e7d4f" stroke-width="2" marker-start="url(#ah-2e7d4f)" marker-end="url(#ah-2e7d4f)"/>
+<text x="560.0" y="300.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">声明都在 include/mcpu.h；第一个参数都是 &amp;x</text>
+</svg>

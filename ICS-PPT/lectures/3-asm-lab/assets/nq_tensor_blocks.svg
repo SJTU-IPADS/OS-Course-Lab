@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 330" width="1120" height="330">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">blk.0.attn_q.weight：2048 行 × 2048 个 BF16 权重</text>
+<rect x="20.0" y="44.0" width="300.0" height="200.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="20.0" y1="56.5" x2="320.0" y2="56.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="69.0" x2="320.0" y2="69.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="81.5" x2="320.0" y2="81.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="94.0" x2="320.0" y2="94.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="106.5" x2="320.0" y2="106.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="119.0" x2="320.0" y2="119.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="131.5" x2="320.0" y2="131.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="144.0" x2="320.0" y2="144.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="156.5" x2="320.0" y2="156.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="169.0" x2="320.0" y2="169.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="181.5" x2="320.0" y2="181.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="194.0" x2="320.0" y2="194.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="206.5" x2="320.0" y2="206.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="219.0" x2="320.0" y2="219.0" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="20.0" y1="231.5" x2="320.0" y2="231.5" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="20.0" y="44.0" width="300.0" height="12.5" rx="0" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="170.0" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">行优先存放：一行接一行</text>
+<text x="20.0" y="268.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">每行独立切块，行长 2048 是 32 的倍数</text>
+<text x="380.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">第 0 行：2048 个权重 = 64 个块 × 32 个</text>
+<rect x="380.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<rect x="391.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="402.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="413.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="425.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="436.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="447.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="458.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="470.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="481.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="492.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="503.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="515.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="526.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="537.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="548.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="560.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="571.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="582.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="593.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="605.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="616.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="627.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="638.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="650.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="661.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="672.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="683.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="695.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="706.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="717.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="728.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="740.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="751.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="762.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="773.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="785.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="796.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="807.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="818.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="830.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="841.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="852.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="863.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="875.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="886.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="897.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="908.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="920.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="931.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="942.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="953.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="965.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="976.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="987.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="998.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1010.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1021.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1032.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1043.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1055.0" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1066.2" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1077.5" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="1088.8" y="46.0" width="11.2" height="24.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="320.0" y1="44.0" x2="380.0" y2="46.0" stroke="#156082" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="320.0" y1="56.5" x2="380.0" y2="70.0" stroke="#156082" stroke-width="1.2" stroke-dasharray="4 4"/>
+<text x="380.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">块 0 的输入 x：32 个 float，x[0] … x[31]</text>
+<rect x="380.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="394.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="408.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="422.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="436.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="450.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="464.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="478.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="492.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="506.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="520.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="534.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="548.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="562.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="576.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="590.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="604.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="618.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="632.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="646.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="660.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="674.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="688.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="702.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="716.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="730.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="744.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="758.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="772.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="786.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="800.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<rect x="814.0" y="140.0" width="14.0" height="28.0" rx="0" fill="#eef2f4" stroke="#9fb5c3" stroke-width="0.8"/>
+<line x1="380.0" y1="70.0" x2="380.0" y2="140.0" stroke="#156082" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="391.2" y1="70.0" x2="828.0" y2="140.0" stroke="#156082" stroke-width="1.2" stroke-dasharray="4 4"/>
+<line x1="604.0" y1="172.0" x2="604.0" y2="226.0" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
+<text x="618.0" y="205.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">q4_0_quantize(x, blk)</text>
+<rect x="380.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="404.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="428.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="452.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="476.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="500.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="524.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="548.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="572.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="596.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="620.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="644.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="668.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="692.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="716.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="740.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="764.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<rect x="788.0" y="232.0" width="24.0" height="28.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.0"/>
+<text x="380.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">块 0 的输出 blk：18 个字节，写在 dst 的开头；块 b 写在 dst + 18·b</text>
+<text x="860.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">框架的循环</text>
+<text x="860.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">每行 64 次调用</text>
+<text x="860.0" y="188.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">2048 行 × 64 块 × 18 字节</text>
+<text x="860.0" y="210.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="start">= 2 359 296 字节</text>
+</svg>

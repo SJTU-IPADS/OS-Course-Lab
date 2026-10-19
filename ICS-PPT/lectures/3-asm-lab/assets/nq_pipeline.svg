@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 292" width="1120" height="292">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="10.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">张量的数据：读 BF16 权重，按块量化，写出数据区</text>
+<rect x="10.0" y="60.0" width="170.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="95.0" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">model.safetensors</text>
+<text x="95.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">4.25 GB · 625 个 BF16 张量</text>
+<rect x="222.0" y="60.0" width="150.0" height="64.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="297.0" y="85.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">nano-quant quant</text>
+<rect x="228.0" y="96.0" width="138.0" height="22.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="297.0" y="111.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="11.5" font-weight="bold" fill="#e97132" text-anchor="middle">impl/nano_quant.cpp</text>
+<rect x="414.0" y="60.0" width="150.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="489.0" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">q4_k_m.nq</text>
+<text x="489.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据区 1.10 GB</text>
+<rect x="606.0" y="60.0" width="130.0" height="64.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="671.0" y="97.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">nq2gguf</text>
+<rect x="778.0" y="60.0" width="150.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="853.0" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">q4_k_m.gguf</text>
+<text x="853.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">1.11 GB</text>
+<rect x="970.0" y="60.0" width="140.0" height="64.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="1040.0" y="85.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">ollama</text>
+<text x="1040.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">create · run</text>
+<line x1="184.0" y1="92.0" x2="218.0" y2="92.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="376.0" y1="92.0" x2="410.0" y2="92.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="568.0" y1="92.0" x2="602.0" y2="92.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="740.0" y1="92.0" x2="774.0" y2="92.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="932.0" y1="92.0" x2="966.0" y2="92.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="10.0" y="174.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">模型的元数据：架构参数、词表、特殊词元，成为 GGUF 的键值段</text>
+<rect x="10.0" y="190.0" width="170.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="95.0" y="217.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">config.json</text>
+<text x="95.0" y="238.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">tokenizer.json</text>
+<rect x="222.0" y="190.0" width="150.0" height="64.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="297.0" y="227.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">tools/mkmeta.py</text>
+<rect x="414.0" y="190.0" width="150.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="489.0" y="217.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">meta.kv</text>
+<text x="489.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">24 个键值对</text>
+<line x1="184.0" y1="222.0" x2="218.0" y2="222.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="376.0" y1="222.0" x2="410.0" y2="222.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 568.0 222.0 L 671.0 222.0 L 671.0 129.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="606.0" y="271.0" width="14.0" height="14.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="626.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="start">文件</text>
+<rect x="676.0" y="271.0" width="14.0" height="14.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="696.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="start">框架的程序</text>
+<rect x="796.0" y="271.0" width="14.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="816.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="start">你写的代码</text>
+<rect x="916.0" y="271.0" width="14.0" height="14.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="936.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#5a6b78" text-anchor="start">ollama</text>
+</svg>

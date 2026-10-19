@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 400" width="1120" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="24.0" width="160.0" height="40.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="100.0" y="49.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">q4_0.gguf</text>
+<rect x="20.0" y="92.0" width="160.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="100.0" y="117.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">model.c</text>
+<text x="100.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">载入 GGUF，找到张量</text>
+<rect x="20.0" y="176.0" width="160.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="100.0" y="201.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">main.c</text>
+<text x="100.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">逐个 Token 生成</text>
+<rect x="20.0" y="260.0" width="160.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="100.0" y="285.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">selftest.c</text>
+<text x="100.0" y="306.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">检查算子，计时</text>
+<line x1="100.0" y1="64.0" x2="100.0" y2="90.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="100.0" y1="148.0" x2="100.0" y2="174.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="180.0" y1="204.0" x2="236.0" y2="204.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="180.0" y1="288.0" x2="236.0" y2="250.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="240.0" y="92.0" width="300.0" height="224.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="390.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">struct ops（ops.h）：算子表</text>
+<line x1="240.0" y1="124.0" x2="540.0" y2="124.0" stroke="#9fb5c3" stroke-width="1"/>
+<text x="258.0" y="144.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#c0392b" text-anchor="start">matvec</text>
+<text x="258.0" y="161.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">embed</text>
+<text x="258.0" y="179.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">rmsnorm</text>
+<text x="258.0" y="196.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">rope</text>
+<text x="258.0" y="214.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">attn_scores</text>
+<text x="258.0" y="231.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">softmax</text>
+<text x="258.0" y="249.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">attn_values</text>
+<text x="258.0" y="266.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">swiglu</text>
+<text x="258.0" y="284.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">add</text>
+<text x="258.0" y="301.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#0e2841" text-anchor="start">argmax</text>
+<text x="332.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#c0392b" text-anchor="start">两部分写的算子</text>
+<text x="436.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">内存操作</text>
+<text x="436.0" y="164.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">init</text>
+<text x="436.0" y="181.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">alloc</text>
+<text x="436.0" y="199.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">upload</text>
+<text x="436.0" y="216.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">download</text>
+<text x="436.0" y="234.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">finish</text>
+<text x="735.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">编译时 -DOPS= 选一套，一个程序链接一套</text>
+<rect x="610.0" y="40.0" width="250.0" height="90.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="735.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">ops/scalar.c</text>
+<text x="735.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="middle">ops_scalar · CPU，每次 1 个元素</text>
+<text x="735.0" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#5a6b78" text-anchor="middle">两部分的参照与计时基准</text>
+<line x1="540.0" y1="204.0" x2="606.0" y2="85.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="610.0" y="150.0" width="250.0" height="90.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="735.0" y="176.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">ops/simd.c</text>
+<text x="735.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="middle">ops_simd · CPU，AVX2，每次 8 个 float</text>
+<text x="735.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#c0392b" text-anchor="middle">matvec_q4_0：第一部分</text>
+<line x1="540.0" y1="204.0" x2="606.0" y2="195.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="610.0" y="260.0" width="250.0" height="90.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="735.0" y="286.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">ops/cuda.cu</text>
+<text x="735.0" y="308.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="middle">ops_cuda · GPU，每个算子一个 kernel</text>
+<text x="735.0" y="332.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#c0392b" text-anchor="middle">matvec_q4_0_kernel：第二部分</text>
+<line x1="540.0" y1="204.0" x2="606.0" y2="305.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="900.0" y="60.0" width="210.0" height="40.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="912.0" y="85.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">mini-ollama-scalar</text>
+<line x1="860.0" y1="85.0" x2="896.0" y2="80.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
+<rect x="900.0" y="150.0" width="210.0" height="36.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="912.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">mini-ollama-simd</text>
+<line x1="860.0" y1="195.0" x2="896.0" y2="168.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
+<rect x="900.0" y="196.0" width="210.0" height="36.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="912.0" y="219.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">ops-selftest-simd</text>
+<line x1="860.0" y1="195.0" x2="896.0" y2="214.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
+<rect x="900.0" y="260.0" width="210.0" height="36.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="912.0" y="283.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">mini-ollama-cuda</text>
+<line x1="860.0" y1="305.0" x2="896.0" y2="278.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
+<rect x="900.0" y="306.0" width="210.0" height="36.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="912.0" y="329.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="start">ops-selftest-cuda</text>
+<line x1="860.0" y1="305.0" x2="896.0" y2="324.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
+</svg>

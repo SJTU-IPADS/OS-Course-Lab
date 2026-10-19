@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="36.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">48 8b 3c 24   mov (%rsp),%rdi</text>
+<text x="340.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">guest/hello 的第一条指令，地址 401000</text>
+<rect x="20.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="39.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">48</text>
+<rect x="58.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="77.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">8b</text>
+<rect x="96.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="115.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">3c</text>
+<rect x="134.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#efe7f7" stroke="#7b4fa6" stroke-width="1.2"/>
+<text x="153.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">24</text>
+<line x1="115.0" y1="86.0" x2="115.0" y2="110.0" stroke="#2e7d4f" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="20.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">ModRM</text>
+<rect x="96.0" y="112.0" width="52.0" height="30.0" rx="3" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="109.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="135.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="122.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">mod</text>
+<rect x="148.0" y="112.0" width="78.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="161.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="187.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="213.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="187.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">reg</text>
+<rect x="226.0" y="112.0" width="78.0" height="30.0" rx="3" fill="#bfdfc9" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="239.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="265.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="291.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="265.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">rm</text>
+<text x="318.0" y="133.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">= 0x3c</text>
+<text x="400.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">mod</text>
+<text x="450.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">11：rm 是寄存器　00、01、10：另一个操作数在内存中，位移为 0、1、4 字节</text>
+<text x="400.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">reg</text>
+<text x="450.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器操作数的编号（m-&gt;reg）；0x81、0x83 这类组指令用它扩展操作码（m-&gt;sub）</text>
+<text x="400.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">rm</text>
+<text x="450.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 11：寄存器编号　其余：基址寄存器的编号，两个例外：</text>
+<text x="450.0" y="158.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">rm 100：随后是 SIB 字节，基址与变址由它给出</text>
+<text x="450.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">rm 101 且 mod 00：没有基址，随后 4 字节位移，地址相对于下一条指令（%rip）</text>
+<rect x="20.0" y="212.0" width="1080.0" height="66.0" rx="8" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="36.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">这一条</text>
+<text x="100.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">mod 00：内存操作数，没有位移　　reg 111：%rdi（REX.R 为 0）　　rm 100：读随后的 SIB 字节 24</text>
+<text x="100.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">操作码 8b 规定 reg 是目标：reg = rm，即 %rdi = 内存中的 8 字节（REX.W）</text>
+</svg>

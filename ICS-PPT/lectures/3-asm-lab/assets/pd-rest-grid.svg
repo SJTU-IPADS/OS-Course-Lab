@@ -1,0 +1,305 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="25 0 1120 400" width="1120" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="180.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">W：rows 行</text>
+<rect x="70.0" y="64.0" width="220.0" height="276.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="330.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">y</text>
+<rect x="318.0" y="64.0" width="24.0" height="276.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="70.0" y1="86.0" x2="290.0" y2="86.0" stroke="#156082" stroke-width="0.8"/>
+<line x1="318.0" y1="86.0" x2="342.0" y2="86.0" stroke="#2e7d4f" stroke-width="0.8"/>
+<text x="180.0" y="79.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#0e2841" text-anchor="middle">第 0 行</text>
+<line x1="70.0" y1="108.0" x2="290.0" y2="108.0" stroke="#156082" stroke-width="0.8"/>
+<line x1="318.0" y1="108.0" x2="342.0" y2="108.0" stroke="#2e7d4f" stroke-width="0.8"/>
+<text x="180.0" y="101.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#0e2841" text-anchor="middle">第 1 行</text>
+<line x1="70.0" y1="130.0" x2="290.0" y2="130.0" stroke="#156082" stroke-width="0.8"/>
+<line x1="318.0" y1="130.0" x2="342.0" y2="130.0" stroke="#2e7d4f" stroke-width="0.8"/>
+<text x="180.0" y="123.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#0e2841" text-anchor="middle">第 2 行</text>
+<text x="180.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#156082" text-anchor="middle">…</text>
+<text x="330.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">…</text>
+<line x1="70.0" y1="340.0" x2="290.0" y2="340.0" stroke="#156082" stroke-width="0.8"/>
+<line x1="318.0" y1="340.0" x2="342.0" y2="340.0" stroke="#2e7d4f" stroke-width="0.8"/>
+<text x="180.0" y="333.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#0e2841" text-anchor="middle">第 rows−1 行</text>
+<rect x="430.0" y="40.0" width="320.0" height="320.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="590.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Grid：&lt;&lt;&lt;rows, 256&gt;&gt;&gt;，rows 个线程块</text>
+<rect x="450.0" y="62.0" width="280.0" height="26.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="590.0" y="79.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 0：读第 0 行，写 y[0]</text>
+<line x1="446.0" y1="75.0" x2="346.0" y2="75.0" stroke="#e97132" stroke-width="1.4" marker-end="url(#ah-e97132)"/>
+<rect x="450.0" y="84.0" width="280.0" height="26.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="590.0" y="101.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 1：读第 1 行，写 y[1]</text>
+<line x1="446.0" y1="97.0" x2="346.0" y2="97.0" stroke="#e97132" stroke-width="1.4" marker-end="url(#ah-e97132)"/>
+<rect x="450.0" y="106.0" width="280.0" height="26.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="590.0" y="123.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 2：读第 2 行，写 y[2]</text>
+<line x1="446.0" y1="119.0" x2="346.0" y2="119.0" stroke="#e97132" stroke-width="1.4" marker-end="url(#ah-e97132)"/>
+<text x="590.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="450.0" y="316.0" width="280.0" height="26.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6"/>
+<text x="590.0" y="333.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">Block rows−1：读第 rows−1 行，写 y[rows−1]</text>
+<line x1="446.0" y1="329.0" x2="346.0" y2="329.0" stroke="#e97132" stroke-width="1.4" marker-end="url(#ah-e97132)"/>
+<line x1="730.0" y1="84.0" x2="790.0" y2="96.0" stroke="#e97132" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="730.0" y1="110.0" x2="790.0" y2="326.0" stroke="#e97132" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="790.0" y="96.0" width="310.0" height="230.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.8"/>
+<text x="945.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Block 1：256 个线程 = 8 个 Warp × 32</text>
+<text x="802.0" y="145.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 0</text>
+<rect x="860.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="138.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="166.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 1</text>
+<rect x="860.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="159.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="187.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 2</text>
+<rect x="860.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="180.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="208.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 3</text>
+<rect x="860.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="201.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="229.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 4</text>
+<rect x="860.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="222.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="250.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 5</text>
+<rect x="860.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="243.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="271.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 6</text>
+<rect x="860.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="264.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="802.0" y="292.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="normal" fill="#0e2841" text-anchor="start">Warp 7</text>
+<rect x="860.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="867.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="874.4" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="881.6" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="888.8" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="896.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="903.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="910.4" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="917.6" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="924.8" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="932.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="939.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="946.4" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="953.6" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="960.8" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="968.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="975.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="982.4" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="989.6" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="996.8" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1004.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1011.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1018.4" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1025.6" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1032.8" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1040.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1047.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1054.4" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1061.6" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1068.8" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1076.0" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<rect x="1083.2" y="285.0" width="6.0" height="6.0" rx="1" fill="#fce9df" stroke="#e97132" stroke-width="0.9"/>
+<text x="945.0" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">线程 t = threadIdx.x，0 .. 255；行号 = blockIdx.x</text>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 470" width="520" height="470">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="60.0" y="14.0" width="400.0" height="100.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="78.0" y="44.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">x86_begin(c, &amp;x)</text>
+<text x="78.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">跳过前缀，记下 x.rex、x.size</text>
+<text x="78.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">读操作码，返回 op</text>
+<line x1="260.0" y1="114.0" x2="260.0" y2="140.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="60.0" y="144.0" width="400.0" height="126.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="78.0" y="174.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">switch (op)</text>
+<text x="78.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">case：读其余字节，计算，</text>
+<text x="78.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">写寄存器与内存</text>
+<text x="78.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">default：x86_other</text>
+<line x1="260.0" y1="270.0" x2="260.0" y2="296.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="60.0" y="300.0" width="400.0" height="100.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="78.0" y="330.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">x86_end(&amp;x)</text>
+<text x="78.0" y="362.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">没有异常：返回 0</text>
+<text x="78.0" y="388.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">有异常：恢复寄存器，返回 -1</text>
+<path d="M 260.0 400.0 L 260.0 426.0 L 30.0 426.0 L 30.0 64.0 L 56.0 64.0" fill="none" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="270.0" y="454.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="start">返回 0：下一条指令</text>
+<text x="468.0" y="352.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="start">-1</text>
+<text x="468.0" y="374.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">结束</text>
+</svg>

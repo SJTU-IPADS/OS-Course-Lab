@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 560" width="450" height="560">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="225.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">bomb 进程的地址空间</text>
+<rect x="112.0" y="56.0" width="190.0" height="40.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="207.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">内核</text>
+<rect x="112.0" y="96.0" width="190.0" height="90.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="207.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">运行时栈</text>
+<text x="207.0" y="158.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">Stack</text>
+<rect x="112.0" y="186.0" width="190.0" height="96.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="112.0" y="282.0" width="190.0" height="46.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="207.0" y="302.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">堆</text>
+<text x="207.0" y="322.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">malloc</text>
+<rect x="112.0" y="328.0" width="190.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="207.0" y="350.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">数据段</text>
+<text x="207.0" y="370.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">.data / .bss</text>
+<text x="104.0" y="373.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">0x103000</text>
+<rect x="112.0" y="378.0" width="190.0" height="62.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="207.0" y="406.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">只读数据</text>
+<text x="207.0" y="426.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">.rodata</text>
+<text x="104.0" y="435.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">0xcb000</text>
+<rect x="112.0" y="440.0" width="190.0" height="84.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="207.0" y="479.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">代码段</text>
+<text x="207.0" y="499.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">.text</text>
+<text x="104.0" y="519.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">0xa1c0</text>
+<line x1="152.0" y1="192.0" x2="152.0" y2="232.0" stroke="#e97132" stroke-width="2.4" marker-end="url(#ah-e97132)"/>
+<text x="164.0" y="216.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="start">向低地址生长</text>
+<text x="207.0" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">未使用的地址</text>
+<text x="312.0" y="137.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="start">phase_1 的栈帧</text>
+<text x="312.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#e97132" text-anchor="start">-0x8(%rbp)：line</text>
+<text x="312.0" y="349.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="start">line</text>
+<text x="312.0" y="367.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="start">读入的一行（.bss）</text>
+<text x="312.0" y="405.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="start">0xcb030</text>
+<text x="312.0" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#2e7d4f" text-anchor="start">比较用的字符串</text>
+<text x="312.0" y="478.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#156082" text-anchor="start">0xab8d</text>
+<text x="312.0" y="496.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#156082" text-anchor="start">phase_1 的指令</text>
+<text x="104.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">高地址</text>
+<text x="104.0" y="540.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">低地址</text>
+</svg>

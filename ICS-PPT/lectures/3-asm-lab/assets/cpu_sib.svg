@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="20.0" y="36.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">4c 03 04 d5 20 30 40 00   add 0x403020(,%rdx,8),%r8</text>
+<text x="560.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">guest/matmul，地址 40122e</text>
+<rect x="20.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="39.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">4c</text>
+<rect x="58.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="77.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">03</text>
+<rect x="96.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="115.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">04</text>
+<rect x="134.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#efe7f7" stroke="#7b4fa6" stroke-width="1.2"/>
+<text x="153.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">d5</text>
+<rect x="172.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#e3f3f3" stroke="#1f8a8a" stroke-width="1.2"/>
+<text x="191.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">20</text>
+<rect x="210.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#e3f3f3" stroke="#1f8a8a" stroke-width="1.2"/>
+<text x="229.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">30</text>
+<rect x="248.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#e3f3f3" stroke="#1f8a8a" stroke-width="1.2"/>
+<text x="267.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">40</text>
+<rect x="286.0" y="54.0" width="38.0" height="32.0" rx="2" fill="#e3f3f3" stroke="#1f8a8a" stroke-width="1.2"/>
+<text x="305.0" y="75.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">00</text>
+<line x1="153.0" y1="86.0" x2="153.0" y2="110.0" stroke="#7b4fa6" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="20.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#7b4fa6" text-anchor="start">SIB</text>
+<rect x="96.0" y="112.0" width="52.0" height="30.0" rx="3" fill="#ffffff" stroke="#7b4fa6" stroke-width="1.4"/>
+<text x="109.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="135.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="122.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#7b4fa6" text-anchor="middle">scale</text>
+<rect x="148.0" y="112.0" width="78.0" height="30.0" rx="3" fill="#efe7f7" stroke="#7b4fa6" stroke-width="1.4"/>
+<text x="161.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="187.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="213.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="187.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#7b4fa6" text-anchor="middle">index</text>
+<rect x="226.0" y="112.0" width="78.0" height="30.0" rx="3" fill="#d9c8ec" stroke="#7b4fa6" stroke-width="1.4"/>
+<text x="239.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="265.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<text x="291.0" y="132.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<text x="265.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#7b4fa6" text-anchor="middle">base</text>
+<text x="318.0" y="133.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">= 0xd5</text>
+<text x="400.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">scale</text>
+<text x="460.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">00、01、10、11：比例因子 1、2、4、8（m-&gt;scale）</text>
+<text x="400.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">index</text>
+<text x="460.0" y="104.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">变址寄存器，REX.X 作第 3 位；得到 4（100 且无 REX.X）表示没有变址，scale 记 1</text>
+<text x="400.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">base</text>
+<text x="460.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">基址寄存器，REX.B 作第 3 位；字段 101 且 mod 00：没有基址，随后 4 字节位移</text>
+<text x="400.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">内存操作数的地址 = disp + base + index × scale</text>
+<rect x="20.0" y="192.0" width="1080.0" height="92.0" rx="8" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="36.0" y="218.0" font-family="monospace" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">d5</text>
+<text x="100.0" y="218.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">scale 11 → 8　　index 010 → %rdx　　base 101 且 mod 00 → 没有基址，位移 00403020</text>
+<text x="100.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">地址 = 0x403020 + %rdx × 8；用掉 ModRM、SIB 与位移共 6 字节</text>
+<text x="36.0" y="270.0" font-family="monospace" font-size="15" font-weight="bold" fill="#7b4fa6" text-anchor="start">24</text>
+<text x="100.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">scale 00 → 1　　index 100 → 没有变址　　base 100 → %rsp；mov (%rsp),%rdi 的地址 = %rsp，用掉 2 字节</text>
+</svg>

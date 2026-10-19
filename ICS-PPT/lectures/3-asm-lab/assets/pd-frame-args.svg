@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-35 0 1120 315" width="1120" height="315">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="300.0" y="40.0" width="460.0" height="26.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="312.0" y1="40.0" x2="312.0" y2="66.0" stroke="#5a6b78" stroke-width="0.8"/>
+<line x1="324.0" y1="40.0" x2="324.0" y2="66.0" stroke="#5a6b78" stroke-width="0.8"/>
+<line x1="336.0" y1="40.0" x2="336.0" y2="66.0" stroke="#5a6b78" stroke-width="0.8"/>
+<line x1="348.0" y1="40.0" x2="348.0" y2="66.0" stroke="#5a6b78" stroke-width="0.8"/>
+<line x1="360.0" y1="40.0" x2="360.0" y2="66.0" stroke="#5a6b78" stroke-width="0.8"/>
+<line x1="372.0" y1="40.0" x2="372.0" y2="66.0" stroke="#5a6b78" stroke-width="0.8"/>
+<text x="400.0" y="58.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<text x="570.0" y="58.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">x：cols 个 float</text>
+<line x1="230.0" y1="53.0" x2="296.0" y2="53.0" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah-5a6b78)"/>
+<text x="224.0" y="58.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">x</text>
+<rect x="300.0" y="96.0" width="460.0" height="170.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<line x1="300.0" y1="110.0" x2="760.0" y2="110.0" stroke="#156082" stroke-width="0.6"/>
+<line x1="300.0" y1="124.0" x2="760.0" y2="124.0" stroke="#156082" stroke-width="0.6"/>
+<line x1="300.0" y1="138.0" x2="760.0" y2="138.0" stroke="#156082" stroke-width="0.6"/>
+<line x1="300.0" y1="152.0" x2="760.0" y2="152.0" stroke="#156082" stroke-width="0.6"/>
+<text x="530.0" y="218.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#156082" text-anchor="middle">…</text>
+<rect x="300.0" y="166.0" width="460.0" height="14.0" rx="0" fill="#156082" stroke="#156082" stroke-width="1"/>
+<text x="530.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="bold" fill="#ffffff" text-anchor="middle">第 r 行：cols 个权重，cols / 32 个块</text>
+<text x="530.0" y="248.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">W：rows 行，每行 cols / 32 · 18 字节</text>
+<path d="M 300.0 272.0 L 300.0 280.0 L 760.0 280.0 L 760.0 272.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="530.0" y="297.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">cols 列（32 的倍数）</text>
+<path d="M 766.0 96.0 L 774.0 96.0 L 774.0 266.0 L 766.0 266.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="782.0" y="185.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="start">rows 行</text>
+<line x1="230.0" y1="98.0" x2="296.0" y2="98.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="224.0" y="103.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">w</text>
+<line x1="150.0" y1="173.0" x2="296.0" y2="173.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="144.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="end">w + r * (cols/32*18)</text>
+<text x="144.0" y="187.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="end">第 r 行的第一个字节</text>
+<rect x="856.0" y="96.0" width="26.0" height="170.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<line x1="856.0" y1="110.0" x2="882.0" y2="110.0" stroke="#2e7d4f" stroke-width="0.6"/>
+<line x1="856.0" y1="124.0" x2="882.0" y2="124.0" stroke="#2e7d4f" stroke-width="0.6"/>
+<line x1="856.0" y1="138.0" x2="882.0" y2="138.0" stroke="#2e7d4f" stroke-width="0.6"/>
+<line x1="856.0" y1="152.0" x2="882.0" y2="152.0" stroke="#2e7d4f" stroke-width="0.6"/>
+<rect x="856.0" y="166.0" width="26.0" height="14.0" rx="0" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1"/>
+<line x1="869.0" y1="66.0" x2="869.0" y2="92.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="869.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">y</text>
+<text x="892.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">y：rows 个 float</text>
+<text x="892.0" y="177.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="start">y[r]</text>
+<line x1="766.0" y1="173.0" x2="852.0" y2="173.0" stroke="#2e7d4f" stroke-width="1.8" marker-end="url(#ah-2e7d4f)"/>
+<text x="892.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">y[r] = Σ W[r][c] · x[c]</text>
+<text x="892.0" y="224.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">c = 0..cols−1，以 float 计算</text>
+<text x="892.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">相加的次序不限</text>
+</svg>

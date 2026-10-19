@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 220" width="1120" height="220">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="80.0" y="4.0" width="960.0" height="40.0" rx="5" fill="#eef2f4" stroke="#0e2841" stroke-width="2.0"/>
+<text x="560.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">Q4_K 超块：256 个权重 · 144 字节 · 4.50 位/权重</text>
+<rect x="80.0" y="60.0" width="220.0" height="58.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="190.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#e97132" text-anchor="middle">d, dmin · 字节 0..3</text>
+<text x="190.0" y="103.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">两个 fp16：sc 与 m 的步长</text>
+<line x1="560.0" y1="44.0" x2="190.0" y2="60.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 4"/>
+<rect x="310.0" y="60.0" width="270.0" height="58.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.6"/>
+<text x="445.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#196b24" text-anchor="middle">scales · 字节 4..15</text>
+<text x="445.0" y="103.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">8 对 (sc[j], m[j])，各 6 位</text>
+<line x1="560.0" y1="44.0" x2="445.0" y2="60.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 4"/>
+<rect x="590.0" y="60.0" width="450.0" height="58.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="815.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#156082" text-anchor="middle">qs · 字节 16..143</text>
+<text x="815.0" y="103.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">256 个 4 位编码：第 g 组 32 字节存子块 2g（低 4 位）与 2g+1（高 4 位）</text>
+<line x1="560.0" y1="44.0" x2="815.0" y2="60.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 4"/>
+<rect x="87.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="140.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 0</text>
+<text x="140.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="140.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="207.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="260.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 1</text>
+<text x="260.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="260.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="327.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="380.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 2</text>
+<text x="380.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="380.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="447.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="500.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 3</text>
+<text x="500.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="500.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="567.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="620.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 4</text>
+<text x="620.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="620.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="687.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="740.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 5</text>
+<text x="740.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="740.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="807.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="860.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 6</text>
+<text x="860.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="860.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<rect x="927.0" y="140.0" width="106.0" height="44.0" rx="4" fill="#e7f2e4" stroke="#196b24" stroke-width="1.4"/>
+<text x="980.0" y="159.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#196b24" text-anchor="middle">子块 7</text>
+<text x="980.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11.5" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个权重</text>
+<line x1="445.0" y1="118.0" x2="980.0" y2="140.0" stroke="#9fb5c3" stroke-width="1.0" stroke-dasharray="3 4"/>
+<text x="560.0" y="209.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="middle">子块 j 的步长 D[j] = d · sc[j]，偏移 M[j] = dmin · m[j]；还原 x = D[j] · q − M[j]，q 取 0..15</text>
+</svg>

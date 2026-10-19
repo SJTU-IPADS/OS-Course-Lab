@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 290" width="1000" height="290">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="28.0" width="800.0" height="134.0" rx="8" fill="none" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="32.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">main：k = 1 … 8，每个阶段依次调用三个函数</text>
+<rect x="40.0" y="70.0" width="210.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="145.0" y="99.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">line = read_line()</text>
+<text x="145.0" y="120.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">读一行输入</text>
+<rect x="320.0" y="70.0" width="210.0" height="64.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="425.0" y="99.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">phase_k(line)</text>
+<text x="425.0" y="120.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">检查这一行</text>
+<rect x="600.0" y="70.0" width="210.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="705.0" y="99.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">phase_defused()</text>
+<text x="705.0" y="120.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">报告：阶段 k 已拆除</text>
+<line x1="250.0" y1="102.0" x2="318.0" y2="102.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="262.0" y="94.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">line</text>
+<line x1="530.0" y1="102.0" x2="598.0" y2="102.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="565.0" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#2e7d4f" text-anchor="middle">返回</text>
+<path d="M 705.0 134.0 L 705.0 156.0 L 145.0 156.0 L 145.0 136.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="232.5" y="174.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k &lt; 8：下一个阶段</text>
+<line x1="810.0" y1="102.0" x2="868.0" y2="102.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="846.0" y="124.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#2e7d4f" text-anchor="middle">k = 8</text>
+<rect x="870.0" y="70.0" width="110.0" height="64.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="925.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">退出状态 0</text>
+<text x="925.0" y="120.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">全部拆除</text>
+<line x1="425.0" y1="134.0" x2="425.0" y2="208.0" stroke="#c0392b" stroke-width="2" marker-end="url(#ah-c0392b)"/>
+<text x="435.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="start">输入错误</text>
+<rect x="320.0" y="210.0" width="210.0" height="64.0" rx="6" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="425.0" y="239.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">explode_bomb()</text>
+<text x="425.0" y="260.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">报告：阶段 k 爆炸</text>
+<line x1="530.0" y1="242.0" x2="598.0" y2="242.0" stroke="#c0392b" stroke-width="2" marker-end="url(#ah-c0392b)"/>
+<rect x="600.0" y="210.0" width="210.0" height="64.0" rx="6" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="705.0" y="239.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">退出状态 1</text>
+<text x="705.0" y="260.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">显示爆炸，程序结束</text>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 284" width="1120" height="284">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="16.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">第一次 write：puts("hello from the guest\n")</text>
+<rect x="16.0" y="32.0" width="236.0" height="146.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="28.0" y="55.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">40112a</text>
+<rect x="92.0" y="38.0" width="30.0" height="24.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="107.0" y="54.7" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">0f</text>
+<rect x="122.0" y="38.0" width="30.0" height="24.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="137.0" y="54.7" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">05</text>
+<text x="162.0" y="55.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">syscall</text>
+<text x="28.0" y="86.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RAX] = 1</text>
+<text x="240.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">write</text>
+<text x="28.0" y="108.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RDI] = 1</text>
+<text x="240.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">stdout</text>
+<text x="28.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RSI] = 0x402000</text>
+<text x="240.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">字符串</text>
+<text x="28.0" y="152.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RDX] = 21</text>
+<text x="240.0" y="152.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">字节数</text>
+<rect x="292.0" y="32.0" width="236.0" height="146.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="304.0" y="54.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">interp_run</text>
+<text x="304.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">x86_begin：op = 0x105</text>
+<text x="304.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">switch 中没有 case 0x105，</text>
+<text x="304.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">进入 default：x86_other(&amp;x)</text>
+<text x="304.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">x86_other 调用 syscall_enter，</text>
+<text x="304.0" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">再进入 sys_dispatch</text>
+<rect x="568.0" y="32.0" width="316.0" height="146.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="580.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">sys_dispatch（frame/sysbase.c）</text>
+<text x="580.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RAX] 是 1：write</text>
+<text x="580.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">mem_read 从客户机地址 0x402000</text>
+<text x="580.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">复制 21 个字节到 mini-cpu 的 buf</text>
+<text x="580.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">调用本机的 write(1, buf, 21)</text>
+<text x="580.0" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RAX] = 21：写出的字节数</text>
+<rect x="924.0" y="32.0" width="180.0" height="146.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="936.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">终端</text>
+<text x="936.0" y="88.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="start">hello from the guest</text>
+<line x1="256.0" y1="105.0" x2="288.0" y2="105.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="532.0" y1="105.0" x2="564.0" y2="105.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="888.0" y1="105.0" x2="920.0" y2="105.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="16.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">exit：guest_main 返回之后，_start 的最后一个 syscall</text>
+<rect x="16.0" y="218.0" width="236.0" height="62.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="28.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve">401019  syscall</text>
+<text x="28.0" y="262.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RAX] = 60</text>
+<text x="240.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="end">exit，R[RDI] = 0</text>
+<rect x="292.0" y="218.0" width="236.0" height="62.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="304.0" y="240.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">interp_run</text>
+<text x="304.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">同样经 x86_other 进入 sys_dispatch</text>
+<rect x="568.0" y="218.0" width="316.0" height="62.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="580.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">sys_dispatch</text>
+<text x="580.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">R[RAX] 是 60：exit，置 c-&gt;halted = 1</text>
+<rect x="924.0" y="218.0" width="180.0" height="62.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="936.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">循环结束</text>
+<text x="936.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">mini-cpu 的退出码 0</text>
+<line x1="256.0" y1="249.0" x2="288.0" y2="249.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="532.0" y1="249.0" x2="564.0" y2="249.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="888.0" y1="249.0" x2="920.0" y2="249.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+</svg>

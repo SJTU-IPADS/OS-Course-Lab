@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="40.0" width="44.0" height="30.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="42.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">CF</text>
+<rect x="64.0" y="40.0" width="44.0" height="30.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="86.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">PF</text>
+<rect x="108.0" y="40.0" width="44.0" height="30.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="130.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">ZF</text>
+<rect x="152.0" y="40.0" width="44.0" height="30.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="174.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">SF</text>
+<rect x="196.0" y="40.0" width="44.0" height="30.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="218.0" y="60.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">OF</text>
+<text x="130.0" y="92.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">R[RFLAGS]</text>
+<line x1="240.0" y1="55.0" x2="286.0" y2="55.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<rect x="290.0" y="30.0" width="200.0" height="50.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="390.0" y="60.8" font-family="monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">cond(f, cc)</text>
+<text x="390.0" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">cc 取低 4 位，可以直接传 op</text>
+<line x1="490.0" y1="55.0" x2="536.0" y2="55.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<rect x="540.0" y="30.0" width="260.0" height="50.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="670.0" y="60.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">1：跳转　0：不跳转</text>
+<text x="20.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">16 个条件码中的 4 个</text>
+<text x="20.0" y="166.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">4 e</text>
+<text x="80.0" y="166.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">ZF</text>
+<text x="20.0" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">5 ne</text>
+<text x="80.0" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">!ZF</text>
+<text x="20.0" y="214.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">c l</text>
+<text x="80.0" y="214.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">SF != OF</text>
+<text x="20.0" y="238.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">d ge</text>
+<text x="80.0" y="238.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">SF == OF</text>
+<text x="20.0" y="262.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">全部 16 个在 interp.c 的注释与 mcpu.h 中</text>
+<text x="20.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">x86_other 的 cmovcc、setcc 也调用 cond</text>
+<line x1="340.0" y1="120.0" x2="340.0" y2="290.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="360.0" y="140.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve">7d f4   jge 401120</text>
+<text x="560.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">guest/sum，地址 40112a</text>
+<rect x="360.0" y="154.0" width="38.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="379.0" y="175.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">7d</text>
+<rect x="398.0" y="154.0" width="38.0" height="32.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="417.0" y="175.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">f4</text>
+<text x="448.0" y="175.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">op 0x7d：条件 d（ge）；rel = (int8_t)0xf4 = -12</text>
+<line x1="360.0" y1="236.0" x2="1080.0" y2="236.0" stroke="#0e2841" stroke-width="1.6"/>
+<line x1="360.0" y1="228.0" x2="360.0" y2="244.0" stroke="#0e2841" stroke-width="1.6"/>
+<text x="360.0" y="262.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">401120</text>
+<text x="360.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">目标</text>
+<line x1="660.0" y1="228.0" x2="660.0" y2="244.0" stroke="#0e2841" stroke-width="1.6"/>
+<text x="660.0" y="262.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">40112a</text>
+<text x="660.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">jge 自己</text>
+<line x1="720.0" y1="228.0" x2="720.0" y2="244.0" stroke="#0e2841" stroke-width="1.6"/>
+<text x="720.0" y="262.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">40112c</text>
+<text x="720.0" y="280.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">下一条 = R[RIP]</text>
+<line x1="720.0" y1="214.0" x2="364.0" y2="214.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="540.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">R[RIP] += rel：0x40112c - 12 = 0x401120</text>
+<text x="800.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">位移读完之后 R[RIP] 才是下一条指令的地址，</text>
+<text x="800.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">因此先读 rel，再加到 R[RIP] 上</text>
+</svg>

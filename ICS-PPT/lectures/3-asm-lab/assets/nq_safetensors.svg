@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 300" width="1120" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="30.0" y="44.0" width="150.0" height="40.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="105.0" y="69.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">8 字节：头长度 N，小端</text>
+<rect x="180.0" y="44.0" width="440.0" height="40.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="400.0" y="69.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">N = 76240 字节：JSON 头，每个张量的 dtype、shape、data_offsets</text>
+<rect x="620.0" y="44.0" width="470.0" height="40.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="855.0" y="69.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">张量数据：625 个张量的 BF16 权重，4.25 GB</text>
+<text x="30.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="start">model.safetensors：4 255 140 312 字节</text>
+<text x="40.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">N 的 8 个字节，p[0] … p[7]</text>
+<rect x="40.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="56.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">d0</text>
+<rect x="72.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="88.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">29</text>
+<rect x="104.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="120.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">01</text>
+<rect x="136.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="152.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">00</text>
+<rect x="168.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="184.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">00</text>
+<rect x="200.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="216.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">00</text>
+<rect x="232.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="248.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">00</text>
+<rect x="264.0" y="136.0" width="32.0" height="32.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="280.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">00</text>
+<text x="40.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="start">小端：0x0001_29d0 = 76240</text>
+<line x1="30.0" y1="84.0" x2="40.0" y2="136.0" stroke="#9fb5c3" stroke-width="1.1" stroke-dasharray="4 4"/>
+<line x1="180.0" y1="84.0" x2="296.0" y2="136.0" stroke="#9fb5c3" stroke-width="1.1" stroke-dasharray="4 4"/>
+<text x="560.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="start">一个 BF16 权重的 16 位 = FP32 的高 16 位</text>
+<rect x="560.0" y="136.0" width="20.0" height="32.0" rx="3" fill="#cfe3ec" stroke="#156082" stroke-width="1.5"/>
+<text x="570.0" y="157.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="580.0" y="136.0" width="160.0" height="32.0" rx="3" fill="#f8d5c0" stroke="#e97132" stroke-width="1.5"/>
+<text x="660.0" y="157.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">阶码 8</text>
+<rect x="740.0" y="136.0" width="140.0" height="32.0" rx="3" fill="#cfe8d2" stroke="#196b24" stroke-width="1.5"/>
+<text x="810.0" y="157.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12.5" font-weight="bold" fill="#0e2841" text-anchor="middle">尾数 7</text>
+<line x1="620.0" y1="84.0" x2="560.0" y2="136.0" stroke="#9fb5c3" stroke-width="1.1" stroke-dasharray="4 4"/>
+<line x1="1090.0" y1="84.0" x2="880.0" y2="136.0" stroke="#9fb5c3" stroke-width="1.1" stroke-dasharray="4 4"/>
+<text x="930.0" y="126.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#e97132" text-anchor="start">块中的 d：fp16，2 字节</text>
+<rect x="930.0" y="136.0" width="40.0" height="32.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="950.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">d</text>
+<rect x="970.0" y="136.0" width="40.0" height="32.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.3"/>
+<text x="990.0" y="157.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">d</text>
+<text x="970.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#e97132" text-anchor="middle">低字节在前</text>
+<rect x="30.0" y="232.0" width="190.0" height="54.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="125.0" y="255.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="middle">rd_u64le(p)</text>
+<text x="125.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">p[0] 最低，读出 N</text>
+<rect x="240.0" y="232.0" width="250.0" height="54.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="365.0" y="255.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="middle">框架解析 JSON 头</text>
+<text x="365.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">src/st.cpp</text>
+<rect x="510.0" y="232.0" width="280.0" height="54.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="650.0" y="255.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="middle">bf16_to_f32(h)</text>
+<text x="650.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">读入每个权重：一次移位</text>
+<rect x="810.0" y="232.0" width="280.0" height="54.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="950.0" y="255.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13.5" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">f32_to_fp16(f)  fp16_to_f32(h)</text>
+<text x="950.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">写出与读回块中的 fp16 字段 d</text>
+<line x1="168.0" y1="192.0" x2="168.0" y2="228.0" stroke="#e97132" stroke-width="1.8" marker-end="url(#ah-e97132)"/>
+<line x1="400.0" y1="88.0" x2="365.0" y2="228.0" stroke="#156082" stroke-width="1.8" marker-end="url(#ah-156082)"/>
+<line x1="720.0" y1="172.0" x2="650.0" y2="228.0" stroke="#e97132" stroke-width="1.8" marker-end="url(#ah-e97132)"/>
+<line x1="970.0" y1="192.0" x2="950.0" y2="228.0" stroke="#e97132" stroke-width="1.8" marker-start="url(#ah-e97132)" marker-end="url(#ah-e97132)"/>
+</svg>
