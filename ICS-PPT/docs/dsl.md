@@ -315,7 +315,7 @@ handle for chaining (see [Footnotes](#footnotes) and
 | `p.cover(...)` | `cover` | Cover-page metadata, usually created through `lec.cover(...)`. |
 | `p.slide(content)` | `slide` | A markdown text block — the main body of a page. |
 | `p.columns(left, right, …)` | `columns` | Slide text set side by side, one markdown string per column (see [Columns](#columns)). |
-| `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language), [dialects](#dialects-cuda) and [marking lines](#marking-a-line)). |
+| `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language), [dialects](#dialects-cuda) and [marking lines](#marking-a-line)). Not translated, unless `translate=True`. |
 | `p.link(label, url)` | `link` | A labelled hyperlink. |
 | `p.image(src, …)` | `image` | An inline image (see [Images](#images)). |
 | `p.frames(src, src, …)` | `image` ×N | An animation: one page, one figure per frame (see [Frames](#frames-an-animation)). |

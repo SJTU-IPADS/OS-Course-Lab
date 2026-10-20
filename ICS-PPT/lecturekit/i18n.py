@@ -134,6 +134,10 @@ def content_slots(kind: str, content: Any) -> list[tuple[str, tuple]]:
             add(f"layer.{i}.title", ("layers", i - 1, "title"))
             for j, _ in enumerate(layer.get("modules") or [], start=1):
                 add(f"layer.{i}.module.{j}", ("layers", i - 1, "modules", j - 1))
+    elif kind == "code" and content.get("translate"):
+        # Code is verbatim. translate=True opts one block in, for pseudocode
+        # written in the lecture's language rather than in a programming language.
+        add("", ("content",))
     elif kind == "table":
         # The header is row 0, so a cell's key reads as its position in the
         # table as printed.

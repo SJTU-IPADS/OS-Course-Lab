@@ -554,6 +554,7 @@ class PageBuilder:
         only: Iterable[str] | None = None,
         except_: Iterable[str] | None = None,
         key: str | None = None,
+        translate: bool = False,
     ) -> "BlockHandle":
         """A fenced code block. ``language="pseudo"`` is lexed by lecturekit
         itself (see :mod:`lecturekit.pseudo`).
@@ -565,8 +566,14 @@ class PageBuilder:
         first — so the same shared listing can be marked differently on each
         page that shows it. ``pseudo`` only: another language is coloured by the
         renderer's own highlighter, which leaves nowhere to put the wash.
+
+        Code is verbatim and is not translated. ``translate=True`` is the
+        exception, for pseudocode written in the lecture's own language: the
+        block's text then enters the overlay like a slide does.
         """
         content_dict: dict = {"language": language, "content": content}
+        if translate:
+            content_dict["translate"] = True
         if mark is not None:
             content_dict["mark"] = list(mark)
             content_dict["tone"] = tone
