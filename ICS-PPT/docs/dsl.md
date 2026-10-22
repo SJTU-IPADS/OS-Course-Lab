@@ -315,7 +315,7 @@ handle for chaining (see [Footnotes](#footnotes) and
 | `p.cover(...)` | `cover` | Cover-page metadata, usually created through `lec.cover(...)`. |
 | `p.slide(content)` | `slide` | A markdown text block — the main body of a page. |
 | `p.columns(left, right, …)` | `columns` | Slide text set side by side, one markdown string per column (see [Columns](#columns)). |
-| `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language), [dialects](#dialects-cuda) and [marking lines](#marking-a-line)). Not translated, unless `translate=True`. |
+| `p.code(language, content, …)` | `code` | A fenced code block in the given language (see [`pseudo`](#the-pseudo-language), [dialects](#dialects-cuda), [marking lines](#marking-a-line) and [translating a listing](#translating-a-listing)). Not translated, unless `translate=True`. |
 | `p.link(label, url)` | `link` | A labelled hyperlink. |
 | `p.image(src, …)` | `image` | An inline image (see [Images](#images)). |
 | `p.frames(src, src, …)` | `image` ×N | An animation: one page, one figure per frame (see [Frames](#frames-an-animation)). |
@@ -475,6 +475,23 @@ highlighter, which leaves nowhere to put the wash, so `mark` on one is a
 landing on a blank line — refused rather than ignored, because an author who
 renumbers a listing and forgets the mark would otherwise find out on the
 projector, from a wash that quietly went missing.
+
+### Translating a listing
+
+A code block is verbatim in every language: a program reads the same whoever
+is in the room, so its comments are written in English once. Pseudocode written
+in the lecture's own language is prose in code layout, and
+`p.code(..., translate=True)` makes it a translation entry like a slide's text:
+
+```python
+p.code("pseudo", """b = 下一个字节
+若 b 是前缀：记下它，b = 下一个字节""", translate=True)
+```
+
+The overlay entry is the whole listing, keyed `<page>.code.<n>` (see
+[i18n.md](i18n.md)); its `text` keeps the indentation as written. A `mark=` on
+the block counts the lines of whichever language is rendered, so the
+translation keeps the line count.
 
 ### Auto-bold on `slide`
 
@@ -646,8 +663,9 @@ p.slide("""
 p.table([["[Makefile](file:Makefile)", "构建规则"]], headers=["文件", "内容"])
 ```
 
-The path is relative to the lecture's own directory, as an entry of `files=` is,
-and the label is whatever the sentence needs — the file's name, `查看源码`, a
+The path is relative to the lecture's own directory, as an entry of `files=` is. A path that begins with `/` is relative to the **project root** instead: the directory that holds the `lecturekit` package, the one a demo reaches as [`$LECTUREKIT_ROOT`](#demos). A lab lecture names a source of the lab it introduces, which sits beside it under `lectures/`, as `[seq.c](file:/lectures/mini-cpu/src/lab2/seq.c)`, and the path holds wherever the lecture itself sits.
+
+The label is whatever the sentence needs — the file's name, `查看源码`, a
 `` `code span` ``. In a `view --watch` session the label is a button that opens
 the file in the [panel](usage.md#showing-a-source-file-from-the-deck) a demo's
 file button opens; the two share one table of files, so the same path is the
@@ -668,11 +686,7 @@ are the text every target reads as inline markdown and sets as a line of the
 page. A `code` block, a demo's `output=` and an inline `` `code span` `` are
 verbatim, so they may *show* the syntax.
 
-Checked when the deck is built, and a `ValidationError` on any of: the link
-outside those three places; a path that is absolute or leaves the lecture
-directory through `..`; a near miss such as `[](file:a.c)` (no label) or
-`[a.c](file: a.c)` (a space in the address), which markdown would otherwise
-print as the characters they are.
+Checked when the deck is built, and a `ValidationError` on any of: the link outside those three places; a path that leaves its directory through `..`; a path that begins with `//`, which past the one `/` that names the project root is an absolute path again; a near miss such as `[](file:a.c)` (no label) or `[a.c](file: a.c)` (a space in the address), which markdown would otherwise print as the characters they are.
 
 ### Math in slides
 
@@ -1285,7 +1299,8 @@ p.demo("和模型对话", "ollama run llama3.2", interactive=True, timeout=0)
 ```
 
 `files=` names the source the command works on, as paths relative to the
-lecture's own directory. Each one becomes a button beside ▶ that opens the file
+lecture's own directory, or to the project root when they begin with `/`
+(see below). Each one becomes a button beside ▶ that opens the file
 in a panel down the right-hand side, so the code being compiled can be read in
 the room without leaving the deck:
 
@@ -1296,10 +1311,7 @@ gcc -O1 -o sizes sizes.c && ./sizes""",
        files=["examples/sizes.c"])
 ```
 
-The button is labelled with the file's name and is live in the same watch
-session the ▶ button is; the file is read when it is pressed, so
-an edit made during the lecture shows up on the next press. A path that leaves
-the lecture directory is refused when the deck is built.
+The button is labelled with the file's name and is live in the same watch session the ▶ button is; the file is read when it is pressed, so an edit made during the lecture shows up on the next press. A path that leaves its directory through `..`, or begins with `//`, is refused when the deck is built.
 
 `command` may be `""` (or blank) when the block is there for its `files=` alone:
 a page that explains a listing and wants the source one press away.
@@ -1332,6 +1344,18 @@ Commands run in the **lecture directory**, so a demo refers to its files the way
 the lecture does (`demo.c`, not a path). Like any block it takes `only=` /
 `except_=`, and `.disable()` takes it out of every target — including out of the
 set of commands the deck can run at all.
+
+A demo that works in another directory of the project reaches it through `$LECTUREKIT_ROOT`, the project root: the directory that holds the `lecturekit` package, with `lectures/` beside it. `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"` names the same directory wherever the lecture itself sits; `cd ../mini-cpu` holds only while the two directories are siblings. The quotes keep a root whose path contains a space in one piece. See [Running a demo from the deck](usage.md#running-a-demo-from-the-deck) for how the value is chosen.
+
+Such a demo names its files from the same root: an entry of `files=` that begins with `/` is relative to the project root, so the directory in the `cd` and the path of each file start alike.
+
+```python
+p.demo("编译实验二", """cd "$LECTUREKIT_ROOT/lectures/mini-cpu"
+make lab2""", files=["/lectures/mini-cpu/src/lab2/seq.c",
+                     "/lectures/mini-cpu/src/lab2/pipe.c"])
+```
+
+The button is labelled `seq.c`, as any file button is labelled with the file's name; the panel's header shows the path as written. A `[label](file:/...)` link in a sentence takes the same form.
 
 `name` and `description` are translated; `command` and `output` are not, for the
 same reason code is not — a translated command is a different command.

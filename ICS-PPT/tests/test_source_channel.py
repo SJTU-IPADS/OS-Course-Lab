@@ -20,7 +20,7 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest import mock
 
-from lecturekit import dev_server, model, source
+from lecturekit import demo, dev_server, model, source
 from lecturekit.dsl import Lecture
 from lecturekit.renderers.viewer import StaticViewerRenderer
 from lecturekit.renderers.viewer.blocks import render_block
@@ -68,10 +68,15 @@ class SourceAuthoringTest(unittest.TestCase):
             source.normalize("examples/a.c")
 
     def test_a_path_that_leaves_the_lecture_is_refused(self):
-        for path in ("../secrets.txt", "/etc/passwd", "examples/../../x"):
+        for path in ("../secrets.txt", "examples/../../x", "//etc/passwd",
+                     "/../secrets.txt", "/lectures/../../x"):
             with self.subTest(path=path):
                 with self.assertRaises(model.ValidationError):
                     source.normalize([path])
+
+    def test_a_path_of_the_project_root_is_kept_as_written(self):
+        path = "/lectures/mini-cpu/src/lab2/seq.c"
+        self.assertEqual(_demo_block(_lecture(path)).content["files"], [path])
 
     def test_a_repeated_path_is_named_once(self):
         self.assertEqual(source.normalize(["a.c", "a.c"]), ["a.c"])
@@ -131,14 +136,41 @@ class SourceTableFileTest(unittest.TestCase):
             self.assertEqual(source.read(out), {})
 
 
+def _project(tmp: str) -> tuple[Path, Path]:
+    """A project root holding a lecture and, beside it, a lab with one file."""
+    project = Path(tmp)
+    lecture = Path(project, "lectures", "lab-intro")
+    lecture.mkdir(parents=True)
+    Path(project, "lectures", "lab", "src").mkdir(parents=True)
+    Path(project, "lectures", "lab", "src", "seq.c").write_text(
+        "int seq;\n", encoding="utf-8"
+    )
+    return project, lecture
+
+
 class SourceReadTest(unittest.TestCase):
     def test_resolve_finds_the_file_under_the_lecture(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as project:
             root = Path(tmp)
             Path(root, "examples").mkdir()
             Path(root, "examples", "a.c").write_text("int main;\n", encoding="utf-8")
-            path = source.resolve(source.Source("examples/a.c"), root)
+            path = source.resolve(source.Source("examples/a.c"), root, Path(project))
         self.assertEqual(path.name, "a.c")
+
+    def test_a_leading_slash_is_resolved_under_the_project_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project, lecture = _project(tmp)
+            path = source.resolve(
+                source.Source("/lectures/lab/src/seq.c"), lecture, project
+            )
+            self.assertEqual(path, Path(project, "lectures/lab/src/seq.c").resolve())
+
+    def test_a_path_without_the_slash_stays_under_the_lecture(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project, lecture = _project(tmp)
+            self.assertIsNone(
+                source.resolve(source.Source("lectures/lab/src/seq.c"), lecture, project)
+            )
 
     def test_a_symlink_that_leaves_the_tree_resolves_to_nothing(self):
         # The path was checked when the deck was built, but a lecture directory
@@ -147,12 +179,35 @@ class SourceReadTest(unittest.TestCase):
             root = Path(tmp)
             Path(away, "secret.txt").write_text("s", encoding="utf-8")
             Path(root, "link.txt").symlink_to(Path(away, "secret.txt"))
-            self.assertIsNone(source.resolve(source.Source("link.txt"), root))
+            self.assertIsNone(source.resolve(source.Source("link.txt"), root, root))
+
+    def test_a_symlink_that_leaves_the_project_root_resolves_to_nothing(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as away:
+            project, lecture = _project(tmp)
+            Path(away, "secret.txt").write_text("s", encoding="utf-8")
+            Path(project, "lectures", "lab", "link.txt").symlink_to(
+                Path(away, "secret.txt")
+            )
+            self.assertIsNone(
+                source.resolve(source.Source("/lectures/lab/link.txt"), lecture, project)
+            )
+
+    def test_a_second_slash_in_a_table_does_not_reach_the_file_system(self):
+        # `normalize` refuses the spelling; this is a `sources.json` someone
+        # wrote by hand, and the gate holds on its own.
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as away:
+            project, lecture = _project(tmp)
+            secret = Path(away, "secret.txt")
+            secret.write_text("s", encoding="utf-8")
+            entry = source.Source("/" + secret.as_posix())
+            self.assertIsNone(source.resolve(entry, lecture, project))
 
     def test_a_directory_is_not_a_file(self):
         with tempfile.TemporaryDirectory() as tmp:
             Path(tmp, "examples").mkdir()
-            self.assertIsNone(source.resolve(source.Source("examples"), Path(tmp)))
+            self.assertIsNone(
+                source.resolve(source.Source("examples"), Path(tmp), Path(tmp))
+            )
 
     def test_a_long_file_is_truncated_with_a_marker(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -253,6 +308,12 @@ class SourceButtonTest(unittest.TestCase):
     def test_a_block_without_files_grows_no_buttons(self):
         self.assertNotIn("lk-demo-file", self._html())
 
+    def test_a_file_of_the_project_root_is_labelled_by_its_name(self):
+        path = "/lectures/mini-cpu/src/lab2/seq.c"
+        html = self._html(path)
+        self.assertIn(f'data-lk-source="{source.source_id(path)}"', html)
+        self.assertIn(">seq.c<", html)
+
 
 class SourceEndpointTest(unittest.TestCase):
     def _server(self, directory: Path, demo_cwd=None):
@@ -291,6 +352,26 @@ class SourceEndpointTest(unittest.TestCase):
         self.assertEqual(payload["path"], "examples/a.c")
         self.assertEqual(payload["text"], "int main;\n")
         self.assertEqual(payload["tokens"], [[["type", "int"], ["", " main;"]]])
+
+    def test_a_leading_slash_reads_the_file_under_the_projects_root(self):
+        # The root is the one a demo's `$LECTUREKIT_ROOT` names, so a value in
+        # the environment moves both.
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as deck:
+            project, lecture = _project(tmp)
+            out = self._deck(deck, "/lectures/lab/src/seq.c")
+            port = self._server(out, demo_cwd=lecture)
+            with mock.patch.dict(demo.os.environ, {"LECTUREKIT_ROOT": str(project)}):
+                status, payload = self._get(
+                    port, "id=" + source.source_id("/lectures/lab/src/seq.c")
+                )
+        self.assertEqual(status, 200)
+        self.assertEqual(payload["path"], "/lectures/lab/src/seq.c")
+        self.assertEqual(payload["text"], "int seq;\n")
+
+    def test_without_the_environment_the_root_is_the_packages_parent(self):
+        with mock.patch.dict(demo.os.environ):
+            demo.os.environ.pop("LECTUREKIT_ROOT", None)
+            self.assertEqual(Path(demo.project_root()), demo.PROJECT_ROOT)
 
     def test_a_file_without_a_lexer_answers_with_text_alone(self):
         with tempfile.TemporaryDirectory() as tmp:

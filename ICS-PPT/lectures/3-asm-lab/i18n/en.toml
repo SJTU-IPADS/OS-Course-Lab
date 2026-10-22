@@ -9,9 +9,9 @@ text = 'Lab briefing'
 # src: 实验说明
 
 ['lecture.subtitle']
-src_hash = '2de73e06'
-text = 'nano-quant · bomb-lab · parallel-dot · mini-cpu lab 1'
-# src: nano-quant · bomb-lab · parallel-dot · mini-cpu 实验一
+src_hash = '7d6f4961'
+text = 'nano-quant · bomb-lab · attack-elf · parallel-dot · mini-cpu lab 1'
+# src: nano-quant · bomb-lab · attack-elf · parallel-dot · mini-cpu 实验一
 
 ['cover.title']
 src_hash = 'b159f18d'
@@ -33,136 +33,158 @@ src_hash = '241cec84'
 text = 'Plan of this lecture'
 # src: 本节的安排
 
-['four-labs.title']
-src_hash = 'efe95dd5'
-text = 'The four labs'
-# src: 四个实验
+['five-labs.title']
+src_hash = '060f624a'
+text = 'Five labs'
+# src: 五个实验
 
-['four-labs.table.1.cell.0.0']
+['five-labs.table.1.cell.0.0']
 src_hash = '5e42855d'
 text = 'Lab'
 # src: 实验
 
-['four-labs.table.1.cell.0.1']
+['five-labs.table.1.cell.0.1']
 src_hash = '67289968'
 text = 'Lecture'
 # src: 配合
 
-['four-labs.table.1.cell.0.2']
+['five-labs.table.1.cell.0.2']
 src_hash = '3059e4dd'
-text = 'What you do'
+text = 'Task'
 # src: 要做的事
 
-['four-labs.table.1.cell.0.3']
-src_hash = '6235e025'
-text = 'Score'
-# src: 计分
-
-['four-labs.table.1.cell.1.0']
-src_hash = 'ef94283f'
-text = 'nano-quant'
-# src: nano-quant
-
-['four-labs.table.1.cell.1.1']
-src_hash = 'd47b631b'
-text = 'Lecture 2'
-# src: 第二讲
-
-['four-labs.table.1.cell.1.2']
-src_hash = '71575eb3'
-text = 'Quantize Qwen3-VL-2B-Instruct to 4 bits'
-# src: 把 Qwen3-VL-2B-Instruct 量化为 4 位
-
-['four-labs.table.1.cell.1.3']
-src_hash = '32b21197'
-text = 'Not scored'
-# src: 不计分
-
-['four-labs.table.1.cell.2.0']
-src_hash = '23693a18'
-text = 'bomb-lab'
-# src: bomb-lab
-
-['four-labs.table.1.cell.2.1']
-src_hash = 'd6a716a1'
-text = 'Lecture 3'
-# src: 第三讲
-
-['four-labs.table.1.cell.2.2']
-src_hash = '44b3f4e3'
-text = 'Derive the input of the 8 phases from the machine code of `bomb`'
-# src: 从 `bomb` 的机器码推出 8 个阶段的输入
-
-['four-labs.table.1.cell.2.3']
-src_hash = '32b21197'
-text = 'Not scored'
-# src: 不计分
-
-['four-labs.table.1.cell.3.0']
-src_hash = '311456f1'
-text = 'parallel-dot'
-# src: parallel-dot
-
-['four-labs.table.1.cell.3.1']
-src_hash = '5e4829d4'
-text = 'Lecture 3, part five'
-# src: 第三讲第五部分
-
-['four-labs.table.1.cell.3.2']
-src_hash = 'ebd4affd'
-text = 'Write the matrix-vector product with AVX2 and CUDA'
-# src: 用 AVX2 与 CUDA 写矩阵向量乘
-
-['four-labs.table.1.cell.3.3']
-src_hash = '32b21197'
-text = 'Not scored'
-# src: 不计分
-
-['four-labs.table.1.cell.4.0']
-src_hash = 'c6c70e7a'
-text = 'mini-cpu lab 1'
-# src: mini-cpu 实验一
-
-['four-labs.table.1.cell.4.1']
-src_hash = 'd6a716a1'
-text = 'Lecture 3'
-# src: 第三讲
-
-['four-labs.table.1.cell.4.2']
-src_hash = '86f63e49'
-text = 'Complete an x86-64 instruction interpreter'
-# src: 完成 x86-64 指令解释器
-
-['four-labs.table.1.cell.4.3']
+['five-labs.table.1.cell.0.3']
 src_hash = '6235e025'
 text = 'Scored'
 # src: 计分
 
-['four-labs.slide.1']
+['five-labs.table.1.cell.1.0']
+src_hash = 'ef94283f'
+text = 'nano-quant'
+# src: nano-quant
+
+['five-labs.table.1.cell.1.1']
+src_hash = 'd47b631b'
+text = 'Lecture 2'
+# src: 第二讲
+
+['five-labs.table.1.cell.1.2']
+src_hash = '71575eb3'
+text = 'Quantize Qwen3-VL-2B-Instruct to 4 bits'
+# src: 把 Qwen3-VL-2B-Instruct 量化为 4 位
+
+['five-labs.table.1.cell.1.3']
+src_hash = '32b21197'
+text = 'Not scored'
+# src: 不计分
+
+['five-labs.table.1.cell.2.0']
+src_hash = '23693a18'
+text = 'bomb-lab'
+# src: bomb-lab
+
+['five-labs.table.1.cell.2.1']
+src_hash = 'd6a716a1'
+text = 'Lecture 3'
+# src: 第三讲
+
+['five-labs.table.1.cell.2.2']
+src_hash = '44b3f4e3'
+text = 'Derive the input of each phase from `bomb`'
+# src: 从 `bomb` 的机器码推出 8 个阶段的输入
+
+['five-labs.table.1.cell.2.3']
+src_hash = '32b21197'
+text = 'Not scored'
+# src: 不计分
+
+['five-labs.table.1.cell.3.0']
+src_hash = '06d2ac90'
+text = 'attack-elf'
+# src: attack-elf
+
+['five-labs.table.1.cell.3.1']
+src_hash = 'd6a716a1'
+text = 'Lecture 3'
+# src: 第三讲
+
+['five-labs.table.1.cell.3.2']
+src_hash = '366942a8'
+text = 'Make the program call `report_pass`'
+# src: 构造一行输入，让程序调用 `report_pass`
+
+['five-labs.table.1.cell.3.3']
+src_hash = '32b21197'
+text = 'Not scored'
+# src: 不计分
+
+['five-labs.table.1.cell.4.0']
+src_hash = '311456f1'
+text = 'parallel-dot'
+# src: parallel-dot
+
+['five-labs.table.1.cell.4.1']
+src_hash = '5e4829d4'
+text = 'Lecture 3, part five'
+# src: 第三讲第五部分
+
+['five-labs.table.1.cell.4.2']
+src_hash = 'ebd4affd'
+text = 'Write the matvec with AVX2 and CUDA'
+# src: 用 AVX2 与 CUDA 写矩阵向量乘
+
+['five-labs.table.1.cell.4.3']
+src_hash = '32b21197'
+text = 'Not scored'
+# src: 不计分
+
+['five-labs.table.1.cell.5.0']
+src_hash = 'c6c70e7a'
+text = 'mini-cpu lab 1'
+# src: mini-cpu 实验一
+
+['five-labs.table.1.cell.5.1']
+src_hash = 'd6a716a1'
+text = 'Lecture 3'
+# src: 第三讲
+
+['five-labs.table.1.cell.5.2']
+src_hash = '86f63e49'
+text = 'Complete the x86-64 interpreter'
+# src: 完成 x86-64 指令解释器
+
+['five-labs.table.1.cell.5.3']
+src_hash = '6235e025'
+text = 'Scored'
+# src: 计分
+
+['five-labs.slide.1']
 src_hash = '5a4a6fcd'
-text = 'Programming the old way is encouraged: write the code by hand yourself. Discussion with classmates is encouraged, and so is discussion with AI.'
+text = 'Programming the old way is encouraged — write the code by hand; discussion with classmates and with AI is encouraged.'
 # src:
 # 
 # 鼓励「古法编程」，鼓励同学之间讨论、与 AI 讨论。
 
-['four-labs.notes.1']
-src_hash = 'dea01ffb'
+['five-labs.notes.1']
+src_hash = '99dab1c7'
 text = '''
-This lecture first explains how to download, install and use the courseware, then explains four labs, one part per lab. The first three labs are after-class exercises and are not scored; every step has a checking program, and output equal to the expected values shows that the step is correct. mini-cpu lab 1 is scored, with a maximum of 100 points.
+This lecture first explains how to download, install and use the courseware, then explains five labs, one part per lab. The first four labs are after-class exercises and are not scored; every step has a checking program, and output equal to the expected values shows that the step is correct. mini-cpu lab 1 is scored, with a maximum of 100 points.
 nano-quant accompanies lecture 2, "Representing data": impl/nano_quant.cpp implements the functions that read bytes and the encoding and decoding of three 4-bit formats; the framework quantizes the language model of Qwen3-VL-2B-Instruct, assembles it into a GGUF file, and ollama loads and runs it.
 bomb-lab accompanies lecture 3: each student ID has its own bomb without source code, and the input of each of the 8 phases is derived from its machine code. bomb connects to the course server while it runs; every explosion and every defused phase is recorded under the student ID, and ./bomb -s shows the scoreboard.
+attack-elf accompanies lecture 3 as well: it is likewise a program without source code, one build per student ID; you read its machine code and craft one line of input that makes the program call report_pass, a pass function that nothing calls. The three phases wear different protections, and this lecture demonstrates breaking phase 1.
 parallel-dot accompanies the two speed-up solutions of part five of lecture 3. Both parts write the same operator, the product of a Q4_0 matrix and a vector: part 1 writes the function matvec_q4_0 with AVX2, part 2 writes its CUDA kernel; without an NVIDIA GPU, make remote submits to the course server. The mini-ollama that both parts run reads q4_0.gguf, which is downloaded from the SJTU cloud drive or produced by nano-quant with the q4_0 recipe.
 mini-cpu lab 1 accompanies lecture 3: an x86-64 instruction interpreter is completed in three files, make check gives the score, and the lab1.zip produced by make handin is submitted on the Canvas platform.
-For all four labs, programming the old way is encouraged: write the code by hand yourself. Discussion with classmates is encouraged, and so is discussion with AI.
+For all five labs, programming the old way is encouraged — write the code by hand yourself; discussion with classmates is encouraged, and so is discussion with AI.
 '''
 # src:
 # 
-# 本讲先说明课件的下载、安装与使用，再说明四个实验，每个实验一部分。前三个实验是课后练习，不计分，每一步都有检查程序，输出与期望值一致就说明这一步正确；mini-cpu 实验一计分，满分 100 分。
+# 本讲先说明课件的下载、安装与使用，再说明五个实验，每个实验一部分。前四个实验是课后练习，不计分，每一步都有检查程序，输出与期望值一致就说明这一步正确；mini-cpu 实验一计分，满分 100 分。
 # nano-quant 配合第二讲「数据的表示」：在 impl/nano_quant.cpp 中实现读字节的函数与三种 4 位格式的编解码，框架把 Qwen3-VL-2B-Instruct 的语言模型量化后组装为 GGUF，由 ollama 加载运行。
 # bomb-lab 配合第三讲：每个学号一个没有源码的 bomb，阅读它的机器码推出 8 个阶段的输入；bomb 运行时连接课程服务器，每一次爆炸与每一个被拆除的阶段都记在学号下，./bomb -s 显示计分板。
+# attack-elf 也配合第三讲：同样是没有源码的程序，每个学号一个构建，读它的机器码构造一行输入，让程序自己调用没有调用点的过关函数 report_pass；三个阶段戴不同的防护，本讲演示第一阶段的攻破。
 # parallel-dot 配合第三讲第五部分的两个提速方案，两部分写同一个算子，即 Q4_0 矩阵与向量的乘积：第一部分用 AVX2 写函数 matvec_q4_0，第二部分写它的 CUDA kernel；没有 NVIDIA 显卡时用 make remote 提交到课程服务器。两部分运行的 mini-ollama 读取 q4_0.gguf，这个文件从交大云盘下载，或由 nano-quant 按 q4_0 配方生成。
 # mini-cpu 实验一配合第三讲：在三个文件中完成 x86-64 指令解释器，make check 给出得分，make handin 生成的 lab1.zip 提交到 Canvas 平台。
-# 做这四个实验时，鼓励「古法编程」，即代码由自己动手写出；鼓励同学之间讨论，也鼓励与 AI 讨论。
+# 做这五个实验时，鼓励「古法编程」，即代码由自己动手写出；鼓励同学之间讨论，也鼓励与 AI 讨论。
 
 ['bridge-kit.title']
 src_hash = 'b150e0e9'
@@ -291,11 +313,11 @@ text = '"≡ Outline" at the top right'
 # src: 右上角的「≡ 大纲」
 
 ['kit-view.slide.2']
-src_hash = '8b18b329'
-text = 'Adding `--lang en` to the command opens the English version.'
+src_hash = '426d353a'
+text = 'Adding `--lang en` to the command opens the English version; its text is the translation in `i18n/en.toml` in the directory of the lecture.'
 # src:
 # 
-# 命令末尾加 `--lang en` 打开英文版。
+# 命令末尾加 `--lang en` 打开英文版，英文版的文字是这一讲目录中 `i18n/en.toml` 的翻译。
 
 ['kit-view.notes.1']
 src_hash = '7742e35c'
@@ -423,11 +445,11 @@ text = 'How the framework calls the functions you implement'
 # src: 框架如何调用实现的函数
 
 ['nq-call-graph.slide.1']
-src_hash = 'b0a835bb'
-text = '`include/nano_quant.h` is the whole interface between the framework and your code: the framework calls the prototypes of the header, and each function reads only its parameters and writes only its output.'
+src_hash = 'a08b7a99'
+text = '[`include/nano_quant.h`](file:/lectures/nano-quant/include/nano_quant.h) is the whole interface between the framework and your code: the framework calls the prototypes of the header, and each function reads only its parameters and writes only its output.'
 # src:
 # 
-# `include/nano_quant.h` 是框架与你的代码之间的全部接口。
+# [`include/nano_quant.h`](file:/lectures/nano-quant/include/nano_quant.h) 是框架与你的代码之间的全部接口。
 
 ['nq-call-graph.notes.1']
 src_hash = '257178ba'
@@ -1061,25 +1083,361 @@ The bytes from 0xcb030 in .rodata are 54 68 65 20 …, the characters T h e spac
 # objdump 在行尾的注释中写出了这个和：# cb030；尖括号中的 __rseq_flags+0x2c 是离 0xcb030 最近的符号加偏移，与字符串无关，字符串常量在符号表中没有名字。
 # .rodata 中 0xcb030 起的字节是 54 68 65 20 …，即字符 T h e 空格 …，到值为 0 的字节结束。
 
+['bridge-attack.title']
+src_hash = '12c5404f'
+text = 'Part 4 · attack-elf'
+# src: 第四部分 · attack-elf
+
+['bridge-attack.bridge.1']
+src_hash = 'df910e64'
+text = '''
+Part 4 · attack-elf
+Craft one line of input that makes the program call report_pass
+'''
+# src:
+# 第四部分 · attack-elf
+# 构造一行输入，让程序调用 report_pass
+
+['section.attack.title']
+src_hash = '741657df'
+text = 'Part 4 · attack-elf: craft one line of input that makes the program call report_pass'
+# src: 第四部分 · attack-elf：构造一行输入，让程序调用 report_pass
+
+['bridge-attack-use.title']
+src_hash = '9fa57d19'
+text = 'Using attack'
+# src: attack 的使用
+
+['bridge-attack-use.bridge.1']
+src_hash = '3d1fda31'
+text = '''
+Using attack
+Fetching the program, running it, submitting and scoring
+'''
+# src:
+# attack 的使用
+# 领取程序、运行、提交与记分
+
+['section.attack-use.title']
+src_hash = '9fa57d19'
+text = 'Using attack'
+# src: attack 的使用
+
+['attack-task.title']
+src_hash = '34545ab6'
+text = 'Lab attack-elf: make the program call report_pass'
+# src: 实验 attack-elf：构造一行输入，让程序调用 report_pass
+
+['attack-task.slide.1']
+src_hash = 'c5bb2b91'
+text = '''
+- `attack1`, `attack2`, `attack3` are one chat program built with different protections: it loads `q4_0.gguf`, reads one line of prompt and replies, until the input ends;
+- all three contain `report_pass(unsigned long phase, unsigned long key)`: with the right phase and key it prints `phase N passed` and exits with status 0; nothing calls it;
+- **The task**: craft one line of input that puts these two numbers into `%rdi` and `%rsi`, and lets control flow enter the start of the function.
+'''
+# src:
+# 
+# - `attack1`、`attack2`、`attack3` 是同一个聊天程序，以不同的保护选项编译：程序加载模型 `q4_0.gguf`，读入一行提示词，由模型回复，直到输入结束；
+# - 三个程序里都有 `report_pass(unsigned long phase, unsigned long key)`：阶段号与口令都对时打印 `phase N passed` 并以状态 0 退出，程序中没有任何地方调用它；
+# - **要做的事**：构造一行输入，把这两个数放进参数寄存器 `%rdi`、`%rsi`，再让控制流进入函数开头。
+
+['attack-task.table.1.cell.0.0']
+src_hash = '5d942dbe'
+text = 'Program'
+# src: 程序
+
+['attack-task.table.1.cell.0.1']
+src_hash = '0f810a79'
+text = 'Protection'
+# src: 保护
+
+['attack-task.table.1.cell.0.2']
+src_hash = '04ff9007'
+text = 'Way to pass'
+# src: 过关方式
+
+['attack-task.table.1.cell.1.0']
+src_hash = 'f2f4ccd3'
+text = '`attack1`'
+# src: `attack1`
+
+['attack-task.table.1.cell.1.1']
+src_hash = 'ce181814'
+text = 'No canary, executable stack'
+# src: 无金丝雀，栈可执行
+
+['attack-task.table.1.cell.1.2']
+src_hash = '91b40005'
+text = 'Overwrite the return address to redirect control flow'
+# src: 覆盖返回地址，改变程序的控制流
+
+['attack-task.table.1.cell.2.0']
+src_hash = '43015c4e'
+text = '`attack2`'
+# src: `attack2`
+
+['attack-task.table.1.cell.2.1']
+src_hash = '81b56c19'
+text = 'Stack canary, executable stack'
+# src: 有栈金丝雀，栈可执行
+
+['attack-task.table.1.cell.2.2']
+src_hash = '446fa673'
+text = 'Brute-force the canary, then the return address'
+# src: 爆破 8 字节固定金丝雀值，再覆盖返回地址
+
+['attack-task.table.1.cell.3.0']
+src_hash = '08b14e05'
+text = '`attack3`'
+# src: `attack3`
+
+['attack-task.table.1.cell.3.1']
+src_hash = 'c2ca8009'
+text = 'No canary, non-exec stack'
+# src: 无金丝雀，栈不可执行
+
+['attack-task.table.1.cell.3.2']
+src_hash = 'e0cf3762'
+text = 'Build the arguments and the call from fragments'
+# src: 只用程序里已有的指令片段拼凑出参数与调用
+
+['attack-task.notes.1']
+src_hash = '1c713295'
+text = '''
+Lab attack-elf accompanies lecture 3, "machine-level representation of programs". It is not scored and belongs to the same family as bomb-lab: you are given an executable without source code and craft one line of input by reading its machine code.
+The three programs are three builds of one chat program, and each turn of the dialogue is independent: the line is read, this turn's function returns, and only then does inference start, so the control-flow attack happens before inference and there is no need to wait for the model's answer.
+report_pass is the pass function, and no instruction in the program refers to it. It compares its two arguments: the phase and the key; the key is a 64-bit constant that varies with the student ID, is not shown in the interface and can be read with objdump. When both are right it prints phase N passed and exits with status 0. To pass this lab: put the two numbers into %rdi and %rsi, then make control flow enter the start of report_pass.
+The three programs differ in their protections, so they are passed in different ways: attack1 has an executable stack, so the return address can be rewritten to an address in the buffer and the call is made by code you write yourself — this lecture demonstrates breaking it; attack2 puts a canary in front of the return address, and its 8 bytes must first be asked out; attack3 has a non-executable stack, so the arguments and the call can only be assembled from instruction fragments already in the program. The pass function is the same in all three; only the protections differ.
+The constants and the buffer sizes in the program are computed from a SHA-256 of the student ID, so they differ per student, and the addresses in the three programs differ with them. The demonstration uses the build of student ID 000000000001, the same as the bomb demonstration.
+'''
+# src:
+# 
+# 实验 attack-elf 配合第三讲「程序的机器级表示」，不计分，与 bomb-lab 同类：给出没有源码的可执行文件，阅读它的机器码构造一行输入。
+# 三个程序是同一个聊天程序的三个构建，每一轮对话互相独立：读入一行、这一轮的函数返回，然后才做推理，所以控制流攻击发生在推理之前，不必等模型的回答。
+# report_pass 是过关函数，程序里没有指令引用它。它比较两个参数：阶段号与口令；口令是随学号变化的 64 位常数，界面上不显示，objdump 读得到。两项都对时它打印 phase N passed，以状态 0 退出。要过这一关：先把两个数放进 %rdi 与 %rsi，再让控制流进入 report_pass 的开头。
+# 三个程序的保护不同，过关的方法也不同：attack1 的栈可执行，返回地址可以改写为缓冲区里的地址，由自己写的代码完成调用，本节演示它的攻破；attack2 在返回地址之前放了金丝雀，先要问出它的 8 个字节；attack3 的栈不可执行，参数与调用只能用程序里已有的指令片段拼出来。三个阶段的过关函数相同，差别只在各自的防护。
+# 程序里的常数与缓冲区大小由学号的 SHA-256 算出，每个学号不同，三个程序的地址也随之不同。演示用演示学号 000000000001 的构建，与 bomb 的演示相同。
+
+['attack-get.title']
+src_hash = '80c8489f'
+text = 'Fetching your program, preparing the model'
+# src: 领取自己的程序，准备模型
+
+['attack-get.slide.1']
+src_hash = '3365f016'
+text = '''
+- The answer is written in `answers/attack1.txt`: one or more lines of two-digit hexadecimal numbers, with a comment after `#`; `tools/unhex` turns it into raw bytes;
+- three commands go with the attack: `make local1`, `make remote1` and `make score`.
+'''
+# src:
+# 
+# - 答案写在 `answers/attack1.txt`：由一行或多行两位十六进制数组成，`#` 之后是注释。通过 `tools/unhex` 可以把它转换为原始字节；
+# - 与攻击配套的三个命令：`make local1`、`make remote1`、`make score`。
+
+['attack-get.slide.2']
+src_hash = '4e1a7a7a'
+text = '''
+- Run it in a terminal: the banner gives the phase and the student ID, a labelled box takes one line, `Ctrl-D` leaves; the answer streams from the model and one turn takes tens of seconds;
+- **`-q`**: draw nothing; the reading is the same and only the two lines of a pass are left;
+- **`-s`**: fetch the scoreboard from the course server, draw it and exit;
+- the attack line is piped in: `tools/unhex < answers/attack1.txt | ./attack1 -q`.
+'''
+# src:
+# 
+# - 在终端里运行：横幅给出阶段号与学号，提示框接受一行，`Ctrl-D` 退出；
+# - **`-q`**：什么都不画，读法不变，只留下过关时的那两行；
+# - **`-s`**：从课程服务器取回计分榜，画完退出；
+# - 攻击的一行从管道读入：`tools/unhex < answers/attack1.txt | ./attack1 -q`。
+
+['attack-get.notes.1']
+src_hash = 'a0a509cb'
+text = '''
+The lab directory contains no source code: Makefile, README.md, tools/ and an empty answers/. make attack ID=... asks the course server for the three programs of your student ID; the Makefile gives an equivalent one-line curl or wget command, to fetch them by hand when there is no network.
+The student ID is used only to compute the constants: tools/pick.c hashes the ID with SHA-256, takes the first 8 bytes of the hash as the key (replacing 0x0a with 0x0b), and uses the following bytes to compute the sizes of the three buffers (between 256 and 496, a multiple of 16) and the address of the segment that holds the pass function. The same ID always yields the same constants and the same programs; another ID changes the key, the buffer sizes and the addresses.
+The model q4_0.gguf is about 929 MiB, the same file the nano-quant lab produces. It takes no part in the attack, but the program loads it at startup, so it must be in the current directory; a symbolic link will do.
+make localN turns the hexadecimal in answers/attackN.txt into bytes, feeds them to ./attackN and checks that the output contains phase N passed; make remoteN sends the same answer to the server for checking and scoring; make score prints the scoreboard. The three commands are implemented in tools/: unhex.c, submit.py and the Makefile, all of them readable.
+The answer is written in answers/attackN.txt: a line is hexadecimal bytes followed by a comment after #; unhex ignores comments and whitespace and writes the bytes to the standard input of the program.
+'''
+# src:
+# 
+# 实验材料的目录中没有源码：Makefile、README.md、tools/ 与空的 answers/。make attack ID=… 向课程服务器要回本学号的三个程序；Makefile 里给出一行等价的 curl 或 wget 命令，没有网络时按它手动取回。
+# 学号只用来算常数：tools/pick.c 对学号做 SHA-256，取散列的前 8 个字节做口令（遇到 0x0a 换成 0x0b），用后续的字节算出三个缓冲区的大小（256 到 496 之间，16 的倍数）与过关函数所在段的地址。同一学号每次算出的常数相同，领回来的程序每次相同；换学号则口令、缓冲区大小与地址都变。
+# 模型 q4_0.gguf 约 929 MiB，与 nano-quant 实验生成的是同一个文件。它不参与攻击，但程序启动时会装入它，所以当前目录中要有它，链接也可以。
+# make localN 把 answers/attackN.txt 里的十六进制转成字节喂给 ./attackN，再检查输出里有 phase N passed；make remoteN 把同一份答案发到服务器复核并记分；make score 打印计分榜。三个命令的实现在 tools/ 中：unhex.c、submit.py 与 Makefile，都可以读。
+# 答案写在 answers/attackN.txt 中：一行是十六进制字节与 # 之后的注释；unhex 忽略注释与空白，写出的字节从标准输入喂给程序。
+
+['attack-submit.title']
+src_hash = '2f1cca16'
+text = 'Submitting and scoring: make remoteN'
+# src: 提交与记分：make remoteN
+
+['attack-submit.slide.1']
+src_hash = '8c709c5f'
+text = '''
+- The attack binary does not report anything itself: `phase 1 passed` is only the result on your own machine;
+- the server re-runs the same binary once to check the answer; when it passes, the terminal shows the reply `phase N: pass (exit 0)`;
+- the scoreboard is like the bomb one: rank, the number of phases passed and so on, one cell per phase, with your own row marked by `>` and your full student ID.
+'''
+# src:
+# 
+# - attack 二进制程序本身不上报结果，`phase 1 passed` 仅为本机的运行结果；
+# - 服务器会用相同的二进制重跑一次验证答案正确性，如正确通过，终端里可以看到回复 `phase N: pass (exit 0)`；
+# - 计分榜与 bomb 的类似：名次、已过的阶段数等等，每个阶段一格，自己的一行以 `>` 标出并写出完整学号。
+
+['attack-submit.notes.1']
+src_hash = 'fda217ce'
+text = '''
+make remoteN is implemented by tools/submit.py: it reads the bytes in answers/attackN.txt and sends them to the server together with the student ID and the phase; the server hands them to its checking copy of the program on standard input and sees whether it exits with status 0 having printed phase N passed. If so it records the phase and replies with the line phase N: pass (exit 0); you have cleared K/3; on failure the parentheses hold fail (signal 6) or the like: the result and the way the run ended are both in there.
+The program on the server is the build of the same student ID, but phase 2 pins the canary of the server while the local copy pins another fixed value, so a phase 2 passed locally is caught by the canary on the server; phases 1 and 3 have no canary and are the same on both sides. The check runs in a sandbox with no network, and the program does not use the network either, so no further records are made while it runs.
+The scoreboard is the same as the bomb one: rank, student (your own row shows the full student ID, others only an anonymous code), the number of phases passed, then one cell per phase: a passed phase is #, an unpassed one is ., and a passed cell carries a * when there is no colour; the meaning of the symbols is given on the line below the table. The end of the table gives the number of students and your own row.
+After submitting, look at the scoreboard once to confirm that your row has the phase marked.
+'''
+# src:
+# 
+# make remoteN 由 tools/submit.py 实现：读出 answers/attackN.txt 中的字节，连同学号与阶段号发给服务器；服务器把它们交给复核用的那份程序，用标准输入喂进去，看它是否以状态 0 退出并打印了 phase N passed，是则记录这一阶段，回复一行 phase N: pass (exit 0); you have cleared K/3；失败时括号里是 fail (signal 6) 之类，结果与这一跑的结束方式都在里面。
+# 服务器上的程序是同一个学号的构建，但阶段 2 钉的是服务器的金丝雀，本机那份钉另一个固定值，所以在本机过掉的阶段 2 到服务器上会被金丝雀拦下；阶段 1 与阶段 3 没有金丝雀，两侧相同。复核在沙箱里进行，没有网络，程序也不联网，所以复核期间不会再有记录。
+# 计分榜与 bomb 的相同：名次、学生（自己的一行是完整学号，别人只显示匿名代号）、已过的阶段数，之后每个阶段一格：已过的为 #，未过的为 .，没有颜色时已过的一格带一个 *；符号的含义在表下一行。表的末尾给出学生总数与自己所在的行。
+# 提交之后先看一遍计分榜，确认自己的一行已标出这一阶段。
+
+['bridge-attack-class.title']
+src_hash = 'f98e7030'
+text = 'From the stack frame of chat_turn to report_pass'
+# src: 从 chat_turn 的栈帧到 report_pass
+
+['bridge-attack-class.bridge.1']
+src_hash = 'f98e7030'
+text = 'From the stack frame of chat_turn to report_pass'
+# src: 从 chat_turn 的栈帧到 report_pass
+
+['section.attack-class.title']
+src_hash = '828fa8b9'
+text = 'Classroom demo: breaking attack1'
+# src: 课堂演示：attack1 的攻破
+
+['attack-frame.title']
+src_hash = '4dff00b6'
+text = 'The stack frame of chat_turn'
+# src: chat_turn 的栈帧
+
+['attack-frame.side_image.1.alt']
+src_hash = 'dd9245cc'
+text = 'contain'
+# src: contain
+
+['attack-frame.slide.1']
+src_hash = 'a88a6743'
+text = '''
+- The local array `char prompt[304]` starts at `%rbp-304` (`lea -0x130(%rbp),%rax` hands its address to `Gets`), the saved `%rbp` sits at `%rbp` and the return address at `%rbp+8`;
+- there is no canary between the buffer and the return address: past byte 312 what you overwrite is the return address;
+- the return address is to be the address of code in the buffer: the code sits at the low end of the buffer, a fixed 312 bytes before the return address.
+'''
+# src:
+# 
+# - 局部数组 `char prompt[304]` 从 `%rbp-304` 开始（`lea -0x130(%rbp),%rax` 把它的地址交给 `Gets`），保存的 `%rbp` 在 `%rbp`，返回地址在 `%rbp+8`；
+# - 缓冲区与返回地址之间没有金丝雀：写到第 312 个字节之后，改的就是返回地址；
+# - 返回地址要写成缓冲区里代码的地址：代码写在缓冲区的低端，它与返回地址的距离固定为 312。
+
+['attack-frame.notes.1']
+src_hash = '036f1445'
+text = '''
+This section demonstrates attack1 of student ID 000000000001 (examples/attack1). Its three protections: no canary (-fno-stack-protector), an executable stack (-Wl,-z,execstack at link time) and no position-independent code (-no-pie); the part students disassemble is also compiled with -O0, so instructions and source correspond one to one.
+chat_turn takes no arguments: main calls it in a loop, a return of 1 continues and a return of 0 ends. Its frame holds one local array, char prompt[304] (BUF1 = 304): sub $0x130,%rsp reserves it, lea -0x130(%rbp),%rax is its address, and mov $0x130,%esi passes 304 as the second argument to Gets.
+Gets reads one line: the bytes read start at the low-address end of the buffer and go on until a newline or the end of the input, with no length check. On the pipe path 0x00 is stored as it is; the interactive path copies the line isocline read back with strcpy, likewise without a length limit.
+The return address is at %rbp+8: the offset 0x130 of the lea plus the 8 bytes of the saved %rbp give 0x138 = 312. Nothing else lies between the buffer and the return address — that is what "no canary" means: the first byte past byte 312 overwrites the return address.
+The build of the demonstration ID: a 304-byte buffer, the return address at +312, the key 0x27d6fbbe5c7d230b and report_pass at 0x01528000. These numbers differ per student ID: the offset and the buffer size are read from the offset of the lea, the key is the immediate of the movabs at the start of report_pass, and the address of report_pass comes from nm.
+The return address is written as the address of the code in the buffer: that stack address is read with gdb (p/x $rbp-0x130) in the demonstration environment, where ASLR is off, and is 0x00007fffffffd550 on this page and in the animation. The address moves with the environment, and with ASLR on it changes on every run; the reference answer of the lab therefore takes a form that does not depend on it, which this lecture does not go into.
+'''
+# src:
+# 
+# 本节演示演示学号 000000000001 的 attack1（examples/attack1）。它的三个保护：没有金丝雀（-fno-stack-protector）、栈可执行（链接时 -Wl,-z,execstack）、不是位置无关的程序（-no-pie）；学生反汇编的这部分还用 -O0 编译，指令与源码一一对应。
+# chat_turn 没有参数：main 在一个循环里调用它，返回 1 继续、返回 0 结束。它的这一帧里有一个局部数组 char prompt[304]（BUF1 = 304），sub $0x130,%rsp 为它留出位置，lea -0x130(%rbp),%rax 是它的地址，mov $0x130,%esi 把 304 作为第二个参数传给 Gets。
+# Gets 读一行：读到的字节从缓冲区的低地址一端写起，一直写到换行或输入结束，不检查长度。管道路径上 0x00 照存；交互路径用 strcpy 复制 isocline 读回的一行，同样不限长度。
+# 返回地址在 %rbp+8：lea 的偏移 0x130 加上保存的 %rbp 的 8 字节，是 0x138 = 312。缓冲区与返回地址之间没有别的东西——这就是「无金丝雀」的意思：写到第 312 个字节之后的第一个字节，改的就是返回地址。
+# 演示学号的构建：缓冲区 304 字节、返回地址在 +312、口令 0x27d6fbbe5c7d230b、report_pass 在 0x01528000。各学号的这些数不同：偏移与缓冲区大小从 lea 的偏移读出，口令是 report_pass 开头 movabs 的立即数，report_pass 的地址由 nm 给出。
+# 返回地址写成缓冲区里代码的地址：这个栈地址在关掉 ASLR 的演示环境里用 gdb 读出（p/x $rbp-0x130），本页与动画里是 0x00007fffffffd550。栈的地址随环境而变，开着 ASLR 时每次运行都不同；实验室的参考答案因此换成不依赖它的做法，本讲不展开。
+
+['attack-payload.title']
+src_hash = '750c1eec'
+text = 'Filling the payload: the return address and the code'
+# src: 填充负载：返回地址和代码
+
+['attack-payload.slide.1']
+src_hash = '21f1dffa'
+text = '''
+- **The return address is the address of the code in the buffer**: the 27 bytes of code sit at the low end of the buffer (offset 0), and the return address is their address;
+- all 320 bytes: the saved `%rbp` is overwritten with `41`, and it is only used by `leave`; not one byte is written above the return address;
+- no byte is `0x0a` (the end of the line); the stack address is read once with `gdb` in the demonstration environment.
+'''
+# src:
+# 
+# - **返回地址 = 缓冲区里代码的地址**：代码 27 字节写在缓冲区低端（偏移 0），返回地址就是它的地址；
+# - 全部 320 字节：保存的 `%rbp` 被 `41` 覆盖，它在 `leave` 里才用到；返回地址之上一个字节也不写；
+# - 没有一个字节是 `0x0a`（行的结尾）；栈地址在演示环境里用 `gdb` 读一遍即可。
+
+['attack-payload.notes.1']
+src_hash = '5498c1f8'
+text = '''
+The code sits at the low end of the buffer (offset 0) and the return address is written as its address; ret lands on that code as soon as it runs, with no other springboard. The distance from the code to the return address is a fixed 312 bytes, independent of where the stack is; the whole payload is 320 bytes and stops at the last byte of the return address, with not one byte above it: main's frame is untouched, and the call to report_pass is an ordinary call.
+The saved %rbp is overwritten with 41: it is popped by leave (mov %rbp,%rsp; pop %rbp), and control never returns to chat_turn, so it does not matter.
+The only thing to know is the address of the buffer. The stack address changes on every run (ASLR), so the demonstration turns it off with setarch -R, which fixes it: read %rbp-0x130 once with gdb, or use the probe in tools/make-attack-demo.sh (it prints the address from the fixed distance between %rsp and the buffer). The 0x00007fffffffd550 on this page and in the animation comes from there.
+The 27 bytes of code: bf 01 00 00 00 is mov $1,%edi, 48 be plus 8 bytes is movabs $key,%rsi (a 64-bit immediate takes movabs), 48 b8 plus 8 bytes is movabs $0x01528000,%rax, and ff d0 is call *%rax. It calls report_pass(1, key).
+Neither the key nor the address of report_pass contains 0x0a (the tools avoid it byte by byte when they look for an address, and the hash-generated constants avoid it too), so no byte of the payload is 0x0a. 0x00 is allowed: this line comes in through a pipe, and Gets stores it byte by byte.
+The hexadecimal of the payload is written in answers/attack1.txt; unhex turns it back into 320 bytes, and the way it is fed to the program does not change.
+'''
+# src:
+# 
+# 代码写在缓冲区的低端（偏移 0），返回地址写成它的地址；ret 一执行就落到这段代码上，不需要别的跳板。代码与返回地址的距离是固定的 312 字节，与栈的位置无关；整条载荷 320 字节，只写到返回地址的最后一个字节，返回地址之上一个字节也不写：main 的帧没有被碰，report_pass 的调用与平常的调用一样。
+# 保存的 %rbp 被 41 覆盖：它在 leave（mov %rbp,%rsp; pop %rbp）里被弹出，此后不再回到 chat_turn，所以没有影响。
+# 要知道的只有缓冲区的地址。栈的地址每次运行都不同（ASLR），演示时用 setarch -R 关掉它，地址就固定下来：用 gdb 读一次 %rbp-0x130，或者用 tools/make-attack-demo.sh 里的探针（它从 %rsp 与缓冲区的固定距离把地址打印出来）。本页与动画里的 0x00007fffffffd550 就是这样得到的。
+# 代码 27 字节：bf 01 00 00 00 是 mov $1,%edi，48 be 加 8 个字节是 movabs $口令,%rsi（64 位立即数用 movabs），48 b8 加 8 个字节是 movabs $0x01528000,%rax，ff d0 是 call *%rax。调用 report_pass(1, 口令)。
+# 口令与 report_pass 的地址都可以不含 0x0a（工具按字节找地址时避开它，常数由散列生成时也避开了），所以整条载荷没有一个字节是 0x0a。0x00 允许出现：这一行从管道读入，Gets 逐字节地存。
+# 载荷的十六进制写在 answers/attack1.txt 中；unhex 把它还原成 320 字节，喂给程序的方式不变。
+
+['attack-fill.title']
+src_hash = '87620a27'
+text = 'Buffer overflow'
+# src: 缓冲区溢出
+
+['attack-fill.notes.1']
+src_hash = '0077e754'
+text = '''
+The animation has six frames, from an empty buffer to report_pass printing phase 1 passed. On the left is the stack frame of chat_turn, high addresses on top; on the right, where control flow is now.
+Frame 1: the buffer is empty and the return address is 0x4025bc, the instruction after the call to chat_turn in main; when chat_turn returns, control goes back there.
+Frame 2: the first 27 bytes of the input are the code, and they land at the low end of the buffer (offset 0); the return address is at offset 312, and the distance between the two does not depend on what the input holds.
+Frame 3: 304 bytes in, the buffer is full, and nothing has been written outside it yet.
+Frame 4: 16 more bytes: the 8 bytes of the saved %rbp are overwritten with 41, and the 8 bytes of the return address are rewritten to the address of the code, 0x00007fffffffd550 (the demonstration environment has ASLR off, so the address is fixed). The return address is not used yet — it has to wait for ret.
+Frame 5: ret pops that address from %rbp+8 into %rip and %rsp points at %rbp+16; control flow lands on the code in the stack — an executable stack (-Wl,-z,execstack) is what makes that jump possible.
+Frame 6: the code puts 1 and the key into %rdi and %rsi, and call *%rax enters report_pass at 0x01528000; it compares the two arguments, prints phase 1 passed and exits with status 0. The model generates no token at all: the ret of chat_turn has already taken control flow away.
+'''
+# src:
+# 
+# 动画六帧，从缓冲区为空到 report_pass 打印 phase 1 passed。左侧是 chat_turn 的栈帧，高地址在上；右侧是控制流的当前位置。
+# 第一帧：缓冲区为空，返回地址是 main 中调用 chat_turn 的下一条指令 0x4025bc，chat_turn 返回后回到那里。
+# 第二帧：输入的开头 27 字节是代码，落在缓冲区的低端（偏移 0）；返回地址在偏移 312，两者之间的距离不受输入内容影响。
+# 第三帧：输入 304 字节，缓冲区填满，还没有写到缓冲区之外。
+# 第四帧：再写 16 字节：保存的 %rbp 的 8 个字节被 41 覆盖，返回地址的 8 个字节被改写成代码的地址 0x00007fffffffd550（演示环境关掉了 ASLR，这个地址固定）。此时返回地址还没有被使用——它要等 ret 执行。
+# 第五帧：ret 从 %rbp+8 弹出这个地址放进 %rip，%rsp 指向 %rbp+16；控制流落到栈上的代码——栈可执行（-Wl,-z,execstack）使这一跳成为可能。
+# 第六帧：代码把 1 与口令放进 %rdi、%rsi，call *%rax 进入 0x01528000 的 report_pass；它比较两个参数，打印 phase 1 passed，以状态 0 退出。模型没有生成任何 Token：chat_turn 的 ret 就已经把控制流带走了。
+
 ['bridge-pd.title']
-src_hash = '1de7388c'
-text = 'Part 4 · parallel-dot'
-# src: 第四部分 · parallel-dot
+src_hash = '080a38a3'
+text = 'Part 5 · parallel-dot'
+# src: 第五部分 · parallel-dot
 
 ['bridge-pd.bridge.1']
-src_hash = '5369e8c6'
+src_hash = '79ab9219'
 text = '''
-Part 4 · parallel-dot
+Part 5 · parallel-dot
 Matrix-vector multiplication with AVX2 and CUDA
 '''
 # src:
-# 第四部分 · parallel-dot
+# 第五部分 · parallel-dot
 # AVX2 与 CUDA 的矩阵向量乘
 
 ['section.pd.title']
-src_hash = '6e188bc2'
-text = 'Part 4 · parallel-dot: matrix-vector multiplication with AVX2 and CUDA'
-# src: 第四部分 · parallel-dot：AVX2 与 CUDA 的矩阵向量乘
+src_hash = 'fb7110fd'
+text = 'Part 5 · parallel-dot: matrix-vector multiplication with AVX2 and CUDA'
+# src: 第五部分 · parallel-dot：AVX2 与 CUDA 的矩阵向量乘
 
 ['bridge-pd-frame.title']
 src_hash = '413e07dd'
@@ -1105,11 +1463,11 @@ text = 'The structure of mini-ollama: main.c calls the operators through the ope
 # src: mini-ollama 的结构：main.c 经算子表调用算子
 
 ['pd-frame-ops.slide.1']
-src_hash = 'e15dd6b2'
-text = '- **The two parts modify the same operator `matvec_q4_0`**: part 1 writes the function in `ops/simd.c` (AVX2), part 2 writes the kernel `matvec_q4_0_kernel` in `ops/cuda.cu` that this function launches.'
+src_hash = '2e79b787'
+text = '- **The two parts modify the same operator `matvec_q4_0`**: part 1 writes the function in [`ops/simd.c`](file:/lectures/parallel-dot/ops/simd.c) (AVX2), part 2 writes the kernel `matvec_q4_0_kernel` in [`ops/cuda.cu`](file:/lectures/parallel-dot/ops/cuda.cu) that this function launches.'
 # src:
 # 
-# - **两部分修改同一个算子 `matvec_q4_0`**：第一部分写 `ops/simd.c` 中的函数（AVX2），第二部分写 `ops/cuda.cu` 中由它启动的 kernel `matvec_q4_0_kernel`。
+# - **两部分修改同一个算子 `matvec_q4_0`**：第一部分写 [`ops/simd.c`](file:/lectures/parallel-dot/ops/simd.c) 中的函数（AVX2），第二部分写 [`ops/cuda.cu`](file:/lectures/parallel-dot/ops/cuda.cu) 中由它启动的 kernel `matvec_q4_0_kernel`。
 
 ['pd-frame-ops.notes.1']
 src_hash = '46be56b2'
@@ -1429,24 +1787,24 @@ Compared with part 1: the hsum8 of part 1 adds the 8 accumulator lanes into one 
 # 与第一部分的对照：第一部分的 hsum8 把 8 路累加器相加为一个数，这里把 256 个部分和相加为一个数，两者都是每一步两两相加，使数的个数减半。
 
 ['bridge-minicpu.title']
-src_hash = 'a519b7cc'
-text = 'Part 5 · mini-cpu lab 1'
-# src: 第五部分 · mini-cpu 实验一
+src_hash = '8a07261a'
+text = 'Part 6 · mini-cpu lab 1'
+# src: 第六部分 · mini-cpu 实验一
 
 ['bridge-minicpu.bridge.1']
-src_hash = 'cd4b8662'
+src_hash = '9c315b43'
 text = '''
-Part 5 · mini-cpu lab 1
+Part 6 · mini-cpu lab 1
 An x86-64 instruction interpreter
 '''
 # src:
-# 第五部分 · mini-cpu 实验一
+# 第六部分 · mini-cpu 实验一
 # x86-64 指令解释器
 
 ['section.minicpu.title']
-src_hash = 'ca77682c'
-text = 'Part 5 · mini-cpu lab 1: an x86-64 instruction interpreter'
-# src: 第五部分 · mini-cpu 实验一：x86-64 指令解释器
+src_hash = 'ec00b53f'
+text = 'Part 6 · mini-cpu lab 1: an x86-64 instruction interpreter'
+# src: 第六部分 · mini-cpu 实验一：x86-64 指令解释器
 
 ['bridge-cpu-frame.title']
 src_hash = '413e07dd'
@@ -1469,16 +1827,16 @@ text = 'printf, libc and syscall'
 # src: printf, libc 和 syscall
 
 ['cpu-libc.slide.1']
-src_hash = '907604fc'
+src_hash = '2da52656'
 text = '''
 
 - **`printf` is a function of the C standard library libc**: like the program's own functions it consists of ordinary instructions; it converts the arguments into bytes by the format, then calls libc's `write`.
-- **Only the `syscall` instruction enters the operating system**: `write` puts the number and the arguments in registers and executes `syscall`, and the operating system does the output. A guest program is not linked with libc and has no `printf`; its output is done by the `write` of `guest/mini.h`, which executes `syscall` directly.
+- **Only the `syscall` instruction enters the operating system**: `write` puts the number and the arguments in registers and executes `syscall`, and the operating system does the output. A guest program is not linked with libc and has no `printf`; its output is done by the `write` of [`guest/mini.h`](file:/lectures/mini-cpu/guest/mini.h), which executes `syscall` directly.
 '''
 # src:
 # 
 # - **`printf` 是 C 标准库 libc 中的函数**：它与程序自己的函数一样由普通指令组成，按格式把参数转为字节，再调用 libc 的 `write`。
-# - **进入操作系统的只有 `syscall` 指令**：`write` 把编号与参数放入寄存器，执行 `syscall`，由操作系统完成输出。guest 程序不链接 libc，没有 `printf`，输出由 `guest/mini.h` 的 `write` 直接执行 `syscall`。
+# - **进入操作系统的只有 `syscall` 指令**：`write` 把编号与参数放入寄存器，执行 `syscall`，由操作系统完成输出。guest 程序不链接 libc，没有 `printf`，输出由 [`guest/mini.h`](file:/lectures/mini-cpu/guest/mini.h) 的 `write` 直接执行 `syscall`。
 
 ['cpu-libc.notes.1']
 src_hash = '201a5f1e'
@@ -1529,14 +1887,14 @@ text = 'Memory and registers: mini-cpu simulates them in its own memory'
 # src: 内存与寄存器：mini-cpu 在内存中模拟
 
 ['cpu-hello-mem.slide.1']
-src_hash = 'b1d13566'
+src_hash = 'f94dc66b'
 text = '''
 
-`frame/loader.c` writes the instructions and the strings of guest/hello into dram.img, writes argc and argv at the top of the stack, and sets `R[RSP]` and `R[RIP]`. `interp_run` executes one instruction after another from `R[RIP]`.
+[`frame/loader.c`](file:/lectures/mini-cpu/frame/loader.c) writes the instructions and the strings of guest/hello into dram.img, writes argc and argv at the top of the stack, and sets `R[RSP]` and `R[RIP]`. `interp_run` executes one instruction after another from `R[RIP]`.
 '''
 # src:
 # 
-# `frame/loader.c` 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`。`interp_run` 从 `R[RIP]` 开始逐条执行。
+# [`frame/loader.c`](file:/lectures/mini-cpu/frame/loader.c) 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`。`interp_run` 从 `R[RIP]` 开始逐条执行。
 
 ['cpu-hello-mem.notes.1']
 src_hash = '1c8bc10a'
@@ -1801,11 +2159,11 @@ text = 'The fields of modrm_t and how the interpreter uses them'
 # src: modrm_t 的字段与解释器对它的使用
 
 ['cpu-modrm-out.slide.1']
-src_hash = '16e7daf9'
-text = '`modrm_decode` only reads bytes and fills fields, without touching the registers; `modrm()` in `frame/x86.c` computes `x.addr` from these fields, and a `case` only has to take its operands with `get`, `rm_get` and `ea`.'
+src_hash = 'fda4bb71'
+text = '`modrm_decode` only reads bytes and fills fields, without touching the registers; `modrm()` in [`frame/x86.c`](file:/lectures/mini-cpu/frame/x86.c) computes `x.addr` from these fields, and a `case` only has to take its operands with `get`, `rm_get` and `ea`.'
 # src:
 # 
-# `modrm_decode` 只读字节、填字段，不访问寄存器；`frame/x86.c` 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数即可。
+# `modrm_decode` 只读字节、填字段，不访问寄存器；[`frame/x86.c`](file:/lectures/mini-cpu/frame/x86.c) 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数即可。
 
 ['cpu-modrm-out.notes.1']
 src_hash = '34621f16'
@@ -1934,12 +2292,11 @@ text = 'The integer instructions of interp.c: five groups by the bytes after the
 # src: interp.c 的整数指令：按操作码之后的字节分五组
 
 ['cpu-insn-groups.slide.1']
-# CHANGED: was 4a9adee2
-src_hash = '717d7480'
-text = 'The comment at the head of `interp.c` lists every opcode and its semantics by these five groups; in parentheses is the first guest program that uses it. A `case` reads only the bytes of its own group.'
+src_hash = '19f252c7'
+text = 'The comment at the head of [`interp.c`](file:/lectures/mini-cpu/src/lab1/interp.c) lists every opcode and its semantics by these five groups; in parentheses is the first guest program that uses it. A `case` reads only the bytes of its own group.'
 # src:
 # 
-# `interp.c` 开头的注释按这五组列出每个操作码的语义，括号中是第一个用到它的客户机程序。
+# [`interp.c`](file:/lectures/mini-cpu/src/lab1/interp.c) 开头的注释按这五组列出每个操作码的语义，括号中是第一个用到它的客户机程序。
 
 ['cpu-insn-groups.notes.1']
 src_hash = '7c4acf4a'
@@ -1966,11 +2323,11 @@ text = 'cond and conditional jumps'
 # src: cond 与条件跳转
 
 ['cpu-cond-jump.slide.1']
-src_hash = '8865c4b0'
-text = '`cond(f, cc)` reads the five flags of `f` and returns 1 or 0 by the low 4 bits of the condition code `cc`; the table of the 16 condition codes is in the comment of `interp.c`. The `case` of `jcc` reads the offset first, and `R[RIP] += rel` when `cond` is 1.'
+src_hash = '34d412c5'
+text = '`cond(f, cc)` reads the five flags of `f` and returns 1 or 0 by the low 4 bits of the condition code `cc`; the table of the 16 condition codes is in the comment of [`interp.c`](file:/lectures/mini-cpu/src/lab1/interp.c). The `case` of `jcc` reads the offset first, and `R[RIP] += rel` when `cond` is 1.'
 # src:
 # 
-# `cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 `interp.c` 的注释中。`jcc` 的 `case` 先读偏移，`cond` 为 1 时 `R[RIP] += rel`。
+# `cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 [`interp.c`](file:/lectures/mini-cpu/src/lab1/interp.c) 的注释中。`jcc` 的 `case` 先读偏移，`cond` 为 1 时 `R[RIP] += rel`。
 
 ['cpu-cond-jump.notes.1']
 src_hash = 'f26fea86'

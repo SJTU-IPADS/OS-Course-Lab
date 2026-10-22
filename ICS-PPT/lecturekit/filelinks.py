@@ -8,7 +8,13 @@ is ``file:`` followed by a path says the same thing where the sentence is:
     p.slide("`main` 的定义在 [main.c](file:examples/main.c) 中。")
 
 The path is relative to the lecture's own directory, as an entry of ``files=``
-is. The live preview draws the label as a button that opens the file in the
+is; one that begins with ``/`` is relative to the project root, the directory a
+demo reaches as ``$LECTUREKIT_ROOT`` (see :func:`lecturekit.demo.project_root`),
+so a lab lecture names its lab's sources in the directory beside it:
+
+    p.slide("取指在 [seq.c](file:/lectures/mini-cpu/src/lab2/seq.c) 中。")
+
+The live preview draws the label as a button that opens the file in the
 panel (see :mod:`lecturekit.source`); every other target prints the label as
 the text it is, since nothing can be pressed there.
 
@@ -37,6 +43,10 @@ from . import marks
 #: What the address of a file link begins with.
 SCHEME = "file:"
 
+#: What a path relative to the project root begins with. Any other path is
+#: relative to the lecture's own directory.
+ROOT_PREFIX = "/"
+
 # A whole link. The label may not span a line or hold a `]`; the path holds no
 # space and no `)`, which is what a markdown link's address is anyway.
 LINK_RE = re.compile(r"\[(?P<label>[^\]\n]+)\]\(file:(?P<path>[^)\s]+)\)")
@@ -55,17 +65,28 @@ def path_of(url: str) -> str | None:
     return url[len(SCHEME):] if url.startswith(SCHEME) else None
 
 
+def is_rooted(path: str) -> bool:
+    """Whether ``path`` is relative to the project root rather than the lecture."""
+    return path.startswith(ROOT_PREFIX)
+
+
 def path_problem(path: str) -> str | None:
     """What is wrong with ``path`` as a file a lecture may show; ``None`` if nothing.
 
     One rule for ``files=`` and for a link: the file is named relative to the
-    lecture's directory and stays inside it.
+    lecture's directory, or after one leading ``/`` relative to the project
+    root, and stays inside that directory. A second ``/`` would make the rest
+    an absolute path again, so it is refused with ``..``.
     """
     if not path.strip():
         return "must not be empty"
-    pure = PurePosixPath(path)
-    if pure.is_absolute() or ".." in pure.parts:
-        return "must be relative to the lecture directory"
+    relative = path[len(ROOT_PREFIX):] if is_rooted(path) else path
+    pure = PurePosixPath(relative)
+    if not relative or pure.is_absolute() or ".." in pure.parts:
+        return (
+            "must be relative to the lecture directory, or begin with one /"
+            " and be relative to the project root"
+        )
     return None
 
 

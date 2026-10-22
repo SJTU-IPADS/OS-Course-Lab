@@ -451,7 +451,9 @@ def make_handler(
             if entry is None:
                 self._send_json(404, {"error": "no such file"})
                 return
-            path = source_module.resolve(entry, demo_cwd)
+            path = source_module.resolve(
+                entry, demo_cwd, Path(demo_module.project_root())
+            )
             if path is None:
                 self._send_json(404, {"error": "file not found"})
                 return

@@ -1,11 +1,14 @@
-"""ICS 实验说明：课件的使用，nano-quant、bomb-lab、parallel-dot 与 mini-cpu 实验一。
+"""ICS 实验说明：课件的使用，nano-quant、bomb-lab、attack-elf、parallel-dot 与
+mini-cpu 实验一。
 
-结构安排：本节的安排用一张表列出四个实验。第一部分说明课件的下载、安装与使用，
+结构安排：本节的安排用一张表列出五个实验。第一部分说明课件的下载、安装与使用，
 此后每个实验一部分，按发布的顺序：第二部分 nano-quant（第二讲的量化格式），
-第三部分 bomb-lab（第三讲，读 bomb 的机器码），第四部分 parallel-dot（第三讲
-第五部分，AVX2 与 CUDA），第五部分 mini-cpu 实验一（x86-64 指令解释器）。
-每个实验先讲实验框架，再课上完成一部分，最后说明其余部分与评测；各是一个小节，
-以一个衔接页开头。bomb-lab 只有前两个小节：bomb 的使用与 phase 1 的课堂演示。
+第三部分 bomb-lab（第三讲，读 bomb 的机器码），第四部分 attack-elf（第三讲，构造
+一行输入让程序调用 report_pass），第五部分 parallel-dot（第三讲第五部分，AVX2 与
+CUDA），第六部分 mini-cpu 实验一（x86-64 指令解释器）。每个实验先讲实验框架，再课上
+完成一部分，最后说明其余部分与评测；各是一个小节，以一个衔接页开头。bomb-lab 只有
+前两个小节：bomb 的使用与 phase 1 的课堂演示；attack-elf 同样只有前两个小节：
+attack 的使用与 attack1 的攻破。
 
 页面函数都在 pages.py，按部分排列；它的说明写明各部分的内容与演示输出的来源。
 """
@@ -18,7 +21,7 @@ import pages
 lecture = Lecture(
     id="ics-lab-1",
     title="实验说明",
-    subtitle="nano-quant · bomb-lab · parallel-dot · mini-cpu 实验一",
+    subtitle="nano-quant · bomb-lab · attack-elf · parallel-dot · mini-cpu 实验一",
     ratio="16:9",
 )
 
@@ -29,7 +32,7 @@ lecture.cover(
 )
 
 with lecture.section("本节的安排", id="framing") as s:
-    s.page("four-labs", body=pages.four_labs)
+    s.page("five-labs", body=pages.five_labs)
 
 lecture.bridge("第一部分 · 课件\n下载、安装与使用", id="bridge-kit")
 
@@ -76,9 +79,24 @@ with lecture.section("第三部分 · bomb-lab：从机器码推出每个阶段�
         t.page("bomb-space", body=pages.bomb_space)
         t.page("bomb-lea", body=pages.bomb_lea)
 
-lecture.bridge("第四部分 · parallel-dot\nAVX2 与 CUDA 的矩阵向量乘", id="bridge-pd")
+lecture.bridge("第四部分 · attack-elf\n构造一行输入，让程序调用 report_pass", id="bridge-attack")
 
-with lecture.section("第四部分 · parallel-dot：AVX2 与 CUDA 的矩阵向量乘", id="pd") as s:
+with lecture.section("第四部分 · attack-elf：构造一行输入，让程序调用 report_pass", id="attack") as s:
+    s.bridge("attack 的使用\n领取程序、运行、提交与记分", id="bridge-attack-use")
+    with s.section("attack 的使用", id="attack-use") as t:
+        t.page("attack-task", body=pages.attack_task)
+        t.page("attack-get", body=pages.attack_get)
+        t.page("attack-submit", body=pages.attack_submit)
+
+    s.bridge("从 chat_turn 的栈帧到 report_pass", id="bridge-attack-class")
+    with s.section("课堂演示：attack1 的攻破", id="attack-class") as t:
+        t.page("attack-frame", body=pages.attack_frame)
+        t.page("attack-payload", body=pages.attack_payload)
+        t.page("attack-fill", body=pages.attack_fill)
+
+lecture.bridge("第五部分 · parallel-dot\nAVX2 与 CUDA 的矩阵向量乘", id="bridge-pd")
+
+with lecture.section("第五部分 · parallel-dot：AVX2 与 CUDA 的矩阵向量乘", id="pd") as s:
     s.bridge("实验框架", id="bridge-pd-frame")
 
     with s.section("实验框架", id="pd-frame") as ss:
@@ -102,9 +120,9 @@ with lecture.section("第四部分 · parallel-dot：AVX2 与 CUDA 的矩阵向�
         ss.page("pd-rest-threads", body=pages.pd_rest_threads)
         ss.page("pd-rest-fold", body=pages.pd_rest_fold)
 
-lecture.bridge("第五部分 · mini-cpu 实验一\nx86-64 指令解释器", id="bridge-minicpu")
+lecture.bridge("第六部分 · mini-cpu 实验一\nx86-64 指令解释器", id="bridge-minicpu")
 
-with lecture.section("第五部分 · mini-cpu 实验一：x86-64 指令解释器", id="minicpu") as s:
+with lecture.section("第六部分 · mini-cpu 实验一：x86-64 指令解释器", id="minicpu") as s:
     s.bridge("实验框架", id="bridge-cpu-frame")
     with s.section("实验框架", id="cpu-frame") as ss:
         ss.page("cpu-libc", body=pages.cpu_libc)

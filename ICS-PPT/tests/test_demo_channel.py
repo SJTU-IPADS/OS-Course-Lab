@@ -364,6 +364,14 @@ class DemoLaunchTest(unittest.TestCase):
         )
         self.assertEqual(output, "unset unset unset\n")
 
+    def test_the_project_root_is_the_directory_above_the_package(self):
+        output = self._output('cd "$LECTUREKIT_ROOT" && test -d lecturekit && pwd')
+        self.assertEqual(Path(output.strip()).resolve(), demo.PROJECT_ROOT)
+
+    def test_a_root_already_in_the_environment_is_kept(self):
+        with patch.dict(demo.os.environ, {"LECTUREKIT_ROOT": "/elsewhere"}):
+            self.assertEqual(self._output('echo "$LECTUREKIT_ROOT"'), "/elsewhere\n")
+
 
 class FindBashTest(unittest.TestCase):
     """On Windows, WSL's `bash` is passed over for Git Bash."""

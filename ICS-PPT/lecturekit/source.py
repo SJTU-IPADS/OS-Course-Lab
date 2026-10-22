@@ -5,7 +5,9 @@ same point, and a lecture that cannot put it on screen sends the room to a
 terminal instead. ``p.demo(..., files=[...])`` names those files, and the deck
 grows a button per file that opens it in a panel. A file a sentence mentions is
 named where it is mentioned, ``[label](file:path)`` (see
-`lecturekit.filelinks`), and its label is a button onto the same panel.
+`lecturekit.filelinks`), and its label is a button onto the same panel. Either
+names a file of the lecture directory, or, with a leading ``/``, a file of the
+project root: a lab lecture shows the lab it introduces, which sits beside it.
 
 The trust model is `lecturekit.demo`'s, for the same reason: the page is HTML in
 a browser, so it carries an **identifier** and the server maps it back to the
@@ -87,8 +89,9 @@ def normalize(files) -> list[str]:
     """Validate a block's ``files=`` and return it as a list of relative paths.
 
     Checked here, at authoring time, rather than when a button is pressed: a
-    path that leaves the lecture directory is a mistake in the deck, and the
-    author should hear about it from the build and not from the room.
+    path that leaves the lecture directory, or the project root for a path
+    that begins with ``/``, is a mistake in the deck, and the author should
+    hear about it from the build and not from the room.
     """
     if files is None:
         return []
@@ -111,7 +114,8 @@ def normalize(files) -> list[str]:
 
 @dataclass(frozen=True)
 class Source:
-    """A viewable file: where it is, relative to the lecture directory."""
+    """A viewable file, as the author wrote it: relative to the lecture
+    directory, or to the project root after a leading ``/``."""
 
     path: str
 
@@ -174,17 +178,23 @@ def read(output_dir: Path) -> dict[str, Source]:
     return table
 
 
-def resolve(source: Source, root: Path) -> Path | None:
-    """The file ``source`` names, or ``None`` if it is not a file under ``root``.
+def resolve(source: Source, lecture_dir: Path, project_root: Path) -> Path | None:
+    """The file ``source`` names, or ``None`` if it is not a file under its root.
 
-    The path came from the author's own file and was checked when the deck was
-    built, so this is the second gate rather than the first — it is here because
-    a symlink can move between the two, and a lecture directory is a working
-    tree the author edits.
+    A path that begins with ``/`` is looked up under ``project_root``, any
+    other under ``lecture_dir``, and the file has to be under that same
+    directory once every symlink is resolved. The path came from the author's
+    own file and was checked when the deck was built, so this is the second
+    gate rather than the first — it is here because a symlink can move between
+    the two, and a lecture directory is a working tree the author edits.
     """
+    if filelinks.is_rooted(source.path):
+        root, relative = project_root, source.path[len(filelinks.ROOT_PREFIX):]
+    else:
+        root, relative = lecture_dir, source.path
     root = root.resolve()
     try:
-        path = (root / source.path).resolve()
+        path = (root / relative).resolve()
     except OSError:
         return None
     if path != root and root not in path.parents:

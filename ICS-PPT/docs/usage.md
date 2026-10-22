@@ -417,6 +417,8 @@ time is watched, not waited for. The drawer counts the seconds while it runs and
 ends with the exit status and the total. The slide itself does not move, and
 whatever `output=` recorded stays where it is.
 
+**The project root.** The command's environment carries `LECTUREKIT_ROOT`, the directory that holds the `lecturekit` package (the repository root, `ICS-PPT/` in a course copy), written with forward slashes so Git Bash reads it too. A demo uses it to reach a directory outside its lecture: `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"`. The package is found where Python imports it from, so this is the checkout only under `pip install -e .`; with any other install, or to point demos elsewhere, set `LECTUREKIT_ROOT` before starting `view --watch`, and the value in the environment is kept. A [file button](#showing-a-source-file-from-the-deck) whose path begins with `/` is looked up under the same directory, so `/lectures/mini-cpu/src/lab2/seq.c` is the file a demo reaches after `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"`.
+
 The drawer is a terminal ([xterm.js](../lecturekit/renderers/viewer/assets/vendor/xterm/README.md)).
 Each command is written into it just before bash runs it: the `$` in a dim
 grey, the command in pale italic, and a loop or a `\`-continued line whole,
@@ -617,9 +619,9 @@ and so is every file when Pygments is not installed.
 Armed with ▶, in a watch session and nowhere else. **The browser cannot
 invent a path**, on the demo channel's terms: the button carries a hash of the
 path, the server maps that id back through `sources.json`, and a file dropped
-from the block stops resolving on the next render. A path that leaves the
-lecture directory is refused when the deck is built, and again when the button
-is pressed — a symlink can appear between the two.
+from the block stops resolving on the next render.
+
+A path that begins with `/` names a file under the project root, the directory a demo reaches as `$LECTUREKIT_ROOT` (see [Running a demo from the deck](#running-a-demo-from-the-deck)); any other path names a file under the lecture directory. A path that leaves its directory through `..`, or begins with `//`, is refused when the deck is built. When the button is pressed the server resolves every symlink in the path and refuses a file that is no longer under that same directory, since a symlink can appear between the two. The project root is read from the environment on each press, as it is for each run, so a `LECTUREKIT_ROOT` set before `view --watch` moves the demos and the file buttons together. The root holds every directory of the project, the `*-ta` ones included; the deck still reaches only the files its own blocks name.
 
 ### Debouncing a burst of changes
 

@@ -1,20 +1,21 @@
 """实验说明课的全部页面内容。
 
-本节的安排用一张表列出四个实验；第一部分说明课件的下载、安装与使用；第二到
-第五部分依次是 nano-quant、bomb-lab、parallel-dot 与 mini-cpu 实验一
+本节的安排用一张表列出五个实验；第一部分说明课件的下载、安装与使用；第二到
+第六部分依次是 nano-quant、bomb-lab、attack-elf、parallel-dot 与 mini-cpu 实验一
 （x86-64 指令解释器）。页面函数按这个顺序排列，函数名就是页面 id（连字符写成
 下划线）。
 
-四个实验的部分结构相同：「实验框架」用图说明要实现的函数被谁调用、参数是什么、
+五个实验的部分结构相同：「实验框架」用图说明要实现的函数被谁调用、参数是什么、
 处理的是哪一部分数据；「课上完成」带着同学完成一部分（nano-quant 的 Q4_0、
-bomb-lab 的 phase 1、parallel-dot 的 AVX2 版本、mini-cpu 的 ModRM 与 SIB 的
-解析），页面不给出答案代码；「其余部分与评测」说明课后要完成的部分与检查、评测的
-方法。bomb-lab 没有「其余部分与评测」一节，phase 1 的课堂演示只有 objdump 反汇编、
-地址空间与 lea 三页。parallel-dot 的第三个小节称为「其余部分」，只讲第二部分的
-CUDA kernel。mini-cpu 的第三个小节称为「其余部分」，不讲评测与提交。
+bomb-lab 的 phase 1、attack-elf 的 attack1、parallel-dot 的 AVX2 版本、mini-cpu 的
+ModRM 与 SIB 的解析），页面不给出答案代码；「其余部分与评测」说明课后要完成的部分
+与检查、评测的方法。bomb-lab 没有「其余部分与评测」一节，phase 1 的课堂演示只有
+objdump 反汇编、地址空间与 lea 三页；attack-elf 同样只有前两个小节，attack1 的攻破从
+chat_turn 的栈帧讲到把这一行喂给 attack1。parallel-dot 的第三个小节称为「其余部分」，
+只讲第二部分的 CUDA kernel。mini-cpu 的第三个小节称为「其余部分」，不讲评测与提交。
 
 配图由 diagrams/ 下的同名脚本生成（diagrams/render.sh），脚本与图以 nq_、bomb_、
-pd-/pd_、cpu_ 开头；bomb-lab 的四张终端截图由 tools/shots.sh 生成。
+attack_、pd-/pd_、cpu_ 开头；bomb-lab 的四张终端截图由 tools/shots.sh 生成。
 
 第一部分 · 课件
 
@@ -38,7 +39,8 @@ Q4_1、Q4_K 与 put_scale_min。
 
 实验在 ../nano-quant/，实验说明在 ../nano-quant/README.md，每个函数的原型与计算规则
 在 ../nano-quant/include/nano_quant.h。页面上的命令都写成学生在 ../nano-quant 中运行
-的形式；files= 不能指向讲义目录之外的文件，因此没有源文件预览按钮。
+的形式。演示的 files= 与正文中的文件按钮指向实验目录中的文件，路径以 / 开头、
+相对于项目根目录（/lectures/nano-quant/impl/nano_quant.cpp）。
 
 录得的输出的来源（2026-10-19，本机 x86-64 Linux，gcc）：把 ../nano-quant（不含 model/）
 复制到 build/scratch-nq/lab/ 下的四个副本：
@@ -80,7 +82,30 @@ bomb.asm、bomb-all.asm 由 examples/.gitignore 忽略。
 127.0.0.1 上启动的课程服务器与它发出的 5 个演示 bomb（学号 000000000001 ~
 000000000005），计分板上只有这 5 行。
 
-第四部分 · parallel-dot
+第四部分 · attack-elf
+
+组织方式：第一小节说明 attack 的使用：任务（构造一行输入，让程序自己调用 report_pass）、
+领取程序与模型与程序的用法（终端界面、-q、-s、攻击的一行走管道）、提交与记分；第二小节
+是 attack1 的攻破：chat_turn 的栈帧、载荷的字节、字节填入栈的六帧动画。只讲阶段 1。
+
+材料的来源：学生说明 ../attack-elf/dist/README.md，教师说明 ../attack-elf/README.md
+（编译选项与三个阶段的构造、记分与服务器），源码 ../attack-elf/src/chat.c 中的
+chat_turn、Gets 与 report_pass。页面与讲稿不写阶段 2、3 的载荷，只说明它们各自的防护。
+
+例子程序 examples/attack1：演示学号 000000000001 的构建，由 tools/make-attack-demo.sh
+生成（make attack ID=000000000001，复制该构建；页面上的攻击不依赖栈的地址——实验室的
+参考答案用 push %rsp; ret，本讲不讲，这里把代码写进缓冲区、返回地址写成它的地址，脚本
+先关掉 ASLR 跑一段探针读出这个环境里的缓冲区地址，再写出 answers/attack1.txt 与它的字节
+attack1.bin，并跑一遍核对；脚本前后备份与恢复 dist/answers/ 中的参考学号答案）。页面上
+的数字（缓冲区 304 字节、返回地址在 +312、口令 0x27d6fbbe5c7d230b、report_pass 在
+0x01528000、返回地址 0x00007fffffffd550、载荷 320 字节）、反汇编，2026-10-20 在本机
+（x86-64 Linux，binutils 2.46）用 objdump、nm、readelf、grep 与运行 examples/attack1 录得。
+
+配图由 diagrams/ 下的 attack_*.py 生成：attack_frame.py 一帧栈帧，attack_fill.py 六帧
+动画（代码写进缓冲区、缓冲区填满、保存的 %rbp 与返回地址被改写、ret 落到栈上的代码、
+调用 report_pass）；颜色沿用 bomb 的地址空间图（栈橙、代码蓝、.lab 与数据段绿）。
+
+第五部分 · parallel-dot
 
 组织方式：三个小节。「实验框架」说明 mini-ollama 的结构（算子表与三套算子）、
 生成一个 Token 时 matvec_q4_0 被调用的位置与矩阵的形状、函数的五个参数在矩阵
@@ -94,7 +119,8 @@ bomb.asm、bomb-all.asm 由 examples/.gitignore 忽略。
 与 ../parallel-dot/docs/cuda.md，算子表 ../parallel-dot/ops.h，三套算子
 ../parallel-dot/ops/{scalar.c,simd.c,cuda.cu}，主循环 ../parallel-dot/main.c。
 页面上的命令都写成学生在 ../parallel-dot 中运行的形式；实验目录在讲义目录之外，
-files= 不能指向它，所以演示没有源文件预览按钮。页面与讲稿不含 AVX2 或 CUDA 的
+演示的 files= 与正文中的文件按钮写成以 / 开头、相对于项目根目录的路径
+（/lectures/parallel-dot/ops/simd.c）。页面与讲稿不含 AVX2 或 CUDA 的
 答案代码：intrinsics 的名字取自 ops/simd.c 中给出的 TODO 注释与 docs/simd.md。
 
 配图由 diagrams/pd_*.py 生成，颜色沿用第三讲第五部分的图（权重蓝、x 灰、积橙、
@@ -110,7 +136,7 @@ files= 不能指向它，所以演示没有源文件预览按钮。页面与讲�
 make test-simd 的输出（第一组全部 pass 之后 matvec_q4_0 is not implemented yet，
 状态 3）只在讲稿中转述。
 
-第五部分 · mini-cpu 实验一
+第六部分 · mini-cpu 实验一
 
 三个小节：实验框架、课上完成的 ModRM 与 SIB 解析、其余部分。
 配图由 diagrams/ 下的 cpu_*.py 生成，脚本与图同名；cpu_flow.py 生成三帧。
@@ -148,29 +174,32 @@ def figure(p, name, width=1120):
 # 本节的安排
 # ==============================================================================
 
-def four_labs(p):
-    p.title("四个实验")
-    p.spacer(100)                      # the table and one line sit mid-page
+def five_labs(p):
+    p.title("五个实验")
+    p.spacer(70)                       # the table and one line sit mid-page
     p.table(
         headers=["实验", "配合", "要做的事", "计分"],
         rows=[
             ["nano-quant", "第二讲", "把 Qwen3-VL-2B-Instruct 量化为 4 位", "不计分"],
             ["bomb-lab", "第三讲", "从 `bomb` 的机器码推出 8 个阶段的输入", "不计分"],
+            ["attack-elf", "第三讲", "构造一行输入，让程序调用 `report_pass`", "不计分"],
             ["parallel-dot", "第三讲第五部分", "用 AVX2 与 CUDA 写矩阵向量乘", "不计分"],
             ["mini-cpu 实验一", "第三讲", "完成 x86-64 指令解释器", "计分"],
         ],
+        widths=[1.6, 2.0, 3.9, 1.4],
     )
     p.spacer(20)
     slide(p, """
 鼓励「古法编程」，鼓励同学之间讨论、与 AI 讨论。
 """)
     p.notes("""
-本讲先说明课件的下载、安装与使用，再说明四个实验，每个实验一部分。前三个实验是课后练习，不计分，每一步都有检查程序，输出与期望值一致就说明这一步正确；mini-cpu 实验一计分，满分 100 分。
+本讲先说明课件的下载、安装与使用，再说明五个实验，每个实验一部分。前四个实验是课后练习，不计分，每一步都有检查程序，输出与期望值一致就说明这一步正确；mini-cpu 实验一计分，满分 100 分。
 nano-quant 配合第二讲「数据的表示」：在 impl/nano_quant.cpp 中实现读字节的函数与三种 4 位格式的编解码，框架把 Qwen3-VL-2B-Instruct 的语言模型量化后组装为 GGUF，由 ollama 加载运行。
 bomb-lab 配合第三讲：每个学号一个没有源码的 bomb，阅读它的机器码推出 8 个阶段的输入；bomb 运行时连接课程服务器，每一次爆炸与每一个被拆除的阶段都记在学号下，./bomb -s 显示计分板。
+attack-elf 也配合第三讲：同样是没有源码的程序，每个学号一个构建，读它的机器码构造一行输入，让程序自己调用没有调用点的过关函数 report_pass；三个阶段戴不同的防护，本讲演示第一阶段的攻破。
 parallel-dot 配合第三讲第五部分的两个提速方案，两部分写同一个算子，即 Q4_0 矩阵与向量的乘积：第一部分用 AVX2 写函数 matvec_q4_0，第二部分写它的 CUDA kernel；没有 NVIDIA 显卡时用 make remote 提交到课程服务器。两部分运行的 mini-ollama 读取 q4_0.gguf，这个文件从交大云盘下载，或由 nano-quant 按 q4_0 配方生成。
 mini-cpu 实验一配合第三讲：在三个文件中完成 x86-64 指令解释器，make check 给出得分，make handin 生成的 lab1.zip 提交到 Canvas 平台。
-做这四个实验时，鼓励「古法编程」，即代码由自己动手写出；鼓励同学之间讨论，也鼓励与 AI 讨论。
+做这五个实验时，鼓励「古法编程」，即代码由自己动手写出；鼓励同学之间讨论，也鼓励与 AI 讨论。
 """)
 
 
@@ -228,7 +257,7 @@ def kit_view(p):
         ],
     )
     p.slide("""
-命令末尾加 `--lang en` 打开英文版。
+命令末尾加 `--lang en` 打开英文版，英文版的文字是这一讲目录中 `i18n/en.toml` 的翻译。
 """, autobold=False)
     p.notes("""
 view 把这一讲渲染为网页，终端最后一行打印网页的路径，随后浏览器自动打开大纲。大纲是一棵章节树，每行前面的数字是那一页在整个幻灯片中的页码。
@@ -270,7 +299,7 @@ SELFTEST_Q4_0 = """q4_0  relative rms error 0.08408, max abs error 8
 q4_0_back    f444b647e38b04afee71056cd0b1acac  matches
 q4_0_bytes   942530b9c1c6ec1c41790c63de4317f8  matches"""
 
-Q4_0_MODEL = """cd ../nano-quant
+Q4_0_MODEL = """cd "$LECTUREKIT_ROOT/lectures/nano-quant"
 sh tools/fetch-model.sh                      # model.safetensors, config.json, tokenizer.json
 python3 tools/mkmeta.py model -o model/meta.kv
 ./nano-quant quant model/model.safetensors --recipe q4_0 -o model/q4_0.nq
@@ -302,7 +331,7 @@ def nq_call_graph(p):
     p.title("框架如何调用实现的函数")
     figure(p, "nq_call_graph", 1120)
     slide(p, """
-`include/nano_quant.h` 是框架与你的代码之间的全部接口。
+[`include/nano_quant.h`](file:/lectures/nano-quant/include/nano_quant.h) 是框架与你的代码之间的全部接口。
 """)
     p.notes("""
 图左是 nano-quant quant 的主循环（src/main_quant.cpp），图右是 include/nano_quant.h 声明、你在 impl/nano_quant.cpp 中实现的函数。框架只通过这个头文件调用你的代码，你的代码也只需要头文件中的两个辅助函数 nq_round 与 nq_q4_k_fit，完成实验不需要阅读 src/ 下的框架代码。
@@ -381,12 +410,16 @@ def nq_q4_rule(p):
 
 def nq_q4_check(p):
     p.title("课上的检查：nq-selftest q4_0，再由 ollama 运行 q4_0 模型")
-    p.demo("A 部分与 Q4_0 完成之后", """cd ../nano-quant
-make -s && ./nq-selftest q4_0""", output=SELFTEST_Q4_0)
+    p.demo("A 部分与 Q4_0 完成之后", """cd "$LECTUREKIT_ROOT/lectures/nano-quant"
+make -s && ./nq-selftest q4_0""", output=SELFTEST_Q4_0,
+           files=["/lectures/nano-quant/impl/nano_quant.cpp"])
     slide(p, """
 - 编码字节与还原值的 md5 都 `matches` 即正确
 """)
-    p.demo("生成 model/q4_0.gguf，在 ollama 中输入问题", Q4_0_MODEL, interactive=True, timeout=0)
+    p.demo("生成 model/q4_0.gguf，在 ollama 中输入问题", Q4_0_MODEL, interactive=True, timeout=0,
+           files=["/lectures/nano-quant/tools/fetch-model.sh",
+                  "/lectures/nano-quant/tools/mkmeta.py",
+                  "/lectures/nano-quant/impl/nano_quant.cpp"])
     p.notes("""
 make 生成 nano-quant、nq2gguf 与 nq-selftest 三个程序。nq-selftest 按组检查，组名 a、scale_min、q4_0、q4_1、q4_k、q6_k；指定组名时只运行这些组，完成一组涉及的函数即可运行这一组。
 q4_0 组在 512 个超块、131072 个权重上量化，即 4096 个 Q4_0 块：先把全部权重编码，比较编码字节的 md5（q4_0_bytes），再逐块还原，比较还原值的 md5（q4_0_back），两个 md5 都与 tests/expected-blocks.txt 一致时输出 matches，否则 DIFFERS，退出码 1。标准错误上另有一行相对均方根误差与最大绝对误差，正确时为 0.08408 与 8。
@@ -593,7 +626,156 @@ objdump 在行尾的注释中写出了这个和：# cb030；尖括号中的 __rs
 
 
 # ==============================================================================
-# 第四部分 · parallel-dot
+# 第四部分 · attack-elf
+# ==============================================================================
+
+# ==============================================================================
+# attack 的使用
+# ==============================================================================
+
+def attack_task(p):
+    p.title("实验 attack-elf：构造一行输入，让程序调用 report_pass")
+    slide(p, """
+- `attack1`、`attack2`、`attack3` 是同一个聊天程序，以不同的保护选项编译：程序加载模型 `q4_0.gguf`，读入一行提示词，由模型回复，直到输入结束；
+- 三个程序里都有 `report_pass(unsigned long phase, unsigned long key)`：阶段号与口令都对时打印 `phase N passed` 并以状态 0 退出，程序中没有任何地方调用它；
+- **要做的事**：构造一行输入，把这两个数放进参数寄存器 `%rdi`、`%rsi`，再让控制流进入函数开头。
+""")
+    p.table(
+        headers=["程序", "保护", "过关方式"],
+        rows=[
+            ["`attack1`", "无金丝雀，栈可执行", "覆盖返回地址，改变程序的控制流"],
+            ["`attack2`", "有栈金丝雀，栈可执行", "爆破 8 字节固定金丝雀值，再覆盖返回地址"],
+            ["`attack3`", "无金丝雀，栈不可执行", "只用程序里已有的指令片段拼凑出参数与调用"],
+        ],
+        widths=[1.3, 2.5, 4.2],
+    )
+    p.notes("""
+实验 attack-elf 配合第三讲「程序的机器级表示」，不计分，与 bomb-lab 同类：给出没有源码的可执行文件，阅读它的机器码构造一行输入。
+三个程序是同一个聊天程序的三个构建，每一轮对话互相独立：读入一行、这一轮的函数返回，然后才做推理，所以控制流攻击发生在推理之前，不必等模型的回答。
+report_pass 是过关函数，程序里没有指令引用它。它比较两个参数：阶段号与口令；口令是随学号变化的 64 位常数，界面上不显示，objdump 读得到。两项都对时它打印 phase N passed，以状态 0 退出。要过这一关：先把两个数放进 %rdi 与 %rsi，再让控制流进入 report_pass 的开头。
+三个程序的保护不同，过关的方法也不同：attack1 的栈可执行，返回地址可以改写为缓冲区里的地址，由自己写的代码完成调用，本节演示它的攻破；attack2 在返回地址之前放了金丝雀，先要问出它的 8 个字节；attack3 的栈不可执行，参数与调用只能用程序里已有的指令片段拼出来。三个阶段的过关函数相同，差别只在各自的防护。
+程序里的常数与缓冲区大小由学号的 SHA-256 算出，每个学号不同，三个程序的地址也随之不同。演示用演示学号 000000000001 的构建，与 bomb 的演示相同。
+""")
+
+
+def attack_get(p):
+    p.title("领取自己的程序，准备模型")
+    p.code("bash", """make attack ID=你的学号        # 领取二进制 attack1、attack2、attack3
+cp path/to/q4_0.gguf .        # 模型约 929 MiB
+./attack1                     # mini-ollama 终端显示界面""")
+    slide(p, """
+- 答案写在 `answers/attack1.txt`：由一行或多行两位十六进制数组成，`#` 之后是注释。通过 `tools/unhex` 可以把它转换为原始字节；
+- 与攻击配套的三个命令：`make local1`、`make remote1`、`make score`。
+""")
+    p.code("bash", "usage: ./attack1 [-q|--quiet] [-h|--help] [-s|--score] [MODEL.gguf]")
+    slide(p, """
+- 在终端里运行：横幅给出阶段号与学号，提示框接受一行，`Ctrl-D` 退出；
+- **`-q`**：什么都不画，读法不变，只留下过关时的那两行；
+- **`-s`**：从课程服务器取回计分榜，画完退出；
+- 攻击的一行从管道读入：`tools/unhex < answers/attack1.txt | ./attack1 -q`。
+""")
+    p.notes("""
+实验材料的目录中没有源码：Makefile、README.md、tools/ 与空的 answers/。make attack ID=… 向课程服务器要回本学号的三个程序；Makefile 里给出一行等价的 curl 或 wget 命令，没有网络时按它手动取回。
+学号只用来算常数：tools/pick.c 对学号做 SHA-256，取散列的前 8 个字节做口令（遇到 0x0a 换成 0x0b），用后续的字节算出三个缓冲区的大小（256 到 496 之间，16 的倍数）与过关函数所在段的地址。同一学号每次算出的常数相同，领回来的程序每次相同；换学号则口令、缓冲区大小与地址都变。
+模型 q4_0.gguf 约 929 MiB，与 nano-quant 实验生成的是同一个文件。它不参与攻击，但程序启动时会装入它，所以当前目录中要有它，链接也可以。
+make localN 把 answers/attackN.txt 里的十六进制转成字节喂给 ./attackN，再检查输出里有 phase N passed；make remoteN 把同一份答案发到服务器复核并记分；make score 打印计分榜。三个命令的实现在 tools/ 中：unhex.c、submit.py 与 Makefile，都可以读。
+答案写在 answers/attackN.txt 中：一行是十六进制字节与 # 之后的注释；unhex 忽略注释与空白，写出的字节从标准输入喂给程序。
+""")
+
+
+def attack_submit(p):
+    p.title("提交与记分：make remoteN")
+    p.code("bash", """make local1               # unhex 转成原始字节，并输入到 ./attack1 -q
+make remote1 ID=你的学号   # 发送答案到服务器进行复核并记分
+make score                # 计分榜，等价于 ./attack1 -s""")
+    slide(p, """
+- attack 二进制程序本身不上报结果，`phase 1 passed` 仅为本机的运行结果；
+- 服务器会用相同的二进制重跑一次验证答案正确性，如正确通过，终端里可以看到回复 `phase N: pass (exit 0)`；
+- 计分榜与 bomb 的类似：名次、已过的阶段数等等，每个阶段一格，自己的一行以 `>` 标出并写出完整学号。
+""")
+    p.notes("""
+make remoteN 由 tools/submit.py 实现：读出 answers/attackN.txt 中的字节，连同学号与阶段号发给服务器；服务器把它们交给复核用的那份程序，用标准输入喂进去，看它是否以状态 0 退出并打印了 phase N passed，是则记录这一阶段，回复一行 phase N: pass (exit 0); you have cleared K/3；失败时括号里是 fail (signal 6) 之类，结果与这一跑的结束方式都在里面。
+服务器上的程序是同一个学号的构建，但阶段 2 钉的是服务器的金丝雀，本机那份钉另一个固定值，所以在本机过掉的阶段 2 到服务器上会被金丝雀拦下；阶段 1 与阶段 3 没有金丝雀，两侧相同。复核在沙箱里进行，没有网络，程序也不联网，所以复核期间不会再有记录。
+计分榜与 bomb 的相同：名次、学生（自己的一行是完整学号，别人只显示匿名代号）、已过的阶段数，之后每个阶段一格：已过的为 #，未过的为 .，没有颜色时已过的一格带一个 *；符号的含义在表下一行。表的末尾给出学生总数与自己所在的行。
+提交之后先看一遍计分榜，确认自己的一行已标出这一阶段。
+""")
+
+
+# ==============================================================================
+# 课上演示：attack1 的攻破
+# ==============================================================================
+
+def attack_frame(p):
+    p.title("chat_turn 的栈帧")
+    p.side_image("assets/attack_frame.svg", alt="contain", width="48%", side="left")
+    slide(p, """
+- 局部数组 `char prompt[304]` 从 `%rbp-304` 开始（`lea -0x130(%rbp),%rax` 把它的地址交给 `Gets`），保存的 `%rbp` 在 `%rbp`，返回地址在 `%rbp+8`；
+- 缓冲区与返回地址之间没有金丝雀：写到第 312 个字节之后，改的就是返回地址；
+- 返回地址要写成缓冲区里代码的地址：代码写在缓冲区的低端，它与返回地址的距离固定为 312。
+""")
+    p.notes("""
+本节演示演示学号 000000000001 的 attack1（examples/attack1）。它的三个保护：没有金丝雀（-fno-stack-protector）、栈可执行（链接时 -Wl,-z,execstack）、不是位置无关的程序（-no-pie）；学生反汇编的这部分还用 -O0 编译，指令与源码一一对应。
+chat_turn 没有参数：main 在一个循环里调用它，返回 1 继续、返回 0 结束。它的这一帧里有一个局部数组 char prompt[304]（BUF1 = 304），sub $0x130,%rsp 为它留出位置，lea -0x130(%rbp),%rax 是它的地址，mov $0x130,%esi 把 304 作为第二个参数传给 Gets。
+Gets 读一行：读到的字节从缓冲区的低地址一端写起，一直写到换行或输入结束，不检查长度。管道路径上 0x00 照存；交互路径用 strcpy 复制 isocline 读回的一行，同样不限长度。
+返回地址在 %rbp+8：lea 的偏移 0x130 加上保存的 %rbp 的 8 字节，是 0x138 = 312。缓冲区与返回地址之间没有别的东西——这就是「无金丝雀」的意思：写到第 312 个字节之后的第一个字节，改的就是返回地址。
+演示学号的构建：缓冲区 304 字节、返回地址在 +312、口令 0x27d6fbbe5c7d230b、report_pass 在 0x01528000。各学号的这些数不同：偏移与缓冲区大小从 lea 的偏移读出，口令是 report_pass 开头 movabs 的立即数，report_pass 的地址由 nm 给出。
+返回地址写成缓冲区里代码的地址：这个栈地址在关掉 ASLR 的演示环境里用 gdb 读出（p/x $rbp-0x130），本页与动画里是 0x00007fffffffd550。栈的地址随环境而变，开着 ASLR 时每次运行都不同；实验室的参考答案因此换成不依赖它的做法，本讲不展开。
+""")
+
+
+PAYLOAD = """bf 01 00 00 00                 # mov $1,%edi          -- the phase
+48 be 0b 23 7d 5c be fb d6 27  # movabs $0x27d6fbbe5c7d230b,%rsi  -- the key
+48 b8 00 80 52 01 00 00 00 00  # movabs $0x01528000,%rax  -- &report_pass
+ff d0                          # call *%rax
+41 41 41 41 41 41 41 41        # "41" x 277: the rest of the buffer (304 - 27)
+41 41 41 41 41 41 41 41        # "41" x 8: the saved %rbp
+50 d5 ff ff ff 7f 00 00        # return address 0x00007fffffffd550: the code in the buffer
+# 320 bytes; nothing is written above the return address"""
+
+
+def attack_payload(p):
+    p.title("填充负载：返回地址和代码")
+    p.code("text", PAYLOAD)
+    slide(p, """
+- **返回地址 = 缓冲区里代码的地址**：代码 27 字节写在缓冲区低端（偏移 0），返回地址就是它的地址；
+- 全部 320 字节：保存的 `%rbp` 被 `41` 覆盖，它在 `leave` 里才用到；返回地址之上一个字节也不写；
+- 没有一个字节是 `0x0a`（行的结尾）；栈地址在演示环境里用 `gdb` 读一遍即可。
+""")
+    p.notes("""
+代码写在缓冲区的低端（偏移 0），返回地址写成它的地址；ret 一执行就落到这段代码上，不需要别的跳板。代码与返回地址的距离是固定的 312 字节，与栈的位置无关；整条载荷 320 字节，只写到返回地址的最后一个字节，返回地址之上一个字节也不写：main 的帧没有被碰，report_pass 的调用与平常的调用一样。
+保存的 %rbp 被 41 覆盖：它在 leave（mov %rbp,%rsp; pop %rbp）里被弹出，此后不再回到 chat_turn，所以没有影响。
+要知道的只有缓冲区的地址。栈的地址每次运行都不同（ASLR），演示时用 setarch -R 关掉它，地址就固定下来：用 gdb 读一次 %rbp-0x130，或者用 tools/make-attack-demo.sh 里的探针（它从 %rsp 与缓冲区的固定距离把地址打印出来）。本页与动画里的 0x00007fffffffd550 就是这样得到的。
+代码 27 字节：bf 01 00 00 00 是 mov $1,%edi，48 be 加 8 个字节是 movabs $口令,%rsi（64 位立即数用 movabs），48 b8 加 8 个字节是 movabs $0x01528000,%rax，ff d0 是 call *%rax。调用 report_pass(1, 口令)。
+口令与 report_pass 的地址都可以不含 0x0a（工具按字节找地址时避开它，常数由散列生成时也避开了），所以整条载荷没有一个字节是 0x0a。0x00 允许出现：这一行从管道读入，Gets 逐字节地存。
+载荷的十六进制写在 answers/attack1.txt 中；unhex 把它还原成 320 字节，喂给程序的方式不变。
+""")
+
+
+def attack_fill(p):
+    p.title("缓冲区溢出")
+    p.spacer(70)                       # the figure alone sits mid-page
+    p.frames(
+        "assets/attack_fill-1.svg",
+        "assets/attack_fill-2.svg",
+        "assets/attack_fill-3.svg",
+        "assets/attack_fill-4.svg",
+        "assets/attack_fill-5.svg",
+        "assets/attack_fill-6.svg",
+        width_px=1120,
+    )
+    p.notes("""
+动画六帧，从缓冲区为空到 report_pass 打印 phase 1 passed。左侧是 chat_turn 的栈帧，高地址在上；右侧是控制流的当前位置。
+第一帧：缓冲区为空，返回地址是 main 中调用 chat_turn 的下一条指令 0x4025bc，chat_turn 返回后回到那里。
+第二帧：输入的开头 27 字节是代码，落在缓冲区的低端（偏移 0）；返回地址在偏移 312，两者之间的距离不受输入内容影响。
+第三帧：输入 304 字节，缓冲区填满，还没有写到缓冲区之外。
+第四帧：再写 16 字节：保存的 %rbp 的 8 个字节被 41 覆盖，返回地址的 8 个字节被改写成代码的地址 0x00007fffffffd550（演示环境关掉了 ASLR，这个地址固定）。此时返回地址还没有被使用——它要等 ret 执行。
+第五帧：ret 从 %rbp+8 弹出这个地址放进 %rip，%rsp 指向 %rbp+16；控制流落到栈上的代码——栈可执行（-Wl,-z,execstack）使这一跳成为可能。
+第六帧：代码把 1 与口令放进 %rdi、%rsi，call *%rax 进入 0x01528000 的 report_pass；它比较两个参数，打印 phase 1 passed，以状态 0 退出。模型没有生成任何 Token：chat_turn 的 ret 就已经把控制流带走了。
+""")
+
+
+# ==============================================================================
+# 第五部分 · parallel-dot
 # ==============================================================================
 
 # ==============================================================================
@@ -638,7 +820,7 @@ def pd_frame_ops(p):
     p.title("mini-ollama 的结构：main.c 经算子表调用算子")
     figure(p, "pd-frame-ops")
     p.slide("""
-- **两部分修改同一个算子 `matvec_q4_0`**：第一部分写 `ops/simd.c` 中的函数（AVX2），第二部分写 `ops/cuda.cu` 中由它启动的 kernel `matvec_q4_0_kernel`。
+- **两部分修改同一个算子 `matvec_q4_0`**：第一部分写 [`ops/simd.c`](file:/lectures/parallel-dot/ops/simd.c) 中的函数（AVX2），第二部分写 [`ops/cuda.cu`](file:/lectures/parallel-dot/ops/cuda.cu) 中由它启动的 kernel `matvec_q4_0_kernel`。
 """, autobold=False)
     p.notes("""
 parallel-dot 配合第三讲第五部分「性能瓶颈与向量化」给出的两个提速方案：一条指令完成多次乘加（SIMD），使用更多的运算单元（GPU）。实验分两部分，依次对应两个方案，按顺序完成；两部分都是课后练习，不计分。两部分的程序都是第三讲的 mini-ollama：读取 Q4_0 格式的模型文件 q4_0.gguf，逐个 Token 生成回答。
@@ -749,9 +931,10 @@ Makefile 以 -O2 -mavx2 编译 simd.c，不加 -mfma：讲义讲到 AVX2 为止�
 
 def pd_class_check(p):
     p.title("检查 attn_q 上的加速比")
-    p.demo("检查每个算子的结果，比较 matvec 的速度", """cd ../parallel-dot
+    p.demo("检查每个算子的结果，比较 matvec 的速度", """cd "$LECTUREKIT_ROOT/lectures/parallel-dot"
 make -s test-simd | tail -n 8""",
-           output=SIMD_TEST_TAIL, bold=[2, 6, 8])
+           output=SIMD_TEST_TAIL, bold=[2, 6, 8],
+           files=["/lectures/parallel-dot/ops/simd.c"])
     p.notes("""
 make test-simd 编译三个程序，然后运行 ./ops-selftest-simd，不需要模型文件。程序分三组，每一项输出一行 pass 或 FAIL，最后输出 all passed 或 N failed，退出码为失败的项数。页面上是 tail -n 8 取出的第三组的表与最后一行，毫秒数与 GB/s 因机器而异。
 第一组「operators」检查已给出的算子，每个算子与 scalar.c 中的同名算子处理同一组输入，这一组在开始之前就全部通过。第二组「matvec」检查你的函数：矩阵为 64 × 32、64 × 96、1000 × 2048（两组，其中一组 x 的量级为 64）与 64 × 6144，32 与 96 检查只有一个块与块数不是 2 的幂的行；缩放系数有正有负，16 个编码值都出现，另有 d 为 0 与次正规数的行。每一行的期望值按 ops.h 中的定义用 double 计算，结果与它的差不超过这一行 Σ |W[r][c] · x[c]| 的 10⁻⁵ 即通过；不同的累加次序带来的差别在 10⁻⁷ 量级，漏掉 2048 个权重中的一个，差别是 1/2048，远大于这个界限。
@@ -805,7 +988,7 @@ __syncthreads() 使线程块内的每个线程在这一行等待，直到线程�
 
 
 # ==============================================================================
-# 第五部分 · mini-cpu 实验一
+# 第六部分 · mini-cpu 实验一
 # ==============================================================================
 
 # ==============================================================================
@@ -851,7 +1034,7 @@ def cpu_libc(p):
     p.spacer(16)
     slide(p, """
 - **`printf` 是 C 标准库 libc 中的函数**：它与程序自己的函数一样由普通指令组成，按格式把参数转为字节，再调用 libc 的 `write`。
-- **进入操作系统的只有 `syscall` 指令**：`write` 把编号与参数放入寄存器，执行 `syscall`，由操作系统完成输出。guest 程序不链接 libc，没有 `printf`，输出由 `guest/mini.h` 的 `write` 直接执行 `syscall`。
+- **进入操作系统的只有 `syscall` 指令**：`write` 把编号与参数放入寄存器，执行 `syscall`，由操作系统完成输出。guest 程序不链接 libc，没有 `printf`，输出由 [`guest/mini.h`](file:/lectures/mini-cpu/guest/mini.h) 的 `write` 直接执行 `syscall`。
 """)
     p.notes("""
 PC 上一个普通的 C 程序调用 printf 时，printf 的代码来自 C 标准库 libc（Linux 上通常是 glibc），链接时与程序放在一起，运行时与程序自己的函数一样是 CPU 执行的普通指令。printf 按格式串把 argc 转为字符 1，得到 "argc = 1\n" 这 9 个字节，放入 stdout 的缓冲区；需要输出时，它调用 libc 中的 write 函数。
@@ -880,7 +1063,7 @@ def cpu_hello_mem(p):
     p.title("内存与寄存器：mini-cpu 在内存中模拟")
     figure(p, "cpu_hello_mem")
     slide(p, """
-`frame/loader.c` 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`。`interp_run` 从 `R[RIP]` 开始逐条执行。
+[`frame/loader.c`](file:/lectures/mini-cpu/frame/loader.c) 把 guest/hello 的指令与字符串写入 dram.img，在栈顶写入 argc 与 argv，设置 `R[RSP]` 与 `R[RIP]`。`interp_run` 从 `R[RIP]` 开始逐条执行。
 """)
     p.notes("""
 ./mini-cpu guest/hello 启动的 mini-cpu 是本机上的一个普通进程，guest/hello 的内存与寄存器都是这个进程中的数据。
@@ -1002,7 +1185,7 @@ def cpu_modrm_out(p):
     p.title("modrm_t 的字段与解释器对它的使用")
     figure(p, "cpu_modrm_t")
     slide(p, """
-`modrm_decode` 只读字节、填字段，不访问寄存器；`frame/x86.c` 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数即可。
+`modrm_decode` 只读字节、填字段，不访问寄存器；[`frame/x86.c`](file:/lectures/mini-cpu/frame/x86.c) 的 `modrm()` 由这些字段算出 `x.addr`，`case` 中用 `get`、`rm_get` 与 `ea` 取操作数即可。
 """)
     p.notes("""
 modrm_t 有十个字段，全部由 modrm_decode 填写：mod、sub、reg、rm、base、index、scale、rip、dsize、disp。
@@ -1067,7 +1250,7 @@ def cpu_insn_groups(p):
     p.title("interp.c 的整数指令：按操作码之后的字节分五组")
     figure(p, "cpu_groups")
     slide(p, """
-`interp.c` 开头的注释按这五组列出每个操作码的语义，括号中是第一个用到它的客户机程序。
+[`interp.c`](file:/lectures/mini-cpu/src/lab1/interp.c) 开头的注释按这五组列出每个操作码的语义，括号中是第一个用到它的客户机程序。
 """)
     p.notes("""
 只有操作码：push、pop、ret。push 已经写出，pop 与 ret 照它写，寄存器编号在操作码的低 3 位加 REX.B。
@@ -1083,7 +1266,7 @@ def cpu_cond_jump(p):
     p.title("cond 与条件跳转")
     figure(p, "cpu_cond")
     slide(p, """
-`cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 `interp.c` 的注释中。`jcc` 的 `case` 先读偏移，`cond` 为 1 时 `R[RIP] += rel`。
+`cond(f, cc)` 读 `f` 的五个标志位，按条件码 `cc` 的低 4 位返回 1 或 0；16 个条件码的表在 [`interp.c`](file:/lectures/mini-cpu/src/lab1/interp.c) 的注释中。`jcc` 的 `case` 先读偏移，`cond` 为 1 时 `R[RIP] += rel`。
 """)
     p.notes("""
 条件码是操作码的低 4 位，jcc 的 case 直接把 op 传给 cond。

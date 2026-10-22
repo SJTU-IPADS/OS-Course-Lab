@@ -139,6 +139,13 @@ _WRITE_WAIT_S = 1.0
 # turns into a `Command`. The file says why each part is there.
 _PROLOGUE = Path(__file__).resolve().with_name("demo_prologue.bash")
 
+#: The project root: the directory the ``lecturekit`` package sits in, which
+#: holds ``lectures/`` beside it. A demo sees it as ``$LECTUREKIT_ROOT``, so a
+#: lecture reaches a sibling directory by a path that does not depend on where
+#: the lecture itself is (``cd "$LECTUREKIT_ROOT/lectures/mini-cpu"``). A value
+#: already in the environment is kept.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 # How bash is started. The command travels in the environment, not on bash's
 # command line: on Windows a command line is one string that the program splits
 # by its own rules, and Git Bash's are not the ones Python quotes for, so a
@@ -664,11 +671,23 @@ def stream(
             terminal._detach()
 
 
+def project_root() -> str:
+    """The project root as a demo sees it: ``LECTUREKIT_ROOT`` from the
+    environment when it is set, `PROJECT_ROOT` otherwise.
+
+    A file button whose path begins with ``/`` is looked up under the same
+    directory (`lecturekit.source.resolve`), so ``/lectures/mini-cpu/src/a.c``
+    is the file ``cd "$LECTUREKIT_ROOT/lectures/mini-cpu"`` reaches.
+    """
+    return os.environ.get("LECTUREKIT_ROOT") or PROJECT_ROOT.as_posix()
+
+
 def _launch(command: str) -> tuple[list[str], dict[str, str]]:
     """The argv and environment that run ``command`` (see `_LAUNCH`)."""
     env = {key: value for key, value in os.environ.items() if key != "BASH_ENV"}
     env["LECTUREKIT_DEMO"] = command
     env["LECTUREKIT_PROLOGUE"] = _PROLOGUE.as_posix()  # Git Bash reads C:/...
+    env["LECTUREKIT_ROOT"] = project_root()
     return [BASH or "bash", "-c", _LAUNCH], env
 
 

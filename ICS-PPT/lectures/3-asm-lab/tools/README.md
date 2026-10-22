@@ -1,6 +1,8 @@
-# tools：终端截图的生成
+# tools：终端截图与 attack1 演示的生成
 
 `assets/bomb_*.png` 是 bomb 在终端中的画面：`termshot.py` 在一个固定大小的伪终端上运行程序，按步骤输入，把程序写出的字节回放给终端仿真库 pyte，再用系统的 DejaVu Sans Mono 字体逐格画成 PNG（深色背景，程序自己的颜色）。`shots.sh` 列出四张图各自的步骤。
+
+`make-attack-demo.sh` 重新生成 attack1 一节课的演示材料：`examples/attack1`（演示学号 `000000000001` 的构建）、`examples/attack1.txt`（这个学号的答案：27 字节的代码写在缓冲区低端，返回地址写成它的地址）、`examples/attack1.bin`（答案的原始字节，由实验的 `tools/unhex` 写出）与指向 nano-quant 模型的 `examples/q4_0.gguf`。脚本用 `make attack ID=000000000001` 取回构建，并取实验的参考答案里的那 27 字节代码；返回地址是栈上的地址，随 ASLR 每次运行都不同，脚本于是在 `setarch -R`（关掉 ASLR）下先跑一段探针，把缓冲区地址打印出来：探针借参考答案里 `push %rsp; ret` 的那一跳进入自己的代码（课堂上不出现这一段），从 `%rsp` 与缓冲区的固定距离算出地址；随后写出的答案用同样的方式跑一遍，检查输出里有 `phase 1 passed`。脚本前后备份与恢复 `../attack-elf/dist/answers/` 中的参考学号答案，结束时把实验目录恢复为参考构建（`make attack ID=026033910166`）。
 
 ## 重新生成
 

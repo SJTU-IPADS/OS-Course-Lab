@@ -83,7 +83,8 @@ class FileLinkSyntaxTest(unittest.TestCase):
         self.assertEqual(filelinks.errors(text, allowed=False), [])
 
     def test_a_path_must_stay_inside_the_lecture(self):
-        for path in ("/etc/passwd", "../other/a.c", "a/../../b.c", "///abs"):
+        for path in ("../other/a.c", "a/../../b.c", "///abs", "//abs", "/",
+                     "/../a.c", "/lectures/../../a.c"):
             with self.subTest(path=path):
                 problems = filelinks.errors(f"[x](file:{path})", allowed=True)
                 self.assertEqual(len(problems), 1)
@@ -97,13 +98,25 @@ class FileLinkSyntaxTest(unittest.TestCase):
                 self.assertEqual(len(problems), 1)
                 self.assertIn("malformed file link", problems[0])
 
+    def test_a_leading_slash_names_a_file_of_the_project_root(self):
+        text = "[seq.c](file:/lectures/mini-cpu/src/lab2/seq.c)"
+        self.assertEqual(
+            filelinks.find(text), [("seq.c", "/lectures/mini-cpu/src/lab2/seq.c")]
+        )
+        self.assertEqual(filelinks.errors(text, allowed=True), [])
+        self.assertTrue(filelinks.is_rooted("/lectures/a.c"))
+        self.assertFalse(filelinks.is_rooted("examples/a.c"))
+
     def test_files_and_links_share_one_path_rule(self):
-        for path in ("/abs/a.c", "../a.c"):
+        for path in ("//abs/a.c", "../a.c", "/../a.c"):
             with self.subTest(path=path):
                 self.assertIsNotNone(filelinks.path_problem(path))
                 with self.assertRaises(model.ValidationError):
                     source.normalize([path])
-        self.assertIsNone(filelinks.path_problem("examples/a.c"))
+        for path in ("examples/a.c", "/lectures/lab/a.c"):
+            with self.subTest(path=path):
+                self.assertIsNone(filelinks.path_problem(path))
+                self.assertEqual(source.normalize([path]), [path])
 
 
 class FileLinkPlacementTest(unittest.TestCase):
@@ -187,6 +200,12 @@ class FileLinkButtonTest(unittest.TestCase):
         self.assertIn(">the source</button>", html)
         self.assertNotIn("file:", html)
         self.assertNotIn("](", html)
+
+    def test_a_file_of_the_project_root_is_a_button_too(self):
+        path = "/lectures/mini-cpu/src/lab2/seq.c"
+        html = html_of(lambda p: p.slide(f"see [seq.c](file:{path}) here"))
+        self.assertIn(f'data-lk-source="{source.source_id(path)}"', html)
+        self.assertIn(">seq.c</button>", html)
 
     def test_the_button_ships_disabled(self):
         html = html_of(lambda p: p.slide("see [a.c](file:a.c)"))
