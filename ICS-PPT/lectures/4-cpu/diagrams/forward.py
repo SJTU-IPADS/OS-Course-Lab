@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
-"""imull writes %ecx in execute; addl reads it two stages later and can forward.
+"""imull computes %ecx in execute; the next addl uses it one cycle later.
 
-When addl is in execute, imull is in memory. The product was computed in the
-previous cycle and is forwarded; addl does not wait for write-back.
-Run it to refresh ../assets/forward.svg.
+Two rows of the shared time-space grid (timegrid.py), one column apart. The
+product exists at the end of imull's execute (cycle 3); an orange elbow carries
+it straight into addl's execute (cycle 4) instead of waiting for imull's
+write-back in cycle 5, so the addl row has no stall cell. The slide's own
+highlight line states the conclusion; the figure only annotates the grid.
+
+An animation, one frame per cycle from cycle 2 on: frame k shows the cells of
+cycles 1..k+1. The elbow appears with cycle 4, the write-back note with
+cycle 5, "addl 没有停" with cycle 6; the last frame is the whole figure.
+Run it to refresh ../assets/forward-1.svg .. forward-5.svg.
 """
 
 import pathlib
@@ -11,41 +18,39 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN,
-                    INK, ORANGE, arrow, mono, rect, save, text)
+from svgkit import GREEN, INK, ORANGE, elbow, save, text
+from timegrid import CH, CW, LX, TOP, VIEW_LEFT, cx, cycle_numbers, row
 
-W, H = 1120, 250
-CW, CH = 100, 44
-LX, TOP = 250, 70
-
-
-def cell(col, row, name, fill, stroke):
-    x = LX + col * CW
-    y = TOP + row * (CH + 28)
-    return [rect(x + 4, y, CW - 8, CH, fill, stroke, rx=3, width=1.6),
-            text(x + CW / 2, y + 28, name, 18, stroke, "bold")], (x + CW / 2, y)
+W, H = 1120, 300
+GAP = 84                            # room between the rows for the elbow + label
+R2 = TOP + CH + GAP                 # top of the addl row (200)
+STAGES = ["取指", "译码", "执行", "访存", "写回"]
 
 
-def build():
-    out = [text(W / 2, 28, "imull 在执行阶段算出乘积，addl 下一拍就能用", 18, INK, "bold")]
-    out.append(mono(24, TOP + 28, "imull", 16, INK))
-    out.append(mono(24, TOP + CH + 28 + 28, "addl", 16, INK))
-    colors = [("取", FILL_BLUE, BLUE), ("译", FILL_GREY, INK), ("执", FILL_ORANGE, ORANGE),
-              ("访", FILL_GREEN, GREEN), ("写", FILL_BLUE, BLUE)]
-    centres = []
-    for row in range(2):
-        for col, (name, fill, stroke) in enumerate(colors):
-            shapes, top = cell(col + row, row, name, fill, stroke)
-            out += shapes
-            if name == "执":
-                centres.append((top[0], top[1], top[1] + CH))
-    x1, top1, bot1 = centres[0]
-    x2, top2, bot2 = centres[1]
-    out.append(arrow(x1, bot1 + 2, x2, top2 - 2, ORANGE, 2.4))
-    out.append(text(x2 + 16, (bot1 + top2) / 2 + 5, "转发 %ecx", 15, ORANGE, "bold",
+UPTO = [2, 3, 4, 5, 6]               # cycles shown in each frame
+
+
+def build(upto):
+    out = cycle_numbers(6)
+    out += row("imull", TOP, 0, STAGES, upto)
+    out += row("addl", R2, 1, STAGES, upto)
+    if upto < 4:
+        return out
+    mid = TOP + CH + GAP / 2        # the horizontal run of the elbow (158)
+    out.append(elbow([(cx(2), TOP + CH - 1), (cx(2), mid), (cx(3), mid), (cx(3), R2 + 1)],
+                     ORANGE, 2.4))
+    out.append(text(LX + 4 * CW + 8, mid + 5,
+                    "转发：周期 3 算出的乘积，周期 4 直接送进 addl 的执行", 16, ORANGE, "bold",
                     anchor="start"))
+    if upto >= 5:
+        out.append(text(LX + 5 * CW + 12, TOP + CH / 2 + 6, "正式写回 %ecx 要到周期 5", 15, INK,
+                        anchor="start"))
+    if upto >= 6:
+        out.append(text(LX + 6 * CW + 12, R2 + CH / 2 + 6, "addl 没有停", 15, GREEN, "bold",
+                        anchor="start"))
     return out
 
 
 if __name__ == "__main__":
-    save("forward", W, H, build())
+    for k, upto in enumerate(UPTO, 1):
+        save(f"forward-{k}", W, H, build(upto), left=VIEW_LEFT)

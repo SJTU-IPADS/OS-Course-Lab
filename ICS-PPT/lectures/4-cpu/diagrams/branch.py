@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
-"""jl decides in execute; the next instruction has already been fetched.
+"""jl decides at the end of execute; two guessed instructions are already in.
 
-Run it to refresh ../assets/branch.svg.
+Rows are jl and the two instructions fetched after it on a guess. Columns are
+cycles. The dashed orange line at the end of cycle 3 is the moment the branch
+direction is known; the red frame holds what the pipeline has fetched before
+that moment. The frame's right side is that line, so it is drawn open. Cycle 4 shows "?" cells: whether they continue depends on the
+guess. No fixed number of squashed instructions is given. The grid comes from
+timegrid.py so this figure lines up with pipeline / forward / stall.
+
+An animation in four frames: cycles 1-2; cycle 3 (jl executes, two guessed
+instructions are in); the decision at the end of cycle 3 with the red frame
+round what was fetched before it; cycles 4-5 with the "?" cells and the two
+outcomes. The last frame is the whole figure.
+Run it to refresh ../assets/branch-1.svg .. branch-4.svg.
 """
 
 import pathlib
@@ -9,36 +20,46 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREY, FILL_ORANGE, FILL_RED, INK, ORANGE,
-                    RED, mono, rect, save, text)
+from svgkit import MUTED, ORANGE, RED, line, path, save, text
+from timegrid import CH, CW, LX, TOP, VIEW_LEFT, cycle_numbers, row
 
-W, H = 1120, 240
-CW, CH = 100, 44
-LX, TOP = 280, 64
+W, H = 1120, 350
+GAP = 22                            # looser than pipeline: three rows, two notes
+R2, R3 = TOP + CH + GAP, TOP + 2 * (CH + GAP)
+XD = LX + 3 * CW                    # end of cycle 3: jl has just executed
 
 
-def build():
-    out = [text(W / 2, 28, "jl 在执行阶段才知道跳不跳，下一条已经被取进来", 18, INK, "bold")]
-    rows = [("jl", "取译执"), ("下一条", " 取")]
-    tone = {"取": (FILL_BLUE, BLUE), "译": (FILL_GREY, INK), "执": (FILL_ORANGE, ORANGE)}
-    for r, (name, stages) in enumerate(rows):
-        y = TOP + 16 + r * (CH + 28)
-        out.append(mono(36, y + 28, name, 16, INK))
-        for c, ch in enumerate(stages):
-            if ch == " ":
-                continue
-            fill, stroke = tone[ch]
-            x = LX + c * CW
-            out.append(rect(x + 4, y, CW - 8, CH, fill, stroke, rx=3, width=1.6))
-            out.append(text(x + CW / 2, y + 28, ch, 18, stroke, "bold"))
-    # the fetched instruction may be thrown away
-    y = TOP + 16 + CH + 28
-    x = LX + 2 * CW
-    out.append(rect(x + 4, y, CW - 8, CH, FILL_RED, RED, rx=3, width=1.6, dash="5 4"))
-    out.append(text(x + CW / 2, y + 28, "作废", 16, RED, "bold"))
-    out.append(text(W / 2, 214, "猜错时，已经取入的指令不作数", 16, RED, "bold"))
+FRAMES = [(2, False), (3, False), (3, True), (5, True)]   # (cycles shown, decided)
+
+
+def build(upto, decided):
+    out = cycle_numbers(5)
+    out += row("jl .L3", TOP, 0, ["取指", "译码", "执行", "访存", "写回"], upto)
+    out += row("猜来的第 1 条", R2, 1, ["取指", "译码", "?"], upto)
+    out += row("猜来的第 2 条", R3, 2, ["取指", "?"], upto)
+    if not decided:
+        return out
+    out.append(text(XD, 22, "周期 3 结束：jl 执行完，才知道跳不跳", 16, ORANGE, "bold"))
+    # what is already in the pipeline when jl decides: rows 2-3, cycles 2-3.
+    # Top, left and bottom sides only: the right side would sit 1 px from the
+    # decision line with the same dash and read as red-orange speckle, so
+    # the orange line, drawn after it, closes the frame.
+    x0, y0, y1, r = LX + CW + 1, R2 - 5, R3 + CH + 5, 6
+    out.append(path(f"M {XD - 1} {y0} L {x0 + r} {y0} Q {x0} {y0} {x0} {y0 + r} "
+                    f"L {x0} {y1 - r} Q {x0} {y1} {x0 + r} {y1} L {XD - 1} {y1}",
+                    RED, 2, dash="6 4", head=False))
+    # the decision point
+    out.append(line(XD, TOP - 8, XD, R3 + CH + 8, ORANGE, 2, dash="6 4"))
+    out.append(text(LX + 2 * CW, R3 + CH + 40,
+                    "jl 判定前，后面几级里已经取进来的指令：猜错就作废", 16, RED, "bold"))
+    if upto < 5:
+        return out
+    # the two outcomes, centred between the two guessed rows
+    out.append(text(LX + 4 * CW + 10, 195, "猜对：继续执行", 15, MUTED, anchor="start"))
+    out.append(text(LX + 4 * CW + 10, 215, "猜错：全部作废", 15, RED, "bold", anchor="start"))
     return out
 
 
 if __name__ == "__main__":
-    save("branch", W, H, build())
+    for k, (upto, decided) in enumerate(FRAMES, 1):
+        save(f"branch-{k}", W, H, build(upto, decided), left=VIEW_LEFT)

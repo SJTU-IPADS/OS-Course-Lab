@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 236" width="1120" height="236">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="108.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">时间步</text>
+<text x="139.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="185.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="231.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<text x="277.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<text x="323.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<text x="369.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<text x="415.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<text x="461.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
+<text x="507.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<text x="553.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<text x="599.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">11</text>
+<text x="645.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">12</text>
+<text x="691.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">13</text>
+<text x="737.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">14</text>
+<text x="783.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">15</text>
+<text x="829.0" y="30.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">16</text>
+<line x1="20.0" y1="40.0" x2="852.0" y2="40.0" stroke="#9fb5c3" stroke-width="1"/>
+<text x="20.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">请求 1</text>
+<rect x="117.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1"/>
+<text x="139.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">T</text>
+<rect x="163.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="185.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="209.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="231.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="255.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="277.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="301.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="323.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="347.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="369.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="393.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="415.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="439.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="461.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="485.0" y="42.0" width="44.0" height="28.0" rx="3" fill="#e5f3ea" stroke="#9fb5c3" stroke-width="1"/>
+<text x="507.0" y="62.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">O</text>
+<text x="20.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">请求 2</text>
+<rect x="209.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1"/>
+<text x="231.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">T</text>
+<rect x="255.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="277.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="301.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="323.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="347.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="369.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="393.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="415.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="439.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="461.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="485.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="507.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="531.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="553.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="577.0" y="74.0" width="44.0" height="28.0" rx="3" fill="#e5f3ea" stroke="#9fb5c3" stroke-width="1"/>
+<text x="599.0" y="94.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">O</text>
+<text x="20.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">请求 3</text>
+<rect x="255.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1"/>
+<text x="277.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">T</text>
+<rect x="301.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="323.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="347.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="369.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="393.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="415.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="439.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="461.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="485.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="507.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="531.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="553.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="577.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="599.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="623.0" y="106.0" width="44.0" height="28.0" rx="3" fill="#e5f3ea" stroke="#9fb5c3" stroke-width="1"/>
+<text x="645.0" y="126.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">O</text>
+<text x="20.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">请求 4</text>
+<rect x="393.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1"/>
+<text x="415.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">T</text>
+<rect x="439.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="461.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">P</text>
+<rect x="485.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="507.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="531.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="553.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="577.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="599.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="623.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="645.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="669.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="691.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="715.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="737.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="761.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="783.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<rect x="807.0" y="138.0" width="44.0" height="28.0" rx="3" fill="#e5f3ea" stroke="#9fb5c3" stroke-width="1"/>
+<text x="829.0" y="158.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">O</text>
+<rect x="344.0" y="10.0" width="50.0" height="160.0" rx="4" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="5 4"/>
+<rect x="882.0" y="52.0" width="16.0" height="16.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1"/>
+<text x="906.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start" xml:space="preserve">T  分词</text>
+<rect x="882.0" y="80.0" width="16.0" height="16.0" rx="3" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<text x="906.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start" xml:space="preserve">P  prefill</text>
+<rect x="882.0" y="108.0" width="16.0" height="16.0" rx="3" fill="#eaf3f7" stroke="#9fb5c3" stroke-width="1"/>
+<text x="906.0" y="121.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start" xml:space="preserve">D  decode（1 个 token）</text>
+<rect x="882.0" y="136.0" width="16.0" height="16.0" rx="3" fill="#e5f3ea" stroke="#9fb5c3" stroke-width="1"/>
+<text x="906.0" y="149.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start" xml:space="preserve">O  输出（detokenize）</text>
+<text x="20.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#c0392b" text-anchor="start">第 6 步的一批：请求 1、请求 2 各 1 个 decode token，请求 3 的 1 个 prefill token，合成一次矩阵乘</text>
+<text x="20.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">每一行的 D 格一个接一个：一个请求的 token 逐个生成，批处理没有缩短它</text>
+</svg>

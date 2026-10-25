@@ -8,7 +8,7 @@ here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 for py in "$here"/*.py; do
     [ -e "$py" ] || continue
-    case $(basename "$py") in svgkit.py|check_bounds.py) continue ;; esac
+    case $(basename "$py") in svgkit.py|check_bounds.py|timegrid.py) continue ;; esac
     python3 "$py"
 done
 

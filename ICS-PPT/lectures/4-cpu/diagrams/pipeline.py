@@ -2,9 +2,11 @@
 """The five loop-body instructions overlapping, one new instruction per cycle.
 
 Rows are the gcc -Og loop body, in program order. Columns are cycles.
-A cell holds the stage that instruction is in. At cycle 5 every stage is busy,
-and a new instruction still enters each cycle. Run it to refresh
-../assets/pipeline.svg.
+A cell holds the stage that instruction is in. At cycle 5 every stage holds an
+instruction; from then on one instruction writes back per cycle (throughput),
+while each instruction itself still takes five cycles (latency). The grid comes
+from timegrid.py so this figure lines up with forward / stall / branch.
+Run it to refresh ../assets/pipeline.svg.
 """
 
 import pathlib
@@ -12,42 +14,28 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN,
-                    INK, MUTED, ORANGE, mono, rect, save, text)
+from svgkit import GREEN, INK, ORANGE, brace, save, text
+from timegrid import CH, CW, LX, TOP, VIEW_LEFT, col_frame, cycle_numbers, row
 
-W, H = 1120, 300
-ROWS = ["movslq", "movl", "imull", "addl sum", "addl $1"]
-STAGE = {
-    "取": (FILL_BLUE, BLUE),
-    "译": (FILL_GREY, INK),
-    "执": (FILL_ORANGE, ORANGE),
-    "访": (FILL_GREEN, GREEN),
-    "写": (FILL_BLUE, BLUE),
-}
-CW, CH = 78, 36
-LX, TOP = 168, 56
+W, H = 1120, 400
+ROWS = ["movslq", "movl", "imull", "addl %ecx,%r9d", "addl $1,%eax"]
+STAGES = ["取指", "译码", "执行", "访存", "写回"]
+PITCH = CH + 6                      # rows packed tight: the overlap is the point
 
 
 def build():
-    cycles = 9
-    out = [text(LX + cycles * CW / 2, 28, "周期", 15, MUTED)]
-    for c in range(cycles):
-        out.append(text(LX + c * CW + CW / 2, TOP - 8, str(c + 1), 14, MUTED))
+    out = [text(LX + 4.5 * CW, 22, "周期 5：五级同时有指令", 16, ORANGE, "bold")]
+    out += cycle_numbers(9, emph=5)
     for r, name in enumerate(ROWS):
-        y = TOP + r * CH
-        out.append(mono(24, y + 24, name, 15, INK))
-        for c in range(cycles):
-            k = c - r
-            if not 0 <= k < 5:
-                continue
-            fill, stroke = STAGE["取译执访写"[k]]
-            x = LX + c * CW
-            out.append(rect(x + 3, y + 3, CW - 6, CH - 6, fill, stroke, rx=3, width=1.4))
-            out.append(text(x + CW / 2, y + 25, "取译执访写"[k], 16, stroke, "bold"))
-    y = TOP + 5 * CH + 28
-    out.append(text(W / 2, y, "周期 5：五级同时在工作，新的指令仍从取指进入", 16, INK))
+        out += row(name, TOP + r * PITCH, r, STAGES)
+    bottom = TOP + 4 * PITCH + CH
+    out.append(col_frame(4, TOP - 5, bottom + 5, ORANGE))
+    out.append(text(LX + 5 * CW + 14, TOP + CH / 2 + 6,
+                    "一条指令从取指到写回仍要 5 个周期（延迟）", 16, INK, anchor="start"))
+    out += brace(LX + 4 * CW + 3, LX + 9 * CW - 3, bottom + 12, GREEN,
+                 "从周期 5 起，每个周期写回一条（吞吐）", 16, depth=8)
     return out
 
 
 if __name__ == "__main__":
-    save("pipeline", W, H, build())
+    save("pipeline", W, H, build(), left=VIEW_LEFT)

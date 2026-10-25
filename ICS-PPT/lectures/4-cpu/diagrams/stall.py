@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
-"""Load-use: imull needs %ecx while movl is still in the memory stage.
+"""Load-use: imull needs w[i] while movl is still reading it from memory.
 
-The value is not ready at the start of that cycle, so imull waits one cycle
-between decode and execute. Run it to refresh ../assets/stall.svg.
+Two rows on the shared time-space grid (timegrid.py), the same skeleton as
+forward.svg with the rows closer (the page has a paragraph above the figure). movl reads w[i] into %r10d in its memory stage (cycle 4); the
+register imull that follows (the multiply half of imull (%rdi,%r8,4),%ecx) would
+execute in that same cycle, but the value is nowhere yet, so imull waits one
+cycle (the red "停" cell) and executes in cycle 5. The green elbow runs from
+movl's memory cell down into imull's execute cell, one column to the right,
+in the same shape as the orange forwarding elbow of forward.svg: side by side,
+the two figures differ only in which stage the value comes out of.
+The slide's conclusion lives in its text, not in the figure.
+
+An animation, one frame per cycle from cycle 2 on: frame k shows the cells of
+cycles 1..k+1. Cycle 4 brings the red column, the "停" cell and its notes;
+cycle 5 brings the elbow; the last frame is the whole figure.
+Run it to refresh ../assets/stall-1.svg .. stall-6.svg.
 """
 
 import pathlib
@@ -10,39 +22,38 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, FILL_RED,
-                    GREEN, INK, ORANGE, RED, mono, rect, save, text)
+from svgkit import GREEN, RED, elbow, save, text
+from timegrid import CH, CW, LX, TOP, VIEW_LEFT, col_frame, cx, cycle_numbers, row
 
-W, H = 1120, 250
-CW, CH = 90, 44
-LX, TOP = 200, 64
+W, H = 1120, 280
+GAP = 64                            # room between the rows for the elbow and its label
+R2 = TOP + CH + GAP                 # top of the second row (= 180)
+MID = TOP + CH + GAP / 2            # the elbow's horizontal run (= 148)
 
 
-def build():
-    out = [text(W / 2, 28, "movl 还在访存，imull 的执行用不上 %ecx", 18, INK, "bold")]
-    for c in range(7):
-        out.append(text(LX + c * CW + CW / 2, TOP - 10, str(c + 1), 14, INK))
-    rows = [
-        ("movl", "取译执访写"),
-        ("imull", " 取译停执访写"),
-    ]
-    tone = {
-        "取": (FILL_BLUE, BLUE), "译": (FILL_GREY, INK), "执": (FILL_ORANGE, ORANGE),
-        "访": (FILL_GREEN, GREEN), "写": (FILL_BLUE, BLUE), "停": (FILL_RED, RED),
-    }
-    for r, (name, stages) in enumerate(rows):
-        y = TOP + 16 + r * (CH + 24)
-        out.append(mono(24, y + 28, name, 16, INK))
-        for c, ch in enumerate(stages):
-            if ch == " ":
-                continue
-            fill, stroke = tone[ch]
-            x = LX + c * CW
-            out.append(rect(x + 4, y, CW - 8, CH, fill, stroke, rx=3, width=1.6))
-            out.append(text(x + CW / 2, y + 28, ch, 18, stroke, "bold"))
-    out.append(text(W / 2, 228, "停的那一拍，movl 在访存，imull 还不能进入执行", 16, RED, "bold"))
+UPTO = [2, 3, 4, 5, 6, 7]            # cycles shown in each frame
+
+
+def build(upto):
+    out = []
+    if upto >= 4:
+        out.append(text(cx(3), 22, "周期 4：w[i] 还在读", 16, RED, "bold"))
+    out += cycle_numbers(7, emph=4 if upto >= 4 else None, color=RED)
+    out += row("movl", TOP, 0, ["取指", "译码", "执行", "访存", "写回"], upto)
+    out += row("imull", R2, 1, ["取指", "译码", "停", "执行", "访存", "写回"], upto)
+    if upto < 4:
+        return out
+    out.append(col_frame(3, TOP - 5, R2 + CH + 5, RED))
+    out.append(text(cx(3), R2 + CH + 26, "本该在这个周期执行，w[i] 还没读出来", 15, RED))
+    if upto < 5:
+        return out
+    out.append(elbow([(cx(3), TOP + CH - 1), (cx(3), MID), (cx(4), MID), (cx(4), R2 + 1)],
+                     GREEN, 2.4))
+    out.append(text(LX + 5 * CW + 8, MID + 5, "访存结束，读出的 w[i] 才能送进执行", 16, GREEN,
+                    "bold", anchor="start"))
     return out
 
 
 if __name__ == "__main__":
-    save("stall", W, H, build())
+    for k, upto in enumerate(UPTO, 1):
+        save(f"stall-{k}", W, H, build(upto), left=VIEW_LEFT)

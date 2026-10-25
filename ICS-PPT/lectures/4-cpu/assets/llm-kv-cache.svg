@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 232" width="1120" height="232">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="36.0" width="592.0" height="178.0" rx="8" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="316.0" y="58.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">显存中的 KV 缓存（每一层一份）</text>
+<text x="86.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">t1</text>
+<rect x="52.0" y="96.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="86.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k1</text>
+<rect x="52.0" y="134.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="86.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">v1</text>
+<text x="178.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">t2</text>
+<rect x="144.0" y="96.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="178.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k2</text>
+<rect x="144.0" y="134.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="178.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">v2</text>
+<text x="270.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">t3</text>
+<rect x="236.0" y="96.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="270.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k3</text>
+<rect x="236.0" y="134.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="270.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">v3</text>
+<text x="362.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">t4</text>
+<rect x="328.0" y="96.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="362.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k4</text>
+<rect x="328.0" y="134.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="362.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">v4</text>
+<text x="454.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">t5</text>
+<rect x="420.0" y="96.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="454.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k5</text>
+<rect x="420.0" y="134.0" width="68.0" height="30.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="454.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">v5</text>
+<text x="546.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">t6</text>
+<rect x="512.0" y="96.0" width="68.0" height="30.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="546.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">k6</text>
+<rect x="512.0" y="134.0" width="68.0" height="30.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="546.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">v6</text>
+<path d="M 52.0 170.0 L 52.0 178.0 L 488.0 178.0 L 488.0 170.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="270.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">已经处理的 token：各自那一步算出，之后只读取</text>
+<path d="M 512.0 170.0 L 512.0 178.0 L 580.0 178.0 L 580.0 170.0" fill="none" stroke="#e97132" stroke-width="1.6"/>
+<text x="546.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">本次算出</text>
+<rect x="682.0" y="76.0" width="418.0" height="70.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="891.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">当前 token t6 的注意力</text>
+<text x="891.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">读取 k1 ~ k6、v1 ~ v6，算出一个输出</text>
+<line x1="612.0" y1="111.0" x2="680.0" y2="111.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="647.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">读</text>
+<text x="891.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">没有缓存时，生成每个 token 都要重算前面全部 token 的 k、v</text>
+</svg>
