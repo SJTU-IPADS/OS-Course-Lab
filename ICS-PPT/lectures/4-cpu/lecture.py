@@ -6,8 +6,10 @@
 第二部分 流水线执行的指令冲突：data hazard（没有转发时等写回；转发后不停的、
 仍停一拍的）与跳转指令的 control hazard；
 第三部分 拓展：现代 CPU：现代核在这五级之上做的三件事、为什么带宽上限不变；
-第四部分 拓展：大模型推理中的流水线：推理服务中的同一套结构（prefill 与 decode、
-KV 缓存、连续批处理、投机解码）。
+第四部分 拓展：系统里的流水线：大模型推理在做什么（一次一个词、28 层、装不下、
+按层切）；流水线并行与它的气泡（单请求、多请求填满、两头的占比、逐词生成的依赖、
+多用户轮流）；投机推理（读一遍权重、先猜、核对、与分支预测对照、划不划算）；
+其他系统里的流水线（装配线、看视频、总结）。
 
 不讲 Y86、HCL、顺序实现的电路和五级转发通路。页面函数在 pages.py。
 """
@@ -67,12 +69,33 @@ with lecture.section('第三部分：拓展：现代 CPU', id="part3") as s:
     s.page("modern", body=pages.modern)
     s.page("bandwidth", body=pages.bandwidth)
 
-lecture.bridge('第四部分：拓展：大模型推理中的流水线', id="bridge-part4")
+lecture.bridge('第四部分：拓展：系统里的流水线', id="bridge-part4")
 
-with lecture.section('第四部分：拓展：大模型推理中的流水线', id="part4") as s:
-    s.page("llm-two-phases", body=pages.llm_two_phases)
-    s.page("llm-autoregressive", body=pages.llm_autoregressive)
-    s.page("llm-kv-cache", body=pages.llm_kv_cache)
-    s.page("llm-batching", body=pages.llm_batching)
-    s.page("llm-spec-decode", body=pages.llm_spec_decode)
-    s.page("llm-summary", body=pages.llm_summary)
+with lecture.section('第四部分：拓展：系统里的流水线', id="part4") as s:
+    with s.section('大模型推理在做什么', id="part4-llm") as ss:
+        ss.page("llm-what", body=pages.llm_what)
+        ss.page("llm-layers", body=pages.llm_layers)
+        ss.page("llm-too-big", body=pages.llm_too_big)
+        ss.page("llm-split", body=pages.llm_split)
+
+    s.bridge('流水线并行与它的气泡', id="bridge-part4-pp")
+    with s.section('流水线并行与它的气泡', id="part4-pp") as ss:
+        ss.page("llm-pp-single", body=pages.llm_pp_single)
+        ss.page("llm-pp-fill", body=pages.llm_pp_fill)
+        ss.page("llm-pp-ratio", body=pages.llm_pp_ratio)
+        ss.page("llm-pp-decode", body=pages.llm_pp_decode)
+        ss.page("llm-pp-batch", body=pages.llm_pp_batch)
+
+    s.bridge('投机推理：预测执行的应用', id="bridge-part4-spec")
+    with s.section('投机推理', id="part4-spec") as ss:
+        ss.page("llm-decode-slow", body=pages.llm_decode_slow)
+        ss.page("llm-spec-idea", body=pages.llm_spec_idea)
+        ss.page("llm-spec-verify", body=pages.llm_spec_verify)
+        ss.page("llm-spec-vs-branch", body=pages.llm_spec_vs_branch)
+        ss.page("llm-spec-gain", body=pages.llm_spec_gain)
+
+    s.bridge('其他系统里的流水线', id="bridge-part4-others")
+    with s.section('其他系统里的流水线', id="part4-others") as ss:
+        ss.page("assembly-line", body=pages.assembly_line)
+        ss.page("video-pipeline", body=pages.video_pipeline)
+        ss.page("pipeline-summary", body=pages.pipeline_summary)

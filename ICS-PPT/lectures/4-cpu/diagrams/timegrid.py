@@ -29,6 +29,13 @@ TONE = {                 # stage -> (fill, stroke, label colour)
     "写回": (INK, INK, WHITE),
     "停":   (FILL_RED, RED, RED),
     "?":    (WHITE, MUTED, MUTED),
+    # 第四部分：大模型的流水线并行与投机推理
+    "请求 1": (FILL_BLUE, BLUE, BLUE),
+    "请求 2": (FILL_ORANGE, ORANGE, ORANGE),
+    "请求 3": (FILL_GREEN, GREEN, GREEN),
+    "请求 4": (FILL_GREY, INK, INK),
+    "词 1": (FILL_BLUE, BLUE, BLUE),
+    "词 2": (FILL_ORANGE, ORANGE, ORANGE),
 }
 
 

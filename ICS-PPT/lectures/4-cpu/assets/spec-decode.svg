@@ -1,42 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 282" width="1120" height="282">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 382" width="1120" height="382">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="20.0" y="47.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">小模型连猜 4 个</text>
-<rect x="214.0" y="22.0" width="104.0" height="38.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
-<text x="266.0" y="46.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">猜 t1</text>
-<line x1="266.0" y1="60.0" x2="266.0" y2="104.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
-<rect x="332.0" y="22.0" width="104.0" height="38.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
-<text x="384.0" y="46.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">猜 t2</text>
-<line x1="384.0" y1="60.0" x2="384.0" y2="104.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
-<rect x="450.0" y="22.0" width="104.0" height="38.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
-<text x="502.0" y="46.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">猜 t3</text>
-<line x1="502.0" y1="60.0" x2="502.0" y2="104.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
-<rect x="568.0" y="22.0" width="104.0" height="38.0" rx="6" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.6"/>
-<text x="620.0" y="46.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">猜 t4</text>
-<line x1="620.0" y1="60.0" x2="620.0" y2="104.0" stroke="#0e2841" stroke-width="1.4" marker-end="url(#ah-0e2841)"/>
-<text x="20.0" y="131.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">大模型一次前向</text>
-<rect x="214.0" y="106.0" width="458.0" height="38.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="443.0" y="130.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">读一遍权重，同时检查 4 个位置</text>
-<text x="266.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">接受</text>
-<line x1="266.0" y1="172.0" x2="266.0" y2="194.0" stroke="#2e7d4f" stroke-width="1.4" marker-end="url(#ah-2e7d4f)"/>
-<text x="384.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">接受</text>
-<line x1="384.0" y1="172.0" x2="384.0" y2="194.0" stroke="#2e7d4f" stroke-width="1.4" marker-end="url(#ah-2e7d4f)"/>
-<text x="502.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">改为大模型的 t3′</text>
-<line x1="502.0" y1="172.0" x2="502.0" y2="194.0" stroke="#e97132" stroke-width="1.4" marker-end="url(#ah-e97132)"/>
-<text x="620.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">丢弃</text>
-<line x1="620.0" y1="172.0" x2="620.0" y2="194.0" stroke="#c0392b" stroke-width="1.4" marker-end="url(#ah-c0392b)"/>
-<text x="20.0" y="221.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">这一次的输出</text>
-<rect x="214.0" y="196.0" width="104.0" height="38.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="266.0" y="220.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">t1</text>
-<rect x="332.0" y="196.0" width="104.0" height="38.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="384.0" y="220.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">t2</text>
-<rect x="450.0" y="196.0" width="104.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="502.0" y="220.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">t3′</text>
-<rect x="568.0" y="196.0" width="104.0" height="38.0" rx="6" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
-<text x="620.0" y="220.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">×</text>
-<text x="443.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">一次前向产出 3 个 token；逐个 decode 时产出 3 个 token 要读 3 遍权重</text>
-<text x="720.0" y="47.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">对应处理器的做法</text>
-<text x="720.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">猜：分支预测，判定前按猜测继续取指</text>
-<text x="720.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">验：条件跳转在执行阶段判定</text>
-<text x="720.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">丢弃：作废猜错之后取入的指令</text>
-<text x="720.0" y="174.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">输出与大模型逐个 decode 相同：推测不改变结果</text>
+<text x="20.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">前文</text>
+<rect x="330.0" y="16.0" width="104.0" height="40.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="382.0" y="41.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">流水线</text>
+<rect x="448.0" y="16.0" width="104.0" height="40.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="500.0" y="41.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">提高</text>
+<rect x="566.0" y="16.0" width="104.0" height="40.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="618.0" y="41.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">的</text>
+<rect x="684.0" y="16.0" width="104.0" height="40.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="736.0" y="41.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">是</text>
+<text x="822.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">下一个词是什么？</text>
+<text x="20.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start">小模型连猜 4 个</text>
+<text x="382.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">猜 1</text>
+<rect x="330.0" y="96.0" width="104.0" height="40.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="382.0" y="121.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吞</text>
+<text x="500.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">猜 2</text>
+<rect x="448.0" y="96.0" width="104.0" height="40.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="500.0" y="121.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吐</text>
+<text x="618.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">猜 3</text>
+<rect x="566.0" y="96.0" width="104.0" height="40.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="618.0" y="121.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">量</text>
+<text x="736.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">猜 4</text>
+<rect x="684.0" y="96.0" width="104.0" height="40.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="736.0" y="121.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">，</text>
+<text x="822.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">权重少几十倍，猜得快</text>
+<text x="20.0" y="202.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">大模型一遍算出</text>
+<rect x="330.0" y="176.0" width="104.0" height="40.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="382.0" y="201.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吞</text>
+<rect x="448.0" y="176.0" width="104.0" height="40.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="500.0" y="201.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吐</text>
+<rect x="566.0" y="176.0" width="104.0" height="40.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="618.0" y="201.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">率</text>
+<rect x="684.0" y="176.0" width="104.0" height="40.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="736.0" y="201.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">。</text>
+<text x="822.0" y="202.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">连同前文一起送入，读一遍权重</text>
+<line x1="382.0" y1="138.0" x2="382.0" y2="174.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<line x1="500.0" y1="138.0" x2="500.0" y2="174.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<line x1="618.0" y1="138.0" x2="618.0" y2="174.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<line x1="736.0" y1="138.0" x2="736.0" y2="174.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<text x="20.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">从前往后比对</text>
+<rect x="330.0" y="256.0" width="104.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="382.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="middle">接受</text>
+<rect x="448.0" y="256.0" width="104.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="500.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="middle">接受</text>
+<rect x="566.0" y="256.0" width="104.0" height="40.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="618.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">改为「率」</text>
+<rect x="684.0" y="256.0" width="104.0" height="40.0" rx="6" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="736.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">作废</text>
+<text x="822.0" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">猜错处换成大模型的词，后面的作废</text>
+<text x="20.0" y="352.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">这一轮得到</text>
+<rect x="330.0" y="326.0" width="104.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="382.0" y="351.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吞</text>
+<rect x="448.0" y="326.0" width="104.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="500.0" y="351.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吐</text>
+<rect x="566.0" y="326.0" width="104.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="618.0" y="351.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">率</text>
+<text x="694.0" y="352.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="start">读一遍权重得到 3 个词；逐词生成要读 3 遍</text>
 </svg>

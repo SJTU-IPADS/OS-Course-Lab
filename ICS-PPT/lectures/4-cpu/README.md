@@ -6,7 +6,7 @@
 
 ## 结构
 
-开场两页之后分四部分，每部分前有一页「第 N 部分」过渡页；第一、二部分各有两个小节，第二个小节前另有一页小节过渡页（写法同 3-asm：`lecture.bridge` 分部分，`s.bridge` 分小节）。第四部分的对照表是最后一页，没有单独的总结页。
+开场两页之后分四部分，每部分前有一页「第 N 部分」过渡页；第一、二、四部分分小节，第一个小节之外的每个小节前另有一页小节过渡页（写法同 3-asm：`lecture.bridge` 分部分，`s.bridge` 分小节）。第四部分的最后一页「同一套设计方法」是全讲的收束。
 
 | 部分 · 小节 | 页 | 落点 |
 | --- | --- | --- |
@@ -16,7 +16,10 @@
 | 第二部分 流水线执行的指令冲突 · data hazard | `forward`、`forward-fig`、`load-use`、`load-use-fig`（四页都是动画） | 没有转发时，后一条指令要等前一条写回之后的周期才能译码：`addl` 停 3 个周期（`forward`）。转发把 `imull` 在执行阶段算出的乘积直接送进 `addl` 的执行阶段，不用停（`forward-fig`）。带内存操作数的 `imull (%rdi,%r8,4), %ecx` 在五级流水线中拆成两条：`movl` 把 `w[i]` 读入 `%r10d`，`imull %r10d, %ecx` 相乘；冲突在 `%r10d`，没有转发停 3 个周期（`load-use`），转发后仍在译码与执行之间停一拍（`load-use-fig`）。`%r10d` 代替处理器内部的临时寄存器，循环体没有用到它 |
 | 第二部分 · control hazard | `branch`、`branch-fig`（动画） | `jl` 要到执行阶段读到标志位才知道跳不跳，取指按猜测先取，猜错则作废 |
 | 第三部分 拓展：现代 CPU | `modern`、`bandwidth` | 乱序执行、分支预测与推测执行、一个周期开始执行多条指令（第 3 讲的「每个周期最多 5 条」）。IPC 可以大于 1，也会因为停顿、猜错、前后相关远低于每周期 5 条的峰值（0.77 对 1.1）。流水线不减少每个权重的读取，53 Token/s 不变 |
-| 第四部分 拓展：大模型推理中的流水线 | `llm-two-phases`、`llm-autoregressive`、`llm-kv-cache`、`llm-batching`、`llm-spec-decode`、`llm-summary` | prefill 在算力受限区、decode 在访存受限区（第 2 讲的 Roofline），`llm_stages.py` 实测相差 8 倍（数字在讲稿里）。自回归生成的公式 $x_t \sim P(x_t \mid x_1, \dots, x_{t-1})$ 与示意图（`llm-autoregressive`：相邻两步，取出的 token 追加到下一步的输入），同一页下方是注意力：$q_i$、$k_i$、$v_i$ 的定义与 $o_t = \mathrm{softmax}(q_t K_t^{\top}/\sqrt{d})\,V_t$，$K_t$、$V_t$ 逐行排列 $k_1 \dots k_t$、$v_1 \dots v_t$；$K$、$V$ 每一步末尾加一行、前面的行不变，$q_t$ 只在第 $t$ 步使用，所以 KV 缓存只存 $K$、$V$ 两个矩阵（这个推理写在讲稿里，正文只有公式）；页底一句说明 $o_t$ 是 $v_1 \dots v_t$ 的加权和、成为下一层的 $h_t$，最后一层位置 $t$ 的结果经输出矩阵与 softmax 得到 $P(x_{t+1} \mid x_1, \dots, x_t)$。注意力公式按「位置 $t$」编号，与自回归公式的「第 $t$ 步」差一位，KV 缓存一页同样写「位置 $t$」。$K_t$、$V_t$ 用 `smallmatrix`，换成 `bmatrix` 后这一页放不下，文字会压到图上。KV 缓存一页给出每个 token 的大小（Qwen3-VL-2B 每个 token 112 KiB），对应转发，连续批处理对应流水线的重叠，投机解码对应分支预测与作废；这两页的页脚注明出处论文（连续批处理：Orca，OSDI 2022；prefill 分块：Sarathi-Serve，OSDI 2024；投机解码：Leviathan 等，ICML 2023，与同期的 Chen 等，2023）。末页是对照表。取自 `4-cpu-bak/bak-2` 的 `llm.py`，回指已改为本讲的页面 |
+| 第四部分 拓展：系统里的流水线 · 大模型推理在做什么 | `llm-what`、`llm-layers`、`llm-too-big`、`llm-split` | 面向零基础：大模型是「给定前文、算出下一个词」的函数，第 6 步要等第 5 步取出的词（`llm-autoregressive` 图，例句「流水线提高的是吞吐率」）；算一次是向量穿过 28 层，每层权重 × 向量，17.2 亿个权重 0.968 GB 每个词全部读一遍（`llm-layers`）；Llama 3.1 405B 的 810 GB 对 H100 的 80 GB，至少 11 块（`llm-too-big`）；按层切成 4 份放 4 块 GPU，GPU 间传的向量就是级间寄存器的内容，叫流水线并行（`llm-split`） |
+| 第四部分 · 流水线并行与它的气泡 | `llm-pp-single`、`llm-pp-fill`（动画 4 帧）、`llm-pp-ratio`、`llm-pp-decode`、`llm-pp-batch` | 时空图的一行是一块 GPU。一个请求：每拍只有一块 GPU 在算，16 格 12 格停，停格就是气泡。多个请求跟着进来：第 4 拍四块全满，延迟不变、吞吐提高；两头是进管与排空气泡。占比 (K − 1) ÷ (M + K − 1)，K = 4、M = 8 时 27%（GPipe，NeurIPS 2019；页上有 M = 4/8/16/32 的表）。逐词生成：词 2 要等 GPU 4 取出词 1，GPU 1 停三拍，同一请求独自使用时流水线和一块 GPU 一样慢（第 2 部分 data hazard 的对应）。多个用户轮流：请求 2、3、4 填进那三拍，请求 1 的词 2 恰在第 5 拍回到 GPU 1，第 4 拍起没有气泡，独立请求数至少等于 GPU 块数（连续批处理，Orca，OSDI 2022）。实测数字（prefill 1455.8、decode 190.2 token/s）在 `llm-pp-decode` 讲稿里 |
+| 第四部分 · 投机推理 | `llm-decode-slow`、`llm-spec-idea`、`llm-spec-verify`、`llm-spec-vs-branch`、`llm-spec-gain` | 逐词生成慢在每个词读一遍全部权重，几个词的输入都已知时读一遍得到几个词（`llm-read-once`，实测 190.2 对 1455.8 词/秒）。小模型先连猜 4 个词（`spec-guess`），对应分支预测；大模型连同前文读一遍权重同时核对 4 个位置，从前往后比对：接受、第一个猜错处换成大模型的词、其后作废，例子接受「吞」「吐」改为「率」作废「，」，一遍得到 3 个词（`spec-decode`）。与分支预测逐行对照的表（谁猜、谁判定、猜对、猜错、最终结果），结论「猜测只影响速度」。划不划算：猜对 k 个前进 k + 1 个，典型 2–3 倍（Leviathan 等，ICML 2023；Chen 等，2023） |
+| 第四部分 · 其他系统里的流水线 | `assembly-line`、`video-pipeline`、`pipeline-summary` | 1913 年福特装配线（底盘装配 12 小时 28 分 → 1 小时 33 分），流水线这个词的来历；看视频：下载、解码、显示三级，段与段之间的缓冲区就是级间缓冲，开头「缓冲几秒」是进管，网络慢时缓冲区读空、画面转圈是气泡，自动降清晰度是给最慢的一级减负（`video-pipeline`）。Unix 管道与 GPU 图形管线不讲：前者没有固定节拍、气泡不是格子，后者学生没有体验。末页四行四列的表：一级是什么、级间缓冲是什么、气泡从哪来，加两条总结，再留给下一讲的问题 |
 
 ## 这一讲不讲
 
@@ -27,7 +30,7 @@ Y86 指令编码、HCL、顺序实现的数据通路、五级转发电路、load
 与第 3 讲一致：
 - 正文计数用「周期」；「拍」只在「停一拍」和讲稿口语里；「时钟」只指时钟信号或周期长短。
 - 「阶段」说一条指令经过的五步，「级」说流水线的硬件分级（五级、级间寄存器、最慢的一级），不用「段」。
-- 名词「停顿」，动词「停一拍」，图格子「停」；「气泡」只在讲稿提一次。
+- 名词「停顿」，动词「停一拍」，图格子「停」。第四部分正文用「气泡」指时空图上的停格（第一次出现在 `llm-pp-single`），讲稿里也可以用。
 - 一律「作废」。
 - 「转发」在 `forward-fig` 页正文定义；「开始执行」沿用第 3 讲，「发射」只在讲稿里。
 - 「标志位」不写「条件码」；正文不裸用 load / store。
@@ -46,4 +49,6 @@ sh lectures/4-cpu/diagrams/render.sh
 python3 -m lecturekit.cli render lectures/4-cpu --png
 ```
 
-`llm-two-phases` 讲稿里的数字是 2026-10-07 在 RTX 3060 Laptop GPU 上的一次运行（prefill 1455.8 token/s，decode 190.2 token/s）。重测在 `examples/` 下运行 `python3 llm_stages.py`，需要 `ollama serve` 在运行，并已 `ollama create nq-qwen3vl-2b -f ../../nano-quant/model/Modelfile`；换了数字要同步 `llm-two-phases` 的讲稿。
+`llm-pp-decode` 与 `llm-decode-slow` 讲稿里的数字是 2026-10-07 在 RTX 3060 Laptop GPU 上的一次运行（prefill 1455.8 token/s，decode 190.2 token/s）；`llm-read-once` 图上也印着这两个数。重测在 `examples/` 下运行 `python3 llm_stages.py`，需要 `ollama serve` 在运行，并已 `ollama create nq-qwen3vl-2b -f ../../nano-quant/model/Modelfile`；换了数字要同步这两页的讲稿和 `diagrams/llm_read_once.py`。
+
+第四部分的时空图（`llm_pp_single.py`、`llm_pp_fill.py`、`llm_pp_decode.py`、`llm_pp_batch.py`）也用 `timegrid.py` 的格子，行标签是四块 GPU，格子里是请求号或词号（`TONE` 里有「请求 1」至「请求 4」、「词 1」「词 2」）；`llm_pp_ratio.py` 要画 11 列，用更小的格子自己画。`spec_decode.py` 一次生成 `spec-guess.svg`（只到小模型猜的那一行）和 `spec-decode.svg`（整图），两张图坐标相同，翻页时格子不动。`llm_autoregressive.py` 仍在用（`llm-what` 页）；`llm_phases.py`、`llm_kv_cache.py`、`llm_batching.py` 现在没有页面引用。
