@@ -26,7 +26,7 @@ lecture = Lecture(
 
 lecture.cover(
     "CPU 执行阶段与流水线",
-    author="古金宇 · 陈榕",
+    author="古金宇 · 廖承凡",
     time="上海交通大学 IPADS",
 )
 

@@ -19,9 +19,9 @@ text = 'Lab briefing'
 # src: 实验说明
 
 ['cover.cover.1.author']
-src_hash = '96947c04'
-text = 'Jinyu Gu · Rong Chen'
-# src: 古金宇 · 陈榕
+src_hash = 'ebb322ef'
+text = 'Jinyu Gu · Chengfan Liao'
+# src: 古金宇 · 廖承凡
 
 ['cover.cover.1.time']
 src_hash = 'b33c6a5b'

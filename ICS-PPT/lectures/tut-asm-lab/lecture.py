@@ -24,7 +24,7 @@ lecture = Lecture(
 
 lecture.cover(
     "汇编实验准备",
-    author="古金宇 · 陈榕",
+    author="古金宇 · 廖承凡",
     time="上海交通大学 IPADS",
 )
 
