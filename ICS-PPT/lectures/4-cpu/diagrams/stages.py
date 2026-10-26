@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""One movl from the dot_product loop, split into the five stages.
+"""The five stages of the classic MIPS model, for any instruction.
 
-The instruction is `movl (%rsi,%r8,4), %ecx` from gcc -Og: read x[i].
-Five boxes in the stage colours the time-space figures use (fetch blue,
+No particular instruction: the next page (stage_units.py) shows the
+hardware each stage uses. Five boxes in the stage colours the time-space figures use (fetch blue,
 decode grey, execute orange, memory green, write-back solid ink) and the
 hand-over between stages written above each gap. The figure sits under the
 stage list on the `stages` page, so it is kept short; the single-cycle
@@ -16,18 +16,18 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK,
-                    ORANGE, WHITE, arrow, mono, rect, save, text)
+                    ORANGE, WHITE, arrow, rect, save, text)
 
-W, H = 1120, 156
+W, H = 1120, 132
 # (stage, what this step produces, fill, stroke, text colour)
 STAGES = [
-    ("取指", "按 %rip 读指令字节", FILL_BLUE, BLUE, INK),
-    ("译码", "认出 movl，读寄存器", FILL_GREY, INK, INK),
-    ("执行", "算地址 %rsi+%r8*4", FILL_ORANGE, ORANGE, INK),
-    ("访存", "从该地址读出 x[i]", FILL_GREEN, GREEN, INK),
-    ("写回", "x[i] 写入 %ecx", INK, INK, WHITE),
+    ("取指", "按 PC 读出指令", FILL_BLUE, BLUE, INK),
+    ("译码", "识别操作，读寄存器", FILL_GREY, INK, INK),
+    ("执行", "运算或算地址", FILL_ORANGE, ORANGE, INK),
+    ("访存", "读或写内存", FILL_GREEN, GREEN, INK),
+    ("写回", "结果写入寄存器", INK, INK, WHITE),
 ]
-PRODUCTS = ["指令字节", "%rsi、%r8 的值", "地址", "x[i]"]   # handed over in each gap
+PRODUCTS = ["指令", "源操作数", "结果或地址", "结果或数据"]   # handed over in each gap
 BW, GAP, BH = 160, 60, 88
 X0 = (W - 5 * BW - 4 * GAP) / 2                           # 40
 Y0 = 34
@@ -44,8 +44,6 @@ def build():
             mid = Y0 + BH / 2
             out.append(arrow(x + BW + 4, mid, x + BW + GAP - 4, mid, INK, 2))
             out.append(text(x + BW + GAP / 2, Y0 - 12, PRODUCTS[i], 15, INK))
-    out.append(mono(W / 2, Y0 + BH + 28, "movl (%rsi,%r8,4), %ecx", 18, INK, "bold",
-                    anchor="middle"))
     return out
 
 

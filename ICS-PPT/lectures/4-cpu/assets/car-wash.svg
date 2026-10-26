@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 456 128" width="456" height="128">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="8.0" y="8.0" width="124.0" height="112.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="70.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#156082" text-anchor="middle">打泡沫</text>
+<rect x="34.0" y="66.0" width="72.0" height="42.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="70.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">车 3</text>
+<rect x="166.0" y="8.0" width="124.0" height="112.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="228.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#e97132" text-anchor="middle">冲洗</text>
+<rect x="192.0" y="66.0" width="72.0" height="42.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="228.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">车 2</text>
+<line x1="136.0" y1="64.0" x2="162.0" y2="64.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="324.0" y="8.0" width="124.0" height="112.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="386.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#2e7d4f" text-anchor="middle">擦干</text>
+<rect x="350.0" y="66.0" width="72.0" height="42.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="386.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">车 1</text>
+<line x1="294.0" y1="64.0" x2="320.0" y2="64.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+</svg>

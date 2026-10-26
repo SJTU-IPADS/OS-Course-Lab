@@ -69,6 +69,7 @@
 }
 
 :root {
+  --layout-gutter: 24px;
   --color-bg: #ffffff;       /* lt1 */
   --color-fg: #000000;       /* dk1 / tx1 */
   --color-dk2: #0e2841;
@@ -219,6 +220,88 @@ section.lk-gap-auto > .lk-gap-flow {
   flex: 1 0 var(--lk-gap-min);
   min-height: var(--lk-gap-min);
   max-height: var(--lk-gap-max);
+}
+
+/* Both columns of a side_image page in the vertical middle
+   (p.side_image(..., valign="middle")). The renderer puts one of these
+   spacers before the text column's first block and one after its last; they
+   split the leftover space, so the blocks sit in the middle of the band from
+   the title's rule to the slide's bottom padding. The last block's bottom
+   margin would otherwise count toward the group's height. */
+section.lk-valign-middle > .lk-valign-spacer,
+section.lk-valign-bottom > .lk-valign-spacer {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+section.lk-valign-middle > :not(h1):has(+ .lk-valign-spacer) {
+  margin-bottom: 0;
+}
+
+/* Layout boxes share one alignment rule for every leaf and container. The
+   content keeps its own text alignment while the box moves it as a group. */
+.lk-box {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 0 0.4em;
+}
+
+.lk-content {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.lk-box[style*="align-items:stretch"] > .lk-content,
+.lk-content.lk-flex {
+  width: 100%;
+}
+
+.lk-content > * {
+  flex: 0 0 auto;
+}
+
+.lk-content > table { align-self: center; }
+.lk-content > figure.lk-figure,
+.lk-content > figure.lk-row {
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0 0 0.6em;
+  text-align: center;
+}
+.lk-content > figure.lk-arch {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 0.6em;
+  font-size: 0.9em;
+}
+.lk-content > .lk-float { display: flow-root; margin: 0 0 0.4em; }
+.lk-content > .lk-float.lk-float-middle { display: flex; }
+
+.lk-flex-row {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--layout-gutter);
+}
+.lk-flex-row > .lk-box {
+  flex: 1 1 0;
+  margin-bottom: 0;
+}
+.lk-flex-row > .lk-box[style*="--lk-basis"] {
+  flex: 0 1 var(--lk-basis);
+}
+
+.lk-content > :last-child {
+  margin-bottom: 0;
 }
 
 section.lk-gap-auto .lk-gap-block > .lk-float {
@@ -989,6 +1072,33 @@ section > .lk-float {
   margin: 0 0 0.4em;
 }
 
+/* image_right(..., valign="middle"): the text and the image side by side, each
+   centred vertically against the other; the text does not wrap under the
+   image. The selector outranks the flow-root of a `p.gap` page's block, and
+   the live preview's reveal wrapper repeats it (reveal.css). */
+section .lk-float.lk-float-middle,
+section.lk-gap-auto .lk-gap-block > .lk-float.lk-float-middle {
+  display: flex;
+  align-items: center;
+}
+
+.lk-float-middle > .lk-float-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lk-float-middle > .lk-float-text > :first-child {
+  margin-top: 0;
+}
+
+.lk-float-middle > .lk-float-text > :last-child {
+  margin-bottom: 0;
+}
+
+.lk-float-middle > img {
+  flex: none;
+}
+
 /* A figure frames an image (and optional caption). It shrinks into whatever
    vertical space is left after the title and text, so the image stays fully
    visible, and it centers the image and caption. */
@@ -1086,27 +1196,44 @@ section > figure.lk-row > figcaption {
   min-width: 0;       /* a long code span wraps instead of widening its column */
 }
 
-/* --- An image column on the left (p.side_image(..., side="left")) ---
+/* --- An image column beside the text (p.side_image(...)) ---
    Marp's split background moves the whole slide into the other column, the
-   title with it; on the left that takes the title away from the slide's left
-   edge. This split is therefore drawn here: the title keeps the slide's width,
-   the image column runs from under the title's rule to the slide's left and
-   bottom edges, and the blocks keep their flex column to the right of it, as
-   wide as Marp's split leaves them. The renderer sets --lk-side-width (px) on
-   the slide. */
+   title with it: on the left the title leaves the slide's left edge, and on
+   either side its rule stops at the column. This split is therefore drawn
+   here, on either side: the title keeps the slide's width, the image column
+   runs from under the title's rule to the slide's outer and bottom edges, and
+   the blocks keep their flex column beside it, as wide as Marp's split leaves
+   them. The renderer sets --lk-side-width (px) on the slide and names the
+   side in its class. */
 section.lk-side-left {
   padding-left: calc(var(--lk-side-width) + 80px);
+}
+
+section.lk-side-right {
+  padding-right: calc(var(--lk-side-width) + 80px);
+}
+
+section.lk-side-left,
+section.lk-side-right {
   anchor-scope: --lk-title;
 }
 
 section.lk-side-left > h1 {
   margin-left: calc(-1 * var(--lk-side-width));
+}
+
+section.lk-side-right > h1 {
+  margin-right: calc(-1 * var(--lk-side-width));
+}
+
+section.lk-side-left > h1,
+section.lk-side-right > h1 {
   anchor-name: --lk-title;
 }
 
-section.lk-side-left > .lk-side {
+section.lk-side-left > .lk-side,
+section.lk-side-right > .lk-side {
   position: absolute;
-  left: 0;
   bottom: 0;
   width: var(--lk-side-width);
   /* Where a one-line title's rule ends (the slide's top padding plus the h1
@@ -1116,6 +1243,14 @@ section.lk-side-left > .lk-side {
   top: anchor(--lk-title bottom);
   margin: 13pt 0 0;           /* the title's own bottom margin */
   display: flex;              /* several images share the column side by side */
+}
+
+section.lk-side-left > .lk-side {
+  left: 0;
+}
+
+section.lk-side-right > .lk-side {
+  right: 0;
 }
 
 .lk-side > img {
@@ -1137,22 +1272,33 @@ section.lk-side-left > .lk-side {
    outside and 40px short of the text column on the inside, and stops 40px
    above the bottom edge. The picture then sits nearer the text than the
    slide's edge, its outer side in line with the title. The text column is
-   the same either way. */
-section.lk-side-left > .lk-side:has(> img.lk-side-fit) {
-  left: 80px;
+   the same either way.
+
+   Slide text under the image (p.slide(...).under_side_image()) makes the
+   column a stack: the images across its top, as wide as the column and as
+   tall as their aspect ratio makes them, and the text below. It keeps the
+   slide's margins, as a fitted image's box does. */
+section.lk-side-left > .lk-side:has(> img.lk-side-fit),
+section.lk-side-right > .lk-side:has(> img.lk-side-fit),
+section.lk-side-left > .lk-side.lk-side-stack,
+section.lk-side-right > .lk-side.lk-side-stack {
   width: calc(var(--lk-side-width) - 40px);
   bottom: 40px;
 }
 
-/* Slide text under the image (p.slide(...).under_side_image()). The column
-   is then a stack: the images across its top, as wide as the column and as
-   tall as their aspect ratio makes them, and the text below. It keeps the
-   slide's margins, as a fitted image's box does. */
+section.lk-side-left > .lk-side:has(> img.lk-side-fit),
 section.lk-side-left > .lk-side.lk-side-stack {
-  display: block;
   left: 80px;
-  width: calc(var(--lk-side-width) - 40px);
-  bottom: 40px;
+}
+
+section.lk-side-right > .lk-side:has(> img.lk-side-fit),
+section.lk-side-right > .lk-side.lk-side-stack {
+  right: 80px;
+}
+
+section.lk-side-left > .lk-side.lk-side-stack,
+section.lk-side-right > .lk-side.lk-side-stack {
+  display: block;
 }
 
 .lk-side-stack > .lk-side-images {
@@ -1168,19 +1314,45 @@ section.lk-side-left > .lk-side.lk-side-stack {
   margin: 0;
 }
 
-/* The same box for Marp's split on the right, which runs the slide's full
-   height: there the top margin is the slide's top padding (44px). */
-section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split="right"]
-  > div[data-marpit-advanced-background-container]:has(> figure[style*="contain"]) {
-  box-sizing: border-box;
-  width: calc(var(--marpit-advanced-background-split, 50%) - 40px);
-  margin-left: calc(100% - var(--marpit-advanced-background-split, 50%) - 40px);
-  padding: 44px 0 40px;
+/* The image column under valign="middle" ends at the slide's bottom padding,
+   where the text column's band ends, so the two columns centre on one line:
+   a fitted image is already centred in its box, a stack is centred as one
+   group (the picture with the text under it). */
+section.lk-valign-middle > .lk-side:has(> img.lk-side-fit) {
+  bottom: 70px;
+}
+
+section.lk-valign-middle > .lk-side.lk-side-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  bottom: 70px;
+}
+
+section.lk-valign-middle > .lk-side.lk-side-stack > :last-child {
+  margin-bottom: 0;
+}
+
+section.lk-valign-bottom > .lk-side:has(> img.lk-side-fit),
+section.lk-valign-bottom > .lk-side.lk-side-stack {
+  bottom: 70px;
+}
+section.lk-valign-bottom > .lk-side > img.lk-side-fit {
+  object-position: center bottom;
+}
+section.lk-valign-bottom > .lk-side.lk-side-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 /* Footnotes stay under the text, as they do inside Marp's split. */
 section.lk-side-left > .footnotes {
   left: calc(var(--lk-side-width) + 80px);
+}
+
+section.lk-side-right > .footnotes {
+  right: calc(var(--lk-side-width) + 80px);
 }
 
 /* --- Pagination + footer --- */

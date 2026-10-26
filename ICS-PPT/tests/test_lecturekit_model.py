@@ -23,6 +23,8 @@ class SelectBlocksTest(unittest.TestCase):
                 "image", "side_image", "sidenote", "demo", "aside",
                 "table", "architecture", "row", "columns", "spacer",
                 "highlight", "bridge",
+                # a container's two markers (docs/layout.md)
+                "flex", "end",
             }),
         )
 

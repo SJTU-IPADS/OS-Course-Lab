@@ -54,6 +54,11 @@ running text is written twice, as `p.slide(...)` and `p.prose(...)`.
 
 ### More of the vocabulary
 
+`p.valign("middle")` centres a page's content below its title. Every block has
+the same `.halign(...)` and `.valign(...)` methods; `with p.flex("row"):` puts
+blocks side by side, and `p.flex()` stacks a nested group. See the
+[layout model](docs/layout.md) for boxes and inheritance.
+
 `p.frames(a, b, c)` is an animation: the text written once, the figure swapped
 under it. Each frame is a slide of its own; the outline gives the three one row.
 

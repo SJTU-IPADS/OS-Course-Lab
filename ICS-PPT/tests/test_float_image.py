@@ -46,7 +46,7 @@ class FloatImageSerializeTest(unittest.TestCase):
         self.assertEqual(
             block["float_image"],
             {"src": "weekly.png", "alt": "", "width": "160px",
-             "height": None, "side": "right"},
+             "height": None, "side": "right", "valign": "top"},
         )
 
     def test_plain_block_dumps_float_image_none(self):
@@ -79,7 +79,7 @@ class FloatImageAuthoringTest(unittest.TestCase):
         self.assertEqual(
             block.float_image,
             {"src": "weekly.png", "alt": "", "width": "160px",
-             "height": None, "side": "right"},
+             "height": None, "side": "right", "valign": "top"},
         )
 
     def test_image_right_accepts_pct_and_alt(self):

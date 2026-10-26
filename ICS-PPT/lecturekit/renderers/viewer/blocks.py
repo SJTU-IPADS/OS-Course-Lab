@@ -65,13 +65,16 @@ def _float_image_html(image: dict) -> str:
 
     Marp's --html mode passes this through; absent width/height are omitted. The
     margin is a fixed cosmetic gutter between the image and the wrapped text.
+    Under ``valign="middle"`` the image is a flex item after the text instead
+    of a float, so it keeps only the gutter on its left.
     """
-    decls = ["float: right"]
+    middle = image.get("valign") == "middle"
+    decls = [] if middle else ["float: right"]
     if image.get("width") is not None:
         decls.append(f"width: {image['width']}")
     if image.get("height") is not None:
         decls.append(f"height: {image['height']}")
-    decls.append("margin: 0 0 .4em 1em")
+    decls.append("margin: 0 0 0 1em" if middle else "margin: 0 0 .4em 1em")
     style = "; ".join(decls)
     src = escape_html(image["src"])
     alt = escape_html(image.get("alt") or "")
@@ -104,6 +107,22 @@ def _file_buttons(text: str) -> str:
 def _slide(block):
     content = _file_buttons(str(block.content).strip())
     image = block.float_image
+    if image and image.get("valign") == "middle":
+        # `valign="middle"`: the text and the image side by side in one flex
+        # row (`.lk-float-middle` in the theme), each centred against the
+        # other. The text gets a wrapper of its own so its paragraphs and list
+        # stay one flex item; the image follows it, on the right.
+        return [
+            '<div class="lk-float lk-float-middle">',
+            '<div class="lk-float-text">',
+            "",
+            content,
+            "",
+            "</div>",
+            _float_image_html(image),
+            "</div>",
+            "",
+        ]
     if image:
         # The theme lays the slide body out as a flex column, where a bare
         # floated <img> becomes a flex item and `float` is ignored (it would
@@ -231,20 +250,8 @@ def _image(block):
 
 
 def _side_image(block):
-    image = block.content
-    src = image["src"]
-    side = image.get("side") or "right"
-    if side == "left":
-        # Drawn once per page by `side_column`, under the full-width title.
-        return []
-    width = image.get("width")
-    alt = image.get("alt") or ""
-    directive = f"bg {side}"
-    if width is not None:
-        directive += f":{width}"
-    if alt:
-        directive += f" {alt}"
-    return [f"![{directive}]({src})", ""]
+    # Drawn once per page by `side_column`, under the full-width title.
+    return []
 
 
 # Marp's background keywords that ask for the whole image, uncropped.
@@ -256,7 +263,7 @@ def side_width_px(width, slide_width: int) -> int:
     """A ``side_image`` column's width in pixels on a slide ``slide_width`` wide.
 
     ``width`` is a percentage of the slide (``"40%"``), a pixel count
-    (``"480px"`` or a bare number), or ``None`` for Marp's half split.
+    (``"480px"`` or a bare number), or ``None`` for half the slide.
     """
     if isinstance(width, (int, float)):
         return round(width)
@@ -270,14 +277,15 @@ def side_width_px(width, slide_width: int) -> int:
 
 
 def side_column(sides: list, slide_width: int, texts: list = ()) -> list[str]:
-    """The image column of a page whose ``side_image`` blocks sit on the left.
+    """The image column of a page with ``side_image`` blocks, on either side.
 
     Marp's split background moves the whole slide into the other column, the
-    title with it; on the left that takes the title away from the slide's left
-    edge. So a left column is drawn by the theme instead
-    (``section.lk-side-left``): the title keeps the slide's width, and the
-    images share one column that starts under it. The scoped style hands the
-    theme that column's width, set by the first image.
+    title with it: the title leaves the slide's edge on the left, and its rule
+    stops at the column on either side. So the column is drawn by the theme
+    instead (``section.lk-side-left`` / ``section.lk-side-right``): the title
+    keeps the slide's width, and the images share one column that starts
+    under it. The scoped style hands the theme that column's width, set by
+    the first image.
 
     ``texts`` is the rendered markdown of the slide blocks set under the image
     (``under_side_image``), one list of lines per block. With any, the column

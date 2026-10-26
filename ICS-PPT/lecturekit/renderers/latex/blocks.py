@@ -18,6 +18,8 @@ from .assets import AssetCopier
 from .text import blocks as md_blocks
 from .text import MARK_COLORS, escape, inline
 
+# Layout markers are deliberately absent: the book prints the contained leaves
+# in order and ignores their slide alignment.
 LATEX_KINDS = frozenset({
     "prose", "code", "link", "image", "row", "table",
     "sidenote", "architecture", "demo", "aside", "highlight",

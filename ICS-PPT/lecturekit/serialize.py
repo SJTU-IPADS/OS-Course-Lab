@@ -31,6 +31,8 @@ def _node(node: model.Section | model.Page) -> dict:
             "news": [_news_item(item) for item in node.news],
             "citations": [_citation(item) for item in node.citations],
             "gap": _gap(node.gap),
+            "halign": node.halign,
+            "valign": node.valign,
             "frame_group": _frame_group(node.frame_group),
             "blocks": [_block(block) for block in node.blocks],
         }
@@ -59,6 +61,8 @@ def _block(block: model.Block) -> dict:
         "reveal": block.reveal,
         "autobold": block.autobold,
         "after_frames": block.after_frames,
+        "halign": block.halign,
+        "valign": block.valign,
     }
 
 

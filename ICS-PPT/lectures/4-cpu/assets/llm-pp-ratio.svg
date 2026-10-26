@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 186" width="1120" height="186">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="100.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">周期</text>
+<text x="144.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="208.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="272.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<text x="336.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<text x="400.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<text x="464.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<text x="528.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<text x="592.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
+<text x="656.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<text x="720.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<text x="784.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">11</text>
+<text x="24.0" y="52.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 1</text>
+<rect x="114.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="144.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">1</text>
+<rect x="178.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="208.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">2</text>
+<rect x="242.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="272.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">3</text>
+<rect x="306.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="336.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="370.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="400.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">5</text>
+<rect x="434.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="464.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">6</text>
+<rect x="498.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="528.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">7</text>
+<rect x="562.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="592.0" y="52.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">8</text>
+<rect x="626.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="656.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="690.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="720.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="754.0" y="32.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="784.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<text x="24.0" y="90.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 2</text>
+<rect x="114.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="144.0" y="89.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="178.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="208.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">1</text>
+<rect x="242.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="272.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">2</text>
+<rect x="306.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="336.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">3</text>
+<rect x="370.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="400.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="434.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="464.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">5</text>
+<rect x="498.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="528.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">6</text>
+<rect x="562.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="592.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">7</text>
+<rect x="626.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="656.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">8</text>
+<rect x="690.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="720.0" y="89.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="754.0" y="70.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="784.0" y="89.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<text x="24.0" y="128.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 3</text>
+<rect x="114.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="144.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="178.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="208.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="242.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="272.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">1</text>
+<rect x="306.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="336.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">2</text>
+<rect x="370.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="400.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">3</text>
+<rect x="434.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="464.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="498.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="528.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">5</text>
+<rect x="562.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="592.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">6</text>
+<rect x="626.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="656.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">7</text>
+<rect x="690.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="720.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">8</text>
+<rect x="754.0" y="108.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="784.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<text x="24.0" y="166.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 4</text>
+<rect x="114.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="144.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="178.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="208.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="242.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="272.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="306.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="336.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">1</text>
+<rect x="370.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="400.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">2</text>
+<rect x="434.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="464.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">3</text>
+<rect x="498.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="528.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="562.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="592.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">5</text>
+<rect x="626.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="656.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">6</text>
+<rect x="690.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="720.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">7</text>
+<rect x="754.0" y="146.0" width="60.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="784.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">8</text>
+<text x="842.0" y="80.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">共 4 × 11 = 44 格</text>
+<text x="842.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start">bubble 6 + 6 = 12 格</text>
+<text x="842.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start">12 ÷ 44 = 27%</text>
+</svg>

@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable, Self
 
 from . import filelinks, marks
 
@@ -20,12 +20,31 @@ RATIOS = {
 }
 DEFAULT_RATIO = "16:9"
 
+# A container is written into a page's flat block list the way HTML writes an
+# element: an opening `flex` block, its children, a closing `end` block. They
+# are layout, not content — `layout(...)` reads them back into a tree, and a
+# renderer that does not lay a slide out (the book, the transcript) never asks
+# for either kind, so it sees the children in order. See docs/layout.md.
+FLEX_KIND = "flex"
+END_KIND = "end"
+MARKER_KINDS = frozenset({FLEX_KIND, END_KIND})
+
 BLOCK_KINDS = frozenset({
     "cover", "slide", "notes", "prose", "code", "link",
     "image", "side_image", "sidenote", "demo", "aside",
     "table", "architecture", "row", "columns", "spacer", "highlight",
     "bridge",
-})
+}) | MARKER_KINDS
+
+# The two axes of alignment, and where each value puts an element's content in
+# its box as a fraction of the room left over: 0 at the start, 1 at the end.
+HALIGNS = ("left", "center", "right")
+VALIGNS = ("top", "middle", "bottom")
+ALIGN_FRACTION = {
+    "left": 0.0, "center": 0.5, "right": 1.0,
+    "top": 0.0, "middle": 0.5, "bottom": 1.0,
+}
+FLEX_DIRECTIONS = ("column", "row")
 
 # Slide text may carry `<mark>`: a `slide` block, and each column of a
 # `columns` block, which is slide text set beside its neighbours.
@@ -147,6 +166,45 @@ LEGACY_GAP_MAX_PX = 28
 # The word ``p.gap(...)`` takes instead of a cap to lift it entirely.
 GAP_FILL = "fill"
 
+# Where a ``side_image`` page's columns sit in the band under the title. It is
+# the page's own ``valign`` (see ``page_valign``), so it takes the same values.
+# See dsl.PageBuilder.side_image.
+SIDE_VALIGNS = VALIGNS
+DEFAULT_SIDE_VALIGN = "top"
+# Where an ``image_right`` picture sits against its text: "top" floats it and
+# the text flows round it, "middle" sets the two side by side, each centred
+# against the other. See dsl.BlockHandle.image_right.
+FLOAT_VALIGNS = ("top", "middle")
+
+
+def side_valign(blocks: Iterable[Block]) -> str:
+    """The vertical alignment the ``side_image`` blocks among ``blocks`` ask for.
+
+    A block without the key (one built by hand, or serialized before the key
+    existed) asks for the default. Validation rejects a page whose side images
+    disagree, so the first one's answer is the page's.
+    """
+    for block in blocks:
+        if block.kind == "side_image":
+            return block.content.get("valign", DEFAULT_SIDE_VALIGN)
+    return DEFAULT_SIDE_VALIGN
+
+
+def page_valign(page: Page, blocks: Iterable[Block] | None = None) -> str | None:
+    """The page's own ``valign``: where its elements sit in the band under the title.
+
+    ``p.valign(...)`` sets it; ``p.side_image(..., valign=...)`` says the same
+    thing for a page with an image column, and is read when the page sets none.
+    ``blocks`` names the blocks a renderer kept (a ``side_image`` filtered out of
+    a target no longer speaks for the page there); it defaults to all of them.
+    """
+    if page.valign is not None:
+        return page.valign
+    blocks = page.blocks if blocks is None else blocks
+    if any(block.kind == "side_image" for block in blocks):
+        return side_valign(blocks)
+    return None
+
 
 @dataclass(frozen=True)
 class PageGap:
@@ -173,8 +231,45 @@ class FrameGroup:
     total: int
 
 
+@dataclass(frozen=True, kw_only=True)
+class LecturekitElement:
+    """Anything a page lays out: a block, a container, the page itself.
+
+    Each element has a box — the space its container gives it — and these two
+    fields place its content in that box: ``halign`` is one of ``HALIGNS``,
+    ``valign`` one of ``VALIGNS``, and ``None`` keeps the theme's default for
+    the element. A container's content is its children, moved as one group
+    along its direction; an unset field takes the container's value. The rules
+    are in docs/layout.md, and each renderer implements them once, for every
+    element.
+    """
+    halign: str | None = None
+    valign: str | None = None
+
+    def aligned(self, **axes: str | None) -> Self:
+        """An immutable copy with alignment set, shared by all element types."""
+        if axes.keys() - {"halign", "valign"}:
+            raise ValidationError(f"unknown alignment axis: {', '.join(axes)}")
+        element = replace(self, **axes)
+        check_alignment(element, type(self).__name__)
+        return element
+
+
+@dataclass(frozen=True, kw_only=True)
+class Flex(LecturekitElement):
+    """A container: its children laid out in a column or in a row.
+
+    Not stored on a page as such — a page's ``blocks`` hold it as an opening
+    ``flex`` block and a closing ``end`` block around its children, and
+    :func:`layout` builds this node from them. ``block`` is that opening block.
+    """
+    direction: str = "column"
+    children: tuple[LecturekitElement, ...] = ()
+    block: Block | None = None
+
+
 @dataclass(frozen=True)
-class Block:
+class Block(LecturekitElement):
     kind: str
     content: Any
     only: set[str] | None = None
@@ -204,10 +299,10 @@ class Block:
     # A small image floated to the right of a slide block's text; the text
     # wraps around it. Only set on slide blocks. See dsl.BlockHandle.image_right.
     float_image: dict | None = None
-    # When True, this slide block is set in the page's left image column,
-    # under the ``side_image``, instead of in the text column beside it. Only
-    # set on slide blocks, and only on a page with a ``side_image`` on the
-    # left. See dsl.BlockHandle.under_side_image.
+    # When True, this slide block is set in the page's image column, under
+    # the ``side_image``, instead of in the text column beside it. Only set on
+    # slide blocks, and only on a page with a ``side_image``. See
+    # dsl.BlockHandle.under_side_image.
     in_side: bool = False
     # How finely this block steps in the live preview's reveal-on-Enter mode;
     # one of REVEAL_MODES. Only a slide block may carry "items". Live preview
@@ -230,7 +325,13 @@ class Block:
 
 
 @dataclass(frozen=True)
-class Page:
+class Page(LecturekitElement):
+    """One slide's worth of content: the root container of its elements.
+
+    As an element, the page is a column whose box is the band under its title;
+    its ``halign`` / ``valign`` place its elements there (see ``page_valign``
+    for the ``side_image`` spelling of the latter).
+    """
     id: str
     title: str
     blocks: list[Block] = field(default_factory=list)
@@ -344,6 +445,52 @@ def select_blocks(page: Page, target: str, kinds: set[str]) -> list[Block]:
     return selected
 
 
+def layout(blocks: Iterable[Block]) -> list[LecturekitElement]:
+    """Read a flat run of blocks back into the tree its markers spell.
+
+    Returns the top-level elements in order: a ``Block`` for each leaf and a
+    ``Flex`` for each ``flex`` … ``end`` pair, holding its children. A container
+    left without children (every one filtered out of a target) is dropped, so
+    a renderer never draws an empty box. Validation has already refused an
+    unbalanced page; a stray ``end`` here closes nothing, and a container still
+    open at the end of the run is closed there.
+    """
+    stack: list[tuple[Block, list[LecturekitElement]]] = []
+    top: list[LecturekitElement] = []
+
+    def close() -> None:
+        opener, children = stack.pop()
+        if not children:
+            return
+        node = Flex(
+            direction=(opener.content or {}).get("direction", "column"),
+            children=tuple(children),
+            block=opener,
+            halign=opener.halign,
+            valign=opener.valign,
+        )
+        (stack[-1][1] if stack else top).append(node)
+
+    for block in blocks:
+        if block.kind == FLEX_KIND:
+            stack.append((block, []))
+        elif block.kind == END_KIND:
+            if stack:
+                close()
+        else:
+            (stack[-1][1] if stack else top).append(block)
+    while stack:
+        close()
+    return top
+
+
+def resolve_align(
+    element: LecturekitElement, inherited: tuple[str | None, str | None]
+) -> tuple[str | None, str | None]:
+    """``(halign, valign)`` of ``element``: its own, else its container's."""
+    return (element.halign or inherited[0], element.valign or inherited[1])
+
+
 def is_bridge_page(page: Page) -> bool:
     """A transition page: one ``bridge`` block and nothing else.
 
@@ -436,10 +583,11 @@ def tail_visible(page: Page) -> bool:
     return group is None or group.index == group.total
 
 
-# Kinds ``block_held`` never holds. A ``side_image`` column narrows the whole
-# slide: hiding it would reflow every frame's text to full width, which is
-# exactly the between-frame shift holding exists to prevent.
-HELD_EXEMPT_KINDS = frozenset({"side_image"})
+# Kinds ``block_held`` never holds. A ``side_image`` narrows the text column:
+# hiding it would reflow every frame's text to full width, which is
+# exactly the between-frame shift holding exists to prevent. A container's
+# markers are layout: its children are held one by one, the box stays.
+HELD_EXEMPT_KINDS = frozenset({"side_image"}) | MARKER_KINDS
 
 
 def block_held(page: Page, block: Block) -> bool:
@@ -580,6 +728,8 @@ def validate_lecture(lecture: Lecture) -> None:
             for block in node.blocks:
                 check_block(block, page_id=node.id, refs=seen_refs, keys=keys)
             check_side_text(node)
+            check_side_valign(node)
+            check_layout(node)
             for item in node.news:
                 check_news_item(item, page_id=node.id)
             return
@@ -592,20 +742,131 @@ def validate_lecture(lecture: Lecture) -> None:
 
 
 def check_side_text(page: Page) -> None:
-    """Slide text set under a side image needs that image, and on the left.
-
-    A column on the right is Marp's split background, which holds a picture
-    and nothing else; only the left column is drawn by the theme.
-    """
+    """Slide text set under a side image needs that image on the same page."""
     if not any(block.in_side for block in page.blocks):
         return
-    if not any(
-        block.kind == "side_image" and block.content.get("side") == "left"
-        for block in page.blocks
-    ):
+    if not any(block.kind == "side_image" for block in page.blocks):
         raise ValidationError(
-            "under_side_image needs a side_image on the left "
-            f"(p.side_image(..., side=\"left\")) on the same page: {page.id}"
+            f"under_side_image needs a p.side_image(...) on the same page: {page.id}"
+        )
+
+
+def check_side_valign(page: Page) -> None:
+    """A page's side images agree on ``valign``, with each other and the page.
+
+    A side image's ``valign`` is the page's (see ``page_valign``): one page has
+    one band under its title, so its side images cannot ask for different
+    places in it, nor for another than ``p.valign(...)`` set.
+    """
+    valigns = []
+    for block in page.blocks:
+        if block.kind != "side_image":
+            continue
+        valign = block.content.get("valign", DEFAULT_SIDE_VALIGN)
+        if valign not in SIDE_VALIGNS:
+            raise ValidationError(
+                f"Unknown side_image valign on {page.id}: {valign!r}"
+            )
+        valigns.append(valign)
+    if len(set(valigns)) > 1:
+        raise ValidationError(
+            f"The side images on {page.id} disagree on valign: "
+            f"{', '.join(repr(v) for v in valigns)}"
+        )
+    if (page.valign is not None and valigns
+            and valigns[0] != DEFAULT_SIDE_VALIGN and valigns[0] != page.valign):
+        raise ValidationError(
+            f"side_image valign={valigns[0]!r} and p.valign({page.valign!r}) "
+            f"disagree on {page.id}; the side image's valign is the page's"
+        )
+
+
+def check_alignment(element: LecturekitElement, where: str) -> None:
+    """``halign`` / ``valign`` name a place on their own axis, or are unset."""
+    if element.halign is not None and element.halign not in HALIGNS:
+        raise ValidationError(
+            f"halign on {where} must be one of {', '.join(HALIGNS)}, "
+            f"got {element.halign!r}"
+        )
+    if element.valign is not None and element.valign not in VALIGNS:
+        raise ValidationError(
+            f"valign on {where} must be one of {', '.join(VALIGNS)}, "
+            f"got {element.valign!r}"
+        )
+
+
+# What a container may not hold: the blocks that belong to the page's image
+# column, or own a page of their own.
+_FLEX_EXCLUDED_KINDS = frozenset({"side_image", "cover", "bridge"})
+
+
+def check_layout(page: Page) -> None:
+    """The page's alignment, and its containers: well formed and well placed.
+
+    Every ``flex`` block is closed by an ``end`` block, holds at least one
+    block, and names a direction; a marker carries nothing a block hangs off
+    itself (footnotes, callouts, filters), since it draws nothing. A container
+    holds no ``side_image`` and no text set under one, which belong to the
+    page's image column. A page set in the middle or at the bottom of its band
+    cannot also share that band out with ``p.gap(...)``.
+    """
+    check_alignment(page, f"page {page.id}")
+    valign = page_valign(page)
+    if valign in ("middle", "bottom") and page.gap is not None:
+        raise ValidationError(
+            f"valign={valign!r} and p.gap(...) both claim the page's leftover "
+            f"vertical space; {page.id} sets both"
+        )
+    depth = 0
+    counts: list[int] = []
+    for block in page.blocks:
+        where = f"the {block.kind} block on {page.id}"
+        check_alignment(block, where)
+        if block.kind in MARKER_KINDS:
+            if (block.footnotes or block.annotations or block.only is not None
+                    or block.except_ is not None or block.disabled
+                    or block.key is not None):
+                raise ValidationError(
+                    f"a flex container carries no footnotes, callouts, filters "
+                    f"or key: {page.id}"
+                )
+        if block.kind == FLEX_KIND:
+            direction = (block.content or {}).get("direction")
+            if direction not in FLEX_DIRECTIONS:
+                raise ValidationError(
+                    f"flex direction on {page.id} must be one of "
+                    f"{', '.join(FLEX_DIRECTIONS)}, got {direction!r}"
+                )
+            if counts:
+                counts[-1] += 1
+            depth += 1
+            counts.append(0)
+            continue
+        if block.kind == END_KIND:
+            if not depth:
+                raise ValidationError(
+                    f"an end block closes no flex container on {page.id}"
+                )
+            if not counts.pop():
+                raise ValidationError(f"an empty flex container on {page.id}")
+            depth -= 1
+            continue
+        if counts:
+            counts[-1] += 1
+        if block.kind == "side_image" and (block.halign or block.valign):
+            raise ValidationError(
+                f"a side_image follows the page's alignment and has none of "
+                f"its own: {page.id} (use p.valign(...) or side_image(valign=...))"
+            )
+        if depth and (block.kind in _FLEX_EXCLUDED_KINDS or block.in_side):
+            what = "under_side_image text" if block.in_side else block.kind
+            raise ValidationError(
+                f"a flex container cannot hold {what}: {page.id}"
+            )
+    if depth:
+        raise ValidationError(
+            f"a flex container on {page.id} is never closed; write it as "
+            f"`with p.flex(...):`"
         )
 
 
@@ -726,6 +987,11 @@ def check_block(
             raise ValidationError(
                 f"Empty float image src on {page_id}: {block.kind}"
             )
+        valign = block.float_image.get("valign", DEFAULT_SIDE_VALIGN)
+        if valign not in FLOAT_VALIGNS:
+            raise ValidationError(
+                f"Unknown image_right valign on {page_id}: {valign!r}"
+            )
     if block.kind == "architecture":
         check_architecture(block.content, page_id)
     if block.kind == "row":
@@ -754,7 +1020,7 @@ def check_block(
 # keys it must not walk into.
 _NON_PROSE_KEYS = frozenset({
     "src", "srcs", "url", "link", "logo", "ref", "language", "command",
-    "side", "flow", "align", "caption_align", "tone", "width",
+    "side", "flow", "align", "caption_align", "tone", "width", "direction",
 })
 
 

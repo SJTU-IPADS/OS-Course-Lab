@@ -25,6 +25,12 @@
   display: block;
 }
 
+/* An aligned leaf's wrapper is its layout box. Keep that box while dimming
+   its content, so reveal mode and exported slides have identical geometry. */
+.reveal-block.lk-box {
+  display: flex;
+}
+
 section > .reveal-block > * {
   flex: 0 0 auto;
 }
@@ -34,6 +40,9 @@ section > .reveal-block > table {
 section > .reveal-block > .lk-float {
   display: flow-root;
   margin: 0 0 0.4em;
+}
+section > .reveal-block > .lk-float.lk-float-middle {
+  display: flex;
 }
 section > .reveal-block > figure.lk-figure {
   flex: 0 1 auto;

@@ -14,7 +14,8 @@ import re
 import sys
 
 PAT = re.compile(r'<text x="([-\d.]+)" y="([-\d.]+)"[^>]*font-size="([\d.]+)"'
-                 r'[^>]*text-anchor="(\w+)"[^>]*>([^<]*)</text>')
+                 r'[^>]*text-anchor="(\w+)"[^>]*>((?:[^<]|</?tspan[^>]*>)*)</text>')
+TSPAN = re.compile(r'</?tspan[^>]*>')
 
 RECT = re.compile(r'<rect x="([-\d.]+)" y="([-\d.]+)" '
                   r'width="([\d.]+)" height="([\d.]+)"')
@@ -34,7 +35,7 @@ def offences(path):
     out = []
     for x, y, size, anchor, body in PAT.findall(src):
         x, y, size = float(x), float(y), float(size)
-        wide = advance(html.unescape(body), size)
+        wide = advance(html.unescape(TSPAN.sub("", body)), size)
         left = {"end": x - wide, "middle": x - wide / 2}.get(anchor, x)
         right = left + wide
         if left < x0 + 2 or right > x0 + w - 2 or y > h - 2 or y < size:

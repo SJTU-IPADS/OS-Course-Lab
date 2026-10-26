@@ -40,8 +40,7 @@ def step(n, generated, dist, taken, y):
         out.append(text(x + TW / 2, y - 8, f"x{i + 1}", 13, MUTED))
         out += box(x, y, TW, TH, tok, fill, stroke, 15, "normal")
     out.append(arrow(TX + 5 * TP - 4, y + TH / 2, MX - 2, y + TH / 2, INK, 2))
-    out += box(MX, y - 6, MW, TH + 12, "模型", FILL_GREY, INK, 16, "bold",
-               sub="每一层：q、k、v 与注意力", sub_size=12)
+    out += box(MX, y - 6, MW, TH + 12, "模型", FILL_GREY, INK, 16, "bold")
     out.append(arrow(MX + MW, y + TH / 2, DX - 6, y + TH / 2, INK, 2))
     out.append(text(DX + 80, y - 8, f"P(x{n} | x1 … x{n - 1})", 14, INK))
     for k, (word, p) in enumerate(dist):

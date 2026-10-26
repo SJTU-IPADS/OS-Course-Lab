@@ -1,44 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 304" width="1120" height="304">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-224 0 1120 244" width="1120" height="244">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="188.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">时钟周期</text>
-<text x="424.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
-<text x="872.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
-<line x1="200.0" y1="28.0" x2="200.0" y2="262.0" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="6 4"/>
-<line x1="648.0" y1="28.0" x2="648.0" y2="262.0" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="6 4"/>
-<line x1="1096.0" y1="28.0" x2="1096.0" y2="262.0" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="6 4"/>
-<text x="24.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#156082" text-anchor="start">取指</text>
-<text x="70.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">指令内存</text>
-<rect x="200.0" y="34.0" width="896.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
-<text x="24.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">译码</text>
-<text x="70.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器堆（读）</text>
-<rect x="200.0" y="80.0" width="896.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
-<text x="24.0" y="152.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start">执行</text>
-<text x="70.0" y="152.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">ALU</text>
-<rect x="200.0" y="126.0" width="896.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
-<text x="24.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">访存</text>
-<text x="70.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">数据内存</text>
-<rect x="200.0" y="172.0" width="896.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
-<text x="24.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">写回</text>
-<text x="70.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器堆（写）</text>
-<rect x="200.0" y="218.0" width="896.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
-<rect x="202.0" y="37.0" width="108.0" height="34.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="256.0" y="59.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">movslq</text>
-<rect x="314.0" y="83.0" width="52.0" height="34.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="340.0" y="105.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">movslq</text>
-<rect x="370.0" y="129.0" width="108.0" height="34.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="424.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">movslq</text>
-<rect x="482.0" y="221.0" width="52.0" height="34.0" rx="3" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
-<text x="508.0" y="243.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">movslq</text>
-<rect x="650.0" y="37.0" width="108.0" height="34.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="704.0" y="59.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">movl</text>
-<rect x="762.0" y="83.0" width="52.0" height="34.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="788.0" y="105.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">movl</text>
-<rect x="818.0" y="129.0" width="108.0" height="34.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="872.0" y="151.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">movl</text>
-<rect x="930.0" y="175.0" width="108.0" height="34.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="984.0" y="197.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">movl</text>
-<rect x="1042.0" y="221.0" width="52.0" height="34.0" rx="3" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
-<text x="1068.0" y="243.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">movl</text>
-<rect x="926.0" y="30.0" width="116.0" height="232.0" rx="6" fill="none" stroke="#e97132" stroke-width="2" stroke-dasharray="6 4"/>
-<text x="984.0" y="284.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">movl 访存期间</text>
+<text x="24.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#156082" text-anchor="start">取指</text>
+<text x="70.0" y="36.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">指令内存</text>
+<rect x="200.0" y="10.0" width="448.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="24.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">译码</text>
+<text x="70.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器堆（读）</text>
+<rect x="200.0" y="56.0" width="448.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="24.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start">执行</text>
+<text x="70.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">ALU</text>
+<rect x="200.0" y="102.0" width="448.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="24.0" y="174.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="start">访存</text>
+<text x="70.0" y="174.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">数据内存</text>
+<rect x="200.0" y="148.0" width="448.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="24.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">写回</text>
+<text x="70.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">寄存器堆（写）</text>
+<rect x="200.0" y="194.0" width="448.0" height="40.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="200.0" y1="4.0" x2="200.0" y2="238.0" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="648.0" y1="4.0" x2="648.0" y2="238.0" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<rect x="202.0" y="13.0" width="108.0" height="34.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="256.0" y="35.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">movl</text>
+<rect x="314.0" y="59.0" width="52.0" height="34.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="340.0" y="81.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">movl</text>
+<rect x="370.0" y="105.0" width="108.0" height="34.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="424.0" y="127.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">movl</text>
+<rect x="482.0" y="151.0" width="108.0" height="34.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="536.0" y="173.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">movl</text>
+<rect x="594.0" y="197.0" width="52.0" height="34.0" rx="3" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
+<text x="620.0" y="219.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">movl</text>
 </svg>

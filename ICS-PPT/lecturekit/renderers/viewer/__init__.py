@@ -16,25 +16,135 @@ from .pdf import SLIDE_LINK_PREFIX
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 REFERENCES_PAGE_ID = "__references__"
-VIEWER_KINDS = set(BLOCK_RENDERERS)
+VIEWER_KINDS = set(BLOCK_RENDERERS) | model.MARKER_KINDS
 OUTLINE_CSS = (ASSETS / "outline.css").read_text(encoding="utf-8")
 
-# A Marp background directive (``![bg …](…)``) must stay a top-level image, so a
-# side_image is never wrapped: it is always visible and consumes no reveal step.
-# (One on the left renders nothing in its own place; `side_column` draws it.)
+# A side_image renders nothing in its own place (`side_column` draws its
+# column under the title), so it is never wrapped and consumes no reveal step.
 # A spacer is pure layout whitespace, so it is likewise always visible and never
 # claims a reveal step of its own.
-_REVEAL_SKIP = {"side_image", "spacer"}
+_REVEAL_SKIP = {"side_image", "spacer"} | model.MARKER_KINDS
 _GAP_FLOW_SKIP = {"side_image"}
+# One of the two flex spacers that centre a page's text column under its
+# title (`side_image(..., valign="middle")`). Its own HTML block, between
+# blank lines, so Marp keeps parsing what follows as markdown; never a reveal
+# step, and never held.
+_VALIGN_SPACER = ['<div class="lk-valign-spacer" aria-hidden="true"></div>', ""]
 _TITLE_MARK_RE = re.compile(r"\\emph\{([^{}]+)\}")
+
+
+def _render_layout(
+    page: model.Page,
+    blocks: list[model.Block],
+    slide_size: tuple[int, int],
+    *,
+    reveal: bool,
+    footnotes: list[str],
+    annotation_rules: list[str],
+) -> list[str]:
+    """Draw a tree of boxes, with the ordinary leaf/reveal/footnote protocol.
+
+    Unaligned pages keep their original markup. A box owns alignment, not its
+    drawer: text, code and figures all travel through this same path.
+    """
+    width, height = slide_size
+    sidenote_index = reveal_index = 0
+    css_align = {"left": "flex-start", "center": "center", "right": "flex-end",
+                 "top": "flex-start", "middle": "center", "bottom": "flex-end"}
+
+    def element(node, inherited, *, in_row=False):
+        nonlocal sidenote_index, reveal_index
+        halign, valign = model.resolve_align(node, inherited)
+        attrs = 'class="lk-box"'
+        if isinstance(node, model.Flex):
+            body = []
+            for child in node.children:
+                body.extend(element(child, (halign, valign), in_row=node.direction == "row"))
+            content = [f'<div class="lk-content lk-flex lk-flex-{node.direction}" '
+                       f'style="justify-content:{css_align.get(halign if node.direction == "row" else valign, "flex-start")}">',
+                       "", *body, "</div>", ""]
+        else:
+            block = node
+            content_style = ""
+            if block.kind == "image" and block.content.get("width"):
+                requested = block.content["width"]
+                # The row already assigned this width to the box. Resolving a
+                # percentage against that box a second time would halve it.
+                block = replace(block, content={**block.content, "width": "100%"})
+                content_style = f' style="width:{"100%" if in_row else requested}"'
+            held = model.block_held(page, block)
+            numbers = ()
+            if not held and block.footnotes:
+                start = len(footnotes) + 1
+                numbers = tuple(range(start, start + len(block.footnotes)))
+                footnotes.extend(block.footnotes)
+            body = render_block(block, sidenote_index=sidenote_index,
+                                footnote_numbers=numbers)
+            if block.kind == "sidenote":
+                sidenote_index += 1
+            idx = None
+            if held:
+                attrs = 'class="lk-box lk-held" aria-hidden="true"'
+            elif reveal and block.kind not in _REVEAL_SKIP and _block_steps(page, block):
+                idx = reveal_index
+                reveal_index += 1
+                attrs = _reveal_attrs(idx, block.reveal == "items", extra_class="lk-box")
+            wash = " lk-untranslated" if block.untranslated and block.kind not in _REVEAL_SKIP else ""
+            content = [f'<div class="lk-content{wash}"{content_style}>', "", *body, "</div>", ""]
+            # Bubbles use slide coordinates and must stay outside layout boxes.
+            if not held and page.show_annotations:
+                for note in block.annotations:
+                    uid = f"{page.id}-{len(annotation_rules)}"
+                    aside, rule = annotation_markup(note, uid, width, height)
+                    overlays.extend([_tag_reveal(aside, idx) if idx is not None else aside, ""])
+                    annotation_rules.append(rule)
+            if block.kind == "side_image":
+                return []
+        default_halign = ("center" if isinstance(node, model.Block)
+                          and node.kind in {"image", "row", "table", "architecture", "highlight"}
+                          else "stretch")
+        style = (f'align-items:{css_align.get(halign, default_halign)};'
+                 f'justify-content:{css_align.get(valign, "flex-start")}')
+        # In a row a sized image keeps its requested width. Every other child
+        # shares the remaining width; this works for nested containers too.
+        if in_row and isinstance(node, model.Block) and node.kind == "image":
+            requested = node.content.get("width")
+            if requested:
+                style += f';--lk-basis:{requested}'
+        return [f'<div {attrs} style="{style}">', "", *content, "</div>", ""]
+
+    overlays: list[str] = []
+    nodes = model.layout(blocks)
+    out = []
+    gap = page.gap
+    if gap is not None:
+        cap = "none" if gap.max_px is None else f"{gap.max_px}px"
+        out.extend(['<div class="lk-gap-flow" '
+                    f'style="--lk-gap-min: {gap.min_px}px; --lk-gap-max: {cap};">', ""])
+    visual_count = 0
+    for node in nodes:
+        lines = element(node, (page.halign, model.page_valign(page, blocks)))
+        if not lines:
+            continue
+        if gap is not None:
+            if visual_count:
+                out.extend(['<div class="lk-gap-spacer" aria-hidden="true"></div>', ""])
+            out.extend(_wrap_gap_block(lines))
+        else:
+            out.extend(lines)
+        visual_count += 1
+    if gap is not None:
+        out.extend(["</div>", ""])
+    out.extend(overlays)
+    return out
 
 
 def _wrap_untranslated(lines: list[str]) -> list[str]:
     """Wrap a block that fell back to the baseline in a faintly washed div.
 
-    Not applied to the kinds `_REVEAL_SKIP` names: a `side_image` is a Marp
-    background directive and has to stay a top-level image, and a `spacer` is
-    whitespace with nothing to wash.
+    Not applied to the kinds `_REVEAL_SKIP` names: a `side_image` renders
+    nothing in its own place, and a `spacer` is whitespace with nothing to
+    wash.
 
     A missing translation is otherwise invisible — the slide simply shows the
     original language, which reads as a deliberate choice. The wash is a
@@ -630,34 +740,53 @@ def render_marp_page(
         classes.append("lk-gap-auto")
     if page.id == REFERENCES_PAGE_ID:
         classes.append("lk-references")
-    # A side_image on the left is drawn by the theme, not by Marp's split: the
-    # title keeps the slide's width and the image column starts under it.
-    left_sides = [
-        block for block in visible_blocks
-        if block.kind == "side_image" and block.content.get("side") == "left"
-    ]
+    # A side_image is drawn by the theme, not by Marp's split background, which
+    # would take the title into the text column and cut its rule short: the
+    # title keeps the slide's width and the image column starts under it, on
+    # either side. The first image sets the side.
+    sides = [block for block in visible_blocks if block.kind == "side_image"]
     # Slide text set under that image (`under_side_image`) is drawn in the same
     # column and leaves the flow. With no image column in this target, it stays
     # where it was written.
-    side_texts = [block for block in visible_blocks if block.in_side] if left_sides else []
+    side_texts = [block for block in visible_blocks if block.in_side] if sides else []
     if side_texts:
         visible_blocks = [block for block in visible_blocks if not block.in_side]
-    if left_sides:
-        classes.append("lk-side-left")
+    if sides:
+        classes.append(f"lk-side-{sides[0].content.get('side') or 'right'}")
+    # `valign="middle"` on the side image: the text column's blocks are centred
+    # in the band under the title by two spacers that split the leftover space
+    # (the theme gives them `flex: 1`); the image column is centred by the theme.
+    valign = model.page_valign(page, visible_blocks)
+    if valign in ("middle", "bottom"):
+        classes.append(f"lk-valign-{valign}")
     if classes:
         out.extend([f"<!-- _class: {' '.join(classes)} -->", ""])
     out.extend([f"# {_title_html(page.title)}", ""])
     footnotes: list[str] = []
     annotation_rules: list[str] = []
-    if left_sides:
+    if sides:
         texts = []
         for block in side_texts:
             start = len(footnotes) + 1
             numbers = tuple(range(start, start + len(block.footnotes)))
             footnotes.extend(block.footnotes)
             texts.append(render_block(block, footnote_numbers=numbers))
-        out.extend(side_column(left_sides, width, texts))
-    if page.gap is not None:
+        out.extend(side_column(sides, width, texts))
+    # The text column's blocks, which the spacers enclose. A side_image renders
+    # nothing in the flow.
+    column_blocks = [block for block in visible_blocks if block.kind != "side_image"]
+    if valign in ("middle", "bottom") and column_blocks:
+        out.extend(_VALIGN_SPACER)
+    has_layout = page.halign is not None or page.valign is not None or any(
+        block.kind in model.MARKER_KINDS or block.halign is not None
+        or block.valign is not None for block in column_blocks
+    )
+    if has_layout:
+        out.extend(_render_layout(
+            page, visible_blocks, slide_size, reveal=reveal,
+            footnotes=footnotes, annotation_rules=annotation_rules,
+        ))
+    elif page.gap is not None:
         out.extend(
             _render_gap_flow(
                 page,
@@ -710,6 +839,8 @@ def render_marp_page(
                     annotation_rules.append(rule)
             if block.kind == "sidenote":
                 sidenote_index += 1
+    if valign == "middle" and column_blocks:
+        out.extend(_VALIGN_SPACER)
     if footnotes:
         out.append(render_footnotes(footnotes))
     if annotation_rules:

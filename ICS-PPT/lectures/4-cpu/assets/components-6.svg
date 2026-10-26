@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 400" width="1120" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="40.0" y="87.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">组合逻辑</text>
+<rect x="210.0" y="63.0" width="72.0" height="34.0" rx="14" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="40.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">时钟寄存器</text>
+<rect x="210.0" y="153.0" width="72.0" height="34.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="40.0" y="267.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">存储器</text>
+<rect x="210.0" y="243.0" width="72.0" height="34.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<rect x="460.0" y="20.0" width="240.0" height="280.0" rx="24" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="580.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">组合逻辑</text>
+<rect x="500.0" y="78.0" width="160.0" height="158.0" rx="12" fill="#ffffff" stroke="#156082" stroke-width="1.4"/>
+<text x="580.0" y="266.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">ALU</text>
+<rect x="820.0" y="80.0" width="160.0" height="56.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="900.0" y="114.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">内存</text>
+<rect x="820.0" y="180.0" width="160.0" height="56.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="900.0" y="214.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<rect x="535.0" y="138.0" width="90.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="580.0" y="162.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">标志位</text>
+<rect x="530.0" y="340.0" width="100.0" height="40.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="580.0" y="366.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">PC</text>
+</svg>

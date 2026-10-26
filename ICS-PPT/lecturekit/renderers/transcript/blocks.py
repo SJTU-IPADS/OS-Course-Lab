@@ -15,6 +15,8 @@ from lecturekit import model, pseudo
 from .images import DEFAULT_WIDTH_PX, Embedder
 from .text import escape, inline, markdown
 
+# Layout markers are deliberately absent: paper prints their leaves in order
+# and ignores slide alignment, so a container contributes no box of its own.
 #: Every kind that reaches the sheet. `only=["transcript"]` can still force one
 #: in, and `except_=["transcript"]` takes any of them out.
 TRANSCRIPT_KINDS = {
@@ -155,7 +157,7 @@ def _image(block: model.Block, embedder: Embedder) -> str:
 
 
 def _side_image(block: model.Block, embedder: Embedder) -> str:
-    # A split-background on the slide; on paper it is simply another figure.
+    # A side column on the slide; on paper it is simply another figure.
     return (
         f'<figure class="tx-fig">'
         f'{_img(block.content["src"], block.content.get("alt", ""), embedder)}</figure>'

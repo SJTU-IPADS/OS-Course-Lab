@@ -507,20 +507,26 @@ class PptxRendererTest(unittest.TestCase):
         pic = next(
             s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
         )
+        title, text = (
+            next(s for s in slide.shapes if s.has_text_frame and s.text_frame.text == name)
+            for name in ("P", "beside the picture")
+        )
+        # the title keeps the slide's width, as on the left: Marp's split
+        # would cut it (and its rule) short at the column
+        self.assertEqual(title.left, layout.content_left)
+        self.assertEqual(title.width, layout.content_width)
         # a fitted picture keeps the slide's margins: its box ends at the side
         # padding and starts 40px from the text, and the square picture fills
-        # that width, centred between the top padding and 40px above the bottom
+        # that width, centred between the title and 40px above the bottom
         self.assertEqual(pic.left, layout.width - column - px(40))
         self.assertEqual(pic.left + pic.width, layout.content_left + layout.content_width)
-        top, bottom = layout.content_top, layout.height - px(40)
+        top, bottom = text.top, layout.height - px(40)
+        self.assertGreater(top, title.top + title.height)
         self.assertEqual(pic.top, top + (bottom - top - pic.height) // 2)
-        for name in ("P", "beside the picture"):
-            text = next(s for s in slide.shapes if s.has_text_frame
-                        and s.text_frame.text == name)
-            self.assertEqual(text.left, layout.content_left)
-            self.assertLessEqual(text.left + text.width,
-                                 layout.content_left + layout.content_width - column)
-        # the text starts under the title, not under the picture
+        # the text reflows beside the column and starts under the title
+        self.assertEqual(text.left, layout.content_left)
+        self.assertLessEqual(text.left + text.width,
+                             layout.content_left + layout.content_width - column)
         self.assertLess(text.top, layout.height // 3)
 
     def test_fitted_side_image_on_the_left_keeps_the_slide_margins(self):

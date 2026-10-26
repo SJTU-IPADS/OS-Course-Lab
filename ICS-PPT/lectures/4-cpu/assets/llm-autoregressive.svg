@@ -15,8 +15,7 @@
 <text x="361.0" y="55.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">是</text>
 <line x1="480.0" y1="50.0" x2="502.0" y2="50.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <rect x="504.0" y="24.0" width="156.0" height="52.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
-<text x="582.0" y="47.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">模型</text>
-<text x="582.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">每一层：q、k、v 与注意力</text>
+<text x="582.0" y="55.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">模型</text>
 <line x1="660.0" y1="50.0" x2="716.0" y2="50.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <text x="802.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">P(x5 | x1 … x4)</text>
 <text x="756.0" y="40.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#e97132" text-anchor="end">吞吐</text>
@@ -48,8 +47,7 @@
 <text x="441.0" y="151.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">吞吐</text>
 <line x1="480.0" y1="146.0" x2="502.0" y2="146.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <rect x="504.0" y="120.0" width="156.0" height="52.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
-<text x="582.0" y="143.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">模型</text>
-<text x="582.0" y="162.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">每一层：q、k、v 与注意力</text>
+<text x="582.0" y="151.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">模型</text>
 <line x1="660.0" y1="146.0" x2="716.0" y2="146.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <text x="802.0" y="118.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">P(x6 | x1 … x5)</text>
 <text x="756.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#e97132" text-anchor="end">率</text>
