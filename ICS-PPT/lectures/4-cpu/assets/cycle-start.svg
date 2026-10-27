@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 330" width="1120" height="330">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="200.0" y="71.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">时钟</text>
+<line x1="220.0" y1="32.0" x2="220.0" y2="88.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="410.0" y1="32.0" x2="410.0" y2="88.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="600.0" y1="32.0" x2="600.0" y2="88.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="790.0" y1="32.0" x2="790.0" y2="88.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="980.0" y1="32.0" x2="980.0" y2="88.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<path d="M 210 80 L 220 80 L 220 50 L 315.0 50 L 315.0 80 L 410 80 L 410 50 L 505.0 50 L 505.0 80 L 600 80 L 600 50 L 695.0 50 L 695.0 80 L 790 80 L 790 50 L 885.0 50 L 885.0 80 L 980 80 L 980 50 L 1000 50" fill="none" stroke="#0e2841" stroke-width="2"/>
+<text x="315.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 1</text>
+<text x="505.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 2</text>
+<text x="695.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">周期 3</text>
+<text x="885.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">周期 4</text>
+<line x1="600.0" y1="16.0" x2="600.0" y2="94.0" stroke="#0e2841" stroke-width="3"/>
+<text x="200.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">周期 1</text>
+<rect x="220.0" y="116.0" width="800.0" height="44.0" rx="4" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="236.0" y="144.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">0x000: movl $0x100, %ebx   # %ebx &lt;- 0x100</text>
+<text x="200.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">周期 2</text>
+<rect x="220.0" y="168.0" width="800.0" height="44.0" rx="4" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="236.0" y="196.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">0x005: movl $0x200, %edx   # %edx &lt;- 0x200</text>
+<text x="200.0" y="248.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">周期 3</text>
+<rect x="220.0" y="220.0" width="800.0" height="44.0" rx="4" fill="#ffffff" stroke="#0e2841" stroke-width="2.4"/>
+<text x="236.0" y="248.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start" xml:space="preserve">0x00a: addl %edx, %ebx     # %ebx &lt;- 0x300, CF ZF SF OF &lt;- 0 0 0 0</text>
+<text x="200.0" y="300.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">周期 4</text>
+<rect x="220.0" y="272.0" width="800.0" height="44.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="236.0" y="300.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start" xml:space="preserve">0x00c: je   dest           # not taken</text>
+</svg>

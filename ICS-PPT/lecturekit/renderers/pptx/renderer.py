@@ -2,9 +2,8 @@
 
 One slide per page (deck order). Each slide draws the page title, then the
 page's PPTX-visible blocks stacked top-to-bottom by the layout cursor, then any
-accumulated footnotes. A ``side_image`` takes a column (full-height on the
-right, under the title on the left) and the rest of the page is laid out beside
-it. Shapes are native (text frames, tables, pictures,
+accumulated footnotes. A ``side_image`` takes a column under the title, on
+either side, and the rest of the page is laid out beside it. Shapes are native (text frames, tables, pictures,
 autoshapes), so the deck is editable in PowerPoint; styling is ported from the
 viewer theme, but vertical spacing is estimated (no browser to measure text).
 """
@@ -24,6 +23,7 @@ from .blocks import (
     draw_side_images, draw_title, redraw_architecture, side_layout,
 )
 from .layout import Cursor, Layout
+from .elements import draw_elements, place_shapes
 
 # python-pptx's built-in blank layout (no placeholders).
 _BLANK_LAYOUT = 6
@@ -58,39 +58,44 @@ class PptxRenderer:
             ctx = Ctx(slide=slide, layout=layout, cursor=Cursor(layout),
                       asset_root=self.asset_root, rasterizer=rasterizer,
                       borrowed=lecture.borrowed)
-            # A held block (written after `p.frames(...)`, on a frame before
-            # the last) is dropped outright: slides here share no geometry, so
-            # there is no layout to reserve space in.
-            visible_blocks = [
-                block
-                for block in model.select_blocks(page, "pptx", PPTX_KINDS)
-                if not model.block_held(page, block)
-            ]
+            candidates = model.select_blocks(page, "pptx", PPTX_KINDS | model.MARKER_KINDS)
+            # New boxes reserve the finished animation's extent on every
+            # frame. Legacy pages retain their original geometry.
+            reserve_held = page.valign is not None or page.halign is not None or any(
+                b.kind in model.MARKER_KINDS or b.halign is not None or b.valign is not None
+                for b in candidates
+            )
+            visible_blocks = [b for b in candidates
+                              if reserve_held or not model.block_held(page, b)]
             if len(visible_blocks) == 1 and visible_blocks[0].kind == "cover":
                 draw_cover(page.title, visible_blocks[0], ctx)
                 continue
             if model.is_bridge_page(page):
                 draw_bridge(visible_blocks[0], ctx)
                 continue
-            # A side_image column narrows the content box. On the right it is
-            # full-height and the title reflows beside it with every other
-            # block, as in Marp's split background. On the left the title keeps
-            # the slide's width, and the column starts under it.
+            # A side_image column narrows the content box. The title keeps the
+            # slide's width, and the column starts under it, on either side.
             sides = [block for block in visible_blocks if block.kind == "side_image"]
             visible_blocks = [b for b in visible_blocks if b.kind != "side_image"]
-            on_left = bool(sides) and sides[0].content.get("side") == "left"
-            # Slide text set under a left side image is drawn in its column.
-            side_texts = [b for b in visible_blocks if b.in_side] if on_left else []
+            # Slide text set under a side image is drawn in its column.
+            side_texts = [b for b in visible_blocks if b.in_side] if sides else []
             if side_texts:
                 visible_blocks = [b for b in visible_blocks if not b.in_side]
-            if sides and not on_left:
-                draw_side_images(sides, ctx)
-                ctx.layout = side_layout(sides, layout)
-                ctx.cursor = Cursor(ctx.layout)
+            # `valign="middle"`: both columns are centred in the band from
+            # under the title to the content box's bottom, once drawn.
+            valign = model.page_valign(page, (*sides, *visible_blocks))
+            middle = valign == "middle"
             draw_title(page.title, ctx)
-            if on_left:
-                under_title = ctx.cursor.top
-                draw_side_images(sides, ctx, top=under_title, texts=side_texts)
+            under_title = ctx.cursor.top
+            stack_shapes: list[object] = []
+            if sides:
+                before = len(slide.shapes)
+                draw_side_images(
+                    sides, ctx, top=under_title, texts=side_texts,
+                    fit_bottom=layout.content_bottom if valign in ("middle", "bottom") else None,
+                )
+                if side_texts or valign == "bottom":
+                    stack_shapes = list(slide.shapes)[before:]
                 ctx.layout = side_layout(sides, layout)
                 ctx.cursor = Cursor(ctx.layout)
                 ctx.cursor.top = under_title
@@ -98,14 +103,45 @@ class PptxRenderer:
                 note for block in (*sides, *side_texts) for note in block.footnotes
             ]
             block_shapes: list[list[object]] = []
-            for block in visible_blocks:
-                before = len(slide.shapes)
-                draw_block(block, ctx)
-                block_shapes.append(list(slide.shapes)[before:])
-                footnotes.extend(block.footnotes)
-            _reclaim_overflow(visible_blocks, block_shapes, slide, ctx)
+            held_shapes = []
+            has_layout = page.halign is not None or page.valign is not None or any(
+                b.kind in model.MARKER_KINDS or b.halign is not None
+                or b.valign is not None for b in visible_blocks
+            )
+            if has_layout:
+                block_shapes = draw_elements(
+                    model.layout(visible_blocks), ctx,
+                    inherited=(page.halign, valign),
+                    held_shapes=held_shapes, page=page,
+                )
+                footnotes.extend(note for b in visible_blocks
+                                 if not model.block_held(page, b) for note in b.footnotes)
+            else:
+                for block in visible_blocks:
+                    before = len(slide.shapes)
+                    draw_block(block, ctx)
+                    shapes = list(slide.shapes)[before:]
+                    block_shapes.append(shapes)
+                    if model.block_held(page, block):
+                        held_shapes.extend(shapes)
+                    else:
+                        footnotes.extend(block.footnotes)
+                _reclaim_overflow(visible_blocks, block_shapes, slide, ctx)
             _spread_page_blocks(page.gap, block_shapes, ctx)
+            if middle:
+                band = (under_title, ctx.layout.content_bottom)
+                _centre_shapes([s for group in block_shapes for s in group], *band)
+                _centre_shapes(stack_shapes, *band)
+            elif valign == "bottom":
+                place_shapes([s for group in block_shapes for s in group],
+                             ctx.layout.content_left, under_title,
+                             ctx.layout.content_width,
+                             ctx.layout.content_bottom - under_title, valign="bottom")
+                place_shapes(stack_shapes, 0, under_title, layout.width,
+                             layout.content_bottom - under_title, valign="bottom")
             draw_footnotes(footnotes, ctx)
+            for shape in held_shapes:
+                shape._element.getparent().remove(shape._element)
 
         out = output_dir / f"{slugify(lecture.title)}.pptx"
         prs.save(str(out))
@@ -174,3 +210,24 @@ def _spread_page_blocks(gap: model.PageGap | None,
         offset = per_seam * index
         for shape in shapes:
             shape.top += offset
+
+
+def _centre_shapes(shapes: list[object], top: int, bottom: int) -> None:
+    """Honor ``side_image(..., valign="middle")``: move a column's shapes down
+    so that their extent is centred between ``top`` and ``bottom``.
+
+    The shapes are drawn with the renderer's ordinary rhythm from ``top``, so
+    the group is moved as one and its geometry stays. The viewer's flex
+    spacers split the leftover space the same way. A group taller than the
+    band is left where it is: it already overflows, and moving it up would
+    put it under the title.
+    """
+    if not shapes:
+        return
+    first = min(shape.top for shape in shapes)
+    last = max(shape.top + shape.height for shape in shapes)
+    shift = ((top + bottom) - (first + last)) // 2
+    if shift <= 0:
+        return
+    for shape in shapes:
+        shape.top += shift

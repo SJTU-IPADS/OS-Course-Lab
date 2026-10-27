@@ -433,7 +433,12 @@ def _slide(block, ctx: Ctx) -> None:
     _fill_paras(tf, paras)
     # A floated picture may be taller than the text beside it; the block owns
     # whichever is taller, so the next block clears both.
-    ctx.cursor.place(max(height, pic.height) if pic is not None else height)
+    band = max(height, pic.height) if pic is not None else height
+    if pic is not None and block.float_image.get("valign") == "middle":
+        # `valign="middle"`: each is centred in the band the taller one sets.
+        pic.top = box.top + (band - pic.height) // 2
+        box.top = box.top + (band - height) // 2
+    ctx.cursor.place(band)
     ctx.cursor.advance(_GAP)
 
 
@@ -932,7 +937,7 @@ def _size_to_emu(value, whole: int) -> int | None:
 def _side_column(block, layout: Layout) -> tuple[int, int]:
     """Left edge and width (EMU) of a ``side_image``'s column.
 
-    Marp's ``bg right`` without a size takes half the slide.
+    Without a width the column takes half the slide.
     """
     width = _size_to_emu(block.content.get("width") or "50%", layout.width)
     width = min(width or layout.width // 2, layout.content_width)
@@ -943,10 +948,10 @@ def _side_column(block, layout: Layout) -> tuple[int, int]:
 def side_layout(sides: list, layout: Layout) -> Layout:
     """The content box a page's ``side_image`` column leaves to the other blocks.
 
-    Marp's split background narrows the whole slide to the rest of its width and
-    keeps the ordinary padding inside it, so every block reflows there; so does
-    the title when the column is on the right. The first ``side_image`` sets
-    the side and the width.
+    The blocks keep the ordinary padding in the rest of the slide's width, as
+    Marp's split background would leave them; the title, drawn before this box
+    applies, keeps the slide's width. The first ``side_image`` sets the side
+    and the width.
     """
     left, width = _side_column(sides[0], layout)
     return replace(
@@ -966,18 +971,21 @@ def _fitted(block) -> bool:
     return bool({"contain", "fit"} & set(str(block.content.get("alt") or "").split()))
 
 
-def draw_side_images(sides: list, ctx: Ctx, top: int = 0, texts: list = ()) -> None:
+def draw_side_images(sides: list, ctx: Ctx, top: int, texts: list = (),
+                     fit_bottom: int | None = None) -> None:
     """Draw a page's ``side_image`` blocks into their column, from ``top`` down.
 
-    The column is the slide's full height on the right (``top`` 0) and starts
-    under the title on the left. Several images share it side by side, as in
-    Marp. ``contain`` or ``fit`` in ``alt`` fits the whole picture in its cell,
-    centred; otherwise it covers the cell and is cropped to it, Marp's default
-    for a background.
+    The column starts under the title (``top``), on either side, and runs to
+    the slide's outer and bottom edges. Several images share it side by side,
+    as in Marp. ``contain`` or ``fit`` in ``alt`` fits the whole picture in its
+    cell, centred; otherwise it covers the cell and is cropped to it, Marp's
+    default for a background.
 
     A covering image is a backdrop and bleeds to the slide's edges. A fitted
     one is a figure beside the text, so its column is first drawn in to the
     slide's margins: the picture then sits nearer the text than the edge.
+    ``fit_bottom`` moves the bottom of that box: under ``valign="middle"`` it
+    is the content box's bottom, where the text column's band ends.
 
     ``texts`` are the slide blocks set under the image (``under_side_image``);
     with any, the column is a stack, see `_draw_side_stack`.
@@ -992,7 +1000,8 @@ def draw_side_images(sides: list, ctx: Ctx, top: int = 0, texts: list = ()) -> N
         pad, gap = layout.content_left, px(_SIDE_FIT_GAP)
         column = pad if column == 0 else column - gap
         width = max(width - pad + gap, len(sides))
-        top, bottom = max(top, layout.content_top), bottom - gap
+        top = max(top, layout.content_top)
+        bottom = bottom - gap if fit_bottom is None else fit_bottom
     cell, height = width // len(sides), bottom - top
     for i, block in enumerate(sides):
         path = _resolve_image(block.content["src"], ctx)
@@ -1016,7 +1025,7 @@ def draw_side_images(sides: list, ctx: Ctx, top: int = 0, texts: list = ()) -> N
 
 
 def _draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
-    """The left image column as a stack: the images across its top, text below.
+    """The image column as a stack: the images across its top, text below.
 
     The theme's ``.lk-side-stack``. The column keeps the slide's margins, as a
     fitted image's box does; each image is as wide as its share of the column
@@ -1024,9 +1033,10 @@ def _draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
     in the column's width by the ordinary drawers.
     """
     layout = ctx.layout
-    _, width = _side_column(sides[0], layout)
-    column = layout.content_left
-    width = max(width - column + px(_SIDE_FIT_GAP), len(sides))
+    left, width = _side_column(sides[0], layout)
+    width = max(width - layout.content_left + px(_SIDE_FIT_GAP), len(sides))
+    column = (layout.content_left if left == 0
+              else layout.width - layout.content_left - width)
     top = max(top, layout.content_top)
     cell, bottom = width // len(sides), top
     for i, block in enumerate(sides):

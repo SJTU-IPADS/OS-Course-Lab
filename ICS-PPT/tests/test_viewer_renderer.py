@@ -641,7 +641,7 @@ def _reveal_page():
         p.title("Title")
         p.slide("first block").annotate("look", at="center")
         p.code("python", "print(1)")
-        p.side_image("assets/x.svg")  # bg directive, must NOT be wrapped
+        p.side_image("assets/x.svg")  # the image column, must NOT be wrapped
     lecture.page("pg", body=body)
     return lecture.build().children[0]
 
@@ -662,8 +662,8 @@ def test_render_marp_page_wraps_blocks_when_reveal():
     assert 'data-reveal="2"' not in md
     # the slide's annotation bubble reveals with its block (step 0)
     assert 'data-reveal="0" class="annotation' in md
-    # side_image emitted but never wrapped
-    assert "![bg right" in md or "![bg" in md
+    # side_image drawn as the page's column, never wrapped
+    assert '<figure class="lk-side"><img src="assets/x.svg" alt=""></figure>' in md
     assert md.count('class="reveal-block"') == 2
 
 
@@ -685,6 +685,25 @@ def test_a_left_side_image_keeps_the_title_across_the_slide():
     assert "<!-- _class: lk-side-left -->" in md
     figure = '<figure class="lk-side"><img src="assets/x.svg" alt="" class="lk-side-fit"></figure>'
     # the column comes right after the title and is not a reveal step
+    assert md.index("# Title") < md.index(figure) < md.index("beside the picture")
+    assert "section { --lk-side-width: 512px; }" in md
+    assert md.count('class="reveal-block"') == 1
+
+
+def test_a_right_side_image_keeps_the_title_across_the_slide():
+    lecture = Lecture(id="lec", title="T")
+
+    def body(p):
+        p.title("Title")
+        p.side_image("assets/x.svg", width="40%", alt="contain")
+        p.slide("beside the picture")
+    lecture.page("pg", body=body)
+    md = render_marp_page(lecture.build().children[0], reveal=True)
+    # no Marp split: it would move the title into the left column and cut
+    # its rule short at the image column
+    assert "![bg" not in md
+    assert "<!-- _class: lk-side-right -->" in md
+    figure = '<figure class="lk-side"><img src="assets/x.svg" alt="" class="lk-side-fit"></figure>'
     assert md.index("# Title") < md.index(figure) < md.index("beside the picture")
     assert "section { --lk-side-width: 512px; }" in md
     assert md.count('class="reveal-block"') == 1

@@ -1,36 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 230" width="1120" height="230">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 190" width="1120" height="190">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="78.0" y="71.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">工位</text>
-<text x="78.0" y="161.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">传送带</text>
-<rect x="90.0" y="36.0" width="190.0" height="58.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="185.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">装车架</text>
-<text x="185.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">工位 1：只做这一道工序</text>
-<line x1="185.0" y1="96.0" x2="185.0" y2="126.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
-<rect x="340.0" y="36.0" width="190.0" height="58.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="435.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">装发动机</text>
-<text x="435.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">工位 2：只做这一道工序</text>
-<line x1="435.0" y1="96.0" x2="435.0" y2="126.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
-<rect x="590.0" y="36.0" width="190.0" height="58.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="685.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">装车轮</text>
-<text x="685.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">工位 3：只做这一道工序</text>
-<line x1="685.0" y1="96.0" x2="685.0" y2="126.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
-<rect x="840.0" y="36.0" width="190.0" height="58.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
-<text x="935.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">装车身</text>
-<text x="935.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">工位 4：只做这一道工序</text>
-<line x1="935.0" y1="96.0" x2="935.0" y2="126.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
-<rect x="60.0" y="130.0" width="1000.0" height="50.0" rx="6" fill="#f4f6f8" stroke="#9fb5c3" stroke-width="1.2"/>
-<rect x="120.0" y="138.0" width="130.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="185.0" y="160.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">第 4 辆</text>
-<line x1="254.0" y1="155.0" x2="366.0" y2="155.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="370.0" y="138.0" width="130.0" height="34.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="435.0" y="160.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">第 3 辆</text>
-<line x1="504.0" y1="155.0" x2="616.0" y2="155.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="620.0" y="138.0" width="130.0" height="34.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="685.0" y="160.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">第 2 辆</text>
-<line x1="754.0" y1="155.0" x2="866.0" y2="155.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="870.0" y="138.0" width="130.0" height="34.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
-<text x="935.0" y="160.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">第 1 辆</text>
-<line x1="1004.0" y1="155.0" x2="1058.0" y2="155.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<text x="1064.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">出厂</text>
-<text x="560.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">每一拍传送带前进一格：四个工位同时在装四辆不同的车</text>
+<rect x="240.0" y="10.0" width="176.0" height="112.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="328.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#156082" text-anchor="middle">工位 1：装发动机</text>
+<rect x="292.0" y="66.0" width="72.0" height="42.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="328.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">车 3</text>
+<line x1="328.0" y1="122.0" x2="328.0" y2="138.0" stroke="#5a6b78" stroke-width="1.4"/>
+<rect x="472.0" y="10.0" width="176.0" height="112.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="560.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">工位 2：装车轮</text>
+<rect x="524.0" y="66.0" width="72.0" height="42.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="560.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">车 2</text>
+<line x1="560.0" y1="122.0" x2="560.0" y2="138.0" stroke="#5a6b78" stroke-width="1.4"/>
+<rect x="704.0" y="10.0" width="176.0" height="112.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="792.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">工位 3：装车身</text>
+<rect x="756.0" y="66.0" width="72.0" height="42.0" rx="5" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="792.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">车 1</text>
+<line x1="792.0" y1="122.0" x2="792.0" y2="138.0" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="156.0" y1="144.0" x2="964.0" y2="144.0" stroke="#0e2841" stroke-width="4" marker-end="url(#ah-0e2841)"/>
+<circle cx="166.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="206.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="246.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="286.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="326.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="366.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="406.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="446.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="486.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="526.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="566.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="606.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="646.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="686.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="726.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="766.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="806.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="846.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="886.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="926.0" cy="153.0" r="4.0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="156.0" y="134.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">上线</text>
+<text x="934.0" y="134.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">下线</text>
+<text x="560.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">传送带：每过一个节拍，每辆车前进一个工位</text>
 </svg>

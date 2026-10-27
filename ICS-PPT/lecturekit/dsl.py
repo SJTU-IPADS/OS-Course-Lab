@@ -6,7 +6,7 @@ import os
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 from . import bibtex, marks, model, source
 from .autobold import autobold as _autobold
@@ -392,13 +392,32 @@ class NewsPanel:
         return notebook.render_news_html(self.lecture, self.spec)
 
 
-class PageBuilder:
+class ElementHandle:
+    """The shared alignment API for a page, a leaf and a container."""
+
+    def halign(self, where: str) -> Self:
+        """Place this element across its box: left, center or right."""
+        self._set_alignment("halign", _align(where, model.HALIGNS, "halign"))
+        return self
+
+    def valign(self, where: str) -> Self:
+        """Place this element down its box: top, middle or bottom."""
+        self._set_alignment("valign", _align(where, model.VALIGNS, "valign"))
+        return self
+
+    def _set_alignment(self, axis: str, where: str) -> None:
+        raise NotImplementedError
+
+
+class PageBuilder(ElementHandle):
     def __init__(self) -> None:
         self.blocks: list[model.Block] = []
         self.news_items: list[model.NewsItem] = []
         self.cite_items: list[model.Citation] = []
         self._title: str | None = None
         self._gap: model.PageGap | None = None
+        self._halign: str | None = None
+        self._valign: str | None = None
 
     def title(self, text: str) -> None:
         if self._title is not None:
@@ -450,6 +469,40 @@ class PageBuilder:
             if type(cap) is int and cap < floor:
                 floor = cap
         self._gap = model.PageGap(mode="auto", min_px=floor, max_px=cap)
+
+    def _set_alignment(self, axis: str, where: str) -> None:
+        setattr(self, "_" + axis, where)
+
+    def flex(
+        self,
+        direction: str = "column",
+        *,
+        halign: str | None = None,
+        valign: str | None = None,
+    ) -> "FlexHandle":
+        """Open a container; every block written inside the ``with`` is its child.
+
+        ``direction`` is "column" (children top to bottom) or "row" (side by
+        side: an image with its own width keeps it, the rest share the row).
+        ``halign`` / ``valign`` place the children in the container's box and
+        are their default (docs/layout.md). Containers nest::
+
+            with p.flex("row", valign="middle"):
+                p.slide("the rule")
+                p.image("assets/fig.svg", width_px=420)
+        """
+        if direction not in model.FLEX_DIRECTIONS:
+            raise model.ValidationError(
+                f"flex direction must be one of {', '.join(model.FLEX_DIRECTIONS)}, "
+                f"got {direction!r}"
+            )
+        self.blocks.append(model.Block(
+            kind=model.FLEX_KIND,
+            content={"direction": direction},
+            halign=None if halign is None else _align(halign, model.HALIGNS, "halign"),
+            valign=None if valign is None else _align(valign, model.VALIGNS, "valign"),
+        ))
+        return FlexHandle(self, len(self.blocks) - 1)
 
     def spacer(
         self,
@@ -706,6 +759,7 @@ class PageBuilder:
         alt: str = "",
         width: str | int | None = None,
         side: str = "right",
+        valign: str = "top",
         only: Iterable[str] | None = None,
         except_: Iterable[str] | None = None,
         key: str | None = None,
@@ -713,18 +767,29 @@ class PageBuilder:
         """Place an image in a side column; slide text reflows into the other column.
 
         ``side`` is "right" (default) or "left"; ``width`` sets the column width
-        (e.g. "38%"), defaulting to a half-split. On the right the column is
-        the slide's full height and the title reflows beside it (Marp's split
-        background in the viewer, the same box in PPTX). On the left the title
-        keeps the slide's width and the column starts under it.
+        (e.g. "38%"), defaulting to half the slide. On either side the title
+        keeps the slide's width and the column starts under its rule.
+
+        ``valign`` is the page's own (see :meth:`valign`): "top" (default),
+        "middle" or "bottom". The text column's blocks and the image column
+        (the picture with any text set under it) both sit there in the band
+        between the title's rule and the slide's bottom padding, so with
+        "middle" the two columns share one middle line. Anything but "top"
+        claims the page's leftover vertical space, so it excludes
+        ``p.gap(...)`` (checked when the lecture is validated).
         """
         if side not in ("left", "right"):
             raise model.ValidationError(
                 f"side_image side must be 'left' or 'right', got {side!r}"
             )
+        if valign not in model.SIDE_VALIGNS:
+            raise model.ValidationError(
+                f"side_image valign must be one of {', '.join(model.SIDE_VALIGNS)}, "
+                f"got {valign!r}"
+            )
         return self._block(
             "side_image",
-            {"src": src, "alt": alt, "width": width, "side": side},
+            {"src": src, "alt": alt, "width": width, "side": side, "valign": valign},
             only=only,
             except_=except_,
             key=key,
@@ -1084,6 +1149,48 @@ class PageBuilder:
         return BlockHandle(self, len(self.blocks) - 1)
 
 
+def _align(value: str, allowed: tuple[str, ...], what: str) -> str:
+    """Check one alignment value, eagerly, so the error names the call site."""
+    if value not in allowed:
+        raise model.ValidationError(
+            f"{what} must be one of {', '.join(allowed)}, got {value!r}"
+        )
+    return value
+
+
+class _BlockElementHandle(ElementHandle):
+    def __init__(self, builder: "PageBuilder", index: int):
+        self._builder = builder
+        self._index = index
+
+    def _set_alignment(self, axis: str, where: str) -> None:
+        block = self._builder.blocks[self._index]
+        if block.kind == "side_image":
+            raise model.ValidationError(
+                "a side_image follows the page's alignment: use "
+                "p.valign(...) or side_image(valign=...)"
+            )
+        self._builder.blocks[self._index] = block.aligned(**{axis: where})
+
+
+class FlexHandle(_BlockElementHandle):
+    """A container opened by :meth:`PageBuilder.flex`, used as a ``with`` block.
+
+    Entering does nothing — the opening block was written by ``flex`` — and
+    leaving writes the closing one, so the blocks written in between are the
+    container's children. ``halign`` / ``valign`` set the container's own,
+    like any element's.
+    """
+
+    def __enter__(self) -> "FlexHandle":
+        return self
+
+    def __exit__(self, exc_type: object, exc: object, traceback: object) -> None:
+        self._builder.blocks.append(model.Block(kind=model.END_KIND, content=None))
+        return None
+
+
+
 def _weights(widths, count: int, what: str) -> list[float] | None:
     """Column weights as fractions summing to 1, or None when not given."""
     if widths is None:
@@ -1103,16 +1210,12 @@ def _weights(widths, count: int, what: str) -> list[float] | None:
     return [w / total for w in weights]
 
 
-class BlockHandle:
+class BlockHandle(_BlockElementHandle):
     """A reference to the block just added, so the author can chain a footnote.
 
     The block is frozen, so ``footnote`` replaces it in place with a copy that
     carries one more footnote, and returns ``self`` for ``.footnote(a).footnote(b)``.
     """
-
-    def __init__(self, builder: "PageBuilder", index: int):
-        self._builder = builder
-        self._index = index
 
     def footnote(self, text: str) -> "BlockHandle":
         block = self._builder.blocks[self._index]
@@ -1178,6 +1281,7 @@ class BlockHandle:
         width_pct: int | None = None,
         height_px: int | None = None,
         height_pct: int | None = None,
+        valign: str = "top",
     ) -> "BlockHandle":
         """Float a small image to the right of this slide block's text.
 
@@ -1186,11 +1290,19 @@ class BlockHandle:
         mirrors :meth:`PageBuilder.image`; passing both units for one dimension
         raises ``ValidationError``. Returns ``self`` so it chains with
         ``footnote`` / ``annotate``; a later call replaces the prior image.
+
+        ``valign`` is "top" (default) or "middle". With "middle" the image and
+        the text sit side by side, each centred vertically against the other,
+        and the text no longer wraps under the image.
         """
         block = self._builder.blocks[self._index]
         if block.kind != "slide":
             raise model.ValidationError(
                 f"image_right may only be attached to a slide block, got {block.kind!r}"
+            )
+        if valign not in model.FLOAT_VALIGNS:
+            raise model.ValidationError(
+                f"image_right valign must be 'top' or 'middle', got {valign!r}"
             )
         width = _size_value(width_px, width_pct, "width")
         height = _size_value(height_px, height_pct, "height")
@@ -1202,6 +1314,7 @@ class BlockHandle:
                 "width": width,
                 "height": height,
                 "side": "right",
+                "valign": valign,
             },
         )
         return self
@@ -1209,12 +1322,12 @@ class BlockHandle:
     def under_side_image(self) -> "BlockHandle":
         """Set this slide block in the image column, under the side image.
 
-        The page's ``p.side_image(..., side="left")`` then sits at the top of
-        its column at the column's width, and this text fills the space below
-        it; the other blocks keep the text column. It is for a figure that is
-        much shorter than the slide. Only valid on a ``slide`` block, and only
-        on a page whose side image is on the left (checked when the lecture is
-        validated). Returns ``self`` so it chains with ``footnote``.
+        The page's ``p.side_image(...)`` then sits at the top of its column at
+        the column's width, and this text fills the space below it; the other
+        blocks keep the text column. It is for a figure that is much shorter
+        than the slide. Only valid on a ``slide`` block, and only on a page
+        with a side image (checked when the lecture is validated). Returns
+        ``self`` so it chains with ``footnote``.
         """
         block = self._builder.blocks[self._index]
         if block.kind != "slide":
@@ -1498,6 +1611,8 @@ def _build_pages(spec: PageSpec, builder: PageBuilder) -> list[model.Page]:
             news=tuple(builder.news_items),
             citations=tuple(builder.cite_items),
             gap=builder._gap,
+            halign=builder._halign,
+            valign=builder._valign,
             book=book,
             book_title=spec.book_title,
             frame_group=frame_group,

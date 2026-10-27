@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 0 709 262" width="709" height="262">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<line x1="0.0" y1="111.4" x2="49.3" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="51.3" y="43.2" width="79.9" height="136.4" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="91.3" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">80 ps</text>
+<text x="91.3" y="117.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">A</text>
+<line x1="133.2" y1="111.4" x2="180.5" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="182.5" y="43.2" width="30.0" height="136.4" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="197.5" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">30 ps</text>
+<text x="197.5" y="117.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">B</text>
+<line x1="214.5" y1="111.4" x2="261.8" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="263.8" y="43.2" width="59.9" height="136.4" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="293.8" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">60 ps</text>
+<text x="293.8" y="117.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">C</text>
+<line x1="325.7" y1="111.4" x2="373.0" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="375.0" y="43.2" width="50.0" height="136.4" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="400.0" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">50 ps</text>
+<text x="400.0" y="117.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">D</text>
+<line x1="427.0" y1="111.4" x2="474.3" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="476.3" y="43.2" width="69.9" height="136.4" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="511.2" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">70 ps</text>
+<text x="511.2" y="117.9" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">E</text>
+<line x1="548.2" y1="111.4" x2="595.5" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="597.5" y="43.2" width="10.0" height="136.4" rx="2.4975000000000005" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="602.5" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">10 ps</text>
+<text x="602.5" y="201.6" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">F</text>
+<line x1="609.5" y1="111.4" x2="656.8" y2="111.4" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="658.8" y="43.2" width="24.3" height="136.4" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="670.9" y="99.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">寄</text>
+<text x="670.9" y="116.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">存</text>
+<text x="670.9" y="133.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">器</text>
+<text x="670.9" y="32.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">20 ps</text>
+<line x1="670.9" y1="179.6" x2="670.9" y2="207.9" stroke="#0e2841" stroke-width="1.6"/>
+<text x="670.9" y="247.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">时钟</text>
+</svg>

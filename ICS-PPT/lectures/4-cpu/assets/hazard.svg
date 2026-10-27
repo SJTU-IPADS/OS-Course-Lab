@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-17 0 1120 300" width="1120" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="188.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">周期</text>
+<text x="248.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="344.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="440.0" y="19.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c0392b" text-anchor="middle">3</text>
+<text x="536.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<text x="632.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<text x="728.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<text x="824.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<text x="24.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">imull</text>
+<rect x="203.0" y="37.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="248.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">取指</text>
+<rect x="299.0" y="37.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="344.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">译码</text>
+<rect x="395.0" y="37.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="440.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">执行</text>
+<rect x="491.0" y="37.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="536.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">访存</text>
+<rect x="587.0" y="37.0" width="90.0" height="46.0" rx="3" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
+<text x="632.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#ffffff" text-anchor="middle">写回</text>
+<text x="440.0" y="115.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">3 × 4 = 12</text>
+<text x="692.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">周期 5 结束时 12 写入 %ecx</text>
+<path d="M 632.0 85.0 L 632.0 109.0 L 728.0 109.0 L 728.0 131.0" fill="none" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="24.0" y="155.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">%ecx 的值</text>
+<rect x="203.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="248.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="299.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="344.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="395.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="440.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="middle">4</text>
+<rect x="491.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="536.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="587.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="632.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="683.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="728.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">12</text>
+<rect x="779.0" y="132.0" width="90.0" height="34.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="824.0" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">12</text>
+<line x1="440.0" y1="167.0" x2="440.0" y2="213.0" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
+<text x="452.0" y="195.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start">周期 3 译码，读到旧值 4</text>
+<text x="24.0" y="244.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">addl</text>
+<rect x="299.0" y="215.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="344.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">取指</text>
+<rect x="395.0" y="215.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="440.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">译码</text>
+<rect x="491.0" y="215.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="536.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">执行</text>
+<rect x="587.0" y="215.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="632.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">访存</text>
+<rect x="683.0" y="215.0" width="90.0" height="46.0" rx="3" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
+<text x="728.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#ffffff" text-anchor="middle">写回</text>
+<text x="536.0" y="288.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c0392b" text-anchor="middle">10 + 4 = 14</text>
+<text x="788.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="start">%r9d = 14，应为 10 + 12 = 22</text>
+</svg>

@@ -1,7 +1,7 @@
-"""Slide text set under a left side image: `p.slide(...).under_side_image()`.
+"""Slide text set under a side image: `p.slide(...).under_side_image()`.
 
-The image column on the left then holds the picture at its top and the text
-below it; the other blocks keep the text column.
+The image column, on either side, then holds the picture at its top and the
+text below it; the other blocks keep the text column.
 """
 
 import base64
@@ -57,10 +57,10 @@ def test_only_a_slide_block_may_be_set_under_the_image():
         lecture.build()
 
 
-@pytest.mark.parametrize("lecture", [_lecture(image=False), _lecture("right")])
-def test_it_needs_a_side_image_on_the_left(lecture):
-    with pytest.raises(model.ValidationError, match="side_image on the left"):
-        lecture.build()
+def test_it_needs_a_side_image():
+    with pytest.raises(model.ValidationError, match="side_image"):
+        _lecture(image=False).build()
+    _lecture("right").build()                   # either side holds the text
 
 
 def test_the_viewer_draws_the_text_in_the_image_column():
@@ -118,3 +118,35 @@ def test_powerpoint_stacks_the_picture_and_the_text_in_the_column():
     # the other block keeps the text column and starts under the title
     assert beside.left >= column + layout.content_left
     assert beside.top < under.top
+
+
+def test_the_viewer_stacks_a_right_column_the_same_way():
+    md = render_marp_page(_lecture("right").build().children[0])
+    assert md.startswith("<!-- _class: lk-side-right -->")
+    assert '<div class="lk-side lk-side-stack">' in md
+    assert md.count("under the picture") == 1
+    assert md.index("</div>", md.index("lk-side-stack")) < md.index("int beside;")
+
+
+def test_powerpoint_stacks_a_right_column_against_the_right_margin():
+    src = Path(tempfile.mkdtemp())
+    (src / "assets").mkdir()
+    (src / "assets" / "pic.png").write_bytes(_PNG)
+    out = PptxRenderer(asset_root=src).render(
+        _lecture("right").build(), Path(tempfile.mkdtemp()))
+    slide = Presentation(str(out)).slides[0]
+    layout = Layout.from_ratio("16:9")
+    column = round(layout.width * 0.4)
+    pic = next(s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
+    under = next(s for s in slide.shapes if s.has_text_frame
+                 and s.text_frame.text.endswith("under the picture"))
+    beside = next(s for s in slide.shapes if s.has_text_frame
+                  and "int beside;" in s.text_frame.text)
+    # the mirror of the left column: the outer edge at the side padding, the
+    # inner edge 40px into the text column's share
+    assert pic.left + pic.width == layout.width - layout.content_left
+    assert pic.left == layout.width - column - px(40)
+    assert under.left == pic.left
+    assert under.top >= pic.top + pic.height
+    assert beside.left == layout.content_left
+    assert beside.left + beside.width <= layout.content_left + layout.content_width - column

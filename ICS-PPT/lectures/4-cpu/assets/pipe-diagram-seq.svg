@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="21 0 648.0 146.47500000000002" width="648.0" height="146.47500000000002">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="82.4" y="27.6" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">OP1</text>
+<rect x="89.1" y="5.4" width="186.3" height="32.4" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="82.4" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">OP2</text>
+<rect x="275.4" y="37.8" width="186.3" height="32.4" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="82.4" y="92.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">OP3</text>
+<rect x="461.7" y="70.2" width="186.3" height="32.4" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<line x1="89.1" y1="1.4" x2="89.1" y2="114.6" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="275.4" y1="1.4" x2="275.4" y2="114.6" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="461.7" y1="1.4" x2="461.7" y2="114.6" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<line x1="648.0" y1="1.4" x2="648.0" y2="114.6" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<path d="M 89.1 144.6 L 89.1 114.6 L 182.3 114.6 L 182.3 144.6 L 275.4 144.6 L 275.4 114.6 L 368.6 114.6 L 368.6 144.6 L 461.7 144.6 L 461.7 114.6 L 554.9 114.6 L 554.9 144.6 L 648.0 144.6 L 648.0 114.6" fill="none" stroke="#0e2841" stroke-width="2"/>
+<text x="75.0" y="135.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">时钟</text>
+</svg>

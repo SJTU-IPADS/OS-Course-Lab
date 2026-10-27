@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Decode on a pipeline: word 2 cannot enter GPU 1 until GPU 4 takes word 1.
+"""One user generating word by word on four GPUs.
 
-Same four GPU rows. Word 1 walks GPU 1..4 in cycles 1..4; its result is the
-input of word 2, which enters GPU 1 in cycle 5. Everything else is 停: with a
-single request the pipeline is as empty as llm-pp-single. Run it to refresh
-../assets/llm-pp-decode.svg.
+The grid of llm_pp_single.py over eight cycles: word 1 walks down the
+diagonal in cycles 1-4, GPU 4 takes it in cycle 4, and only then can word 2
+enter GPU 1 in cycle 5; the arrow runs from word 1 on GPU 4 to word 2 on
+GPU 1. GPU 1 has bubbles in cycles 2-4 (red frame). Eight cycles give two
+words.
+Run it to refresh ../assets/llm-pp-decode.svg.
 """
 
 import pathlib
@@ -12,34 +14,32 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import INK, RED, elbow, rect, save, text
-from timegrid import CH, CW, LX, TOP, cx, cycle_numbers, row
+from llm_pp_single import BOTTOM, K, W, gpu_grid, gy, handoff
+from svgkit import INK, RED, brace, rect, save, text
+from timegrid import CH, CW, LX, VIEW_LEFT
 
-W, H = 1120, 356
-PITCH = CH + 8
-GPUS = ["GPU 1（1–7 层）", "GPU 2（8–14 层）", "GPU 3（15–21 层）", "GPU 4（22–28 层）"]
-NCOL = 8
+STEPS = 2 * K
+
+
+def work(g, t):
+    for n in (1, 2):
+        if t == g + (n - 1) * K:
+            return f"词 {n}"
+    return None
 
 
 def build():
-    out = [text(LX + 4 * CW, 22, "第 4 拍 GPU 4 取出词 1；词 1 是词 2 的输入，词 2 第 5 拍才能进入 GPU 1",
-                16, INK, "bold")]
-    out += cycle_numbers(NCOL)
-    for r, label in enumerate(GPUS):
-        cells = ["停"] * NCOL
-        cells[r] = "词 1"
-        cells[r + 4] = "词 2"
-        out += row(label, TOP + r * PITCH, 0, cells)
-    y4 = TOP + 3 * PITCH + CH / 2            # centre of the GPU 4 row
-    y1 = TOP + CH / 2                        # centre of the GPU 1 row
-    xg = LX + 4 * CW                         # the gap between cycle 4 and cycle 5
-    out.append(elbow([(LX + 4 * CW - 4, y4), (xg, y4), (xg, y1), (LX + 4 * CW + 4, y1)],
-                     INK, 2.4))
-    out.append(rect(LX + CW + 1, TOP - 4, 3 * CW - 2, CH + 8, "none", RED, rx=6, width=2, dash="6 4"))
-    bottom = TOP + 3 * PITCH + CH
-    out.append(text(cx(2), bottom + 28, "GPU 1 在第 2、3、4 拍没有这个请求的词可做", 16, RED, "bold"))
+    out = gpu_grid(STEPS, work)
+    out.append(rect(LX + CW + 1, gy(1) - 3, (K - 1) * CW - 2, CH + 6, "none", RED, rx=6,
+                    width=2, dash="6 4"))
+    out.append(text(LX + 2.5 * CW, 22, "GPU 1 等词 1：3 个周期是 bubble", 16, RED, "bold"))
+    out += handoff(K)
+    out.append(text(LX + K * CW + 24, 22, "词 1 是词 2 的输入", 16, INK, "bold",
+                    anchor="start"))
+    out += brace(LX + 3, LX + STEPS * CW - 3, BOTTOM + 12, INK,
+                 f"{STEPS} 个周期只出 2 个词", 16)
     return out
 
 
 if __name__ == "__main__":
-    save("llm-pp-decode", W, H, build(), left=-64)
+    save("llm-pp-decode", W, BOTTOM + 50, build(), left=VIEW_LEFT)

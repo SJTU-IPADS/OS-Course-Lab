@@ -78,19 +78,12 @@ class RenderBlockTest(unittest.TestCase):
             ['<figure class="lk-figure"><img src="x.svg" alt=""><figcaption>c</figcaption></figure>', ""],
         )
 
-    def test_side_image_marp_emits_split_background(self):
-        block = Block(kind="side_image", content={"src": "x.png", "alt": "", "side": "right", "width": None})
-        self.assertEqual(render_block(block), ["![bg right](x.png)", ""])
-
-    def test_side_image_marp_with_width_and_alt(self):
-        block = Block(kind="side_image", content={"src": "x.png", "alt": "a", "side": "right", "width": "34%"})
-        self.assertEqual(render_block(block), ["![bg right:34% a](x.png)", ""])
-
-    def test_side_image_on_the_left_is_left_to_the_page(self):
-        # Marp's split would take the title into the right column with the
-        # text; the page draws the left column itself (`side_column`).
-        block = Block(kind="side_image", content={"src": "x.png", "alt": "", "side": "left", "width": "34%"})
-        self.assertEqual(render_block(block), [])
+    def test_side_image_is_left_to_the_page_on_either_side(self):
+        # Marp's split would take the title into the text column and cut its
+        # rule short; the page draws the column itself (`side_column`).
+        for side in ("left", "right"):
+            block = Block(kind="side_image", content={"src": "x.png", "alt": "", "side": side, "width": "34%"})
+            self.assertEqual(render_block(block), [])
 
     def test_side_column_holds_the_images_and_hands_the_theme_its_width(self):
         from lecturekit.renderers.viewer.blocks import side_column

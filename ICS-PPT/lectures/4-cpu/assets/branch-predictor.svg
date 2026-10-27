@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 176" width="1120" height="176">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="200.0" y="4.0" width="170.0" height="36.0" rx="0" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="285.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">跳转指令的地址</text>
+<rect x="370.0" y="4.0" width="110.0" height="36.0" rx="0" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="425.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">2 位计数器</text>
+<rect x="200.0" y="40.0" width="170.0" height="36.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="285.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="370.0" y="40.0" width="110.0" height="36.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="425.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="200.0" y="76.0" width="170.0" height="36.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="285.0" y="100.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle" xml:space="preserve">0x34  jl .L3</text>
+<rect x="370.0" y="76.0" width="110.0" height="36.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="425.0" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle"></text>
+<rect x="374.0" y="80.0" width="102.0" height="28.0" rx="3" fill="#ffffff" stroke="#0e2841" stroke-width="2.6"/>
+<text x="425.0" y="101.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">3</text>
+<rect x="20.0" y="68.0" width="132.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="86.0" y="89.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">取指</text>
+<text x="86.0" y="110.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">PC = 0x34</text>
+<line x1="154.0" y1="94.0" x2="196.0" y2="94.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="176.0" y="84.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">查表</text>
+<rect x="325.0" y="138.0" width="200.0" height="34.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="347.0" y="161.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">jl</text>
+<text x="366.2" y="161.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start" xml:space="preserve"> 执行完：跳或不跳</text>
+<line x1="425.0" y1="136.0" x2="425.0" y2="116.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="435.0" y="131.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="start">更新</text>
+<rect x="604.0" y="30.0" width="68.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="638.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">0</text>
+<rect x="728.0" y="30.0" width="68.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="762.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="852.0" y="30.0" width="68.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="886.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">2</text>
+<rect x="976.0" y="30.0" width="68.0" height="56.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="2.6"/>
+<text x="1010.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">3</text>
+<line x1="676.0" y1="46.0" x2="724.0" y2="46.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="700.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">跳</text>
+<line x1="724.0" y1="70.0" x2="676.0" y2="70.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="700.0" y="92.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">不跳</text>
+<line x1="800.0" y1="46.0" x2="848.0" y2="46.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="824.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">跳</text>
+<line x1="848.0" y1="70.0" x2="800.0" y2="70.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="824.0" y="92.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">不跳</text>
+<line x1="924.0" y1="46.0" x2="972.0" y2="46.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="948.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">跳</text>
+<line x1="972.0" y1="70.0" x2="924.0" y2="70.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="948.0" y="92.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">不跳</text>
+<path d="M 1046 46.0 C 1086 22.0, 1086 94.0, 1048 70.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="1082.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">跳</text>
+<path d="M 602 70.0 C 562 94.0, 562 22.0, 600 46.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="566.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">不跳</text>
+<path d="M 604.0 120.0 L 604.0 128.0 L 796.0 128.0 L 796.0 120.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
+<text x="700.0" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">预测不跳转</text>
+<path d="M 852.0 120.0 L 852.0 128.0 L 1044.0 128.0 L 1044.0 120.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
+<text x="948.0" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">预测跳转</text>
+</svg>

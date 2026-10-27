@@ -199,6 +199,28 @@ def body(p):
 
 ### Page layout
 
+Pages, blocks and containers share two alignment methods. `halign` takes
+`left`, `center`, `right`; `valign` takes `top`, `middle`, `bottom`. They move
+the content as a group within its box, preserving the alignment of text lines.
+
+```python
+p.valign("middle")                   # all page content under the title
+p.code("c", "int x;").halign("right")
+
+with p.flex("row", valign="middle"):
+    p.slide("The rule illustrated by the figure.")
+    p.image("assets/figure.svg", width_px=420)
+```
+
+`p.flex(direction="column", *, halign=None, valign=None)` is a context manager;
+containers may nest. A column stacks its children, and a row shares its width
+between them, keeping explicitly sized images at their requested width. A
+child's own alignment overrides its container's. Containers have no visibility
+filters, translation keys or annotations; those belong to their content.
+Side images stay in the page's side column and follow its vertical alignment.
+For the box model, renderer behaviour and the mapping of older layout calls,
+see [layout.md](layout.md).
+
 `p.gap(spread=None, *, min_px=None, max_px=None)` opts the page into adaptive
 spacing between viewer-visible blocks: the slide's leftover vertical space is
 split evenly across the seams between blocks, each seam capped at `spread`
@@ -229,6 +251,10 @@ The setting is page-level. HTML, PDF, PNG, live preview, notebook inline slides,
 and PPTX honor it. The PPTX renderer keeps each block's native geometry, then
 distributes the remaining canvas between block groups. Pages that do not call
 `p.gap(...)` keep the normal theme rhythm.
+
+A container is one group for this spacing policy. Page `valign="middle"` and
+`valign="bottom"` use that same leftover space, so they cannot combine with
+`p.gap(...)`. Use `p.valign("top")` to retain gap spreading.
 
 `p.gap(...)` is one page-wide *policy* — distribute leftover space evenly — so a
 page sets it at most once (a second call is a `ValidationError`). When you want
@@ -319,7 +345,7 @@ handle for chaining (see [Footnotes](#footnotes) and
 | `p.link(label, url)` | `link` | A labelled hyperlink. |
 | `p.image(src, …)` | `image` | An inline image (see [Images](#images)). |
 | `p.frames(src, src, …)` | `image` ×N | An animation: one page, one figure per frame (see [Frames](#frames-an-animation)). |
-| `p.side_image(src, …)` | `side_image` | An image in a side column; text reflows beside it. |
+| `p.side_image(src, …)` | `side_image` | An image in a side column; text reflows beside it (see [Side images](#side-images)). |
 | `p.sidenote(title, text, …)` | `sidenote` | A boxed callout pointing at external material. |
 | `p.highlight(text, …)` | `highlight` | A centered emphasis chip (see [Highlight](#highlight)). |
 | `p.table(rows, *, headers, …)` | `table` | A GFM table (see [Tables](#tables)). |
@@ -849,28 +875,28 @@ p.image("arch.svg").framed().width_px(480).footnote("来源：CSAPP 3e")
 p.image("arch.svg", caption="图 1").caption_align("right")
 ```
 
-`p.side_image(src, *, alt="", width=None, side="right")` places the image in a
-side column and reflows the slide text into the other column. `side` is `"right"`
-(default) or `"left"`; `width` (e.g. `"38%"`) sets the column width, defaulting
-to a half-split. `alt` carries Marp's background keywords: `alt="contain"` (or
-`"fit"`) shows the whole image inside the column, and without it the image
-covers the column and is cropped to it.
+### Side images
 
-The title always starts at the slide's left edge, so the two sides differ in
-what the column takes:
+`p.side_image(src, *, alt="", width=None, side="right", valign="top")` places
+the image in a side column and reflows the slide text into the other column.
+`side` is `"right"` (default) or `"left"`; `width` (e.g. `"38%"`) sets the
+column width, defaulting to half the slide. `alt` carries Marp's background
+keywords: `alt="contain"` (or `"fit"`) shows the whole image inside the column,
+and without it the image covers the column and is cropped to it. `valign` is
+`"top"` (default) or `"middle"`, see [below](#both-columns-in-the-middle).
 
-| `side` | Image column | Title |
-| --- | --- | --- |
-| `"right"` | the slide's full height (a Marp split background) | in the text column, beside the image |
-| `"left"` | from under the title's rule to the slide's left and bottom edges | the slide's full width, above both columns |
+The title keeps the slide's full width, rule included, above both columns.
+The image column runs from under the title's rule to the slide's outer edge
+(left or right) and its bottom edge. The theme draws this column on either
+side; Marp's own split background is not used, since it would move the title
+into the text column and cut its rule short.
 
 A covering image is a backdrop: it fills the column out to the slide's edges.
 A fitted one (`contain`) is a figure beside the text, so the box it is fitted
 into keeps the slide's margins. That box ends at the side padding (80px) on
-the outside, in line with the title, stops 40px short of the text column and
-40px above the slide's bottom edge, and on the right starts at the top padding.
-The picture is centred in it, which puts it nearer the text than the slide's
-edge. `width` therefore counts the outer margin: a fitted image is drawn at
+the outside, in line with the title's edge, and stops 40px short of the text
+column and 40px above the slide's bottom edge. The picture is centred in it,
+which puts it nearer the text than the slide's edge. `width` therefore counts the outer margin: a fitted image is drawn at
 most `width` minus 40px wide.
 
 The text column has the same width on either side, fitted image or covering.
@@ -884,7 +910,7 @@ shorter than the slide, which would otherwise sit in the middle of an empty
 column:
 
 ```python
-p.side_image("assets/stack.svg", width="42%", alt="contain", side="left")
+p.side_image("assets/stack.svg", width="42%", alt="contain")
 p.slide("""
 - the rule the figure shows
 - in a few short lines
@@ -896,28 +922,69 @@ The column is then a stack: the picture at its top, as wide as the column and
 as tall as its aspect ratio makes it, and the text below it at the column's
 width. The column keeps the slide's margins, as a fitted image's box does, and
 it is not a reveal step. The handle is valid **only on a `slide` block**, and
-the page needs a `side_image` with `side="left"`; either mistake is a
-`ValidationError`. A column on the right is Marp's split background and holds
-a picture only. In a target that does not draw the image column (the block
+the page needs a `side_image`, on either side; either mistake is a
+`ValidationError`. In a target that does not draw the image column (the block
 filtered out with `only=`), the text stays where it was written. The PPTX
 export draws the same stack; the transcript prints the text in source order.
 
+#### Both columns in the middle
+
+`p.side_image(..., valign="middle")` centres the page vertically: the text
+column's blocks (everything under the title that is not in the image column)
+are centred in the band from the title's rule to the slide's bottom padding,
+as one group, and the image column is centred in the same band, so the two
+columns share one middle line. A stack (`under_side_image`) is centred as one
+group, the picture with the text under it, and a fitted image's box ends at
+the bottom padding instead of 40px above the slide's edge. It is for a short
+table or a few lines beside a figure that would otherwise both hug the title:
+
+```python
+p.side_image("assets/op-encoding.svg", alt="contain", width="44%", side="left",
+             valign="middle")
+p.slide("the byte layout the figure shows").under_side_image()
+p.table(rows, headers=["field", "bits"])                 # the text column
+```
+
+The default, `valign="top"`, is the layout described above. The viewer centres
+the text column with two flex spacers around its blocks; the PPTX export draws
+the blocks with their ordinary rhythm and moves each group down to the band's
+middle. A group taller than the band stays where it is. Centring and
+`p.gap(...)` both claim the page's leftover vertical space, so a page that
+sets both is a `ValidationError`, as is a page whose side images disagree on
+`valign`. The transcript and the book have no slide to centre in and ignore it.
+
 `p.slide(...).image_right(src, *, alt="", width_px=None, width_pct=None,
-height_px=None, height_pct=None)` floats a **small** image on the right of that
-slide block's text, sharing the same horizontal band; the text wraps to its left
-and flows under it once cleared. It chains like a footnote
+height_px=None, height_pct=None, valign="top")` floats a **small** image on the
+right of that slide block's text, sharing the same horizontal band; the text
+wraps to its left and flows under it once cleared. It chains like a footnote
 (`p.slide("…").image_right("weekly.png", width_px=160)`) and can be combined with
 `.footnote(...)` / `.annotate(...)`. Size is unit-explicit, exactly as for
 `p.image`. It is valid **only on a `slide` block**; calling it elsewhere is a
 `ValidationError`.
 
-This is distinct from `side_image`: `side_image` splits the *whole slide* into
-two columns, whereas `image_right` is a single small figure beside one block of
+`valign="middle"` sets the image and the text side by side instead, each
+centred vertically against the other: a figure shorter than the text sits at
+the text's middle, and text shorter than the figure sits at the figure's
+middle. The text then stays in its own column and does not flow under the
+image. Any other value is a `ValidationError`.
+
+```python
+p.slide("""
+**idea**:
+- divide the process into stages
+- move objects through them in sequence
+""").image_right("assets/car-wash.svg", width_px=456, valign="middle")
+```
+
+This is distinct from `side_image`: `side_image` splits the slide under its
+title into two columns, whereas `image_right` is a single small figure beside one block of
 text that does not claim the full slide height.
 
 In the PPTX export the picture keeps its place at the right edge, but the text
 does not wrap around it: PowerPoint cannot flow text around a shape, so the text
-box is narrowed to sit beside the picture for its whole height.
+box is narrowed to sit beside the picture for its whole height. Under
+`valign="middle"` the picture and the text box are each centred in the band
+the taller of the two sets. The transcript ignores `valign`.
 
 `p.row(*, caption=None, ref=None)` lays out several images **side by side** in one band.
 It returns a `RowHandle`; add images with `row.image(src, ...)`, each taking the
@@ -938,8 +1005,8 @@ Items are top-aligned, so each image's own caption sits below it at its natural
 height; the optional `caption` renders below the whole row. An empty row (no
 `.image(...)`) raises a `ValidationError` at build time.
 
-This is distinct from the other image placements: `side_image` splits the whole
-slide into two columns, `image_right` floats one small image beside
+This is distinct from the other image placements: `side_image` splits the
+slide under its title into two columns, `image_right` floats one small image beside
 a single text block, and `row` is a self-contained band of N images with no
 slide text flowing around them.
 

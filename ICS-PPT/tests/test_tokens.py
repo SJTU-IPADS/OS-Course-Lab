@@ -54,13 +54,14 @@ class FlattenTest(unittest.TestCase):
             with self.subTest(name=name):
                 self.assertRegex(tokens.opaque(name), r"^#[0-9a-f]{6}$")
 
-    def test_only_fonts_and_mark_geometry_are_not_colours(self):
+    def test_only_fonts_and_geometry_are_not_colours(self):
         # Everything else in :root is paint. A new non-colour token is fine —
         # add it here so the list stays a statement of what the theme carries.
         others = {n for n in tokens.tokens() if not tokens.is_colour(n)}
         self.assertEqual(others, {
             "--font-base", "--font-mono", "--pptx-font-cjk", "--pptx-font-mono",
             "--mark-top", "--mark-bottom", "--mark-tex-raise", "--mark-tex-height",
+            "--layout-gutter",
         })
 
 

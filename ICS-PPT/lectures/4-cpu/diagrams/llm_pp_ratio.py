@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""How much of the grid the start-up and drain bubbles take.
+"""Fill and drain bubbles for K = 4 GPUs and M = 8 requests.
 
-K = 4 GPUs, M = 8 requests in a row: 4 x 11 cells, 12 of them bubbles, so
-12 / 44 = 27 %, which is (K - 1) / (M + K - 1). Smaller cells than
-timegrid so eleven cycles fit. Run it to refresh ../assets/llm-pp-ratio.svg.
+Eleven cycles do not fit the cells of timegrid.py, so this grid draws its own
+smaller cells with the same colours: request m is on GPU g in cycle m + g - 1,
+the cell holds the request number in the colour of request ((m - 1) mod 4) + 1
+of llm_pp_fill.py, and the two triangles of 1 + 2 + 3 = 6 dashed cells are the
+bubbles. The count is on the right.
+Run it to refresh ../assets/llm-pp-ratio.svg.
 """
 
 import pathlib
@@ -11,38 +14,45 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import BLUE, FILL_BLUE, FILL_RED, INK, MUTED, RED, mono, rect, save, text
+from svgkit import INK, MUTED, RED, mono, rect, save, text
+from timegrid import TONE
 
-W = 1120
 K, M = 4, 8
-NCOL = M + K - 1
-GX, GY = 150, 40
-CELL_W, CELL_H, PITCH = 66, 40, 46
+STEPS = M + K - 1
+CW, CH, PITCH = 64, 34, 38
+LX, TOP = 112, 30
+W = 1120
+H = TOP + (K - 1) * PITCH + CH + 8
 
 
 def build():
-    out = [text(GX - 10, GY - 20, "周期", 14, MUTED, anchor="end")]
-    for c in range(NCOL):
-        out.append(text(GX + c * CELL_W + CELL_W / 2, GY - 20, str(c + 1), 14, MUTED))
-    bubbles = 0
-    for r in range(K):
-        y = GY + r * PITCH
-        out.append(mono(24, y + CELL_H / 2 + 6, f"GPU {r + 1}", 16, INK))
-        for c in range(NCOL):
-            x = GX + c * CELL_W
-            if r <= c < r + M:
-                out.append(rect(x + 2, y + 2, CELL_W - 4, CELL_H - 4, FILL_BLUE, BLUE, rx=3, width=1.2))
-                out.append(text(x + CELL_W / 2, y + CELL_H / 2 + 5, f"请求 {c - r + 1}", 13, BLUE, "bold"))
+    out = [text(LX - 12, 20, "周期", 14, MUTED, anchor="end")]
+    for t in range(1, STEPS + 1):
+        out.append(text(LX + (t - 0.5) * CW, 20, str(t), 14, MUTED))
+    for g in range(1, K + 1):
+        y = TOP + (g - 1) * PITCH
+        out.append(mono(24, y + CH / 2 + 5, f"GPU {g}", 15, INK))
+        for t in range(1, STEPS + 1):
+            m = t - g + 1
+            name = f"请求 {(m - 1) % 4 + 1}" if 1 <= m <= M else "bubble"
+            fill, stroke, tone = TONE[name]
+            x = LX + (t - 1) * CW
+            dash = "4 3" if name == "bubble" else None
+            out.append(rect(x + 2, y + 2, CW - 4, CH - 4, fill, stroke, rx=3, width=1.2, dash=dash))
+            if name == "bubble":
+                out.append(text(x + CW / 2, y + CH / 2 + 4, "bubble", 12, tone, "bold"))
             else:
-                bubbles += 1
-                out.append(rect(x + 2, y + 2, CELL_W - 4, CELL_H - 4, FILL_RED, RED, rx=3, width=1.2))
-                out.append(text(x + CELL_W / 2, y + CELL_H / 2 + 5, "停", 14, RED, "bold"))
-    total = K * NCOL
-    y = GY + K * PITCH + 24
-    out.append(text(GX, y, f"气泡 {bubbles} 格 ÷ 总共 {K} × {NCOL} = {total} 格 = {bubbles / total:.0%}",
-                    16, RED, "bold", anchor="start"))
+                out.append(text(x + CW / 2, y + CH / 2 + 5, str(m), 14, tone, "bold"))
+    tx = LX + STEPS * CW + 26
+    mid = TOP + ((K - 1) * PITCH + CH) / 2
+    total, bubble = K * STEPS, K * (K - 1)
+    out.append(text(tx, mid - 24, f"共 {K} × {STEPS} = {total} 格", 16, INK, anchor="start"))
+    out.append(text(tx, mid + 4, f"bubble {bubble // 2} + {bubble // 2} = {bubble} 格", 16, RED,
+                    "bold", anchor="start"))
+    out.append(text(tx, mid + 32, f"{bubble} ÷ {total} = {round(100 * bubble / total)}%", 16,
+                    RED, "bold", anchor="start"))
     return out
 
 
 if __name__ == "__main__":
-    save("llm-pp-ratio", W, GY + K * PITCH + 36, build(), left=-(W - (GX + NCOL * CELL_W + 24)) / 2)
+    save("llm-pp-ratio", W, H, build())

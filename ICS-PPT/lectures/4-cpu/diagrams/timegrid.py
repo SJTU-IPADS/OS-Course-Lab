@@ -29,6 +29,7 @@ TONE = {                 # stage -> (fill, stroke, label colour)
     "写回": (INK, INK, WHITE),
     "停":   (FILL_RED, RED, RED),
     "?":    (WHITE, MUTED, MUTED),
+    "作废": (WHITE, RED, RED),
     # 第四部分：大模型的流水线并行与投机推理
     "请求 1": (FILL_BLUE, BLUE, BLUE),
     "请求 2": (FILL_ORANGE, ORANGE, ORANGE),
@@ -36,25 +37,28 @@ TONE = {                 # stage -> (fill, stroke, label colour)
     "请求 4": (FILL_GREY, INK, INK),
     "词 1": (FILL_BLUE, BLUE, BLUE),
     "词 2": (FILL_ORANGE, ORANGE, ORANGE),
+    "bubble": (WHITE, MUTED, MUTED),   # a GPU with nothing to compute, drawn like
+                                       # the bubble of stall_bubble.py
 }
 
 
-def cycle_numbers(n, emph=None, color=ORANGE):
-    """'周期' and the numbers 1..n; `emph` is drawn larger in `color`."""
-    out = [text(LX - 12, NUM_Y, "周期", 15, MUTED, anchor="end")]
+def cycle_numbers(n, emph=None, color=ORANGE, y=NUM_Y):
+    """'周期' and the numbers 1..n; `emph` is drawn larger in `color`. `y`
+    moves the row up in a static figure with nothing drawn above its grid."""
+    out = [text(LX - 12, y, "周期", 15, MUTED, anchor="end")]
     for c in range(n):
         x = LX + c * CW + CW / 2
         if emph == c + 1:
-            out.append(text(x, NUM_Y + 1, str(c + 1), 18, color, "bold"))
+            out.append(text(x, y + 1, str(c + 1), 18, color, "bold"))
         else:
-            out.append(text(x, NUM_Y, str(c + 1), 15, MUTED))
+            out.append(text(x, y, str(c + 1), 15, MUTED))
     return out
 
 
 def cell(col, y, name):
     fill, stroke, tone = TONE[name]
     x = LX + col * CW
-    dash = "5 4" if name == "?" else None
+    dash = "5 4" if name in ("?", "作废", "bubble") else None
     return [rect(x + 3, y + 3, CW - 6, CH - 6, fill, stroke, rx=3, width=1.4, dash=dash),
             text(x + CW / 2, y + CH / 2 + 6, name, 17, tone, "bold")]
 

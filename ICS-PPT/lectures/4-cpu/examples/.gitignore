@@ -1,0 +1,14 @@
+# What the demos and the Makefile here build, in place. A program has no
+# extension: every extensionless file is ignored, every file with one is
+# kept (sources, scripts). Makefile is kept by name, and the products that
+# do have an extension are ignored again.
+*
+!*/
+!*.*
+!Makefile
+*.o
+*.i
+*.s
+*.exe
+a.out
+__pycache__/

@@ -1,24 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 138" width="1120" height="138">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 154" width="1120" height="154">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<rect x="27.0" y="20.0" width="210.0" height="74.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
-<text x="132.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">下载</text>
-<text x="132.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">第 3 段：从服务器取压缩数据</text>
-<line x1="239.0" y1="57.0" x2="269.0" y2="57.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="271.0" y="34.0" width="150.0" height="46.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="346.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">缓冲区</text>
-<text x="346.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">已下载、未解码</text>
-<text x="346.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#c0392b" text-anchor="middle">网络慢，这里读空：画面停住转圈</text>
-<line x1="423.0" y1="57.0" x2="453.0" y2="57.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="455.0" y="20.0" width="210.0" height="74.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
-<text x="560.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">解码</text>
-<text x="560.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">第 2 段：还原成一帧帧画面</text>
-<line x1="667.0" y1="57.0" x2="697.0" y2="57.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="699.0" y="34.0" width="150.0" height="46.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
-<text x="774.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">缓冲区</text>
-<text x="774.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="11" font-weight="normal" fill="#5a6b78" text-anchor="middle">已解码、未显示</text>
-<text x="774.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#c0392b" text-anchor="middle">显示的节拍固定：解码停下等它</text>
-<line x1="851.0" y1="57.0" x2="881.0" y2="57.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<rect x="883.0" y="20.0" width="210.0" height="74.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="988.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">显示</text>
-<text x="988.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">第 1 段：每 16.7 ms 换一帧</text>
+<text x="141.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">网络</text>
+<line x1="147.0" y1="68.0" x2="169.0" y2="68.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="248.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">正在处理段 3</text>
+<rect x="173.0" y="26.0" width="150.0" height="84.0" rx="8" fill="#eaf3f7" stroke="#156082" stroke-width="1.8"/>
+<text x="248.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#156082" text-anchor="middle">下载</text>
+<text x="248.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">从网络取压缩数据</text>
+<line x1="327.0" y1="68.0" x2="345.0" y2="68.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="349.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="371.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="393.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="415.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="437.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="404.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">缓冲区：已下载、未解码</text>
+<line x1="463.0" y1="68.0" x2="481.0" y2="68.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="560.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">正在处理段 2</text>
+<rect x="485.0" y="26.0" width="150.0" height="84.0" rx="8" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="560.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#e97132" text-anchor="middle">解码</text>
+<text x="560.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">还原成一帧帧画面</text>
+<line x1="639.0" y1="68.0" x2="657.0" y2="68.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="661.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="683.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="705.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="727.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="749.0" y="50.0" width="22.0" height="36.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="716.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">缓冲区：已解码、未显示</text>
+<line x1="775.0" y1="68.0" x2="793.0" y2="68.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="872.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">正在处理段 1</text>
+<rect x="797.0" y="26.0" width="150.0" height="84.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="872.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#2e7d4f" text-anchor="middle">显示</text>
+<text x="872.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">每 16.7 ms 换一帧</text>
+<line x1="951.0" y1="68.0" x2="973.0" y2="68.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="979.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">屏幕</text>
 </svg>
