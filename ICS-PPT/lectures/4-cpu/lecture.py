@@ -11,7 +11,7 @@ stall 到写回之后；转发后不停的、仍 stall 一个周期的）与跳�
 超标量一页，超线程（一个线程用不满执行部件、硬件结构、两个线程同时执行、填上空着的
 执行部件、与超标量和多核对照），硬件分支预测器与一页实测（跳转方向无规律时运行慢）；
 第四部分 拓展：系统里的流水线：大模型推理在做什么（一次一个词、28 层、装不下、
-按层切）；流水线并行与它的 bubble（单请求、多请求填满、两头的占比、逐词生成的依赖、
+按层切）；流水线并行与它的 bubble（单请求、多请求填满、逐词生成的依赖、
 多用户轮流）；投机推理（读一遍权重、先猜、核对、与分支预测对照、划不划算）；
 其他系统里的流水线（装配线、看视频、总结）。
 
@@ -118,7 +118,6 @@ with lecture.section('第四部分：拓展：系统里的流水线', id="part4"
     with s.section('流水线并行与它的 bubble', id="part4-pp") as ss:
         ss.page("llm-pp-single", body=pages.llm_pp_single)
         ss.page("llm-pp-fill", body=pages.llm_pp_fill)
-        ss.page("llm-pp-ratio", body=pages.llm_pp_ratio)
         ss.page("llm-pp-decode", body=pages.llm_pp_decode)
         ss.page("llm-pp-batch", body=pages.llm_pp_batch)
 

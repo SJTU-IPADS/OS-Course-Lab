@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""Watching a video: download, decode and display as a three-stage pipeline.
+"""Watching a video: download, decode, display, with buffers between.
 
-Three stages in the station colours of car_wash.py and assembly_line.py,
-each busy with a different segment: the network downloads segment 3 while
-the decoder works on segment 2 and the screen shows segment 1. Between two
-stages a buffer, drawn as a queue of slots: compressed segments (blue, the
-download colour) before the decoder, decoded frames (orange, the decode
-colour) before the screen. The dashed slots are the empty part of a buffer.
-Run it to refresh ../assets/video-pipeline.svg.
+Three stages working on three different segments at once. The display
+stage has a fixed beat (one frame every 16.7 ms); an empty buffer in front
+of it is the spinner everyone has seen. Run it to refresh
+../assets/video-pipeline.svg.
 """
 
 import pathlib
@@ -15,57 +12,40 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import INK, MUTED, WHITE, arrow, rect, save, text
-from timegrid import TONE
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK, MUTED,
+                    ORANGE, RED, arrow, box, save, text)
 
-STAGES = [("下载", "取指", "段 3", "从网络取压缩数据"),
-          ("解码", "执行", "段 2", "还原成一帧帧画面"),
-          ("显示", "访存", "段 1", "每 16.7 ms 换一帧")]
-BUFFERS = [("取指", 2, "缓冲区：已下载、未解码"), ("执行", 3, "缓冲区：已解码、未显示")]
-SW, SH = 150, 84                     # a stage box
-SLOT, NSLOT = 22, 5                  # a buffer slot and the slots per buffer
-BW = NSLOT * SLOT
-GAP = 26                             # arrow room on either side of a buffer
 W = 1120
-END = 60
-X0 = (W - (END + 3 * SW + 2 * (BW + 2 * GAP) + END)) / 2
-SY = 26
-MY = SY + SH / 2
-H = SY + SH + 44
-
-
-def buffer(x, tone, full, label):
-    fill, stroke, _ = TONE[tone]
-    out = []
-    for k in range(NSLOT):
-        filled = k >= NSLOT - full   # the queue drains from the right
-        out.append(rect(x + k * SLOT, MY - 18, SLOT, 36, fill if filled else WHITE,
-                        stroke if filled else MUTED, rx=2, width=1.2,
-                        dash=None if filled else "4 3"))
-    out.append(text(x + BW / 2, SY + SH + 30, label, 14, MUTED))
-    return out
+SW, SH = 210, 74              # a stage
+BUF_W, BUF_H = 150, 46        # a buffer
+GAP = 34
+X0 = (W - (3 * SW + 2 * BUF_W + 4 * GAP)) / 2
+Y = 20
+STAGES = [("下载", "第 3 段：从服务器取压缩数据", FILL_BLUE, BLUE),
+          ("解码", "第 2 段：还原成一帧帧画面", FILL_ORANGE, ORANGE),
+          ("显示", "第 1 段：每 16.7 ms 换一帧", FILL_GREEN, GREEN)]
+BUFS = [("缓冲区", "已下载、未解码"), ("缓冲区", "已解码、未显示")]
+STALLS = ["网络慢，这里读空：画面停住转圈", "显示的节拍固定：解码停下等它"]
 
 
 def build():
-    x = X0 + END
-    out = [text(x - 32, MY + 5, "网络", 15, MUTED, anchor="end")]
-    out.append(arrow(x - 26, MY, x - 4, MY, INK, 2))
-    for k, (name, tone, seg, what) in enumerate(STAGES):
-        fill, stroke, ink = TONE[tone]
-        out.append(text(x + SW / 2, SY - 10, f"正在处理{seg}", 14, ink, "bold"))
-        out.append(rect(x, SY, SW, SH, fill, stroke, rx=8, width=1.8))
-        out.append(text(x + SW / 2, SY + 34, name, 20, ink, "bold"))
-        out.append(text(x + SW / 2, SY + 60, what, 13, INK))
+    out = []
+    x = X0
+    for i, (name, sub, fill, stroke) in enumerate(STAGES):
+        out += box(x, Y, SW, SH, name, fill, stroke, 18, "bold", sub=sub, sub_size=12)
         x += SW
-        if k < 2:
-            out.append(arrow(x + 4, MY, x + GAP - 4, MY, INK, 2))
-            out += buffer(x + GAP, *BUFFERS[k])
-            out.append(arrow(x + GAP + BW + 4, MY, x + 2 * GAP + BW - 4, MY, INK, 2))
-            x += 2 * GAP + BW
-    out.append(arrow(x + 4, MY, x + 26, MY, INK, 2))
-    out.append(text(x + 32, MY + 5, "屏幕", 15, MUTED, anchor="start"))
+        if i < 2:
+            out.append(arrow(x + 2, Y + SH / 2, x + GAP - 2, Y + SH / 2, INK, 2))
+            x += GAP
+            name_b, sub_b = BUFS[i]
+            out += box(x, Y + (SH - BUF_H) / 2, BUF_W, BUF_H, name_b, FILL_GREY, MUTED, 14,
+                       "normal", color=INK, sub=sub_b, sub_size=11)
+            out.append(text(x + BUF_W / 2, Y + SH + 28, STALLS[i], 13, RED))
+            x += BUF_W
+            out.append(arrow(x + 2, Y + SH / 2, x + GAP - 2, Y + SH / 2, INK, 2))
+            x += GAP
     return out
 
 
 if __name__ == "__main__":
-    save("video-pipeline", W, H, build())
+    save("video-pipeline", W, Y + SH + 44, build())

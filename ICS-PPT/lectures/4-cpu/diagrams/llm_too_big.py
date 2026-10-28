@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""The 810 GB of Llama 3.1 405B cut into 80 GB pieces, one per H100.
+"""The weights of a large model against the memory of one GPU.
 
-One bar, to scale: ten full 80 GB cells and a last piece of 10 GB, whose
-cell is drawn dashed for the part of the GPU it leaves empty. The weights are
-grey, as the weight matrices of llm_layers.py. Under every cell is the GPU it
-goes to; the bracket gives the count.
-Run it to refresh ../assets/llm-too-big.svg.
+Two bars on one scale: Llama 3.1 405B in 16-bit (810 GB) and one H200
+(141 GB). The long bar is ticked every 141 GB, so the number of GPUs needed
+can be counted off it. The weights are grey, as in the other part-4
+figures; the GPU memory is an empty white box. Run it to refresh
+../assets/llm-too-big.svg.
 """
 
 import pathlib
@@ -13,35 +13,38 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import FILL_GREY, INK, MUTED, WHITE, brace, rect, save, text
+from svgkit import FILL_GREY, INK, MUTED, RED, WHITE, line, rect, save, text
 
-TOTAL, PIECE = 810, 80               # GB
-S = 90                               # px per 80 GB
-N = -(-TOTAL // PIECE)               # 11 pieces
-W, H = 1120, 156
-X0 = (W - N * S) / 2
-BY, BH = 36, 44                      # the bar: top, height
+W, H = 1120, 200
+LX = 24                    # labels
+BX = 300                   # bars start here
+SCALE = 700 / 810          # px per GB
+BH = 44
+Y1, Y2 = 36, 118
+GPU_GB, MODEL_GB = 141, 810
+
+
+def bar(y, gb, fill, stroke, label, value):
+    w = gb * SCALE
+    out = [text(LX, y + BH / 2 + 6, label, 16, INK, "bold", anchor="start"),
+           rect(BX, y, w, BH, fill, stroke, rx=4, width=1.6),
+           text(BX + w + 12, y + BH / 2 + 6, value, 17, stroke, "bold", anchor="start")]
+    return out
 
 
 def build():
-    out = [text(X0, 22, "Llama 3.1 405B 的权重：4050 亿个 × 2 字节 = 810 GB", 16, INK, "bold",
-                anchor="start"),
-           text(X0 + N * S, 22, "一格 = 一块 H100 的显存（80 GB）", 14, MUTED, anchor="end")]
-    for k in range(N):
-        x = X0 + k * S
-        left = TOTAL - k * PIECE
-        if left >= PIECE:
-            out.append(rect(x, BY, S, BH, FILL_GREY, INK, rx=2, width=1.4))
-            out.append(text(x + S / 2, BY + BH / 2 + 5, "80 GB", 14, INK))
-        else:
-            part = S * left / PIECE
-            out.append(rect(x, BY, S, BH, WHITE, MUTED, rx=2, width=1.4, dash="5 4"))
-            out.append(rect(x, BY, part, BH, FILL_GREY, INK, rx=2, width=1.4))
-            out.append(text(x + part + 5, BY + BH / 2 + 5, f"← {left} GB", 13, INK,
-                            anchor="start"))
-        out.append(text(x + S / 2, BY + BH + 22, f"GPU {k + 1}", 14, INK))
-    out += brace(X0 + 2, X0 + N * S - 2, BY + BH + 32, INK,
-                 f"{TOTAL} ÷ {PIECE} ≈ 10.1：至少 {N} 块 GPU", 16, depth=8)
+    out = bar(Y1, MODEL_GB, FILL_GREY, INK, "Llama 3.1 405B 的权重", "810 GB")
+    n_full = MODEL_GB // GPU_GB
+    for k in range(1, n_full + 1):
+        x = BX + k * GPU_GB * SCALE
+        out.append(line(x, Y1 + 2, x, Y1 + BH - 2, WHITE, 2))
+    for k in range(n_full):
+        x = BX + (k + 0.5) * GPU_GB * SCALE
+        out.append(text(x, Y1 + BH / 2 + 5, str(k + 1), 13, INK))
+    out.append(text(BX + MODEL_GB * SCALE - 6, Y1 + BH + 18, "第 6 块", 13, RED, anchor="end"))
+    out += bar(Y2, GPU_GB, WHITE, INK, "一块 H200 的显存", "141 GB")
+    out.append(text(BX, Y2 + BH + 30, "4050 亿个权重 × 2 字节 = 810 GB；810 ÷ 141 ≈ 5.74，仅权重至少需 6 块 H200",
+                    15, MUTED, anchor="start"))
     return out
 
 

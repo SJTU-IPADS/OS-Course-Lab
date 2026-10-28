@@ -2,10 +2,13 @@
 """Speculative decoding on the lecture's own sentence.
 
 The text so far is 流水线 提高 的 是. A small model guesses four words in a
-row; the large model reads its weights once and, for each of the four
+row; the large model reuses its weights in one forward pass and, for each of the four
 positions, produces the word it would have taken itself; the two rows are
 compared left to right. spec-guess.svg stops after the guess row;
-spec-decode.svg is the whole figure. Run it to refresh both.
+spec-decode.svg is the whole figure. Colours follow the other part-4
+figures: the text so far blue, a word the large model takes orange (its row
+and the words this round yields); the small model's guesses are dashed
+orange, words not yet confirmed. Run it to refresh both.
 """
 
 import pathlib
@@ -13,8 +16,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, FILL_RED, GREEN,
-                    INK, MUTED, ORANGE, RED, arrow, box, rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_ORANGE, FILL_RED, GREEN, INK, MUTED,
+                    ORANGE, RED, WHITE, arrow, box, rect, save, text)
 
 W = 1120
 LX, BX = 20, 330
@@ -45,15 +48,16 @@ def build(full):
     out.append(label(YA, f"小模型连猜 {K} 个", ORANGE))
     for i, w in enumerate(GUESS):
         out.append(text(col_x(i) + BW / 2, YA - 8, f"猜 {i + 1}", 13, MUTED))
-        out += box(col_x(i), YA, BW, BH, w, FILL_ORANGE, ORANGE, 16, "bold")
+        out.append(rect(col_x(i), YA, BW, BH, WHITE, ORANGE, rx=6, width=1.6, dash="5 4"))
+        out.append(text(col_x(i) + BW / 2, YA + BH / 2 + 6, w, 16, INK, "bold"))
     out.append(text(col_x(K) + 20, YA + BH / 2 + 6, "权重少几十倍，猜得快", 14, MUTED, anchor="start"))
     if not full:
         return out
 
-    out.append(label(YB, "大模型一遍算出", INK))
+    out.append(label(YB, "大模型一次核对", INK))
     for i, w in enumerate(TARGET):
-        out += box(col_x(i), YB, BW, BH, w, FILL_GREY, INK, 16, "bold")
-    out.append(text(col_x(K) + 20, YB + BH / 2 + 6, "连同前文一起送入，读一遍权重", 14, MUTED, anchor="start"))
+        out += box(col_x(i), YB, BW, BH, w, FILL_ORANGE, ORANGE, 16, "bold")
+    out.append(text(col_x(K) + 20, YB + BH / 2 + 6, "连同前文一起送入，一次前向核对", 14, MUTED, anchor="start"))
     for i in range(K):
         out.append(arrow(col_x(i) + BW / 2, YA + BH + 2, col_x(i) + BW / 2, YB - 2, MUTED, 1.4))
 
@@ -64,10 +68,10 @@ def build(full):
         out.append(text(col_x(i) + BW / 2, YC + BH / 2 + 6, v, 15, stroke, "bold"))
     out.append(text(col_x(K) + 20, YC + BH / 2 + 6, "猜错处换成大模型的词，后面的作废", 14, MUTED, anchor="start"))
 
-    out.append(label(YR, "这一轮得到", GREEN))
+    out.append(label(YR, "这一轮得到"))
     for i, w in enumerate(["吞", "吐", "率"]):
-        out += box(col_x(i), YR, BW, BH, w, FILL_GREEN, GREEN, 16, "bold")
-    out.append(text(col_x(3) + 10, YR + BH / 2 + 6, "读一遍权重得到 3 个词；逐词生成要读 3 遍",
+        out += box(col_x(i), YR, BW, BH, w, FILL_ORANGE, ORANGE, 16, "bold")
+    out.append(text(col_x(3) + 10, YR + BH / 2 + 6, "一次核对得到 3 个词；逐词生成需 3 次前向",
                     15, GREEN, "bold", anchor="start"))
     return out
 

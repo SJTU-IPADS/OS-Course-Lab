@@ -1,41 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 156" width="1120" height="156">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 200" width="1120" height="200">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="65.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">Llama 3.1 405B 的权重：4050 亿个 × 2 字节 = 810 GB</text>
-<text x="1055.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">一格 = 一块 H100 的显存（80 GB）</text>
-<rect x="65.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="110.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="110.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 1</text>
-<rect x="155.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="200.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="200.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 2</text>
-<rect x="245.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="290.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="290.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 3</text>
-<rect x="335.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="380.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="380.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 4</text>
-<rect x="425.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="470.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="470.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 5</text>
-<rect x="515.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="560.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="560.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 6</text>
-<rect x="605.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="650.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="650.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 7</text>
-<rect x="695.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="740.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="740.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 8</text>
-<rect x="785.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="830.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="830.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 9</text>
-<rect x="875.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="920.0" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">80 GB</text>
-<text x="920.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 10</text>
-<rect x="965.0" y="36.0" width="90.0" height="44.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<rect x="965.0" y="36.0" width="11.2" height="44.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="981.2" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">← 10 GB</text>
-<text x="1010.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">GPU 11</text>
-<path d="M 67.0 112.0 L 67.0 120.0 L 1053.0 120.0 L 1053.0 112.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
-<text x="560.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">810 ÷ 80 ≈ 10.1：至少 11 块 GPU</text>
+<text x="24.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">Llama 3.1 405B 的权重</text>
+<rect x="300.0" y="36.0" width="700.0" height="44.0" rx="4" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="1012.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">810 GB</text>
+<line x1="421.9" y1="38.0" x2="421.9" y2="78.0" stroke="#ffffff" stroke-width="2"/>
+<line x1="543.7" y1="38.0" x2="543.7" y2="78.0" stroke="#ffffff" stroke-width="2"/>
+<line x1="665.6" y1="38.0" x2="665.6" y2="78.0" stroke="#ffffff" stroke-width="2"/>
+<line x1="787.4" y1="38.0" x2="787.4" y2="78.0" stroke="#ffffff" stroke-width="2"/>
+<line x1="909.3" y1="38.0" x2="909.3" y2="78.0" stroke="#ffffff" stroke-width="2"/>
+<text x="360.9" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<text x="482.8" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">2</text>
+<text x="604.6" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">3</text>
+<text x="726.5" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<text x="848.3" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">5</text>
+<text x="994.0" y="98.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#c0392b" text-anchor="end">第 6 块</text>
+<text x="24.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">一块 H200 的显存</text>
+<rect x="300.0" y="118.0" width="121.9" height="44.0" rx="4" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="433.9" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">141 GB</text>
+<text x="300.0" y="192.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">4050 亿个权重 × 2 字节 = 810 GB；810 ÷ 141 ≈ 5.74，仅权重至少需 6 块 H200</text>
 </svg>

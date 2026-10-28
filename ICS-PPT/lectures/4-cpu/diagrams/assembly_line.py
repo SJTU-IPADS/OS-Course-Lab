@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""A moving assembly line: three stations along one conveyor.
+"""Ford's moving assembly line: four stations, four cars, one step per beat.
 
-Drawn for the page "流水线这个词从哪来：装配线" in the manner of car_wash.py
-(the same cars, the same station colours from timegrid.TONE): station 1
-fits the engine, station 2 the wheels, station 3 the body; car 3 is at
-station 1 while car 2 is at station 2 and car 1 at station 3. The conveyor
-under the stations carries each car to the next one.
+Each station does one job; the car moves on. The station working on car 1
+is the last; car 4 has just entered. The cars are white, as in car_wash.py.
 Run it to refresh ../assets/assembly-line.svg.
 """
 
@@ -14,36 +11,38 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from car_wash import CAR_H, CAR_W, car
-from svgkit import INK, MUTED, WHITE, arrow, circle, line, rect, save, text
-from timegrid import TONE
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, GREEN, INK, LINE,
+                    MUTED, ORANGE, WHITE, arrow, box, rect, save, text)
 
-STEPS = [("装发动机", "取指"), ("装车轮", "执行"), ("装车身", "访存")]   # step -> tone
-SW, SH, SGAP = 176, 112, 56          # a station and the gap between two
-END = 84                             # room for 上线 / 下线 at either end
-W = 1120
-X0 = (W - 3 * SW - 2 * SGAP) / 2
-SY = 10
-BELT = SY + SH + 22                  # the conveyor line
-H = BELT + 46
+W, H = 1120, 230
+STATIONS = ["装车架", "装发动机", "装车轮", "装车身"]
+CARS = ["第 4 辆", "第 3 辆", "第 2 辆", "第 1 辆"]
+TONES = [(FILL_BLUE, BLUE), (FILL_ORANGE, ORANGE), (FILL_GREEN, GREEN), (FILL_GREY, INK)]
+SW, SH, GAP = 190, 58, 60
+X0 = (W - (4 * SW + 3 * GAP)) / 2
+YS = 36                       # stations
+YB = 130                      # the belt
+BELT_H = 50
 
 
 def build():
-    out = []
-    for k, (name, tone) in enumerate(STEPS):
-        x = X0 + k * (SW + SGAP)
-        fill, stroke, ink = TONE[tone]
-        out.append(rect(x, SY, SW, SH, fill, stroke, rx=8, width=1.8))
-        out.append(text(x + SW / 2, SY + 28, f"工位 {k + 1}：{name}", 18, ink, "bold"))
-        out += car(x + (SW - CAR_W) / 2, SY + SH - CAR_H - 14, 3 - k)
-        out.append(line(x + SW / 2, SY + SH, x + SW / 2, BELT - 6, MUTED, 1.4))
-    left, right = X0 - END, X0 + 3 * SW + 2 * SGAP + END
-    out.append(arrow(left, BELT, right, BELT, INK, 4))
-    for k in range(int((right - left - 20) // 40) + 1):
-        out.append(circle(left + 10 + k * 40, BELT + 9, 4, WHITE, MUTED, 1.2))
-    out.append(text(left, BELT - 10, "上线", 16, INK, "bold", anchor="start"))
-    out.append(text(right - 30, BELT - 10, "下线", 16, INK, "bold", anchor="end"))
-    out.append(text(W / 2, BELT + 38, "传送带：每过一个节拍，每辆车前进一个工位", 15, MUTED))
+    out = [text(X0 - 38, YS + SH / 2 + 6, "工位", 15, MUTED, anchor="end"),
+           text(X0 - 38, YB + BELT_H / 2 + 6, "传送带", 15, MUTED, anchor="end")]
+    for i, (name, (fill, stroke)) in enumerate(zip(STATIONS, TONES)):
+        x = X0 + i * (SW + GAP)
+        out += box(x, YS, SW, SH, name, fill, stroke, 17, "bold", sub=f"工位 {i + 1}：只做这一道工序",
+                   sub_size=12)
+        out.append(arrow(x + SW / 2, YS + SH + 2, x + SW / 2, YB - 4, MUTED, 1.4))
+    out.append(rect(X0 - 30, YB, 4 * SW + 3 * GAP + 60, BELT_H, "#f4f6f8", LINE, rx=6, width=1.2))
+    for i, car in enumerate(CARS):
+        x = X0 + i * (SW + GAP)
+        out += box(x + 30, YB + 8, SW - 60, BELT_H - 16, car, WHITE, INK, 15, "bold")
+        if i < 3:
+            out.append(arrow(x + SW - 26, YB + BELT_H / 2, x + SW + GAP + 26, YB + BELT_H / 2, INK, 2))
+    xr = X0 + 4 * SW + 3 * GAP
+    out.append(arrow(xr - 26, YB + BELT_H / 2, xr + 28, YB + BELT_H / 2, INK, 2))
+    out.append(text(xr + 34, YB + BELT_H / 2 + 5, "出厂", 15, INK, anchor="start"))
+    out.append(text(W / 2, YB + BELT_H + 32, "每个节拍传送带前进一格：四个工位同时在装四辆不同的车", 15, INK, "bold"))
     return out
 
 

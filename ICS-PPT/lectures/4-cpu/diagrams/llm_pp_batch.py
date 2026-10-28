@@ -1,39 +1,29 @@
 #!/usr/bin/env python3
-"""Four users' requests taking turns on four GPUs.
-
-The grid of llm_pp_single.py over eight cycles: GPU g in cycle t works on
-request ((t - g) mod 4) + 1. Requests 2-4 fill the cycles in which GPU 1 would
-wait for request 1's word; request 1's word 1 leaves GPU 4 in cycle 4 and its
-word 2 enters GPU 1 in cycle 5 (the arrow, as in llm_pp_decode.py). Only the
-fill bubbles of cycles 1-3 remain.
-Run it to refresh ../assets/llm-pp-batch.svg.
-"""
-
+"""Six users keep all six H200 stages occupied after the pipeline fills."""
 import pathlib
 import sys
-
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from svgkit import BLUE, GREEN, ORANGE, brace, save
+from llm_pipeline import BOTTOM, CW, GPU_COUNT, GPUS, LX, PITCH, RETURN_GAP, TOP, W, canvas_left, cycle_numbers, return_arrow, row
 
-from llm_pp_single import BOTTOM, K, W, gpu_grid, handoff
-from svgkit import GREEN, INK, brace, save, text
-from timegrid import CW, LX, VIEW_LEFT
-
-STEPS = 2 * K
-
-
-def work(g, t):
-    return f"请求 {(t - g) % K + 1}" if t >= g else None
+NCOL = 2 * GPU_COUNT
+RETURN_AFTER = (GPU_COUNT, GPU_COUNT + 1)
 
 
 def build():
-    out = gpu_grid(STEPS, work)
-    out += handoff(K)
-    out.append(text(LX + K * CW + 24, 22, "请求 1 的词 2 在周期 5 进入 GPU 1", 16, INK, "bold",
-                    anchor="start"))
-    out += brace(LX + (K - 1) * CW + 3, LX + STEPS * CW - 3, BOTTOM + 12, GREEN,
-                 f"从周期 {K} 起没有 bubble：每个周期出一个词", 16)
+    out = cycle_numbers(NCOL, return_gap=RETURN_GAP, return_after=RETURN_AFTER)
+    for stage, label in enumerate(GPUS):
+        cells = ["bubble"] * stage + [f"请求 {(column - stage) % GPU_COUNT + 1}" for column in range(stage, NCOL)]
+        out += row(label, TOP + stage * PITCH, cells, return_gap=RETURN_GAP,
+                   return_after=RETURN_AFTER)
+    out += return_arrow(GPU_COUNT, BLUE, "请求1回传", return_after=RETURN_AFTER)
+    out += return_arrow(GPU_COUNT + 1, ORANGE, "请求2回传", return_after=RETURN_AFTER)
+    out += brace(LX + (GPU_COUNT - 1) * CW + 3,
+                 LX + NCOL * CW + len(RETURN_AFTER) * RETURN_GAP - 3, BOTTOM + 10,
+                 GREEN, "填满后每周期输出一个词；每个请求每 6 个周期得到一个词", 14, depth=7)
     return out
 
 
 if __name__ == "__main__":
-    save("llm-pp-batch", W, BOTTOM + 50, build(), left=VIEW_LEFT)
+    save("llm-pp-batch", W, BOTTOM + 48, build(),
+         left=canvas_left(NCOL, RETURN_GAP, RETURN_AFTER))

@@ -1,85 +1,178 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-17 0 1120 340" width="1120" height="340">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 0 1120 334" width="1120" height="334">
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
-<text x="188.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">周期</text>
-<text x="248.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
-<text x="344.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
-<text x="440.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
-<text x="536.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
-<text x="632.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
-<text x="728.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
-<text x="824.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
-<text x="920.0" y="48.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
-<text x="24.0" y="96.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 1</text>
-<rect x="203.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="248.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="299.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="344.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<rect x="395.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="440.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
-<rect x="491.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="536.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
-<rect x="587.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="632.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="683.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="728.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<rect x="779.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="824.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
-<rect x="875.0" y="67.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="920.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
-<text x="24.0" y="154.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 2</text>
-<rect x="203.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="248.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
-<rect x="299.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="344.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="395.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="440.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<rect x="491.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="536.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
-<rect x="587.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="632.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
-<rect x="683.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="728.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="779.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="824.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<rect x="875.0" y="125.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="920.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
-<text x="24.0" y="212.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 3</text>
-<rect x="203.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="248.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
-<rect x="299.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="344.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
-<rect x="395.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="440.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="491.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="536.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<rect x="587.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="632.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
-<rect x="683.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="728.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
-<rect x="779.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="824.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="875.0" y="183.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="920.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<text x="24.0" y="270.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 4</text>
-<rect x="203.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="248.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
-<rect x="299.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="344.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
-<rect x="395.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
-<text x="440.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
-<rect x="491.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="536.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<rect x="587.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
-<text x="632.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
-<rect x="683.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
-<text x="728.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
-<rect x="779.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
-<text x="824.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
-<rect x="875.0" y="241.0" width="90.0" height="46.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="920.0" y="270.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
-<line x1="584.0" y1="264.0" x2="584.0" y2="90.0" stroke="#ffffff" stroke-width="5"/>
-<path d="M 570.0 264.0 L 584.0 264.0 L 584.0 90.0 L 600.0 90.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
-<text x="608.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">请求 1 的词 2 在周期 5 进入 GPU 1</text>
-<path d="M 491.0 302.0 L 491.0 310.0 L 965.0 310.0 L 965.0 302.0" fill="none" stroke="#2e7d4f" stroke-width="1.6"/>
-<text x="728.0" y="330.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="middle">从周期 4 起没有 bubble：每个周期出一个词</text>
+<text x="192.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">周期</text>
+<text x="237.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="303.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="369.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<text x="435.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<text x="501.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<text x="567.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<text x="689.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<text x="811.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
+<text x="877.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<text x="943.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<text x="1009.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">11</text>
+<text x="1075.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">12</text>
+<text x="24.0" y="74.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 1（1–21 层）</text>
+<rect x="206.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="237.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="272.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="303.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="338.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="369.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="404.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="435.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="470.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="501.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="536.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="567.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<rect x="658.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="689.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="780.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="811.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="846.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="877.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="912.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="943.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="978.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="1009.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="1044.0" y="54.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="1075.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<text x="24.0" y="114.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 2（22–42 层）</text>
+<rect x="206.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="237.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="272.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="303.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="338.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="369.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="404.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="435.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="470.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="501.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="536.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="567.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="658.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="689.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<rect x="780.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="811.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="846.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="877.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="912.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="943.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="978.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="1009.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="1044.0" y="94.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="1075.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<text x="24.0" y="154.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 3（43–63 层）</text>
+<rect x="206.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="237.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="272.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="303.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="338.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="369.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="404.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="435.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="470.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="501.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="536.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="567.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="658.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="689.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="780.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="811.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<rect x="846.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="877.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="912.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="943.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="978.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="1009.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="1044.0" y="134.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="1075.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<text x="24.0" y="194.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 4（64–84 层）</text>
+<rect x="206.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="237.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="272.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="303.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="338.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="369.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="404.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="435.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="470.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="501.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="536.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="567.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="658.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="689.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="780.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="811.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="846.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="877.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<rect x="912.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="943.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="978.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="1009.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="1044.0" y="174.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="1075.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<text x="24.0" y="234.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 5（85–105 层）</text>
+<rect x="206.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="237.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="272.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="303.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="338.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="369.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="404.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="435.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="470.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="501.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="536.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="567.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="658.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="689.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="780.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="811.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="846.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="877.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="912.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="943.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<rect x="978.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="1009.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="1044.0" y="214.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="1075.0" y="234.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<text x="24.0" y="274.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">GPU 6（106–126 层）</text>
+<rect x="206.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="237.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="272.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="303.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="338.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="369.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="404.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="435.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="470.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="501.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">bubble</text>
+<rect x="536.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="567.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<rect x="658.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="689.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 2</text>
+<rect x="780.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="811.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#2e7d4f" text-anchor="middle">请求 3</text>
+<rect x="846.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="1.2"/>
+<text x="877.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">请求 4</text>
+<rect x="912.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="943.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 5</text>
+<rect x="978.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="1009.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">请求 6</text>
+<rect x="1044.0" y="254.0" width="62.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="1075.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#156082" text-anchor="middle">请求 1</text>
+<path d="M 601 269.0 H 620.0 Q 628.0 269.0 628.0 261.0 V 77.0 Q 628.0 69.0 636.0 69.0 H 654" fill="none" stroke="#156082" stroke-width="1.8" marker-end="url(#ah-156082)"/>
+<circle cx="601.0" cy="269.0" r="2.5" fill="#156082" stroke="#156082" stroke-width="0"/>
+<text x="628.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#156082" text-anchor="middle">请求1回传</text>
+<rect x="536.0" y="254.0" width="62.0" height="30.0" rx="3" fill="none" stroke="#156082" stroke-width="2.4"/>
+<rect x="658.0" y="54.0" width="62.0" height="30.0" rx="3" fill="none" stroke="#156082" stroke-width="2.4"/>
+<path d="M 723 269.0 H 742.0 Q 750.0 269.0 750.0 261.0 V 77.0 Q 750.0 69.0 758.0 69.0 H 776" fill="none" stroke="#e97132" stroke-width="1.8" marker-end="url(#ah-e97132)"/>
+<circle cx="723.0" cy="269.0" r="2.5" fill="#e97132" stroke="#e97132" stroke-width="0"/>
+<text x="750.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="bold" fill="#e97132" text-anchor="middle">请求2回传</text>
+<rect x="658.0" y="254.0" width="62.0" height="30.0" rx="3" fill="none" stroke="#e97132" stroke-width="2.4"/>
+<rect x="780.0" y="54.0" width="62.0" height="30.0" rx="3" fill="none" stroke="#e97132" stroke-width="2.4"/>
+<path d="M 537.0 296.0 L 537.0 303.0 L 1105.0 303.0 L 1105.0 296.0" fill="none" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="821.0" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#2e7d4f" text-anchor="middle">填满后每周期输出一个词；每个请求每 6 个周期得到一个词</text>
 </svg>
