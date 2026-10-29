@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 366" width="1120" height="366">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="367.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">前文</text>
+<text x="733.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">小模型写下</text>
+<text x="24.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">已写下</text>
+<rect x="200.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="238.0" y="54.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">流水线</text>
+<rect x="286.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="324.0" y="54.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">提高</text>
+<rect x="372.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="410.0" y="54.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">的</text>
+<rect x="458.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="496.0" y="54.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">是</text>
+<rect x="566.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="604.0" y="54.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吞</text>
+<rect x="652.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="690.0" y="54.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吐</text>
+<rect x="738.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="776.0" y="54.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">量</text>
+<rect x="824.0" y="32.0" width="76.0" height="34.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="862.0" y="54.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">，</text>
+<rect x="454.0" y="100.0" width="220.0" height="230.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="564.0" y="212.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">一次前向</text>
+<text x="564.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">126 层权重，读一遍</text>
+<text x="378.0" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">5 个向量，同时输入</text>
+<rect x="330.0" y="108.0" width="96.0" height="38.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="378.0" y="125.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">是</text>
+<text x="378.0" y="141.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">向量</text>
+<text x="320.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">前文最后一个词</text>
+<line x1="428.0" y1="127.0" x2="452.0" y2="127.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="676.0" y1="127.0" x2="700.0" y2="127.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="702.0" y="108.0" width="88.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="746.0" y="132.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吞</text>
+<text x="800.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">核对猜 1</text>
+<rect x="330.0" y="152.0" width="96.0" height="38.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="378.0" y="169.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">吞</text>
+<text x="378.0" y="185.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">向量</text>
+<text x="320.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">猜 1</text>
+<line x1="428.0" y1="171.0" x2="452.0" y2="171.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="676.0" y1="171.0" x2="700.0" y2="171.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="702.0" y="152.0" width="88.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="746.0" y="176.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">吐</text>
+<text x="800.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">核对猜 2</text>
+<rect x="330.0" y="196.0" width="96.0" height="38.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="378.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">吐</text>
+<text x="378.0" y="229.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">向量</text>
+<text x="320.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">猜 2</text>
+<line x1="428.0" y1="215.0" x2="452.0" y2="215.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="676.0" y1="215.0" x2="700.0" y2="215.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="702.0" y="196.0" width="88.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="746.0" y="220.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">率</text>
+<text x="800.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">核对猜 3</text>
+<rect x="330.0" y="240.0" width="96.0" height="38.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="378.0" y="257.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">量</text>
+<text x="378.0" y="273.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">向量</text>
+<text x="320.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">猜 3</text>
+<line x1="428.0" y1="259.0" x2="452.0" y2="259.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="676.0" y1="259.0" x2="700.0" y2="259.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="702.0" y="240.0" width="88.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="746.0" y="264.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">。</text>
+<text x="800.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">核对猜 4</text>
+<rect x="330.0" y="284.0" width="96.0" height="38.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="378.0" y="301.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">，</text>
+<text x="378.0" y="317.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="12" font-weight="normal" fill="#5a6b78" text-anchor="middle">向量</text>
+<text x="320.0" y="308.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">猜 4</text>
+<line x1="428.0" y1="303.0" x2="452.0" y2="303.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="676.0" y1="303.0" x2="700.0" y2="303.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="702.0" y="284.0" width="88.0" height="38.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="746.0" y="308.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<text x="800.0" y="308.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">4 个全对时多得一个词</text>
+<text x="746.0" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="middle">同时得到</text>
+</svg>

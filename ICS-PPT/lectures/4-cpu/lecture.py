@@ -11,9 +11,9 @@ stall 到写回之后；转发后不停的、仍 stall 一个周期的）与跳�
 超标量一页，超线程（一个线程用不满执行部件、硬件结构、两个线程同时执行、填上空着的
 执行部件、与超标量和多核对照），硬件分支预测器与一页实测（跳转方向无规律时运行慢）；
 第四部分 拓展：系统里的流水线：大模型推理在做什么（一次一个词、28 层、装不下、
-按层切）；流水线并行与它的 bubble（单请求、多请求填满、逐词生成的依赖、
-多用户轮流）；投机推理（读一遍权重、先猜、核对、与分支预测对照、划不划算）；
-其他系统里的流水线（装配线、看视频、总结）。
+按层切）；流水线并行与它的 bubble（单请求、多请求填满）；投机推理（读一遍权重、先猜、为什么能一次核对、从左到右比对、
+与分支预测对照、划不划算）；
+其他系统里的流水线（看视频、总结）。
 
 不讲 Y86、HCL、顺序实现的电路和五级转发通路。页面函数在 pages.py。
 """
@@ -118,19 +118,17 @@ with lecture.section('第四部分：拓展：系统里的流水线', id="part4"
     with s.section('流水线并行与它的 bubble', id="part4-pp") as ss:
         ss.page("llm-pp-single", body=pages.llm_pp_single)
         ss.page("llm-pp-fill", body=pages.llm_pp_fill)
-        ss.page("llm-pp-decode", body=pages.llm_pp_decode)
-        ss.page("llm-pp-batch", body=pages.llm_pp_batch)
 
     s.bridge('投机推理：预测执行的应用', id="bridge-part4-spec")
     with s.section('投机推理', id="part4-spec") as ss:
         ss.page("llm-decode-slow", body=pages.llm_decode_slow)
         ss.page("llm-spec-idea", body=pages.llm_spec_idea)
+        ss.page("llm-spec-why", body=pages.llm_spec_why)
         ss.page("llm-spec-verify", body=pages.llm_spec_verify)
         ss.page("llm-spec-vs-branch", body=pages.llm_spec_vs_branch)
         ss.page("llm-spec-gain", body=pages.llm_spec_gain)
 
     s.bridge('其他系统里的流水线', id="bridge-part4-others")
     with s.section('其他系统里的流水线', id="part4-others") as ss:
-        ss.page("assembly-line", body=pages.assembly_line)
         ss.page("video-pipeline", body=pages.video_pipeline)
         ss.page("pipeline-summary", body=pages.pipeline_summary)
