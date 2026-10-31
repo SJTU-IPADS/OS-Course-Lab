@@ -1,8 +1,9 @@
-"""Per-block LaTeX emitters: ``(block, ctx) -> str``.
+"""Helpers the elements' ``to_latex`` methods emit with.
 
-The book's block table deliberately omits ``slide``: slides and prose are
-parallel bodies over the same page tree. ``notes``, ``side_image``,
-``image_right`` and annotation bubbles are projection-only and never reach here.
+Each element class (``lecturekit.elements``) says how it reads in the book; this
+module holds what several of them share. ``slide`` has no ``to_latex``: slides
+and prose are parallel bodies over the same page tree. ``notes``, ``side_image``
+and annotation bubbles are projection-only and never reach here.
 """
 
 from __future__ import annotations
@@ -15,25 +16,17 @@ from pathlib import Path
 from lecturekit import i18n, model, pseudo
 
 from .assets import AssetCopier
-from .text import blocks as md_blocks
 from .text import MARK_COLORS, escape, inline
 
-# Layout markers are deliberately absent: the book prints the contained leaves
-# in order and ignores their slide alignment.
-LATEX_KINDS = frozenset({
-    "prose", "code", "link", "image", "row", "table",
-    "sidenote", "architecture", "demo", "aside", "highlight",
-})
-
 # Fraction of \textwidth for an image the author never sized.
-_DEFAULT_WIDTH = 0.8
+DEFAULT_WIDTH = 0.8
 
-_COLUMN_SPEC = {"left": "l", "center": "c", "right": "r"}
+COLUMN_SPEC = {"left": "l", "center": "c", "right": "r"}
 
-_FLOW_ARROWS = {"down": r"$\downarrow$", "up": r"$\uparrow$", "both": r"$\updownarrow$"}
+FLOW_ARROWS = {"down": r"$\downarrow$", "up": r"$\uparrow$", "both": r"$\updownarrow$"}
 
 # Tone -> the \definecolor name the preamble declares for the chip's ink.
-_HIGHLIGHT_COLORS = {
+HIGHLIGHT_COLORS = {
     "yellow": "lkChipYellow",
     "orange": "lkChipOrange",
     "green": "lkChipGreen",
@@ -43,7 +36,7 @@ _HIGHLIGHT_COLORS = {
 # What graphicx can embed under XeLaTeX. A .gif is an animation: it has no place
 # in print, and graphicx cannot even read its bounding box — so rather than fail
 # the whole book, the figure renders as a labelled placeholder.
-_EMBEDDABLE = frozenset({".png", ".jpg", ".jpeg", ".pdf", ".eps"})
+EMBEDDABLE = frozenset({".png", ".jpg", ".jpeg", ".pdf", ".eps"})
 
 
 @dataclass
@@ -82,13 +75,7 @@ class Ctx:
 
 
 def emit_block(block: model.Block, ctx: Ctx) -> str:
-    try:
-        emitter = _EMITTERS[block.kind]
-    except KeyError:
-        raise model.ValidationError(
-            f"LaTeX renderer cannot emit block kind: {block.kind}"
-        )
-    return emitter(block, ctx)
+    return block.to_latex(ctx)
 
 
 def emit_news(items: tuple[model.NewsItem, ...], lang: str | None = None) -> str:
@@ -136,22 +123,22 @@ def emit_citations(
     return "\n".join(lines)
 
 
-def _width_fraction(width: str | None, slide_width: int) -> float:
+def width_fraction(width: str | None, slide_width: int) -> float:
     """A DSL length (``"480px"`` / ``"60%"`` / ``None``) as a fraction of the text width."""
     if width is None:
-        return _DEFAULT_WIDTH
+        return DEFAULT_WIDTH
     if width.endswith("%"):
         return float(width[:-1]) / 100
     if width.endswith("px"):
         return min(float(width[:-2]) / slide_width, 1.0)
-    return _DEFAULT_WIDTH
+    return DEFAULT_WIDTH
 
 
-def _fmt(value: float) -> str:
+def fmt(value: float) -> str:
     return f"{value:g}"
 
 
-def _footnotes(block: model.Block, ctx: Ctx) -> str:
+def footnotes(block: model.Block, ctx: Ctx) -> str:
     return "".join(
         r"\footnote{%s}" % inline(note, refs=ctx.resolve_ref)
         for note in block.footnotes
@@ -160,7 +147,7 @@ def _footnotes(block: model.Block, ctx: Ctx) -> str:
 
 def _graphic(path: str, width: str, framed: bool) -> str:
     """``\\includegraphics`` for an embeddable format, else a visible placeholder."""
-    if Path(path).suffix.lower() not in _EMBEDDABLE:
+    if Path(path).suffix.lower() not in EMBEDDABLE:
         print(
             f"lecturekit: cannot embed {path} in LaTeX; rendering a placeholder",
             file=sys.stderr,
@@ -170,13 +157,13 @@ def _graphic(path: str, width: str, framed: bool) -> str:
     return r"\fbox{%s}" % graphic if framed else graphic
 
 
-def _includegraphics(content: dict, ctx: Ctx) -> str:
+def includegraphics(content: dict, ctx: Ctx) -> str:
     path = ctx.assets.copy(ctx.lecture_id, ctx.asset_root, content["src"])
-    fraction = _fmt(_width_fraction(content.get("width"), ctx.slide_width))
+    fraction = fmt(width_fraction(content.get("width"), ctx.slide_width))
     return _graphic(path, rf"{fraction}\textwidth", bool(content.get("framed")))
 
 
-def _figure(body: str, caption: str | None, block: model.Block, ctx: Ctx) -> str:
+def figure(body: str, caption: str | None, block: model.Block, ctx: Ctx) -> str:
     """Wrap ``body`` in a centered float, with a caption, label, and footnotes.
 
     A ``\\footnote`` inside a float is silently dropped by LaTeX, so a figure's
@@ -204,59 +191,23 @@ def _figure(body: str, caption: str | None, block: model.Block, ctx: Ctx) -> str
     return "\n".join(lines)
 
 
-def _prose(block: model.Block, ctx: Ctx) -> str:
-    return md_blocks(block.content, refs=ctx.resolve_ref) + _footnotes(block, ctx)
+DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 
 
-def _columns(block: model.Block, ctx: Ctx) -> str:
-    """Slide text the deck sets side by side; the book prints it in order."""
-    text = "\n\n".join(str(item).strip() for item in block.content["items"])
-    return md_blocks(text, refs=ctx.resolve_ref) + _footnotes(block, ctx)
-
-
-def _aside(block: model.Block, ctx: Ctx) -> str:
-    body = md_blocks(block.content, refs=ctx.resolve_ref) + _footnotes(block, ctx)
-    return "\\begin{quote}\n\\small %s\n\\end{quote}" % body
-
-
-_DISPLAY_MATH_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
-
-
-def _display_math_inline(line: str) -> str:
+def display_math_inline(line: str) -> str:
     """``$$…$$`` -> ``$\\displaystyle …$``.
 
     A chip's rows are the cells of a one-column tabular, and TeX cannot open
     display math inside a cell. Inline math set in display style is the same
     formula at the same size, and it stays on the row it was written on.
     """
-    return _DISPLAY_MATH_RE.sub(
+    return DISPLAY_MATH_RE.sub(
         lambda m: r"$\displaystyle %s$" % m.group(1).strip(), line
     )
 
 
-def _highlight(block: model.Block, ctx: Ctx) -> str:
-    """A centered chip. Lines become tabular rows, so it grows taller, not wider.
-
-    A plain ``\\footnote`` after the macro would land outside the ``center``
-    group and open a paragraph of its own, dropping the mark in the margin. So
-    the marks ride the macro's optional argument — just outside the chip, as in
-    the deck — and the texts follow, the same split ``_figure`` uses.
-    """
-    content = block.content
-    color = _HIGHLIGHT_COLORS[content["tone"]]
-    body = r" \\ ".join(
-        inline(_display_math_inline(line), refs=ctx.resolve_ref)
-        for line in model.highlight_lines(content["text"])
-    )
-    marks = r"\footnotemark" * len(block.footnotes)
-    out = r"\lkhighlight%s{%s}{%s}" % (f"[{marks}]" if marks else "", color, body)
-    for note in block.footnotes:
-        out += "\n" + r"\footnotetext{%s}" % inline(note, refs=ctx.resolve_ref)
-    return out
-
-
 # `pseudo` token kind -> the colour macro the preamble defines for it.
-_PSEUDO_MACROS = {
+PSEUDO_MACROS = {
     "keyword": r"\lkpskw", "message": r"\lkpsmsg",
     "state": r"\lkpsst", "comment": r"\lkpscm",
 }
@@ -279,7 +230,7 @@ def _pseudo(content: str, marked: set[int], tone: str) -> str:
         parts = []
         for kind, text in tokens:
             body = escape(text).replace(" ", "~")
-            macro = _PSEUDO_MACROS.get(kind)
+            macro = PSEUDO_MACROS.get(kind)
             parts.append("%s{%s}" % (macro, body) if macro else body)
         line = "".join(parts) or "~"
         if number in marked:
@@ -288,177 +239,23 @@ def _pseudo(content: str, marked: set[int], tone: str) -> str:
     return "\\begin{lkpseudo}\n%s\n\\end{lkpseudo}" % "\\\\\n".join(lines)
 
 
-def _code(block: model.Block, ctx: Ctx) -> str:
-    language = block.content.get("language") or ""
-    if language == "pseudo":
-        return _pseudo(
-            block.content["content"].strip("\n"),
-            set(block.content.get("mark") or ()),
-            block.content.get("tone") or model.DEFAULT_HIGHLIGHT_TONE,
-        ) + _footnotes(block, ctx)
-    option = f"[language={language}]" if language else ""
-    return "\\begin{lstlisting}%s\n%s\n\\end{lstlisting}%s" % (
-        option, block.content["content"], _footnotes(block, ctx)
-    )
+PARBOX_ALIGN = {"left": r"\raggedright", "center": r"\centering", "right": r"\raggedleft"}
 
 
-def _link(block: model.Block, ctx: Ctx) -> str:
-    return r"\href{%s}{%s}%s" % (
-        block.content["url"], inline(block.content["label"]), _footnotes(block, ctx)
-    )
-
-
-def _image(block: model.Block, ctx: Ctx) -> str:
-    return _figure(_includegraphics(block.content, ctx), block.content.get("caption"), block, ctx)
-
-
-def _row(block: model.Block, ctx: Ctx) -> str:
-    items = block.content["items"]
-    share = _fmt(0.9 / max(len(items), 1))
-    parts = []
-    for item in items:
-        path = ctx.assets.copy(ctx.lecture_id, ctx.asset_root, item["src"])
-        caption = inline(item["caption"]) if item.get("caption") else ""
-        graphic = _graphic(path, r"\linewidth", bool(item.get("framed")))
-        parts.append(
-            r"\begin{subfigure}[t]{%s\textwidth}%s\caption*{%s}\end{subfigure}"
-            % (share, graphic, caption)
-        )
-    return _figure("\n".join(parts), block.content.get("caption"), block, ctx)
-
-
-_PARBOX_ALIGN = {"left": r"\raggedright", "center": r"\centering", "right": r"\raggedleft"}
-
-
-def _width_column(align: str, share: float) -> str:
+def width_column(align: str, share: float) -> str:
     r"""A `p` column taking ``share`` of the line, less its own padding.
 
     Each column pads both sides by \tabcolsep, so taking it off every column
     keeps the table exactly \linewidth wide.
     """
     return r">{%s\arraybackslash}p{\dimexpr %s\linewidth-2\tabcolsep\relax}" % (
-        _PARBOX_ALIGN[align], _fmt(share)
+        PARBOX_ALIGN[align], fmt(share)
     )
-
-
-def _table(block: model.Block, ctx: Ctx) -> str:
-    headers = block.content["headers"]
-    align = block.content.get("align") or ["left"] * len(headers)
-    widths = block.content.get("widths")
-    if widths is None:
-        spec = "".join(_COLUMN_SPEC[a] for a in align)
-    else:
-        spec = "".join(_width_column(a, w) for a, w in zip(align, widths))
-    lines = [
-        r"\begin{center}",
-        r"\begin{tabular}{%s}" % spec,
-        r"\toprule",
-        " & ".join(inline(h) for h in headers) + r" \\",
-        r"\midrule",
-    ]
-    for row in block.content["rows"]:
-        lines.append(" & ".join(inline(cell) for cell in row) + r" \\")
-    lines += [r"\bottomrule", r"\end{tabular}", r"\end{center}"]
-    return "\n".join(lines) + _footnotes(block, ctx)
-
-
-def _sidenote(block: model.Block, ctx: Ctx) -> str:
-    content = block.content
-    title = inline(content["title"])
-    if content.get("link"):
-        title = r"\href{%s}{%s}" % (content["link"], title)
-    body = md_blocks(content["text"], refs=ctx.resolve_ref) + _footnotes(block, ctx)
-    return "\\begin{booksidenote}{%s}\n%s\n\\end{booksidenote}" % (title, body)
 
 
 # Delimiter pairs for the weights of demo output lines under `bold=`, tried in
 # order; the first two the output does not contain are used. `listings` drops
 # them from the page.
-_WEIGHT_DELIMS = [("(@", "@)"), ("<@", "@>"), ("[@", "@]"), ("(!", "!)"), ("<!", "!>")]
+WEIGHT_DELIMS = [("(@", "@)"), ("<@", "@>"), ("[@", "@]"), ("(!", "!)"), ("<!", "!>")]
 
 
-def _demo(block: model.Block, ctx: Ctx) -> str:
-    """A command as the book has to print it: verbatim, with its output.
-
-    The book cannot run anything, so the recorded output is the whole of what a
-    reader gets — and it goes in a listing rather than through `inline`, because
-    a shell transcript is text a machine wrote and every character in it is
-    load-bearing.
-    """
-    from lecturekit import demo as demo_module
-
-    content = block.content
-    lines = [
-        r"\begin{tcolorbox}[colback=blue!3,colframe=blue!40,title=%s]"
-        % i18n.ui(ctx.lang, "demo")
-    ]
-    if content["name"]:  # a demo may go without a name
-        lines.append(r"\textbf{%s}\\" % inline(content["name"]))
-    if content.get("description"):
-        lines.append(inline(content["description"]) + r"\\")
-    transcript = demo_module.prompt_lines(str(content["command"]))
-    options = ""
-    if not transcript and not content.get("output"):
-        lines.append(r"\end{tcolorbox}")
-        return "\n".join(lines) + _footnotes(block, ctx)
-    if content.get("output"):
-        outputs = str(content["output"]).strip("\n").split("\n")
-        bold = set(content.get("bold") or ())
-        if bold:
-            # `listings` sets what sits between two invisible delimiters in the
-            # style the pair names and prints everything else verbatim. The named
-            # lines go bold and the rest light, as on the slide; each style takes
-            # a pair the output lacks.
-            (bl, br), (ll, lr) = [pair for pair in _WEIGHT_DELIMS
-                                  if not any(d in content["output"] for d in pair)][:2]
-            options = ("[moredelim={[is][\\bfseries]{%s}{%s}},"
-                       "moredelim={[is][\\fontseries{l}\\selectfont]{%s}{%s}}]"
-                       % (bl, br, ll, lr))
-            outputs = [f"{bl}{line}{br}" if number in bold
-                       else f"{ll}{line}{lr}" if line else line
-                       for number, line in enumerate(outputs, start=1)]
-        transcript += outputs
-    lines.append(
-        "\\begin{lstlisting}%s\n%s\n\\end{lstlisting}" % (options, "\n".join(transcript))
-    )
-    lines.append(r"\end{tcolorbox}")
-    return "\n".join(lines) + _footnotes(block, ctx)
-
-
-def _architecture(block: model.Block, ctx: Ctx) -> str:
-    content = block.content
-    arrow = _FLOW_ARROWS.get(content.get("flow") or "")
-    layers = []
-    for layer in content["layers"]:
-        modules = " & ".join(inline(m) for m in layer["modules"])
-        spec = "|" + "c|" * len(layer["modules"])
-        rows = [r"\hline", modules + r" \\", r"\hline"]
-        title = layer.get("title")
-        head = r"\textbf{%s}\\[2pt]" % inline(title) if title else ""
-        layers.append(
-            "%s\\begin{tabular}{%s}\n%s\n\\end{tabular}" % (head, spec, "\n".join(rows))
-        )
-    separator = f"\n\n{arrow}\n\n" if arrow else "\n\n"
-    return _figure(separator.join(layers), content.get("caption"), block, ctx)
-
-
-_EMITTERS = {
-    "prose": _prose,
-    # A slide reaches the book only when the author forces it in with
-    # `only=["latex"]` — "this passage is word for word the same in both". Its
-    # content is the same markdown string a prose block holds, so it renders the
-    # same way; without this entry that documented escape hatch raises.
-    "slide": _prose,
-    # The same escape hatch for slide text in columns.
-    "columns": _columns,
-    "aside": _aside,
-    "highlight": _highlight,
-    "code": _code,
-    "link": _link,
-    "image": _image,
-    "row": _row,
-    "table": _table,
-    "sidenote": _sidenote,
-    "demo": _demo,
-    "architecture": _architecture,
-}

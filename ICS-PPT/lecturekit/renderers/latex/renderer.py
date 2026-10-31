@@ -17,7 +17,7 @@ from lecturekit import model, references
 from lecturekit.book import BookModel
 
 from .assets import AssetCopier
-from .blocks import LATEX_KINDS, Ctx, emit_block, emit_citations, emit_news
+from .blocks import Ctx, emit_citations, emit_news
 from .preamble import MAKEFILE, document_preamble
 from .text import blocks as md_blocks
 from .text import escape, inline
@@ -128,7 +128,7 @@ def _warn_dangling_refs(lecture: model.Lecture) -> None:
 
 def _has_prose(page: model.Page) -> bool:
     return any(_is_body_text(block)
-               for block in model.select_blocks(page, "latex", set(LATEX_KINDS)))
+               for block in model.select_blocks(page, "latex"))
 
 
 def _opted_out_of_prose(page: model.Page) -> bool:
@@ -146,10 +146,9 @@ def _opted_out_of_prose(page: model.Page) -> bool:
 
 
 def _would_supply_prose(block: model.Block) -> bool:
-    if block.kind == "prose":
-        return True
-    return (block.kind in model.SLIDE_TEXT_KINDS
-            and block.only is not None and "latex" in block.only)
+    return block.BOOK_TEXT and (
+        "latex" in block.TARGETS or (block.only is not None and "latex" in block.only)
+    )
 
 
 def _is_body_text(block: model.Block) -> bool:
@@ -159,7 +158,7 @@ def _is_body_text(block: model.Block) -> bool:
     forced it in with `only=["latex"]`, which is a deliberate "use this text as
     the prose".
     """
-    return block.kind == "prose" or block.kind in model.SLIDE_TEXT_KINDS
+    return block.BOOK_TEXT
 
 
 def _document(book: BookModel, includes: list[str]) -> str:
@@ -237,7 +236,7 @@ def _page(
     news.extend(page.news)
     parts = [f"\\{_HEADINGS[depth]}{{{inline(page.title)}}}", ""]
 
-    selected = model.select_blocks(page, "latex", set(LATEX_KINDS))
+    selected = model.select_blocks(page, "latex")
     if not any(_is_body_text(block) for block in selected) and not _opted_out_of_prose(page):
         # The id is typeset by \booktodo, so it needs escaping like any text.
         parts += [f"\\booktodo{{{escape(page.id)}}}", ""]
@@ -246,8 +245,5 @@ def _page(
               assets=assets, asset_root=asset_root, lang=lecture.lang)
     for block in selected:
         # A slide forced in with only=["latex"] renders as the prose it stands in for.
-        kind = "prose" if block.kind == "slide" else block.kind
-        parts += [emit_block(model.Block(
-            kind=kind, content=block.content, footnotes=block.footnotes,
-        ), ctx), ""]
+        parts += [block.to_latex(ctx), ""]
     return "\n".join(parts)

@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="11 31 1158 450" width="1158" height="450">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="40.0" width="480.0" height="80.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="34.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">Grid：一次启动的全部线程块</text>
+<rect x="40.0" y="74.0" width="86.0" height="34.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="83.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Block 0</text>
+<rect x="136.0" y="74.0" width="86.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="179.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Block 1</text>
+<rect x="232.0" y="74.0" width="86.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="275.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Block 2</text>
+<rect x="328.0" y="74.0" width="86.0" height="34.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="371.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">Block 3</text>
+<text x="450.0" y="97.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="20.0" y="162.0" width="480.0" height="196.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.8"/>
+<text x="34.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">Thread Block（本例 256 个线程）：分为 8 个 Warp</text>
+<line x1="40.0" y1="108.0" x2="20.0" y2="162.0" stroke="#e97132" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="126.0" y1="108.0" x2="500.0" y2="162.0" stroke="#e97132" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="36.0" y="212.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">Warp 0</text>
+<rect x="104.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="116.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="128.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="140.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="152.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="164.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="176.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="188.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="200.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="212.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="224.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="236.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="248.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="260.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="272.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="284.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="296.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="308.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="320.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="332.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="344.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="356.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="368.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="380.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="392.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="404.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="416.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="428.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="440.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="452.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="464.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<rect x="476.0" y="202.0" width="10.0" height="10.0" rx="1.5" fill="#fce9df" stroke="#e97132" stroke-width="1"/>
+<text x="36.0" y="242.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">Warp 1</text>
+<rect x="104.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="116.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="128.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="140.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="152.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="164.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="176.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="188.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="200.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="212.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="224.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="236.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="248.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="260.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="272.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="284.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="296.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="308.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="320.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="332.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="344.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="356.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="368.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="380.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="392.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="404.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="416.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="428.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="440.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="452.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="464.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="476.0" y="232.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<text x="36.0" y="302.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">Warp 7</text>
+<rect x="104.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="116.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="128.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="140.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="152.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="164.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="176.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="188.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="200.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="212.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="224.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="236.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="248.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="260.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="272.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="284.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="296.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="308.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="320.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="332.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="344.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="356.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="368.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="380.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="392.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="404.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="416.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="428.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="440.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="452.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="464.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<rect x="476.0" y="292.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<text x="296.0" y="278.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<path d="M 104.0 308.0 L 104.0 316.0 L 486.0 316.0 L 486.0 308.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="295.0" y="334.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">每个 Warp 32 个线程</text>
+<rect x="36.0" y="392.0" width="10.0" height="10.0" rx="1.5" fill="#eaf3f7" stroke="#156082" stroke-width="1"/>
+<text x="54.0" y="402.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">1 个线程（Thread）：执行一遍 kernel 函数</text>
+<rect x="680.0" y="40.0" width="480.0" height="330.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<text x="694.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">Fermi GPU</text>
+<rect x="806.0" y="72.0" width="338.0" height="32.0" rx="4" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.6"/>
+<text x="975.0" y="93.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">线程块调度器（GigaThread）</text>
+<rect x="696.0" y="124.0" width="300.0" height="234.0" rx="6" fill="#ffffff" stroke="#e97132" stroke-width="1.8"/>
+<text x="708.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">SM 0</text>
+<rect x="708.0" y="156.0" width="132.0" height="30.0" rx="4" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.6"/>
+<text x="774.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">Warp 调度器</text>
+<line x1="774.0" y1="186.0" x2="774.0" y2="204.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="715.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="730.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="745.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="760.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="775.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="790.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="805.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="820.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="715.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="730.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="745.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="760.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="775.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="790.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="805.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="820.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="774.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">16 个核心</text>
+<rect x="852.0" y="156.0" width="132.0" height="30.0" rx="4" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.6"/>
+<text x="918.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">Warp 调度器</text>
+<line x1="918.0" y1="186.0" x2="918.0" y2="204.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="859.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="874.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="889.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="904.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="919.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="934.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="949.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="964.5" y="206.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="859.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="874.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="889.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="904.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="919.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="934.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="949.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="964.5" y="224.0" width="12.0" height="14.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="918.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">16 个核心</text>
+<text x="846.0" y="284.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">两个调度器各发射一个 Warp 的一条指令</text>
+<text x="846.0" y="302.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">32 个线程在 16 个核心上分两批执行</text>
+<rect x="708.0" y="314.0" width="276.0" height="36.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="846.0" y="337.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">共享内存 / L1 高速缓存（64 KB）</text>
+<rect x="1008.0" y="124.0" width="136.0" height="38.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1076.0" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 1</text>
+<rect x="1008.0" y="172.0" width="136.0" height="38.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1076.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 2</text>
+<rect x="1008.0" y="268.0" width="136.0" height="38.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1076.0" y="292.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 15</text>
+<text x="1076.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<text x="1076.0" y="338.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">共 16 个 SM</text>
+<line x1="846.0" y1="104.0" x2="846.0" y2="124.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<line x1="1076.0" y1="104.0" x2="1076.0" y2="124.0" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah-5a6b78)"/>
+<rect x="696.0" y="422.0" width="230.0" height="50.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="811.0" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">显存（GDDR5）</text>
+<text x="811.0" y="464.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">所有 SM 共用，最大 6 GB</text>
+<rect x="934.0" y="422.0" width="210.0" height="50.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="1039.0" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">主机内存</text>
+<text x="1039.0" y="464.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">CPU 一侧</text>
+<line x1="760.0" y1="370.0" x2="760.0" y2="422.0" stroke="#2e7d4f" stroke-width="2.4" marker-start="url(#ah-2e7d4f)" marker-end="url(#ah-2e7d4f)"/>
+<text x="770.0" y="400.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">6 个 64 位分区</text>
+<line x1="1039.0" y1="370.0" x2="1039.0" y2="422.0" stroke="#0e2841" stroke-width="2" marker-start="url(#ah-0e2841)" marker-end="url(#ah-0e2841)"/>
+<text x="1049.0" y="400.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">PCIe 总线</text>
+<line x1="504.0" y1="88.0" x2="802.0" y2="88.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="590.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">一个线程块</text>
+<text x="590.0" y="80.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">整块分配给 1 个 SM</text>
+<line x1="504.0" y1="207.0" x2="714.0" y2="214.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="590.0" y="259.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">同一个 Warp 的线程</text>
+<text x="590.0" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">执行同一条指令</text>
+</svg>

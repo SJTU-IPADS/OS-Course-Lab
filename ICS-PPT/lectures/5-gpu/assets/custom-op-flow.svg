@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 212" width="1120" height="212">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="13.0" y="8.0" width="245.0" height="130.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="135.5" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">① 核函数与封装</text>
+<text x="135.5" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">myadd.cu</text>
+<text x="135.5" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">核函数 add_kernel</text>
+<text x="135.5" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">与 C++ 函数 myadd_cuda</text>
+<rect x="296.0" y="8.0" width="245.0" height="130.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="418.5" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">② 声明与注册</text>
+<text x="418.5" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">TORCH_LIBRARY</text>
+<text x="418.5" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">声明 mylib::myadd，</text>
+<text x="418.5" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">为 CUDA 登记 myadd_cuda</text>
+<line x1="260.0" y1="73.0" x2="294.0" y2="73.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="579.0" y="8.0" width="245.0" height="130.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="701.5" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">③ 编译与加载</text>
+<text x="701.5" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">cpp_extension.load</text>
+<text x="701.5" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">nvcc 编译成动态库，</text>
+<text x="701.5" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">加载时执行注册</text>
+<line x1="543.0" y1="73.0" x2="577.0" y2="73.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="862.0" y="8.0" width="245.0" height="130.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="984.5" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">④ Python 调用</text>
+<text x="984.5" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">torch.ops.mylib.myadd</text>
+<text x="984.5" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">Dispatcher 按 key</text>
+<text x="984.5" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">选出 myadd_cuda</text>
+<line x1="826.0" y1="73.0" x2="860.0" y2="73.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 13.0 148.0 L 13.0 156.0 L 541.0 156.0 L 541.0 148.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="277.0" y="175.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">同一个 .cu 文件</text>
+<path d="M 579.0 148.0 L 579.0 156.0 L 1107.0 156.0 L 1107.0 148.0" fill="none" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="843.0" y="175.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="middle">Python 脚本</text>
+</svg>

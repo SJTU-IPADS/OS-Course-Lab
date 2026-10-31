@@ -14,9 +14,8 @@ LEC=path/to/your/lecture
 
 Four commands, each doing one thing. `inspect` and `build` are pure and need no
 Node; `render` and `view` produce a complete viewer bundle and run Marp (the
-viewer's own tool) to build `slides.html`. `render --to` picks another target:
-an editable [PowerPoint](#powerpoint-export) (`pptx`) or a printable
-[transcript](#transcript-export) sheet (`transcript`).
+viewer's own tool) to build `slides.html`. `render --to` picks what to produce,
+as described in [Targets](#targets).
 
 ```bash
 # 1. Print and validate the lecture tree (human-readable)
@@ -32,6 +31,28 @@ python3 -m lecturekit.cli render "$LEC" --out build/lecture-viewer
 python3 -m lecturekit.cli view "$LEC"
 ```
 
+## Targets
+
+`render --to TARGET` names what to produce. It is the only switch: there is no
+separate `--pdf` or `--png`.
+
+| `--to` | Output |
+| --- | --- |
+| `html` (default) | the viewer bundle and its deck `slides.html`; `viewer` is the old name and still accepted |
+| `pdf` | the bundle, plus the deck as `<title>.pdf` ([PDF export](#pdf-export)) |
+| `png` | the bundle, plus one `slides.NNN.png` per page ([PNG export](#png-export)) |
+| `pptx` | an editable PowerPoint deck ([PowerPoint export](#powerpoint-export)) |
+| `transcript` | one printable HTML sheet ([transcript export](#transcript-export)) |
+| `transcript-pdf` | the transcript sheet, and its PDF beside it |
+
+`--to` repeats or takes a comma-separated list: `--to pdf --to png` and
+`--to pdf,png` both build the deck once and export both. The targets of one
+renderer share one output directory (`html`, `pdf` and `png` are one bundle);
+targets of different renderers, such as `html,pptx`, each write to their own
+default directory, so `--out` is accepted only when the targets share a
+renderer. `--no-build` skips Marp, so it cannot be combined with `pdf` or `png`.
+`view` shows the deck and exports nothing.
+
 ## The rendered bundle
 
 A rendered bundle contains:
@@ -43,7 +64,7 @@ A rendered bundle contains:
 - `slides.html` — the Marp-rendered deck (pages only)
 - `theme.css`, the bundled `*.woff2` fonts and `assets/` — what the deck loads
   (`theme-pdf.css` too, once a PDF or PNG export has run)
-- `<title>.pdf`, `slides.NNN.png` — with `--pdf` / `--png` (see
+- `<title>.pdf`, `slides.NNN.png` — with `--to pdf` / `--to png` (see
   [PDF export](#pdf-export), [PNG export](#png-export))
 - `demos.json` — `p.demo(...)` commands by id, rewritten every render (see
   [Running a demo from the deck](#running-a-demo-from-the-deck)); inert without
@@ -77,7 +98,7 @@ page that cited the work, so a citation on two frames of one animation reads
 `(P12, P13)`.
 
 Build tooling uses the same count: `--pages 4` selects the slide that prints 4 in
-the full deck, and a full `--png` export names that slide's image `slides.004.png`.
+the full deck, and a full `--to png` export names that slide's image `slides.004.png`.
 
 **Presenter notes.** A page's `p.notes(...)` blocks are emitted into the deck as
 Marp presenter notes. Open the deck (`slides.html`) and press `p` to open the
@@ -149,7 +170,7 @@ lecturekit/renderers/viewer/marp-engine.cjs`: Marp itself, with the code
 `$LECTUREKIT_MARP` wrapper has to pass that option through.
 
 The deck itself is self-contained: fonts are bundled with the theme, so no slide
-load fetches anything. Only the `--pdf`/`--png` exports need more than Node — a
+load fetches anything. Only the `--to pdf` / `--to png` exports need more than Node — a
 local Chrome — and `npx` remains the fallback for a machine that has never run
 `prepare.sh`.
 
@@ -210,12 +231,12 @@ The full model, the key rules and the file format are in [i18n.md](i18n.md).
 
 ## PDF export
 
-Pass `--pdf` to `render` / `view` to also export the deck. The exported PDF is
+`render --to pdf` also exports the deck. The exported PDF is
 named after the lecture: its title is slugified (e.g. `Operating Systems` →
 `operating-systems.pdf`), the same rule that derives section/page ids.
 
 ```bash
-python3 -m lecturekit.cli render "$LEC" --out build/lecture-viewer --pdf
+python3 -m lecturekit.cli render "$LEC" --out build/lecture-viewer --to pdf
 ```
 
 The PDF is assembled in three steps so a large outline never clips:
@@ -237,16 +258,16 @@ keeps using your system fonts.
 
 ## PNG export
 
-Pass `--png` to `render` / `view` to also export one image per page, named
+`render --to png` also exports one image per page, named
 `slides.001.png`, `slides.002.png`, … Combined with `--pages` this exports a
 single page as an image:
 
 ```bash
-python3 -m lecturekit.cli render "$LEC" --pages 4 --png   # -> slides.001.png
+python3 -m lecturekit.cli render "$LEC" --pages 4 --to png   # -> slides.001.png
 ```
 
 Like the PDF pages, PNGs render in headless Chromium with the bundled CJK font,
-so it needs a local Chrome/Chromium. `--pdf` and `--png` can be combined.
+so it needs a local Chrome/Chromium. `pdf` and `png` can be combined: `--to pdf,png`.
 
 ## PowerPoint export
 
@@ -357,7 +378,7 @@ under it with its figures beside it.
 
 ```bash
 python3 -m lecturekit.cli render "$LEC" --to transcript        # -> build/<id>-transcript/<slug>-transcript.html
-python3 -m lecturekit.cli render "$LEC" --to transcript --pdf  # and the PDF beside it
+python3 -m lecturekit.cli render "$LEC" --to transcript-pdf    # and the PDF beside it
 ```
 
 It is derived from what the deck says, so there is nothing more to write. It
@@ -366,7 +387,7 @@ prose, the cover, the reference list, an animation's earlier frames, a reveal
 pair's first half, and pages borrowed from another lecture. Every figure is
 embedded in the file as a `data:` URI, so the one `.html` is the whole sheet; a
 raster is scaled down to print resolution first when Pillow is installed.
-`--pdf` prints the sheet with headless Chrome, found as for the
+`transcript-pdf` prints the sheet with headless Chrome, found as for the
 [PDF export](#pdf-export). `--pages` and `--lang` work as for the other targets.
 
 ## Live preview: edit and watch
@@ -410,7 +431,7 @@ else — a rendered bundle has nothing to run it:
 python3 -m lecturekit.cli view "$LEC" --watch
 ```
 
-Press it and bash runs the command **in the lecture directory**. Its output
+Press it and bash runs the command **in the lecture directory**, or in the subdirectory the block names with [`pwd=`](dsl.md#demos). Its output
 (stdout and stderr merged) appears in a drawer along the bottom of the deck **as
 it is produced**, not when the command is over: a model answering a token at a
 time is watched, not waited for. The drawer counts the seconds while it runs and
@@ -418,6 +439,8 @@ ends with the exit status and the total. The slide itself does not move, and
 whatever `output=` recorded stays where it is.
 
 **The project root.** The command's environment carries `LECTUREKIT_ROOT`, the directory that holds the `lecturekit` package (the repository root, `ICS-PPT/` in a course copy), written with forward slashes so Git Bash reads it too. A demo uses it to reach a directory outside its lecture: `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"`. The package is found where Python imports it from, so this is the checkout only under `pip install -e .`; with any other install, or to point demos elsewhere, set `LECTUREKIT_ROOT` before starting `view --watch`, and the value in the environment is kept. A [file button](#showing-a-source-file-from-the-deck) whose path begins with `/` is looked up under the same directory, so `/lectures/mini-cpu/src/lab2/seq.c` is the file a demo reaches after `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"`.
+
+**Secrets: `.env`.** A demo that needs a value the slide must not show, such as the token of a course server, reads it from the environment: `curl -H "X-Token: $GPU_TOKEN" ...`. The preview takes such variables from a `.env` file at the project root (the directory `$LECTUREKIT_ROOT` names), one `KEY=VALUE` per line, `#` comments, optional quotes and `export` prefix, no variable expansion (read by python-dotenv). The file is read at every launch, so an edit applies at the next press of the button. A variable already set in the shell that started `view --watch` wins over the file, and the file cannot change `LECTUREKIT_ROOT`. `.env` is git-ignored; `.env.example` lists the names a checkout expects. Every variable in it is visible to every demo the preview serves, so it holds only what demos need. Only the live preview reads it: the exported viewer, the PDF and the PPTX run no demo and never contain it. The module is `lecturekit/env.py`.
 
 The drawer is a terminal ([xterm.js](../lecturekit/renderers/viewer/assets/vendor/xterm/README.md)).
 Each command is written into it just before bash runs it: the `$` in a dim
@@ -607,6 +630,40 @@ of the file's text (2px a press, 10px to 40px, 14px to start), dragging the
 panel's left edge sets its width, and a double click on that edge returns it to
 the default (46% of the window, at most 720px). Both are kept in the browser
 across reloads.
+
+#### Editing the file in the panel
+
+The panel is also an editor, for writing a kernel in front of the room. Click
+into the text and type. Nothing reaches the disk until **Save** (or `Ctrl+S`)
+is pressed; **Reset** reads the file from the disk again and drops what has not
+been saved, with no question asked. After a Save, a later Reset drops only what
+was typed since.
+
+What is typed is kept as a **draft**, one per file, in the browser's
+`localStorage` — the place the text size and the width are kept. Putting the
+panel away, turning the page, reloading, and restarting the server all leave the
+draft as it was. It is dropped by Save, by Reset, and when the text is typed
+back to what the file holds. The head shows `modified` while a draft differs
+from the file.
+
+A Save is not a reload. The file belongs to a demo, not to the slides, so the
+rebuild it causes is carried out but the page is not refreshed: the panel stays
+open and the demo output stays on the slide. A change made by anything else, the
+author's editor included, still reloads the page as before.
+
+A file changed on the disk after the draft began is not overwritten silently.
+The first Save answers `file changed on disk · Save again to overwrite it` and
+writes nothing; a second Save writes the draft. Reset takes the file as it is.
+
+Editing keys: `Tab` inserts four spaces (a tab in a `Makefile`), `Enter` keeps
+the indentation of the line above and adds one level after `{`, `(` or `:`, and
+the first `Escape` leaves the text so the arrow keys turn the deck again. Line
+endings of a file written with `\r\n` are kept. A file longer than 256 KiB, or
+one that is not valid UTF-8, is shown read-only, since the panel cannot hand it
+back byte for byte. The colours follow the typing a moment after each pause.
+
+The editor needs the same demo channel the file buttons use, so it exists only
+under `view --watch`.
 
 The panel colours the file by its syntax. The lexer is chosen from the file
 name (`.c`, `.h`, `.s`, `.S`, `.py`, `.sh`, `.sed`, `Makefile`, `.cu`, ...) and

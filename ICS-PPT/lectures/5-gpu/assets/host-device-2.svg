@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 310" width="1040" height="310">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="10.0" y="8.0" width="290.0" height="294.0" rx="8" fill="none" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="22.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="start">主机</text>
+<rect x="40.0" y="34.0" width="230.0" height="68.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="155.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">CPU</text>
+<rect x="40.0" y="132.0" width="230.0" height="154.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="52.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">主机内存</text>
+<rect x="80.0" y="166.0" width="150.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="155.0" y="186.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">a</text>
+<rect x="80.0" y="202.0" width="150.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="155.0" y="222.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">b</text>
+<rect x="80.0" y="238.0" width="150.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="155.0" y="258.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">c</text>
+<rect x="740.0" y="8.0" width="290.0" height="294.0" rx="8" fill="none" stroke="#5a6b78" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="752.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="start">设备</text>
+<rect x="770.0" y="34.0" width="230.0" height="68.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="885.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">GPU</text>
+<rect x="770.0" y="132.0" width="230.0" height="154.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="782.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">设备显存</text>
+<rect x="810.0" y="166.0" width="150.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="885.0" y="186.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">da</text>
+<rect x="810.0" y="202.0" width="150.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="885.0" y="222.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">db</text>
+<rect x="810.0" y="238.0" width="150.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="885.0" y="258.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">dc</text>
+<line x1="155.0" y1="102.0" x2="155.0" y2="132.0" stroke="#5a6b78" stroke-width="1.8" marker-start="url(#ah-5a6b78)" marker-end="url(#ah-5a6b78)"/>
+<text x="167.0" y="123.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">读写 a、b、c</text>
+<path d="M 270.0 68.0 L 690.0 68.0 L 690.0 144.0 L 770.0 144.0" fill="none" stroke="#e97132" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#ah-e97132)"/>
+<rect x="352.6" y="58.0" width="254.7" height="21.0" rx="2" fill="#ffffff" stroke="none" stroke-width="0"/>
+<text x="480.0" y="73.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle" xml:space="preserve">① cudaMalloc  分配 da、db、dc</text>
+</svg>

@@ -8,7 +8,7 @@ from pathlib import Path
 
 from lecturekit import demo, i18n, model, references, source
 from .blocks import (
-    BLOCK_RENDERERS, annotation_markup, escape_html, render_block, render_footnotes,
+    MarpCtx, annotation_markup, escape_html, render_block, render_footnotes,
     side_column,
 )
 from .marp import CJK_FONT
@@ -16,15 +16,8 @@ from .pdf import SLIDE_LINK_PREFIX
 
 ASSETS = Path(__file__).resolve().parent / "assets"
 REFERENCES_PAGE_ID = "__references__"
-VIEWER_KINDS = set(BLOCK_RENDERERS) | model.MARKER_KINDS
 OUTLINE_CSS = (ASSETS / "outline.css").read_text(encoding="utf-8")
 
-# A side_image renders nothing in its own place (`side_column` draws its
-# column under the title), so it is never wrapped and consumes no reveal step.
-# A spacer is pure layout whitespace, so it is likewise always visible and never
-# claims a reveal step of its own.
-_REVEAL_SKIP = {"side_image", "spacer"} | model.MARKER_KINDS
-_GAP_FLOW_SKIP = {"side_image"}
 # One of the two flex spacers that centre a page's text column under its
 # title (`side_image(..., valign="middle")`). Its own HTML block, between
 # blank lines, so Marp keeps parsing what follows as markdown; never a reveal
@@ -48,48 +41,53 @@ def _render_layout(
     drawer: text, code and figures all travel through this same path.
     """
     width, height = slide_size
-    sidenote_index = reveal_index = 0
+    marp = MarpCtx()
+    reveal_index = 0
     css_align = {"left": "flex-start", "center": "center", "right": "flex-end",
                  "top": "flex-start", "middle": "center", "bottom": "flex-end"}
 
-    def element(node, inherited, *, in_row=False):
-        nonlocal sidenote_index, reveal_index
+    def take_numbers(texts):
+        start = len(footnotes) + 1
+        footnotes.extend(texts)
+        return tuple(range(start, start + len(texts)))
+
+    def element(node, inherited, *, in_row=False, share=None, closers=()):
+        # ``closers`` are the containers this node ends: a container's footnote
+        # superscript rides the last leaf drawn inside it.
+        nonlocal reveal_index
         halign, valign = model.resolve_align(node, inherited)
         attrs = 'class="lk-box"'
         if isinstance(node, model.Flex):
             body = []
-            for child in node.children:
-                body.extend(element(child, (halign, valign), in_row=node.direction == "row"))
+            last = len(node.children) - 1
+            shares = (model.row_shares(node) if node.direction == "row"
+                      else [None] * len(node.children))
+            for i, child in enumerate(node.children):
+                body.extend(element(
+                    child, (halign, valign), in_row=node.direction == "row",
+                    share=shares[i], closers=(node, *closers) if i == last else (),
+                ))
             content = [f'<div class="lk-content lk-flex lk-flex-{node.direction}" '
                        f'style="justify-content:{css_align.get(halign if node.direction == "row" else valign, "flex-start")}">',
                        "", *body, "</div>", ""]
         else:
             block = node
-            content_style = ""
-            if block.kind == "image" and block.content.get("width"):
-                requested = block.content["width"]
-                # The row already assigned this width to the box. Resolving a
-                # percentage against that box a second time would halve it.
-                block = replace(block, content={**block.content, "width": "100%"})
-                content_style = f' style="width:{"100%" if in_row else requested}"'
+            block, content_style = node.sized_in_box(in_row)
             held = model.block_held(page, block)
             numbers = ()
-            if not held and block.footnotes:
-                start = len(footnotes) + 1
-                numbers = tuple(range(start, start + len(block.footnotes)))
-                footnotes.extend(block.footnotes)
-            body = render_block(block, sidenote_index=sidenote_index,
-                                footnote_numbers=numbers)
-            if block.kind == "sidenote":
-                sidenote_index += 1
+            if not held and block.IN_FLOW:
+                numbers = take_numbers(block.footnotes)
+                for container in closers:
+                    numbers += take_numbers(container.footnotes)
+            body = render_block(block, footnote_numbers=numbers, ctx=marp)
             idx = None
             if held:
                 attrs = 'class="lk-box lk-held" aria-hidden="true"'
-            elif reveal and block.kind not in _REVEAL_SKIP and _block_steps(page, block):
+            elif reveal and block.REVEAL_STEP and _block_steps(page, block):
                 idx = reveal_index
                 reveal_index += 1
                 attrs = _reveal_attrs(idx, block.reveal == "items", extra_class="lk-box")
-            wash = " lk-untranslated" if block.untranslated and block.kind not in _REVEAL_SKIP else ""
+            wash = " lk-untranslated" if block.untranslated and block.REVEAL_STEP else ""
             content = [f'<div class="lk-content{wash}"{content_style}>', "", *body, "</div>", ""]
             # Bubbles use slide coordinates and must stay outside layout boxes.
             if not held and page.show_annotations:
@@ -98,19 +96,18 @@ def _render_layout(
                     aside, rule = annotation_markup(note, uid, width, height)
                     overlays.extend([_tag_reveal(aside, idx) if idx is not None else aside, ""])
                     annotation_rules.append(rule)
-            if block.kind == "side_image":
+            if not block.IN_FLOW:
                 return []
-        default_halign = ("center" if isinstance(node, model.Block)
-                          and node.kind in {"image", "row", "table", "architecture", "highlight"}
+        default_halign = ("center" if isinstance(node, model.Block) and node.CENTERED
                           else "stretch")
         style = (f'align-items:{css_align.get(halign, default_halign)};'
                  f'justify-content:{css_align.get(valign, "flex-start")}')
         # In a row a sized image keeps its requested width. Every other child
         # shares the remaining width; this works for nested containers too.
-        if in_row and isinstance(node, model.Block) and node.kind == "image":
-            requested = node.content.get("width")
-            if requested:
-                style += f';--lk-basis:{requested}'
+        if in_row and isinstance(node, model.Block) and node.row_basis():
+            style += f';--lk-basis:{node.row_basis()}'
+        elif share is not None:
+            style += f';--lk-grow:{100 * share:.2f}'
         return [f'<div {attrs} style="{style}">', "", *content, "</div>", ""]
 
     overlays: list[str] = []
@@ -139,10 +136,17 @@ def _render_layout(
     return out
 
 
+def _take_numbers(footnotes: list[str], texts: tuple[str, ...]) -> tuple[int, ...]:
+    """Append ``texts`` to the page's footnotes; the numbers they now carry."""
+    start = len(footnotes) + 1
+    footnotes.extend(texts)
+    return tuple(range(start, start + len(texts)))
+
+
 def _wrap_untranslated(lines: list[str]) -> list[str]:
     """Wrap a block that fell back to the baseline in a faintly washed div.
 
-    Not applied to the kinds `_REVEAL_SKIP` names: a `side_image` renders
+    Not applied to the kinds without a `REVEAL_STEP`: a `side_image` renders
     nothing in its own place, and a `spacer` is whitespace with nothing to
     wash.
 
@@ -241,12 +245,12 @@ def _render_gap_flow(
 
     out: list[str] = []
     flow_blocks: list[model.Block] = []
-    sidenote_index = 0
+    marp = MarpCtx()
     reveal_index = 0
 
     for block in visible_blocks:
-        if block.kind in _GAP_FLOW_SKIP:
-            out.extend(render_block(block, sidenote_index=sidenote_index))
+        if not block.IN_FLOW:
+            out.extend(render_block(block, ctx=marp))
             if page.show_annotations:
                 for note in block.annotations:
                     uid = f"{page.id}-{len(annotation_rules)}"
@@ -271,23 +275,19 @@ def _render_gap_flow(
 
         if model.block_held(page, block):
             out.extend(_wrap_gap_block(
-                render_block(block, sidenote_index=sidenote_index), held=True
+                render_block(block, ctx=marp), held=True
             ))
-            if block.kind == "sidenote":
-                sidenote_index += 1
             continue
         numbers: tuple[int, ...] = ()
-        if block.footnotes:
+        if block.footnotes and block.IN_FLOW:
             start = len(footnotes) + 1
             numbers = tuple(range(start, start + len(block.footnotes)))
             footnotes.extend(block.footnotes)
-        lines = render_block(
-            block, sidenote_index=sidenote_index, footnote_numbers=numbers
-        )
-        if block.untranslated and block.kind not in _REVEAL_SKIP:
+        lines = render_block(block, footnote_numbers=numbers, ctx=marp)
+        if block.untranslated and block.REVEAL_STEP:
             lines = _wrap_untranslated(lines)
         wrap = (
-            reveal and block.kind not in _REVEAL_SKIP and _block_steps(page, block)
+            reveal and block.REVEAL_STEP and _block_steps(page, block)
         )
         idx = reveal_index if wrap else None
         out.extend(_wrap_gap_block(lines, idx, items=block.reveal == "items"))
@@ -301,8 +301,6 @@ def _render_gap_flow(
                     aside = _tag_reveal(aside, idx)
                 out.extend([aside, ""])
                 annotation_rules.append(rule)
-        if block.kind == "sidenote":
-            sidenote_index += 1
     out.extend(["</div>", ""])
     return out
 
@@ -509,7 +507,7 @@ def build_page(page: model.Page) -> dict:
         "title": page.title,
         "blocks": [
             {"kind": block.kind, "content": block.content}
-            for block in model.select_blocks(page, "viewer", VIEWER_KINDS)
+            for block in model.select_blocks(page, "viewer")
         ],
     }
 
@@ -729,7 +727,7 @@ def render_marp_page(
     reveal: bool = False,
 ) -> str:
     width, height = slide_size
-    visible_blocks = model.select_blocks(page, "viewer", VIEWER_KINDS)
+    visible_blocks = model.select_blocks(page, "viewer")
     if _is_cover_page(visible_blocks):
         return _render_cover_page(page, visible_blocks[0])
     if model.is_bridge_page(page):
@@ -765,13 +763,16 @@ def render_marp_page(
     footnotes: list[str] = []
     annotation_rules: list[str] = []
     if sides:
+        # The images' footnotes are numbered first, ahead of the text under them.
+        side_marks = tuple(
+            number for block in sides
+            for number in _take_numbers(footnotes, block.footnotes)
+        )
         texts = []
         for block in side_texts:
-            start = len(footnotes) + 1
-            numbers = tuple(range(start, start + len(block.footnotes)))
-            footnotes.extend(block.footnotes)
+            numbers = _take_numbers(footnotes, block.footnotes)
             texts.append(render_block(block, footnote_numbers=numbers))
-        out.extend(side_column(sides, width, texts))
+        out.extend(side_column(sides, width, texts, side_marks))
     # The text column's blocks, which the spacers enclose. A side_image renders
     # nothing in the flow.
     column_blocks = [block for block in visible_blocks if block.kind != "side_image"]
@@ -798,29 +799,25 @@ def render_marp_page(
             )
         )
     else:
-        sidenote_index = 0
+        marp = MarpCtx()
         reveal_index = 0
         for block in visible_blocks:
             if model.block_held(page, block):
                 # An after_frames block before the last frame: its space is
                 # reserved, its footnotes and bubbles wait with it.
-                out.extend(_wrap_held(render_block(block, sidenote_index=sidenote_index)))
-                if block.kind == "sidenote":
-                    sidenote_index += 1
+                out.extend(_wrap_held(render_block(block, ctx=marp)))
                 continue
             numbers: tuple[int, ...] = ()
-            if block.footnotes:
+            if block.footnotes and block.IN_FLOW:
                 start = len(footnotes) + 1
                 numbers = tuple(range(start, start + len(block.footnotes)))
                 footnotes.extend(block.footnotes)
-            lines = render_block(
-                block, sidenote_index=sidenote_index, footnote_numbers=numbers
-            )
-            if block.untranslated and block.kind not in _REVEAL_SKIP:
+            lines = render_block(block, footnote_numbers=numbers, ctx=marp)
+            if block.untranslated and block.REVEAL_STEP:
                 lines = _wrap_untranslated(lines)
             wrap = (
                 reveal
-                and block.kind not in _REVEAL_SKIP
+                and block.REVEAL_STEP
                 and _block_steps(page, block)
             )
             idx = reveal_index if wrap else None
@@ -837,8 +834,6 @@ def render_marp_page(
                         aside = _tag_reveal(aside, idx)
                     out.extend([aside, ""])
                     annotation_rules.append(rule)
-            if block.kind == "sidenote":
-                sidenote_index += 1
     if valign == "middle" and column_blocks:
         out.extend(_VALIGN_SPACER)
     if footnotes:

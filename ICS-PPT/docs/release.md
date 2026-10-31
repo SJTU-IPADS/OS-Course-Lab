@@ -38,7 +38,7 @@ directory without `lecture.py` beside the file is an error, not a skip.
 One PDF per lecture and language, named after the directory rather than the
 title, so the names are stable and plain ASCII: `lectures/2-data` gives
 `2-data.pdf`, and its English translation `2-data.en.pdf`. Each is the deck's
-PDF: the outline page, then one page per slide (as `render --pdf` makes it; see
+PDF: the outline page, then one page per slide (as `render --to pdf` makes it; see
 [usage.md](usage.md)).
 
 The zip is `lectures-<version>.zip`, holding a single folder of the same name
@@ -57,7 +57,7 @@ scripts/release-zip.sh dist/lectures-test.zip  # the two above, then zip; what C
   skipping `.git`, `node_modules` and `build`) and prints the lecture's
   directory, or the directory, a tab and a language for a translation.
 - `build-pdfs.sh OUT` reads those lines, renders each with
-  `python3 -m lecturekit.cli render DIR [--lang L] --pdf`, and moves the PDF to
+  `python3 -m lecturekit.cli render DIR [--lang L] --to pdf`, and moves the PDF to
   `OUT/<name>.pdf`. A lecture that fails is reported and the rest still build;
   the exit status says whether any failed.
 - `release-zip.sh OUT.zip` runs the two from the repository root and writes the
@@ -65,7 +65,7 @@ scripts/release-zip.sh dist/lectures-test.zip  # the two above, then zip; what C
   `RELEASE` file marks a lecture, it says so on standard error, writes no zip
   and exits with status 0.
 
-Run on your own machine, they need what `render --pdf` needs: marp-cli
+Run on your own machine, they need what `render --to pdf` needs: marp-cli
 (`scripts/prepare.sh`) and a Chrome or Chromium.
 
 ## CI

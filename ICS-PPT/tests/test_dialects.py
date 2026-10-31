@@ -18,7 +18,7 @@ from lecturekit import dialects
 from lecturekit.dsl import Lecture
 from lecturekit.renderers.latex import preamble
 from lecturekit.renderers.viewer import marp
-from lecturekit.renderers.viewer.blocks import _code
+from lecturekit.renderers.viewer.blocks import render_block
 
 VENDORED_MARP = marp.PKG_ROOT / "node_modules" / "@marp-team" / "marp-cli" / "marp-cli.js"
 
@@ -59,7 +59,7 @@ def test_cuda_adds_what_c_plus_plus_lacks():
 
 
 def test_the_deck_hands_marp_the_dialect_name():
-    assert _code(_block("cuda", KERNEL))[0] == "```cuda"
+    assert render_block(_block("cuda", KERNEL))[0] == "```cuda"
 
 
 def test_every_marp_run_goes_through_the_engine():

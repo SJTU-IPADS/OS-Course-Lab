@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 330" width="1080" height="330">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="18.0" y="38.0" width="370.0" height="230.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="34.0" y="76.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">100:  x = threadIdx.x;</text>
+<text x="34.0" y="110.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">101:  if (x % 2 == 0) {</text>
+<text x="34.0" y="144.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">102:      A();</text>
+<text x="34.0" y="178.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">103:  } else {</text>
+<rect x="28.0" y="190.0" width="346.0" height="32.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="34.0" y="212.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">104:      B();</text>
+<text x="34.0" y="246.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">105:  }</text>
+<text x="460.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">一个 Warp 的 32 个线程</text>
+<text x="468.0" y="69.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">T0</text>
+<text x="468.0" y="96.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">T1</text>
+<text x="468.0" y="123.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">T2</text>
+<text x="468.0" y="150.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">T3</text>
+<text x="468.0" y="177.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">…</text>
+<text x="468.0" y="204.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">T30</text>
+<text x="468.0" y="231.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="end">T31</text>
+<rect x="474.0" y="46.0" width="86.0" height="199.0" rx="5" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="480.0" y="55.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="480.0" y="82.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="480.0" y="109.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="480.0" y="136.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="517.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">⋮</text>
+<rect x="480.0" y="190.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="480.0" y="217.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="517.0" y="265.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">PC 100</text>
+<rect x="582.0" y="46.0" width="86.0" height="199.0" rx="5" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="588.0" y="55.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="588.0" y="82.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="588.0" y="109.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="588.0" y="136.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="625.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">⋮</text>
+<rect x="588.0" y="190.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="588.0" y="217.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="625.0" y="265.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">PC 101</text>
+<rect x="690.0" y="46.0" width="86.0" height="199.0" rx="5" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2"/>
+<rect x="696.0" y="55.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="696.0" y="82.0" width="74.0" height="19.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="696.0" y="109.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="696.0" y="136.0" width="74.0" height="19.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="733.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">⋮</text>
+<rect x="696.0" y="190.0" width="74.0" height="19.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="696.0" y="217.0" width="74.0" height="19.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="733.0" y="265.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">PC 102</text>
+<rect x="798.0" y="46.0" width="86.0" height="199.0" rx="5" fill="#ffffff" stroke="#e97132" stroke-width="1.8"/>
+<rect x="804.0" y="55.0" width="74.0" height="19.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="804.0" y="82.0" width="74.0" height="19.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="804.0" y="109.0" width="74.0" height="19.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="804.0" y="136.0" width="74.0" height="19.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="841.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">⋮</text>
+<rect x="804.0" y="190.0" width="74.0" height="19.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="804.0" y="217.0" width="74.0" height="19.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="841.0" y="265.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">PC 104</text>
+<line x1="470.0" y1="281.0" x2="1020.0" y2="281.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<text x="1024.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">时间</text>
+<rect x="18.0" y="296.0" width="30.0" height="14.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="56.0" y="308.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">执行这条指令</text>
+<rect x="164.0" y="296.0" width="30.0" height="14.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="202.0" y="308.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">等待：不执行这条指令</text>
+</svg>

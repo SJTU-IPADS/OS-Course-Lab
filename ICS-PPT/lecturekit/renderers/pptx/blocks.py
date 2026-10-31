@@ -1,12 +1,13 @@
-"""Per-block drawers: map one AST block onto native PowerPoint shapes.
+"""Helpers the elements' ``to_pptx`` methods draw with.
 
-Each drawer takes a :class:`Ctx` (slide, layout, vertical cursor, asset root)
-and the block, draws shape(s) at the cursor, and advances the cursor by the
-block's estimated height. Styling comes from :mod:`theme`. Annotation bubbles
-are the one deferred overlay: they are not in ``PPTX_KINDS`` and never reach
-here. An ``image_right`` figure does not wrap text the way CSS floats do —
-PowerPoint has no text wrap around a shape — so the text box is narrowed to
-sit beside the picture instead.
+An element class (``lecturekit.elements``) draws itself from a :class:`Ctx`
+(slide, layout, vertical cursor, asset root): it adds shape(s) at the cursor and
+advances the cursor by the block's estimated height. This module holds the
+shapes and measures several of them share. Styling comes from :mod:`theme`.
+Annotation bubbles are the one deferred overlay and never reach here. A side
+image does not wrap text the way CSS floats do, since PowerPoint has no text
+wrap around a shape, so the text box is narrowed to sit beside the picture
+instead.
 """
 
 from __future__ import annotations
@@ -30,24 +31,16 @@ from .layout import (
 )
 from .text import Para, Run, emphasize, parse_inline, parse_markdown
 
-# Block kinds the PPTX renderer draws. Only the annotation overlay is deferred,
-# so select_blocks drops that one.
-PPTX_KINDS = {
-    "cover", "slide", "code", "demo", "link", "image", "side_image", "aside",
-    "sidenote", "table", "highlight", "bridge", "architecture", "row",
-    "columns",
-}
-
 # Image formats python-pptx can embed. `.svg` is not one of them — it is
-# rasterized to PNG first (see `_resolve_image`), so authors need no separate
+# rasterized to PNG first (see `resolve_image`), so authors need no separate
 # raster copy of a vector figure.
-_RASTER_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff")
-_EMBEDDABLE_EXTS = _RASTER_EXTS + (".svg",)
+RASTER_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff")
+EMBEDDABLE_EXTS = RASTER_EXTS + (".svg",)
 
-_GAP = Emu(Pt(8))            # vertical gap between blocks (~0.6em of body)
-_PARA_GAP_EM = 0.45          # space after each paragraph (~viewer p/li margins)
-_GROUP_GAP_EM = 0.55         # extra space before a numbered group heading
-_LIST_INDENT = Emu(Pt(18))   # approx indent per list level (drives width estimate)
+GAP = Emu(Pt(8))            # vertical gap between blocks (~0.6em of body)
+PARA_GAP_EM = 0.45          # space after each paragraph (~viewer p/li margins)
+GROUP_GAP_EM = 0.55         # extra space before a numbered group heading
+LIST_INDENT = Emu(Pt(18))   # approx indent per list level (drives width estimate)
 
 
 @dataclass
@@ -61,18 +54,14 @@ class Ctx:
     # Review sources, so an `assets/<source id>/…` src resolves back to the
     # lecture it was borrowed from. See model.resolve_asset.
     borrowed: tuple = ()
-
-
-def draw_block(block, ctx: Ctx) -> None:
-    drawer = _DRAWERS.get(block.kind)
-    if drawer is not None:
-        drawer(block, ctx)
+    # The page's title, for the cover that draws it.
+    title: str = ""
 
 
 # --- shared helpers ---
 
 
-def _solid(shape, color: RGBColor) -> None:
+def solid(shape, color: RGBColor) -> None:
     shape.fill.solid()
     shape.fill.fore_color.rgb = color
 
@@ -90,7 +79,7 @@ def _shape(ctx: Ctx, preset, left: int, top: int, width: int, height: int):
     to prefer that reference over the explicit fill and line set here, so the
     reference goes and what this module sets is the whole story. The empty
     effect list is what says "no shadow": only the highlight chip casts one, and
-    it sets its own with :func:`_drop_shadow`.
+    it sets its own with :func:`drop_shadow`.
     """
     shape = ctx.slide.shapes.add_shape(preset, left, top, width, height)
     style = shape._element.find(qn("p:style"))
@@ -100,18 +89,18 @@ def _shape(ctx: Ctx, preset, left: int, top: int, width: int, height: int):
     return shape
 
 
-def _no_line(shape) -> None:
+def no_line(shape) -> None:
     shape.line.fill.background()
 
 
-def _drop_shadow(shape, color: RGBColor, *, alpha: float,
+def drop_shadow(shape, color: RGBColor, *, alpha: float,
                  blur_pt: float, dist_pt: float) -> None:
     """Give a shape the theme's soft downward shadow.
 
     python-pptx exposes only shadow *inheritance*, so the effect goes in by
     hand. `<a:effectLst>` follows the fill and the line inside `<a:spPr>`, and
     PowerPoint rejects a file that orders them otherwise, so it is appended
-    last — after `_solid`/`_line` have written theirs. `dir` is in 60000ths of
+    last — after `solid`/`_line` have written theirs. `dir` is in 60000ths of
     a degree, and 90 degrees points straight down.
     """
     spPr = shape._element.spPr
@@ -131,7 +120,7 @@ def _drop_shadow(shape, color: RGBColor, *, alpha: float,
     spPr.append(lst)
 
 
-def _textbox(ctx: Ctx, height: int, *, left: int | None = None, width: int | None = None):
+def textbox(ctx: Ctx, height: int, *, left: int | None = None, width: int | None = None):
     box = ctx.slide.shapes.add_textbox(
         ctx.layout.content_left if left is None else left,
         ctx.cursor.top,
@@ -149,7 +138,7 @@ def _textbox(ctx: Ctx, height: int, *, left: int | None = None, width: int | Non
     return box, tf
 
 
-def _set_line_spacing(paragraph, size_pt: float) -> None:
+def set_line_spacing(paragraph, size_pt: float) -> None:
     """Exact point line spacing (size * 1.4), matching estimate_text_height.
 
     A float multiple is scaled by the font's own leading in PowerPoint, so the
@@ -158,7 +147,7 @@ def _set_line_spacing(paragraph, size_pt: float) -> None:
     paragraph.line_spacing = Pt(size_pt * LINE_HEIGHT)
 
 
-def _set_east_asian(run, typeface: str) -> None:
+def set_east_asian(run, typeface: str) -> None:
     """Set the run's CJK typeface (<a:ea>); font.name only sets the Latin face.
 
     The element schema orders <a:ea> right after <a:latin>, which font.name has
@@ -173,7 +162,7 @@ def _set_east_asian(run, typeface: str) -> None:
     ea.set("typeface", typeface)
 
 
-def _set_highlight(run, tone: str) -> None:
+def set_highlight(run, tone: str) -> None:
     """Wash the run with a `<mark>` tone, via PowerPoint's own text highlight.
 
     python-pptx has no API for it, so the element goes in by hand. The schema
@@ -194,7 +183,7 @@ def _set_highlight(run, tone: str) -> None:
     ))
 
 
-def _style_run(run, text: str, *, size_pt: float, color: RGBColor,
+def style_run(run, text: str, *, size_pt: float, color: RGBColor,
                bold: bool = False, italic: bool = False, mono: bool = False,
                mark: str | None = None) -> None:
     run.text = text
@@ -204,35 +193,35 @@ def _style_run(run, text: str, *, size_pt: float, color: RGBColor,
     font.bold = bold
     font.italic = italic
     font.color.rgb = color
-    _set_east_asian(run, theme.cjk_font())
+    set_east_asian(run, theme.cjk_font())
     if mark:
-        _set_highlight(run, mark)
+        set_highlight(run, mark)
 
 
-def _draw_math(paragraph, latex: str, *, size_pt: float, display: bool = False) -> None:
+def draw_math(paragraph, latex: str, *, size_pt: float, display: bool = False) -> None:
     """Append a native PowerPoint equation to the paragraph (see :mod:`omml`)."""
     node = omml.to_alternate_content(latex, display=display)
     omml.apply_run_props(node, size_pt=size_pt, color=f"{theme.FG}")
     paragraph._p.append(node)
 
 
-def _apply_runs(paragraph, runs: list[Run], *, size_pt: float, color: RGBColor) -> None:
+def apply_runs(paragraph, runs: list[Run], *, size_pt: float, color: RGBColor) -> None:
     for r in runs:
         if r.math:
-            _draw_math(paragraph, r.math, size_pt=size_pt)
+            draw_math(paragraph, r.math, size_pt=size_pt)
             continue
         run = paragraph.add_run()
         if r.link:
-            _style_run(run, r.text, size_pt=size_pt, color=theme.LINK, mark=r.mark)
+            style_run(run, r.text, size_pt=size_pt, color=theme.LINK, mark=r.mark)
             run.hyperlink.address = r.link
         elif r.code:
-            _style_run(run, r.text, size_pt=size_pt, color=theme.ACCENT1,
+            style_run(run, r.text, size_pt=size_pt, color=theme.ACCENT1,
                        mono=True, mark=r.mark)
         elif r.bold:
-            _style_run(run, r.text, size_pt=size_pt, color=theme.DK2,
+            style_run(run, r.text, size_pt=size_pt, color=theme.DK2,
                        bold=True, mark=r.mark)
         else:
-            _style_run(run, r.text, size_pt=size_pt, color=color,
+            style_run(run, r.text, size_pt=size_pt, color=color,
                        italic=r.italic, mark=r.mark)
 
 
@@ -244,9 +233,9 @@ def draw_title(title: str, ctx: Ctx) -> None:
     height = estimate_text_height(
         title, font_pt=size, width=ctx.layout.content_width
     )
-    box, tf = _textbox(ctx, height)
-    _set_line_spacing(tf.paragraphs[0], size)
-    _style_run(tf.paragraphs[0].add_run(), title,
+    box, tf = textbox(ctx, height)
+    set_line_spacing(tf.paragraphs[0], size)
+    style_run(tf.paragraphs[0].add_run(), title,
                size_pt=size, color=theme.FG, bold=True)
     top = ctx.cursor.place(height)
     # The accent rule under the title (h1 border-bottom), with a deliberate
@@ -258,144 +247,78 @@ def draw_title(title: str, ctx: Ctx) -> None:
     )
     rule.line.color.rgb = theme.ACCENT1
     rule.line.width = Pt(theme.TITLE_RULE_PT)
-    ctx.cursor.advance(_GAP)
+    ctx.cursor.advance(GAP)
 
 
 # --- cover ---
 
 
-_COVER_TITLE_PT = 40
-_COVER_META_PT = 22
-_COVER_TIME_PT = 19
-_COVER_ACCENT = RGBColor.from_string(tokens.hex6("--cover-accent"))
-_COVER_LOGO_MAX_W = Emu(Pt(240))
-_COVER_LOGO_MAX_H = Emu(Pt(58))
+COVER_TITLE_PT = 40
+COVER_META_PT = 22
+COVER_TIME_PT = 19
+COVER_ACCENT = RGBColor.from_string(tokens.hex6("--cover-accent"))
+COVER_LOGO_MAX_W = Emu(Pt(240))
+COVER_LOGO_MAX_H = Emu(Pt(58))
 
 
-def draw_cover(title: str, block, ctx: Ctx) -> None:
-    cover = block.content
-    _draw_cover_logos(cover.get("logo"), ctx)
-
-    title_width = int(ctx.layout.width * 0.78)
-    title_left = (ctx.layout.width - title_width) // 2
-    title_top = int(ctx.layout.height * 0.24)
-    title_height = int(ctx.layout.height * 0.26)
-    box = ctx.slide.shapes.add_textbox(title_left, title_top, title_width, title_height)
-    tf = box.text_frame
-    tf.word_wrap = True
-    tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
-    tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-    p = tf.paragraphs[0]
-    p.alignment = PP_ALIGN.CENTER
-    _set_line_spacing(p, _COVER_TITLE_PT)
-    _style_run(p.add_run(), title, size_pt=_COVER_TITLE_PT,
-               color=_COVER_ACCENT)
-
-    meta_top = int(ctx.layout.height * 0.57)
-    meta_height = int(ctx.layout.height * 0.2)
-    meta = ctx.slide.shapes.add_textbox(
-        title_left, meta_top, title_width, meta_height
-    )
-    mtf = meta.text_frame
-    mtf.word_wrap = True
-    mtf.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-    mtf.margin_left = mtf.margin_right = mtf.margin_top = mtf.margin_bottom = 0
-    first = True
-    if cover.get("author"):
-        p = mtf.paragraphs[0]
-        p.alignment = PP_ALIGN.CENTER
-        _set_line_spacing(p, _COVER_META_PT)
-        _style_run(p.add_run(), cover["author"], size_pt=_COVER_META_PT,
-                   color=theme.FG, bold=True)
-        first = False
-    if cover.get("time"):
-        p = mtf.paragraphs[0] if first else mtf.add_paragraph()
-        p.alignment = PP_ALIGN.CENTER
-        _set_line_spacing(p, _COVER_TIME_PT)
-        _style_run(p.add_run(), cover["time"], size_pt=_COVER_TIME_PT,
-                   color=theme.DK2)
+BRIDGE_PT = 30.0    # above TITLE_PT, matching the deck's 30pt
 
 
-_BRIDGE_PT = 30.0    # above TITLE_PT, matching the deck's 30pt
-
-
-def draw_bridge(block, ctx: Ctx) -> None:
-    """A transition page: its plain-text lines centered on an empty slide.
-
-    Like ``draw_cover``, this owns the whole slide — no title, no footnotes —
-    so the renderer calls it instead of the block loop.
-    """
-    width = int(ctx.layout.width * 0.82)
-    left = (ctx.layout.width - width) // 2
-    box = ctx.slide.shapes.add_textbox(left, 0, width, ctx.layout.height)
-    tf = box.text_frame
-    tf.word_wrap = True
-    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-    first = True
-    for line in str(block.content["text"]).splitlines():
-        p = tf.paragraphs[0] if first else tf.add_paragraph()
-        first = False
-        p.alignment = PP_ALIGN.CENTER
-        _set_line_spacing(p, _BRIDGE_PT)
-        _style_run(p.add_run(), line, size_pt=_BRIDGE_PT, color=theme.FG)
-
-
-def _draw_cover_logos(logo, ctx: Ctx) -> None:
+def draw_cover_logos(logo, ctx: Ctx) -> None:
     if logo is None:
         return
     top = Emu(Pt(32))
     margin = Emu(Pt(54))
     if isinstance(logo, str):
-        _draw_cover_logo(logo, ctx.layout.width - margin - _COVER_LOGO_MAX_W, top, ctx)
+        draw_cover_logo(logo, ctx.layout.width - margin - COVER_LOGO_MAX_W, top, ctx)
         return
     left = logo.get("left")
     right = logo.get("right")
     if left:
-        _draw_cover_logo(left, margin, top, ctx)
+        draw_cover_logo(left, margin, top, ctx)
     if right:
-        _draw_cover_logo(right, ctx.layout.width - margin - _COVER_LOGO_MAX_W, top, ctx)
+        draw_cover_logo(right, ctx.layout.width - margin - COVER_LOGO_MAX_W, top, ctx)
 
 
-def _draw_cover_logo(src: str, left: int, top: int, ctx: Ctx) -> None:
-    path = _resolve_image(src, ctx)
+def draw_cover_logo(src: str, left: int, top: int, ctx: Ctx) -> None:
+    path = resolve_image(src, ctx)
     if path is None:
         return
-    pic = ctx.slide.shapes.add_picture(str(path), left, top, width=_COVER_LOGO_MAX_W)
-    if pic.height > _COVER_LOGO_MAX_H:
+    pic = ctx.slide.shapes.add_picture(str(path), left, top, width=COVER_LOGO_MAX_W)
+    if pic.height > COVER_LOGO_MAX_H:
         pic.width, pic.height = fit_within(
-            pic.width, pic.height, _COVER_LOGO_MAX_W, _COVER_LOGO_MAX_H
+            pic.width, pic.height, COVER_LOGO_MAX_W, COVER_LOGO_MAX_H
         )
-    if pic.width < _COVER_LOGO_MAX_W:
-        pic.left = left + (_COVER_LOGO_MAX_W - pic.width) // 2
+    if pic.width < COVER_LOGO_MAX_W:
+        pic.left = left + (COVER_LOGO_MAX_W - pic.width) // 2
 
 
 # --- slide (markdown body) ---
 
 
-def _para_size(para: Para) -> int:
+def para_size(para: Para) -> int:
     return theme.HEADING_PT[para.level] if para.kind == "heading" else theme.BODY_PT
 
 
-def _para_space_before(para: Para, index: int) -> float:
+def para_space_before(para: Para, index: int) -> float:
     """Extra space (pt) above a paragraph, to group sections like the viewer.
 
     A numbered top-level item (an ordered list at level 0) starts a new group,
     so it gets a gap above it — except the very first paragraph on the slide.
     """
     if index and para.kind == "ordered" and para.level == 0:
-        return theme.BODY_PT * _GROUP_GAP_EM
+        return theme.BODY_PT * GROUP_GAP_EM
     return 0.0
 
 
 # Gap between an `image_right` picture and the text beside it (theme: 0.8em).
-_FLOAT_GAP = Emu(Pt(16))
+FLOAT_GAP = Emu(Pt(16))
 # The float never takes more than this share of the column, so the text it sits
 # beside keeps a readable measure even when the author asked for a wide image.
-_FLOAT_MAX_SHARE = 0.45
+FLOAT_MAX_SHARE = 0.45
 
 
-def _float_picture(image: dict, ctx: Ctx, top: int):
+def float_picture(image: dict, ctx: Ctx, top: int):
     """Place an ``image_right`` picture flush with the content box's right edge.
 
     Returns the picture, or ``None`` when the source cannot be embedded (a URL,
@@ -403,16 +326,16 @@ def _float_picture(image: dict, ctx: Ctx, top: int):
     by the picture's width: PowerPoint cannot wrap text around a shape, so the
     two sit side by side rather than the text flowing around the figure.
     """
-    path = _resolve_image(image["src"], ctx)
+    path = resolve_image(image["src"], ctx)
     if path is None:
         return None
     pic = ctx.slide.shapes.add_picture(str(path), ctx.layout.content_left, top)
-    requested = _requested_image_size(image, pic.width, pic.height, ctx.layout)
+    requested = requested_image_size(image, pic.width, pic.height, ctx.layout)
     if requested is not None:
         pic.width, pic.height = requested
     pic.width, pic.height = fit_within(
         pic.width, pic.height,
-        round(ctx.layout.content_width * _FLOAT_MAX_SHARE),
+        round(ctx.layout.content_width * FLOAT_MAX_SHARE),
         max(Emu(Pt(theme.BODY_PT)), ctx.cursor.remaining()),
     )
     pic.left = ctx.layout.content_left + ctx.layout.content_width - pic.width
@@ -420,75 +343,28 @@ def _float_picture(image: dict, ctx: Ctx, top: int):
     return pic
 
 
-def _slide(block, ctx: Ctx) -> None:
-    pic = None
-    width = ctx.layout.content_width
-    if block.float_image:
-        pic = _float_picture(block.float_image, ctx, ctx.cursor.top)
-        if pic is not None:
-            width -= pic.width + _FLOAT_GAP
-    paras = parse_markdown(str(block.content))
-    height = _estimate_paras_height(paras, width)
-    box, tf = _textbox(ctx, height, width=width)
-    _fill_paras(tf, paras)
-    # A floated picture may be taller than the text beside it; the block owns
-    # whichever is taller, so the next block clears both.
-    band = max(height, pic.height) if pic is not None else height
-    if pic is not None and block.float_image.get("valign") == "middle":
-        # `valign="middle"`: each is centred in the band the taller one sets.
-        pic.top = box.top + (band - pic.height) // 2
-        box.top = box.top + (band - height) // 2
-    ctx.cursor.place(band)
-    ctx.cursor.advance(_GAP)
-
-
 # Gap between the columns of a `columns` block (theme: `.lk-columns { gap: 2em }`).
-_COLUMN_GAP_EM = 2.0
+COLUMN_GAP_EM = 2.0
 
 
-def _columns(block, ctx: Ctx) -> None:
-    """Slide text in side-by-side text boxes that share the content width.
-
-    One text box per column, all at the cursor's top; the block owns the
-    tallest of them. Columns split the width left after the gaps evenly, or by
-    the block's ``widths`` shares.
-    """
-    items = block.content["items"]
-    gap = Emu(Pt(theme.BODY_PT * _COLUMN_GAP_EM))
-    track = ctx.layout.content_width - gap * (len(items) - 1)
-    shares = block.content.get("widths") or [1 / len(items)] * len(items)
-    left = ctx.layout.content_left
-    tallest = 0
-    for text, share in zip(items, shares):
-        width = round(track * share)
-        paras = parse_markdown(str(text))
-        height = _estimate_paras_height(paras, width)
-        _, tf = _textbox(ctx, height, left=left, width=width)
-        _fill_paras(tf, paras)
-        tallest = max(tallest, height)
-        left += width + gap
-    ctx.cursor.place(tallest)
-    ctx.cursor.advance(_GAP)
-
-
-def _fill_paras(tf, paras: list[Para]) -> None:
+def fill_paras(tf, paras: list[Para]) -> None:
     """Write parsed slide markdown into a text frame, one paragraph each."""
     first = True
     ordinals: dict[int, int] = {}      # running number per list level
     for index, para in enumerate(paras):
         p = tf.paragraphs[0] if first else tf.add_paragraph()
         first = False
-        size = _para_size(para)
+        size = para_size(para)
         if para.kind == "math":
             # Display equation: no exact line spacing, so PowerPoint can give
             # stacked limits and fractions the vertical room they need.
-            p.space_after = Pt(size * _PARA_GAP_EM)
+            p.space_after = Pt(size * PARA_GAP_EM)
             p.alignment = PP_ALIGN.CENTER
-            _draw_math(p, para.runs[0].math, size_pt=size, display=True)
+            draw_math(p, para.runs[0].math, size_pt=size, display=True)
             continue
-        _set_line_spacing(p, size)
-        p.space_after = Pt(size * _PARA_GAP_EM)
-        before = _para_space_before(para, index)
+        set_line_spacing(p, size)
+        p.space_after = Pt(size * PARA_GAP_EM)
+        before = para_space_before(para, index)
         if before:
             p.space_before = Pt(before)
         if para.kind in ("bullet", "ordered"):
@@ -502,19 +378,19 @@ def _fill_paras(tf, paras: list[Para]) -> None:
             else:
                 ordinals.pop(para.level, None)
             marker = f"{ordinals[para.level]}.  " if para.kind == "ordered" else "•  "
-            _hanging_indent(p, marker, size_pt=size, level=para.level)
-            _style_run(p.add_run(), marker, size_pt=size, color=theme.ACCENT1, bold=True)
+            hanging_indent(p, marker, size_pt=size, level=para.level)
+            style_run(p.add_run(), marker, size_pt=size, color=theme.ACCENT1, bold=True)
         else:
             ordinals.clear()           # a paragraph ends every open list
         if para.kind == "heading":
             for r in para.runs:
-                _style_run(p.add_run(), r.text, size_pt=size, color=theme.FG,
+                style_run(p.add_run(), r.text, size_pt=size, color=theme.FG,
                            bold=True, mark=r.mark)
         else:
-            _apply_runs(p, para.runs, size_pt=size, color=theme.FG)
+            apply_runs(p, para.runs, size_pt=size, color=theme.FG)
 
 
-def _hanging_indent(paragraph, marker: str, *, size_pt: float, level: int) -> None:
+def hanging_indent(paragraph, marker: str, *, size_pt: float, level: int) -> None:
     """Hang a list item's wrapped lines under its text, not under its marker.
 
     The marker is an ordinary run here, so without this a second line starts at
@@ -524,14 +400,14 @@ def _hanging_indent(paragraph, marker: str, *, size_pt: float, level: int) -> No
     """
     marker_width = estimate_text_width(marker, font_pt=size_pt)
     pPr = paragraph._pPr if paragraph._pPr is not None else paragraph._p.get_or_add_pPr()
-    pPr.set("marL", str(_LIST_INDENT * level + marker_width))
+    pPr.set("marL", str(LIST_INDENT * level + marker_width))
     pPr.set("indent", str(-marker_width))
 
 
-def _estimate_paras_height(paras: list[Para], width: int) -> int:
+def estimate_paras_height(paras: list[Para], width: int) -> int:
     total = 0
     for index, para in enumerate(paras):
-        size = _para_size(para)
+        size = para_size(para)
         # Estimate against the real text (CJK-aware), prefixing the list marker
         # so its width counts; indent eats into a bullet/ordered line's width.
         text = "".join(r.text for r in para.runs)
@@ -539,326 +415,70 @@ def _estimate_paras_height(paras: list[Para], width: int) -> int:
             # A display equation is one centered line, but a fraction or a sum
             # with limits stacks well above it.
             lines = omml.visual_lines(para.runs[0].math or "")
-            total += Emu(Pt(size * LINE_HEIGHT * lines + size * _PARA_GAP_EM))
+            total += Emu(Pt(size * LINE_HEIGHT * lines + size * PARA_GAP_EM))
             continue
         if para.kind in ("bullet", "ordered"):
             text = "•   " + text
-        eff_width = width - _LIST_INDENT * (para.level + 1) if para.kind in ("bullet", "ordered") else width
+        eff_width = width - LIST_INDENT * (para.level + 1) if para.kind in ("bullet", "ordered") else width
         total += estimate_text_height(text, font_pt=size, width=max(eff_width, width // 4))
-        total += Emu(Pt(size * _PARA_GAP_EM + _para_space_before(para, index)))
+        total += Emu(Pt(size * PARA_GAP_EM + para_space_before(para, index)))
     return total or Emu(Pt(theme.BODY_PT))
 
 
 # --- code ---
 
 
-def _code(block, ctx: Ctx) -> None:
-    code = str(block.content["content"]).strip("\n")
-    lines = code.split("\n")
-    # A marked line takes PowerPoint's own text highlight — the same wash a
-    # `<mark>` gets here, at line scale.
-    marked = set(block.content.get("mark") or ())
-    tone = block.content.get("tone") or model.DEFAULT_HIGHLIGHT_TONE
-    # Match the background to the actual code rows.  The previous ``n + 1``
-    # estimate effectively reserved a blank line in every block, so short
-    # listings looked especially loose.  Give each row the same exact leading
-    # used elsewhere, plus a small and explicit vertical inset.
-    vertical_pad_pt = 4
-    height = Emu(Pt(
-        len(lines) * theme.CODE_PT * LINE_HEIGHT + 2 * vertical_pad_pt
-    ))
-    box, tf = _textbox(ctx, height)
-    _solid(box, theme.LT2)
-    _no_line(box)
-    tf.margin_left = Pt(10)
-    tf.margin_top = tf.margin_bottom = Pt(vertical_pad_pt)
-    first = True
-    for number, line in enumerate(lines, start=1):
-        p = tf.paragraphs[0] if first else tf.add_paragraph()
-        first = False
-        _set_line_spacing(p, theme.CODE_PT)
-        _style_run(p.add_run(), line or " ", size_pt=theme.CODE_PT,
-                   color=theme.FG, mono=True,
-                   mark=tone if number in marked else None)
-    top = ctx.cursor.place(height)
-    # accent1 left bar (pre border-left).
-    bar = _shape(ctx, MSO_SHAPE.RECTANGLE, ctx.layout.content_left, top,
-                 Pt(4), height)
-    _solid(bar, theme.ACCENT1)
-    _no_line(bar)
-    ctx.cursor.advance(_GAP)
-
-
 # --- demo (a command, and what it printed) ---
-
-
-def _demo(block, ctx: Ctx) -> None:
-    """A `p.demo(...)` as a still transcript.
-
-    Nothing here is runnable — a PPTX is a file on someone else's laptop — so
-    the block prints what the deck prints when nobody presses the button: the
-    name, then the command, then the output the author recorded. The box is the
-    code block's, because on the slide it *is* the code block, and a handout
-    that reflows every listing is a different handout.
-    """
-    from lecturekit import demo as demo_module
-
-    content = block.content
-    lines = demo_module.prompt_lines(str(content["command"]))
-    output = content.get("output")
-    outputs = str(output).strip("\n").split("\n") if output else []
-
-    # A demo may go without a name, and then the listing is all there is.
-    head = " — ".join(
-        str(part) for part in (content["name"], content.get("description")) if part
-    )
-    if head:
-        head_height = estimate_text_height(head, font_pt=theme.CAPTION_PT,
-                                           width=ctx.layout.content_width)
-        box, tf = _textbox(ctx, head_height)
-        _set_line_spacing(tf.paragraphs[0], theme.CAPTION_PT)
-        _apply_runs(tf.paragraphs[0], parse_markdown(head)[0].runs,
-                    size_pt=theme.CAPTION_PT, color=theme.DK2)
-        for run in tf.paragraphs[0].runs:
-            run.font.bold = True
-        ctx.cursor.place(head_height)
-
-    vertical_pad_pt = 4
-    rows = lines + outputs
-    if not rows:
-        return
-    bold = {len(lines) + number for number in content.get("bold") or ()}
-    height = Emu(Pt(len(rows) * theme.CODE_PT * LINE_HEIGHT + 2 * vertical_pad_pt))
-    box, tf = _textbox(ctx, height)
-    _solid(box, theme.LT2)
-    _no_line(box)
-    tf.margin_left = Pt(10)
-    tf.margin_top = tf.margin_bottom = Pt(vertical_pad_pt)
-    first = True
-    for number, line in enumerate(rows, start=1):
-        p = tf.paragraphs[0] if first else tf.add_paragraph()
-        first = False
-        _set_line_spacing(p, theme.CODE_PT)
-        _style_run(p.add_run(), line or " ", size_pt=theme.CODE_PT, mono=True,
-                   color=theme.ACCENT1 if number <= len(lines) else theme.FG,
-                   bold=number in bold)
-    top = ctx.cursor.place(height)
-    bar = _shape(ctx, MSO_SHAPE.RECTANGLE, ctx.layout.content_left, top,
-                 Pt(4), height)
-    _solid(bar, theme.ACCENT4)
-    _no_line(bar)
-    ctx.cursor.advance(_GAP)
 
 
 # --- link ---
 
 
-def _link(block, ctx: Ctx) -> None:
-    label = str(block.content["label"])
-    url = str(block.content["url"])
-    height = estimate_text_height(label, font_pt=theme.BODY_PT,
-                                  width=ctx.layout.content_width)
-    box, tf = _textbox(ctx, height)
-    p = tf.paragraphs[0]
-    _style_run(p.add_run(), "•  ", size_pt=theme.BODY_PT, color=theme.ACCENT1, bold=True)
-    run = p.add_run()
-    _style_run(run, label, size_pt=theme.BODY_PT, color=theme.LINK)
-    run.hyperlink.address = url
-    ctx.cursor.place(height)
-    ctx.cursor.advance(_GAP)
-
-
 # --- aside (blockquote) ---
-
-
-def _aside(block, ctx: Ctx) -> None:
-    text = str(block.content).strip()
-    height = estimate_text_height(text, font_pt=theme.BODY_PT,
-                                  width=ctx.layout.content_width)
-    box, tf = _textbox(ctx, height)
-    tf.margin_left = Pt(12)
-    _set_line_spacing(tf.paragraphs[0], theme.BODY_PT)
-    _apply_runs(tf.paragraphs[0], parse_markdown(text)[0].runs if text else [Run("")],
-                size_pt=theme.BODY_PT, color=theme.DK2)
-    for run in tf.paragraphs[0].runs:
-        run.font.italic = True
-        run.font.color.rgb = theme.DK2
-    top = ctx.cursor.place(height)
-    bar = _shape(ctx, MSO_SHAPE.RECTANGLE, ctx.layout.content_left, top,
-                 Pt(4), height)
-    _solid(bar, theme.LT2)
-    _no_line(bar)
-    ctx.cursor.advance(_GAP)
 
 
 # --- highlight (centered emphasis chip) ---
 
 
-_HIGHLIGHT_PAD = Emu(Pt(10))     # matches the theme's 0.28em/0.8em chip padding
-_HIGHLIGHT_RULE_PT = 1.0         # the theme's 1.5px frame, in points
+HIGHLIGHT_PAD = Emu(Pt(10))     # matches the theme's 0.28em/0.8em chip padding
+HIGHLIGHT_RULE_PT = 1.0         # the theme's 1.5px frame, in points
 # The theme's `box-shadow: 0 2px 8px rgba(13, 35, 50, 0.18)`, in points.
-_HIGHLIGHT_SHADOW = {"alpha": 0.18, "blur_pt": 6.0, "dist_pt": 1.5}
-
-
-def _highlight(block, ctx: Ctx) -> None:
-    """A centered chip: a hairline frame in the tone, holding text in that tone.
-
-    PowerPoint has no inline-block, so the width is *estimated* from the longest
-    line (like every other box in this renderer) and centered in the content
-    column. As in the deck the shape carries no fill — the tone is the outline
-    and the ink, and what is inside the frame is white slide.
-    """
-    content = block.content
-    lines = model.highlight_lines(content["text"])
-    rows = [parse_markdown(line)[0].runs if line.strip() else [Run("")]
-            for line in lines]
-    size = theme.HIGHLIGHT_PT
-    # Measured on the parsed runs, not the source: a `$$…$$` row is typeset as
-    # an equation, so what the chip has to be wide enough for is the formula's
-    # plain-text rendering, not the LaTeX that spelled it.
-    width = min(
-        ctx.layout.content_width,
-        max(estimate_text_width("".join(run.text for run in runs), font_pt=size)
-            for runs in rows)
-        + 2 * _HIGHLIGHT_PAD,
-    )
-    height = Emu(Pt(len(lines) * size * LINE_HEIGHT)) + 2 * _HIGHLIGHT_PAD
-    left = ctx.layout.content_left + (ctx.layout.content_width - width) // 2
-
-    top = ctx.cursor.place(height)
-    shape = _shape(ctx, MSO_SHAPE.RECTANGLE, left, top, width, height)
-    shape.fill.background()
-    _line(shape, theme.CHIP_INK[content["tone"]], _HIGHLIGHT_RULE_PT)
-    _drop_shadow(shape, theme.SIDENOTE_BORDER, **_HIGHLIGHT_SHADOW)
-
-    tf = shape.text_frame
-    tf.word_wrap = False
-    for i, runs in enumerate(rows):
-        para = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        para.alignment = PP_ALIGN.CENTER
-        _set_line_spacing(para, size)
-        _apply_runs(para, runs, size_pt=size,
-                    color=theme.CHIP_INK[content["tone"]])
-        for run in para.runs:
-            run.font.bold = True
-    ctx.cursor.advance(_GAP)
+HIGHLIGHT_SHADOW = {"alpha": 0.18, "blur_pt": 6.0, "dist_pt": 1.5}
 
 
 # --- sidenote (boxed callout) ---
 
 
-_LOGO_SIZE = Emu(Pt(36))     # sidenote image-logo box (~2.4em at 18pt, like the theme)
-
-
-def _sidenote(block, ctx: Ctx) -> None:
-    note = block.content
-    raw_logo = note.get("logo")
-    title = f"{note['title']}："
-    body = str(note["text"])
-    fill = theme.SIDENOTE_WHEEL[ctx.sidenote_index % len(theme.SIDENOTE_WHEEL)]
-    ctx.sidenote_index += 1
-
-    # An image logo embeds as a picture in a left gutter (the theme floats it);
-    # an emoji/glyph logo stays an inline text run. A path that won't resolve
-    # falls back to the default book glyph rather than leaking the path as text.
-    logo_path = _resolve_image(raw_logo, ctx) if model.logo_is_image(raw_logo) else None
-    logo_glyph = "" if logo_path is not None else (raw_logo or "📖")
-
-    height = estimate_text_height(
-        logo_glyph + title + body, font_pt=theme.SIDENOTE_PT,
-        width=ctx.layout.content_width,
-    ) + Emu(Pt(16))
-    box_top = ctx.cursor.top
-    shape = _shape(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, ctx.layout.content_left,
-                   box_top, ctx.layout.content_width, height)
-    _solid(shape, fill)
-    _line(shape, theme.SIDENOTE_BORDER, 1.0)
-    tf = shape.text_frame
-    tf.word_wrap = True
-    if logo_path is not None:
-        tf.margin_left = _LOGO_SIZE + Pt(16)
-    p = tf.paragraphs[0]
-    _set_line_spacing(p, theme.SIDENOTE_PT)
-    if logo_glyph:
-        _style_run(p.add_run(), logo_glyph + " ", size_pt=theme.SIDENOTE_PT, color=theme.FG)
-    title_run = p.add_run()
-    _style_run(title_run, title, size_pt=theme.SIDENOTE_PT, color=theme.ACCENT1, bold=True)
-    if note.get("link"):
-        title_run.hyperlink.address = note["link"]
-    _apply_runs(p, parse_inline(body), size_pt=theme.SIDENOTE_PT, color=theme.FG)
-
-    if logo_path is not None:
-        pic = ctx.slide.shapes.add_picture(
-            str(logo_path), ctx.layout.content_left + Pt(10), box_top + Pt(8),
-            width=_LOGO_SIZE,
-        )
-        # keep the logo inside the box even for a tall source image
-        if pic.height > height - Pt(16):
-            pic.width, pic.height = fit_within(pic.width, pic.height, _LOGO_SIZE, height - Pt(16))
-
-    ctx.cursor.place(height)
-    ctx.cursor.advance(_GAP)
+LOGO_SIZE = Emu(Pt(36))     # sidenote image-logo box (~2.4em at 18pt, like the theme)
 
 
 # --- table (booktabs-ish) ---
 
 
-def _table(block, ctx: Ctx) -> None:
-    content = block.content
-    headers = content["headers"]
-    rows = content["rows"]
-    align = content["align"]
-    n_rows = len(rows) + 1
-    n_cols = len(headers)
-    row_h = Emu(Pt(theme.BODY_PT * 0.85 * 1.6))
-    height = row_h * n_rows
-    frame = ctx.slide.shapes.add_table(
-        n_rows, n_cols, ctx.layout.content_left, ctx.cursor.top,
-        ctx.layout.content_width, height,
-    )
-    table = frame.table
-    table.first_row = True
-    widths = content.get("widths")
-    if widths is not None:
-        # the last column takes the rounding remainder, so the sum is exact
-        total = ctx.layout.content_width
-        spans = [Emu(int(total * w)) for w in widths[:-1]]
-        spans.append(Emu(total - sum(spans)))
-        for column, span in zip(table.columns, spans):
-            column.width = span
-    for c, header in enumerate(headers):
-        _fill_cell(table.cell(0, c), str(header), bold=True, align=align, col=c)
-    for r, row in enumerate(rows, start=1):
-        for c, cell in enumerate(row):
-            _fill_cell(table.cell(r, c), str(cell), bold=False, align=align, col=c)
-    ctx.cursor.place(height)
-    ctx.cursor.advance(_GAP)
+ALIGN = {"left": PP_ALIGN.LEFT, "center": PP_ALIGN.CENTER, "right": PP_ALIGN.RIGHT}
 
 
-_ALIGN = {"left": PP_ALIGN.LEFT, "center": PP_ALIGN.CENTER, "right": PP_ALIGN.RIGHT}
-
-
-def _fill_cell(cell, text: str, *, bold: bool, align, col: int) -> None:
+def fill_cell(cell, text: str, *, bold: bool, align, col: int) -> None:
     # No fills (the theme's tables are booktabs-style — rules, not blocks).
     cell.fill.background()
     p = cell.text_frame.paragraphs[0]
     if align is not None:
-        p.alignment = _ALIGN[align[col]]
+        p.alignment = ALIGN[align[col]]
     # A cell carries the same inline markdown as slide text — including $math$,
     # so a table of formulas is typeset, not printed as LaTeX source.
     runs = parse_inline(text) if text else [Run("")]
-    _apply_runs(p, emphasize(runs, bold=bold), size_pt=theme.BODY_PT * 0.85,
+    apply_runs(p, emphasize(runs, bold=bold), size_pt=theme.BODY_PT * 0.85,
                 color=theme.FG)
 
 
 # --- image / side_image ---
 
 
-def _resolve_image(src: str, ctx: Ctx) -> Path | None:
+def resolve_image(src: str, ctx: Ctx) -> Path | None:
     """The local file to embed for ``src``, rasterizing an SVG on the way."""
     if src.startswith(("http://", "https://")):
         return None
-    if not src.lower().endswith(_EMBEDDABLE_EXTS):
+    if not src.lower().endswith(EMBEDDABLE_EXTS):
         return None
     path = model.resolve_asset(src, ctx.asset_root, ctx.borrowed)
     if not path.exists():
@@ -867,11 +487,11 @@ def _resolve_image(src: str, ctx: Ctx) -> Path | None:
         return path
     png = ctx.rasterizer.png(path) if ctx.rasterizer else None
     if png is None:
-        _warn_svg_skipped(path, ctx)
+        warn_svg_skipped(path, ctx)
     return png
 
 
-def _warn_svg_skipped(path: Path, ctx: Ctx) -> None:
+def warn_svg_skipped(path: Path, ctx: Ctx) -> None:
     reason = (
         f"no SVG renderer found — {rasterize.BACKEND_HINT}"
         if ctx.rasterizer is None or ctx.rasterizer.backend is None
@@ -880,36 +500,11 @@ def _warn_svg_skipped(path: Path, ctx: Ctx) -> None:
     print(f"lecturekit: skipping {path} in PPTX: {reason}", file=sys.stderr)
 
 
-def _image(block, ctx: Ctx) -> None:
-    image = block.content
-    path = _resolve_image(image["src"], ctx)
-    if path is not None:
-        pic = ctx.slide.shapes.add_picture(
-            str(path), ctx.layout.content_left, ctx.cursor.top
-        )
-        # Fit the picture into the content width and the leftover vertical space
-        # (the viewer's max-width/max-height:100%), reserving room for a caption.
-        caption_reserve = Emu(Pt(theme.CAPTION_PT * 1.4)) + _GAP if image.get("caption") else 0
-        max_h = max(Emu(Pt(theme.BODY_PT)), ctx.cursor.remaining() - caption_reserve)
-        requested = _requested_image_size(image, pic.width, pic.height, ctx.layout)
-        if requested is not None:
-            pic.width, pic.height = requested
-        pic.width, pic.height = fit_within(
-            pic.width, pic.height, ctx.layout.content_width, max_h
-        )
-        # center horizontally within the content box
-        pic.left = ctx.layout.content_left + (ctx.layout.content_width - pic.width) // 2
-        ctx.cursor.place(pic.height)
-        ctx.cursor.advance(_GAP)
-    if image.get("caption"):
-        _caption(image["caption"], image.get("caption_align") or "center", ctx)
-
-
-def _requested_image_size(image: dict, natural_w: int, natural_h: int,
+def requested_image_size(image: dict, natural_w: int, natural_h: int,
                           layout: Layout) -> tuple[int, int] | None:
     """Resolve the DSL's explicit px/% image size while preserving aspect ratio."""
-    target_w = _size_to_emu(image.get("width"), layout.width)
-    target_h = _size_to_emu(image.get("height"), layout.height)
+    target_w = size_to_emu(image.get("width"), layout.width)
+    target_h = size_to_emu(image.get("height"), layout.height)
     if target_w is None and target_h is None:
         return None
     scales = []
@@ -921,7 +516,7 @@ def _requested_image_size(image: dict, natural_w: int, natural_h: int,
     return round(natural_w * scale), round(natural_h * scale)
 
 
-def _size_to_emu(value, whole: int) -> int | None:
+def size_to_emu(value, whole: int) -> int | None:
     if value is None:
         return None
     if isinstance(value, int):
@@ -934,12 +529,12 @@ def _size_to_emu(value, whole: int) -> int | None:
     return None
 
 
-def _side_column(block, layout: Layout) -> tuple[int, int]:
+def side_column(block, layout: Layout) -> tuple[int, int]:
     """Left edge and width (EMU) of a ``side_image``'s column.
 
     Without a width the column takes half the slide.
     """
-    width = _size_to_emu(block.content.get("width") or "50%", layout.width)
+    width = size_to_emu(block.content.get("width") or "50%", layout.width)
     width = min(width or layout.width // 2, layout.content_width)
     left = 0 if block.content.get("side") == "left" else layout.width - width
     return left, width
@@ -953,7 +548,7 @@ def side_layout(sides: list, layout: Layout) -> Layout:
     applies, keeps the slide's width. The first ``side_image`` sets the side
     and the width.
     """
-    left, width = _side_column(sides[0], layout)
+    left, width = side_column(sides[0], layout)
     return replace(
         layout,
         content_left=layout.content_left + (width if left == 0 else 0),
@@ -964,10 +559,10 @@ def side_layout(sides: list, layout: Layout) -> Layout:
 # A fitted side image keeps the slide's margins (theme `.lk-side:has(> img.lk-side-fit)`):
 # the side padding on the outside, and this far from the text column and from
 # the slide's bottom edge.
-_SIDE_FIT_GAP = 40
+SIDE_FIT_GAP = 40
 
 
-def _fitted(block) -> bool:
+def fitted(block) -> bool:
     return bool({"contain", "fit"} & set(str(block.content.get("alt") or "").split()))
 
 
@@ -988,29 +583,29 @@ def draw_side_images(sides: list, ctx: Ctx, top: int, texts: list = (),
     is the content box's bottom, where the text column's band ends.
 
     ``texts`` are the slide blocks set under the image (``under_side_image``);
-    with any, the column is a stack, see `_draw_side_stack`.
+    with any, the column is a stack, see `draw_side_stack`.
     """
     if texts:
-        _draw_side_stack(sides, texts, ctx, top)
+        draw_side_stack(sides, texts, ctx, top)
         return
     layout = ctx.layout
-    column, width = _side_column(sides[0], layout)
+    column, width = side_column(sides[0], layout)
     bottom = layout.height
-    if any(_fitted(block) for block in sides):
-        pad, gap = layout.content_left, px(_SIDE_FIT_GAP)
+    if any(fitted(block) for block in sides):
+        pad, gap = layout.content_left, px(SIDE_FIT_GAP)
         column = pad if column == 0 else column - gap
         width = max(width - pad + gap, len(sides))
         top = max(top, layout.content_top)
         bottom = bottom - gap if fit_bottom is None else fit_bottom
     cell, height = width // len(sides), bottom - top
     for i, block in enumerate(sides):
-        path = _resolve_image(block.content["src"], ctx)
+        path = resolve_image(block.content["src"], ctx)
         if path is None:
             continue
         left = column + i * cell
         pic = ctx.slide.shapes.add_picture(str(path), left, top)
         w, h = pic.width, pic.height
-        if _fitted(block):
+        if fitted(block):
             scale = min(cell / w, height / h)
             pic.width, pic.height = round(w * scale), round(h * scale)
             pic.left = left + (cell - pic.width) // 2
@@ -1024,7 +619,7 @@ def draw_side_images(sides: list, ctx: Ctx, top: int, texts: list = (),
         pic.width, pic.height = cell, height
 
 
-def _draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
+def draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
     """The image column as a stack: the images across its top, text below.
 
     The theme's ``.lk-side-stack``. The column keeps the slide's margins, as a
@@ -1033,14 +628,14 @@ def _draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
     in the column's width by the ordinary drawers.
     """
     layout = ctx.layout
-    left, width = _side_column(sides[0], layout)
-    width = max(width - layout.content_left + px(_SIDE_FIT_GAP), len(sides))
+    left, width = side_column(sides[0], layout)
+    width = max(width - layout.content_left + px(SIDE_FIT_GAP), len(sides))
     column = (layout.content_left if left == 0
               else layout.width - layout.content_left - width)
     top = max(top, layout.content_top)
     cell, bottom = width // len(sides), top
     for i, block in enumerate(sides):
-        path = _resolve_image(block.content["src"], ctx)
+        path = resolve_image(block.content["src"], ctx)
         if path is None:
             continue
         pic = ctx.slide.shapes.add_picture(str(path), column + i * cell, top)
@@ -1049,45 +644,45 @@ def _draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
     main = ctx.layout, ctx.cursor
     ctx.layout = replace(layout, content_left=column, content_width=width)
     ctx.cursor = Cursor(ctx.layout)
-    ctx.cursor.top = bottom + _GAP
+    ctx.cursor.top = bottom + GAP
     for block in texts:
-        draw_block(block, ctx)
+        block.to_pptx(ctx)
     ctx.layout, ctx.cursor = main
 
 
 def _caption(text: str, align: str, ctx: Ctx) -> None:
     height = estimate_text_height(text, font_pt=theme.CAPTION_PT,
                                   width=ctx.layout.content_width)
-    box, tf = _textbox(ctx, height)
+    box, tf = textbox(ctx, height)
     p = tf.paragraphs[0]
-    p.alignment = _ALIGN.get(align, PP_ALIGN.CENTER)
-    _style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2, italic=True)
+    p.alignment = ALIGN.get(align, PP_ALIGN.CENTER)
+    style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2, italic=True)
     ctx.cursor.place(height)
-    ctx.cursor.advance(_GAP)
+    ctx.cursor.advance(GAP)
 
 
 # --- architecture diagram (layered bands of module boxes) ---
 
 
 # The theme's `.lk-arch*` metrics, in CSS pixels at the diagram's own size.
-_ARCH_FIG_GAP = 6          # figure gap: between bands, and around a chevron
-_ARCH_BAND_PAD_X = 12      # .lk-arch-layer padding
-_ARCH_BAND_PAD_Y = 10
-_ARCH_BAND_GAP = 12        # label gutter to module track
-_ARCH_LABEL_W = 140        # .lk-arch-label flex basis
-_ARCH_MOD_GAP = 8          # .lk-arch-modules gap
-_ARCH_MOD_PAD_X = 10       # .lk-arch-module padding
-_ARCH_MOD_PAD_Y = 8
-_ARCH_MORE_PAD_X = 14      # the dashed "more modules" box is padded wider
-_ARCH_BORDER_PT = 0.75     # the 1px hairline of a band and of a module box
+ARCH_FIG_GAP = 6          # figure gap: between bands, and around a chevron
+ARCH_BAND_PAD_X = 12      # .lk-arch-layer padding
+ARCH_BAND_PAD_Y = 10
+ARCH_BAND_GAP = 12        # label gutter to module track
+ARCH_LABEL_W = 140        # .lk-arch-label flex basis
+ARCH_MOD_GAP = 8          # .lk-arch-modules gap
+ARCH_MOD_PAD_X = 10       # .lk-arch-module padding
+ARCH_MOD_PAD_Y = 8
+ARCH_MORE_PAD_X = 14      # the dashed "more modules" box is padded wider
+ARCH_BORDER_PT = 0.75     # the 1px hairline of a band and of a module box
 
 # A diagram taller than the room left is drawn smaller, but only this far: past
 # it the module labels stop being readable from the back of a lecture hall.
-_ARCH_MIN_SCALE = 0.55
+ARCH_MIN_SCALE = 0.55
 
 
 @dataclass
-class _ArchMetrics:
+class ArchMetrics:
     """The architecture metrics at one scale: ``size`` in points, rest in EMU."""
 
     size: float
@@ -1102,23 +697,23 @@ class _ArchMetrics:
     more_pad_x: int
 
     @classmethod
-    def at(cls, scale: float) -> "_ArchMetrics":
+    def at(cls, scale: float) -> "ArchMetrics":
         return cls(
             size=theme.ARCH_PT * scale,
-            fig_gap=px(_ARCH_FIG_GAP * scale),
-            band_pad_x=px(_ARCH_BAND_PAD_X * scale),
-            band_pad_y=px(_ARCH_BAND_PAD_Y * scale),
-            band_gap=px(_ARCH_BAND_GAP * scale),
-            label_w=px(_ARCH_LABEL_W * scale),
-            mod_gap=px(_ARCH_MOD_GAP * scale),
-            mod_pad_x=px(_ARCH_MOD_PAD_X * scale),
-            mod_pad_y=px(_ARCH_MOD_PAD_Y * scale),
-            more_pad_x=px(_ARCH_MORE_PAD_X * scale),
+            fig_gap=px(ARCH_FIG_GAP * scale),
+            band_pad_x=px(ARCH_BAND_PAD_X * scale),
+            band_pad_y=px(ARCH_BAND_PAD_Y * scale),
+            band_gap=px(ARCH_BAND_GAP * scale),
+            label_w=px(ARCH_LABEL_W * scale),
+            mod_gap=px(ARCH_MOD_GAP * scale),
+            mod_pad_x=px(ARCH_MOD_PAD_X * scale),
+            mod_pad_y=px(ARCH_MOD_PAD_Y * scale),
+            more_pad_x=px(ARCH_MORE_PAD_X * scale),
         )
 
 
-def _arch_module_widths(modules: list[str], track: int,
-                        m: _ArchMetrics) -> list[int]:
+def arch_module_widths(modules: list[str], track: int,
+                        m: ArchMetrics) -> list[int]:
     """Split a layer's module track between its boxes.
 
     Follows the theme's flex bases: a `…` box hugs its own text
@@ -1135,8 +730,8 @@ def _arch_module_widths(modules: list[str], track: int,
     return [hug.get(i, each) for i in range(len(modules))]
 
 
-def _arch_layout(diagram: dict, ctx: Ctx,
-                 m: _ArchMetrics) -> tuple[int, list[dict]]:
+def arch_layout(diagram: dict, ctx: Ctx,
+                 m: ArchMetrics) -> tuple[int, list[dict]]:
     """Measure the diagram at ``m``: total height, then one entry per band.
 
     Every width comes from the content column, so only the heights depend on the
@@ -1150,7 +745,7 @@ def _arch_layout(diagram: dict, ctx: Ctx,
         if title:
             track -= m.band_gap
         modules = layer["modules"]
-        widths = _arch_module_widths(
+        widths = arch_module_widths(
             modules, track - m.mod_gap * (len(modules) - 1), m
         )
         module_height = 2 * m.mod_pad_y + max(
@@ -1175,53 +770,7 @@ def _arch_layout(diagram: dict, ctx: Ctx,
     return height, bands
 
 
-def redraw_architecture(block, ctx: Ctx, top: int, max_height: int) -> int:
-    """Draw an architecture block again at ``top``, within ``max_height``.
-
-    Blocks are drawn in one pass, so a diagram takes its natural size before the
-    blocks below it exist. This is what the renderer calls when that left the
-    page overflowing; it returns the height the diagram took the second time.
-    """
-    ctx.cursor.top = top
-    _architecture(block, ctx, ceiling=max_height)
-    return ctx.cursor.top - top
-
-
-def _architecture(block, ctx: Ctx, *, ceiling: int | None = None) -> None:
-    """Stacked layer bands, each a label gutter beside a row of module boxes.
-
-    The viewer hands this to flexbox; here every width is computed from the
-    content column and every height estimated from the text. A diagram that
-    would not fit the room left on the page — or a ``ceiling`` the renderer
-    imposes, once it knows what the blocks below it need — is measured again at
-    a smaller scale rather than running off the slide.
-    """
-    diagram = block.content
-    caption = diagram.get("caption")
-    reserve = Emu(Pt(theme.CAPTION_PT * LINE_HEIGHT)) + _GAP if caption else 0
-    m = _ArchMetrics.at(1.0)
-    height, bands = _arch_layout(diagram, ctx, m)
-    room = ctx.cursor.remaining() if ceiling is None else min(ceiling, ctx.cursor.remaining())
-    budget = room - reserve
-    if height > budget > 0:
-        m = _ArchMetrics.at(max(_ARCH_MIN_SCALE, budget / height))
-        height, bands = _arch_layout(diagram, ctx, m)
-
-    glyph = model.ARCH_FLOW_GLYPH.get(diagram.get("flow"), "")
-    top = ctx.cursor.place(height)
-    for i, (layer, band) in enumerate(zip(diagram["layers"], bands)):
-        if i:
-            top += m.fig_gap
-            if glyph:
-                top += _arch_flow(glyph, top, m, ctx) + m.fig_gap
-        _arch_band(layer, band, top, m, ctx)
-        top += band["height"]
-    ctx.cursor.advance(_GAP)
-    if caption:
-        _caption(caption, "center", ctx)
-
-
-def _arch_flow(glyph: str, top: int, m: _ArchMetrics, ctx: Ctx) -> int:
+def arch_flow(glyph: str, top: int, m: ArchMetrics, ctx: Ctx) -> int:
     """The direction chevron between two bands; returns the height it took."""
     height = Emu(Pt(m.size))
     box = ctx.slide.shapes.add_textbox(
@@ -1233,17 +782,17 @@ def _arch_flow(glyph: str, top: int, m: _ArchMetrics, ctx: Ctx) -> int:
     p = tf.paragraphs[0]
     p.alignment = PP_ALIGN.CENTER
     p.line_spacing = Pt(m.size)     # the theme's line-height: 1
-    _style_run(p.add_run(), glyph, size_pt=m.size, color=theme.ACCENT1)
+    style_run(p.add_run(), glyph, size_pt=m.size, color=theme.ACCENT1)
     return height
 
 
-def _arch_band(layer: dict, band: dict, top: int, m: _ArchMetrics,
+def arch_band(layer: dict, band: dict, top: int, m: ArchMetrics,
                ctx: Ctx) -> None:
     """One layer: the tinted band, its bold label, and its module boxes."""
     shape = _shape(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, ctx.layout.content_left,
                    top, ctx.layout.content_width, band["height"])
-    _solid(shape, theme.LT2)
-    _line(shape, theme.BOX_BORDER, _ARCH_BORDER_PT)
+    solid(shape, theme.LT2)
+    _line(shape, theme.BOX_BORDER, ARCH_BORDER_PT)
     left = ctx.layout.content_left + m.band_pad_x
     title = layer.get("title")
     if title:
@@ -1256,26 +805,26 @@ def _arch_band(layer: dict, band: dict, top: int, m: _ArchMetrics,
         tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
         tf.vertical_anchor = MSO_ANCHOR.MIDDLE
         p = tf.paragraphs[0]
-        _set_line_spacing(p, m.size)
-        _style_run(p.add_run(), title, size_pt=m.size, color=theme.FG, bold=True)
+        set_line_spacing(p, m.size)
+        style_run(p.add_run(), title, size_pt=m.size, color=theme.FG, bold=True)
         left += band["gutter"] + m.band_gap
     module_top = top + (band["height"] - band["module_height"]) // 2
     for module, width in zip(layer["modules"], band["widths"]):
-        _arch_module(module, left, module_top, width, band["module_height"],
+        arch_module(module, left, module_top, width, band["module_height"],
                      m, ctx)
         left += width + m.mod_gap
 
 
-def _arch_module(text: str, left: int, top: int, width: int, height: int,
-                 m: _ArchMetrics, ctx: Ctx) -> None:
+def arch_module(text: str, left: int, top: int, width: int, height: int,
+                 m: ArchMetrics, ctx: Ctx) -> None:
     """One module box: white and solid, or faded and dashed for `…`."""
     more = text == model.ARCH_ELLIPSIS
     shape = _shape(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
     if more:
         shape.fill.background()
     else:
-        _solid(shape, theme.BG)
-    _line(shape, theme.BOX_BORDER, _ARCH_BORDER_PT)
+        solid(shape, theme.BG)
+    _line(shape, theme.BOX_BORDER, ARCH_BORDER_PT)
     if more:
         shape.line.dash_style = MSO_LINE_DASH_STYLE.DASH
     tf = shape.text_frame
@@ -1285,75 +834,19 @@ def _arch_module(text: str, left: int, top: int, width: int, height: int,
     tf.vertical_anchor = MSO_ANCHOR.MIDDLE
     p = tf.paragraphs[0]
     p.alignment = PP_ALIGN.CENTER
-    _set_line_spacing(p, m.size)
-    _style_run(p.add_run(), text, size_pt=m.size,
+    set_line_spacing(p, m.size)
+    style_run(p.add_run(), text, size_pt=m.size,
                color=theme.DK2 if more else theme.FG)
 
 
 # --- row (side-by-side image figures) ---
 
 
-def _row(block, ctx: Ctx) -> None:
-    """A track of pictures side by side, each under its own share of the width.
-
-    Widths follow the theme's flex bases: a sized item takes its width and the
-    unsized ones split what is left. Items are top-aligned and the track is
-    centered, so pictures of differing heights line up at their tops and each
-    caption sits directly under its own picture.
-    """
-    content = block.content
-    items = content["items"]
-    gap = Emu(Pt(theme.BODY_PT * 1.2))     # .lk-row-track gap: 1.2em
-    caption = content.get("caption")
-    reserve = Emu(Pt(theme.CAPTION_PT * LINE_HEIGHT)) + _GAP if caption else 0
-    max_height = max(Emu(Pt(theme.BODY_PT)), ctx.cursor.remaining() - reserve)
-    widths = _row_widths(items, ctx.layout.content_width - gap * (len(items) - 1),
-                         ctx.layout)
-
-    # Pictures land at their natural size, so each has to be added before its
-    # final width is known; the track can only be centered once all are placed.
-    top = ctx.cursor.top
-    placed = []
-    for item, width in zip(items, widths):
-        path = _resolve_image(item["src"], ctx)
-        if path is None:
-            continue
-        pic = ctx.slide.shapes.add_picture(str(path), ctx.layout.content_left, top)
-        requested = _requested_image_size(item, pic.width, pic.height, ctx.layout)
-        if requested is not None:
-            pic.width, pic.height = requested
-        item_reserve = (
-            Emu(Pt(theme.CAPTION_PT * LINE_HEIGHT)) + _GAP
-            if item.get("caption") else 0
-        )
-        pic.width, pic.height = fit_within(
-            pic.width, pic.height, width, max(Emu(Pt(1)), max_height - item_reserve)
-        )
-        placed.append((pic, item))
-    if not placed:
-        return
-
-    used = sum(pic.width for pic, _ in placed) + gap * (len(placed) - 1)
-    left = ctx.layout.content_left + (ctx.layout.content_width - used) // 2
-    height = 0
-    for pic, item in placed:
-        pic.left, pic.top = left, top
-        left += pic.width + gap
-        below = pic.height
-        if item.get("caption"):
-            below += _row_caption(item["caption"], pic, ctx)
-        height = max(height, below)
-    ctx.cursor.place(height)
-    ctx.cursor.advance(_GAP)
-    if caption:
-        _caption(caption, "center", ctx)
-
-
-def _row_widths(items: list[dict], track: int, layout: Layout) -> list[int]:
+def row_widths(items: list[dict], track: int, layout: Layout) -> list[int]:
     """Each item's share of the track: sized items first, the rest split evenly."""
     sized = {}
     for i, item in enumerate(items):
-        width = _size_to_emu(item.get("width"), layout.width)
+        width = size_to_emu(item.get("width"), layout.width)
         if width is not None:
             sized[i] = width
     shared = len(items) - len(sized)
@@ -1361,20 +854,20 @@ def _row_widths(items: list[dict], track: int, layout: Layout) -> list[int]:
     return [sized.get(i, each) for i in range(len(items))]
 
 
-def _row_caption(text: str, pic, ctx: Ctx) -> int:
+def row_caption(text: str, pic, ctx: Ctx) -> int:
     """One item's caption, centered under its picture; returns the height used."""
     height = estimate_text_height(text, font_pt=theme.CAPTION_PT, width=pic.width)
     box = ctx.slide.shapes.add_textbox(
-        pic.left, pic.top + pic.height + _GAP, pic.width, height
+        pic.left, pic.top + pic.height + GAP, pic.width, height
     )
     tf = box.text_frame
     tf.word_wrap = True
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     p = tf.paragraphs[0]
     p.alignment = PP_ALIGN.CENTER
-    _style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2,
+    style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2,
                italic=True)
-    return _GAP + height
+    return GAP + height
 
 
 # --- footnotes (pinned bottom-left; drawn by the renderer after the blocks) ---
@@ -1393,21 +886,5 @@ def draw_footnotes(texts: list[str], ctx: Ctx) -> None:
     tf.word_wrap = True
     for i, text in enumerate(texts, 1):
         p = tf.paragraphs[0] if i == 1 else tf.add_paragraph()
-        _style_run(p.add_run(), f"{i} ", size_pt=size, color=theme.ACCENT1)
-        _apply_runs(p, parse_markdown(text)[0].runs, size_pt=size, color=theme.DK2)
-
-
-_DRAWERS = {
-    "slide": _slide,
-    "code": _code,
-    "demo": _demo,
-    "link": _link,
-    "aside": _aside,
-    "highlight": _highlight,
-    "sidenote": _sidenote,
-    "table": _table,
-    "image": _image,
-    "architecture": _architecture,
-    "row": _row,
-    "columns": _columns,
-}
+        style_run(p.add_run(), f"{i} ", size_pt=size, color=theme.ACCENT1)
+        apply_runs(p, parse_markdown(text)[0].runs, size_pt=size, color=theme.DK2)

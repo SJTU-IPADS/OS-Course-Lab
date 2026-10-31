@@ -4,7 +4,9 @@ from pathlib import Path
 
 from lecturekit import model
 from lecturekit.renderers.latex.assets import AssetCopier
-from lecturekit.renderers.latex.blocks import LATEX_KINDS, Ctx, emit_block, emit_news
+from lecturekit.renderers.latex.blocks import Ctx, emit_block, emit_news
+
+LATEX_KINDS = model.kinds_drawn_by("latex")
 
 
 def image_content(**kw):

@@ -28,7 +28,7 @@ while IFS=$'\t' read -r dir lang; do
   bundle=$work/$name
   echo "build-pdfs: $dir${lang:+ ($lang)}" >&2
   if python3 -m lecturekit.cli render "$dir" ${lang:+--lang "$lang"} \
-      --out "$bundle" --pdf >&2; then
+      --out "$bundle" --to pdf >&2; then
     pdf=$(find "$bundle" -maxdepth 1 -name '*.pdf' | head -n 1)
     if [ -n "$pdf" ] && mv "$pdf" "$out/$name.pdf"; then
       printf '%s\n' "$out/$name.pdf"

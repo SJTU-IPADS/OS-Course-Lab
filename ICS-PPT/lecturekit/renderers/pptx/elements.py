@@ -12,7 +12,7 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.enum.text import PP_ALIGN
 
 from lecturekit import model, tokens
-from .blocks import Ctx, draw_block
+from .blocks import Ctx
 from .layout import Cursor, estimate_text_width, px
 from . import theme
 
@@ -68,8 +68,8 @@ def _hug_text(shapes):
 
 
 def _width(node, available):
-    if isinstance(node, model.Block) and node.kind == "image":
-        value = node.content.get("width")
+    if isinstance(node, model.Block):
+        value = node.row_basis()
         if value and value.endswith("px"):
             return px(float(value[:-2]))
         if value and value.endswith("%"):
@@ -96,7 +96,7 @@ def draw_elements(elements, ctx: Ctx, *, inherited=(None, None), held_shapes=Non
         top = ctx.cursor.top
         halign, valign = model.resolve_align(element, inherited)
         if isinstance(element, model.Block):
-            draw_block(element, ctx)
+            element.to_pptx(ctx)
             shapes = list(ctx.slide.shapes)[before:]
             if halign is not None:
                 _hug_text(shapes)
@@ -129,8 +129,11 @@ def _draw_row(row, ctx, *, inherited, held_shapes=None, page=None):
     unsized = widths.count(None)
     # As in CSS flex-shrink, fixed requests fit the row when they exceed it.
     scale = min(1, available / max(1, fixed))
+    shares = model.row_shares(row)
     widths = [max(1, round(w * scale)) if w is not None
-              else max(1, (available - fixed) // max(1, unsized)) for w in widths]
+              else max(1, round((available - fixed) * shares[i])) if shares[i] is not None
+              else max(1, (available - fixed) // max(1, unsized))
+              for i, w in enumerate(widths)]
     left = layout.content_left
     groups = []
     used = []

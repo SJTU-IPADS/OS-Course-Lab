@@ -138,9 +138,50 @@
   color: #dfe6ec;
 }
 
+/* Save and Reset, when the file can be edited. Beside A− and A+, on the left. */
+.lk-file-acts {
+  display: flex;
+  flex: none;
+  gap: 0.3em;
+}
+
+.lk-file-acts[hidden] {
+  display: none;
+}
+
+.lk-file-act {
+  padding: 0.05em 0.7em;
+  border: 1px solid #2c4a63;
+  border-radius: 5px;
+  background: #1a3247;
+  color: #8fd3ff;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.lk-file-act[data-act="reset"] {
+  border-color: #263039;
+  background: #141c23;
+  color: #9fb3c2;
+}
+
+.lk-file-act:hover:not(:disabled) {
+  border-color: #8fd3ff;
+  color: #dfe6ec;
+}
+
+.lk-file-act:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .lk-file-body {
   flex: 1;
   min-height: 0;
+  /* Its own stacking context: the editor's gutter is positioned, and without
+     this it would sit over the grip, which shares its layer, and take the drag. */
+  isolation: isolate;
   overflow: auto;
   padding: 0.7em 0 1em;
 }
@@ -207,4 +248,73 @@
 
 .lk-tok-meta {
   color: #c9a6f0;
+}
+
+/* The editor. A gutter, and a stack of two layers with the same text in the same
+   box: the coloured copy decides the size, the textarea lies over it with its
+   own text transparent. Whatever the two share — font, size, line height, tab
+   width, padding, wrapping — is inherited or stated once, so they cannot drift
+   apart. */
+.lk-file-edit {
+  display: flex;
+  gap: 0.9em;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.lk-file-gutter {
+  flex: none;
+  width: 3.2em;
+  padding-right: 0.6em;
+  text-align: right;
+  white-space: pre;
+  color: #4e6272;
+  user-select: none;
+  /* Stays at the left edge as a long line is scrolled along. */
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #10171d;
+}
+
+.lk-file-stack {
+  position: relative;
+  flex: 1;
+  padding-right: 0.9em;
+}
+
+.lk-file-under,
+.lk-file-input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  tab-size: 4;
+  white-space: pre;
+  word-spacing: normal;
+  overflow-wrap: normal;
+}
+
+.lk-file-under {
+  min-height: 100%;
+  pointer-events: none;
+}
+
+.lk-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: transparent;
+  caret-color: #dfe6ec;
+  outline: none;
+}
+
+.lk-file-input::selection {
+  background: rgba(143, 211, 255, 0.28);
 }

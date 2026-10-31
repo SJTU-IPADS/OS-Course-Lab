@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Self
 
 from . import bibtex, marks, model, source
+from . import demo as demo_module
 from .autobold import autobold as _autobold
 
 # Absolute path of the lecturekit package, used to tell the framework's own
@@ -479,22 +480,34 @@ class PageBuilder(ElementHandle):
         *,
         halign: str | None = None,
         valign: str | None = None,
+        widths: Iterable[float] | None = None,
     ) -> "FlexHandle":
         """Open a container; every block written inside the ``with`` is its child.
 
         ``direction`` is "column" (children top to bottom) or "row" (side by
         side: an image with its own width keeps it, the rest share the row).
         ``halign`` / ``valign`` place the children in the container's box and
-        are their default (docs/layout.md). Containers nest::
+        are their default (docs/layout.md). ``widths``, on a row, is one
+        positive weight per child: the children that carry no width of their
+        own take the row in those proportions instead of equally. Containers
+        nest::
 
             with p.flex("row", valign="middle"):
                 p.slide("the rule")
                 p.image("assets/fig.svg", width_px=420)
+
+            with p.flex("row", widths=[1, 3]):   # a quarter and three quarters
+                p.slide("**Answer:**")
+                p.code("c", "return 0;")
         """
         if direction not in model.FLEX_DIRECTIONS:
             raise model.ValidationError(
                 f"flex direction must be one of {', '.join(model.FLEX_DIRECTIONS)}, "
                 f"got {direction!r}"
+            )
+        if widths is not None and direction != "row":
+            raise model.ValidationError(
+                "widths belongs to a row; a column is as tall as its children"
             )
         self.blocks.append(model.Block(
             kind=model.FLEX_KIND,
@@ -502,7 +515,7 @@ class PageBuilder(ElementHandle):
             halign=None if halign is None else _align(halign, model.HALIGNS, "halign"),
             valign=None if valign is None else _align(valign, model.VALIGNS, "valign"),
         ))
-        return FlexHandle(self, len(self.blocks) - 1)
+        return FlexHandle(self, len(self.blocks) - 1, None if widths is None else list(widths))
 
     def spacer(
         self,
@@ -805,6 +818,8 @@ class PageBuilder(ElementHandle):
         description: str | None = None,
         timeout: float | None = None,
         interactive: bool = False,
+        pwd: str | None = None,
+        show: str | None = None,
         files: Iterable[str] | None = None,
         only: Iterable[str] | None = None,
         except_: Iterable[str] | None = None,
@@ -823,6 +838,21 @@ class PageBuilder(ElementHandle):
         ``interactive=True`` runs the command on a terminal the drawer can
         type into — ``ollama run``, a REPL, anything that reads its input. Left
         off, the command's stdin is ``/dev/null`` and the drawer only shows.
+
+        ``pwd`` is the directory the command starts in, written relative to the
+        lecture's own (``"examples"``), for a demo that would otherwise begin
+        with ``cd examples``. It has to stay under the lecture directory: an
+        absolute path or a ``..`` is refused when the deck is built, and a
+        symlink that leads out is refused when the command runs. It sets where
+        the command starts and nothing more: the command itself is bash.
+
+        ``show`` is the command as the slide and the drawer write it, when that
+        is not what bash is given: a ``| sed ...`` that only trims the output
+        for the page, a token passed as an argument. It has to have the same
+        number of lines as ``command`` — each line of ``command`` is announced
+        in the drawer as bash reaches it, and is announced as the line of
+        ``show`` that stands in its place. The demo's identity and the command
+        that runs are ``command``'s alone.
 
         ``timeout`` is in seconds; ``0`` means the command has no natural end
         (``ollama serve``) and is stopped by hand. Omitted, the session's
@@ -858,6 +888,10 @@ class PageBuilder(ElementHandle):
             content["bold"] = list(bold)
         if interactive:
             content["interactive"] = True
+        if pwd is not None:
+            content["pwd"] = demo_module.normalize_pwd(pwd)
+        if show is not None:
+            content["show"] = show
         return self._block(
             "demo",
             content,
@@ -1172,6 +1206,20 @@ class _BlockElementHandle(ElementHandle):
             )
         self._builder.blocks[self._index] = block.aligned(**{axis: where})
 
+    def footnote(self, text: str) -> Self:
+        """Hang a footnote on this element (a leaf, or a ``flex`` container).
+
+        The element is frozen, so this replaces it in place with a copy that
+        carries one more footnote, and returns ``self`` for
+        ``.footnote(a).footnote(b)``. A container's superscript rides its last
+        leaf.
+        """
+        block = self._builder.blocks[self._index]
+        self._builder.blocks[self._index] = replace(
+            block, footnotes=block.footnotes + (text,)
+        )
+        return self
+
 
 class FlexHandle(_BlockElementHandle):
     """A container opened by :meth:`PageBuilder.flex`, used as a ``with`` block.
@@ -1182,11 +1230,31 @@ class FlexHandle(_BlockElementHandle):
     like any element's.
     """
 
+    def __init__(self, builder: "PageBuilder", index: int,
+                 widths: list[float] | None = None):
+        super().__init__(builder, index)
+        self._widths = widths
+
     def __enter__(self) -> "FlexHandle":
         return self
 
     def __exit__(self, exc_type: object, exc: object, traceback: object) -> None:
-        self._builder.blocks.append(model.Block(kind=model.END_KIND, content=None))
+        blocks = self._builder.blocks
+        if exc_type is None and self._widths is not None:
+            # The direct children: the blocks at depth 0 below the opening one,
+            # a nested container counting once, by its opening block.
+            children, depth = [], 0
+            for i in range(self._index + 1, len(blocks)):
+                if depth == 0:
+                    children.append(i)
+                if blocks[i].kind == model.FLEX_KIND:
+                    depth += 1
+                elif blocks[i].kind == model.END_KIND:
+                    depth -= 1
+            weights = _weights(self._widths, len(children), "flex")
+            for i, weight in zip(children, weights):
+                blocks[i] = replace(blocks[i], weight=weight)
+        blocks.append(model.Block(kind=model.END_KIND, content=None))
         return None
 
 
@@ -1217,13 +1285,6 @@ class BlockHandle(_BlockElementHandle):
     carries one more footnote, and returns ``self`` for ``.footnote(a).footnote(b)``.
     """
 
-    def footnote(self, text: str) -> "BlockHandle":
-        block = self._builder.blocks[self._index]
-        self._builder.blocks[self._index] = replace(
-            block, footnotes=block.footnotes + (text,)
-        )
-        return self
-
     def disable(self) -> "BlockHandle":
         """Turn this block off: it then renders in no target at all.
 
@@ -1248,10 +1309,13 @@ class BlockHandle(_BlockElementHandle):
         keyword on the corresponding builder methods; the last call wins.
         """
         block = self._builder.blocks[self._index]
-        if block.kind not in model.REF_KINDS:
+        if not block.REF:
+            figures = sorted(
+                kind for kind in model.BLOCK_KINDS if model.element_class(kind).REF
+            )
             raise model.ValidationError(
                 f"ref may only be attached to a figure block "
-                f"({', '.join(sorted(model.REF_KINDS))}), got {block.kind!r}"
+                f"({', '.join(figures)}), got {block.kind!r}"
             )
         block.content["ref"] = name
         return self

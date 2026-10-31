@@ -1,6 +1,14 @@
+"""Helpers the elements' ``to_marp`` methods render with.
+
+Each element class (``lecturekit.elements``) says how it reads in the deck;
+this module holds the escaping, footnote markers and side column several of
+them share, and :func:`render_block`, which asks a block to draw itself.
+"""
+
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 
 from lecturekit import filelinks, model, pseudo
 
@@ -17,15 +25,15 @@ def escape_html(text: str) -> str:
 # Inline HTML tags allowed verbatim inside a sidenote body. Everything is
 # escaped first; these are reintroduced afterwards so untrusted-looking input
 # can't smuggle in arbitrary markup.
-_INLINE_TAGS = "u|b|i|em|strong|code|sup|sub|br"
-_TAG_RE = re.compile(rf"&lt;(/?(?:{_INLINE_TAGS})\s*/?)&gt;")
-_CODE_RE = re.compile(r"`([^`]+)`")
-_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)\s]+)\)")
-_BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
-_ITALIC_RE = re.compile(r"\*([^*]+?)\*")
+INLINE_TAGS = "u|b|i|em|strong|code|sup|sub|br"
+TAG_RE = re.compile(rf"&lt;(/?(?:{INLINE_TAGS})\s*/?)&gt;")
+CODE_RE = re.compile(r"`([^`]+)`")
+LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)\s]+)\)")
+BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
+ITALIC_RE = re.compile(r"\*([^*]+?)\*")
 
 
-def _inline_md(text: str) -> str:
+def inline_md(text: str) -> str:
     """Render a small subset of inline markdown inside a sidenote body.
 
     Marp does not parse markdown within raw HTML blocks, and a sidenote is
@@ -35,17 +43,17 @@ def _inline_md(text: str) -> str:
     newlines into line breaks.
     """
     html = escape_html(text)
-    html = _TAG_RE.sub(r"<\1>", html)
-    html = _CODE_RE.sub(r"<code>\1</code>", html)
-    html = _LINK_RE.sub(
+    html = TAG_RE.sub(r"<\1>", html)
+    html = CODE_RE.sub(r"<code>\1</code>", html)
+    html = LINK_RE.sub(
         r'<a href="\2" target="_blank" rel="noopener noreferrer">\1</a>', html
     )
-    html = _BOLD_RE.sub(r"<strong>\1</strong>", html)
-    html = _ITALIC_RE.sub(r"<em>\1</em>", html)
+    html = BOLD_RE.sub(r"<strong>\1</strong>", html)
+    html = ITALIC_RE.sub(r"<em>\1</em>", html)
     return html.replace("\n", "<br>")
 
 
-def _sidenote_logo_html(logo: str | None) -> str:
+def sidenote_logo_html(logo: str | None) -> str:
     if logo is None:
         return '<span class="sidenote-logo">📖</span>'
     if model.logo_is_image(logo):
@@ -53,14 +61,14 @@ def _sidenote_logo_html(logo: str | None) -> str:
     return f'<span class="sidenote-logo">{escape_html(logo)}</span>'
 
 
-def _sidenote_classes(note: dict) -> str:
+def sidenote_classes(note: dict) -> str:
     classes = ["sidenote"]
     if "\n" not in str(note["title"]) and "\n" not in str(note["text"]):
         classes.append("sidenote--single-line")
     return " ".join(classes)
 
 
-def _float_image_html(image: dict) -> str:
+def float_image_html(image: dict) -> str:
     """A right-floated <img> emitted before a slide's text so the text wraps it.
 
     Marp's --html mode passes this through; absent width/height are omitted. The
@@ -81,7 +89,7 @@ def _float_image_html(image: dict) -> str:
     return f'<img src="{src}" alt="{alt}" style="{style};" />'
 
 
-def _file_button(label: str, path: str) -> str:
+def file_button(label: str, path: str) -> str:
     """One ``[label](file:path)`` as the button the live preview arms.
 
     The markup of a demo block's file button, for the same reasons: an id and
@@ -94,67 +102,23 @@ def _file_button(label: str, path: str) -> str:
     return (
         '<button class="lk-text-file" type="button" disabled'
         f' data-lk-source="{source_module.source_id(path)}"'
-        f' aria-label="Show {_inert_md(escape_html(path))}">'
-        f"{_inert_md(_inline_md(label))}</button>"
+        f' aria-label="Show {inert_md(escape_html(path))}">'
+        f"{inert_md(inline_md(label))}</button>"
     )
 
 
-def _file_buttons(text: str) -> str:
+def file_buttons(text: str) -> str:
     """Markdown with each file link drawn as its button. See `lecturekit.filelinks`."""
-    return filelinks.replace(text, _file_button)
-
-
-def _slide(block):
-    content = _file_buttons(str(block.content).strip())
-    image = block.float_image
-    if image and image.get("valign") == "middle":
-        # `valign="middle"`: the text and the image side by side in one flex
-        # row (`.lk-float-middle` in the theme), each centred against the
-        # other. The text gets a wrapper of its own so its paragraphs and list
-        # stay one flex item; the image follows it, on the right.
-        return [
-            '<div class="lk-float lk-float-middle">',
-            '<div class="lk-float-text">',
-            "",
-            content,
-            "",
-            "</div>",
-            _float_image_html(image),
-            "</div>",
-            "",
-        ]
-    if image:
-        # The theme lays the slide body out as a flex column, where a bare
-        # floated <img> becomes a flex item and `float` is ignored (it would
-        # stack above the text). Wrapping the image and the text in one
-        # block-flow container — `.lk-float`, a `flow-root` in the theme —
-        # restores normal flow so the text wraps to the image's left. The float
-        # must precede the text in document order; blank lines around the inner
-        # content keep Marp parsing it as markdown rather than raw HTML.
-        return [
-            '<div class="lk-float">',
-            "",
-            _float_image_html(image),
-            "",
-            content,
-            "",
-            "</div>",
-            "",
-        ]
-    return [content, ""]
-
-
-def _cover(block):
-    return []
+    return filelinks.replace(text, file_button)
 
 
 # `pseudo` token kind -> the class suffix its <span> carries.
-_PSEUDO_CLASSES = {
+PSEUDO_CLASSES = {
     "keyword": "kw", "message": "msg", "state": "st", "comment": "cm",
 }
 
 
-def _pseudo_html(content: str, marked: set[int], tone: str) -> str:
+def pseudo_html(content: str, marked: set[int], tone: str) -> str:
     """Lecture pseudocode as a pre-highlighted ``<pre>``.
 
     Marp highlights a fenced block with highlight.js, which knows no such
@@ -173,7 +137,7 @@ def _pseudo_html(content: str, marked: set[int], tone: str) -> str:
         line = "".join(
             f'<span class="tok-{cls}">{escape_html(text)}</span>' if cls else escape_html(text)
             for cls, text in (
-                (_PSEUDO_CLASSES.get(kind), text) for kind, text in tokens
+                (PSEUDO_CLASSES.get(kind), text) for kind, text in tokens
             )
         )
         if number in marked:
@@ -182,39 +146,23 @@ def _pseudo_html(content: str, marked: set[int], tone: str) -> str:
     return '<pre class="lk-pseudo"><code>%s</code></pre>' % "\n".join(out)
 
 
-def _code(block):
-    language = block.content["language"]
-    content = block.content["content"].strip("\n")
-    if language == "pseudo":
-        marked = set(block.content.get("mark") or ())
-        tone = block.content.get("tone") or model.DEFAULT_HIGHLIGHT_TONE
-        return [_pseudo_html(content, marked, tone), ""]
-    return [f"```{language}", content, "```", ""]
-
-
-def _link(block):
-    label = escape_html(block.content["label"])
-    url = escape_html(block.content["url"])
-    return [f'- <a href="{url}" target="_blank" rel="noopener noreferrer">{label}</a>', ""]
-
-
-def _css_length(value) -> str:
+def css_length(value) -> str:
     """A unit-bearing CSS length string, treating a bare number as pixels."""
     return value if isinstance(value, str) else f"{value}px"
 
 
-def _figure_inner(image: dict) -> tuple[str, str]:
+def figure_inner(image: dict) -> tuple[str, str]:
     """Build ``(img_html, caption_html)`` for one image dict.
 
     Shared by a standalone image (`_image`) and a row item (`_row`) so both
-    render the <img> and caption identically. Caption runs through `_inline_md`
+    render the <img> and caption identically. Caption runs through `inline_md`
     and honors `caption_align`; an absent caption yields an empty string.
     """
     sizes = []
     if image.get("width") is not None:
-        sizes.append(f"width:{_css_length(image['width'])}")
+        sizes.append(f"width:{css_length(image['width'])}")
     if image.get("height") is not None:
-        sizes.append(f"height:{_css_length(image['height'])}")
+        sizes.append(f"height:{css_length(image['height'])}")
     style = f' style="{";".join(sizes)}"' if sizes else ""
     img = (
         f'<img src="{escape_html(image["src"])}" '
@@ -226,12 +174,12 @@ def _figure_inner(image: dict) -> tuple[str, str]:
         align_style = f' style="text-align:{align}"' if align != "center" else ""
         caption = (
             f"<figcaption{align_style}>"
-            f"{_inline_md(image['caption'])}</figcaption>"
+            f"{inline_md(image['caption'])}</figcaption>"
         )
     return img, caption
 
 
-def _figure_classes(image: dict) -> str:
+def figure_classes(image: dict) -> str:
     """The lk-figure class list for an image: framed/sized modifiers."""
     classes = "lk-figure"
     if image.get("framed"):
@@ -241,22 +189,14 @@ def _figure_classes(image: dict) -> str:
     return classes
 
 
-def _image(block):
-    # Emitted as a semantic <figure> (not Marp image markdown) so the caption can
-    # be styled and centered and an opt-in frame can hang off a modifier class.
-    image = block.content
-    img, caption = _figure_inner(image)
-    return [f'<figure class="{_figure_classes(image)}">{img}{caption}</figure>', ""]
-
-
 def _side_image(block):
     # Drawn once per page by `side_column`, under the full-width title.
     return []
 
 
 # Marp's background keywords that ask for the whole image, uncropped.
-_SIDE_FIT = frozenset({"contain", "fit"})
-_SIDE_KEYWORDS = _SIDE_FIT | {"cover"}
+SIDE_FIT = frozenset({"contain", "fit"})
+SIDE_KEYWORDS = SIDE_FIT | {"cover"}
 
 
 def side_width_px(width, slide_width: int) -> int:
@@ -276,7 +216,9 @@ def side_width_px(width, slide_width: int) -> int:
         return slide_width // 2
 
 
-def side_column(sides: list, slide_width: int, texts: list = ()) -> list[str]:
+def side_column(
+    sides: list, slide_width: int, texts: list = (), marks: tuple[int, ...] = ()
+) -> list[str]:
     """The image column of a page with ``side_image`` blocks, on either side.
 
     Marp's split background moves the whole slide into the other column, the
@@ -292,18 +234,25 @@ def side_column(sides: list, slide_width: int, texts: list = ()) -> list[str]:
     is a stack (``lk-side-stack``): the images across its top at the column's
     width, the text below. Each text sits between blank lines so Marp parses it
     as markdown (an HTML block ends at a blank line).
+
+    ``marks`` are the footnote numbers the images carry; their superscript is
+    drawn at the column's inner top corner, next to the picture.
     """
     width = side_width_px(sides[0].content.get("width"), slide_width)
     images = []
     for block in sides:
         words = str(block.content.get("alt") or "").split()
-        fit = ' class="lk-side-fit"' if _SIDE_FIT & set(words) else ""
-        alt = " ".join(word for word in words if word not in _SIDE_KEYWORDS)
+        fit = ' class="lk-side-fit"' if SIDE_FIT & set(words) else ""
+        alt = " ".join(word for word in words if word not in SIDE_KEYWORDS)
         images.append(
             f'<img src="{escape_html(block.content["src"])}" '
             f'alt="{escape_html(alt)}"{fit}>'
         )
     style = ["<style scoped>", f"section {{ --lk-side-width: {width}px; }}", "</style>", ""]
+    if marks:
+        images.append(marker_html(marks).replace(
+            'class="footnote-ref"', 'class="footnote-ref footnote-ref--side"'
+        ))
     if not texts:
         return [f'<figure class="lk-side">{"".join(images)}</figure>', "", *style]
     lines = [
@@ -316,40 +265,16 @@ def side_column(sides: list, slide_width: int, texts: list = ()) -> list[str]:
     return [*lines, "</div>", "", *style]
 
 
-def _aside(block):
-    return [f"> {str(block.content).strip()}", ""]
+ALIGN_DELIMITERS = {"left": ":---", "center": ":---:", "right": "---:"}
 
 
-_ALIGN_DELIMITERS = {"left": ":---", "center": ":---:", "right": "---:"}
-
-
-def _table_cell(text: str) -> str:
+def table_cell(text: str) -> str:
     # Keep cell markdown intact for Marp; only neutralize the two characters
     # that would break the single-line row syntax.
-    return _file_buttons(str(text)).replace("|", "\\|").replace("\n", " ")
+    return file_buttons(str(text)).replace("|", "\\|").replace("\n", " ")
 
 
-def _table(block):
-    table = block.content
-    headers = table["headers"]
-    align = table["align"]
-    if align is None:
-        delimiters = ["---"] * len(headers)
-    else:
-        delimiters = [_ALIGN_DELIMITERS[a] for a in align]
-    lines = [
-        "| " + " | ".join(_table_cell(h) for h in headers) + " |",
-        "| " + " | ".join(delimiters) + " |",
-    ]
-    for row in table["rows"]:
-        lines.append("| " + " | ".join(_table_cell(c) for c in row) + " |")
-    widths = table.get("widths")
-    if widths is None:
-        return [*lines, ""]
-    return _fixed_table(lines, widths)
-
-
-def _fixed_table(lines: list[str], widths: list[float]) -> list[str]:
+def fixed_table(lines: list[str], widths: list[float]) -> list[str]:
     """Wrap GFM table lines so the table spans the slide at given column shares.
 
     A GFM table carries no widths, so the table goes in a div whose class names
@@ -375,73 +300,10 @@ def _fixed_table(lines: list[str], widths: list[float]) -> list[str]:
     ]
 
 
-def _architecture(block):
-    """A layered + modular diagram: stacked layer bands of module boxes.
-
-    Pure HTML styled by the theme (`.lk-arch*`) — layers stack and modules sit
-    side by side via CSS, no measured geometry. A `flow` chevron is emitted
-    between adjacent layers only. Emitted as one line so Marp passes the raw
-    HTML through untouched rather than reparsing it as markdown.
-    """
-    diagram = block.content
-    flow = diagram.get("flow")
-    parts = ['<figure class="lk-arch">']
-    layers = diagram["layers"]
-    for i, layer in enumerate(layers):
-        if i and flow:
-            glyph = model.ARCH_FLOW_GLYPH.get(flow, "")
-            parts.append(
-                f'<div class="lk-arch-flow lk-arch-flow--{flow}">{glyph}</div>'
-            )
-        parts.append('<div class="lk-arch-layer">')
-        title = layer.get("title")
-        if title:
-            parts.append(f'<div class="lk-arch-label">{escape_html(title)}</div>')
-        parts.append('<div class="lk-arch-modules">')
-        for module in layer["modules"]:
-            cls = "lk-arch-module"
-            if module == model.ARCH_ELLIPSIS:
-                cls += " lk-arch-module--more"
-            parts.append(f'<div class="{cls}">{escape_html(module)}</div>')
-        parts.append("</div></div>")
-    if diagram.get("caption"):
-        parts.append(f"<figcaption>{_inline_md(diagram['caption'])}</figcaption>")
-    parts.append("</figure>")
-    return ["".join(parts), ""]
-
-
 SIDENOTE_WHEEL_SIZE = 6
 
 
-def _sidenote(block, index=0):
-    note = block.content
-    title = f'{escape_html(note["title"])}：'
-    if note.get("link"):
-        title_html = (
-            f'<a class="sidenote-title" href="{escape_html(note["link"])}"'
-            f' target="_blank" rel="noopener noreferrer">{title}</a>'
-        )
-    else:
-        title_html = f'<span class="sidenote-title">{title}</span>'
-    logo_html = _sidenote_logo_html(note.get("logo"))
-    # Cycle through the theme's color wheel so several sidenotes on one slide
-    # don't read as a monotonous block. The first (index 0) keeps the bare
-    # markup and inherits --sidenote-1 from .sidenote; later ones pick the next
-    # wheel slot via an inline background (positional CSS can't reach into
-    # Marp's svg>foreignObject>section DOM, so the color is assigned here).
-    style = ""
-    if index:
-        slot = index % SIDENOTE_WHEEL_SIZE + 1
-        style = f' style="background: var(--sidenote-{slot})"'
-    html = (
-        f'<aside class="{_sidenote_classes(note)}"{style}>{logo_html}'
-        f'<p class="sidenote-body">{title_html}{_inline_md(note["text"])}</p>'
-        f'</aside>'
-    )
-    return [html, ""]
-
-
-def _anchor_axes(at: str) -> tuple[str, str]:
+def anchor_axes(at: str) -> tuple[str, str]:
     """Split an anchor name into (horizontal, vertical), each start/center/end."""
     horizontal, vertical = "center", "center"
     for part in at.split("-"):
@@ -460,15 +322,15 @@ def _anchor_axes(at: str) -> tuple[str, str]:
 # the aside's inline style: Marp strips positioning out of inline `style`
 # attributes, but rules in a <style> block are honored — as the theme's working
 # `.footnotes` rule shows.
-_AXIS = {"start": (0.0, 0), "center": (0.5, -50), "end": (1.0, -100)}
+AXIS = {"start": (0.0, 0), "center": (0.5, -50), "end": (1.0, -100)}
 
 
-def _annotation_decls(note, width: int, height: int) -> str:
-    horizontal, vertical = _anchor_axes(note.at)
+def annotation_decls(note, width: int, height: int) -> str:
+    horizontal, vertical = anchor_axes(note.at)
     h = {"left": "start", "right": "end"}.get(horizontal, "center")
     v = {"top": "start", "bottom": "end"}.get(vertical, "center")
-    hf, tx = _AXIS[h]
-    vf, ty = _AXIS[v]
+    hf, tx = AXIS[h]
+    vf, ty = AXIS[v]
     left = round(width * hf) + note.dx
     top = round(height * vf) + note.dy
     return f"left:{left}px; top:{top}px; transform: translate({tx}%, {ty}%);"
@@ -481,72 +343,25 @@ def annotation_markup(note, uid: str, width: int, height: int) -> tuple[str, str
     the returned rule. A bottom-anchored bubble sits at the slide's lower edge,
     so its tail flips up (toward content above) via ``annotation--tail-up``.
     """
-    _, vertical = _anchor_axes(note.at)
+    _, vertical = anchor_axes(note.at)
     extra = " annotation--tail-up" if vertical == "bottom" else ""
     aside = (
         f'<aside class="annotation ann-{uid}{extra}">'
-        f"{_inline_md(note.text)}</aside>"
+        f"{inline_md(note.text)}</aside>"
     )
-    rule = f"section .ann-{uid} {{ {_annotation_decls(note, width, height)} }}"
+    rule = f"section .ann-{uid} {{ {annotation_decls(note, width, height)} }}"
     return aside, rule
 
 
-def _columns(block):
-    """Slide text in side-by-side columns.
-
-    A flex track of `lk-column` divs. Each column's markdown sits between blank
-    lines so Marp parses it as markdown (an HTML block ends at a blank line).
-    Columns share the track evenly; a weighted column carries its share as the
-    flex grow factor.
-    """
-    content = block.content
-    widths = content.get("widths")
-    lines = ['<div class="lk-columns">']
-    for i, text in enumerate(content["items"]):
-        style = f' style="flex-grow:{100 * widths[i]:.2f}"' if widths else ""
-        lines += [
-            f'<div class="lk-column"{style}>', "",
-            _file_buttons(str(text).strip()), "", "</div>",
-        ]
-    lines += ["</div>", ""]
-    return lines
-
-
-def _row(block):
-    """A row of side-by-side image figures.
-
-    One raw-HTML line (like `_architecture`) so Marp passes it through. Each
-    item is an `lk-figure` reusing the standalone-image markup; an unsized item
-    shares the track evenly (`flex:1 1 0`), a sized item takes its width
-    (`flex:0 0 <width>`) and the rest split the remainder. A row-level caption
-    renders as a trailing <figcaption>.
-    """
-    content = block.content
-    parts = ['<figure class="lk-row"><div class="lk-row-track">']
-    for image in content["items"]:
-        img, caption = _figure_inner(image)
-        width = image.get("width")
-        basis = f"flex:0 0 {_css_length(width)}" if width is not None else "flex:1 1 0"
-        parts.append(
-            f'<figure class="{_figure_classes(image)} lk-row-item" '
-            f'style="{basis}">{img}{caption}</figure>'
-        )
-    parts.append("</div>")
-    if content.get("caption"):
-        parts.append(f'<figcaption>{_inline_md(content["caption"])}</figcaption>')
-    parts.append("</figure>")
-    return ["".join(parts), ""]
-
-
 # Math inside a chip: `$$…$$` (a whole row, set in display style) or `$…$`.
-_CHIP_MATH_RE = re.compile(r"\$\$(?P<display>.+?)\$\$|\$(?P<inline>[^$\n]+)\$")
+CHIP_MATH_RE = re.compile(r"\$\$(?P<display>.+?)\$\$|\$(?P<inline>[^$\n]+)\$")
 
 # The characters markdown still reads as markup in text that is already HTML.
-_MD_INERT = {"*": "&#42;", "_": "&#95;", "`": "&#96;", "\\": "&#92;"}
-_MD_ACTIVE_RE = re.compile("[*_`\\\\]")
+MD_INERT = {"*": "&#42;", "_": "&#95;", "`": "&#96;", "\\": "&#92;"}
+MD_ACTIVE_RE = re.compile("[*_`\\\\]")
 
 
-def _inert_md(html: str) -> str:
+def inert_md(html: str) -> str:
     """Neutralize what markdown would still read as markup in rendered HTML.
 
     For HTML that is emitted on a markdown line rather than as a raw HTML block
@@ -555,10 +370,10 @@ def _inert_md(html: str) -> str:
     author asked for. Entities are the safe spelling — they survive inside an
     attribute (a link's href) as well as in text.
     """
-    return _MD_ACTIVE_RE.sub(lambda m: _MD_INERT[m.group()], html)
+    return MD_ACTIVE_RE.sub(lambda m: MD_INERT[m.group()], html)
 
 
-def _chip_math_md(line: str) -> str:
+def chip_math_md(line: str) -> str:
     """One chip row as markdown: the formulas verbatim, everything else inert.
 
     Marp typesets `$…$` while parsing markdown and never looks inside a raw HTML
@@ -571,116 +386,24 @@ def _chip_math_md(line: str) -> str:
     """
     out: list[str] = []
     pos = 0
-    for match in _CHIP_MATH_RE.finditer(line):
+    for match in CHIP_MATH_RE.finditer(line):
         if match.start() > pos:
-            out.append(_inert_md(_inline_md(line[pos:match.start()])))
+            out.append(inert_md(inline_md(line[pos:match.start()])))
         display = match.group("display")
         latex = display if display is not None else match.group("inline")
         prefix = "\\displaystyle " if display is not None else ""
         out.append(f"${prefix}{latex.strip()}$")
         pos = match.end()
     if pos < len(line):
-        out.append(_inert_md(_inline_md(line[pos:])))
+        out.append(inert_md(inline_md(line[pos:])))
     return "".join(out)
 
 
-def _highlight(block):
-    """A centered chip: the outer element centers, the inner <span> is the wash.
-
-    The split is the point — an inline-block span hugs the widest line instead
-    of becoming a full-width banner. `_inline_md` already turns newlines into
-    <br>, so a multi-line highlight grows the same chip taller.
-
-    A chip carrying math swaps the outer <p> for a blocked-out <span>, because
-    Marp renders math while parsing markdown and a line starting with `<p` is a
-    raw HTML block it never parses — a `<span>` with text after it on the line
-    is not, so the row arrives as a paragraph and the formula is typeset. The
-    box is the same one; only the tag it is drawn on differs.
-    """
-    content = block.content
-    lines = model.highlight_lines(content["text"])
-    tone = content["tone"]
-    classes = f"lk-highlight lk-highlight--{tone}"
-    if any(_CHIP_MATH_RE.search(line) for line in lines):
-        body = "<br>".join(_chip_math_md(line) for line in lines)
-        return [f'<span class="{classes}"><span>{body}</span></span>', ""]
-    body = _inline_md("\n".join(lines))
-    return [f'<p class="{classes}"><span>{body}</span></p>', ""]
-
-
-def _demo(block):
-    """A command, drawn as the transcript it is, with a button that runs it.
-
-    The button carries the command's id, never the command — see
-    ``lecturekit.demo`` for why. It ships ``disabled``: a demo is only runnable
-    against a live dev server, so the static deck shows the same block as an
-    inert transcript and ``demo.js`` arms it when a server is actually behind
-    the page.
-
-    Two shapes, because two things get written as demos. A bare one-liner stays
-    a chip on one row, the way it always did; a command with several lines or a
-    recorded output becomes a bordered transcript, so that a page which used to
-    hold a ``p.code(...)`` of the same thing keeps its proportions.
-
-    ``files=`` adds one button per named file beside the run button. They carry
-    an id and not a path, and ship ``disabled``, for the same reasons the run
-    button does — see ``lecturekit.source``.
-    """
-    from lecturekit import demo as demo_module
-
-    content = block.content
-    command = str(content["command"])
-    output = content.get("output")
-    lines = demo_module.prompt_lines(command)
-    block_form = len(lines) > 1 or bool(output)
-    # A blank command is a file button with nothing to run: no play button and
-    # no `$ …` line. The file buttons are the whole of the block.
-    run = ""
-    if command.strip():
-        run = (
-            '<button class="lk-demo-run" type="button" disabled'
-            ' aria-label="Run this demo">▶</button>'
-        )
-    button = run + _demo_files(content.get("files"))
-    name = f'<span class="lk-demo-name">{escape_html(content["name"])}</span>'
-    desc = ""
-    if content.get("description"):
-        desc = f'<span class="lk-demo-desc">{_inline_md(content["description"])}</span>'
-    # `lk-demo-cmd` holds the command lines and nothing else — `demo.js` falls
-    # back on its first line to label a run whose demo has no name.
-    cmd = ""
-    if lines:
-        cmd = f'<code class="lk-demo-cmd">{escape_html(chr(10).join(lines))}</code>'
-    open_tag = (
-        f'<div class="lk-demo" data-lk-demo="{demo_module.demo_id(command)}"'
-        f' data-lk-demo-form="{"block" if block_form else "inline"}">'
-    )
-    if not block_form:
-        return ["".join([open_tag, button, name, cmd, desc, "</div>"]), ""]
-    parts = [open_tag, f'<div class="lk-demo-head">{button}{name}{desc}</div>',
-             f'<pre class="lk-demo-term">{cmd}']
-    if output:
-        # No newline between the two: inside a `pre` that would be a blank row,
-        # and a slide cannot spare one. The gap is CSS's to draw.
-        bold = content.get("bold")
-        # The attribute lets the theme draw the lines `bold=` leaves out lighter,
-        # so the named ones stand out by contrast from both sides.
-        attr = " data-lk-demo-bold" if bold else ""
-        out = _demo_output(str(output), bold)
-        parts.append(f'<code class="lk-demo-out"{attr}>{out}</code>')
-    parts.append("</pre></div>")
-    # The line breaks are written as character references, so the transcript is
-    # one source line. A raw HTML block ends at the first blank line of the
-    # Markdown, and a blank row in the output or in a quoted argument would be
-    # one: Marp would parse the rows after it as a paragraph inside the `pre`.
-    return ["".join(parts).replace("\n", "&#10;"), ""]
-
-
-def _demo_output(output, bold):
+def demo_output(output, bold):
     """The recorded output, escaped, with the lines ``bold=`` names in <strong>.
 
     The numbers count the output with its leading blank lines stripped (see
-    ``model.check_demo``); those lines stay in the text, so a demo without
+    ``Demo.check_content``); those lines stay in the text, so a demo without
     ``bold`` renders exactly as it did before the option existed.
     """
     if not bold:
@@ -693,7 +416,7 @@ def _demo_output(output, bold):
     )
 
 
-def _demo_files(files):
+def demo_files(files):
     """The file buttons of a demo block, or "" when it named none."""
     from lecturekit import source as source_module
 
@@ -708,58 +431,34 @@ def _demo_files(files):
     return "".join(parts)
 
 
-def _bridge(block):
-    """A transition page's centered lines. Plain text — escaped, no inline md."""
-    body = "<br>".join(
-        escape_html(line) for line in str(block.content["text"]).splitlines()
-    )
-    return [f'<div class="lk-bridge-body">{body}</div>', ""]
-
-
-def _spacer(block):
-    px = int(block.content["px"])
-    return [f'<div class="lk-spacer" aria-hidden="true" style="height:{px}px"></div>', ""]
-
-
-BLOCK_RENDERERS = {
-    "cover": _cover,
-    "bridge": _bridge,
-    "slide": _slide,
-    "spacer": _spacer,
-    "highlight": _highlight,
-    "demo": _demo,
-    "code": _code,
-    "link": _link,
-    "image": _image,
-    "side_image": _side_image,
-    "aside": _aside,
-    "sidenote": _sidenote,
-    "table": _table,
-    "architecture": _architecture,
-    "row": _row,
-    "columns": _columns,
-}
+@dataclass
+class MarpCtx:
+    """What a block needs to know about the page it is drawn in."""
+    # How many sidenotes the page drew before this block; the sidenote picks
+    # its position in the margin column from it, and counts itself in.
+    sidenote_index: int = 0
 
 
 def render_block(
     block: model.Block,
     sidenote_index: int = 0,
     footnote_numbers: tuple[int, ...] = (),
+    ctx: MarpCtx | None = None,
 ) -> list[str]:
-    if block.kind == "sidenote":
-        lines = _sidenote(block, sidenote_index)
-    else:
-        fn = BLOCK_RENDERERS.get(block.kind)
-        lines = fn(block) if fn else []
+    """The Marp lines of one block, with its footnote superscript attached.
+
+    A page passes one ``ctx`` for all its blocks; a lone block gets its own.
+    """
+    lines = block.to_marp(ctx or MarpCtx(sidenote_index))
     if footnote_numbers and lines:
-        lines = _append_footnote_marker(lines, footnote_numbers, block.kind)
+        lines = block.footnote_marker(lines, footnote_numbers)
     return lines
 
 
-_LONE_TAG_RE = re.compile(r"<[^>]+>")
+LONE_TAG_RE = re.compile(r"<[^>]+>")
 
 
-def _last_content_index(lines: list[str]) -> int:
+def last_content_index(lines: list[str]) -> int:
     """Index of the last line a footnote marker can attach to inline.
 
     Skips trailing blank lines (renderers leave a trailing '') and lines that
@@ -771,18 +470,16 @@ def _last_content_index(lines: list[str]) -> int:
     """
     for i in range(len(lines) - 1, -1, -1):
         line = lines[i].strip()
-        if line and not _LONE_TAG_RE.fullmatch(line):
+        if line and not LONE_TAG_RE.fullmatch(line):
             return i
     return len(lines) - 1
 
 
-# Blocks rendered as a single raw-HTML <figure> line (image, row, architecture).
-# A marker appended *after* </figure> becomes its own Marp paragraph — a wasted
-# line — so for these the marker is tucked *inside* the figure instead.
-_FIGURE_KINDS = frozenset({"image", "row", "architecture"})
+def marker_html(numbers: tuple[int, ...]) -> str:
+    return f'<sup class="footnote-ref">{", ".join(str(n) for n in numbers)}</sup>'
 
 
-def _place_figure_marker(figure_html: str, marker: str, kind: str) -> str:
+def place_figure_marker(figure_html: str, marker: str, *, inside_image: bool) -> str:
     """Tuck a footnote marker inside a ``<figure>`` so it claims no extra line.
 
     A figure with its own trailing ``<figcaption>`` gets the marker on that
@@ -798,7 +495,7 @@ def _place_figure_marker(figure_html: str, marker: str, kind: str) -> str:
     corner = marker.replace(
         'class="footnote-ref"', 'class="footnote-ref footnote-ref--corner"'
     )
-    if kind == "image":
+    if inside_image:
         open_end = figure_html.index(">") + 1
         open_tag, body = figure_html[:open_end], figure_html[open_end:]
         img = body[: -len("</figure>")]
@@ -809,41 +506,59 @@ def _place_figure_marker(figure_html: str, marker: str, kind: str) -> str:
     return f"{inner}{corner}</figure>"
 
 
-def _append_footnote_marker(
-    lines: list[str], numbers: tuple[int, ...], kind: str
-) -> list[str]:
-    marker = (
-        f'<sup class="footnote-ref">{", ".join(str(n) for n in numbers)}</sup>'
-    )
+def mark_text_end(lines: list[str], numbers: tuple[int, ...]) -> list[str]:
+    """Text blocks: the marker rides the end of the last line.
+
+    It is glued on with a word joiner and laid out at zero width (`--hang`), so
+    a line that already fills the column cannot break before it and drop a lone
+    number onto the next line — it hangs into the slide's right padding
+    instead.
+    """
     lines = list(lines)
-    idx = _last_content_index(lines)
-    if kind in _FIGURE_KINDS:
-        lines[idx] = _place_figure_marker(lines[idx], marker, kind)
-    elif kind in ("code", "table"):
-        # The last content line is a syntactic row (closing ``` fence or a
-        # `| … |` table row); appending inline would break it, so the marker is
-        # emitted just after the block. A zero-height, right-aligned wrapper
-        # parks it on the block's bottom-right corner, so — as on a figure — it
-        # claims no line of its own.
-        lines.insert(idx + 1, f'<div class="footnote-ref-tuck">{marker}</div>')
-    elif kind == "highlight":
-        # One element on one line; a marker appended after it would become its
-        # own Marp paragraph. Tuck it inside, just outside the chip's <span> —
-        # so after the inner </span>, before the outer tag closes. That tag is a
-        # <p>, or a <span> on the math form of the chip (see `_highlight`).
-        tail = "</span>" if lines[idx].endswith("</span></span>") else "</p>"
-        head = lines[idx][: -len(tail)]
-        lines[idx] = f"{head} {marker}{tail}"
-    else:
-        # Text blocks: the marker rides the end of the last line. It is glued on
-        # with a word joiner and laid out at zero width (`--hang`), so a line
-        # that already fills the column cannot break before it and drop a lone
-        # number onto the next line — it hangs into the slide's right padding
-        # instead.
-        hang = marker.replace(
-            'class="footnote-ref"', 'class="footnote-ref footnote-ref--hang"'
-        )
-        lines[idx] = f"{lines[idx]}&#8288;{hang}"
+    idx = last_content_index(lines)
+    hang = marker_html(numbers).replace(
+        'class="footnote-ref"', 'class="footnote-ref footnote-ref--hang"'
+    )
+    lines[idx] = f"{lines[idx]}&#8288;{hang}"
+    return lines
+
+
+def mark_figure(
+    lines: list[str], numbers: tuple[int, ...], *, inside_image: bool = False
+) -> list[str]:
+    """A block rendered as one raw-HTML ``<figure>`` line (image, row,
+    architecture). A marker appended *after* ``</figure>`` becomes its own Marp
+    paragraph — a wasted line — so it is tucked *inside* the figure."""
+    lines = list(lines)
+    idx = last_content_index(lines)
+    lines[idx] = place_figure_marker(
+        lines[idx], marker_html(numbers), inside_image=inside_image
+    )
+    return lines
+
+
+def mark_tucked(lines: list[str], numbers: tuple[int, ...]) -> list[str]:
+    """Code and tables: the last content line is a syntactic row (closing ```
+    fence or a `| … |` table row); appending inline would break it, so the
+    marker is emitted just after the block. A zero-height, right-aligned
+    wrapper parks it on the block's bottom-right corner, so — as on a figure —
+    it claims no line of its own."""
+    lines = list(lines)
+    idx = last_content_index(lines)
+    lines.insert(idx + 1, f'<div class="footnote-ref-tuck">{marker_html(numbers)}</div>')
+    return lines
+
+
+def mark_highlight(lines: list[str], numbers: tuple[int, ...]) -> list[str]:
+    """One element on one line; a marker appended after it would become its own
+    Marp paragraph. Tuck it inside, just outside the chip's <span> — so after
+    the inner </span>, before the outer tag closes. That tag is a <p>, or a
+    <span> on the math form of the chip (see `Highlight.to_marp`)."""
+    lines = list(lines)
+    idx = last_content_index(lines)
+    tail = "</span>" if lines[idx].endswith("</span></span>") else "</p>"
+    head = lines[idx][: -len(tail)]
+    lines[idx] = f"{head} {marker_html(numbers)}{tail}"
     return lines
 
 
@@ -851,7 +566,7 @@ def render_footnotes(texts: list[str]) -> str:
     """A bottom-left aside listing a page's footnotes, numbered to match markers."""
     items = "".join(
         f'<p class="footnote-item">'
-        f'<sup class="footnote-ref">{i}</sup> {_inline_md(text)}</p>'
+        f'<sup class="footnote-ref">{i}</sup> {inline_md(text)}</p>'
         for i, text in enumerate(texts, 1)
     )
     return f'<aside class="footnotes">{items}</aside>'

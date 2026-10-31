@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from lecturekit import Lecture
+from lecturekit import Lecture, model
 from lecturekit.renderers.viewer import (
     StaticViewerRenderer,
     build_marp_markdown,
@@ -433,9 +433,9 @@ class StaticViewerRendererTest(unittest.TestCase):
         self.assertNotIn("</p> <sup", md)
 
     def test_highlight_claims_a_reveal_step(self):
-        from lecturekit.renderers.viewer import _REVEAL_SKIP
-
-        self.assertNotIn("highlight", _REVEAL_SKIP)
+        self.assertTrue(model.element_class("highlight").REVEAL_STEP)
+        for kind in ("side_image", "spacer", "flex", "end"):
+            self.assertFalse(model.element_class(kind).REVEAL_STEP, kind)
 
     def test_viewer_js_maps_pages_one_to_one(self):
         with tempfile.TemporaryDirectory() as tmp:

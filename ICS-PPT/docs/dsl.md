@@ -212,10 +212,28 @@ with p.flex("row", valign="middle"):
     p.image("assets/figure.svg", width_px=420)
 ```
 
-`p.flex(direction="column", *, halign=None, valign=None)` is a context manager;
-containers may nest. A column stacks its children, and a row shares its width
-between them, keeping explicitly sized images at their requested width. A
-child's own alignment overrides its container's. Containers have no visibility
+`p.flex(direction="column", *, halign=None, valign=None, widths=None)` is a
+context manager; containers may nest. A column stacks its children, and a row
+shares its width between them, keeping explicitly sized images at their
+requested width. A child's own alignment overrides its container's.
+
+A row shares its width equally unless `widths` gives one positive weight per
+child, in order (a nested container is one child). The children take the
+width the gutters leave in those proportions, so `widths=[1, 9]` gives a tenth
+and nine tenths:
+
+```python
+with p.flex("row", widths=[1, 9]):
+    p.slide("**Answer:**")
+    p.code("c", "int main(void) {\n    return 0;\n}")
+```
+
+A child that is written to a target another renderer does not draw (an
+`only=` filter) leaves the row, and the others keep their proportions among
+themselves. `widths` belongs to a row, since a column is as tall as its
+children, and a row that carries `widths` holds no image with its own
+`width_px` / `width_pct`: that image already says how wide it is. Either is a
+`ValidationError`, as is a list whose length is not the number of children. Containers have no visibility
 filters, translation keys or annotations; those belong to their content.
 Side images stay in the page's side column and follow its vertical alignment.
 For the box model, renderer behaviour and the mapping of older layout calls,
@@ -354,7 +372,7 @@ handle for chaining (see [Footnotes](#footnotes) and
 | `p.spacer(px)` | `spacer` | A fixed vertical gap between blocks (see [Spacer](#spacer)). |
 | `p.notes(content)` | `notes` | Speaker notes — emitted as a Marp presenter note (speaker view only), never shown on the slide. |
 | `p.prose(content)` | `prose` | Textbook prose — rendered by the book, never by the deck (see [book.md](book.md)). |
-| `p.demo(name, command, output=…, bold=…, timeout=…, interactive=…, files=…)` | `demo` | A command, shown as a transcript; the deck can [run it and stream the output](usage.md#running-a-demo-from-the-deck), take typed input when it is `interactive=True`, and [show the files it names](usage.md#showing-a-source-file-from-the-deck). |
+| `p.demo(name, command, output=…, bold=…, timeout=…, interactive=…, pwd=…, show=…, files=…)` | `demo` | A command, shown as a transcript; the deck can [run it and stream the output](usage.md#running-a-demo-from-the-deck), take typed input when it is `interactive=True`, and [show the files it names](usage.md#showing-a-source-file-from-the-deck). |
 
 `slide`, `aside`, and the inline `**bold**`/`*italic*`/`` `code` ``/`[label](url)`
 markdown inside cells and callouts pass straight through to the renderer. A
@@ -793,8 +811,8 @@ medium. See [book.md](book.md).
 
 Three cross-cutting controls decide whether a block is rendered:
 
-1. **Renderer block tables.** Each renderer renders only the kinds it knows. The
-   viewer renders `slide`, `columns`, `code`, `link`, `image`, `side_image`, `row`,
+1. **Targets of a kind.** Each element class names the targets that draw it
+   (`TARGETS` in `lecturekit/elements/`). The viewer renders `slide`, `columns`, `code`, `link`, `image`, `side_image`, `row`,
    `architecture`, `sidenote`, `aside`, `highlight`, `demo`, `table`, `spacer`,
    and the `cover` and `bridge` pages. `notes` is emitted into the Marp deck as a
    **presenter note** — an HTML comment the speaker view shows (press `p`) but
@@ -1295,7 +1313,7 @@ claiming one of its own.
 
 ### Demos
 
-`p.demo(name, command, output=None, bold=None, description=None, timeout=None, interactive=False, files=None)`
+`p.demo(name, command, output=None, bold=None, description=None, timeout=None, interactive=False, pwd=None, show=None, files=None)`
 is a command the lecture runs on stage.
 
 ```python
@@ -1347,6 +1365,30 @@ p.demo("对比几种量化", "./quant_compare ext/w-final-norm.bf16",
   Q4_1           1280   5.00   0.022288""",
        bold=[3, 4])
 ```
+
+`pwd=` is the directory the command starts in, relative to the lecture
+directory: `p.demo("编译", "gcc -O2 demo.c -o demo && ./demo", pwd="examples")`
+runs in `examples/` and needs no `cd examples` in front. The path has to stay
+under the lecture directory. An absolute path or a `..` is a `ValidationError`
+at build time, and a symlink that leads out of the lecture is refused when the
+command runs. `pwd=` only sets where the command starts. The command is bash and
+can still `cd` anywhere, as before. A demo runs the same command in two
+directories as two demos.
+
+`show=` is the command as the slide writes it, when bash is to be given
+something else: a filter that only trims what the page prints, such as a
+`| sed ...` after a `curl`.
+
+```python
+p.demo("提交 dot.cu", "curl ... @dot.cu $URL | sed '/^#/d;/^$/,$d'",
+       show="curl ... @dot.cu $URL", output=...)
+```
+
+The slide, the PPTX and the book show `show=`; the drawer announces it too, and
+bash runs `command`. `show=` has as many lines as `command` has — the drawer
+writes each line of the command as the line of `show=` that stands in its place
+— and a different number fails the build. The demo's identity is the command's
+alone, so a change to `show=` does not change which demo a button runs.
 
 `timeout=` is in seconds. `timeout=0` says the command has no natural end
 (`ollama serve`) and is stopped by hand — or by turning the page, which stops
@@ -1412,7 +1454,7 @@ the lecture does (`demo.c`, not a path). Like any block it takes `only=` /
 `except_=`, and `.disable()` takes it out of every target — including out of the
 set of commands the deck can run at all.
 
-A demo that works in another directory of the project reaches it through `$LECTUREKIT_ROOT`, the project root: the directory that holds the `lecturekit` package, with `lectures/` beside it. `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"` names the same directory wherever the lecture itself sits; `cd ../mini-cpu` holds only while the two directories are siblings. The quotes keep a root whose path contains a space in one piece. See [Running a demo from the deck](usage.md#running-a-demo-from-the-deck) for how the value is chosen.
+A demo that works in another directory of the project reaches it through `$LECTUREKIT_ROOT`, the project root: the directory that holds the `lecturekit` package, with `lectures/` beside it. `cd "$LECTUREKIT_ROOT/lectures/mini-cpu"` names the same directory wherever the lecture itself sits; `cd ../mini-cpu` holds only while the two directories are siblings. The quotes keep a root whose path contains a space in one piece. See [Running a demo from the deck](usage.md#running-a-demo-from-the-deck) for how the value is chosen. A value the slide must not show (a server token) is not written in the command: the project's git-ignored `.env` supplies it as an environment variable, `$GPU_TOKEN` for instance, described in the same section.
 
 Such a demo names its files from the same root: an entry of `files=` that begins with `/` is relative to the project root, so the directory in the `cd` and the path of each file start alike.
 
@@ -1494,6 +1536,11 @@ bottom-right corner instead. On a text block it rides the end of the last line
 at zero width, so a line that already fills the column keeps its own wrapping
 and the number hangs into the slide's right margin rather than dropping onto a
 line by itself.
+
+Every element takes a footnote, the page's image column and a `p.flex(...)`
+container included. A `side_image` carries its marker at the inner top corner of
+its column, next to the picture. A container carries its marker on its last
+leaf, so the number follows the group the note is about.
 
 ## Annotations (callout bubbles)
 

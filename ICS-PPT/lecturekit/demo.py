@@ -45,8 +45,9 @@ import threading
 import time
 from collections.abc import Iterator
 from dataclasses import dataclass
-from pathlib import Path, PureWindowsPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
+from . import env as env_module
 from . import model
 
 # The keyboard end of an interactive demo, and POSIX only. Windows has none of
@@ -166,9 +167,54 @@ def why_not(spec: "Spec") -> str | None:
     return None
 
 
-def demo_id(command: str) -> str:
-    """The stable identifier for ``command`` — a prefix of its SHA-256."""
-    return hashlib.sha256(command.encode("utf-8")).hexdigest()[:_ID_LENGTH]
+def demo_id(command: str, pwd: str | None = None) -> str:
+    """The stable identifier for ``command`` — a prefix of its SHA-256.
+
+    The same command in another directory is another demo, so a ``pwd`` is part
+    of what is hashed; without one the id is the command's alone.
+    """
+    text = command if not pwd else f"{pwd}\0{command}"
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:_ID_LENGTH]
+
+
+def normalize_pwd(pwd) -> str | None:
+    """Validate a block's ``pwd=`` and return it, or ``None`` when it names none.
+
+    A directory under the lecture's own, written relative to it: no absolute
+    path, no ``..``. Checked when the deck is built, as ``files=`` is, so a
+    mistake is the author's to hear about at build time; `workdir` checks it
+    again against the disk when the command runs.
+    """
+    if pwd is None:
+        return None
+    if not isinstance(pwd, str) or not pwd.strip():
+        raise model.ValidationError("demo pwd must be a non-empty path")
+    pure = PurePosixPath(pwd.strip())
+    if pure.is_absolute() or ".." in pure.parts or PureWindowsPath(pwd).drive:
+        raise model.ValidationError(
+            f"demo pwd must be a directory under the lecture directory, got {pwd!r}"
+        )
+    return pure.as_posix() if pure.parts else None
+
+
+def workdir(lecture_dir: Path, pwd: str | None) -> Path | None:
+    """The directory a demo runs in, or ``None`` if ``pwd`` leaves the lecture.
+
+    ``lecture_dir`` itself without a ``pwd``. With one, the directory has to
+    exist and, once every symlink is resolved, lie under ``lecture_dir``: the
+    path was checked at build time, and this is the second gate because a
+    lecture directory is a working tree the author keeps editing.
+    """
+    if not pwd:
+        return lecture_dir
+    root = lecture_dir.resolve()
+    try:
+        path = (root / pwd).resolve()
+    except OSError:
+        return None
+    if path != root and root not in path.parents:
+        return None
+    return path if path.is_dir() else None
 
 
 @dataclass(frozen=True)
@@ -187,13 +233,23 @@ class Spec:
     command: str
     timeout: float | None = None
     interactive: bool = False
+    pwd: str | None = None
+    show: str | None = None
 
     def as_json(self) -> dict:
         return {
             "command": self.command,
             "timeout": self.timeout,
             "interactive": self.interactive,
+            "pwd": self.pwd,
+            "show": self.show,
         }
+
+
+def shown(content: dict) -> str:
+    """The command text a block writes on its slide: ``show=``, else the command."""
+    show = content.get("show")
+    return str(show) if show is not None else str(content["command"])
 
 
 def _timeout_field(raw) -> float | None:
@@ -213,6 +269,16 @@ def timeout_for(spec: Spec, default_s: float | None) -> float | None:
     """
     seconds = spec.timeout if spec.timeout is not None else default_s
     return seconds if seconds and seconds > 0 else None
+
+
+def _show_field(content: dict, command: str) -> str | None:
+    """A ``show=`` the drawer can use: a string of as many lines as ``command``."""
+    show = content.get("show")
+    if not isinstance(show, str) or show == command:
+        return None
+    if len(show.split("\n")) != len(command.split("\n")):
+        return None
+    return show
 
 
 def collect(lecture: model.Lecture) -> dict[str, Spec]:
@@ -235,10 +301,13 @@ def collect(lecture: model.Lecture) -> dict[str, Spec]:
             command = str(block.content["command"])
             if not command.strip():
                 continue
-            table[demo_id(command)] = Spec(
+            pwd = block.content.get("pwd")
+            table[demo_id(command, pwd)] = Spec(
                 command=command,
                 timeout=_timeout_field(block.content.get("timeout")),
                 interactive=bool(block.content.get("interactive")),
+                pwd=pwd,
+                show=_show_field(block.content, command),
             )
     return table
 
@@ -269,6 +338,8 @@ def read(output_dir: Path) -> dict[str, Spec]:
             command=value["command"],
             timeout=_timeout_field(value.get("timeout")),
             interactive=value.get("interactive") is True,
+            pwd=value["pwd"] if isinstance(value.get("pwd"), str) else None,
+            show=_show_field(value, value["command"]),
         )
     return table
 
@@ -385,8 +456,10 @@ class _Transcript:
     its first line, ``>`` on the rest.
     """
 
-    def __init__(self, command: str):
-        self._lines = command.split("\n")
+    def __init__(self, command: str, show: str | None = None):
+        # What is written is `show`, line for line; where the commands start and
+        # end is the command's own business.
+        self._lines = (show if show is not None else command).split("\n")
         self._spans = command_spans(command)
         self._starts = [first for first, _ in self._spans]
         self._next = 0
@@ -582,6 +655,7 @@ def stream(
     cwd: Path,
     timeout_s: float | None = DEFAULT_TIMEOUT_S,
     terminal: Terminal | None = None,
+    show: str | None = None,
 ) -> Iterator[Command | Chunk | Tick | Done]:
     """Run ``command`` through bash in ``cwd``, yielding the transcript as it comes.
 
@@ -593,6 +667,10 @@ def stream(
     (`Command`) as bash reaches it, so the output lands under the line that
     made it. Output is passed through as the program wrote it, escapes and all:
     the drawer is a terminal.
+
+    ``show`` is what the transcript writes for each line of ``command``, when
+    that is not the line bash runs (see `p.demo(show=...)`); it has as many
+    lines as ``command``.
 
     With a ``terminal`` the command runs on a pseudo-terminal — its controlling
     terminal, sized to the drawer — and the terminal carries the keystrokes;
@@ -622,7 +700,7 @@ def stream(
     else:
         proc, fd = _spawn_on(terminal, argv, cwd, {**env, "TERM": TERM})
         reads = _polled(fd)
-    transcript = _Transcript(command)
+    transcript = _Transcript(command, show)
     markers = _Markers()
     decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
     deadline = None if timeout_s is None else started + timeout_s
@@ -684,10 +762,10 @@ def project_root() -> str:
 
 def _launch(command: str) -> tuple[list[str], dict[str, str]]:
     """The argv and environment that run ``command`` (see `_LAUNCH`)."""
-    env = {key: value for key, value in os.environ.items() if key != "BASH_ENV"}
+    env = env_module.demo_environment(project_root())
+    env.pop("BASH_ENV", None)
     env["LECTUREKIT_DEMO"] = command
     env["LECTUREKIT_PROLOGUE"] = _PROLOGUE.as_posix()  # Git Bash reads C:/...
-    env["LECTUREKIT_ROOT"] = project_root()
     return [BASH or "bash", "-c", _LAUNCH], env
 
 

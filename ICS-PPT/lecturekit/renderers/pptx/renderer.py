@@ -19,8 +19,8 @@ from pptx.util import Inches
 from lecturekit import model, rasterize
 from lecturekit.dsl import slugify
 from .blocks import (
-    PPTX_KINDS, Ctx, draw_block, draw_bridge, draw_cover, draw_footnotes,
-    draw_side_images, draw_title, redraw_architecture, side_layout,
+    Ctx, draw_footnotes,
+    draw_side_images, draw_title, side_layout,
 )
 from .layout import Cursor, Layout
 from .elements import draw_elements, place_shapes
@@ -57,8 +57,8 @@ class PptxRenderer:
             slide = prs.slides.add_slide(blank)
             ctx = Ctx(slide=slide, layout=layout, cursor=Cursor(layout),
                       asset_root=self.asset_root, rasterizer=rasterizer,
-                      borrowed=lecture.borrowed)
-            candidates = model.select_blocks(page, "pptx", PPTX_KINDS | model.MARKER_KINDS)
+                      borrowed=lecture.borrowed, title=page.title)
+            candidates = model.select_blocks(page, "pptx")
             # New boxes reserve the finished animation's extent on every
             # frame. Legacy pages retain their original geometry.
             reserve_held = page.valign is not None or page.halign is not None or any(
@@ -68,10 +68,10 @@ class PptxRenderer:
             visible_blocks = [b for b in candidates
                               if reserve_held or not model.block_held(page, b)]
             if len(visible_blocks) == 1 and visible_blocks[0].kind == "cover":
-                draw_cover(page.title, visible_blocks[0], ctx)
+                visible_blocks[0].to_pptx(ctx)
                 continue
             if model.is_bridge_page(page):
-                draw_bridge(visible_blocks[0], ctx)
+                visible_blocks[0].to_pptx(ctx)
                 continue
             # A side_image column narrows the content box. The title keeps the
             # slide's width, and the column starts under it, on either side.
@@ -119,7 +119,7 @@ class PptxRenderer:
             else:
                 for block in visible_blocks:
                     before = len(slide.shapes)
-                    draw_block(block, ctx)
+                    block.to_pptx(ctx)
                     shapes = list(slide.shapes)[before:]
                     block_shapes.append(shapes)
                     if model.block_held(page, block):
@@ -162,7 +162,7 @@ def _reclaim_overflow(blocks: list[object], groups: list[list[object]],
     """
     overflow = ctx.cursor.top - ctx.layout.content_bottom
     index = next(
-        (i for i, block in enumerate(blocks) if block.kind == "architecture"),
+        (i for i, block in enumerate(blocks) if block.SHRINKABLE),
         None,
     )
     if overflow <= 0 or index is None or not groups[index]:
@@ -175,7 +175,7 @@ def _reclaim_overflow(blocks: list[object], groups: list[list[object]],
 
     end = ctx.cursor.top
     mark = len(slide.shapes)
-    redrawn = redraw_architecture(blocks[index], ctx, top, height - overflow)
+    redrawn = blocks[index].redraw_pptx(ctx, top, height - overflow)
     groups[index] = list(slide.shapes)[mark:]
     lift = height - redrawn
     for group in groups[index + 1:]:

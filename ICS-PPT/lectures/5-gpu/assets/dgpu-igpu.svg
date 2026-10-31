@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 572 180" width="572" height="180">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="142.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">独立 GPU</text>
+<rect x="10.0" y="30.0" width="114.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="67.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">内存（DRAM）</text>
+<rect x="160.0" y="30.0" width="114.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="217.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">显存（VRAM）</text>
+<rect x="63.8" y="70.0" width="6.4" height="54.0" rx="0" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="189.0" y="70.0" width="56.0" height="54.0" rx="0" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="10.0" y="124.0" width="114.0" height="40.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="67.0" y="149.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">CPU</text>
+<rect x="160.0" y="124.0" width="114.0" height="40.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="217.0" y="149.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">GPU</text>
+<rect x="124.0" y="143.0" width="36.0" height="2.0" rx="0" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<text x="142.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">PCIe</text>
+<text x="430.0" y="18.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">集成 GPU</text>
+<rect x="306.0" y="30.0" width="248.0" height="40.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="430.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">系统内存（DRAM）</text>
+<rect x="426.8" y="70.0" width="6.4" height="36.0" rx="0" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="306.0" y="106.0" width="248.0" height="68.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="430.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">同一颗芯片</text>
+<rect x="318.0" y="128.0" width="106.0" height="36.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="371.0" y="151.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">CPU 核心</text>
+<rect x="436.0" y="128.0" width="106.0" height="36.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="489.0" y="151.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">GPU 核心</text>
+<line x1="286.0" y1="8.0" x2="286.0" y2="172.0" stroke="#9fb5c3" stroke-width="1"/>
+</svg>

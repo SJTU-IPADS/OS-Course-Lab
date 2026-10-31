@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 508" width="620" height="508">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="10.0" y="8.0" width="600.0" height="40.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="26.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">Python API</text>
+<text x="596.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">torch.matmul、Tensor.__matmul__</text>
+<rect x="10.0" y="64.0" width="600.0" height="40.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="26.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">Python 绑定</text>
+<text x="596.0" y="90.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">解析参数，释放 GIL，调用 C++</text>
+<rect x="10.0" y="120.0" width="600.0" height="40.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="26.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">ATen</text>
+<text x="596.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">at::Tensor、at::matmul、at::mm</text>
+<rect x="10.0" y="176.0" width="600.0" height="40.0" rx="6" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.6"/>
+<text x="26.0" y="202.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">Dispatcher</text>
+<text x="596.0" y="202.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">按 dispatch key 选择核函数</text>
+<rect x="10.0" y="232.0" width="600.0" height="70.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="26.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">各 key 的核函数</text>
+<rect x="10.0" y="318.0" width="600.0" height="70.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="26.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">库与 CUDA 核函数</text>
+<rect x="10.0" y="404.0" width="600.0" height="40.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="26.0" y="430.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">CUDA 运行时与驱动</text>
+<text x="596.0" y="430.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">启动核函数，管理显存</text>
+<rect x="10.0" y="460.0" width="600.0" height="40.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="26.0" y="486.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">GPU</text>
+<text x="596.0" y="486.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">SM 与显存</text>
+<line x1="310.0" y1="49.0" x2="310.0" y2="63.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="310.0" y1="105.0" x2="310.0" y2="119.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="310.0" y1="161.0" x2="310.0" y2="175.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="310.0" y1="217.0" x2="310.0" y2="231.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="310.0" y1="303.0" x2="310.0" y2="317.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="310.0" y1="389.0" x2="310.0" y2="403.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="310.0" y1="445.0" x2="310.0" y2="459.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="24.0" y="264.0" width="108.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="78.0" y="284.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">Autocast</text>
+<rect x="140.0" y="264.0" width="108.0" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="194.0" y="284.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">Autograd</text>
+<rect x="256.0" y="264.0" width="108.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="310.0" y="284.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">CPU</text>
+<rect x="372.0" y="264.0" width="108.0" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="426.0" y="284.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">CUDA</text>
+<rect x="488.0" y="264.0" width="108.0" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="542.0" y="284.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">…</text>
+<rect x="24.0" y="350.0" width="185.3" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="116.7" y="370.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">cuDNN</text>
+<rect x="217.3" y="350.0" width="185.3" height="30.0" rx="4" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="310.0" y="370.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">自写 .cu 核函数</text>
+<rect x="410.7" y="350.0" width="185.3" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="503.3" y="370.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">cuBLAS</text>
+<path d="M 426.0 295.0 L 426.0 310.0 L 503.3 310.0 L 503.3 349.0" fill="none" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" width="600" height="470">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="70.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">单精度峰值算力（GFLOP/s，对数坐标）</text>
+<line x1="70.0" y1="370.0" x2="500.0" y2="370.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="62.0" y="375.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">100</text>
+<line x1="70.0" y1="270.0" x2="500.0" y2="270.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="62.0" y="275.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">1 000</text>
+<line x1="70.0" y1="170.0" x2="500.0" y2="170.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="62.0" y="175.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">10 000</text>
+<line x1="70.0" y1="70.0" x2="500.0" y2="70.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="62.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">100 000</text>
+<line x1="70.0" y1="420.0" x2="500.0" y2="420.0" stroke="#0e2841" stroke-width="1.6"/>
+<line x1="90.5" y1="420.0" x2="90.5" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="90.5" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2006</text>
+<line x1="151.9" y1="420.0" x2="151.9" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="151.9" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2009</text>
+<line x1="213.3" y1="420.0" x2="213.3" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="213.3" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2012</text>
+<line x1="274.8" y1="420.0" x2="274.8" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="274.8" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2015</text>
+<line x1="336.2" y1="420.0" x2="336.2" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="336.2" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2018</text>
+<line x1="397.6" y1="420.0" x2="397.6" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="397.6" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2021</text>
+<line x1="459.0" y1="420.0" x2="459.0" y2="425.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="459.0" y="444.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">2024</text>
+<polyline points="90.5,377.0 131.4,369.0 172.4,349.6 192.9,336.2 233.8,304.9 274.8,299.1 315.7,297.0 336.2,273.5 377.1,262.7 397.6,264.8 418.1,257.6 438.6,254.4 459.0,228.7" fill="none" stroke="#156082" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="90.5" cy="377.0" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="131.4" cy="369.0" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="172.4" cy="349.6" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="192.9" cy="336.2" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="233.8" cy="304.9" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="274.8" cy="299.1" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="315.7" cy="297.0" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="336.2" cy="273.5" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="377.1" cy="262.7" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="397.6" cy="264.8" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="418.1" cy="257.6" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="438.6" cy="254.4" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<circle cx="459.0" cy="228.7" r="4.5" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<polyline points="90.5,316.1 131.4,290.6 172.4,257.1 213.3,218.8 233.8,197.2 274.8,191.8 315.7,164.5 336.2,157.1 377.1,114.9 418.1,78.3 479.5,68.0" fill="none" stroke="#e97132" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="90.5" cy="316.1" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="131.4" cy="290.6" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="172.4" cy="257.1" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="213.3" cy="218.8" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="233.8" cy="197.2" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="274.8" cy="191.8" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="315.7" cy="164.5" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="336.2" cy="157.1" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="377.1" cy="114.9" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="418.1" cy="78.3" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="479.5" cy="68.0" r="4.5" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="479.5" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="end">RTX 5090　104.8 TFLOP/s</text>
+<text x="445.0" y="233.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">Core Ultra 9 285K　2.6 TFLOP/s</text>
+<text x="76.5" y="344.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#e97132" text-anchor="start">8800 GTX</text>
+<text x="76.5" y="403.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#156082" text-anchor="start">Core 2 Extreme</text>
+<line x1="493.5" y1="68.0" x2="493.5" y2="228.7" stroke="#0e2841" stroke-width="1.8"/>
+<line x1="488.5" y1="68.0" x2="493.5" y2="68.0" stroke="#0e2841" stroke-width="1.8"/>
+<line x1="488.5" y1="228.7" x2="493.5" y2="228.7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="501.5" y="153.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">约 41 倍</text>
+<line x1="260.0" y1="358.0" x2="290.0" y2="358.0" stroke="#e97132" stroke-width="3"/>
+<text x="298.0" y="363.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">GeForce 旗舰 GPU</text>
+<line x1="260.0" y1="384.0" x2="290.0" y2="384.0" stroke="#156082" stroke-width="3"/>
+<text x="298.0" y="389.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">Intel Core 旗舰 CPU</text>
+</svg>

@@ -28,7 +28,7 @@ from lecturekit import demo, dev_server
 from lecturekit.dsl import Lecture
 from lecturekit.renderers.viewer import StaticViewerRenderer
 from lecturekit.renderers.viewer import marp
-from lecturekit.renderers.viewer.blocks import BLOCK_RENDERERS, render_block
+from lecturekit.renderers.viewer.blocks import render_block
 from lecturekit import model
 
 
@@ -539,7 +539,7 @@ class DemoBlockRenderTest(unittest.TestCase):
         return unescape(re.sub(r"<[^>]+>", "", inner.group(1))).split("\n")
 
     def test_the_deck_now_draws_a_demo(self):
-        self.assertIn("demo", BLOCK_RENDERERS)
+        self.assertIn("viewer", model.element_class("demo").TARGETS)
 
     def test_the_chip_carries_the_id_and_not_a_runnable_command_attribute(self):
         html = "".join(render_block(self._block()))
@@ -1124,3 +1124,87 @@ class DemoInjectionTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _lecture_in(pwd: str | None, command: str = "pwd") -> model.Lecture:
+    lecture = Lecture(id="lec", title="L")
+
+    def body(p):
+        p.title("P")
+        p.slide("body")
+        p.demo("where", command, pwd=pwd)
+
+    lecture.page("p1", body=body)
+    return lecture.build()
+
+
+class DemoPwdTest(unittest.TestCase):
+    def test_a_relative_directory_is_kept_and_normalized(self):
+        self.assertEqual(demo.normalize_pwd("examples/./sub/"), "examples/sub")
+        self.assertIsNone(demo.normalize_pwd(None))
+
+    def test_a_directory_outside_the_lecture_is_refused_at_build_time(self):
+        for bad in ("/etc", "../other", "examples/../..", "", "  ", "C:\\x"):
+            with self.subTest(pwd=bad), self.assertRaises(model.ValidationError):
+                _lecture_in(bad)
+
+    def test_the_same_command_in_two_directories_is_two_demos(self):
+        self.assertNotEqual(demo.demo_id("make", "a"), demo.demo_id("make", "b"))
+        self.assertNotEqual(demo.demo_id("make", "a"), demo.demo_id("make"))
+        self.assertEqual(demo.demo_id("make", None), demo.demo_id("make"))
+
+    def test_pwd_round_trips_through_the_bundle(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            demo.write(_lecture_in("examples"), out)
+            spec = demo.read(out)[demo.demo_id("pwd", "examples")]
+        self.assertEqual(spec.pwd, "examples")
+
+    def test_the_slide_button_names_the_demo_with_its_directory(self):
+        html = render_block(_lecture_in("examples").children[0].blocks[1])[0]
+        self.assertIn(f'data-lk-demo="{demo.demo_id("pwd", "examples")}"', html)
+
+    def test_workdir_stays_inside_the_lecture(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp, "lecture")
+            (root / "examples").mkdir(parents=True)
+            Path(tmp, "outside").mkdir()
+            (root / "escape").symlink_to(Path(tmp, "outside"))
+            self.assertEqual(demo.workdir(root, None), root)
+            self.assertEqual(demo.workdir(root, "examples"), (root / "examples").resolve())
+            self.assertIsNone(demo.workdir(root, "missing"))
+            self.assertIsNone(demo.workdir(root, "escape"))
+
+
+class DemoPwdEndpointTest(unittest.TestCase):
+    _server = DemoEndpointTest._server
+    _post = DemoEndpointTest._post
+
+    def test_the_command_starts_in_its_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp, "lecture").resolve()
+            (root / "examples").mkdir(parents=True)
+            out = Path(tmp, "out")
+            out.mkdir()
+            demo.write(_lecture_in("examples"), out)
+            port = self._server(out, demo_cwd=root)
+            status, events, output = self._post(
+                port, {"id": demo.demo_id("pwd", "examples")}
+            )
+        self.assertEqual(status, 200)
+        self.assertEqual(output.strip(), str(root / "examples"))
+
+    def test_a_directory_that_left_the_lecture_since_the_build_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp, "lecture").resolve()
+            root.mkdir()
+            Path(tmp, "outside").mkdir()
+            (root / "examples").symlink_to(Path(tmp, "outside"))
+            out = Path(tmp, "out")
+            out.mkdir()
+            demo.write(_lecture_in("examples"), out)
+            port = self._server(out, demo_cwd=root)
+            with self.assertRaises(urllib.error.HTTPError) as caught:
+                self._post(port, {"id": demo.demo_id("pwd", "examples")})
+        self.assertEqual(caught.exception.code, 400)
+

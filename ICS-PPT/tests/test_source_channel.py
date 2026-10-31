@@ -442,6 +442,148 @@ class SourceEndpointTest(unittest.TestCase):
         self.assertEqual(caught.exception.code, 404)
 
 
+class SourceSaveTest(unittest.TestCase):
+    def _file(self, data: bytes) -> Path:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name, "a.c")
+        path.write_bytes(data)
+        return path
+
+    def test_a_save_replaces_the_text(self):
+        path = self._file(b"old\n")
+        self.assertEqual(source.save(path, "new\n", "old\n"), "new\n")
+        self.assertEqual(path.read_bytes(), b"new\n")
+
+    def test_a_file_changed_since_the_draft_began_is_left_alone(self):
+        path = self._file(b"theirs\n")
+        with self.assertRaises(source.SaveRefused) as caught:
+            source.save(path, "mine\n", "old\n")
+        self.assertEqual(caught.exception.status, 409)
+        self.assertEqual(path.read_bytes(), b"theirs\n")
+
+    def test_force_lets_the_draft_win(self):
+        path = self._file(b"theirs\n")
+        source.save(path, "mine\n", "old\n", force=True)
+        self.assertEqual(path.read_bytes(), b"mine\n")
+
+    def test_windows_line_endings_are_given_back(self):
+        path = self._file(b"a\r\nb\r\n")
+        source.save(path, "a\nc\n", "a\r\nb\r\n")
+        self.assertEqual(path.read_bytes(), b"a\r\nc\r\n")
+
+    def test_a_file_the_panel_cannot_hand_back_is_not_editable(self):
+        for data in (b"\xff\xfe not utf-8\n", b"x" * (source.MAX_SOURCE_BYTES + 1)):
+            with self.subTest(size=len(data)):
+                path = self._file(data)
+                self.assertFalse(source.editable(path))
+                with self.assertRaises(source.SaveRefused):
+                    source.save(path, "x\n", "x\n", force=True)
+                self.assertEqual(path.read_bytes(), data)
+
+    def test_a_draft_past_the_limit_is_refused(self):
+        path = self._file(b"old\n")
+        with self.assertRaises(source.SaveRefused) as caught:
+            source.save(path, "x" * (source.MAX_SOURCE_BYTES + 1), "old\n")
+        self.assertEqual(caught.exception.status, 413)
+        self.assertEqual(path.read_bytes(), b"old\n")
+
+
+class SourceSaveEndpointTest(SourceEndpointTest):
+    def _post(self, port, route, body, headers=None):
+        request = urllib.request.Request(
+            f"http://127.0.0.1:{port}{dev_server.SOURCE_PATH}{route}",
+            data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json", **(headers or {})},
+        )
+        try:
+            with closing(urllib.request.urlopen(request, timeout=20)) as resp:
+                return resp.status, json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as err:
+            try:
+                return err.code, json.loads(err.read().decode("utf-8"))
+            except ValueError:  # the server's own 404 page
+                return err.code, {}
+
+    def _ready(self, text="x\n"):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        out = self._deck(tmp.name, "a.c")
+        Path(out, "a.c").write_text(text, encoding="utf-8")
+        return out, self._server(out, demo_cwd=out), source.source_id("a.c")
+
+    # `unittest` would run the inherited tests again under this class.
+    for _name in [n for n in dir(SourceEndpointTest) if n.startswith("test_")]:
+        locals()[_name] = None
+    del _name
+
+    def test_the_answer_says_whether_the_file_can_be_edited(self):
+        _out, port, ident = self._ready()
+        _status, payload = self._get(port, "id=" + ident)
+        self.assertIs(payload["editable"], True)
+
+    def test_a_save_writes_the_file(self):
+        out, port, ident = self._ready("x\n")
+        status, payload = self._post(
+            port, "/save", {"id": ident, "text": "y\n", "base": "x\n"}
+        )
+        self.assertEqual((status, payload), (200, {"text": "y\n"}))
+        self.assertEqual(Path(out, "a.c").read_text(encoding="utf-8"), "y\n")
+
+    def test_a_stale_base_is_a_conflict_until_forced(self):
+        out, port, ident = self._ready("x\n")
+        body = {"id": ident, "text": "y\n", "base": "was\n"}
+        status, payload = self._post(port, "/save", body)
+        self.assertEqual((status, payload["error"]), (409, "file changed on disk"))
+        self.assertEqual(Path(out, "a.c").read_text(encoding="utf-8"), "x\n")
+        status, _payload = self._post(port, "/save", {**body, "force": True})
+        self.assertEqual(status, 200)
+        self.assertEqual(Path(out, "a.c").read_text(encoding="utf-8"), "y\n")
+
+    def test_tokens_colour_a_draft_line_for_line(self):
+        _out, port, ident = self._ready("x\n")
+        status, payload = self._post(
+            port, "/tokens", {"id": ident, "text": "int a;\nreturn 0;\n"}
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(len(payload["tokens"]), 2)
+
+    def test_an_unknown_id_saves_nothing(self):
+        _out, port, _ident = self._ready()
+        status, _payload = self._post(
+            port, "/save", {"id": "0" * 12, "text": "y\n", "base": "x\n"}
+        )
+        self.assertEqual(status, 404)
+
+    def test_a_save_needs_text(self):
+        _out, port, ident = self._ready()
+        status, _payload = self._post(port, "/save", {"id": ident})
+        self.assertEqual(status, 400)
+
+    def test_a_foreign_origin_saves_nothing(self):
+        out, port, ident = self._ready("x\n")
+        status, _payload = self._post(
+            port,
+            "/save",
+            {"id": ident, "text": "y\n", "base": "x\n"},
+            headers={"Origin": "http://evil.example"},
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(Path(out, "a.c").read_text(encoding="utf-8"), "x\n")
+
+    def test_the_routes_are_absent_unless_demos_are_armed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = self._deck(tmp, "a.c")
+            Path(out, "a.c").write_text("x\n", encoding="utf-8")
+            port = self._server(out, demo_cwd=None)
+            for route in ("/save", "/tokens"):
+                status, _payload = self._post(
+                    port, route, {"id": source.source_id("a.c"), "text": "y\n"}
+                )
+                self.assertEqual(status, 404)
+            self.assertEqual(Path(out, "a.c").read_text(encoding="utf-8"), "x\n")
+
+
 class SourceInjectionTest(unittest.TestCase):
     def test_the_controller_rides_the_response_only_when_armed(self):
         armed = _slides(Path("."))
@@ -459,6 +601,25 @@ class SourceInjectionTest(unittest.TestCase):
                 self.assertIn(f".{name} {{", armed)        # styled
         for key in ("lk-file-font", "lk-file-width"):     # and remembered
             self.assertIn(key, armed)
+
+    def test_the_panel_ships_its_editor_styled_and_wired(self):
+        # Save and Reset, the text box and its coloured copy: built in
+        # source.js, styled in source.css; the draft is kept in localStorage.
+        armed = _slides(Path("."))
+        for name in ("lk-file-act", "lk-file-input", "lk-file-under", "lk-file-gutter"):
+            with self.subTest(name=name):
+                self.assertIn(f"{name}", armed)
+                self.assertIn(f".{name}", armed)
+        self.assertIn("lk-file-draft:", armed)
+
+    def test_the_editor_cannot_cover_the_resize_grip(self):
+        # The editor's gutter is positioned (it sticks to the left edge) and sat
+        # in the grip's layer, over the 7px the drag starts from. The body is a
+        # stacking context of its own, so nothing inside it can reach the grip.
+        css = _slides(Path("."))
+        body = css[css.index(".lk-file-body {"):]
+        body = body[: body.index("}")]
+        self.assertIn("isolation: isolate", body)
 
     def test_the_file_panel_is_asked_before_the_demo_drawer(self):
         # Both controllers take Escape and an outside click in the capture

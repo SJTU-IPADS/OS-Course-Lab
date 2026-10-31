@@ -63,6 +63,7 @@ def _block(block: model.Block) -> dict:
         "after_frames": block.after_frames,
         "halign": block.halign,
         "valign": block.valign,
+        "weight": block.weight,
     }
 
 

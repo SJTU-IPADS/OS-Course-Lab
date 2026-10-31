@@ -196,6 +196,81 @@ class RenderOnceTest(unittest.TestCase):
             self.assertNotIn("data-reveal", slides_md)
 
 
+class PanelSavesTest(unittest.TestCase):
+    def test_a_rebuild_after_a_panel_save_is_not_broadcast_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            saved = Path(tmp, "a.c")
+            saves = dev_server.PanelSaves()
+            saves.record(saved)
+            saves.expect([saved.resolve()])
+            self.assertTrue(saves.swallow())
+            self.assertFalse(saves.swallow())
+
+    def test_another_change_in_the_batch_gives_the_reload_back(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            saved, other = Path(tmp, "a.c"), Path(tmp, "pages.py")
+            saves = dev_server.PanelSaves()
+            saves.record(saved)
+            saves.expect([saved.resolve(), other.resolve()])
+            self.assertFalse(saves.swallow())
+
+    def test_a_later_change_of_the_authors_disarms_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            saved, other = Path(tmp, "a.c"), Path(tmp, "pages.py")
+            saves = dev_server.PanelSaves()
+            saves.record(saved)
+            saves.expect([saved.resolve()])
+            saves.expect([other.resolve()])
+            self.assertFalse(saves.swallow())
+
+    def test_a_save_is_forgotten_after_its_window(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            saved = Path(tmp, "a.c")
+            saves = dev_server.PanelSaves(window_s=0.0)
+            saves.record(saved)
+            saves.expect([saved.resolve()])
+            self.assertFalse(saves.swallow())
+
+    def test_handle_changes_keeps_the_page_where_it_is(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lecture_dir, out = Path(tmp, "src"), Path(tmp, "out")
+            lecture_dir.mkdir()
+            (lecture_dir / "lecture.py").write_text(
+                'from lecturekit.dsl import Lecture\n'
+                'lecture = Lecture(id="t", title="T")\n'
+                'lecture.page("p1", body=lambda p: (p.title("P"), p.slide("x")))\n',
+                encoding="utf-8",
+            )
+            example = lecture_dir / "a.c"
+            example.write_text("x\n", encoding="utf-8")
+            dev_server.render_once(lecture_dir, out)
+            (out / "slides.html").write_text("<html></html>", encoding="utf-8")
+            bc = dev_server.ReloadBroadcaster()
+            saves = dev_server.PanelSaves()
+            before = bc.generation
+
+            saves.record(example)
+            dev_server.handle_changes(
+                {(dev_server.Change.modified, str(example))},
+                lecture_dir, out, bc, panel_saves=saves,
+            )
+            dev_server.handle_changes(
+                {(dev_server.Change.modified, str(out / "slides.html"))},
+                lecture_dir, out, bc, panel_saves=saves,
+            )
+            self.assertEqual(bc.generation, before)
+
+            dev_server.handle_changes(
+                {(dev_server.Change.modified, str(example))},
+                lecture_dir, out, bc, panel_saves=saves,
+            )
+            dev_server.handle_changes(
+                {(dev_server.Change.modified, str(out / "slides.html"))},
+                lecture_dir, out, bc, panel_saves=saves,
+            )
+            self.assertEqual(bc.generation, before + 1)
+
+
 class HandleChangesTest(unittest.TestCase):
     def tearDown(self):
         for name in list(sys.modules):

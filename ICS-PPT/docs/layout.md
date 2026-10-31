@@ -42,8 +42,8 @@ An element's **box** is the space its container gives it.
   child.
 - A **row** gives each child a box as tall as the row, which is as tall as its
   tallest child. An image with its own width (`width_px` / `width_pct`) keeps
-  it; the other children share what is left equally, after the theme's gutter
-  between neighbours.
+  it; the other children share what is left, after the theme's gutter between
+  neighbours, equally or in the proportions of the row's `widths`.
 
 ## Alignment
 
@@ -78,19 +78,29 @@ with p.flex("row", valign="middle"):   # a container
     p.image("assets/b.svg", width_px=420)
 ```
 
-`p.flex(direction="column", *, halign=None, valign=None)` opens a container
-and is used as a `with` block: every block written inside it is its child,
+`p.flex(direction="column", *, halign=None, valign=None, widths=None)` opens a
+container and is used as a `with` block: every block written inside it is its child,
 and containers nest. Leaving it out, or leaving it empty, is a
 `ValidationError`. `p.halign(...)` and `p.valign(...)` set the page's own.
 
-A container takes no `only=`, footnotes or callouts: it is layout, and its
-children carry their own. It may not hold a `side_image` or a block set
+A container takes no `only=` or callouts: it is layout, and its children carry
+their own. It takes a footnote, which concerns all of them: the viewer puts its
+marker on the container's last leaf, the book and the transcript on the last
+leaf that remains after filtering. It may not hold a `side_image` or a block set
 `under_side_image()`, which belong to the page's image column. The handle of a
 `side_image` has no `halign` / `valign` either: the image column follows the
 page (see below).
 
 Alignment and `p.gap(...)` both claim the leftover space of the page, so a page
 whose `valign` is `middle` or `bottom` cannot also call `p.gap(...)`.
+
+A row's `widths` is one positive weight per child, in order; a nested
+container is one child. Each weight is stored on its child (the `weight` field
+every element has, as a fraction of the sum), so a child a target leaves out
+takes its share with it and the rest are renormalised. A row without `widths`
+shares equally, and `widths` on a column is a `ValidationError`: a column is as
+tall as its children, so there is no height to divide. A child with a width of
+its own cannot also carry a weight.
 
 In a row, percentages on an image are resolved against the row's width;
 the image then fills that allotted box. The gutter is the theme token
@@ -108,7 +118,9 @@ the same leaves in the same order as before, and passes the two markers over.
 
 ## Renderers
 
-**Viewer** (HTML, PDF, PNG, live preview). The slide body is a flex column.
+**Viewer** (HTML, PDF, PNG, live preview). The slide body is a flex column. A
+weighted row gives each child `flex: <share> 1 0`, the share in percent
+(`--lk-grow`), so the proportions hold whatever the content.
 The page's `valign` puts a flexible spacer above its elements (`middle`,
 `bottom`) and below them (`middle`). An element inside a container, or one
 whose `halign` is set, is drawn in a box (`.lk-box`, a flex column whose
@@ -120,9 +132,10 @@ The box itself carries reveal and held-frame state, so changing either state
 keeps the same geometry. An annotation remains outside the boxes, in slide
 coordinates; footnotes stay at the slide's bottom.
 
-**PPTX.** Each element is drawn by its drawer into its box, then its shapes are
+**PPTX.** Each element draws itself (`to_pptx`) into its box, then its shapes are
 moved as one group: right or to the centre by the room the box leaves beside
-them, down by the room below. A text box is first narrowed to its estimated
+them, down by the room below. A weighted row multiplies the width left after the
+gutters by each child's share. A text box is first narrowed to its estimated
 widest line. A table keeps the full width of its box, as PowerPoint draws it.
 
 With the new alignment or containers, an animation reserves the finished

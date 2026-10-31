@@ -8,6 +8,7 @@ import platform
 import subprocess
 import sys
 import webbrowser
+from collections.abc import Iterable
 from pathlib import Path
 from types import ModuleType
 
@@ -46,19 +47,30 @@ def main(argv: list[str] | None = None) -> int:
             lecture = load_lecture_for(args)
             if args.pages:
                 lecture = select_pages(lecture, args.pages)
-            output_dir = Path(args.out) if args.out else default_out_dir(lecture, args.to, args.lang)
-            entry = render_lecture(lecture, lecture_dir, args.to, output_dir)
-            # Only the viewer target needs the Marp build; pptx writes its deck
-            # directly (no Marp/Chrome).
-            if args.to == "viewer" and not args.no_build:
-                build_deck(output_dir, deck_formats(args.pdf, args.png), name=slugify(lecture.title))
-            if args.to == "transcript" and args.pdf:
-                # The sheet is already a paged A4 document, so its PDF is one
-                # headless-Chrome print of the file itself.
-                from .renderers.transcript.pdf import print_pdf
+            targets = parse_targets(args.to)
+            groups = target_groups(targets)
+            if args.out and len(groups) > 1:
+                raise ValueError(
+                    "--out names one directory, and --to "
+                    f"{','.join(targets)} writes {len(groups)} renderers' output; "
+                    "give one renderer's targets, or omit --out"
+                )
+            if args.no_build and any(t in DECK_EXPORTS for t in targets):
+                raise ValueError("--no-build skips Marp, which --to pdf and --to png need")
+            for renderer, names in groups.items():
+                output_dir = Path(args.out) if args.out else default_out_dir(lecture, renderer, args.lang)
+                entry = render_lecture(lecture, lecture_dir, renderer, output_dir)
+                # Only the deck needs the Marp build; pptx writes its file
+                # directly (no Marp/Chrome).
+                if renderer == "viewer" and not args.no_build:
+                    build_deck(output_dir, deck_formats(names), name=slugify(lecture.title))
+                if "transcript-pdf" in names:
+                    # The sheet is already a paged A4 document, so its PDF is one
+                    # headless-Chrome print of the file itself.
+                    from .renderers.transcript.pdf import print_pdf
 
-                print(print_pdf(entry))
-            print(entry)
+                    print(print_pdf(entry))
+                print(entry)
             return 0
         if args.command == "view":
             lecture_dir = Path(args.lecture_dir)
@@ -84,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
                 return 0
             entry = render_lecture(lecture, lecture_dir, "viewer", output_dir)
             if not args.no_build:
-                build_deck(output_dir, deck_formats(args.pdf, args.png), name=slugify(lecture.title))
+                build_deck(output_dir, deck_formats(()), name=slugify(lecture.title))
             open_in_browser(entry)
             return 0
         if args.command == "book":
@@ -109,11 +121,21 @@ def build_parser() -> argparse.ArgumentParser:
     build_parser_.add_argument("lecture_dir")
     add_lang_flag(build_parser_)
 
-    render_parser = subparsers.add_parser("render", help="render a complete viewer bundle")
+    render_parser = subparsers.add_parser(
+        "render", help="render a lecture to html, pdf, png, pptx or a transcript sheet"
+    )
     render_parser.add_argument("lecture_dir")
     add_lang_flag(render_parser, strict=True)
     render_parser.add_argument(
-        "--to", default="viewer", choices=["viewer", "pptx", "transcript"]
+        "--to",
+        action="append",
+        metavar="TARGET",
+        help=(
+            "what to produce, repeatable or comma-separated (default html): "
+            + ", ".join(TARGETS)
+            + ". pdf and png need local Chrome/Chromium; transcript-pdf prints the "
+            "transcript sheet"
+        ),
     )
     render_parser.add_argument("--out")
     render_parser.add_argument(
@@ -124,19 +146,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-build",
         action="store_true",
         help="skip running Marp to build slides.html",
-    )
-    render_parser.add_argument(
-        "--pdf",
-        action="store_true",
-        help=(
-            "also export a PDF: the deck for --to viewer, the sheet itself for "
-            "--to transcript (needs local Chrome/Chromium)"
-        ),
-    )
-    render_parser.add_argument(
-        "--png",
-        action="store_true",
-        help="also export one PNG per page, slides.NNN.png (needs local Chrome/Chromium)",
     )
 
     view_parser = subparsers.add_parser("view", help="render, build the deck, and open a preview")
@@ -185,16 +194,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-build",
         action="store_true",
         help="skip running Marp to build slides.html",
-    )
-    view_parser.add_argument(
-        "--pdf",
-        action="store_true",
-        help="also export the deck as <lecture-title>.pdf (needs local Chrome/Chromium)",
-    )
-    view_parser.add_argument(
-        "--png",
-        action="store_true",
-        help="also export one PNG per page, slides.NNN.png (needs local Chrome/Chromium)",
     )
 
     book_parser = subparsers.add_parser(
@@ -260,14 +259,48 @@ def add_lang_flag(parser: argparse.ArgumentParser, *, strict: bool = False) -> N
         )
 
 
-def deck_formats(pdf: bool, png: bool = False) -> tuple[str, ...]:
-    """Marp output formats for a build; html always (the viewer iframes it)."""
-    formats = ["html"]
-    if pdf:
-        formats.append("pdf")
-    if png:
-        formats.append("png")
-    return tuple(formats)
+# What `render --to` produces: target name -> the renderer that writes it. One
+# renderer serves several targets (the deck is html, pdf and png), so a run
+# renders each renderer once and then does the targets' export steps.
+TARGETS = {
+    "html": "viewer",
+    "pdf": "viewer",
+    "png": "viewer",
+    "pptx": "pptx",
+    "transcript": "transcript",
+    "transcript-pdf": "transcript",
+}
+DECK_EXPORTS = ("pdf", "png")
+# The renderer's old name for the deck, still accepted by --to.
+TARGET_ALIASES = {"viewer": "html"}
+
+
+def parse_targets(values: list[str] | None) -> list[str]:
+    """The `--to` values as an ordered, duplicate-free list of target names."""
+    names: list[str] = []
+    for value in values or ["html"]:
+        for name in value.split(","):
+            name = TARGET_ALIASES.get(name.strip(), name.strip())
+            if name not in TARGETS:
+                raise ValueError(
+                    f"unknown --to target {name!r}: choose from {', '.join(TARGETS)}"
+                )
+            if name not in names:
+                names.append(name)
+    return names
+
+
+def target_groups(targets: list[str]) -> dict[str, list[str]]:
+    """Targets grouped by the renderer that writes them, in first-use order."""
+    groups: dict[str, list[str]] = {}
+    for name in targets:
+        groups.setdefault(TARGETS[name], []).append(name)
+    return groups
+
+
+def deck_formats(targets: Iterable[str]) -> tuple[str, ...]:
+    """Marp output formats for a deck build; html always (the viewer iframes it)."""
+    return ("html", *(name for name in DECK_EXPORTS if name in targets))
 
 
 def render_lecture(lecture: Lecture, lecture_dir: Path, to: str, output_dir: Path) -> Path:

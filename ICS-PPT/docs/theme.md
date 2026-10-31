@@ -43,13 +43,15 @@ only the blocks it knows, so a page is authored once.
 
 | Target | Command | Output |
 | --- | --- | --- |
-| viewer | `render` / `view` | Marp deck in an outline shell (+ `--pdf`, `--png`) |
+| viewer | `render --to html` (also `pdf`, `png`), `view` | Marp deck in an outline shell, exported to PDF or PNG |
 | pptx | `render --to pptx` | editable PowerPoint, styled from the viewer theme |
-| transcript | `render --to transcript` | one printable A4 sheet (+ `--pdf`), styled by `themes/transcript.css` from the same palette |
+| transcript | `render --to transcript` (`transcript-pdf` for the PDF) | one printable A4 sheet, styled by `themes/transcript.css` from the same palette |
 | book | `book` | one `ctexbook` document, one chapter per lecture |
 
 `RENDERERS` in `lecturekit/renderers/` is the `--to` registry the first three
-live in, and the extension point for a new deck target. `book` is its own
+live in, and the extension point for a new deck target. The renderers hold no
+table of block kinds: each one walks the page and asks every block to draw itself
+(see [Elements](#elements)). `book` is its own
 command, and the notebook path (`Lecture(assets=".")`) reuses the viewer's Marp
 pipeline to display a single slide as a cell output.
 
@@ -59,6 +61,37 @@ architecture diagram from computed widths rather than flexbox, floats an
 `image_right` figure beside a narrowed text box instead of wrapping text around
 it, and skips annotation bubbles outright; the book draws architecture as
 stacked boxes.
+
+## Elements
+
+Every block on a page is an instance of a class under `lecturekit/elements/`,
+one module per kind (`image.py`, `table.py`, …), all derived from
+`model.Block`. `Block(kind="table", content=...)` builds a `Table`, and a kind
+no class registered is refused by validation. The base class carries what every
+element shares: `halign`, `valign`, `footnotes` and `annotations`, so any element
+takes a footnote and an alignment without a method of its own.
+
+A class says everything its kind knows about itself:
+
+| What | Where |
+| --- | --- |
+| the targets that draw it, what it may carry | class constants `TARGETS`, `REF`, `MARKS`, `FILE_LINKS`, `VERBATIM` |
+| how the viewer lays it out | `REVEAL_STEP`, `IN_FLOW`, `CENTERED`, `HOLDABLE`, `IN_CONTAINER` |
+| how it validates its content | `check_content(page_id)` |
+| how it is drawn | `to_marp` (deck: HTML, PDF, PNG), `to_pptx`, `to_latex`, `to_transcript` |
+| where a footnote's superscript goes | `footnote_marker` |
+
+A renderer calls the method of its target on each block of the page. A method is
+needed only for a target the class lists in `TARGETS`. The `renderers/*/blocks.py`
+modules hold the helpers several elements draw with (escaping, shape builders,
+text measures) and nothing per kind. The page's image column is the one thing a
+renderer draws itself, once per page, since it is a layout of its own and not a
+block among others.
+
+A new kind of block is a new class: a module in `lecturekit/elements/` with
+`@element`, imported in `lecturekit/elements/__init__.py`, plus the DSL method
+that creates it (`docs/dsl.md`). Its renderers' imports stay inside the methods,
+so python-pptx is not loaded unless a PowerPoint is rendered.
 
 ## Screenshots
 

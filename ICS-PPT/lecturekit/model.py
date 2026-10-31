@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any, Iterable, Self
+from typing import Any, ClassVar, Iterable, Self
 
 from . import filelinks, marks
 
@@ -29,12 +29,8 @@ FLEX_KIND = "flex"
 END_KIND = "end"
 MARKER_KINDS = frozenset({FLEX_KIND, END_KIND})
 
-BLOCK_KINDS = frozenset({
-    "cover", "slide", "notes", "prose", "code", "link",
-    "image", "side_image", "sidenote", "demo", "aside",
-    "table", "architecture", "row", "columns", "spacer", "highlight",
-    "bridge",
-}) | MARKER_KINDS
+# ``BLOCK_KINDS``, the kinds that exist, is read off the registered classes
+# (see ``__getattr__`` below and ``lecturekit.elements``).
 
 # The two axes of alignment, and where each value puts an element's content in
 # its box as a fraction of the room left over: 0 at the start, 1 at the end.
@@ -45,15 +41,6 @@ ALIGN_FRACTION = {
     "top": 0.0, "middle": 0.5, "bottom": 1.0,
 }
 FLEX_DIRECTIONS = ("column", "row")
-
-# Slide text may carry `<mark>`: a `slide` block, and each column of a
-# `columns` block, which is slide text set beside its neighbours.
-SLIDE_TEXT_KINDS = frozenset({"slide", "columns"})
-
-# Text that may carry a file link, `[label](file:path)`: slide text and the
-# cells of a table — what every renderer reads as inline markdown and sets as a
-# line of the page. See `lecturekit.filelinks`.
-FILE_LINK_KINDS = SLIDE_TEXT_KINDS | {"table"}
 
 # A bridge (衔接页) is one or two short lines — three is the hard ceiling, so it
 # cannot grow into a title-less free-form page. See dsl.Lecture.bridge.
@@ -80,10 +67,9 @@ LIST_ITEM_RE = re.compile(r"(?m)^ {0,3}(?:[-*+]|\d+[.)])\s+\S")
 #   "skip"  — leave it out of the book entirely
 BOOK_MODES = frozenset({"page", "merge", "skip"})
 
-# Block kinds that may carry a figure `ref` (an author-chosen anchor that prose
-# cites with `[@name]`). All render as numbered LaTeX figures, which is where
-# the `\label` lands — so a ref requires a caption.
-REF_KINDS = frozenset({"image", "row", "architecture"})
+# The kinds that may carry a figure `ref` (an author-chosen anchor that prose
+# cites with `[@name]`) say so with `REF`. All render as numbered LaTeX figures,
+# which is where the `\label` lands — so a ref requires a caption.
 
 _REF_NAME_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
 
@@ -242,9 +228,21 @@ class LecturekitElement:
     along its direction; an unset field takes the container's value. The rules
     are in docs/layout.md, and each renderer implements them once, for every
     element.
+
+    Footnotes and callouts hang off any element, so they are fields of this
+    class: each footnote renders as small bottom-left text with a matching
+    superscript on the element, and a callout is a bubble floating over the
+    slide next to it (see dsl.BlockHandle.footnote / annotate and Annotation).
+    A container draws its footnote marker on its last leaf.
     """
     halign: str | None = None
     valign: str | None = None
+    # The share of its row's width this element takes, among the children that
+    # carry no width of their own (see ``p.flex("row", widths=...)``). ``None``
+    # leaves it to the equal share.
+    weight: float | None = None
+    footnotes: tuple[str, ...] = ()
+    annotations: tuple[Annotation, ...] = ()
 
     def aligned(self, **axes: str | None) -> Self:
         """An immutable copy with alignment set, shared by all element types."""
@@ -270,6 +268,60 @@ class Flex(LecturekitElement):
 
 @dataclass(frozen=True)
 class Block(LecturekitElement):
+    """One leaf element of a page, and the base of every kind of leaf.
+
+    A block is a ``kind`` and its ``content``; the class a ``Block`` actually
+    is follows from its kind. ``Block(kind="table", content=...)`` builds a
+    ``lecturekit.elements.Table``, and a kind nobody registered stays a plain
+    ``Block`` that validation refuses. Everything one kind knows about itself
+    lives on its class:
+
+    * which targets draw it by default (``TARGETS``) and what it may carry
+      (``REF``, ``MARKS``, ``FILE_LINKS``, ``VERBATIM``);
+    * how the viewer lays it out (``REVEAL_STEP``, ``IN_FLOW``, ``CENTERED``,
+      ``HOLDABLE``, ``IN_CONTAINER``);
+    * how it checks itself (:meth:`check_content`);
+    * how each target draws it: :meth:`to_marp` (the deck: HTML, PDF, PNG),
+      :meth:`to_pptx`, :meth:`to_latex`, :meth:`to_transcript`, and
+      :meth:`footnote_marker` for the superscript a footnote leaves on it.
+
+    A renderer walks the page and asks each block to draw itself; it holds no
+    table of kinds. The fields below are shared by every kind.
+    """
+    # Registration: the kind string this class answers to. ``Block`` itself
+    # has none, so only an unregistered kind validates as unknown.
+    KIND: ClassVar[str] = ""
+    # The targets that draw this kind unless a block says otherwise with
+    # ``only`` / ``except_``: any of "viewer", "pptx", "latex", "transcript".
+    TARGETS: ClassVar[frozenset[str]] = frozenset()
+    # May carry a figure ref (``ref=``, cited from prose as ``[@name]``).
+    REF: ClassVar[bool] = False
+    # Its text may carry ``<mark>`` (slide text) / a file link / is verbatim
+    # and so scanned for neither. ``LINK_FREE_KEYS`` names content keys the
+    # file-link scan leaves out (a demo's recorded output).
+    MARKS: ClassVar[bool] = False
+    FILE_LINKS: ClassVar[bool] = False
+    VERBATIM: ClassVar[bool] = False
+    LINK_FREE_KEYS: ClassVar[frozenset[str]] = frozenset()
+    # Its text stands in as the book's prose (a `slide` or `columns` does so only
+    # when the author forces it in with ``only=["latex"]``).
+    BOOK_TEXT: ClassVar[bool] = False
+    # Held back on the early frames of an animation (``after_frames``) / may sit
+    # inside a ``flex`` container.
+    HOLDABLE: ClassVar[bool] = True
+    IN_CONTAINER: ClassVar[bool] = True
+    # Viewer: takes a reveal step / is set in the page's flow (in the gap split,
+    # in the footnote numbering) / sits centred in its box unless aligned.
+    REVEAL_STEP: ClassVar[bool] = True
+    IN_FLOW: ClassVar[bool] = True
+    CENTERED: ClassVar[bool] = False
+
+    def __new__(cls, *args: Any, **kwargs: Any):
+        if cls is Block:
+            kind = kwargs["kind"] if "kind" in kwargs else (args[0] if args else None)
+            cls = element_class(kind)
+        return object.__new__(cls)
+
     kind: str
     content: Any
     only: set[str] | None = None
@@ -289,13 +341,6 @@ class Block(LecturekitElement):
     # it is an unconditional off switch. See dsl.BlockHandle.disable. On a prose
     # block this is exactly "written but held back from the book".
     disabled: bool = False
-    # Footnotes annotate the block; each renders as small bottom-left text with a
-    # matching superscript on the block. Not a block kind — any block may carry
-    # several. See dsl.BlockHandle.footnote.
-    footnotes: tuple[str, ...] = ()
-    # Callout bubbles floating over the slide near this block. See
-    # dsl.BlockHandle.annotate and Annotation.
-    annotations: tuple[Annotation, ...] = ()
     # A small image floated to the right of a slide block's text; the text
     # wraps around it. Only set on slide blocks. See dsl.BlockHandle.image_right.
     float_image: dict | None = None
@@ -322,6 +367,124 @@ class Block(LecturekitElement):
     # shifts between frames. Derived at expansion time, never authored; always
     # False on a page without an animation.
     after_frames: bool = False
+
+    # --- validation ---
+
+    def validate(
+        self,
+        page_id: str,
+        refs: set[str] | None = None,
+        keys: set[str] | None = None,
+    ) -> None:
+        """Refuse a block no renderer could draw; ``refs`` / ``keys`` collect the
+        page's figure refs and pinned translation keys to keep them unique."""
+        if type(self).KIND != self.kind:
+            raise ValidationError(f"Unknown block kind on {page_id}: {self.kind}")
+        if self.key is not None:
+            check_block_key(self, page_id, keys)
+        if self.REF:
+            check_ref(self, page_id, refs)
+        for footnote in self.footnotes:
+            if not isinstance(footnote, str) or not footnote.strip():
+                raise ValidationError(f"Empty footnote on {page_id}: {self.kind}")
+        for note in self.annotations:
+            if not isinstance(note.text, str) or not note.text.strip():
+                raise ValidationError(f"Empty annotation on {page_id}: {self.kind}")
+            if note.at not in ANNOTATION_ANCHORS:
+                raise ValidationError(
+                    f"Annotation anchor on {page_id} must be one of "
+                    f"{sorted(ANNOTATION_ANCHORS)}, got {note.at!r}"
+                )
+        if self.float_image is not None:
+            src = self.float_image.get("src")
+            if not isinstance(src, str) or not src.strip():
+                raise ValidationError(
+                    f"Empty float image src on {page_id}: {self.kind}"
+                )
+            valign = self.float_image.get("valign", DEFAULT_SIDE_VALIGN)
+            if valign not in FLOAT_VALIGNS:
+                raise ValidationError(
+                    f"Unknown image_right valign on {page_id}: {valign!r}"
+                )
+        self.check_content(page_id)
+        check_marks(self, page_id)
+        check_file_links(self, page_id)
+
+    def check_content(self, page_id: str) -> None:
+        """The kind's own rules for its ``content``; a kind with none keeps this."""
+
+    # --- drawing: a kind overrides the methods of the targets that draw it ---
+
+    def to_marp(self, ctx: Any) -> list[str]:
+        """The deck (HTML, PDF and PNG are all this one page): Marp markdown lines.
+
+        ``ctx`` is the viewer's ``MarpCtx``. A kind the deck draws elsewhere
+        (a ``side_image`` is the page's image column) returns no lines.
+        """
+        return []
+
+    def sized_in_box(self, in_row: bool) -> tuple[Block, str]:
+        """Viewer, in an aligned layout: ``(block to draw, style for its content
+        box)``. A kind that carries its own width takes it from the box instead
+        of resolving it a second time; the rest are drawn as they are."""
+        return self, ""
+
+    def row_basis(self) -> str | None:
+        """Viewer: the width this block keeps in a ``flex`` row, or ``None`` to
+        share what the other children leave."""
+        return None
+
+    # PPTX: a block that can be drawn again in less height when its page ran past
+    # the slide (an architecture diagram), and how.
+    SHRINKABLE: ClassVar[bool] = False
+
+    def redraw_pptx(self, ctx: Any, top: int, max_height: int) -> int:
+        """Draw again from ``top`` within ``max_height``; the height it took."""
+        raise NotImplementedError(self.kind)
+
+    def footnote_marker(self, lines: list[str], numbers: tuple[int, ...]) -> list[str]:
+        """``lines`` (what :meth:`to_marp` drew) with the footnote superscript
+        for ``numbers`` attached. The default rides the end of the last line;
+        a kind whose last line is not text overrides it."""
+        from .renderers.viewer import blocks
+        return blocks.mark_text_end(lines, numbers)
+
+    def to_pptx(self, ctx: Any) -> None:
+        """Draw onto ``ctx.slide`` (the pptx renderer's ``Ctx``), advancing its cursor."""
+
+    def to_latex(self, ctx: Any) -> str:
+        """The LaTeX the book sets for it (``ctx`` is the latex renderer's ``Ctx``)."""
+        raise ValidationError(f"LaTeX renderer cannot emit block kind: {self.kind}")
+
+    def to_transcript(self, embedder: Any) -> str:
+        """HTML for the printable sheet. A kind the sheet does not normally draw,
+        forced in with ``only=["transcript"]``, is set as body text if it is
+        markdown, and dropped otherwise."""
+        if isinstance(self.content, str):
+            from .renderers.transcript.text import markdown
+            return f'<div class="tx-slide">{markdown(self.content)}</div>'
+        return ""
+
+
+_ELEMENTS: dict[str, type[Block]] = {}
+
+
+def element(cls: type[Block]) -> type[Block]:
+    """Class decorator: register ``cls`` as the class of blocks of ``cls.KIND``."""
+    _ELEMENTS[cls.KIND] = cls
+    return cls
+
+
+def element_class(kind: str | None) -> type[Block]:
+    """The class that blocks of ``kind`` are; ``Block`` for a kind nobody registered."""
+    from . import elements  # noqa: F401  (registers the classes on first use)
+    return _ELEMENTS.get(kind, Block)
+
+
+def kinds_drawn_by(target: str) -> frozenset[str]:
+    """Every kind that ``target`` draws by default."""
+    element_class(None)
+    return frozenset(k for k, cls in _ELEMENTS.items() if target in cls.TARGETS)
 
 
 @dataclass(frozen=True)
@@ -418,13 +581,16 @@ def resolve_asset(src: str, asset_root: Path | None, borrowed: tuple[Borrowed, .
     return Path(asset_root, src) if asset_root is not None else path
 
 
-def select_blocks(page: Page, target: str, kinds: set[str]) -> list[Block]:
-    """Blocks of `page` that renderer `target` (handling `kinds`) should emit.
+def select_blocks(
+    page: Page, target: str, kinds: Iterable[str] | None = None
+) -> list[Block]:
+    """Blocks of `page` that renderer `target` should emit.
 
-    The author's `only`/`except_` override sits *on top of* the renderer's own
-    table: `only={target}` forces a block in even when the renderer does not
-    normally render its kind (a `slide` pulled into the book, say), and
-    `except_` forces one out. Absent an override, the table decides.
+    The author's `only`/`except_` override sits *on top of* the kind's own
+    default: `only={target}` forces a block in even when its kind is not
+    normally drawn by `target` (a `slide` pulled into the book, say), and
+    `except_` forces one out. Absent an override, the block's class decides
+    (its `TARGETS`); `kinds`, when given, decides instead.
 
     A `disabled` block is dropped first of all, ahead of every override — it
     renders in no target at all.
@@ -439,10 +605,44 @@ def select_blocks(page: Page, target: str, kinds: set[str]) -> list[Block]:
             if target in block.only:
                 selected.append(block)
             continue
-        if block.kind not in kinds:
+        if kinds is None:
+            if target not in block.TARGETS:
+                continue
+        elif block.kind not in kinds:
             continue
         selected.append(block)
+    if kinds is None and target not in element_class(FLEX_KIND).TARGETS:
+        selected = _with_container_footnotes(page, selected)
     return selected
+
+
+def _with_container_footnotes(page: Page, selected: list[Block]) -> list[Block]:
+    """Hand each container's footnotes to its last leaf.
+
+    A target without containers (the book) draws no ``flex`` marker, which is
+    where the footnotes of a container are stored, so its last leaf carries them
+    instead: the superscript lands where the viewer puts it.
+    """
+    extra: dict[int, tuple[str, ...]] = {}
+    stack: list[tuple[tuple[str, ...], int | None]] = []
+    for index, block in enumerate(page.blocks):
+        if block.kind == FLEX_KIND:
+            stack.append((block.footnotes, None))
+        elif block.kind == END_KIND:
+            if stack:
+                notes, last = stack.pop()
+                if notes and last is not None:
+                    extra[last] = extra.get(last, ()) + notes
+        elif stack:
+            stack = [(notes, index) for notes, _ in stack]
+    if not extra:
+        return selected
+    positions = {id(block): index for index, block in enumerate(page.blocks)}
+    return [
+        replace(block, footnotes=block.footnotes + extra[positions[id(block)]])
+        if positions.get(id(block)) in extra else block
+        for block in selected
+    ]
 
 
 def layout(blocks: Iterable[Block]) -> list[LecturekitElement]:
@@ -468,6 +668,8 @@ def layout(blocks: Iterable[Block]) -> list[LecturekitElement]:
             block=opener,
             halign=opener.halign,
             valign=opener.valign,
+            weight=opener.weight,
+            footnotes=opener.footnotes,
         )
         (stack[-1][1] if stack else top).append(node)
 
@@ -482,6 +684,24 @@ def layout(blocks: Iterable[Block]) -> list[LecturekitElement]:
     while stack:
         close()
     return top
+
+
+def row_shares(row: Flex) -> list[float | None]:
+    """The fraction of the room a row leaves each child, in order.
+
+    The children that carry no width of their own share that room; their
+    weights, renormalised over the ones the target kept, give the fractions.
+    A child with a width of its own, and every child of a row without weights,
+    has ``None``: the equal share.
+    """
+    own = [isinstance(child, Block) and bool(child.row_basis()) for child in row.children]
+    weights = [None if has_own else child.weight
+               for child, has_own in zip(row.children, own)]
+    shared = [w for w in weights if w is not None]
+    if not shared or len(shared) != own.count(False):
+        return [None] * len(row.children)
+    total = float(sum(shared))
+    return [None if w is None else w / total for w in weights]
 
 
 def resolve_align(
@@ -583,13 +803,6 @@ def tail_visible(page: Page) -> bool:
     return group is None or group.index == group.total
 
 
-# Kinds ``block_held`` never holds. A ``side_image`` narrows the text column:
-# hiding it would reflow every frame's text to full width, which is
-# exactly the between-frame shift holding exists to prevent. A container's
-# markers are layout: its children are held one by one, the box stays.
-HELD_EXEMPT_KINDS = frozenset({"side_image"}) | MARKER_KINDS
-
-
 def block_held(page: Page, block: Block) -> bool:
     """Is this block held back on this page — reserving its space, not shown?
 
@@ -601,7 +814,7 @@ def block_held(page: Page, block: Block) -> bool:
     return (
         block.after_frames
         and not tail_visible(page)
-        and block.kind not in HELD_EXEMPT_KINDS
+        and block.HOLDABLE
     )
 
 
@@ -795,17 +1008,32 @@ def check_alignment(element: LecturekitElement, where: str) -> None:
         )
 
 
+def check_weight(element: LecturekitElement, container: str | None, where: str) -> None:
+    """A weight is a positive number on a child of a row that gives no width of
+    its own."""
+    weight = element.weight
+    if weight is None:
+        return
+    if isinstance(weight, bool) or not isinstance(weight, (int, float)) \
+            or not 0 < weight < float("inf"):
+        raise ValidationError(f"the weight of {where} must be a positive number, got {weight!r}")
+    if container != "row":
+        raise ValidationError(f"{where} has a weight but is not a child of a row")
+    if isinstance(element, Block) and element.row_basis():
+        raise ValidationError(
+            f"{where} has a width of its own and cannot also take a share of the row"
+        )
+
+
 # What a container may not hold: the blocks that belong to the page's image
 # column, or own a page of their own.
-_FLEX_EXCLUDED_KINDS = frozenset({"side_image", "cover", "bridge"})
-
-
 def check_layout(page: Page) -> None:
     """The page's alignment, and its containers: well formed and well placed.
 
     Every ``flex`` block is closed by an ``end`` block, holds at least one
-    block, and names a direction; a marker carries nothing a block hangs off
-    itself (footnotes, callouts, filters), since it draws nothing. A container
+    block, and names a direction; a marker may carry a footnote (drawn on the
+    container's last leaf) but no callouts, filters or key, since it draws
+    nothing of its own. A container
     holds no ``side_image`` and no text set under one, which belong to the
     page's image column. A page set in the middle or at the bottom of its band
     cannot also share that band out with ``p.gap(...)``.
@@ -819,16 +1047,19 @@ def check_layout(page: Page) -> None:
         )
     depth = 0
     counts: list[int] = []
+    directions: list[str] = []
     for block in page.blocks:
         where = f"the {block.kind} block on {page.id}"
         check_alignment(block, where)
+        if block.kind != END_KIND:
+            check_weight(block, directions[-1] if directions else None, where)
         if block.kind in MARKER_KINDS:
-            if (block.footnotes or block.annotations or block.only is not None
+            if (block.annotations or block.only is not None
                     or block.except_ is not None or block.disabled
                     or block.key is not None):
                 raise ValidationError(
-                    f"a flex container carries no footnotes, callouts, filters "
-                    f"or key: {page.id}"
+                    f"a flex container carries no callouts, filters or key: "
+                    f"{page.id}"
                 )
         if block.kind == FLEX_KIND:
             direction = (block.content or {}).get("direction")
@@ -841,8 +1072,11 @@ def check_layout(page: Page) -> None:
                 counts[-1] += 1
             depth += 1
             counts.append(0)
+            directions.append(direction)
             continue
         if block.kind == END_KIND:
+            if depth:
+                directions.pop()
             if not depth:
                 raise ValidationError(
                     f"an end block closes no flex container on {page.id}"
@@ -858,7 +1092,7 @@ def check_layout(page: Page) -> None:
                 f"a side_image follows the page's alignment and has none of "
                 f"its own: {page.id} (use p.valign(...) or side_image(valign=...))"
             )
-        if depth and (block.kind in _FLEX_EXCLUDED_KINDS or block.in_side):
+        if depth and (not block.IN_CONTAINER or block.in_side):
             what = "under_side_image text" if block.in_side else block.kind
             raise ValidationError(
                 f"a flex container cannot hold {what}: {page.id}"
@@ -964,54 +1198,7 @@ def check_block(
     refs: set[str] | None = None,
     keys: set[str] | None = None,
 ) -> None:
-    if block.kind not in BLOCK_KINDS:
-        raise ValidationError(f"Unknown block kind on {page_id}: {block.kind}")
-    if block.key is not None:
-        check_block_key(block, page_id, keys)
-    if block.kind in REF_KINDS:
-        check_ref(block, page_id, refs)
-    for footnote in block.footnotes:
-        if not isinstance(footnote, str) or not footnote.strip():
-            raise ValidationError(f"Empty footnote on {page_id}: {block.kind}")
-    for note in block.annotations:
-        if not isinstance(note.text, str) or not note.text.strip():
-            raise ValidationError(f"Empty annotation on {page_id}: {block.kind}")
-        if note.at not in ANNOTATION_ANCHORS:
-            raise ValidationError(
-                f"Annotation anchor on {page_id} must be one of "
-                f"{sorted(ANNOTATION_ANCHORS)}, got {note.at!r}"
-            )
-    if block.float_image is not None:
-        src = block.float_image.get("src")
-        if not isinstance(src, str) or not src.strip():
-            raise ValidationError(
-                f"Empty float image src on {page_id}: {block.kind}"
-            )
-        valign = block.float_image.get("valign", DEFAULT_SIDE_VALIGN)
-        if valign not in FLOAT_VALIGNS:
-            raise ValidationError(
-                f"Unknown image_right valign on {page_id}: {valign!r}"
-            )
-    if block.kind == "architecture":
-        check_architecture(block.content, page_id)
-    if block.kind == "row":
-        check_row(block.content, page_id)
-    if block.kind == "columns":
-        check_columns(block.content, page_id)
-    if block.kind == "cover":
-        check_cover(block.content, page_id)
-    if block.kind == "spacer":
-        check_spacer(block.content, page_id)
-    if block.kind == "highlight":
-        check_highlight(block.content, page_id)
-    if block.kind == "code":
-        check_code(block.content, page_id)
-    if block.kind == "demo":
-        check_demo(block.content, page_id)
-    if block.kind == "bridge":
-        check_bridge(block, page_id)
-    check_marks(block, page_id)
-    check_file_links(block, page_id)
+    block.validate(page_id, refs, keys)
 
 
 # Content values that are never author prose: a path, a URL, an enum, a shell
@@ -1056,7 +1243,7 @@ def check_marks(block: Block, page_id: str) -> None:
     A `code` block is exempt from the scan entirely — it is verbatim, and a
     sample that *shows* `<mark>` as the HTML it is must not be rejected for it.
     """
-    if block.kind == "code":
+    if block.VERBATIM:
         texts: list[str] = []
     elif isinstance(block.content, str):
         texts = [block.content]
@@ -1064,7 +1251,7 @@ def check_marks(block: Block, page_id: str) -> None:
         texts = _prose_strings(block.content)
     for text in texts:
         check_mark_text(
-            text, allowed=block.kind in SLIDE_TEXT_KINDS,
+            text, allowed=block.MARKS,
             where=f"the {block.kind} block", page_id=page_id,
         )
     # A footnote or a callout bubble is marginal prose hanging off a block — it
@@ -1082,7 +1269,7 @@ def check_marks(block: Block, page_id: str) -> None:
 
 def file_link_texts(block: Block) -> list[str]:
     """The strings of ``block`` that may carry a file link; none for most kinds."""
-    if block.kind not in FILE_LINK_KINDS:
+    if not block.FILE_LINKS:
         return []
     if isinstance(block.content, str):
         return [block.content]
@@ -1106,14 +1293,15 @@ def check_file_links(block: Block, page_id: str) -> None:
     where = f"the {block.kind} block"
     for text in file_link_texts(block):
         check_file_link_text(text, allowed=True, where=where, page_id=page_id)
-    if block.kind == "code" or block.kind in FILE_LINK_KINDS:
+    if block.VERBATIM or block.FILE_LINKS:
         texts: list[str] = []
     elif isinstance(block.content, str):
         texts = [block.content]
-    elif block.kind == "demo":
-        texts = _prose_strings(
-            {name: value for name, value in block.content.items() if name != "output"}
-        )
+    elif block.LINK_FREE_KEYS:
+        texts = _prose_strings({
+            name: value for name, value in block.content.items()
+            if name not in block.LINK_FREE_KEYS
+        })
     else:
         texts = _prose_strings(block.content)
     for text in texts:
@@ -1171,46 +1359,6 @@ def check_ref(block: Block, page_id: str, refs: set[str] | None) -> None:
         refs.add(ref)
 
 
-def check_cover(content: dict, page_id: str) -> None:
-    for field_name in ("author", "time"):
-        value = content.get(field_name)
-        if value is not None and (not isinstance(value, str) or not value.strip()):
-            raise ValidationError(
-                f"Empty cover {field_name} on {page_id}"
-            )
-    logo = content.get("logo")
-    if logo is None:
-        return
-    if isinstance(logo, str):
-        if not logo.strip():
-            raise ValidationError(f"Empty cover logo on {page_id}")
-        return
-    if not isinstance(logo, dict):
-        raise ValidationError(
-            f"Cover logo on {page_id} must be a string or left/right mapping"
-        )
-    for key in logo:
-        if key not in ("left", "right"):
-            raise ValidationError(
-                f"Cover logo on {page_id} has unknown slot {key!r}"
-            )
-    for key in ("left", "right"):
-        value = logo.get(key)
-        if value is not None and (not isinstance(value, str) or not value.strip()):
-            raise ValidationError(
-                f"Empty cover logo {key} on {page_id}"
-            )
-
-
-def check_spacer(content: dict, page_id: str) -> None:
-    px = content.get("px")
-    # bool is an int subclass; reject it so True/False can't pass as a height.
-    if type(px) is not int or px <= 0:
-        raise ValidationError(
-            f"Spacer px on {page_id} must be a positive integer, got {px!r}"
-        )
-
-
 def logo_is_image(logo: str | None) -> bool:
     """Whether a sidenote's ``logo`` names an image (a path or a URL) rather
     than a glyph such as an emoji. Asked here, once, so that every renderer
@@ -1262,167 +1410,10 @@ def highlight_lines(text: str) -> list[str]:
     return rows
 
 
-def check_highlight(content: dict, page_id: str) -> None:
-    text = content.get("text")
-    if not isinstance(text, str) or not text.strip():
-        raise ValidationError(f"Empty highlight text on {page_id}")
-    tone = content.get("tone")
-    if tone not in HIGHLIGHT_TONES:
-        raise ValidationError(
-            f"Highlight tone on {page_id} must be one of "
-            f"{sorted(HIGHLIGHT_TONES)}, got {tone!r}"
-        )
-
-
-def check_code(content: dict, page_id: str) -> None:
-    """A marked code line names a line that exists, and is not blank.
-
-    Line numbers are 1-based over the block as the slide shows it — every
-    renderer strips the leading and trailing blank lines a triple-quoted
-    literal collects, so the numbers have to count what is left. A number past
-    the end, or one landing on a blank line, is refused rather than ignored: an
-    author who renumbers a listing and forgets the mark would otherwise find out
-    on the projector, from a wash that quietly went missing.
-    """
-    if "mark" not in content:
-        return
-    language = content.get("language")
-    if language != "pseudo":
-        raise ValidationError(
-            f"Code mark on {page_id} needs language 'pseudo', got {language!r} — "
-            "another language is coloured by the renderer's own highlighter, "
-            "which leaves nowhere to put the wash"
-        )
-    tone = content.get("tone")
-    if tone not in HIGHLIGHT_TONES:
-        raise ValidationError(
-            f"Code mark tone on {page_id} must be one of "
-            f"{sorted(HIGHLIGHT_TONES)}, got {tone!r}"
-        )
-    lines = str(content.get("content", "")).strip("\n").split("\n")
-    for number in content["mark"]:
-        # bool is an int subclass; reject it so True/False can't pass as a line.
-        if type(number) is not int or number < 1:
-            raise ValidationError(
-                f"Code mark on {page_id} must be a 1-based line number, "
-                f"got {number!r}"
-            )
-        if number > len(lines):
-            raise ValidationError(
-                f"Code mark on {page_id} names line {number}, but the block has "
-                f"{len(lines)} line{'' if len(lines) == 1 else 's'}"
-            )
-        if not lines[number - 1].strip():
-            raise ValidationError(
-                f"Code mark on {page_id} names line {number}, which is blank"
-            )
-
-
-def check_demo(content: dict, page_id: str) -> None:
-    """A bold output line names a line of the recorded output that exists.
-
-    Numbered the way `check_code` numbers a marked line — 1-based, over the
-    output with its leading and trailing blank lines stripped — and refused on
-    the same grounds: a number that points nowhere would otherwise surface on
-    the projector as a row that quietly stopped being bold.
-    """
-    if "bold" not in content:
-        return
-    output = content.get("output")
-    if not output or not str(output).strip():
-        raise ValidationError(f"Demo bold on {page_id} needs an output= to bold")
-    lines = str(output).strip("\n").split("\n")
-    for number in content["bold"]:
-        # bool is an int subclass; reject it so True/False can't pass as a line.
-        if type(number) is not int or number < 1:
-            raise ValidationError(
-                f"Demo bold on {page_id} must be a 1-based line number, "
-                f"got {number!r}"
-            )
-        if number > len(lines):
-            raise ValidationError(
-                f"Demo bold on {page_id} names line {number}, but the output has "
-                f"{len(lines)} line{'' if len(lines) == 1 else 's'}"
-            )
-        if not lines[number - 1].strip():
-            raise ValidationError(
-                f"Demo bold on {page_id} names line {number}, which is blank"
-            )
-
-
-def check_bridge(block: Block, page_id: str) -> None:
-    """Bridge text is plain, short, and carries nothing else.
-
-    No footnotes or annotations: a bridge with something to source or point at
-    has outgrown being a bridge and should be a normal page.
-    """
-    content = block.content if isinstance(block.content, dict) else {}
-    text = content.get("text")
-    if not isinstance(text, str) or not text.strip():
-        raise ValidationError(f"Empty bridge text on {page_id}")
-    lines = [line for line in (l.strip() for l in text.splitlines()) if line]
-    if len(lines) > BRIDGE_MAX_LINES:
-        raise ValidationError(
-            f"a bridge holds at most {BRIDGE_MAX_LINES} lines on {page_id}, "
-            f"got {len(lines)} — a longer transition wants a normal page"
-        )
-    if block.footnotes or block.annotations:
-        raise ValidationError(
-            f"a bridge carries no footnotes or annotations: {page_id}"
-        )
-
-
-def check_architecture(content: dict, page_id: str) -> None:
-    flow = content.get("flow")
-    if flow is not None and flow not in ARCH_FLOWS:
-        raise ValidationError(
-            f"Architecture flow on {page_id} must be one of "
-            f"{sorted(ARCH_FLOWS)} or None, got {flow!r}"
-        )
-    layers = content.get("layers") or []
-    if not layers:
-        raise ValidationError(f"Architecture has no layers on {page_id}")
-    for layer in layers:
-        modules = layer.get("modules") or []
-        if not modules:
-            raise ValidationError(
-                f"Architecture layer has no modules on {page_id}"
-            )
-        for module in modules:
-            if not isinstance(module, str) or not module.strip():
-                raise ValidationError(
-                    f"Empty architecture module on {page_id}"
-                )
-
-
-def check_columns(content: dict, page_id: str) -> None:
-    items = content.get("items") or []
-    if len(items) < 2:
-        raise ValidationError(
-            f"Columns on {page_id} needs at least two columns, got {len(items)}"
-        )
-    for item in items:
-        if not isinstance(item, str) or not item.strip():
-            raise ValidationError(f"Empty column on {page_id}")
-    widths = content.get("widths")
-    if widths is not None and len(widths) != len(items):
-        raise ValidationError(
-            f"Columns widths on {page_id} has {len(widths)} entries, "
-            f"expected {len(items)}"
-        )
-
-
-def check_row(content: dict, page_id: str) -> None:
-    items = content.get("items") or []
-    if not items:
-        raise ValidationError(f"Row has no images on {page_id}")
-    for item in items:
-        src = item.get("src")
-        if not isinstance(src, str) or not src.strip():
-            raise ValidationError(f"Empty row image src on {page_id}")
-        align = item.get("caption_align")
-        if align is not None and align not in ("left", "center", "right"):
-            raise ValidationError(
-                f"Row image caption_align on {page_id} must be "
-                f"left/center/right, got {align!r}"
-            )
+def __getattr__(name: str) -> Any:
+    # ``BLOCK_KINDS`` is read off the registry, which the classes in
+    # ``lecturekit.elements`` fill when that package is first imported.
+    if name == "BLOCK_KINDS":
+        element_class(None)
+        return frozenset(_ELEMENTS)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

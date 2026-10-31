@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" width="1120" height="520">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="242.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[0]</text>
+<text x="306.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[1]</text>
+<text x="370.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[2]</text>
+<text x="434.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[3]</text>
+<text x="498.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[4]</text>
+<text x="562.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[5]</text>
+<text x="626.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[6]</text>
+<text x="690.0" y="30.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">cache[7]</text>
+<text x="746.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">假定线程块有 8 个线程，每个 Warp 有 2 个线程：</text>
+<text x="746.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13.5" font-weight="normal" fill="#5a6b78" text-anchor="start">线程 0、1 属于 Warp 0，线程 2、3 属于 Warp 1</text>
+<text x="190.0" y="63.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">每个线程存入一个值</text>
+<rect x="210.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="242.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">3</text>
+<rect x="274.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="306.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="338.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="370.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="402.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="434.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="466.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="498.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">5</text>
+<rect x="530.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="562.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">9</text>
+<rect x="594.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="626.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">2</text>
+<rect x="658.0" y="40.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="690.0" y="63.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">6</text>
+<text x="190.0" y="117.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">s = 4</text>
+<text x="190.0" y="136.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">线程 0、1 执行加法</text>
+<line x1="242.0" y1="76.0" x2="242.0" y2="99.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="498.0" y1="76.0" x2="248.0" y2="99.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="306.0" y1="76.0" x2="306.0" y2="99.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="562.0" y1="76.0" x2="312.0" y2="99.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<rect x="210.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="242.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">8</text>
+<rect x="274.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="306.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">10</text>
+<rect x="338.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="370.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="402.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="434.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="466.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="498.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">5</text>
+<rect x="530.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="562.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">9</text>
+<rect x="594.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="626.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">2</text>
+<rect x="658.0" y="102.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="690.0" y="125.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">6</text>
+<text x="190.0" y="179.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">s = 2</text>
+<text x="190.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">线程 0、1 不等待</text>
+<line x1="242.0" y1="138.0" x2="242.0" y2="161.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="370.0" y1="138.0" x2="248.0" y2="161.0" stroke="#c0392b" stroke-width="1.6" marker-end="url(#ah-c0392b)"/>
+<line x1="306.0" y1="138.0" x2="306.0" y2="161.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="434.0" y1="138.0" x2="312.0" y2="161.0" stroke="#c0392b" stroke-width="1.6" marker-end="url(#ah-c0392b)"/>
+<rect x="210.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="242.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">12</text>
+<rect x="274.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="306.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">11</text>
+<rect x="338.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="370.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<rect x="402.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="434.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<rect x="466.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="498.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">5</text>
+<rect x="530.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="562.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">9</text>
+<rect x="594.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="626.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">2</text>
+<rect x="658.0" y="164.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="690.0" y="187.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">6</text>
+<text x="190.0" y="241.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">s = 4</text>
+<text x="190.0" y="260.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">线程 2、3 补做加法</text>
+<line x1="370.0" y1="200.0" x2="370.0" y2="223.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="626.0" y1="200.0" x2="376.0" y2="223.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="434.0" y1="200.0" x2="434.0" y2="223.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="690.0" y1="200.0" x2="440.0" y2="223.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<rect x="210.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="242.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">12</text>
+<rect x="274.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="306.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">11</text>
+<rect x="338.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="370.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">6</text>
+<rect x="402.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="434.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">7</text>
+<rect x="466.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="498.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<rect x="530.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="562.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<rect x="594.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="626.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<rect x="658.0" y="226.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="690.0" y="249.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<text x="190.0" y="303.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">s = 1</text>
+<text x="190.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">线程 0 执行加法</text>
+<line x1="242.0" y1="262.0" x2="242.0" y2="285.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<line x1="306.0" y1="262.0" x2="248.0" y2="285.0" stroke="#e97132" stroke-width="1.6" marker-end="url(#ah-e97132)"/>
+<rect x="210.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="242.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">23</text>
+<rect x="274.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="306.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">11</text>
+<rect x="338.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="370.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<rect x="402.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="434.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<rect x="466.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="498.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<rect x="530.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="562.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<rect x="594.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="626.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<rect x="658.0" y="288.0" width="64.0" height="34.0" rx="2" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="690.0" y="311.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<text x="746.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="start">cache[0] = 23</text>
+<text x="746.0" y="324.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">正确的和是 31</text>
+<rect x="17.0" y="342.0" width="264.0" height="157.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="29.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">线程 0</text>
+<text x="91.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">Warp 0</text>
+<text x="269.0" y="364.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#e97132" text-anchor="end">s = 1</text>
+<text x="29.0" y="393.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">for (s = 4; s &gt; 0; s &gt;&gt;= 1) {</text>
+<text x="29.0" y="414.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">  if (tid &lt; s)</text>
+<rect x="23.0" y="422.0" width="250.0" height="19.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="29.0" y="435.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">    cache[tid] += cache[tid + s];</text>
+<text x="29.0" y="456.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">}</text>
+<rect x="291.0" y="342.0" width="264.0" height="157.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="303.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">线程 1</text>
+<text x="365.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">Warp 0</text>
+<text x="543.0" y="364.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#e97132" text-anchor="end">s = 1</text>
+<text x="303.0" y="393.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">for (s = 4; s &gt; 0; s &gt;&gt;= 1) {</text>
+<rect x="297.0" y="401.0" width="250.0" height="19.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="303.0" y="414.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">  if (tid &lt; s)</text>
+<text x="303.0" y="435.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">    cache[tid] += cache[tid + s];</text>
+<text x="303.0" y="456.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">}</text>
+<rect x="565.0" y="342.0" width="264.0" height="157.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="577.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">线程 2</text>
+<text x="639.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">Warp 1</text>
+<text x="817.0" y="364.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#e97132" text-anchor="end">s = 4</text>
+<text x="577.0" y="393.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">for (s = 4; s &gt; 0; s &gt;&gt;= 1) {</text>
+<text x="577.0" y="414.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">  if (tid &lt; s)</text>
+<rect x="571.0" y="422.0" width="250.0" height="19.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="577.0" y="435.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">    cache[tid] += cache[tid + s];</text>
+<text x="577.0" y="456.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">}</text>
+<rect x="839.0" y="342.0" width="264.0" height="157.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="851.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">线程 3</text>
+<text x="913.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="start">Warp 1</text>
+<text x="1091.0" y="364.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#e97132" text-anchor="end">s = 4</text>
+<text x="851.0" y="393.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">for (s = 4; s &gt; 0; s &gt;&gt;= 1) {</text>
+<text x="851.0" y="414.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">  if (tid &lt; s)</text>
+<rect x="845.0" y="422.0" width="250.0" height="19.0" rx="3" fill="#fce9df" stroke="none" stroke-width="0"/>
+<text x="851.0" y="435.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">    cache[tid] += cache[tid + s];</text>
+<text x="851.0" y="456.1" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="12.5" font-weight="normal" fill="#0e2841" text-anchor="start">}</text>
+</svg>

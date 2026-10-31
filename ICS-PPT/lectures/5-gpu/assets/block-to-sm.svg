@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 424" width="1020" height="424">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="510.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">Grid：一次核函数启动的 8 个线程块</text>
+<rect x="146.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="188.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 0</text>
+<rect x="238.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="280.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 1</text>
+<rect x="330.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="372.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 2</text>
+<rect x="422.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="464.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 3</text>
+<rect x="514.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="556.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 4</text>
+<rect x="606.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="648.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 5</text>
+<rect x="698.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="740.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 6</text>
+<rect x="790.0" y="46.0" width="84.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="832.0" y="68.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 7</text>
+<line x1="470.0" y1="84.0" x2="260.0" y2="144.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<line x1="550.0" y1="84.0" x2="740.0" y2="144.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<rect x="40.0" y="150.0" width="420.0" height="254.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="250.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">2 个 SM 的 GPU</text>
+<rect x="68.0" y="190.0" width="170.0" height="200.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="153.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 0</text>
+<rect x="88.0" y="224.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="153.0" y="246.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 0</text>
+<rect x="88.0" y="265.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="153.0" y="287.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 2</text>
+<rect x="88.0" y="306.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="153.0" y="328.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 4</text>
+<rect x="88.0" y="347.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="153.0" y="369.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 6</text>
+<rect x="262.0" y="190.0" width="170.0" height="200.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="347.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 1</text>
+<rect x="282.0" y="224.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="347.0" y="246.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 1</text>
+<rect x="282.0" y="265.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="347.0" y="287.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 3</text>
+<rect x="282.0" y="306.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="347.0" y="328.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 5</text>
+<rect x="282.0" y="347.0" width="130.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="347.0" y="369.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 7</text>
+<rect x="500.0" y="150.0" width="480.0" height="172.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="740.0" y="177.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">4 个 SM 的 GPU</text>
+<rect x="513.0" y="190.0" width="106.0" height="118.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="566.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 0</text>
+<rect x="521.0" y="224.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="566.0" y="246.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 0</text>
+<rect x="521.0" y="265.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="566.0" y="287.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 4</text>
+<rect x="629.0" y="190.0" width="106.0" height="118.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="682.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 1</text>
+<rect x="637.0" y="224.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="682.0" y="246.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 1</text>
+<rect x="637.0" y="265.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="682.0" y="287.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 5</text>
+<rect x="745.0" y="190.0" width="106.0" height="118.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="798.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 2</text>
+<rect x="753.0" y="224.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="798.0" y="246.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 2</text>
+<rect x="753.0" y="265.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="798.0" y="287.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 6</text>
+<rect x="861.0" y="190.0" width="106.0" height="118.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="914.0" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 3</text>
+<rect x="869.0" y="224.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="914.0" y="246.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 3</text>
+<rect x="869.0" y="265.0" width="90.0" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="914.0" y="287.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 7</text>
+</svg>

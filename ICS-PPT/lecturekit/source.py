@@ -25,6 +25,10 @@ browser is handed lines of ``[class, text]`` runs: it still builds text nodes
 and nothing else, and it carries no lexer of its own. Pygments is looked for
 when a file is read; without it, or for a file it has no lexer for, the panel
 shows the text plain.
+
+The panel also edits. What is typed stays in the browser, in a draft of its own
+per file, until Save presses it onto the disk (`save`); a file the panel cannot
+hand back byte for byte is shown read-only (`editable`).
 """
 
 from __future__ import annotations
@@ -212,6 +216,60 @@ def load(path: Path) -> str:
     text = data[:MAX_SOURCE_BYTES].decode("utf-8", errors="replace")
     if len(data) > MAX_SOURCE_BYTES:
         text += f"\n… [file past {MAX_SOURCE_BYTES} bytes not shown]"
+    return text
+
+
+class SaveRefused(Exception):
+    """A save the file's own state forbids; ``reason`` is what the panel shows."""
+
+    def __init__(self, reason: str, status: int) -> None:
+        super().__init__(reason)
+        self.reason = reason
+        self.status = status
+
+
+def _decode(path: Path) -> str | None:
+    """The file's whole text, or ``None`` if the panel could not hand it back.
+
+    That is a file `load` would truncate, or one that is not valid UTF-8: the
+    browser would be editing a stand-in for it, and a save would write the
+    stand-in over the original.
+    """
+    try:
+        data = path.read_bytes()
+        if len(data) > MAX_SOURCE_BYTES:
+            return None
+        return data.decode("utf-8")
+    except (OSError, ValueError):
+        return None
+
+
+def editable(path: Path) -> bool:
+    """Whether the panel may offer ``path`` for editing."""
+    return _decode(path) is not None
+
+
+def save(path: Path, text: str, base: str, force: bool = False) -> str:
+    """Replace the file's text with ``text`` and return what is now on disk.
+
+    ``base`` is the text the draft began from, as the panel read it. A file
+    that no longer reads as ``base`` was changed by something else in between,
+    and the save is refused unless ``force`` says the draft wins anyway. The
+    browser's text boxes keep ``\n`` only; a file that was written with
+    ``\r\n`` gets its line endings back.
+    """
+    current = _decode(path)
+    if current is None:
+        raise SaveRefused("file is not editable", 409)
+    if current != base and not force:
+        raise SaveRefused("file changed on disk", 409)
+    text = text.replace("\r\n", "\n")
+    if "\r\n" in current:
+        text = text.replace("\n", "\r\n")
+    data = text.encode("utf-8")
+    if len(data) > MAX_SOURCE_BYTES:
+        raise SaveRefused("file too long to edit here", 413)
+    path.write_bytes(data)
     return text
 
 

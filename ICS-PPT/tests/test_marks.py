@@ -334,7 +334,7 @@ class MarkLatexTest(unittest.TestCase):
     def test_a_slide_forced_into_the_book_can_be_emitted(self):
         # `only=["latex"]` is the only path a mark reaches the book by.
         from lecturekit.renderers.latex import blocks as latex_blocks
-        self.assertIn("slide", latex_blocks._EMITTERS)
+        self.assertEqual(model.element_class("slide")(kind="slide", content="x").to_latex(latex_blocks.Ctx(lecture_id="l", page_id="p", slide_width=1280, assets=None)).strip(), "x")
 
 
 class MarkPptxTest(unittest.TestCase):

@@ -299,6 +299,11 @@ section.lk-valign-middle > :not(h1):has(+ .lk-valign-spacer) {
 .lk-flex-row > .lk-box[style*="--lk-basis"] {
   flex: 0 1 var(--lk-basis);
 }
+/* A weighted row (p.flex("row", widths=[...])): each child's share of what
+   the gutters leave, as a percentage, grown from a zero basis. */
+.lk-flex-row > .lk-box[style*="--lk-grow"] {
+  flex: var(--lk-grow) 1 0;
+}
 
 .lk-content > :last-child {
   margin-bottom: 0;
@@ -1572,6 +1577,22 @@ section > figure.lk-arch {
   position: absolute;
   top: -0.3em;
   right: -0.7em;
+}
+
+/* A footnote marker on a side image. The column holds its pictures edge to edge,
+   so the marker sits inside it, at the corner nearest the text. */
+.lk-side > .footnote-ref--side,
+.lk-side-images > .footnote-ref--side {
+  position: absolute;
+  top: 0.3em;
+}
+section.lk-side-right > .lk-side > .footnote-ref--side,
+section.lk-side-right .lk-side-images > .footnote-ref--side {
+  left: 0.4em;
+}
+section.lk-side-left > .lk-side > .footnote-ref--side,
+section.lk-side-left .lk-side-images > .footnote-ref--side {
+  right: 0.4em;
 }
 
 /* A footnote marker on a code block or table: those end in a syntactic line (a

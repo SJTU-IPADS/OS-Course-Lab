@@ -24,7 +24,7 @@ from pathlib import Path
 from lecturekit import model
 from lecturekit.dsl import slugify
 
-from .blocks import TRANSCRIPT_KINDS, render_annotations, render_block
+from .blocks import render_annotations, render_block
 from .images import Embedder
 from .style import CSS
 from .text import inline
@@ -144,7 +144,7 @@ def kept_page_ids(lecture: model.Lecture) -> set[str]:
 
 
 def visible_blocks(page: model.Page) -> list[model.Block]:
-    return model.select_blocks(page, "transcript", TRANSCRIPT_KINDS)
+    return model.select_blocks(page, "transcript")
 
 
 def _same_content(page: model.Page, other: model.Page) -> bool:

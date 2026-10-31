@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 0 720 420" width="720" height="420">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="157.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="middle">线程层次</text>
+<text x="308.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="middle">存储空间</text>
+<text x="70.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">线程</text>
+<rect x="82.0" y="108.0" width="16.0" height="28.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<line x1="100.0" y1="122.0" x2="259.0" y2="104.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="100.0" y1="122.0" x2="259.0" y2="140.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<text x="70.0" y="204.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">线程块</text>
+<rect x="82.0" y="180.0" width="149.0" height="36.0" rx="4" fill="#ffffff" stroke="#156082" stroke-width="1.6"/>
+<rect x="90.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<rect x="107.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="124.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="141.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="158.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="175.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="192.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<rect x="209.0" y="187.0" width="14.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<line x1="233.0" y1="198.0" x2="259.0" y2="184.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<text x="70.0" y="386.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">Grid</text>
+<rect x="82.0" y="350.0" width="66.0" height="26.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="115.0" y="367.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 0</text>
+<rect x="156.0" y="350.0" width="66.0" height="26.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="189.0" y="367.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 1</text>
+<rect x="82.0" y="384.0" width="66.0" height="26.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="115.0" y="401.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 2</text>
+<rect x="156.0" y="384.0" width="66.0" height="26.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="189.0" y="401.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">Block 3</text>
+<line x1="224.0" y1="380.0" x2="259.0" y2="380.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="262.0" y="90.0" width="92.0" height="28.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="308.0" y="109.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器</text>
+<rect x="262.0" y="126.0" width="92.0" height="28.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="308.0" y="145.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">本地内存</text>
+<rect x="262.0" y="170.0" width="92.0" height="28.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="308.0" y="189.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">共享内存</text>
+<rect x="262.0" y="366.0" width="92.0" height="28.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6"/>
+<text x="308.0" y="385.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">全局内存</text>
+<rect x="400.0" y="26.0" width="312.0" height="258.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="412.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="start">GPU 芯片（片上）</text>
+<rect x="412.0" y="56.0" width="138.0" height="170.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="481.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 0</text>
+<rect x="422.0" y="86.0" width="118.0" height="36.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="481.0" y="109.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<rect x="422.0" y="152.0" width="118.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="481.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">共享内存 /</text>
+<text x="481.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">L1 高速缓存</text>
+<rect x="562.0" y="56.0" width="138.0" height="170.0" rx="5" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="631.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">SM 1</text>
+<rect x="572.0" y="86.0" width="118.0" height="36.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="631.0" y="109.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<rect x="572.0" y="152.0" width="118.0" height="64.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="631.0" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">共享内存 /</text>
+<text x="631.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">L1 高速缓存</text>
+<rect x="412.0" y="238.0" width="288.0" height="34.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="556.0" y="260.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">L2 高速缓存（所有 SM 共用）</text>
+<rect x="400.0" y="316.0" width="312.0" height="94.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="556.0" y="368.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">显存（DRAM，片外）</text>
+<line x1="354.0" y1="104.0" x2="419.0" y2="104.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="354.0" y1="184.0" x2="419.0" y2="184.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<path d="M 354.0 140.0 L 378.0 140.0 L 378.0 336.0 L 397.0 336.0" fill="none" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="354.0" y1="380.0" x2="397.0" y2="380.0" stroke="#0e2841" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+</svg>

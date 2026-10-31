@@ -38,6 +38,14 @@ DEMO_PATH = "/__demo"
 DEMO_STDIN_PATH = "/__demo/stdin"
 DEMO_WINSIZE_PATH = "/__demo/winsize"
 SOURCE_PATH = "/__source"
+# A draft is sent whole: the text of one file (at most `MAX_SOURCE_BYTES`, more
+# once JSON has escaped it) and a few short fields.
+SOURCE_SAVE_PATH = SOURCE_PATH + "/save"
+SOURCE_TOKENS_PATH = SOURCE_PATH + "/tokens"
+MAX_SOURCE_REQUEST_BYTES = 4 * source_module.MAX_SOURCE_BYTES
+# How long a file the panel saved stays recognisable as the panel's own doing;
+# the watcher reports it a moment later, once or twice.
+PANEL_SAVE_S = 10.0
 # How often a page asks whether it is stale. A save already waits out the render
 # debounce and marp's rebuild, so half a second more is not felt.
 LIVERELOAD_POLL_MS = 500
@@ -248,6 +256,48 @@ class DemoQuiet:
             return time.monotonic() < self._until
 
 
+class PanelSaves:
+    """Files the source panel wrote, and the rebuild they are owed no reload for.
+
+    A file saved from the panel is a demo's input: the deck's slides do not
+    contain it, and the room is looking at the panel the save was made in.
+    Reloading the page for it would put that panel away and lose the output of
+    the demo on the slide. So a batch of changes made of such files only still
+    renders, which keeps the bundle current, but the rebuild it causes is not
+    broadcast. Any other change disarms this, since that one's rebuild is a
+    reload the author is waiting for.
+    """
+
+    def __init__(self, window_s: float = PANEL_SAVE_S) -> None:
+        self.window_s = window_s
+        self._saved: dict[Path, float] = {}
+        self._armed = False
+        self._lock = threading.Lock()
+
+    def record(self, path: Path) -> None:
+        with self._lock:
+            self._saved[path.resolve()] = time.monotonic()
+
+    def expect(self, changed: Iterable[Path]) -> None:
+        """Note a batch of changed files other than the deck's own slides."""
+        now = time.monotonic()
+        with self._lock:
+            self._saved = {
+                path: at for path, at in self._saved.items() if now - at < self.window_s
+            }
+            changed = list(changed)
+            self._armed = bool(changed) and all(path in self._saved for path in changed)
+            if self._armed:
+                for path in changed:  # one save explains one batch
+                    del self._saved[path]
+
+    def swallow(self) -> bool:
+        """Whether this rebuild is the one the panel's save caused; once only."""
+        with self._lock:
+            armed, self._armed = self._armed, False
+            return armed
+
+
 def make_handler(
     directory: Path,
     broadcaster: ReloadBroadcaster,
@@ -255,6 +305,7 @@ def make_handler(
     demo_cwd: Path | None = None,
     demo_timeout_s: float | None = demo_module.DEFAULT_TIMEOUT_S,
     demo_quiet: "DemoQuiet | None" = None,
+    panel_saves: "PanelSaves | None" = None,
 ):
     """Build a request handler that serves ``directory`` with live reload.
 
@@ -334,6 +385,12 @@ def make_handler(
             if demo_cwd is not None and path == DEMO_WINSIZE_PATH:
                 self._serve_demo_winsize()
                 return
+            if demo_cwd is not None and path == SOURCE_SAVE_PATH:
+                self._serve_source_save()
+                return
+            if demo_cwd is not None and path == SOURCE_TOKENS_PATH:
+                self._serve_source_tokens()
+                return
             self.send_error(404)
 
         def _send_json(self, status: int, payload: dict):
@@ -387,13 +444,17 @@ def make_handler(
             if refusal is not None:
                 self._send_json(501, {"error": refusal})
                 return
+            cwd = demo_module.workdir(demo_cwd, spec.pwd)
+            if cwd is None:
+                self._send_json(400, {"error": f"demo pwd is not a directory of the lecture: {spec.pwd}"})
+                return
             print(f"\nlecturekit: demo $ {spec.command}", file=sys.stderr, flush=True)
             terminal = None
             if spec.interactive:
                 terminal = demo_module.Terminal(
                     payload.get("cols", 80), payload.get("rows", 24)
                 )
-            self._stream_demo(spec, terminal)
+            self._stream_demo(spec, terminal, cwd)
 
         def _serve_demo_stdin(self):
             """Type into an interactive run: ``{"run": token, "data": text}``.
@@ -462,11 +523,75 @@ def make_handler(
             except OSError:
                 self._send_json(404, {"error": "file not readable"})
                 return
-            payload = {"path": entry.path, "text": text}
+            payload = {
+                "path": entry.path,
+                "text": text,
+                "editable": source_module.editable(path),
+            }
             tokens = source_module.highlight(entry.path, text)
             if tokens is not None:
                 payload["tokens"] = tokens
             self._send_json(200, payload)
+
+        def _source_draft(self) -> tuple[dict, "source_module.Source", Path] | None:
+            """The JSON body of a draft request and the file it names, or ``None``.
+
+            The gates are `_demo_request`'s, and so is the trust model: the body
+            names a file by id, never by path, and carries text for it.
+            """
+            payload = self._demo_request(MAX_SOURCE_REQUEST_BYTES)
+            if payload is None or not isinstance(payload.get("text"), str):
+                self._send_json(400, {"error": "bad request"})
+                return None
+            entry = source_module.read(directory).get(str(payload.get("id")))
+            if entry is None:
+                self._send_json(404, {"error": "no such file"})
+                return None
+            path = source_module.resolve(
+                entry, demo_cwd, Path(demo_module.project_root())
+            )
+            if path is None:
+                self._send_json(404, {"error": "file not found"})
+                return None
+            return payload, entry, path
+
+        def _serve_source_tokens(self):
+            """Colour a draft the way the panel colours a file: its tokens."""
+            found = self._source_draft()
+            if found is None:
+                return
+            payload, entry, _path = found
+            self._send_json(
+                200, {"tokens": source_module.highlight(entry.path, payload["text"])}
+            )
+
+        def _serve_source_save(self):
+            """Write a draft over the file it was made from.
+
+            ``base`` is the text the draft began from. A file that has changed
+            since is answered with 409 and left alone, unless the body says
+            ``force``. The answer carries the text now on disk.
+            """
+            found = self._source_draft()
+            if found is None:
+                return
+            payload, _entry, path = found
+            if panel_saves is not None:
+                panel_saves.record(path)
+            try:
+                text = source_module.save(
+                    path,
+                    payload["text"],
+                    str(payload.get("base", "")),
+                    force=payload.get("force") is True,
+                )
+            except source_module.SaveRefused as refused:
+                self._send_json(refused.status, {"error": refused.reason})
+                return
+            except OSError as err:
+                self._send_json(500, {"error": f"cannot write: {err.strerror or err}"})
+                return
+            self._send_json(200, {"text": text})
 
         def _same_origin(self) -> bool:
             """Refuse a request another page sent from somewhere else.
@@ -478,7 +603,7 @@ def make_handler(
             origin = self.headers.get("Origin")
             return not origin or origin == f"http://{self.headers.get('Host', '')}"
 
-        def _stream_demo(self, spec, terminal=None):
+        def _stream_demo(self, spec, terminal, cwd):
             """Answer with one JSON object per line, flushed as the demo speaks.
 
             Not SSE: there is no reconnecting to do here — a demo that lost its
@@ -503,9 +628,10 @@ def make_handler(
             token = None
             events = demo_module.stream(
                 spec.command,
-                cwd=demo_cwd,
+                cwd=cwd,
                 timeout_s=demo_module.timeout_for(spec, demo_timeout_s),
                 terminal=terminal,
+                show=spec.show,
             )
             try:
                 if terminal is not None:
@@ -692,6 +818,7 @@ def handle_changes(
     lang: str | None = None,
     strict: bool = False,
     demo_quiet: "DemoQuiet | None" = None,
+    panel_saves: "PanelSaves | None" = None,
 ) -> tuple[Path, ...]:
     """Render source changes and reload after Marp emits ``slides.html``.
 
@@ -702,6 +829,8 @@ def handle_changes(
     slides_html = (output_dir / "slides.html").resolve()
     changed_paths = {Path(path).resolve() for _, path in changes}
     source_changed = any(path != slides_html for path in changed_paths)
+    if panel_saves is not None and source_changed:
+        panel_saves.expect(path for path in changed_paths if path != slides_html)
 
     if source_changed:
         try:
@@ -717,6 +846,9 @@ def handle_changes(
         if demo_quiet is not None and demo_quiet.active():
             # A demo's own build artifacts came back around as a rebuild. Not an
             # edit, so not a reload — see `DemoQuiet`.
+            return review_dirs
+        if panel_saves is not None and panel_saves.swallow():
+            # The panel's own save came back around as a rebuild; see `PanelSaves`.
             return review_dirs
         broadcaster.broadcast()
         # One self-overwriting status line (no newline): the last reload time is
@@ -1001,6 +1133,7 @@ def serve(
     ).start()
     broadcaster = ReloadBroadcaster()
     quiet = DemoQuiet()
+    panel_saves = PanelSaves()
     server = QuietHTTPServer(
         ("127.0.0.1", port),
         make_handler(
@@ -1010,6 +1143,7 @@ def serve(
             demo_cwd=lecture_dir.resolve(),
             demo_timeout_s=demo_timeout_s,
             demo_quiet=quiet,
+            panel_saves=panel_saves,
         ),
     )
     server_thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -1050,6 +1184,7 @@ def serve(
                     changes, lecture_dir, output_dir, broadcaster,
                     reveal=reveal, review_dirs=watched,
                     lang=lang, strict=strict, demo_quiet=quiet,
+                    panel_saves=panel_saves,
                 )
                 if set(review_dirs) != set(watched):
                     break

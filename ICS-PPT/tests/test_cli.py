@@ -56,17 +56,41 @@ class LectureCliTest(unittest.TestCase):
     def test_render_to_viewer_writes_bundle_and_builds_marp(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
-                exit_code = main(["render", LECTURE_SOURCE, "--to", "viewer", "--out", tmp])
+                exit_code = main(["render", LECTURE_SOURCE, "--to", "html", "--out", tmp])
             self.assertEqual(exit_code, 0)
             for name in ("index.html", "viewer.css", "viewer.js", "lecture.json", "slides.md"):
                 self.assertTrue(Path(tmp, name).exists(), f"missing {name}")
             build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
 
-    def test_render_pdf_flag_requests_html_and_pdf(self):
+    def test_render_to_pdf_requests_html_and_pdf(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
-                main(["render", LECTURE_SOURCE, "--out", tmp, "--pdf"])
+                main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "pdf"])
             build.assert_called_once_with(Path(tmp), ("html", "pdf"), name="sample-lecture")
+
+    def test_render_to_viewer_is_html(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch("lecturekit.cli.build_deck") as build:
+                main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "html"])
+            build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
+
+    def test_render_unknown_target_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "docx"]), 1)
+
+    def test_render_old_pdf_flag_is_gone(self):
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit):
+            main(["render", LECTURE_SOURCE, "--out", tmp, "--pdf"])
+
+    def test_render_pdf_needs_marp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            exit_code = main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "pdf", "--no-build"])
+        self.assertEqual(exit_code, 1)
+
+    def test_render_two_renderers_cannot_share_out(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            exit_code = main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "html,pptx"])
+        self.assertEqual(exit_code, 1)
 
     def test_render_without_pdf_builds_html_only(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -74,26 +98,17 @@ class LectureCliTest(unittest.TestCase):
                 main(["render", LECTURE_SOURCE, "--out", tmp])
             build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
 
-    def test_view_pdf_flag_requests_html_and_pdf(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            with (
-                patch("lecturekit.cli.build_deck") as build,
-                patch("lecturekit.cli.open_in_browser"),
-            ):
-                main(["view", LECTURE_SOURCE, "--out", tmp, "--pdf"])
-            build.assert_called_once_with(Path(tmp), ("html", "pdf"), name="sample-lecture")
-
     def test_render_no_build_skips_marp(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
-                exit_code = main(["render", LECTURE_SOURCE, "--to", "viewer", "--out", tmp, "--no-build"])
+                exit_code = main(["render", LECTURE_SOURCE, "--to", "html", "--out", tmp, "--no-build"])
             self.assertEqual(exit_code, 0)
             self.assertTrue(Path(tmp, "slides.md").exists())
             build.assert_not_called()
 
     def test_render_viewer_json_skips_notes(self):
         with tempfile.TemporaryDirectory() as tmp:
-            main(["render", LECTURE_SOURCE, "--to", "viewer", "--out", tmp, "--no-build"])
+            main(["render", LECTURE_SOURCE, "--to", "html", "--out", tmp, "--no-build"])
             data = json.loads(Path(tmp, "lecture.json").read_text("utf-8"))
         kinds = [b["kind"] for b in data["pages"][0]["blocks"]]
         self.assertEqual(kinds, ["slide"])
@@ -324,16 +339,16 @@ class PageSelectionCliTest(unittest.TestCase):
 
 
 class PngExportCliTest(unittest.TestCase):
-    def test_render_png_flag_requests_html_and_png(self):
+    def test_render_to_png_requests_html_and_png(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
-                main(["render", MULTIPAGE_SOURCE, "--out", tmp, "--png"])
+                main(["render", MULTIPAGE_SOURCE, "--out", tmp, "--to", "png"])
             build.assert_called_once_with(Path(tmp), ("html", "png"), name="multi")
 
-    def test_render_pdf_and_png_together(self):
+    def test_render_pdf_and_png_together_in_one_build(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
-                main(["render", MULTIPAGE_SOURCE, "--out", tmp, "--pdf", "--png"])
+                main(["render", MULTIPAGE_SOURCE, "--out", tmp, "--to", "pdf", "--to", "png"])
             build.assert_called_once_with(Path(tmp), ("html", "pdf", "png"), name="multi")
 
 

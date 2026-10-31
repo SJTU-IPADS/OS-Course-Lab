@@ -72,9 +72,9 @@ neighbouring lecture's README is the model for a new one.
 
 ```bash
 python3 -m lecturekit.cli inspect lectures/X                  # validate, print the tree
-python3 -m lecturekit.cli render  lectures/X --pages ID --png # one page as an image
+python3 -m lecturekit.cli render  lectures/X --pages ID --to png # one page as an image
 python3 -m lecturekit.cli view    lectures/X --watch          # live preview on :3030
-python3 -m lecturekit.cli render  lectures/X --pdf            # deck PDF
+python3 -m lecturekit.cli render  lectures/X --to pdf            # deck PDF
 python3 -m lecturekit.cli render  lectures/X --to pptx        # editable PowerPoint
 python3 -m lecturekit.cli i18n extract lectures/X --lang en   # refresh the overlay
 python3 -m lecturekit.cli i18n check   lectures/X --lang en   # missing / changed / orphaned
@@ -82,7 +82,7 @@ python3 -m lecturekit.cli i18n check   lectures/X --lang en   # missing / change
 
 Output goes to `build/<id>-viewer`, `build/<id>-pptx`, ... unless `--out` says
 otherwise. Rendering needs Node (Marp is vendored by `scripts/prepare.sh`);
-`--pdf` and `--png` need a local Chrome.
+`--to pdf` and `--to png` need a local Chrome.
 
 A page is done when its PNG has been looked at: at 1280x720 nothing may pass
 y = 700 or so. An overflow is fixed by splitting the page or cutting lines.
