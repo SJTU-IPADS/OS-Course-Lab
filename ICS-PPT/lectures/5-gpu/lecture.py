@@ -22,7 +22,7 @@ lecture = Lecture(
 
 lecture.cover(
     "GPU 与 CUDA 编程",
-    author="古金宇 · 陈榕",
+    author="古金宇 · 廖承凡",
     time="上海交通大学 IPADS",
 )
 lecture.page("outline", body=pages.outline)
