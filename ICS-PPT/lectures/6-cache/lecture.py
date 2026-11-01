@@ -23,7 +23,7 @@ lecture = Lecture(
 
 lecture.cover(
     "局部性与缓存",
-    author="古金宇 · 陈榕",
+    author="古金宇 · 廖承凡",
     time="上海交通大学 IPADS",
 )
 lecture.page("outline", body=pages.outline)
