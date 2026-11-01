@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="13 0 960 300" width="960" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="280.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">时间局部性</text>
+<line x1="90.0" y1="242.0" x2="470.0" y2="242.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<line x1="90.0" y1="242.0" x2="90.0" y2="46.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<text x="474.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">时间</text>
+<text x="98.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">地址</text>
+<text x="280.0" y="288.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">同一个地址被反复引用</text>
+<line x1="90.0" y1="142.0" x2="450.0" y2="142.0" stroke="#9fb5c3" stroke-width="1.2" stroke-dasharray="4 4"/>
+<text x="80.0" y="147.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">sum</text>
+<circle cx="124.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="165.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="206.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="247.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="288.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="329.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="370.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<circle cx="411.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="740.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">空间局部性</text>
+<line x1="550.0" y1="242.0" x2="930.0" y2="242.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<line x1="550.0" y1="242.0" x2="550.0" y2="46.0" stroke="#5a6b78" stroke-width="1.8" marker-end="url(#ah-5a6b78)"/>
+<text x="934.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">时间</text>
+<text x="558.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">地址</text>
+<text x="740.0" y="288.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">相邻的地址在相近的时间被引用</text>
+<text x="540.0" y="227.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[0]</text>
+<circle cx="584.0" cy="222.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="207.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[1]</text>
+<circle cx="625.0" cy="202.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="187.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[2]</text>
+<circle cx="666.0" cy="182.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="167.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[3]</text>
+<circle cx="707.0" cy="162.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="147.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[4]</text>
+<circle cx="748.0" cy="142.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="127.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[5]</text>
+<circle cx="789.0" cy="122.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[6]</text>
+<circle cx="830.0" cy="102.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="540.0" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="end">w[7]</text>
+<circle cx="871.0" cy="82.0" r="8.0" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+</svg>

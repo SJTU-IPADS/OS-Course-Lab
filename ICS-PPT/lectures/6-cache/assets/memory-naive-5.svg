@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 372" width="1100" height="372">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="10.0" y="74.0" width="140.0" height="60.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="80.0" y="111.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="21" font-weight="bold" fill="#0e2841" text-anchor="middle">处理器</text>
+<text x="240.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="start">内存：字节序列，每个单元 4 字节</text>
+<rect x="240.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="293.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">w[0]</text>
+<rect x="346.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="399.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">w[1]</text>
+<rect x="452.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="505.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">w[2]</text>
+<rect x="558.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="611.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">w[3]</text>
+<rect x="664.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="717.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">x[0]</text>
+<rect x="770.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="823.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">x[1]</text>
+<rect x="876.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="929.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">x[2]</text>
+<rect x="982.0" y="74.0" width="106.0" height="60.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="1035.0" y="111.0" font-family="monospace" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">x[3]</text>
+<path d="M 240.0 144.0 L 240.0 152.0 L 658.0 152.0 L 658.0 144.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="449.0" y="172.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">数组 w</text>
+<path d="M 664.0 144.0 L 664.0 152.0 L 1082.0 152.0 L 1082.0 144.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="873.0" y="172.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">数组 x</text>
+<text x="110.0" y="236.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">累计时间</text>
+<text x="110.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="22" font-weight="bold" fill="#0e2841" text-anchor="middle">800.8 ns</text>
+<rect x="240.0" y="232.0" width="800.0" height="30.0" rx="2" fill="#ffffff" stroke="#5a6b78" stroke-width="1"/>
+<rect x="240.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="290.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">w[0]</text>
+<rect x="340.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="390.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">x[0]</text>
+<rect x="440.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="490.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">w[1]</text>
+<rect x="540.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="590.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">x[1]</text>
+<rect x="640.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="690.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">w[2]</text>
+<rect x="740.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="790.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">x[2]</text>
+<rect x="840.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="890.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">w[3]</text>
+<rect x="940.0" y="232.0" width="100.0" height="30.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="990.0" y="253.0" font-family="monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">x[3]</text>
+<rect x="440.0" y="228.0" width="2.4" height="38.0" rx="0" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1"/>
+<rect x="640.0" y="228.0" width="2.4" height="38.0" rx="0" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1"/>
+<rect x="840.0" y="228.0" width="2.4" height="38.0" rx="0" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1"/>
+<rect x="1040.0" y="228.0" width="2.4" height="38.0" rx="0" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1"/>
+<text x="1040.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#2e7d4f" text-anchor="end">每次迭代的乘加 0.2 ns</text>
+<line x1="240.0" y1="270.0" x2="1040.0" y2="270.0" stroke="#5a6b78" stroke-width="1.2"/>
+<line x1="240.0" y1="270.0" x2="240.0" y2="276.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="240.0" y="294.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">0 ns</text>
+<line x1="440.0" y1="270.0" x2="440.0" y2="276.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="440.0" y="294.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">200 ns</text>
+<line x1="640.0" y1="270.0" x2="640.0" y2="276.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="640.0" y="294.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">400 ns</text>
+<line x1="840.0" y1="270.0" x2="840.0" y2="276.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="840.0" y="294.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">600 ns</text>
+<line x1="1040.0" y1="270.0" x2="1040.0" y2="276.0" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="1040.0" y="294.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">800 ns</text>
+<rect x="240.0" y="308.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="272.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">读内存 100 ns</text>
+<rect x="430.0" y="308.0" width="24.0" height="17.0" rx="3" fill="#2e7d4f" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="462.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">乘加 0.2 ns</text>
+<text x="550.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">⑤ 4 次迭代共 800.8 ns，其中乘加共 0.8 ns</text>
+</svg>

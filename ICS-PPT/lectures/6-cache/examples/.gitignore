@@ -1,0 +1,16 @@
+gpuinfo
+stride
+matmul
+latency
+vecadd
+errcheck
+vecadd_time
+dot
+reduce
+rowops
+hello
+occupancy
+diverge
+intensity
+axpy
+kv_decode

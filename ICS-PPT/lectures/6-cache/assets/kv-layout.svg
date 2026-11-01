@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 366" width="1000" height="366">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="114.0" y="44.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">[layer]</text>
+<rect x="132.0" y="20.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="214.0" y="44.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">layer 0</text>
+<rect x="300.0" y="20.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="382.0" y="44.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">...</text>
+<rect x="468.0" y="20.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="550.0" y="44.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">layer l</text>
+<rect x="468.0" y="20.0" width="164.0" height="38.0" rx="4" fill="none" stroke="#0e2841" stroke-width="2.8"/>
+<rect x="636.0" y="20.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="718.0" y="44.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">...</text>
+<rect x="804.0" y="20.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="886.0" y="44.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">layer L-1</text>
+<line x1="468.0" y1="60.0" x2="130.0" y2="94.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<line x1="632.0" y1="60.0" x2="970.0" y2="94.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="114.0" y="120.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">[kv]</text>
+<rect x="132.0" y="96.0" width="416.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="340.0" y="120.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">K</text>
+<rect x="132.0" y="96.0" width="416.0" height="38.0" rx="4" fill="none" stroke="#0e2841" stroke-width="2.8"/>
+<rect x="552.0" y="96.0" width="416.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="760.0" y="120.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">V</text>
+<line x1="132.0" y1="136.0" x2="130.0" y2="170.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<line x1="548.0" y1="136.0" x2="970.0" y2="170.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="114.0" y="196.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">[head]</text>
+<rect x="132.0" y="172.0" width="206.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="235.0" y="196.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">head 0</text>
+<rect x="342.0" y="172.0" width="206.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="445.0" y="196.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">head 1</text>
+<rect x="342.0" y="172.0" width="206.0" height="38.0" rx="4" fill="none" stroke="#0e2841" stroke-width="2.8"/>
+<rect x="552.0" y="172.0" width="206.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="655.0" y="196.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">...</text>
+<rect x="762.0" y="172.0" width="206.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="865.0" y="196.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">head n-1</text>
+<line x1="342.0" y1="212.0" x2="130.0" y2="246.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<line x1="548.0" y1="212.0" x2="970.0" y2="246.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="114.0" y="272.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">[pos]</text>
+<rect x="132.0" y="248.0" width="89.3" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="176.7" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">pos 0</text>
+<rect x="225.3" y="248.0" width="89.3" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="270.0" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">pos 1</text>
+<rect x="318.7" y="248.0" width="89.3" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="363.3" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">...</text>
+<rect x="412.0" y="248.0" width="89.3" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="456.7" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">pos t-1</text>
+<rect x="505.3" y="248.0" width="89.3" height="38.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="550.0" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">pos t</text>
+<rect x="505.3" y="248.0" width="89.3" height="38.0" rx="4" fill="none" stroke="#0e2841" stroke-width="2.8"/>
+<rect x="598.7" y="248.0" width="89.3" height="38.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="643.3" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">empty</text>
+<rect x="692.0" y="248.0" width="89.3" height="38.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="736.7" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">empty</text>
+<rect x="785.3" y="248.0" width="89.3" height="38.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="830.0" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">...</text>
+<rect x="878.7" y="248.0" width="89.3" height="38.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="923.3" y="272.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">MAX-1</text>
+<line x1="505.3" y1="288.0" x2="130.0" y2="322.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<line x1="594.7" y1="288.0" x2="970.0" y2="322.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="114.0" y="348.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">[dim]</text>
+<rect x="132.0" y="324.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="214.0" y="348.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">d0</text>
+<rect x="300.0" y="324.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="382.0" y="348.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">d1</text>
+<rect x="300.0" y="324.0" width="164.0" height="38.0" rx="4" fill="none" stroke="#0e2841" stroke-width="2.8"/>
+<rect x="468.0" y="324.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="550.0" y="348.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">d2</text>
+<rect x="636.0" y="324.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="718.0" y="348.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">...</text>
+<rect x="804.0" y="324.0" width="164.0" height="38.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="886.0" y="348.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">d127</text>
+<text x="970.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">已占用的位置</text>
+</svg>

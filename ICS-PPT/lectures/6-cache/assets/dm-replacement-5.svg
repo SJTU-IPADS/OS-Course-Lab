@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 362" width="1000" height="362">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<rect x="150.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<text x="177.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#6c5a9c" text-anchor="middle">1</text>
+<rect x="204.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="231.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#156082" text-anchor="middle">1</text>
+<rect x="258.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="285.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#156082" text-anchor="middle">0</text>
+<rect x="312.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="339.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#e97132" text-anchor="middle">1</text>
+<text x="177.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#6c5a9c" text-anchor="middle">标记</text>
+<text x="258.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">组索引</text>
+<text x="339.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">块偏移</text>
+<text x="134.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="end">地址 13 =</text>
+<rect x="740.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<text x="767.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#6c5a9c" text-anchor="middle">1</text>
+<rect x="794.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="821.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#156082" text-anchor="middle">1</text>
+<rect x="848.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="875.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#156082" text-anchor="middle">0</text>
+<rect x="902.0" y="38.0" width="54.0" height="40.0" rx="0" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="929.0" y="65.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="22" font-weight="bold" fill="#e97132" text-anchor="middle">0</text>
+<text x="722.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="end">块起始地址 12 =</text>
+<line x1="400.0" y1="58.0" x2="540.0" y2="58.0" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
+<text x="470.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="middle">块偏移清零</text>
+<text x="52.0" y="250.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">内存</text>
+<rect x="52.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="106.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 0</text>
+<text x="106.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 0–1</text>
+<rect x="164.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="218.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 1</text>
+<text x="218.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 2–3</text>
+<rect x="276.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="330.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 2</text>
+<text x="330.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 4–5</text>
+<rect x="388.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="442.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 3</text>
+<text x="442.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 6–7</text>
+<rect x="500.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="554.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 4</text>
+<text x="554.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 8–9</text>
+<rect x="612.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="666.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 5</text>
+<text x="666.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 10–11</text>
+<rect x="724.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#e97132" stroke-width="3.2"/>
+<text x="778.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 6</text>
+<text x="778.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 12–13</text>
+<rect x="836.0" y="262.0" width="108.0" height="50.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="890.0" y="283.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">块 7</text>
+<text x="890.0" y="303.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">地址 14–15</text>
+<text x="174.0" y="157.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#156082" text-anchor="end">组 2</text>
+<rect x="190.0" y="130.0" width="30.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="220.0" y="130.0" width="46.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="266.0" y="130.0" width="60.0" height="40.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="326.0" y="130.0" width="60.0" height="40.0" rx="0" fill="#fce9df" stroke="#0e2841" stroke-width="1.2"/>
+<text x="205.0" y="155.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<text x="243.0" y="155.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#6c5a9c" text-anchor="middle">1</text>
+<text x="296.0" y="154.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">m[12]</text>
+<text x="356.0" y="154.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">m[13]</text>
+<rect x="190.0" y="130.0" width="196.0" height="40.0" rx="0" fill="none" stroke="#0e2841" stroke-width="1.8"/>
+<text x="288.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">替换后：块 6，标记 1，有效位 1</text>
+<text x="500.0" y="348.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#e97132" text-anchor="middle">整行替换：写入数据，标记写为 1，有效位置 1</text>
+<rect data-top="1" x="150.0" y="38.0" width="54.0" height="40.0" rx="3" fill="none" stroke="#6c5a9c" stroke-width="2.4"/>
+<rect data-top="1" x="204.0" y="38.0" width="108.0" height="40.0" rx="3" fill="none" stroke="#156082" stroke-width="2.4"/>
+<rect data-top="1" x="312.0" y="38.0" width="54.0" height="40.0" rx="3" fill="none" stroke="#e97132" stroke-width="2.4"/>
+<rect data-top="1" x="740.0" y="38.0" width="54.0" height="40.0" rx="3" fill="none" stroke="#6c5a9c" stroke-width="2.4"/>
+<rect data-top="1" x="794.0" y="38.0" width="108.0" height="40.0" rx="3" fill="none" stroke="#156082" stroke-width="2.4"/>
+<rect data-top="1" x="902.0" y="38.0" width="54.0" height="40.0" rx="3" fill="none" stroke="#e97132" stroke-width="2.4"/>
+<rect data-top="1" x="186.0" y="126.0" width="204.0" height="48.0" rx="5" fill="none" stroke="#e97132" stroke-width="3.2"/>
+</svg>

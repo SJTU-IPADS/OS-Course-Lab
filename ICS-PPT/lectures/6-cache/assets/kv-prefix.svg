@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 322" width="1000" height="322">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="50.0" y="24.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">请求 1 的块表</text>
+<rect x="60.0" y="36.0" width="116.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="118.0" y="55.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">0 → P0</text>
+<line x1="118.0" y1="66.0" x2="118.0" y2="124.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="210.0" y="36.0" width="116.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="268.0" y="55.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">1 → P1</text>
+<line x1="268.0" y1="66.0" x2="268.0" y2="124.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="360.0" y="36.0" width="116.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="418.0" y="55.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">2 → P2</text>
+<line x1="418.0" y1="66.0" x2="418.0" y2="124.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="510.0" y="36.0" width="116.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="568.0" y="55.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">3 → P3</text>
+<line x1="568.0" y1="66.0" x2="568.0" y2="124.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="660.0" y="36.0" width="116.0" height="30.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="718.0" y="55.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">4 → P4</text>
+<line x1="718.0" y1="66.0" x2="718.0" y2="124.0" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="50.0" y="252.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">请求 2 的块表</text>
+<rect x="60.0" y="262.0" width="116.0" height="30.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="118.0" y="281.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">0 → P0</text>
+<line x1="118.0" y1="262.0" x2="118.0" y2="200.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="210.0" y="262.0" width="116.0" height="30.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="268.0" y="281.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">1 → P1</text>
+<line x1="268.0" y1="262.0" x2="268.0" y2="200.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="360.0" y="262.0" width="116.0" height="30.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="418.0" y="281.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">2 → P2</text>
+<line x1="418.0" y1="262.0" x2="418.0" y2="200.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="810.0" y="262.0" width="116.0" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="868.0" y="281.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">3 → P5</text>
+<line x1="868.0" y1="262.0" x2="868.0" y2="200.0" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="50.0" y="126.0" width="136.0" height="72.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="118.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">P0</text>
+<text x="118.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">系统提示</text>
+<rect x="200.0" y="126.0" width="136.0" height="72.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="268.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">P1</text>
+<text x="268.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">系统提示</text>
+<rect x="350.0" y="126.0" width="136.0" height="72.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="418.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">P2</text>
+<text x="418.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">系统提示</text>
+<rect x="500.0" y="126.0" width="136.0" height="72.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="568.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">P3</text>
+<text x="568.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">请求 1 的输入</text>
+<rect x="650.0" y="126.0" width="136.0" height="72.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="718.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">P4</text>
+<text x="718.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">请求 1 的输入</text>
+<rect x="800.0" y="126.0" width="136.0" height="72.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="868.0" y="154.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">P5</text>
+<text x="868.0" y="182.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">请求 2 的输入</text>
+<rect x="176.0" y="303.0" width="24.0" height="17.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="208.0" y="317.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">命中：已算好的块，两个请求共用</text>
+<rect x="455.0" y="303.0" width="24.0" height="17.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="487.0" y="317.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">未命中：本请求新算</text>
+<rect x="644.0" y="303.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="676.0" y="317.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">请求 1 的块</text>
+</svg>

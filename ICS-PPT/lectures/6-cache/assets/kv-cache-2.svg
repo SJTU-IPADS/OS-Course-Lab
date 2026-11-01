@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 372" width="1040" height="372">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="82.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#5a6b78" text-anchor="end">token</text>
+<rect x="96.0" y="24.0" width="74.0" height="32.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="133.0" y="45.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">x1</text>
+<rect x="178.0" y="24.0" width="74.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="215.0" y="45.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">x2</text>
+<rect x="260.0" y="24.0" width="74.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="297.0" y="45.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">x3</text>
+<rect x="342.0" y="24.0" width="74.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="379.0" y="45.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">x4</text>
+<rect x="424.0" y="24.0" width="74.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="461.0" y="45.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">x5</text>
+<rect x="506.0" y="24.0" width="74.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="543.0" y="45.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">x6</text>
+<text x="82.0" y="105.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">第 1 步</text>
+<rect x="96.0" y="84.0" width="74.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="133.0" y="105.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">k1 v1</text>
+<text x="82.0" y="143.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="end">第 2 步</text>
+<rect x="96.0" y="122.0" width="74.0" height="32.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="133.0" y="143.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">k1 v1</text>
+<rect x="178.0" y="122.0" width="74.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="215.0" y="143.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">k2 v2</text>
+<text x="730.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">KV Cache</text>
+<rect x="668.0" y="84.0" width="124.0" height="32.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="730.0" y="105.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">k1 v1</text>
+<text x="802.0" y="105.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">位置 1</text>
+<rect x="668.0" y="122.0" width="124.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="730.0" y="143.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">k2 v2</text>
+<text x="802.0" y="143.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">位置 2</text>
+<rect x="668.0" y="160.0" width="124.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="802.0" y="181.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">位置 3</text>
+<rect x="668.0" y="198.0" width="124.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="802.0" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">位置 4</text>
+<rect x="668.0" y="236.0" width="124.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="802.0" y="257.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">位置 5</text>
+<rect x="668.0" y="274.0" width="124.0" height="32.0" rx="4" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="802.0" y="295.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">位置 6</text>
+<rect x="663.0" y="79.0" width="134.0" height="80.0" rx="6" fill="none" stroke="#2e7d4f" stroke-width="3"/>
+<line x1="260.0" y1="138.0" x2="658.0" y2="138.0" stroke="#e97132" stroke-width="2.5" marker-end="url(#ah-e97132)"/>
+<text x="459.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#e97132" text-anchor="middle">追加</text>
+<text x="900.0" y="98.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">本步 k、v 投影</text>
+<text x="900.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="24" font-weight="bold" fill="#e97132" text-anchor="start">1 次</text>
+<text x="900.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">累计投影</text>
+<text x="900.0" y="194.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="24" font-weight="bold" fill="#0e2841" text-anchor="start">2 次</text>
+<text x="900.0" y="230.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">本步读取缓存</text>
+<text x="900.0" y="260.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="24" font-weight="bold" fill="#2e7d4f" text-anchor="start">2 个位置</text>
+<text x="520.0" y="334.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">第 2 步：只算 x2，k2 v2 追加到位置 2，q2 读取位置 1 至 2</text>
+<rect x="130.0" y="349.0" width="24.0" height="17.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="162.0" y="363.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">本步新算并追加</text>
+<rect x="289.0" y="349.0" width="24.0" height="17.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="321.0" y="363.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">从缓存读出，不重算</text>
+<rect x="478.0" y="349.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="510.0" y="363.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">缓存中已有</text>
+<rect x="607.0" y="349.0" width="24.0" height="17.0" rx="3" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="639.0" y="363.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">预分配，空</text>
+</svg>

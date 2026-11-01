@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 232" width="440" height="232">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="4.0" y="8.0" width="140.0" height="216.0" rx="8" fill="none" stroke="#5a6b78" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="16.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">处理器</text>
+<text x="74.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">寄存器</text>
+<rect x="19.0" y="82.0" width="110.0" height="42.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="74.0" y="109.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">sum</text>
+<rect x="19.0" y="138.0" width="110.0" height="42.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="74.0" y="165.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">i</text>
+<text x="74.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="middle">无地址的局部变量</text>
+<rect x="204.0" y="8.0" width="232.0" height="216.0" rx="8" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="216.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">内存</text>
+<text x="238.0" y="89.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="end">w</text>
+<rect x="248.0" y="62.0" width="44.0" height="42.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="270.0" y="89.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">[0]</text>
+<rect x="292.0" y="62.0" width="44.0" height="42.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="314.0" y="89.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">[1]</text>
+<rect x="336.0" y="62.0" width="44.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="358.0" y="89.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">[i]</text>
+<rect x="380.0" y="62.0" width="44.0" height="42.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="402.0" y="89.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">[n-1]</text>
+<text x="238.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="end">x</text>
+<rect x="248.0" y="142.0" width="44.0" height="42.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="270.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">[0]</text>
+<rect x="292.0" y="142.0" width="44.0" height="42.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="314.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">[1]</text>
+<rect x="336.0" y="142.0" width="44.0" height="42.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="358.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">[i]</text>
+<rect x="380.0" y="142.0" width="44.0" height="42.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="402.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="middle">[n-1]</text>
+<line x1="204.0" y1="83.0" x2="144.0" y2="83.0" stroke="#e97132" stroke-width="3" marker-end="url(#ah-e97132)"/>
+<text x="174.0" y="71.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">4 字节</text>
+<line x1="204.0" y1="163.0" x2="144.0" y2="163.0" stroke="#e97132" stroke-width="3" marker-end="url(#ah-e97132)"/>
+<text x="174.0" y="151.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#e97132" text-anchor="middle">4 字节</text>
+</svg>

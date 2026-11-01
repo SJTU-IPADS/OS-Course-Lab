@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 396" width="1100" height="396">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="511.0" y="44.0" width="549.0" height="246.0" rx="0" fill="#fce9df" stroke="none" stroke-width="0"/>
+<line x1="84.0" y1="290.0" x2="1060.0" y2="290.0" stroke="#0e2841" stroke-width="1.8"/>
+<text x="74.0" y="295.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">0</text>
+<line x1="84.0" y1="240.8" x2="1060.0" y2="240.8" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="74.0" y="245.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">10</text>
+<line x1="84.0" y1="191.6" x2="1060.0" y2="191.6" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="74.0" y="196.6" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">20</text>
+<line x1="84.0" y1="142.4" x2="1060.0" y2="142.4" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="74.0" y="147.4" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">30</text>
+<line x1="84.0" y1="93.2" x2="1060.0" y2="93.2" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="74.0" y="98.2" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">40</text>
+<line x1="84.0" y1="44.0" x2="1060.0" y2="44.0" stroke="#9fb5c3" stroke-width="1" stroke-dasharray="3 4"/>
+<text x="74.0" y="49.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="end">50</text>
+<text x="74.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">GB/s</text>
+<text x="785.5" y="68.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">步长 ≥ 8：每次访问一个新的块</text>
+<text x="114.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">1</text>
+<text x="175.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">2</text>
+<text x="236.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">3</text>
+<text x="297.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">4</text>
+<text x="358.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">5</text>
+<text x="419.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">6</text>
+<text x="480.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">7</text>
+<text x="541.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">8</text>
+<text x="602.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">9</text>
+<text x="663.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">10</text>
+<text x="724.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">11</text>
+<text x="785.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">12</text>
+<text x="846.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">13</text>
+<text x="907.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">14</text>
+<text x="968.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">15</text>
+<text x="1029.5" y="316.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">16</text>
+<text x="572.0" y="346.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">步长（单位：8 字节）</text>
+<path d="M 114.5 68.6 L 175.5 119.8 L 236.5 125.2 L 297.5 122.2 L 358.5 127.6 L 419.5 135.0 L 480.5 154.2 L 541.5 166.5 L 602.5 169.0 L 663.5 168.5 L 724.5 171.9 L 785.5 170.9 L 846.5 172.4 L 907.5 169.0 L 968.5 170.0 L 1029.5 214.2" fill="none" stroke="#6c5a9c" stroke-width="2.6"/>
+<circle cx="114.5" cy="68.6" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="175.5" cy="119.8" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="236.5" cy="125.2" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="297.5" cy="122.2" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="358.5" cy="127.6" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="419.5" cy="135.0" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="480.5" cy="154.2" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="541.5" cy="166.5" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="602.5" cy="169.0" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="663.5" cy="168.5" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="724.5" cy="171.9" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="785.5" cy="170.9" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="846.5" cy="172.4" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="907.5" cy="169.0" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="968.5" cy="170.0" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="1029.5" cy="214.2" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<path d="M 114.5 220.6 L 175.5 250.6 L 236.5 262.4 L 297.5 265.4 L 358.5 272.3 L 419.5 276.7 L 480.5 278.2 L 541.5 279.7 L 602.5 280.7 L 663.5 281.1 L 724.5 281.1 L 785.5 281.6 L 846.5 281.6 L 907.5 282.1 L 968.5 282.1 L 1029.5 284.6" fill="none" stroke="#2e7d4f" stroke-width="2.6"/>
+<circle cx="114.5" cy="220.6" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="175.5" cy="250.6" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="236.5" cy="262.4" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="297.5" cy="265.4" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="358.5" cy="272.3" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="419.5" cy="276.7" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="480.5" cy="278.2" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="541.5" cy="279.7" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="602.5" cy="280.7" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="663.5" cy="281.1" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="724.5" cy="281.1" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="785.5" cy="281.6" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="846.5" cy="281.6" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="907.5" cy="282.1" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="968.5" cy="282.1" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<circle cx="1029.5" cy="284.6" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<line x1="204.0" y1="380.0" x2="240.0" y2="380.0" stroke="#6c5a9c" stroke-width="2.6"/>
+<circle cx="222.0" cy="380.0" r="4.2" fill="#6c5a9c" stroke="#ffffff" stroke-width="1.2"/>
+<text x="250.0" y="385.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">工作集 256 KB（在 L2 中）</text>
+<line x1="584.0" y1="380.0" x2="620.0" y2="380.0" stroke="#2e7d4f" stroke-width="2.6"/>
+<circle cx="602.0" cy="380.0" r="4.2" fill="#2e7d4f" stroke="#ffffff" stroke-width="1.2"/>
+<text x="630.0" y="385.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">工作集 128 MB（在内存中）</text>
+</svg>

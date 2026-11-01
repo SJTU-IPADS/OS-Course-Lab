@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 372" width="1000" height="372">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="86.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="end">请求 A</text>
+<rect x="100.0" y="20.0" width="860.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<rect x="100.0" y="20.0" width="7.8" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="100.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">已有 37 个 token，预留 4096 个位置，未使用 4059 个</text>
+<text x="86.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="end">请求 B</text>
+<rect x="100.0" y="94.0" width="860.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<rect x="100.0" y="94.0" width="128.5" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="100.0" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">已有 612 个 token，预留 4096 个位置，未使用 3484 个</text>
+<text x="86.0" y="190.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="end">请求 C</text>
+<rect x="100.0" y="168.0" width="860.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<rect x="100.0" y="168.0" width="314.9" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="100.0" y="222.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">已有 1500 个 token，预留 4096 个位置，未使用 2596 个</text>
+<text x="86.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="end">请求 D</text>
+<rect x="100.0" y="242.0" width="860.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<rect x="100.0" y="242.0" width="18.9" height="32.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="100.0" y="296.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">已有 90 个 token，预留 4096 个位置，未使用 4006 个</text>
+<text x="500.0" y="328.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#c0392b" text-anchor="middle">合计预留 16384 个位置，已用 2239 个，未用的占 86.3%</text>
+<rect x="340.0" y="345.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="372.0" y="359.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">已存放 k、v</text>
+<rect x="478.8" y="345.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="510.8" y="359.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">已预留，未使用</text>
+</svg>

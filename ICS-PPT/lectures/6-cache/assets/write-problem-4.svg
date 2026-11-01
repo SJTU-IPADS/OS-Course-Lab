@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 346" width="1000" height="346">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="172.0" y="4.0" width="552.0" height="40.0" rx="6" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="448.0" y="30.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">处理器</text>
+<text x="158.0" y="115.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="end">L1 缓存</text>
+<rect x="228.0" y="86.0" width="56.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="256.0" y="114.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">V=1</text>
+<rect x="284.0" y="86.0" width="72.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="320.0" y="115.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">标记</text>
+<rect x="356.0" y="86.0" width="368.0" height="44.0" rx="0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="540.0" y="115.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="middle">另一个块</text>
+<rect x="228.0" y="86.0" width="496.0" height="44.0" rx="0" fill="none" stroke="#0e2841" stroke-width="2"/>
+<text x="158.0" y="201.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="end">L2 缓存</text>
+<rect x="228.0" y="172.0" width="56.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="256.0" y="200.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">V=1</text>
+<rect x="284.0" y="172.0" width="72.0" height="44.0" rx="0" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<text x="320.0" y="201.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#6c5a9c" text-anchor="middle">标记</text>
+<rect x="356.0" y="172.0" width="92.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<rect x="448.0" y="172.0" width="92.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<rect x="540.0" y="172.0" width="92.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<rect x="632.0" y="172.0" width="92.0" height="44.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="678.0" y="201.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">x = 1</text>
+<rect x="228.0" y="172.0" width="496.0" height="44.0" rx="0" fill="none" stroke="#0e2841" stroke-width="2"/>
+<text x="158.0" y="287.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="end">内存</text>
+<rect x="356.0" y="258.0" width="92.0" height="44.0" rx="0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="448.0" y="258.0" width="92.0" height="44.0" rx="0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="540.0" y="258.0" width="92.0" height="44.0" rx="0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="632.0" y="258.0" width="92.0" height="44.0" rx="0" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="678.0" y="287.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">x = 1</text>
+<rect x="356.0" y="258.0" width="368.0" height="44.0" rx="0" fill="none" stroke="#2e7d4f" stroke-width="2"/>
+<rect x="632.0" y="172.0" width="92.0" height="44.0" rx="0" fill="none" stroke="#c0392b" stroke-width="3"/>
+<rect x="632.0" y="258.0" width="92.0" height="44.0" rx="0" fill="none" stroke="#c0392b" stroke-width="3"/>
+<text x="778.0" y="115.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#c0392b" text-anchor="start">x = 2 丢失</text>
+<text x="778.0" y="201.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#c0392b" text-anchor="start">旧值</text>
+<text x="778.0" y="287.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#c0392b" text-anchor="start">旧值</text>
+<text x="500.0" y="334.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">④ L1 把这一行替换出去，新值 2 不在任何一层中</text>
+</svg>

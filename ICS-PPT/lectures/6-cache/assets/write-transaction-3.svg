@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 350" width="1100" height="350">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="16.0" y="8.0" width="520.0" height="276.0" rx="6" fill="none" stroke="#5a6b78" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="522.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="end">CPU 芯片</text>
+<text x="110.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<rect x="50.0" y="52.0" width="120.0" height="24.0" rx="0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="50.0" y="76.0" width="120.0" height="24.0" rx="0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="50.0" y="100.0" width="120.0" height="24.0" rx="0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="50.0" y="124.0" width="120.0" height="24.0" rx="0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="50.0" y="148.0" width="120.0" height="24.0" rx="0" fill="#ffffff" stroke="#5a6b78" stroke-width="1.2"/>
+<text x="58.0" y="70.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">%rax</text>
+<text x="158.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="end">y</text>
+<rect x="250.0" y="52.0" width="90.0" height="120.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="295.0" y="118.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">ALU</text>
+<line x1="172.0" y1="88.0" x2="248.0" y2="88.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<line x1="248.0" y1="136.0" x2="172.0" y2="136.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<rect x="50.0" y="208.0" width="260.0" height="58.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="180.0" y="243.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">总线接口</text>
+<line x1="110.0" y1="206.0" x2="110.0" y2="176.0" stroke="#5a6b78" stroke-width="2" marker-start="url(#ah-5a6b78)" marker-end="url(#ah-5a6b78)"/>
+<rect x="610.0" y="208.0" width="120.0" height="58.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="670.0" y="243.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">I/O 桥</text>
+<rect x="860.0" y="52.0" width="224.0" height="224.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="972.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">内存</text>
+<rect x="940.0" y="114.0" width="124.0" height="32.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="1002.0" y="137.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="940.0" y="160.0" width="124.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="1.8"/>
+<text x="888.0" y="182.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">A</text>
+<text x="1002.0" y="183.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#e97132" text-anchor="middle">y</text>
+<rect x="940.0" y="206.0" width="124.0" height="32.0" rx="2" fill="#ffffff" stroke="#2e7d4f" stroke-width="1.2"/>
+<text x="1002.0" y="229.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<line x1="310.0" y1="237.0" x2="610.0" y2="237.0" stroke="#9fb5c3" stroke-width="8"/>
+<line x1="730.0" y1="237.0" x2="860.0" y2="237.0" stroke="#9fb5c3" stroke-width="8"/>
+<text x="460.0" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">系统总线</text>
+<text x="795.0" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#5a6b78" text-anchor="middle">内存总线</text>
+<line x1="312.0" y1="237.0" x2="608.0" y2="237.0" stroke="#e97132" stroke-width="5" marker-end="url(#ah-e97132)"/>
+<rect x="440.0" y="197.0" width="40.0" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="460.0" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">y</text>
+<line x1="732.0" y1="237.0" x2="858.0" y2="237.0" stroke="#e97132" stroke-width="5" marker-end="url(#ah-e97132)"/>
+<rect x="775.0" y="197.0" width="40.0" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="795.0" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">y</text>
+<text x="550.0" y="334.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">③ 内存从总线读出 y，存储在地址 A 处</text>
+</svg>

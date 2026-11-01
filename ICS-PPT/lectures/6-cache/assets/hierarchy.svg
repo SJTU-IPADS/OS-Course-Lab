@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 0 980 384" width="980" height="384">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="325.0" y="14.0" width="150.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="400.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">L0  寄存器</text>
+<text x="622.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">保存从 L1 缓存取出的字</text>
+<rect x="300.0" y="74.0" width="200.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="400.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">L1  缓存（SRAM）</text>
+<text x="622.0" y="106.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">保存从 L2 缓存取出的块</text>
+<rect x="275.0" y="134.0" width="250.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="400.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">L2  缓存（SRAM）</text>
+<text x="622.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">保存从 L3 缓存取出的块</text>
+<rect x="250.0" y="194.0" width="300.0" height="52.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="400.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">L3  缓存（SRAM）</text>
+<text x="622.0" y="226.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">保存从内存取出的块</text>
+<rect x="225.0" y="254.0" width="350.0" height="52.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="400.0" y="286.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">L4  内存（DRAM）</text>
+<text x="622.0" y="286.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">保存从磁盘取出的数据</text>
+<rect x="200.0" y="314.0" width="400.0" height="52.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.8"/>
+<text x="400.0" y="346.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle" xml:space="preserve">L5  本地磁盘</text>
+<text x="622.0" y="346.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">保存程序与文件的全部数据</text>
+<line x1="62.0" y1="360.0" x2="62.0" y2="20.0" stroke="#5a6b78" stroke-width="2.2" marker-end="url(#ah-5a6b78)"/>
+<line x1="62.0" y1="20.0" x2="62.0" y2="360.0" stroke="#5a6b78" stroke-width="2.2" marker-end="url(#ah-5a6b78)"/>
+<text x="80.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">更快</text>
+<text x="80.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">更小</text>
+<text x="80.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">每字节更贵</text>
+<text x="80.0" y="286.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">更慢</text>
+<text x="80.0" y="310.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">更大</text>
+<text x="80.0" y="334.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">每字节更便宜</text>
+</svg>

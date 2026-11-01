@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 236" width="1000" height="236">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="187.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">路 0</text>
+<text x="261.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">路 1</text>
+<text x="318.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">…</text>
+<text x="375.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">路 E−1</text>
+<text x="138.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">组 0</text>
+<rect x="152.0" y="40.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="187.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<rect x="226.0" y="40.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="261.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<text x="318.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="340.0" y="40.0" width="70.0" height="30.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="2.4"/>
+<text x="375.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<text x="138.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">组 1</text>
+<rect x="152.0" y="74.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="187.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<rect x="226.0" y="74.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="261.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<text x="318.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="340.0" y="74.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="375.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<text x="138.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">⋮</text>
+<text x="187.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">⋮</text>
+<text x="261.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">⋮</text>
+<text x="375.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">⋮</text>
+<text x="138.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">组 S−1</text>
+<rect x="152.0" y="142.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="187.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<rect x="226.0" y="142.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="261.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<text x="318.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#5a6b78" text-anchor="middle">…</text>
+<rect x="340.0" y="142.0" width="70.0" height="30.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="375.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">行</text>
+<path d="M 152.0 180.0 L 152.0 188.0 L 410.0 188.0 L 410.0 180.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="281.0" y="208.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">路数：每组的行数</text>
+<path d="M 94.0 40.0 L 86.0 40.0 L 86.0 172.0 L 94.0 172.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="78.0" y="111.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="end">组数</text>
+<line x1="410.0" y1="40.0" x2="540.0" y2="38.0" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="410.0" y1="70.0" x2="540.0" y2="82.0" stroke="#e97132" stroke-width="1.6" stroke-dasharray="5 4"/>
+<rect x="540.0" y="38.0" width="330.0" height="44.0" rx="4" fill="#eaf3f7" stroke="#e97132" stroke-width="2.4"/>
+<text x="705.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">一个块</text>
+<path d="M 542.0 88.0 L 542.0 96.0 L 868.0 96.0 L 868.0 88.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="705.0" y="116.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="middle">行长：块的大小，64 B</text>
+<text x="540.0" y="26.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#e97132" text-anchor="start">一行保存内存中的一个块</text>
+<rect x="540.0" y="150.0" width="330.0" height="66.0" rx="6" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="705.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">容量 = 组数 × 路数 × 行长</text>
+<text x="705.0" y="204.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">L1 数据缓存：64 × 12 × 64 B = 48 KB</text>
+</svg>
