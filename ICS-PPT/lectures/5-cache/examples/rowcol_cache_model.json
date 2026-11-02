@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "matrix": {
+    "n": 512,
+    "element_bytes": 4,
+    "row_stride_bytes": 2048,
+    "size_bytes": 1048576,
+    "base_address": 4294967296,
+    "base_hex": "0x0000000100000000",
+    "base_alignment_bytes": 4096
+  },
+  "cache": {
+    "address_bits": 64,
+    "capacity_bytes": 49152,
+    "sets": 64,
+    "ways": 12,
+    "block_bytes": 64,
+    "offset_bits": 6,
+    "index_bits": 6,
+    "tag_bits": 52,
+    "set_index_placement": "middle",
+    "set_index_bits": "address[11:6]",
+    "replacement_policy": "LRU"
+  },
+  "assumptions": {
+    "byte_addressed": true,
+    "initial_state": "cold_for_each_function",
+    "traffic": "W_loads_only",
+    "prefetching": false,
+    "other_memory_accesses": false
+  },
+  "verification": {
+    "small_reference_configurations": 14,
+    "row_simulation": "coalesced_consecutive_loads_with_identical_LRU_state",
+    "column_simulation": "every_matrix_load_simulated_individually",
+    "expected_counts_asserted": true,
+    "column_zero_one_reuse_verified": true,
+    "full_column_trace_crosschecked_with_list_lru": true
+  },
+  "column_analysis": {
+    "blocks_per_matrix_row": 32,
+    "groups_per_column": 2,
+    "column_zero_sets": {
+      "0": 256,
+      "32": 256
+    },
+    "blocks_per_used_group": 256,
+    "same_set_reuse_distance": 255,
+    "column_zero_misses": 512,
+    "column_one_misses": 512,
+    "column_working_set_bytes": 32768,
+    "cache_lines": 768,
+    "same_capacity_fully_associative_misses": 16384
+  },
+  "results": {
+    "sum_rows": {
+      "accesses": 262144,
+      "misses": 16384,
+      "hits": 245760,
+      "miss_rate": 0.0625,
+      "miss_percent": 6.25,
+      "row_limit": 512,
+      "column_limit": 512
+    },
+    "sum_cols": {
+      "accesses": 262144,
+      "misses": 262144,
+      "hits": 0,
+      "miss_rate": 1.0,
+      "miss_percent": 100.0,
+      "row_limit": 512,
+      "column_limit": 512
+    }
+  }
+}

@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" width="1000" height="440">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="40.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">用中间位作组索引</text>
+<text x="40.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">字节地址</text>
+<text x="414.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">位号</text>
+<text x="490.0" y="34.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<text x="610.0" y="34.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="730.0" y="34.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="850.0" y="34.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<rect x="430.0" y="42.0" width="120.0" height="34.0" rx="3" fill="#eeebf6" stroke="#6c5a9c" stroke-width="2"/>
+<text x="490.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">标记 1 位</text>
+<rect x="550.0" y="42.0" width="240.0" height="34.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<text x="670.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">组索引 2 位</text>
+<rect x="790.0" y="42.0" width="120.0" height="34.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="850.0" y="65.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">块偏移 1 位</text>
+<rect x="40.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="67.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<rect x="94.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="121.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<rect x="40.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#8fb9d0" stroke-width="2.2"/>
+<text x="94.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 0</text>
+<rect x="156.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="183.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<rect x="210.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="237.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<rect x="156.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#5a9fc2" stroke-width="2.2"/>
+<text x="210.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 1</text>
+<rect x="272.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="299.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<rect x="326.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="353.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<rect x="272.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#2f7ea8" stroke-width="2.2"/>
+<text x="326.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 2</text>
+<rect x="388.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="415.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<rect x="442.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="469.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<rect x="388.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#156082" stroke-width="2.2"/>
+<text x="442.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 3</text>
+<rect x="504.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="531.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
+<rect x="558.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="585.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<rect x="504.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#8fb9d0" stroke-width="2.2"/>
+<text x="558.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 0</text>
+<rect x="620.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="647.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<rect x="674.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="701.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">11</text>
+<rect x="620.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#5a9fc2" stroke-width="2.2"/>
+<text x="674.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 1</text>
+<rect x="736.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="763.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">12</text>
+<rect x="790.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="817.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">13</text>
+<rect x="736.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#2f7ea8" stroke-width="2.2"/>
+<text x="790.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 2</text>
+<rect x="852.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="879.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">14</text>
+<rect x="906.0" y="110.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="933.0" y="102.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">15</text>
+<rect x="852.0" y="110.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#156082" stroke-width="2.2"/>
+<text x="906.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 3</text>
+<rect x="36.0" y="106.0" width="464.0" height="78.0" rx="5" fill="none" stroke="#e97132" stroke-width="3.2"/>
+<text x="500.0" y="202.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">地址 0–7：4 个块分别进入组 0、1、2、3，可同时保留</text>
+<text x="40.0" y="248.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="start">用高位作组索引</text>
+<text x="40.0" y="302.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">字节地址</text>
+<text x="414.0" y="254.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="end">位号</text>
+<text x="490.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<text x="610.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<text x="730.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<text x="850.0" y="254.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<rect x="430.0" y="262.0" width="240.0" height="34.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="2"/>
+<text x="550.0" y="285.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">组索引 2 位</text>
+<rect x="670.0" y="262.0" width="120.0" height="34.0" rx="3" fill="#eeebf6" stroke="#6c5a9c" stroke-width="2"/>
+<text x="730.0" y="285.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">标记 1 位</text>
+<rect x="790.0" y="262.0" width="120.0" height="34.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="2"/>
+<text x="850.0" y="285.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">块偏移 1 位</text>
+<rect x="40.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="67.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<rect x="94.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="121.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">1</text>
+<rect x="40.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#8fb9d0" stroke-width="2.2"/>
+<text x="94.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 0</text>
+<rect x="156.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="183.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">2</text>
+<rect x="210.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#e3f0f7" stroke="#ffffff" stroke-width="1"/>
+<text x="237.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">3</text>
+<rect x="156.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#8fb9d0" stroke-width="2.2"/>
+<text x="210.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 0</text>
+<rect x="272.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="299.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">4</text>
+<rect x="326.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="353.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<rect x="272.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#5a9fc2" stroke-width="2.2"/>
+<text x="326.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 1</text>
+<rect x="388.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="415.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">6</text>
+<rect x="442.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#c3deec" stroke="#ffffff" stroke-width="1"/>
+<text x="469.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">7</text>
+<rect x="388.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#5a9fc2" stroke-width="2.2"/>
+<text x="442.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 1</text>
+<rect x="504.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="531.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">8</text>
+<rect x="558.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="585.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">9</text>
+<rect x="504.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#2f7ea8" stroke-width="2.2"/>
+<text x="558.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 2</text>
+<rect x="620.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="647.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<rect x="674.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#9fc9de" stroke="#ffffff" stroke-width="1"/>
+<text x="701.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">11</text>
+<rect x="620.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#2f7ea8" stroke-width="2.2"/>
+<text x="674.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 2</text>
+<rect x="736.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="763.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">12</text>
+<rect x="790.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="817.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">13</text>
+<rect x="736.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#156082" stroke-width="2.2"/>
+<text x="790.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 3</text>
+<rect x="852.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="879.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">14</text>
+<rect x="906.0" y="330.0" width="54.0" height="36.0" rx="0" fill="#7fb4d1" stroke="#ffffff" stroke-width="1"/>
+<text x="933.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">15</text>
+<rect x="852.0" y="330.0" width="108.0" height="36.0" rx="2" fill="none" stroke="#156082" stroke-width="2.2"/>
+<text x="906.0" y="391.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">组 3</text>
+<rect x="36.0" y="326.0" width="464.0" height="78.0" rx="5" fill="none" stroke="#e97132" stroke-width="3.2"/>
+<text x="500.0" y="422.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#e97132" text-anchor="middle">地址 0–7：前两块在组 0 互相替换，后两块在组 1 互相替换，组 2、3 未使用</text>
+</svg>

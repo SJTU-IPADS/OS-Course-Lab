@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 226" width="1000" height="226">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="165.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">直接映射</text>
+<rect x="70.0" y="38.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="50.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 0</text>
+<rect x="70.0" y="57.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="69.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="70.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 1</text>
+<rect x="70.0" y="76.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="88.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="89.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 2</text>
+<rect x="70.0" y="95.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="107.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 3</text>
+<rect x="70.0" y="114.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="126.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 4</text>
+<rect x="70.0" y="133.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="145.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 5</text>
+<rect x="70.0" y="152.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="164.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 6</text>
+<rect x="70.0" y="171.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="165.0" y="183.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<text x="56.0" y="184.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 7</text>
+<text x="165.0" y="217.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">S = 8，E = 1</text>
+<text x="505.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">2 路组相联</text>
+<rect x="410.0" y="38.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="50.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="410.0" y="54.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="404.0" y="34.0" width="202.0" height="40.0" rx="5" fill="none" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="396.0" y="59.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 0</text>
+<rect x="410.0" y="78.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="90.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="410.0" y="94.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="106.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="404.0" y="74.0" width="202.0" height="40.0" rx="5" fill="none" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="396.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 1</text>
+<rect x="410.0" y="118.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="410.0" y="134.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="404.0" y="114.0" width="202.0" height="40.0" rx="5" fill="none" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="396.0" y="139.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 2</text>
+<rect x="410.0" y="158.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="170.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="410.0" y="174.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="505.0" y="186.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="404.0" y="154.0" width="202.0" height="40.0" rx="5" fill="none" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="396.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="end">组 3</text>
+<text x="505.0" y="217.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">S = 4，E = 2</text>
+<text x="845.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">全相联</text>
+<rect x="750.0" y="38.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="50.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="54.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="66.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="70.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="82.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="86.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="102.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="114.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="118.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="134.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="750.0" y="150.0" width="190.0" height="16.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="845.0" y="162.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle" xml:space="preserve">v  tag  块</text>
+<rect x="744.0" y="34.0" width="202.0" height="136.0" rx="5" fill="none" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="845.0" y="217.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">S = 1，E = 8</text>
+</svg>

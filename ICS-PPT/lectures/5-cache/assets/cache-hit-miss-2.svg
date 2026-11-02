@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 302" width="1000" height="302">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="26.0" width="620.0" height="230.0" rx="8" fill="#ffffff" stroke="#0e2841" stroke-width="2"/>
+<text x="330.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">CPU</text>
+<rect x="100.0" y="110.0" width="160.0" height="80.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="180.0" y="147.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器</text>
+<text x="180.0" y="168.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">%rax %rbx ...</text>
+<rect x="380.0" y="58.0" width="220.0" height="172.0" rx="8" fill="#ffffff" stroke="#0e2841" stroke-width="2"/>
+<text x="490.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">缓存</text>
+<rect x="400.0" y="102.0" width="180.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="490.0" y="119.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据块</text>
+<rect x="400.0" y="128.0" width="180.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="490.0" y="145.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据块</text>
+<rect x="400.0" y="154.0" width="180.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="490.0" y="171.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据块</text>
+<rect x="400.0" y="180.0" width="180.0" height="22.0" rx="2" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.4"/>
+<text x="490.0" y="197.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">旧块</text>
+<rect x="396.0" y="176.0" width="188.0" height="30.0" rx="5" fill="none" stroke="#c0392b" stroke-width="2.4"/>
+<rect x="720.0" y="38.0" width="260.0" height="216.0" rx="8" fill="#ffffff" stroke="#2e7d4f" stroke-width="2"/>
+<text x="850.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#2e7d4f" text-anchor="middle">内存</text>
+<rect x="744.0" y="82.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="798.0" y="82.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="852.0" y="82.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="906.0" y="82.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="744.0" y="122.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="798.0" y="122.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="852.0" y="122.0" width="50.0" height="32.0" rx="2" fill="#fce9df" stroke="#e97132" stroke-width="3"/>
+<rect x="881.0" y="130.0" width="14.0" height="16.0" rx="2" fill="#e97132" stroke="#e97132" stroke-width="1"/>
+<rect x="906.0" y="122.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="744.0" y="162.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="798.0" y="162.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="852.0" y="162.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="906.0" y="162.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="744.0" y="202.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="798.0" y="202.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="852.0" y="202.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<rect x="906.0" y="202.0" width="50.0" height="32.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="320.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#156082" text-anchor="middle">≈1–50 ns</text>
+<text x="680.0" y="88.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">≈100 ns</text>
+<line x1="264.0" y1="128.0" x2="376.0" y2="128.0" stroke="#e97132" stroke-width="2.2" marker-end="url(#ah-e97132)"/>
+<text x="320.0" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#e97132" text-anchor="middle">地址 A</text>
+<line x1="604.0" y1="128.0" x2="716.0" y2="128.0" stroke="#2e7d4f" stroke-width="3.6" marker-end="url(#ah-2e7d4f)"/>
+<text x="680.0" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="middle">块的地址</text>
+<rect x="277.4" y="220.0" width="85.2" height="28.0" rx="14" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="320.0" y="239.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">miss</text>
+<text x="500.0" y="288.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#c0392b" text-anchor="middle">miss：A 所在的块不在缓存中，缓存向内存请求整个块</text>
+</svg>
