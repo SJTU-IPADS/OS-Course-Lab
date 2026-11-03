@@ -1,7 +1,28 @@
-* text eol=lf
+# Normalize text files while preserving binary files, including extensionless ones.
+* text=auto eol=lf
 
+Lab0/warehouse/bomb-* binary
+Lab*/user/procmgr binary
+Scripts/change_serial binary
+
+*.o binary
 *.obj binary
 *.dbg.obj binary
+*.a binary
+*.elf binary
+*.bin binary
+*.img binary
+*.so binary
+*.so.* binary
+*.dll binary
+*.exe binary
+*.srv binary
+*.gba binary
+*.bmp binary
+*.unitypackage binary
+*.assets binary
+*.resS binary
+*.pack binary
 *.png binary
 *.jpg binary
 *.jpeg binary
