@@ -1774,19 +1774,75 @@ This page presents only four steps: analysis before execution, prediction during
 # 本页只讲运行前分析、运行时预测、提前读取和需要时使用四步。论文的应用对象是一般程序的数据访问。来源：Xu et al., PF-LLM: Large Language Model Hinted Hardware Prefetching, ASPLOS 2026, https://doi.org/10.1145/3779212.3790202 。
 
 ['bridge-part4.title']
-src_hash = '64c58fc0'
-text = 'Part 3: Write Policies, Multilevel Caches and Performance Metrics'
-# src: 第三部分：写策略、多级缓存与性能指标
+src_hash = '7badefe8'
+text = 'Part 3: Write Policies and Performance Metrics'
+# src: 第三部分：写策略与性能指标
 
 ['bridge-part4.bridge.1']
-src_hash = '64c58fc0'
-text = 'Part 3: Write Policies, Multilevel Caches and Performance Metrics'
-# src: 第三部分：写策略、多级缓存与性能指标
+src_hash = '7badefe8'
+text = 'Part 3: Write Policies and Performance Metrics'
+# src: 第三部分：写策略与性能指标
 
 ['section.part4.title']
-src_hash = '64c58fc0'
-text = 'Part 3: Write Policies, Multilevel Caches and Performance Metrics'
-# src: 第三部分：写策略、多级缓存与性能指标
+src_hash = '7badefe8'
+text = 'Part 3: Write Policies and Performance Metrics'
+# src: 第三部分：写策略与性能指标
+
+['copy-fail.title']
+src_hash = '2f84f72a'
+text = 'News: the Copy Fail vulnerability'
+# src: 新闻：Copy Fail 漏洞
+
+['copy-fail.slide.1']
+src_hash = 'f16275b7'
+text = '''
+The Linux kernel vulnerability **Copy Fail (CVE-2026-31431)** was publicly disclosed on April 29, 2026.
+- **Page cache**: file contents kept in memory for reuse when files are read or executed.
+- **Zero-copy** reduces copying by sharing data pages. An error in kernel cryptographic processing allowed unauthorized writes to these shared file pages.
+'''
+# src:
+# 
+# 2026 年 4 月 29 日，Linux 内核漏洞 **Copy Fail（CVE-2026-31431）** 被公开。
+# - **page cache（文件页缓存）**：把文件内容保存在内存中，供文件读取与执行复用。
+# - **零拷贝**通过共享数据页减少复制。内核加解密处理中的错误使这些共享文件页被越权写入。
+
+['copy-fail.image.1.alt']
+src_hash = '99b80488'
+text = 'The su file on disk retains its original contents, while the in-memory file cache is modified without authorization and execution uses the modified cached copy'
+# src: 磁盘上的 su 保持原始内容，内存中的文件缓存被越权修改，执行使用修改后的缓存副本
+
+['copy-fail.image.1.footnote.1']
+src_hash = '2623eac3'
+text = 'Theori / Xint: [Copy Fail technical analysis](https://xint.io/blog/copy-fail-linux-distributions).'
+# src: Theori / Xint：[Copy Fail 技术说明](https://xint.io/blog/copy-fail-linux-distributions)。
+
+['copy-fail.highlight.1']
+src_hash = 'f3aed4f2'
+text = 'The cached contents differ from the disk file. Executing the modified su can grant root privileges.'
+# src: 缓存与磁盘内容不一致，执行被修改的 su 可获得 root 权限。
+
+['copy-fail.notes.1']
+src_hash = 'bc3d1f69'
+text = '''
+The page cache is the operating system's in-memory copy of file contents. Reading or executing a file can use its cached contents.
+Copy Fail is CVE-2026-31431, publicly disclosed on April 29, 2026. The default target in the published example is /usr/bin/su.
+Zero-copy avoids copying by sharing pages. An incorrect in-place operation in the kernel cryptographic interface made shared file pages part of a writable destination, allowing a local unprivileged user to modify cached contents that should have been read-only.
+This abnormal write path did not mark the file pages for writeback, so the original file on disk remained unchanged. Executing su used the modified cached contents and could lead to privilege escalation.
+The root cause was an unauthorized write to shared cached pages. The difference between the cache and disk was a consequence. Normal write-back permits temporary differences while tracking modifications and ensuring that they are written back when required.
+This page explains cached copies, shared data pages, unauthorized modifications, and the execution result. It does not give exploitation steps. The hardware write-policy examples use a CPU, one cache, and memory.
+Sources: Theori / Xint, https://copy.fail/ and https://xint.io/blog/copy-fail-linux-distributions .
+Linux fix: https://github.com/torvalds/linux/commit/a664bf3d603dc3bdcf9ae47cc21e0daec706d7a5 .
+'''
+# src:
+# 
+# page cache 是操作系统在内存中保存的文件内容副本。文件被读取或执行时，系统可以使用已缓存的内容。
+# Copy Fail 的编号为 CVE-2026-31431，2026 年 4 月 29 日公开。公开示例的默认目标是 /usr/bin/su。
+# 零拷贝通过共享页面避免复制。内核加解密接口的原地处理错误让共享文件页进入可写目标，导致普通本地用户越权修改本应只读的缓存内容。
+# 这条异常写入路径没有将文件页标为需要写回，磁盘原文件保持不变。执行 su 时使用修改后的缓存内容，可能导致权限提升。
+# 漏洞的根因是对共享缓存页的非法写入。缓存与磁盘的内容不同是其后果。正常写回允许副本暂时不同，同时记录修改并保证需要时写回。
+# 这里只说明缓存副本、共享数据页、越权修改与执行结果，不给出利用方法。硬件写策略的例子采用 CPU、缓存与内存三者。
+# 来源：Theori / Xint，https://copy.fail/ ，https://xint.io/blog/copy-fail-linux-distributions 。
+# Linux 修复：https://github.com/torvalds/linux/commit/a664bf3d603dc3bdcf9ae47cc21e0daec706d7a5 。
 
 ['write-problem.title']
 src_hash = '7adbbfcc'
@@ -1794,35 +1850,37 @@ text = 'Writes: The Consistency Problem'
 # src: 写入的一致性问题
 
 ['write-problem.slide.1']
-src_hash = 'c066101c'
-text = 'The cache has several levels, and each level holds copies of some of the blocks of main memory. When a word is written, how are the copies in the levels updated?'
+src_hash = 'ab1ca461'
+text = 'The cache holds copies of some blocks in memory. After the CPU writes `x = 2`, how should the two copies in the cache and memory be updated?'
 # src:
 # 
-# 缓存分多级，每一级保存内存中一部分块的副本。写入一个字时，各层的副本怎样更新？
+# 缓存保存内存中一部分块的副本。CPU 写入 `x = 2` 后，缓存与内存中的两份数据怎样更新？
 
 ['write-problem.slide.2']
-src_hash = '81cc5168'
-text = 'After a write, the new value must be propagated to the next level at some point.'
-# src: 写入之后，新值必须在某个时刻更新到下一层。
+src_hash = 'da4d40d2'
+text = 'Modifications must be preserved and written to memory before the cache line is replaced.'
+# src: 写入之后，必须保存修改，并在替换缓存行之前把新值写入内存。
 
 ['write-problem.notes.1']
-src_hash = '30269308'
+src_hash = 'dd718689'
 text = '''
-From top to bottom the figure shows the processor, L1, L2 and main memory. Orange is a copy just written, and a red frame is an old value.
-Frame 1: the block of x has a copy in every level, with the value 1. A read does not change a copy, so the three levels agree.
-Frame 2: the processor writes x = 2. The block is in L1.
-Frame 3: L1 updates its own copy, x in L2 and in main memory is still 1, and the three copies are inconsistent.
-Frame 4: L1 needs to load another block and replaces this line. If the line is simply discarded, the new value 2 no longer exists in any level.
-Frame 5: when x is read again, L1 misses and gets 1 from L2, so the program does not read the value it wrote. Hence after a write, the new value must be propagated to the next level at some point.
+The figure contains only a CPU, one cache, and memory. Registers and the cache are inside the CPU boundary. Orange marks a newly written copy, and a red outline marks the old value.
+Frame 1: the cache and memory each hold a copy of x with value 1.
+Frame 2: the CPU writes x = 2, and the block is already cached.
+Frame 3: only the cache is updated. Memory still holds 1, so the copies differ.
+Frame 4 shows an incorrect action: replace the line with another block without saving its modifications to memory. The new value 2 is lost.
+Frame 5: reading x again misses, and the value fetched from memory is 1. The program cannot read the 2 it wrote.
+A write policy must therefore specify when memory is updated and ensure that replacement does not lose modifications. The incorrect sequence motivates this requirement.
 '''
 # src:
 # 
-# 图中自上而下是处理器、L1、L2 与内存。橙色是刚写入的副本，红框是旧值。
-# 第一帧：x 的块在每一层都有一份副本，值是 1。读不会改变副本，三层的值一致。
-# 第二帧：处理器写 x = 2。该块在 L1 中。
-# 第三帧：L1 更新自己的副本，L2 与内存中的 x 仍是 1，三份副本不一致。
-# 第四帧：L1 要装入别的块，把这一行替换出去。如果替换时直接丢弃，新值 2 在任何一层都不存在。
-# 第五帧：再读 x，L1 miss，从 L2 取得的是 1，程序读到的不是它写入的值。因此写入之后，必须在某个时刻把新值更新到下一层。
+# 图中只有 CPU、缓存与内存，寄存器和缓存位于 CPU 外框中。橙色是刚写入的副本，红框标出旧值。
+# 第一帧：缓存与内存各保存 x 的一份副本，值都是 1。
+# 第二帧：CPU 写 x = 2，该块已在缓存中。
+# 第三帧：只更新缓存，内存仍是 1，两份数据不同。
+# 第四帧演示一种错误处理：直接用其他块替换这一行，未把修改保存到内存，新值 2 丢失。
+# 第五帧：再读 x，缓存 miss，从内存取回的值为 1，程序读不到自己写入的 2。
+# 因此必须规定何时更新内存，并确保修改不会在替换时丢失。图中的错误过程用于提出问题。
 
 ['write-through.title']
 src_hash = 'd4566e09'
@@ -1830,34 +1888,32 @@ text = 'Write Hit: Write-Through'
 # src: 写 hit：写直达
 
 ['write-through.slide.1']
-src_hash = '0e7bbab4'
+src_hash = 'ae4fc244'
 text = '''
-When the block containing the address written by the processor is already in the cache, this is a **write hit**.
+A **write hit** occurs when the block containing the CPU's write address is already cached.
 
-The most naive approach is **write-through**: on each write hit, the word is written to the next level at the same time as the cache is updated, so all levels stay consistent, and a replaced line is simply discarded.
+**Write-through** updates the cache and writes the same word to memory on every write hit. A replaced cache line can be discarded.
 '''
 # src:
 # 
-# 处理器写入的地址所在的块已在缓存中，称为**写 hit**。
+# CPU 写入的地址所在的块已在缓存中，称为**写 hit**。
 # 
-# 最朴素的做法是**写直达**（write-through）：每次写 hit，在更新缓存的同时把这个字写到下一层，各层始终一致，被替换的行直接丢弃。
+# **写直达**（write-through，也称写穿）：每次写 hit，更新缓存，并把这个字写入内存。缓存行被替换时可以直接丢弃。
 
 ['write-through.notes.1']
-src_hash = 'e808bf94'
+src_hash = 'e51e2ddd'
 text = '''
-The column on the right of the figure is the number of writes each level receives. One arrow carries one word.
-Frame 1: the processor writes x = 2. The block is in L1, so this is a write hit, and L1 updates x. L2 and main memory still hold the old value.
-Frame 2: L1 writes the word to L2 at the same time.
-Frame 3: L2 writes the word to main memory at the same time, and the three copies are consistent. A line is consistent with the next level, needs no extra state, and is simply discarded when it is replaced.
-Frame 4: the cost is that every write goes all the way to main memory. Writing the same word 100 times writes main memory 100 times, and the processor waits for main memory on every write.
+The right-hand column counts writes to the cache and memory. One arrow transfers one word.
+The four frames show one write hit and the accumulated result: the CPU issues a write, the cache is updated, and the same word is written to memory. Both copies then agree.
+Writing the same word 100 times updates the cache 100 times and sends 100 word writes to memory. The line has no modifications awaiting transmission to memory, so it can be discarded when replaced.
+The figures explain data transfers without expanding write buffers. Actual CPUs can use a write buffer to reduce waiting, so write-through does not imply that every CPU write blocks until memory has completed the write.
 '''
 # src:
 # 
-# 图右侧一列是每一层被写入的次数。一个箭头表示传送一个字。
-# 第一帧：处理器写 x = 2，该块在 L1 中，写 hit，L1 更新 x。此时 L2 与内存仍是旧值。
-# 第二帧：L1 同时把这个字写到 L2。
-# 第三帧：L2 同时把这个字写到内存，三份副本一致。行与下一层一致，不需要额外状态，被替换时丢弃即可。
-# 第四帧：代价是每次写都要传到内存。同一个字写 100 次，内存被写 100 次，处理器的每次写都要等内存写完。
+# 右侧记录缓存与内存被写入的次数，一个箭头表示传送一个字。
+# 四帧展开一次写 hit 的处理与累计结果：CPU 发出写入，缓存更新，并把同一个字写入内存，随后两份数据一致。
+# 对同一个字连续写 100 次，缓存更新 100 次，内存也接收 100 次字写入。替换缓存行时没有尚未传往内存的修改，可以直接丢弃。
+# 这里用数据传输说明写直达，不展开写缓冲。实际 CPU 可以借助写缓冲减少等待，不能据此断言每次写都阻塞到内存完成。
 
 ['write-back.title']
 src_hash = 'c08ebc30'
@@ -1865,36 +1921,36 @@ text = 'Write Hit: Write-Back'
 # src: 写 hit：写回
 
 ['write-back.slide.1']
-src_hash = '78170807'
+src_hash = 'd1a28591'
 text = '''
-**Write-back** updates only the cache, and the update of the next level is postponed until the line is replaced:
-- Each line gains one **dirty bit**: D = 1 if the line has been written, meaning that it differs from the copy in the next level.
-- When a line is replaced, a line with D = 1 is written to the next level as a whole block, and a line with D = 0 is discarded directly.
+**Write-back** updates only the cache on a write hit and postpones the memory update until the line is replaced:
+- Each line has a **dirty bit**: D = 1 indicates modifications that have not been written back to memory.
+- Before replacement, a line with D = 1 is written back to memory as a whole block. A line with D = 0 can be discarded.
 '''
 # src:
 # 
-# **写回**（write-back）只更新缓存，下一层的更新推迟到该行被替换时：
-# - 每行增加一位**脏位**（dirty bit）：行被写过则 D = 1，表示它与下一层的副本不同。
-# - 被替换时，D = 1 的行整块写到下一层，D = 0 的行直接丢弃。
+# **写回**（write-back）在写 hit 时只更新缓存，内存的更新推迟到该行被替换时：
+# - 每行增加一位**脏位**（dirty bit）：D = 1 表示有尚未写回内存的修改。
+# - 替换前，D = 1 的行先整块写回内存，D = 0 的行直接丢弃。
 
 ['write-back.notes.1']
-src_hash = '17df011f'
+src_hash = 'ec74f74d'
 text = '''
-Each line in the figure has one more column, the dirty bit D. Four parallel arrows carry a whole block.
-Frame 1: the processor writes x = 2, a write hit. Only L1 is updated, and the dirty bit D is set to 1. L2 and main memory still hold the old value.
-Frame 2: the same word is written another 99 times. Each write updates only L1 and does not write the next level.
-Frame 3: L1 replaces this line. D = 1, so the whole block is written to L2, and D of this line in L2 is set to 1.
-Frame 4: L2 replaces this line. D = 1, so the whole block is written to main memory. The same word is written 100 times, and main memory is written once.
-A line with D = 0 is consistent with the next level and is discarded directly when it is replaced.
+The cache line has a dirty bit D. Four parallel arrows transfer a whole block.
+Frame 1: the CPU writes x = 2, updating only the cache and setting D to 1. Memory still holds 1.
+Frame 2: another 99 writes increase x to 101. Each updates only the cache. The cache has been updated 100 times, and memory has not been written.
+Frame 3: when the line must be replaced, first write the entire dirty block to memory. The old line still holds the data being written back.
+Frame 4: only after writeback completes is the line used for another block. The 100 cached word writes are combined into one whole-block write to memory.
+The example assumes that the block remains cached during all 100 writes. D = 1 means writeback is required; the values need not differ, since the program could write the original value again.
 '''
 # src:
 # 
-# 图中每行多了一列脏位 D。四个并排的箭头表示传送整个块。
-# 第一帧：处理器写 x = 2，写 hit。只更新 L1，脏位 D 置 1。L2 与内存仍是旧值。
-# 第二帧：同一个字再写 99 次，每次只更新 L1，不写下一层。
-# 第三帧：L1 替换这一行。D = 1，把整个块写到 L2，L2 这一行的 D 置 1。
-# 第四帧：L2 替换这一行。D = 1，把整个块写到内存。同一个字写 100 次，内存只被写 1 次。
-# D = 0 的行与下一层一致，替换时直接丢弃。
+# 缓存行增加脏位 D，四个并排的箭头表示传送整个块。
+# 第一帧：CPU 写 x = 2，只更新缓存，D 置 1，内存仍为 1。
+# 第二帧：同一个字再写 99 次，x 增至 101，每次只更新缓存。缓存更新 100 次，内存未被写入。
+# 第三帧：需要替换该行时，先将脏块完整写入内存。此时旧行仍保存着待写回的数据。
+# 第四帧：写回完成后，该行才用于其他块。缓存中的 100 次字写入合为 1 次内存整块写入。
+# 本例假设 100 次写期间没有逐出该块。D = 1 表示需要写回，不要求缓存值一定与内存值不同，例如程序也可能写回原值。
 
 ['write-allocate.title']
 src_hash = 'd84e8b07'
@@ -1902,31 +1958,31 @@ text = 'Write Miss: Write-Allocate'
 # src: 写 miss：写分配
 
 ['write-allocate.slide.1']
-src_hash = 'cb24dfd0'
-text = 'When the block containing the address written by the processor is not in the cache, this is a **write miss**. **Write-allocate** first brings the block from the next level into the cache and then proceeds as for a write hit.'
+src_hash = '6f1e05cf'
+text = "A **write miss** occurs when the block containing the CPU's write address is absent from the cache. **Write-allocate** first fetches the block from memory into the cache, then handles the write as a write hit."
 # src:
 # 
-# 处理器写入的地址所在的块不在缓存中，称为**写 miss**。**写分配**（write-allocate）先把该块从下一层取入缓存，再按写 hit 处理。
+# CPU 写入的地址所在的块不在缓存中，称为**写 miss**。**写分配**（write-allocate）先把该块从内存取入缓存，再按写 hit 处理。
 
 ['write-allocate.slide.2']
-src_hash = 'f565bca2'
-text = 'Write-back is usually paired with write-allocate: a written block stays in the cache, and later reads and writes hit.'
-# src: 写回通常配写分配：写过的块留在缓存中，后续的读与写 hit。
+src_hash = '373dc61b'
+text = 'Write-back is commonly paired with write-allocate: keep the written block cached for reuse by later reads and writes.'
+# src: 写回通常配写分配：把写过的块留在缓存中，供后续读写复用。
 
 ['write-allocate.notes.1']
-src_hash = '340dd1f1'
+src_hash = 'a45a2a21'
 text = '''
-Frame 1: the processor writes x = 2, this line of L1 is invalid, and the write misses.
-Frame 2: the block is brought from L2 into L1. The four green arrows are the whole block.
-Frame 3: the write proceeds as a write hit. When the next level is updated is decided by the write-hit policy, which is write-back in the figure: x in L1 is updated and D is set to 1.
-Frame 4: later reads and writes of this block hit in L1. Written data is often read soon after, and adjacent elements are often written next, so write-allocate exploits both kinds of locality. Hence write-back is usually paired with write-allocate.
+Frame 1: the CPU writes x = 2. The cache does not hold the block, so the write misses.
+Frame 2: fetch the entire block from memory into the cache. Four green arrows transfer the block. An empty line is available in this example, so no dirty block needs to be evicted.
+Frame 3: handle the write as a write hit, using write-back in this example. Update cached x and set D to 1. Memory keeps the old value.
+Frame 4: subsequent reads and writes hit while the block remains cached. Reusing written data exploits temporal locality, and accessing neighboring words in the block exploits spatial locality.
 '''
 # src:
 # 
-# 第一帧：处理器写 x = 2，L1 中的这一行无效，写 miss。
-# 第二帧：把该块从 L2 取入 L1，四个绿色箭头表示整个块。
-# 第三帧：按写 hit 处理。下一层何时更新由写 hit 的策略决定，图中是写回：更新 L1 的 x，D 置 1。
-# 第四帧：之后对这个块的读写都在 L1 中 hit。写过的数据常常随后被读到，相邻的元素常常紧接着被写，写分配利用了这两种局部性，因此写回通常配写分配。
+# 第一帧：CPU 写 x = 2，缓存中没有该块，写 miss。
+# 第二帧：从内存把整个块取入缓存，四个绿色箭头表示整个块。本例有可用的空行，无需逐出脏块。
+# 第三帧：按写 hit 处理，图中搭配写回策略。更新缓存中的 x，D 置 1，内存保持旧值。
+# 第四帧：该块仍驻留时，后续对它的读写 hit。重复使用已写入的数据利用时间局部性，访问同块中的邻近字利用空间局部性。
 
 ['no-write-allocate.title']
 src_hash = '55d04955'
@@ -1934,237 +1990,33 @@ text = 'Write Miss: No-Write-Allocate'
 # src: 写 miss：非写分配
 
 ['no-write-allocate.slide.1']
-src_hash = '04ae80dc'
-text = '**No-write-allocate** does not fetch the block and writes the word directly to the next level.'
+src_hash = '33e4c971'
+text = '**No-write-allocate** does not fetch a block on a write miss. It writes the word directly to memory and leaves the cache unchanged.'
 # src:
 # 
-# **非写分配**（no-write-allocate）不取块，直接把这个字写到下一层。
+# **非写分配**（no-write-allocate）在写 miss 时不取块，直接把这个字写入内存，缓存保持不变。
 
 ['no-write-allocate.slide.2']
-src_hash = 'aa59a800'
-text = 'Write-through is usually paired with no-write-allocate: the write has already reached the next level, so no block is fetched.'
-# src: 写直达通常配非写分配：写已到达下一层，无需取块。
+src_hash = '899d86bb'
+text = 'Write-through is commonly paired with no-write-allocate: transfer only the written word and avoid fetching the whole block.'
+# src: 写直达常配非写分配：这次写只传输一个字，省去取入整个块。
 
 ['no-write-allocate.notes.1']
-src_hash = '434dd5a8'
+src_hash = '5212d466'
 text = '''
-Frame 1: the same starting point. The processor writes x = 2, this line of L1 is invalid, and the write misses.
-Frame 2: no block is fetched. The word bypasses L1 and is written to L2, and L1 does not change.
-Frame 3: when the next level is updated is decided by the write-hit policy, which is write-through in the figure: L2 writes the word to main memory at the same time.
-Frame 4: a later read of x finds no block in L1 and misses, and only then is the block fetched from L2.
-Under write-through every write already reaches the next level, so whether the block is in the cache does not affect correctness, and not fetching it saves one block transfer. Hence write-through is usually paired with no-write-allocate.
-The two write-miss approaches and the two write-hit approaches are independent of each other, and in practice they are used in pairs.
+Frame 1: the CPU writes x = 2. The cache does not hold the block, so the write misses.
+Frame 2: the word bypasses the cache and is written directly to memory. No block is fetched from memory.
+Frame 3: memory now holds 2, while the cache still does not hold the block.
+Frame 4: reading x later still misses. The block containing x is then fetched into the cache, yielding the new value 2.
+Not fetching the block saves a block read on the current write miss, but a later read can still miss. Write-hit and write-miss policies are independent choices. Write-through with no-write-allocate is one common combination.
 '''
 # src:
 # 
-# 第一帧：同样的起点，处理器写 x = 2，L1 中的这一行无效，写 miss。
-# 第二帧：不取块，这个字绕过 L1 写到 L2，L1 不变。
-# 第三帧：下一层何时更新由写 hit 的策略决定，图中是写直达：L2 同时把这个字写到内存。
-# 第四帧：之后读 x，L1 中没有该块，读 miss，这时才从 L2 取块。
-# 写直达每次写都已经到达下一层，缓存里有没有这个块不影响正确性，不取块可以省去一次块的传输，因此写直达通常配非写分配。
-# 写 miss 的两种做法与写 hit 的两种做法各自独立，实际使用时成对出现。
-
-['icache-dcache.title']
-src_hash = '068b8dba'
-text = 'Instruction Cache and Data Cache'
-# src: 指令缓存与数据缓存
-
-['icache-dcache.slide.1']
-src_hash = 'a126a489'
-text = '''
-The first-level cache is divided into an **instruction cache** and a **data cache**: instruction fetch reads the instruction cache, and data reads and writes access the data cache. Caches at the second level and below hold both instructions and data and are called **unified caches**.
-
-Why they are separate:
-- Instruction fetch and memory access do not wait for each other in the same cycle.
-- The instruction cache is only read, so it needs no write policy and no dirty bit.
-- Instructions and data never replace each other's blocks.
-'''
-# src:
-# 
-# 一级缓存分为**指令缓存**与**数据缓存**：取指令读指令缓存，读写数据访问数据缓存。二级及以下的缓存同时存放指令与数据，称为**统一缓存**。
-# 
-# 分开的原因：
-# - 取指与访存在同一个周期互不等待。
-# - 指令缓存只被读，无需写策略与脏位。
-# - 指令与数据互相不会替换对方的块。
-
-['icache-dcache.notes.1']
-src_hash = '7366616f'
-text = '''
-In one cycle, the processor fetches the next instruction and may also execute an instruction that reads or writes memory. With only one first-level cache, the two would have to queue. With separate caches, the fetch unit reads the instruction cache and the memory access unit accesses the data cache, and the two accesses do not wait for each other.
-Instructions are only read, so the instruction cache only has blocks read in, with no write hits or write misses, and the arrows on the instruction side of the figure are one-way. Data is written, so the arrows on the data side are two-way.
-The access pattern of instructions is sequential execution plus loops, and the access pattern of data depends on the program. Keeping them separate means that accesses of one kind do not replace the blocks of the other.
-L2 holds instructions and data together and is called a unified cache, and L2 in the figure holds both instruction blocks and data blocks. The capacities in the figure are the parameters of an x86-64 processor: L1 instruction cache 32 KB, 8-way; L1 data cache 48 KB, 12-way; L2 cache 1280 KB, 20-way.
-'''
-# src:
-# 
-# 一个周期内，处理器要取下一条指令，还可能执行一条读写内存的指令。若只有一个一级缓存，两者要排队。分开以后取指部件读指令缓存，访存部件访问数据缓存，两个访问互不等待。
-# 指令只被读取，因此指令缓存只有读入块，没有写 hit 与写 miss 的问题，图中指令一侧的箭头是单向的。数据会被写，图中数据一侧的箭头是双向的。
-# 指令的访问模式是顺序执行加循环，数据的访问模式取决于程序。分开存放使一方的访问不会把另一方的块替换出去。
-# L2 同时存放指令与数据，称为统一缓存，图中 L2 里既有指令块也有数据块。图中的容量是一款 x86-64 处理器的参数：L1 指令缓存 32 KB、8 路，L1 数据缓存 48 KB、12 路，L2 缓存 1280 KB、20 路。
-
-['multilevel.title']
-src_hash = '400e8706'
-text = 'Multilevel Caches'
-# src: 多级缓存
-
-['multilevel.slide.1']
-src_hash = 'c9f03c7a'
-text = '''
-The larger a cache is, the slower its lookup, so processors use multilevel caches:
-- L1 is small and fast and serves most accesses.
-- On an L1 miss, L2, L3, and main memory are accessed in turn.
-- Capacity and latency increase level by level.
-- Each core has its own L1 and L2, and all cores share L3.
-'''
-# src:
-# 
-# 缓存越大，查找越慢。处理器因此使用多级缓存：
-# - L1 小而快，服务大部分访问。
-# - L1 miss 时依次访问 L2、L3 与内存。
-# - 容量与延迟逐级增大。
-# - 每个核有自己的 L1 与 L2，所有核共享 L3。
-
-['multilevel.notes.1']
-src_hash = '2dc6015a'
-text = '''
-The larger a cache is, the longer the paths for selecting the set, comparing tags, and transferring data, so larger caches have higher latency. With the same area and power, designers trade capacity against speed, and the multilevel structure balances the two.
-L1 and L2 belong to each core, and L3 is shared by all cores. Only two cores are drawn in the figure, and the other cores are the same.
-The animation on the right is one access in which the processor reads x, and x is only in L3.
-Frame 1: the processor first accesses the L1 data cache, and it misses.
-Frame 2: it accesses L2, and it misses.
-Frame 3: it accesses L3, and it hits.
-Frame 4: the block containing x is filled from L3 into L2 and then into L1. The closer a level is to the processor, the smaller and faster it is, and the block is filled back level by level.
-Frame 5: x is sent from L1 to the processor. Afterwards, reading x again or other words in the same block hits in L1.
-'''
-# src:
-# 
-# 缓存越大，选择组、比较标记与传输数据的路径越长，因此大缓存的延迟更高。在同样的面积与功耗下，设计者在容量与速度之间取舍，用多级结构兼顾两者。
-# L1 与 L2 属于每个核，L3 由所有核共享。图中只画出两个核，其余核同理。
-# 右侧动画是处理器读 x 的一次访问，x 只在 L3 中。
-# 第一帧：处理器先访问 L1 数据缓存，miss。
-# 第二帧：访问 L2，miss。
-# 第三帧：访问 L3，hit。
-# 第四帧：含 x 的块从 L3 填入 L2，再填入 L1。越靠近处理器的层越小越快，块逐级填回。
-# 第五帧：x 从 L1 送到处理器。之后再读 x 或同一块中的其他字，在 L1 中 hit。
-
-['multilevel-params.title']
-src_hash = 'dad5b969'
-text = 'Capacity and Latency of Each Level'
-# src: 各级缓存的容量与延迟
-
-['multilevel-params.slide.1']
-src_hash = 'dfae5f8e'
-text = 'Capacity and access latency increase level by level, and the access latency of main memory is about 100 times that of L1.'
-# src:
-# 
-# 容量与访问延迟逐级增大，内存的访问延迟约为 L1 的 100 倍。
-
-['multilevel-params.slide.1.footnote.1']
-src_hash = '7e2d5b27'
-text = 'Capacities and numbers of ways are taken from an x86-64 processor; latencies are measured by pointer chasing'
-# src: 容量与路数取自一款 x86-64 处理器，延迟为指针追逐的实测
-
-['multilevel-params.table.1.cell.0.0']
-src_hash = 'b6fd20c0'
-text = 'Level'
-# src: 层
-
-['multilevel-params.table.1.cell.0.1']
-src_hash = 'd8272b3c'
-text = 'Capacity'
-# src: 容量
-
-['multilevel-params.table.1.cell.0.2']
-src_hash = '6dc0f603'
-text = 'Number of ways'
-# src: 路数
-
-['multilevel-params.table.1.cell.0.3']
-src_hash = 'eb4fd500'
-text = 'Access latency'
-# src: 访问延迟
-
-['multilevel-params.table.1.cell.1.0']
-src_hash = '1ab98a50'
-text = 'L1 data cache'
-# src: L1 数据缓存
-
-['multilevel-params.table.1.cell.1.1']
-src_hash = '3035f6ad'
-text = '48 KB'
-# src: 48 KB
-
-['multilevel-params.table.1.cell.1.2']
-src_hash = '6b51d431'
-text = '12'
-# src: 12
-
-['multilevel-params.table.1.cell.1.3']
-src_hash = 'c1f2b212'
-text = '1.1 ns'
-# src: 1.1 ns
-
-['multilevel-params.table.1.cell.2.0']
-src_hash = 'd6a8f082'
-text = 'L2 cache'
-# src: L2 缓存
-
-['multilevel-params.table.1.cell.2.1']
-src_hash = '4413d362'
-text = '1280 KB'
-# src: 1280 KB
-
-['multilevel-params.table.1.cell.2.2']
-src_hash = 'f5ca38f7'
-text = '20'
-# src: 20
-
-['multilevel-params.table.1.cell.2.3']
-src_hash = 'c52d65d0'
-text = '3.1 ns'
-# src: 3.1 ns
-
-['multilevel-params.table.1.cell.3.0']
-src_hash = '58e75ca6'
-text = 'L3 cache'
-# src: L3 缓存
-
-['multilevel-params.table.1.cell.3.1']
-src_hash = 'a2498acd'
-text = '24 MB'
-# src: 24 MB
-
-['multilevel-params.table.1.cell.3.2']
-src_hash = '6b51d431'
-text = '12'
-# src: 12
-
-['multilevel-params.table.1.cell.3.3']
-src_hash = 'a7abcf8d'
-text = '12.0 ns'
-# src: 12.0 ns
-
-['multilevel-params.table.1.cell.4.0']
-src_hash = '7d8f8c37'
-text = 'Main memory'
-# src: 内存
-
-['multilevel-params.table.1.cell.4.3']
-src_hash = '2127603e'
-text = '114.5 ns'
-# src: 114.5 ns
-
-['multilevel-params.notes.1']
-src_hash = 'c60ef067'
-text = '''
-The access latency in the table is the time the processor needs to read data that hits in that level, measured with pointer chasing: when the data set is smaller than L1, the L1 latency is measured, and so on.
-The bars on the right draw the same four numbers to scale: the bars of L1, L2 and L3 are short, and the bar of main memory fills the figure.
-'''
-# src:
-# 
-# 表中的访问延迟是处理器读该层 hit 的数据所需的时间，是用指针追逐测得的：数据集小于 L1 时测得 L1 的延迟，依此类推。
-# 右图按比例画出同样的四个数：L1、L2 与 L3 的条都很短，内存的条占满全图。
+# 第一帧：CPU 写 x = 2，缓存中没有该块，写 miss。
+# 第二帧：这个字绕过缓存，直接写入内存，不从内存取块。
+# 第三帧：内存已变为 2，缓存仍没有该块。
+# 第四帧：之后读 x，仍然读 miss，这时才把含 x 的块取入缓存，得到新值 2。
+# 不取块可以省去当前写 miss 的一次块读取，但后续读取仍可能 miss。写 hit 与写 miss 的策略是两个独立选择，写直达加非写分配是一种常见组合。
 
 ['metrics.title']
 src_hash = 'e82572b4'
@@ -2172,100 +2024,56 @@ text = 'Cache Performance Metrics'
 # src: 缓存的性能指标
 
 ['metrics.slide.1']
-src_hash = '881d1bf6'
+src_hash = '9fa4d6be'
 text = '''
-- **Miss rate** $m$ = misses / accesses, **hit rate** = 1 − $m$.
-- **Hit time** $t_{hit}$: the time to deliver the data to the processor on a hit, including the time to determine whether it hits.
-- **Miss penalty** $t_{pen}$: the extra time on a miss compared with a hit, that is, the time to obtain the block from the next level, place it in the cache, and deliver the data to the processor.
+- **Miss rate** $m$ = number of accesses that miss / total accesses; **hit rate** = 1 − $m$.
+- **Hit time** $t_{hit}$: time to deliver cached data to the CPU, including the hit check.
+- **Miss penalty** $t_{pen}$: the additional time beyond a hit to fetch the block from memory, fill the cache, and transfer the data.
 '''
 # src:
 # 
 # - **miss 率** $m$ = miss 的访问数 / 全部访问数，**hit 率** = 1 − $m$。
-# - **hit 时间** $t_{hit}$：hit 时把数据送到处理器的时间，包括判断是否 hit 的时间。
-# - **miss 惩罚** $t_{pen}$：miss 时比 hit 多出的时间，即从下一层取得块、放入缓存并把数据送到处理器的时间。
+# - **hit 时间** $t_{hit}$：缓存 hit 时把数据送到 CPU 的时间，包括判断是否 hit。
+# - **miss 惩罚** $t_{pen}$：miss 比 hit 多出的时间，用于从内存取块、填入缓存并传输数据。
 
-['metrics.slide.1.footnote.1']
-src_hash = '54bf5242'
-text = "Typical values: the L1 miss rate is 3% to 10%, and a larger L2 can be below 1% (Bryant & O'Hallaron, CS:APP 3e, Section 6.4.2)"
-# src: 典型值：L1 的 miss 率为 3% 至 10%，容量更大的 L2 可以低于 1%（Bryant & O'Hallaron, CS:APP 3e, 6.4.2 节）
-
-['metrics.table.1.cell.0.0']
-src_hash = 'b6fd20c0'
-text = 'Level'
-# src: 层
-
-['metrics.table.1.cell.0.1']
-src_hash = '841d259a'
-text = 'Hit time'
-# src: hit 时间
-
-['metrics.table.1.cell.0.2']
-src_hash = 'c2c29761'
-text = 'Miss penalty'
-# src: miss 惩罚
-
-['metrics.table.1.cell.1.0']
-src_hash = 'dffe8596'
-text = 'L1'
-# src: L1
-
-['metrics.table.1.cell.1.1']
-src_hash = 'c1f2b212'
-text = '1.1 ns'
-# src: 1.1 ns
-
-['metrics.table.1.cell.1.2']
-src_hash = '8011d757'
-text = '2.0 ns'
-# src: 2.0 ns
-
-['metrics.table.1.cell.2.0']
-src_hash = 'd76354d8'
-text = 'L2'
-# src: L2
-
-['metrics.table.1.cell.2.1']
-src_hash = 'c52d65d0'
-text = '3.1 ns'
-# src: 3.1 ns
-
-['metrics.table.1.cell.2.2']
-src_hash = 'b044c451'
-text = '8.9 ns'
-# src: 8.9 ns
-
-['metrics.table.1.cell.3.0']
-src_hash = '842983de'
-text = 'L3'
-# src: L3
-
-['metrics.table.1.cell.3.1']
-src_hash = 'a7abcf8d'
-text = '12.0 ns'
-# src: 12.0 ns
-
-['metrics.table.1.cell.3.2']
-src_hash = 'fb5a948e'
-text = '102.5 ns'
-# src: 102.5 ns
-
-['metrics.highlight.1']
-src_hash = 'c2d07afb'
-text = 'Average memory access time $= t_{hit} + m \times t_{pen}$'
-# src: 平均访存时间 $= t_{hit} + m \times t_{pen}$
-
-['metrics.notes.1']
-src_hash = 'ac721458'
+['metrics.slide.2']
+src_hash = '79d890b7'
 text = '''
-The definitions must be stated exactly. Miss rate and hit rate are counted over an execution or an access sequence. The hit time includes the time to determine a hit, because this determination is needed whether the access hits or not. The miss penalty is the extra time on a miss and does not include the hit time.
-The hit time in the table is the access latency of each level. The miss penalty is the difference between the access latencies of two adjacent levels: after an L1 miss, L2 supplies the data, the total time is 3.1 ns, which is 2.0 ns more than an L1 hit. After an L3 miss, main memory supplies the data, which takes 114.5 − 12.0 = 102.5 ns more. The figure on the right draws one L1 hit and one L1 miss to scale.
-The average memory access time formula follows directly from these definitions: every access pays the hit time t_hit, and a fraction m of the accesses additionally pays the miss penalty t_pen.
+Assume serial reads with:
+- $t_{hit}=1\ \mathrm{ns}$.
+- $t_{pen}=100\ \mathrm{ns}$.
+- $m=5\%$.
 '''
 # src:
 # 
-# 定义要写准。miss 率与 hit 率针对一段执行或一个访问序列统计。hit 时间包含判断 hit 所用的时间，因为不论 hit 与否都要先判断。miss 惩罚是 miss 时多出的时间，不含 hit 时间。
-# 表中的 hit 时间取各层的访问延迟。miss 惩罚取相邻两层访问延迟之差：L1 miss 后由 L2 提供数据，总时间是 3.1 ns，比 L1 hit 多出 2.0 ns。L3 miss 后由内存提供数据，多出 114.5 − 12.0 = 102.5 ns。右图按比例画出 L1 的一次 hit 与一次 miss。
-# 平均访存时间的公式直接来自这些定义：所有访问都花费 hit 时间 t_hit，其中比例为 m 的访问再花费 miss 惩罚 t_pen。
+# 假设串行读取时：
+# - $t_{hit}=1\ \mathrm{ns}$。
+# - $t_{pen}=100\ \mathrm{ns}$。
+# - $m=5\%$。
+
+['metrics.highlight.1']
+src_hash = 'a01a94c8'
+text = 'Average memory access time $=t_{hit}+m\times t_{pen}=1+5\%\times100=6\ \mathrm{ns}$'
+# src: 平均访存时间 $=t_{hit}+m\times t_{pen}=1+5\%\times100=6\ \mathrm{ns}$
+
+['metrics.notes.1']
+src_hash = 'd82a0176'
+text = '''
+This page uses a CPU, one cache, and memory. It considers serial reads and ignores prefetching, overlapping accesses, and the additional cost of writing back dirty evictions.
+Miss and hit rates refer to the same execution interval. Every read first checks the cache and pays the hit time; a fraction m also pays the additional miss penalty.
+The 1 ns and 100 ns values are teaching assumptions. The 100 ns represents the additional fetch and transfer time after the cache check. It is not obtained by subtracting two independently measured latencies.
+A hit takes 1 ns in total, and a miss takes 1 + 100 = 101 ns. Of 100 reads, 95 hit and 5 miss, taking 95 × 1 + 5 × 101 = 600 ns, or 6 ns per read.
+Equivalently, each read pays 1 ns and 5% pay an additional 100 ns, giving 1 + 0.05 × 100 = 6 ns.
+The figure shows the hit time and total miss time for this example to scale.
+'''
+# src:
+# 
+# 本页沿用 CPU、缓存与内存的模型，只考虑串行读取，忽略预取、访问重叠以及逐出脏块的额外写回代价。
+# miss 率与 hit 率针对同一段执行统计。所有读取都先查缓存，耗费 hit 时间，其中比例 m 的读取再付出额外的 miss 惩罚。
+# 1 ns 与 100 ns 是用于演算的教学假设。100 ns 表示缓存查找之后额外的取块和传输时间，不从两个独立实测的延迟相减。
+# hit 总用时 1 ns，miss 总用时 1 + 100 = 101 ns。100 次读取中，95 次 hit，5 次 miss，总时间 95 × 1 + 5 × 101 = 600 ns，平均 6 ns。
+# 也可以按每次读取都支付的 1 ns，加上 5% 的读取多支付的 100 ns，得到 1 + 0.05 × 100 = 6 ns。
+# 右图按比例画出同一个例子的 hit 时间与 miss 总时间。
 
 ['design-factors.title']
 src_hash = '9dfbbe89'
@@ -2338,14 +2146,14 @@ text = 'Write-back instead of write-through'
 # src: 写回替代写直达
 
 ['design-factors.table.1.cell.4.1']
-src_hash = 'a2c32130'
-text = 'Fewer writes to the next level'
-# src: 写到下一层的次数减少
+src_hash = '655f97d1'
+text = 'Multiple writes to one block can be combined into one memory writeback'
+# src: 同一块的多次写可合并为一次内存写回
 
 ['design-factors.table.1.cell.4.2']
-src_hash = 'bdbff428'
-text = 'Each line needs a dirty bit. A replaced dirty line must be written back'
-# src: 每行需要脏位。被替换的脏行要写回
+src_hash = 'b623cad8'
+text = 'Each line needs a dirty bit. A dirty line must be written back as a whole block before replacement'
+# src: 每行需要脏位。替换脏行前要整块写回内存
 
 ['design-factors.highlight.1']
 src_hash = 'f09a36d3'
@@ -2353,18 +2161,18 @@ text = 'The hardware fixes the cache parameters. A program changes the access se
 # src: 缓存的参数由硬件确定。程序改变的是访问序列，从而改变 miss 率
 
 ['design-factors.notes.1']
-src_hash = '88488951'
+src_hash = '39c4ac4d'
 text = '''
-Each row answers the same question: when this parameter is increased, which metric improves and which gets worse.
-A larger capacity keeps more data in the cache and reduces capacity misses, but a large cache is slow to search, so the hit time increases. A larger block brings more adjacent data in on each miss, so a program with good spatial locality has fewer cold misses. With the capacity fixed, the number of lines decreases, conflict misses increase, and more bytes are transferred per miss. A higher associativity lets one set hold more conflicting blocks, but each access compares more tags.
-Write-back reduces writes to the next level, at the cost of a dirty bit per line and a write-back when a line is replaced. Write-through has neither, and every write goes to the next level.
-These parameters are fixed when the processor is designed. On the same processor, different access sequences give different miss rates, and the access sequence is what the programmer can change.
+Each row answers the same question: when this parameter is increased, which metric improves and which becomes worse?
+A larger cache retains more data and reduces capacity misses, but takes longer to search and increases hit time. A larger block fetches more neighboring data, reducing cold misses for programs with spatial locality. At a fixed capacity, larger blocks mean fewer lines, more conflict misses, and more transferred bytes per miss. Higher associativity retains more competing blocks in a set but requires more tag comparisons per access.
+Write-back can combine multiple writes to one block into a single memory writeback. Its costs are a dirty bit per line and a whole-block transfer before replacing a dirty line. Write-through generates a memory word write for each write.
+These parameters are fixed when the processor is designed. On the same processor, different access sequences have different miss rates. The program can change its access sequence.
 '''
 # src:
 # 
 # 每一行回答同一个问题：把这个参数调大，哪个指标改善、哪个指标恶化。
 # 容量增大使更多的数据留在缓存中，容量 miss 减少，但大缓存查找慢，hit 时间增大。块增大使每次 miss 取入更多相邻数据，空间局部性好的程序冷 miss 减少。容量不变时行数减少，冲突 miss 增加，一次 miss 传输的字节也更多。相联度增大使一个组能容纳更多冲突的块，但每次访问要比较更多的标记。
-# 写回减少对下一层的写，代价是每行一位脏位与行被替换时的写回。写直达没有这些，每次写都到下一层。
+# 写回可以把同一块的多次写合并为一次内存写回，代价是每行一位脏位与替换脏行前的整块传输。写直达每次写都产生内存字写入。
 # 这些参数在处理器设计时确定。同一个处理器上，访问序列不同，miss 率不同，这是编写程序时能够改变的。
 
 ['bridge-part5.title']

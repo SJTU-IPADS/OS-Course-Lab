@@ -1,7 +1,7 @@
 """局部性与缓存。
 
 五个部分：局部性与缓存，缓存模型及其访问，
-写策略、多级缓存与性能指标，缓存友好的代码，大模型推理中的缓存。
+写策略与性能指标，缓存友好的代码，大模型推理中的缓存。
 问题从矩阵按行与按列求和的运行时间差异开始，回答是局部性与缓存；先给出缓存的概念，再说明硬件怎样定位一个块，
 最后说明程序怎样利用缓存。矩阵相关示例使用按行存储的 W[M][N]。
 以 lectures/ICS2/2-6-locality、2-7-cache 为素材；取舍记在 README.md。
@@ -83,19 +83,17 @@ with lecture.section("第二部分：缓存模型及其访问", id="part3") as s
         ss.page("cache-prefetch-applications", body=pages.cache_prefetch_applications)
 
 lecture.bridge(
-    "第三部分：写策略、多级缓存与性能指标",
+    "第三部分：写策略与性能指标",
     id="bridge-part4",
 )
 
-with lecture.section("第三部分：写策略、多级缓存与性能指标", id="part4") as s:
+with lecture.section("第三部分：写策略与性能指标", id="part4") as s:
+    s.page("copy-fail", body=pages.copy_fail)
     s.page("write-problem", body=pages.write_problem)
     s.page("write-through", body=pages.write_through)
     s.page("write-back", body=pages.write_back)
     s.page("write-allocate", body=pages.write_allocate)
     s.page("no-write-allocate", body=pages.no_write_allocate)
-    s.page("icache-dcache", body=pages.icache_dcache)
-    s.page("multilevel", body=pages.multilevel)
-    s.page("multilevel-params", body=pages.multilevel_params)
     s.page("metrics", body=pages.metrics)
     s.page("design-factors", body=pages.design_factors)
 

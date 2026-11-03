@@ -1,44 +1,34 @@
 #!/usr/bin/env python3
-"""Writes on the stack processor, L1, L2, main memory: one figure, five animations.
+"""Writes between the CPU, one cache, and memory in five fixed-layout animations.
 
-write-problem: a write that only L1 sees, so the copies differ and the value can be lost.
-write-through, write-back: a write hit under each policy, with the number of writes every
-level receives. write-allocate, no-write-allocate: a write miss under each policy, each
-drawn with the write-hit policy it is usually paired with.
-
-Every level holds one line (a valid bit, a dirty bit under write-back, a tag and four
-words); main memory holds the block alone. The word x is the last one of the block, so
-its cells line up and an arrow runs straight down them. One arrow carries one word, four
-arrows carry the whole block. Blue is a current copy, orange a copy just written, a red
-outline a stale copy. Every frame of every animation uses the same coordinates.
-Run it to refresh ../assets/write-problem-*.svg, write-through-*.svg, write-back-*.svg,
-write-allocate-*.svg and no-write-allocate-*.svg.
+Registers and the cache line are inside the CPU boundary. Memory is outside it.
+One arrow transfers a word and four arrows transfer the whole block. Fill every
+cell before drawing grid lines, then draw current and stale outlines last.
 """
 
+from math import hypot
+
 from cdraw import *
-from svgkit import elbow
+from svgkit import path
+
 
 W, H = 1000, 346
-TOP = {"cpu": (4, 44), "l1": (86, 130), "l2": (172, 216), "mem": (258, 302)}
-ROW_H = 44
-BASE = 29                          # baseline of the text inside a row
-NAMES = {"l1": "L1 缓存", "l2": "L2 缓存", "mem": "内存"}
-NAME_X = 158                       # right edge of the level names
-LINE_X = 172                       # left edge of a line with a dirty bit
+ROW_H, BASE = 44, 29
+CPU_X, CPU_Y, CPU_W, CPU_H = 46, 10, 908, 192
+REG_Y, REG_H = 28, 44
+CACHE_Y, MEM_Y = 124, 250
+LINE_X = 172
 V_W, D_W, TAG_W, WORD_W = 56, 56, 72, 92
 WORD_X = LINE_X + V_W + D_W + TAG_W
 RIGHT = WORD_X + 4 * WORD_W
-HOT_X = WORD_X + 3.5 * WORD_W      # centre of the word x
-BYPASS_X = RIGHT + 30
-NOTE_X = RIGHT + 54                # left edge of the notes beside a level
-COUNT_X = 880                      # centre of the column of write counts
-CAPTION_Y = 334
-
+HOT_X = WORD_X + 3.5 * WORD_W
+BYPASS_X = RIGHT + 70
+COUNT_X = 876
+CAPTION_Y = 333
 OLD, NEW, STALE = "old", "new", "stale"
 
 
 def held(value, state=OLD, dirty=None, whole=False):
-    """A line, or the block in main memory, that holds x."""
     return dict(kind="held", value=value, state=state, dirty=dirty, whole=whole)
 
 
@@ -47,232 +37,218 @@ def empty(dirty=None):
 
 
 def other(dirty=None):
-    """The line now holds another block: x was replaced."""
     return dict(kind="other", dirty=dirty)
 
 
-def word_cell(x, y, value, state, base_fill, base_stroke):
-    """The cell of x; the stale outline is returned apart, to lie over the neighbours."""
-    fill, stroke = (FILL_ORANGE, ORANGE) if state == NEW else (base_fill, base_stroke)
-    out = [rect(x, y, WORD_W, ROW_H, fill, stroke, rx=0, width=1.4),
-           text(x + WORD_W / 2, y + BASE, f"x = {value}", 19, INK, "bold", font=MONO)]
-    top = [rect(x, y, WORD_W, ROW_H, "none", RED, rx=0, width=3)] if state == STALE else []
-    top += [rect(x, y, WORD_W, ROW_H, "none", ORANGE, rx=0, width=2.6)] if state == NEW else []
-    return out, top
+def transfer(points, colour, width=2.8):
+    """A fixed-size head shares its endpoint and direction with the shaft."""
+    end_x, end_y = points[-1]
+    prev_x, prev_y = points[-2]
+    distance = hypot(end_x - prev_x, end_y - prev_y)
+    unit_x, unit_y = (end_x - prev_x) / distance, (end_y - prev_y) / distance
+    head_length, half_width = 9, 4
+    base_x, base_y = end_x - head_length * unit_x, end_y - head_length * unit_y
+    shaft = [*points[:-1], (base_x, base_y)]
+    drawing = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in shaft)
+    head = (f"M {end_x:.1f} {end_y:.1f} "
+            f"L {base_x - half_width * unit_y:.1f} {base_y + half_width * unit_x:.1f} "
+            f"L {base_x + half_width * unit_y:.1f} {base_y - half_width * unit_x:.1f} Z")
+    return [path(drawing, colour, width, head=False),
+            path(head, colour, 0, fill=colour, head=False)]
 
 
-def words(y, line, fill, stroke):
-    """The four words of a line that holds x; `whole` paints the block just written."""
-    out, top = [], []
-    whole = line["whole"]
-    for k in range(3):
-        x = WORD_X + k * WORD_W
-        out.append(rect(x, y, WORD_W, ROW_H, FILL_ORANGE if whole else fill,
-                        ORANGE if whole else stroke, rx=0, width=1.4))
-    shapes, over = word_cell(RIGHT - WORD_W, y, line["value"], line["state"], fill, stroke)
-    return out + shapes, top + over
+def grid_row(y, cells, *, outline, highlight=None):
+    """Draw backgrounds, labels, neutral borders, and highlights in that order."""
+    out, borders = [], []
+    for x, width, label, fill, stroke, colour, font in cells:
+        out.append(rect(x, y, width, ROW_H, fill, "none", rx=0, width=0))
+        if label:
+            out.append(text(x + width / 2, y + BASE, label, 18, colour, "bold", font=font))
+        borders.append(rect(x, y, width, ROW_H, "none", stroke, rx=0, width=1.3))
+    left = cells[0][0]
+    right = cells[-1][0] + cells[-1][1]
+    borders.append(rect(left, y, right - left, ROW_H, "none", outline, rx=0, width=2))
+    if highlight:
+        borders.append(rect(RIGHT - WORD_W, y, WORD_W, ROW_H, "none", highlight,
+                            rx=0, width=2.8))
+    return out + borders
 
 
-def cache_row(key, line):
-    y = TOP[key][0]
-    dirty = line["dirty"]
-    x = LINE_X if dirty is not None else LINE_X + D_W
-    kind = line["kind"]
+def word_cells(y, line, base_fill, base_stroke):
+    cells = []
+    for index in range(4):
+        current = index == 3
+        fresh = line["whole"] or (current and line["state"] == NEW)
+        fill = FILL_ORANGE if fresh else base_fill
+        stroke = ORANGE if fresh else base_stroke
+        label = f"x = {line['value']}" if current else ""
+        cells.append((WORD_X + index * WORD_W, WORD_W, label, fill, stroke, INK, MONO))
+    return cells
+
+
+def cache_row(line):
+    dirty, kind = line["dirty"], line["kind"]
     live = kind != "empty"
     fill, stroke = (FILL_BLUE, INK) if live else (WHITE, LINE)
-    out = [rect(x, y, V_W, ROW_H, fill, stroke, rx=0, width=1.4),
-           text(x + V_W / 2, y + BASE - 1, f"V={int(live)}", 17, INK if live else MUTED, font=MONO)]
-    x += V_W
-    if dirty is not None:
-        out.append(rect(x, y, D_W, ROW_H, fill, stroke, rx=0, width=1.4))
-        if live:
-            out.append(text(x + D_W / 2, y + BASE - 1, f"D={dirty}", 17, RED if dirty else INK,
-                            "bold" if dirty else "normal", font=MONO))
-        x += D_W
-    tag_on = kind == "held"
-    out.append(rect(x, y, TAG_W, ROW_H, FILL_PURPLE if tag_on else fill,
-                    PURPLE if tag_on else stroke, rx=0, width=1.4))
-    if live:
-        out.append(text(x + TAG_W / 2, y + BASE, "标记", 18, PURPLE if tag_on else MUTED, "bold"))
-    top = []
-    if kind == "held":
-        shapes, top = words(y, line, FILL_BLUE, INK)
-        out += shapes
-    elif kind == "other":
-        out.append(rect(WORD_X, y, 4 * WORD_W, ROW_H, FILL_GREY, MUTED, rx=0, width=1.4))
-        out.append(text(WORD_X + 2 * WORD_W, y + BASE, "另一个块", 18, MUTED, "bold"))
-    else:
-        for k in range(4):
-            out.append(rect(WORD_X + k * WORD_W, y, WORD_W, ROW_H, WHITE, LINE, rx=0, width=1.4))
     left = LINE_X if dirty is not None else LINE_X + D_W
-    if live:
-        out.append(rect(left, y, RIGHT - left, ROW_H, "none", INK, rx=0, width=2))
-    return out, top
+    cells = [(left, V_W, f"V={int(live)}", fill, stroke, INK if live else MUTED, MONO)]
+    x = left + V_W
+    if dirty is not None:
+        cells.append((x, D_W, f"D={dirty}" if live else "", fill, stroke,
+                      RED if dirty else INK, MONO))
+        x += D_W
+    cells.append((x, TAG_W, "标记" if live else "", FILL_PURPLE if live else WHITE,
+                  PURPLE if live else LINE, PURPLE, FONT))
+    if kind == "held":
+        cells += word_cells(CACHE_Y, line, FILL_BLUE, INK)
+    elif kind == "empty":
+        cells += [(WORD_X + index * WORD_W, WORD_W, "", WHITE, LINE, MUTED, MONO)
+                  for index in range(4)]
+    else:
+        cells.append((WORD_X, 4 * WORD_W, "另一个块", FILL_GREY, MUTED, MUTED, FONT))
+    highlight = {NEW: ORANGE, STALE: RED}.get(line.get("state"))
+    return grid_row(CACHE_Y, cells, outline=INK if live else LINE, highlight=highlight)
 
 
 def mem_row(line):
-    y = TOP["mem"][0]
-    shapes, top = words(y, line, FILL_GREEN, GREEN)
-    return shapes + [rect(WORD_X, y, RIGHT - WORD_X, ROW_H, "none", GREEN, rx=0, width=2)], top
+    highlight = {NEW: ORANGE, STALE: RED}.get(line["state"])
+    return grid_row(MEM_Y, word_cells(MEM_Y, line, FILL_GREEN, GREEN),
+                    outline=GREEN, highlight=highlight)
 
 
-def ends(a, b):
-    """The y of an arrow from level a to the next level b, in either direction."""
-    if TOP[a][0] < TOP[b][0]:
-        return TOP[a][1] + 2, TOP[b][0] - 3
-    return TOP[a][0] - 2, TOP[b][1] + 3
-
-
-def word_flow(a, b, colour, label="", x=HOT_X):
-    y0, y1 = ends(a, b)
-    out = [arrow(x, y0, x, y1, colour, 3)]
+def flow(source, target, colour, label="", *, x=HOT_X):
+    bounds = {"reg": (REG_Y, REG_Y + REG_H),
+              "cache": (CACHE_Y, CACHE_Y + ROW_H),
+              "mem": (MEM_Y, MEM_Y + ROW_H)}
+    source_top, source_bottom = bounds[source]
+    target_top, target_bottom = bounds[target]
+    downward = source_top < target_top
+    start_y = source_bottom + 3 if downward else source_top - 3
+    end_y = target_top - 4 if downward else target_bottom + 4
+    out = transfer([(x, start_y), (x, end_y)], colour)
     if label:
-        out.append(text(x - 14, (y0 + y1) / 2 + 7, label, 18, colour, "bold", "end"))
+        out.append(text(x - 14, (start_y + end_y) / 2 + 6, label, 18, colour, "bold", "end"))
     return out
 
 
-def block_flow(a, b, colour, label=""):
-    y0, y1 = ends(a, b)
-    out = [arrow(WORD_X + (k + 0.5) * WORD_W, y0, WORD_X + (k + 0.5) * WORD_W, y1, colour, 3)
-           for k in range(4)]
-    if label:
-        out.append(text(WORD_X + 0.5 * WORD_W - 14, (y0 + y1) / 2 + 7, label, 18, colour, "bold",
-                        "end"))
+def block_flow(source, target, colour, label):
+    out = []
+    for index in range(4):
+        out += flow(source, target, colour, x=WORD_X + (index + 0.5) * WORD_W)
+    middle_y = (CACHE_Y + ROW_H + MEM_Y) / 2
+    out.append(text(WORD_X - 15, middle_y + 6, label, 18, colour, "bold", "end"))
     return out
 
 
-def bypass_flow(label):
-    """From the processor past L1 into the word x of L2."""
-    y0 = (TOP["cpu"][0] + TOP["cpu"][1]) / 2
-    y1 = (TOP["l2"][0] + TOP["l2"][1]) / 2
-    out = [elbow([(RIGHT + 2, y0), (BYPASS_X, y0), (BYPASS_X, y1), (RIGHT + 4, y1)], ORANGE, 3)]
-    out.append(text(BYPASS_X + 14, (TOP["l1"][0] + TOP["l1"][1]) / 2 + 7, label, 18, ORANGE, "bold",
-                    "start"))
+def bypass_flow():
+    middle_reg = REG_Y + REG_H / 2
+    middle_mem = MEM_Y + ROW_H / 2
+    out = transfer([(RIGHT + 3, middle_reg), (BYPASS_X, middle_reg),
+                    (BYPASS_X, middle_mem), (RIGHT + 5, middle_mem)], ORANGE)
+    out.append(text(BYPASS_X + 14, 219, "写 x = 2", 18, ORANGE, "bold", "start"))
     return out
 
 
-def frame(f):
-    out = box(LINE_X, TOP["cpu"][0], RIGHT - LINE_X, TOP["cpu"][1] - TOP["cpu"][0], "处理器", WHITE, INK, 19)
-    over = []
-    for key in ("l1", "l2", "mem"):
-        out.append(text(NAME_X, TOP[key][0] + BASE, NAMES[key], 20, INK, "bold", "end"))
-        shapes, top = mem_row(f[key]) if key == "mem" else cache_row(key, f[key])
+def frame(snapshot):
+    out = [rect(CPU_X, CPU_Y, CPU_W, CPU_H, WHITE, INK, rx=8, width=2),
+           text(CPU_X + 53, CPU_Y + 34, "CPU", 20, INK, "bold")]
+    out += box(WORD_X, REG_Y, 4 * WORD_W, REG_H, "寄存器", FILL_GREY, INK, 19)
+    out.append(text(155, CACHE_Y + BASE, "缓存", 20, INK, "bold", "end"))
+    out += cache_row(snapshot["cache"])
+    out.append(text(155, MEM_Y + BASE, "内存", 20, GREEN, "bold", "end"))
+    out += mem_row(snapshot["mem"])
+    for shapes in snapshot.get("flows", []):
         out += shapes
-        over += top
-    out += over
-    for flow in f.get("flows", []):
-        out += flow
-    for key, label, colour in f.get("notes", []):
-        out.append(text(NOTE_X, (TOP[key][0] + TOP[key][1]) / 2 + 7, label, 19, colour, "bold", "start"))
-    counts = f.get("counts")
-    if counts:
-        out.append(text(COUNT_X, TOP["l1"][0] - 18, "被写入的次数", 17, MUTED, "bold"))
-        colour = f.get("count_colour", INK)
-        for key, count in zip(("l1", "l2", "mem"), counts):
-            hot = key in f.get("count_hot", ())
-            out.append(text(COUNT_X, TOP[key][0] + BASE + 1, count, 22, colour if not hot else ORANGE,
-                            "bold"))
-    out.append(text(W / 2, CAPTION_Y, f["caption"], 20, f.get("caption_colour", INK), "bold"))
+    if snapshot.get("counts"):
+        out.append(text(COUNT_X, CACHE_Y - 22, "被写入的次数", 17, MUTED, "bold"))
+        for y, label in zip((CACHE_Y, MEM_Y), snapshot["counts"]):
+            out.append(text(COUNT_X, y + BASE, label, 20, snapshot.get("count_colour", INK), "bold"))
+    out.append(text(W / 2, CAPTION_Y, snapshot["caption"], 20,
+                    snapshot.get("caption_colour", INK), "bold"))
     return out
 
 
 PROBLEM = [
-    dict(l1=held(1), l2=held(1), mem=held(1),
-         caption="① x 的块在 L1、L2 与内存中各有一份副本，值都是 1"),
-    dict(l1=held(1), l2=held(1), mem=held(1),
-         flows=[word_flow("cpu", "l1", ORANGE, "写 x = 2")],
-         caption="② 处理器写 x = 2，该块在 L1 中"),
-    dict(l1=held(2, NEW), l2=held(1, STALE), mem=held(1, STALE),
-         notes=[("l2", "旧值", RED), ("mem", "旧值", RED)],
-         caption="③ L1 更新自己的副本，L2 与内存中的 x 仍是 1，三份副本不一致"),
-    dict(l1=other(), l2=held(1, STALE), mem=held(1, STALE),
-         notes=[("l1", "x = 2 丢失", RED), ("l2", "旧值", RED), ("mem", "旧值", RED)],
-         caption="④ L1 把这一行替换出去，新值 2 不在任何一层中"),
-    dict(l1=held(1), l2=held(1), mem=held(1),
-         flows=[word_flow("l1", "cpu", RED, "读到 x = 1"), block_flow("l2", "l1", GREEN, "取块")],
-         notes=[("l1", "miss", RED)],
-         caption="⑤ 再读 x：L1 miss，从 L2 取得 x = 1，写入的值丢失"),
+    dict(cache=held(1), mem=held(1),
+         caption="① 缓存保存 x 所在块的副本，缓存与内存中的 x 都为 1"),
+    dict(cache=held(1), mem=held(1),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2")],
+         caption="② CPU 写 x = 2，该块已在缓存中"),
+    dict(cache=held(2, NEW), mem=held(1, STALE),
+         caption="③ 只更新缓存时，缓存中的 x 为 2，内存中的 x 仍为 1"),
+    dict(cache=other(), mem=held(1, STALE), caption_colour=RED,
+         caption="④ 错误处理：替换时直接丢弃这一行，写入的新值 2 丢失"),
+    dict(cache=held(1), mem=held(1),
+         flows=[block_flow("mem", "cache", GREEN, "整块取入"),
+                flow("cache", "reg", RED, "读到 x = 1")], caption_colour=RED,
+         caption="⑤ 再读 x 发生 miss，从内存取回旧值 1，结果错误"),
 ]
 
 THROUGH = [
-    dict(l1=held(2, NEW), l2=held(1, STALE), mem=held(1, STALE),
-         flows=[word_flow("cpu", "l1", ORANGE, "写 x = 2")],
-         counts=("1 次", "0 次", "0 次"), count_hot=("l1",),
-         caption="① 处理器写 x = 2，L1 写 hit，更新 x"),
-    dict(l1=held(2), l2=held(2, NEW), mem=held(1, STALE),
-         flows=[word_flow("l1", "l2", ORANGE, "写 x = 2")],
-         counts=("1 次", "1 次", "0 次"), count_hot=("l2",),
-         caption="② L1 同时把这个字写到 L2"),
-    dict(l1=held(2), l2=held(2), mem=held(2, NEW),
-         flows=[word_flow("l2", "mem", ORANGE, "写 x = 2")],
-         notes=[("cpu", "等待内存写完", RED)],
-         counts=("1 次", "1 次", "1 次"), count_hot=("mem",),
-         caption="③ L2 同时把这个字写到内存，三份副本一致，这次写才结束"),
-    dict(l1=held(101, NEW), l2=held(101, NEW), mem=held(101, NEW),
-         flows=[word_flow("cpu", "l1", RED, "再写 99 次，x 增至 101"), word_flow("l1", "l2", RED),
-                word_flow("l2", "mem", RED)],
-         notes=[("cpu", "每次都等内存", RED)],
-         counts=("100 次", "100 次", "100 次"), count_colour=RED, caption_colour=RED,
-         caption="④ 同一个字写 100 次，内存被写 100 次，每次写都要等内存写完"),
+    dict(cache=held(1), mem=held(1),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2")], counts=("0 次", "0 次"),
+         caption="① CPU 写 x = 2，该块已在缓存中，写 hit"),
+    dict(cache=held(2, NEW), mem=held(2, NEW),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2"),
+                flow("cache", "mem", ORANGE, "写入这个字")], counts=("1 次", "1 次"),
+         caption="② 更新缓存，同时把这个字写到内存"),
+    dict(cache=held(2), mem=held(2), counts=("1 次", "1 次"),
+         caption="③ 此次写完成，缓存与内存中的 x 都为 2"),
+    dict(cache=held(101, NEW), mem=held(101, NEW),
+         flows=[flow("reg", "cache", ORANGE, "再写 99 次"), flow("cache", "mem", ORANGE)],
+         counts=("100 次", "100 次"), count_colour=ORANGE,
+         caption="④ 同一个字写 100 次，缓存与内存各被写入 100 次"),
 ]
 
 BACK = [
-    dict(l1=held(2, NEW, dirty=1), l2=held(1, STALE, dirty=0), mem=held(1, STALE),
-         flows=[word_flow("cpu", "l1", ORANGE, "写 x = 2")],
-         counts=("1 次", "0 次", "0 次"), count_hot=("l1",),
-         caption="① 处理器写 x = 2，L1 写 hit：只更新 L1，脏位 D 置 1"),
-    dict(l1=held(101, NEW, dirty=1), l2=held(1, STALE, dirty=0), mem=held(1, STALE),
-         flows=[word_flow("cpu", "l1", ORANGE, "再写 99 次，x 增至 101")],
-         counts=("100 次", "0 次", "0 次"), count_hot=("l1",),
-         caption="② 同一个字再写 99 次：每次只更新 L1，不写下一层"),
-    dict(l1=other(dirty=0), l2=held(101, NEW, dirty=1, whole=True), mem=held(1, STALE),
-         flows=[block_flow("l1", "l2", ORANGE, "整块")],
-         counts=("100 次", "1 次（整块）", "0 次"), count_hot=("l2",),
-         caption="③ L1 替换这一行：D = 1，整块写到 L2，L2 这一行的 D 置 1"),
-    dict(l1=other(dirty=0), l2=other(dirty=0), mem=held(101, NEW, whole=True),
-         flows=[block_flow("l2", "mem", ORANGE, "整块")],
-         counts=("100 次", "1 次（整块）", "1 次（整块）"), count_hot=("mem",),
-         caption="④ L2 替换这一行：D = 1，整块写到内存。写 100 次，内存只被写 1 次"),
+    dict(cache=held(2, NEW, dirty=1), mem=held(1, STALE),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2")], counts=("1 次", "0 次"),
+         caption="① 写 hit 时只更新缓存，D 置 1，记录尚未写回的修改"),
+    dict(cache=held(101, NEW, dirty=1), mem=held(1, STALE),
+         flows=[flow("reg", "cache", ORANGE, "再写 99 次")], counts=("100 次", "0 次"),
+         caption="② 同一个字再写 99 次，每次只更新缓存"),
+    dict(cache=held(101, dirty=1), mem=held(101, NEW, whole=True),
+         flows=[block_flow("cache", "mem", ORANGE, "整块写回")],
+         counts=("100 次", "1 次（整块）"),
+         caption="③ 替换前检查 D = 1，把整个块写回内存"),
+    dict(cache=other(dirty=0), mem=held(101), counts=("100 次", "1 次（整块）"),
+         caption="④ 写回完成后替换这一行，100 次缓存写只产生 1 次整块写回"),
 ]
 
 ALLOCATE = [
-    dict(l1=empty(dirty=0), l2=held(1, dirty=0), mem=held(1),
-         flows=[word_flow("cpu", "l1", ORANGE, "写 x = 2")],
-         notes=[("l1", "miss", RED)],
-         caption="① 处理器写 x = 2，L1 中没有该块，写 miss"),
-    dict(l1=held(1, dirty=0), l2=held(1, dirty=0), mem=held(1),
-         flows=[block_flow("l2", "l1", GREEN, "取块")],
-         caption="② 把该块从 L2 取入 L1"),
-    dict(l1=held(2, NEW, dirty=1), l2=held(1, STALE, dirty=0), mem=held(1, STALE),
-         flows=[word_flow("cpu", "l1", ORANGE, "写 x = 2")],
-         caption="③ 按写 hit 处理。图中的写 hit 策略是写回：更新 L1 的 x，D 置 1"),
-    dict(l1=held(2, dirty=1), l2=held(1, STALE, dirty=0), mem=held(1, STALE),
-         flows=[word_flow("l1", "cpu", GREEN, "读写这个块", x=HOT_X - WORD_W), word_flow("cpu", "l1", GREEN)],
-         notes=[("l1", "hit", GREEN)],
-         caption="④ 之后读写这个块中的字，L1 都 hit"),
+    dict(cache=empty(dirty=0), mem=held(1),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2")],
+         caption="① CPU 写 x = 2，缓存中没有该块，写 miss"),
+    dict(cache=held(1, dirty=0), mem=held(1),
+         flows=[block_flow("mem", "cache", GREEN, "整块取入")],
+         caption="② 从内存取入整个块，放入缓存"),
+    dict(cache=held(2, NEW, dirty=1), mem=held(1, STALE),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2")],
+         caption="③ 按写 hit 处理，图中采用写回：更新缓存，D 置 1"),
+    dict(cache=held(2, dirty=1), mem=held(1, STALE),
+         flows=[flow("cache", "reg", GREEN, "读 / 写", x=HOT_X - 24),
+                flow("reg", "cache", GREEN, x=HOT_X + 24)],
+         caption="④ 只要该块仍在缓存中，后续对块内字的读写都 hit"),
 ]
 
 AROUND = [
-    dict(l1=empty(), l2=held(1), mem=held(1),
-         flows=[word_flow("cpu", "l1", ORANGE, "写 x = 2")],
-         notes=[("l1", "miss", RED)],
-         caption="① 处理器写 x = 2，L1 中没有该块，写 miss"),
-    dict(l1=empty(), l2=held(2, NEW), mem=held(1, STALE),
-         flows=[bypass_flow("写 x = 2")],
-         caption="② 不取块，把这个字直接写到 L2，L1 不变"),
-    dict(l1=empty(), l2=held(2), mem=held(2, NEW),
-         flows=[word_flow("l2", "mem", ORANGE, "写 x = 2")],
-         caption="③ 图中的写 hit 策略是写直达：L2 同时把这个字写到内存"),
-    dict(l1=empty(), l2=held(2), mem=held(2),
-         flows=[word_flow("cpu", "l1", ORANGE, "读 x"), block_flow("l2", "l1", GREEN, "取块")],
-         notes=[("l1", "miss", RED)],
-         caption="④ 之后读 x：L1 miss，这时才从 L2 取块"),
+    dict(cache=empty(), mem=held(1),
+         flows=[flow("reg", "cache", ORANGE, "写 x = 2")],
+         caption="① CPU 写 x = 2，缓存中没有该块，写 miss"),
+    dict(cache=empty(), mem=held(2, NEW), flows=[bypass_flow()],
+         caption="② 不取入该块，把这个字直接写到内存"),
+    dict(cache=empty(), mem=held(2),
+         caption="③ 写完成后缓存仍无此块，这次写省去了一次整块取入"),
+    dict(cache=held(2), mem=held(2),
+         flows=[flow("reg", "cache", ORANGE, "读 x"),
+                block_flow("mem", "cache", GREEN, "整块取入")],
+         caption="④ 随后读 x 仍 miss，此时才从内存取入整个块"),
 ]
 
 
 if __name__ == "__main__":
-    for name, frames in (("write-problem", PROBLEM), ("write-through", THROUGH),
-                         ("write-back", BACK), ("write-allocate", ALLOCATE),
-                         ("no-write-allocate", AROUND)):
-        for n, f in enumerate(frames, 1):
-            save(f"{name}-{n}", W, H, frame(f))
+    for name, snapshots in (("write-problem", PROBLEM), ("write-through", THROUGH),
+                            ("write-back", BACK), ("write-allocate", ALLOCATE),
+                            ("no-write-allocate", AROUND)):
+        for index, snapshot in enumerate(snapshots, 1):
+            save(f"{name}-{index}", W, H, frame(snapshot))

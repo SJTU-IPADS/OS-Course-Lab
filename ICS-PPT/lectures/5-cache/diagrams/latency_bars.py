@@ -1,64 +1,37 @@
 #!/usr/bin/env python3
-"""The charts of the performance pages; every length is computed from the numbers shown.
+"""One serial read through a single cache, with all time lengths to scale.
 
-level-latency.svg: the access latency of each level, to scale.
-metrics-time.svg: one hit and one miss in L1, to scale.
-Drawn at the width they are shown on the slide.
-Run it to refresh ../assets/level-latency.svg and metrics-time.svg.
+The teaching model spends 1 ns checking the cache. A miss adds 100 ns to fetch
+the block from memory and transfer the data, so its total is 101 ns.
+Run it to refresh ../assets/metrics-time.svg.
 """
 
 from cdraw import *
 
-LEVELS = [("L1", 1.1), ("L2", 3.1), ("L3", 12.0), ("内存", 114.5)]   # measured, as in pages.py
-
-
-def segment(x, y, w, h, fill, stroke, label="", colour=INK, size=18):
-    out = [rect(x, y, w, h, fill, stroke, rx=0, width=1.6)]
-    if label:
-        out.append(text(x + w / 2, y + h / 2 + size * 0.36, label, size, colour, "bold"))
-    return out
-
-
-def level_latency():
-    # Beside a table of the same rows: the caption stands level with its header and each bar
-    # with its row, so the pitch is the row height. The blank above the caption balances the
-    # margin the theme keeps under a figure.
-    W, H = 500, 268
-    x0, unit, bar_h, step = 66, 3.1, 36, 51
-    out = [text(x0, 49, "访问延迟（ns，按比例）", 18, MUTED, "bold", "start")]
-    for k, (name, ns) in enumerate(LEVELS):
-        y = 76.5 + k * step
-        out.append(text(x0 - 12, y + bar_h / 2 + 7, name, 19, INK, "bold", "end"))
-        fill, stroke = (FILL_GREEN, GREEN) if name == "内存" else (FILL_BLUE, BLUE)
-        w = ns * unit
-        out += segment(x0, y, w, bar_h, fill, stroke)
-        out.append(text(x0 + w + 10, y + bar_h / 2 + 7, f"{ns:g}", 19, INK, "bold", "start"))
-    return W, H, out
+HIT_NS, PENALTY_NS = 1, 100
 
 
 def metrics_time():
-    # The blank above the caption balances the margin the theme keeps under a figure, so the
-    # chart centres on the table beside it.
-    W, H = 560, 224
-    x0, unit, bar_h = 84, 118, 48
-    hit, pen = 1.1, 2.0
-    hit_w, pen_w = hit * unit, pen * unit
-    out = [text(x0, 38, "L1 的一次访问（按比例）", 18, MUTED, "bold", "start")]
-    y = 58
-    out.append(text(x0 - 12, y + bar_h / 2 + 7, "hit", 19, INK, "bold", "end"))
-    out += segment(x0, y, hit_w, bar_h, FILL_BLUE, BLUE, "hit 时间")
-    out.append(text(x0 + hit_w + 10, y + bar_h / 2 + 7, f"{hit} ns", 19, INK, "bold", "start"))
-    y = 136
-    out.append(text(x0 - 12, y + bar_h / 2 + 7, "miss", 19, INK, "bold", "end"))
-    out += segment(x0, y, hit_w, bar_h, FILL_BLUE, BLUE, "hit 时间")
-    out += segment(x0 + hit_w, y, pen_w, bar_h, FILL_RED, RED, "miss 惩罚", INK)
-    out.append(text(x0 + hit_w + pen_w + 10, y + bar_h / 2 + 7, f"{hit + pen:g} ns", 19, INK, "bold",
-                    "start"))
-    out += brace(x0 + hit_w, x0 + hit_w + pen_w, y + bar_h + 6, INK, f"比 hit 多出 {pen} ns", 18)
-    return W, H, out
+    width, height = 560, 190
+    start, unit, bar_height = 80, 4, 32
+    hit_width, penalty_width = HIT_NS * unit, PENALTY_NS * unit
+    miss_end = start + hit_width + penalty_width
+    out = [text(start, 24, "一次读取的用时（按比例）", 18, MUTED, "bold", "start")]
+
+    for label, top in (("hit", 56), ("miss", 112)):
+        out.append(text(start - 12, top + 23, label, 19, INK, "bold", "end"))
+        out.append(rect(start, top, hit_width, bar_height, FILL_BLUE, BLUE, rx=0, width=1.4))
+
+    out.append(text(start + hit_width + 12, 79, "1 ns", 19, BLUE, "bold", "start"))
+    out.append(rect(start + hit_width, 112, penalty_width, bar_height,
+                    FILL_RED, RED, rx=0, width=1.4))
+    out.append(text(start + hit_width + penalty_width / 2, 135,
+                    "从内存取块并传输", 18, INK, "bold"))
+    out.append(text(miss_end + 8, 135, "101 ns", 19, INK, "bold", "start"))
+    out += brace(start + hit_width, miss_end, 150, RED,
+                 f"miss 惩罚：{PENALTY_NS} ns", 18)
+    return width, height, out
 
 
 if __name__ == "__main__":
-    save("level-latency", *level_latency())
     save("metrics-time", *metrics_time())
-    
