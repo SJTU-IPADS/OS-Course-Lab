@@ -52,3 +52,8 @@ book/
 **/index.html
 compile_commands.json
 .cache/
+
+# Crash dumps from running lab binaries directly or through QEMU.
+/Lab*/core
+/Lab*/core.[0-9]*
+qemu_*.core
