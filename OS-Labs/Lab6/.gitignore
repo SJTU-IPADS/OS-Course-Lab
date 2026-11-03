@@ -41,5 +41,7 @@ infer_*_report.txt
 infer-out/
 .repo/
 
+!/ramdisk-rpi4/chcore_shell.bin
+
 kernel
 ramdisk
