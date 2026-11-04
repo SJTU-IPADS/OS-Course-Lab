@@ -1357,458 +1357,220 @@ def exercise_friendly_2(p):
 
 # 第五部分：大模型推理中的缓存。
 #
-# 起点问题：大模型每生成一个 token，都要对已有的全部 token 作注意力，已有 token 的 k、v 要不要每步重新计算？
-# 回答：不必。一个 token 的 k、v 只取决于它自己和它之前的 token，算出之后不再改变，存入 KV Cache，
-# 之后每步只为新 token 计算 q、k、v，并读取缓存中的全部 k、v。
-# 代价：KV Cache 随上下文长度线性增长，容量以 GiB 计，每生成一个 token 都要从显存读出一遍，
-# 解码的速度由显存或内存的带宽决定。减小代价有三个方向，对应容量公式中的三个因子：KV 头的个数、每个元素的字节数、保留的 token 个数。
-# 服务器同时处理许多长短不一的请求，要为它们分配这块内存，于是按块分配、用块表记录，相同前缀的块可以共用。
-# 页序：自回归生成 → 注意力的计算 → 无缓存的逐 token 生成（动画）→ KV Cache 的逐 token 生成（动画）→
-# 无缓存与有缓存的实测 → 缓存的数据结构 → 追加与读取的代码 → 容量 → 带宽与速度上限 →
-# 分组查询注意力 → KV Cache 的量化 → 淘汰 token → 预分配的内部碎片 → 按块分配与块表（动画）→
-# sidebar：前缀缓存 → 练习。
-
-# 模型取 Llama 3.1 8B 的公开配置：32 层，32 个查询头，8 个 KV 头，头维度 128，上下文 131072 个 token，8.03×10^9 个参数。
-KV_LAYERS, KV_HEADS, KV_QUERY_HEADS, KV_DIM = 32, 8, 32, 128
-KV_PARAMS = 8.03e9
-KV_CTX_SHORT, KV_CTX_LONG = 4096, 131072
-KV_GPU_BW, KV_DRAM_BW = 1792e9, 102.4e9      # 一块带 32 GB GDDR7 的显卡的公布规格，双通道 DDR5-6400 的理论值
-GIB = 2 ** 30
+# 起点问题：大模型每生成一个 token，都要对已有的全部 token 作注意力，哪些中间结果要每步重新计算？
+# 回答：注意力把输入矩阵 X 乘以三个权重矩阵得到 Q、K、V，再由 Q、K 得到权重 A，由 A、V 得到输出 O。
+# 解码的一步只给 X 增加新 token 的一行，生成下一个 token 只用到 O 的最后一行，它只需要新 token 的 q
+# 与全部 token 的 k、v，而已有 token 的 k、v 与上一步相同。把它们存入 KV Cache，每步只为新 token 计算一行 q、k、v。
+# 实测比较不同 token 数下有无缓存的运行时间：缓存使解码快一个数量级以上，token 越多加速越大。
+# 显存同时存放模型权重、中间结果与各活跃会话的 KV Cache。如果各会话的 KV Cache 始终驻留在显存中，
+# 显存迟早被占满，因此服务端设定过期时间（如 1 小时），过期后同一会话继续时重新计算前序 token 的 k、v。
+# 当同一时间请求密集到达、未到过期时间显存就已占满时，若把 KV Cache 换出到内存再按需换入，
+# 由于解码是访存受限的，跨内存传输比直接重新计算更慢，因此实际做法是直接使部分 KV Cache 失效，
+# 会话再次请求时重新计算。淘汰策略可选最近最少使用（LRU）或最小缓存优先。
+# 页序：自回归生成（预填充与解码）→ 注意力的矩阵计算（动画）→ 无缓存时解码的重复计算（动画）→ KV Cache 的做法（动画）→
+# 不同 token 数下无缓存与有缓存的实测 → 显存中的模型与 KV Cache（动画）→ KV Cache 的过期时间（动画）→
+# 显存不足时的换入换出设想（动画）→ 访存受限与缓存失效（动画）→ KV Cache 的淘汰策略。
 
 
-def kv_bytes_per_token(layers=KV_LAYERS, heads=KV_HEADS, dim=KV_DIM, elem=2):
-    return 2 * layers * heads * dim * elem
-
-
-def kv_decode_rate(ctx, bandwidth, kv_elem=2):
-    """批大小为 1 时每秒生成的 token 数上限：带宽 / (权重 + KV Cache) 的字节数。"""
-    return bandwidth / (KV_PARAMS * 2 + ctx * kv_bytes_per_token(elem=kv_elem))
-
-
-# 本页是第五部分的第一页：说明自回归生成的过程，使“已有的全部 token”这个量可以计算。
+# 本页是第五部分的第一页：说明自回归生成的两个阶段，建立“解码每一步只多一个 token”这一事实。
 def kv_generate(p):
     p.title("自回归生成")
     slide(p, r"""
 - 大模型以 **token** 为单位处理文本，一个 token 是一个词或词的一部分。
-- 生成时，每一步根据已有的全部 token 输出下一个 token，并把它接在输入末尾，进入下一步。
-- 模型由 $L$ 层结构相同的 Transformer 层叠成。每一层用**注意力**使一个 token 的向量依赖于它之前的 token。
+- **预填充**一次处理输入的全部 token，输出第一个新 token。**解码**的每一步把上一步输出的 token 接在输入末尾，再输出下一个 token，直到输出结束符。
+- 模型由 $L$ 层结构相同的 Transformer 层叠成，每一层用**注意力**使一个 token 的向量依赖于它之前的 token。
 """)
-    p.image("assets/kv-generate.svg")
+    p.image("assets/kv-generate.svg", width_px=900)
     slide(p, r"""
-生成 $T$ 个 token 需要 $T$ 步，第 $t$ 步的计算依赖前 $t$ 个 token。
+解码每一步的输入只比上一步多一个 token。
 """)
     p.notes("""
 本部分讨论大模型推理，推理指模型训练完成之后用它生成文本。大模型按 token 处理文本，token 由分词器切分，可以是一个词、一个汉字或词的一部分。
-自回归的含义是：输出的每个 token 都作为输入的一部分参与下一个 token 的生成。图中输入 5 个 token，模型输出第 6 个，第 6 个接在输入末尾，下一步输入 6 个 token。
+图中输入是「今天 天气 很 好」4 个 token。预填充把这 4 个 token 一次送入模型，输出第一个新 token「适合」。解码第 1 步的输入是 5 个 token，输出「出门」，第 2 步的输入是 6 个 token，输出「散步」。每一步的输出都接在输入末尾，进入下一步，直到模型输出表示结束的特殊 token。
+自回归的含义是：输出的每个 token 都作为输入的一部分参与下一个 token 的生成。
 模型的每一层包含注意力与前馈网络。注意力使一个 token 的向量依赖于它之前的 token，下一页给出它的计算。
-这一页只建立一个量：第 t 步要处理前 t 个 token。后面各页讨论这 t 个 token 的中间结果是否每步重新计算。
+这一页建立一个事实：解码的相邻两步，输入只差最后一个 token。后面各页讨论前面那些 token 的中间结果是否每步重新计算。
 """)
 
 
-# 上一页给出每一步依赖前 t 个 token。本页给出这个依赖的计算：一个注意力头用 q 与前 t 个 token 的 K、V 算出输出。
+# 上一页给出解码每步只多一个 token。本页用矩阵给出注意力的计算，后两页在同一张图上比较解码时无缓存与有缓存的做法。
 def kv_attention(p):
     p.title("注意力的计算")
     slide(p, r"""
-一层中的一个注意力头把第 $i$ 个 token 的向量 $x_i$ 乘以三个权重矩阵，得到长度为 $d$ 的**查询** $q_i$、**键** $k_i$ 与**值** $v_i$。第 $t$ 步的输出为
- $$o_t = \mathrm{softmax}\!\left(\frac{q_t K^\top}{\sqrt d}\right) V$$
-其中 $K$、$V$ 的第 $i$ 行是 $k_i$、$v_i$，$i = 1, \ldots, t$，$o_t$ 是 $t$ 个值的加权和。
+$X$ 的每行是一个 token 的向量，$W_Q$、$W_K$、$W_V$ 是训练得到的模型参数。
 """)
-    p.image("assets/kv-attention.svg")
-    p.highlight("第 $t$ 步用到全部 $t$ 个位置的 $k$、$v$。它们要在每一步重新计算吗？")
+    p.frames(*(f"assets/kv-attention-{k}.svg" for k in range(1, 4)), width_px=790)
+    p.highlight("解码时 $X$ 只多出一行，其余各行要重新计算吗？")
     p.notes(r"""
-一个注意力头有三个权重矩阵 $W_Q$、$W_K$、$W_V$，维度都是 $d_{model} \times d$。第 i 个 token 的向量 $x_i$ 是上一层的输出，乘以三个矩阵得到 $q_i = x_i W_Q$、$k_i = x_i W_K$、$v_i = x_i W_V$。
-图自左向右：$q_t$（1 × d）乘 $K^\top$（d × t）得到 t 个内积组成的分数 $s$（1 × t）。除以 $\sqrt d$ 后经 softmax 得到权重 $a$（1 × t），权重非负且和为 1。$a$ 乘 $V$（t × d）得到输出 $o_t$（1 × d），即 t 个值按权重相加。
-因果掩码：生成 token t 时，序列中位置大于 t 的 token 不存在，所以只有位置 1 到 t。训练时整个序列并行计算，掩码保证位置 i 的结果与位置大于 i 的 token 无关。这个性质在下面两页用到。
-实际的模型有多个头，每个头各有一组 $W_Q$、$W_K$、$W_V$，各层的权重也各不相同。一个头一层的分析适用于全部。
-这一页提出问题：每一步都用到前 t 个位置的 k 与 v，这些量是否每一步重新计算。
+共 3 帧，对应注意力的三步。图中每个矩阵的一行对应一个 token，紫色是模型参数。
+第 1 帧：$X$ 的第 i 行 $x_i$ 是第 i 个 token 的向量，乘以 $W_Q$、$W_K$、$W_V$（都是 d × d）得到 $Q = XW_Q$、$K = XW_K$、$V = XW_V$，三者都是 N × d。第 i 行记作 $q_i$、$k_i$、$v_i$，分别称为查询、键与值。
+第 2 帧：$QK^\top$ 是 N × N 的矩阵，第 i 行第 j 列是 $q_i$ 与 $k_j$ 的内积。因果掩码把 j > i 的位置去掉（虚线格），再除以 $\sqrt d$，按行作 softmax，得到权重矩阵 $A$。每行的权重非负且和为 1。
+第 3 帧：$O = AV$，第 i 行 $o_i$ 是 $v_1$ 到 $v_i$ 按第 i 行的权重相加。$O$ 的最后一行经过后续的层，用于生成下一个 token「适合」。
+因果掩码（mask）使第 i 个 token 只依赖前 i 个 token，第 i 行的结果与位置大于 i 的 token 无关。这个性质在下面两页用到。图中 N = 4，向量长度为 d。
+实际的模型有多个头与多个层，每个头各有一组 $W_Q$、$W_K$、$W_V$。第一层的 $X$ 来自 token 的向量表，之后各层的 $X$ 是上一层的输出。一个头一层的分析适用于全部。
 """)
 
 
-# 上一页的问题：k、v 是否每步重新计算。本页画出不缓存时的做法，逐步统计投影的次数。
+# 上一页提出问题：解码时 X 只多一行，其余各行是否重新计算。本页画出不保存中间结果时的做法，并指出其中哪些是重复的。
 def kv_naive(p):
     p.title("无缓存时的重复计算")
     slide(p, r"""
-没有缓存时，第 $t$ 步从 $x_1, \ldots, x_t$ 重新计算全部 $t$ 个 $k_i$、$v_i$，再作注意力。图中每个格子是一次 k、v 投影，即 $x_i$ 与 $W_K$、$W_V$ 的乘积。
+解码第 1 步，$X$ 增加新 token「适合」一行。不保存中间结果时，全部矩阵从 $X$ 重新计算。
 """)
-    p.frames(*(f"assets/kv-naive-{k}.svg" for k in range(1, 7)), width_px=860)
-    p.highlight(r"$T$ 步的投影共 $T(T+1)/2$ 次，必要的只有 $T$ 次，量级 $O(T^2)$")
-    p.notes("""
-共 6 帧，每帧多一步。第 s 步的一行是这一步的全部 k、v 投影：位置 1 到 s 各一次。橙色格是新 token 的 k、v，红色格是在上一步已经算过的，这一步又算了一遍。右侧统计由图的脚本逐步累加。
-第 1 帧：只有 x1，投影 1 次，没有重复。
-第 2 帧：k1 v1 重算 1 次，k2 v2 新算，本步 2 次，累计 3 次，其中重复 1 次。
-第 3 帧：本步 3 次，累计 6 次，其中重复 3 次。
-第 4 至第 6 帧：本步 4、5、6 次，累计 10、15、21 次，重复 6、10、15 次。
-第 6 帧：6 步共 21 次投影，必要的 6 次，重复的 15 次。一般地，T 步的投影次数为 1 + 2 + ... + T = T(T+1)/2，量级 O(T²)。第 i 个 token 的 k、v 被重复计算 T − i 次，每次结果相同。
-实际的上下文可达数万个 token，重复的投影占绝大部分。
+    p.frames(*(f"assets/kv-naive-{k}.svg" for k in range(1, 3)), width_px=800)
+    p.highlight("已有 token 的 $k$、$v$ 每一步都相同，可以保存下来重复使用")
+    p.notes(r"""
+共 2 帧，布局与上一页相同。
+第 1 帧：$X$ 的前 4 行与上一步相同，第 5 行是新 token「适合」（橙色）。$Q$、$K$、$V$、$A$、$O$ 全部从 $X$ 重新算出。红色的行在上一步已经算过，这一步又算了一遍。
+第 2 帧：生成下一个 token「出门」只用 $O$ 的最后一行 $o_5$。$o_5$ 由 $A$ 的最后一行与全部 $V$ 算出，$A$ 的最后一行由 $q_5$ 与全部 $K$ 算出。所以 $q_1$ 到 $q_4$、$A$ 与 $O$ 的前 4 行都不需要（灰色虚线）。需要的是 $q_5$ 与 $k_1$ 到 $k_5$、$v_1$ 到 $v_5$。
+$k_1$ 到 $k_4$、$v_1$ 到 $v_4$ 由 $x_1$ 到 $x_4$ 与不变的权重算出。第一层的 $x_i$ 是 token 的向量，不变。之后各层的 $x_i$ 是上一层第 i 行的输出，因果掩码使它只依赖前 i 个 token，也不变。所以这些 $k$、$v$ 与上一步的结果完全相同。
+每生成一个 token 都重复一次。第 t 步要重算 t 个 token 的 k、v，生成越长，重复的计算越多。
 """)
 
 
-# 上一页给出重复计算的量。本页给出避免重复的条件与做法：k、v 算出后不变，存起来。
+# 上一页指出已有 token 的 k、v 每步相同。本页给出做法：把它们存入 KV Cache，每步只为新 token 计算一行。
 def kv_cache(p):
     p.title("KV Cache 的做法")
     slide(p, r"""
-因果掩码使 $k_i$、$v_i$ 只依赖位置不超过 $i$ 的 token，算出之后不再改变，可以存入 **KV Cache**。每一步只为新 token 计算 $q_t$、$k_t$、$v_t$，把 $k_t$、$v_t$ 追加到缓存，再用 $q_t$ 与缓存中的全部 $K$、$V$ 作注意力。
+**KV Cache** 保存已有 token 的 $k$、$v$。解码的每一步只为新 token 计算 $q$、$k$、$v$ 各一行，把 $k$、$v$ 追加到缓存，再用 $q$ 与缓存中的全部 $k$、$v$ 算出 $A$ 与 $O$ 的一行。
 """)
-    p.frames(*(f"assets/kv-cache-{k}.svg" for k in range(1, 7)), width_px=820)
-    p.highlight(r"$T$ 步的投影从 $T(T+1)/2$ 次降为 $T$ 次，$O(T^2)$ 变为 $O(T)$")
-    p.notes("""
-共 6 帧，格子的位置与上一个动画相同。第 s 步的一行：位置 s 的格子是橙色，是这一步新算的 k、v。位置 1 到 s−1 的格子是绿色，是从缓存读出的，没有重新计算。
-右侧是缓存，预先分配了 6 个位置。第 s 步把 k_s、v_s 追加到位置 s（橙色箭头），然后 q_s 读取位置 1 到 s（绿色框）。
-第 1 帧：缓存为空，计算 k1 v1，追加到位置 1，q1 读取位置 1。
-第 2 至第 5 帧：每步新算 1 次，累计 2、3、4、5 次，读取缓存的位置数是 2、3、4、5。
-第 6 帧：6 步共 6 次投影，上一个动画是 21 次。T 步的投影次数是 T，量级 O(T)。
-缓存不改变计算的结果，只省去重复的投影。每步仍要对 t 个位置作注意力，这部分的计算量下一页的实测中给出。
+    p.frames(*(f"assets/kv-cache-{k}.svg" for k in range(1, 3)), width_px=780)
+    slide(p, r"""
+已有 token 的 $k$、$v$ 不再改变，之后每一步都要读取，所以缓存。$q$ 只用一次，不缓存。
+""")
+    p.notes(r"""
+共 2 帧，布局与前两页相同。蓝色虚线框内是 KV Cache，浅蓝色的行从缓存读出，橙色的行是本步新算的。
+第 1 帧：预填充已经把 $k_1$ 到 $k_4$、$v_1$ 到 $v_4$ 存入缓存。解码第 1 步只用新 token「适合」的 $x_5$ 计算 $q_5$、$k_5$、$v_5$，把 $k_5$、$v_5$ 追加到缓存。$q_5$ 与缓存中的 5 个 $k$ 得到 $A$ 的一行（1 × (N+1)），再与 5 个 $v$ 得到 $o_5$，生成「出门」。
+第 2 帧：解码第 2 步只为「出门」计算 $q_6$、$k_6$、$v_6$，缓存增加一行，变为 6 行。
+与上一页相比，$X$、$Q$、$A$、$O$ 每步只有一行，$K$、$V$ 的旧行从缓存读出，不再重新计算。缓存不改变计算的结果。
+每一层、每个头各有自己的 KV Cache。
 """)
 
 
-KV_RUN_OUTPUT = """tokens 1024, head dimension 64
-no cache    524800 k,v projections     766.1 ms
-KV cache      1024 k,v projections      32.4 ms
+KV_RUN_OUTPUT = """tokens   no cache   KV cache   speedup
+    64     29.8 ms      1.9 ms     15.7
+   128    108.1 ms      4.7 ms     22.9
+   256    381.7 ms      9.7 ms     39.4
+   512   1735.1 ms     33.9 ms     51.1
+  1024   6825.9 ms    123.4 ms     55.3
 outputs identical: yes"""
-KV_RUN_BOLD = [2, 3, 4]
+KV_RUN_BOLD = [2, 6, 7]
 
 
 def _kv_run_numbers():
-    lines = KV_RUN_OUTPUT.splitlines()
-    plain, cached = lines[1].split(), lines[2].split()
-    return int(plain[2]), float(plain[-2]), int(cached[2]), float(cached[-2])
+    """每行：token 数、无缓存 ms、有缓存 ms、加速比。"""
+    rows = []
+    for line in KV_RUN_OUTPUT.splitlines()[1:-1]:
+        f = line.split()
+        rows.append((int(f[0]), float(f[1]), float(f[3]), float(f[5])))
+    return rows
 
 
-# 上两页从计算次数上比较了两种做法。本页运行同一个解码过程，检验次数之比与时间之比，并检验输出相同。
+# 上两页从做法上比较了无缓存与有缓存。本页实测两者的运行时间，并看 token 数怎样影响缓存的效果。
 def kv_run(p):
-    n_plain, ms_plain, n_cached, ms_cached = _kv_run_numbers()
+    rows = _kv_run_numbers()
+    first, last = rows[0], rows[-1]
     p.title("无缓存与有缓存的运行时间")
     slide(p, r"""
-`kv_decode.c` 用一个注意力头（$d = 64$）生成 1024 个 token。权重是固定的伪随机数，每一步的输出经 tanh 成为下一步的输入。程序先不用缓存、再用缓存各运行一次，统计投影次数与时间，并逐位比较两种输出。
+`kv_decode.c` 用同一个输入分别生成 64 至 1024 个 token，比较无缓存与使用 KV Cache 的运行时间，并逐位比较两种输出。
 """)
     p.demo("无缓存与有缓存的解码",
            "gcc -O2 kv_decode.c -o kv_decode -lm && ./kv_decode",
            pwd="examples", output=KV_RUN_OUTPUT, bold=KV_RUN_BOLD, timeout=60,
            files=["examples/kv_decode.c"])
     slide(p, f"""
-- 投影次数为 {n_plain} 与 {n_cached}，之比 $(T+1)/2 = {n_plain / n_cached:.1f}$。
-- 两种输出逐位相同，缓存只省去重复的计算。
-- 时间之比约 {ms_plain / ms_cached:.0f}，小于投影次数之比：有缓存时每步仍要计算 $q_t$，并对 $t$ 个位置作注意力。
+- 两种方式的输出逐位相同。生成 {last[0]} 个 token 时，使用缓存快约 {last[3]:.0f} 倍。
+- token 越多，加速越大：{first[0]} 个 token 时约 {first[3]:.0f} 倍，{last[0]} 个时约 {last[3]:.0f} 倍。不用缓存时第 $t$ 步要重算 $t$ 个 token 的 $k$、$v$，使用缓存时只算 1 个。
 """)
-    p.notes(f"""
-`kv_decode.c` 实现单个注意力头的解码，没有多头、层与前馈网络。`decode(cached, out)` 逐步执行：为当前 token 计算 q，然后 `cached` 为真时只调用一次 `compute_kv(t)`，为假时对位置 0 到 t 各调用一次 `compute_kv`，最后 `attend` 对位置 0 到 t 作注意力，输出经 tanh 成为下一步的输入。
-两种方式的运算顺序相同，所以输出逐位相同（最后一行 yes）。投影次数由 `projections` 计数：T(T+1)/2 = {n_plain}，T = {n_cached}，之比 {n_plain / n_cached:.1f}。
-时间：无缓存 {ms_plain} ms，有缓存 {ms_cached} ms，之比 {ms_plain / ms_cached:.1f}。有缓存时，每步的运算量包括 q 与 k、v 的三次 d × d 投影，以及对 t 个位置的注意力（每个位置一次 d 维内积与一次加权累加）。缓存去掉的是投影随 t 增长的那一项，注意力对 t 个位置的求和仍在，所以总时间仍随 T² 增长，每一项的代价是 d，没有缓存时的投影是 d²。这一点由时间之比小于投影次数之比体现。
+    p.notes("""
+`kv_decode.c` 实现单个注意力头的解码，没有多头、层与前馈网络。`decode(T, cached, out)` 逐步执行：为当前 token 计算 q，然后 `cached` 为真时只调用一次 `compute_kv(t)`，为假时对位置 0 到 t 各调用一次 `compute_kv`，最后 `attend` 对位置 0 到 t 作注意力，输出经 tanh 成为下一步的输入。权重是固定的伪随机数。
+两种方式的运算顺序相同，所以输出逐位相同（最后一行 yes）。缓存只省去重复的计算，不改变结果。
+token 数每增加一倍，不用缓存的时间约增为 4 倍：第 t 步重算 t 个 token，总的投影次数随 T² 增长。使用缓存时每步只算 1 个 token 的 k、v，时间增长得慢，所以加速比随 token 数增大。
+使用缓存时每步仍要对 t 个位置作注意力，这部分随 token 数增长，所以加速比的增长逐渐变慢。实际的模型每个 token 要经过全部层的计算，省去的计算远多于这个单头的程序，加速比更大。
 时间随机器而异，页面上的数字取一次运行的结果。
 """)
 
 
-# 实测显示缓存省去了重复计算。本页回答缓存本身怎样存放：一个预先分配的多维数组，按层、K/V、头、位置、维度寻址。
-def kv_layout(p):
-    p.title("缓存的数据结构")
+# 实测表明 KV Cache 显著缩短解码时间。本页画出显存的组织形式，指出若缓存始终驻留显存，显存迟早被占满。
+def kv_vram(p):
+    p.title("显存中的模型与 KV Cache")
     slide(p, r"""
-KV Cache 是一个预先分配到最大长度 MAX 的数组，下标依次是层、K 或 V、头、位置、维度。位置从 0 编号。
+- 显卡的**显存**同时存放三部分数据：共用的**模型权重**、当前步的**中间结果**与各会话的 **KV Cache**。
+- 单个会话的 KV Cache 随 token 数量增长，总容量随显存中保留的会话数增加。
 """)
-    p.image("assets/kv-layout.svg")
-    slide(p, r"""
-- 第 $t$ 步把新的 $k$、$v$ 写在位置 $t$，读取时只取位置 0 到 $t$，位置 $t+1$ 起的空位保留给后续的 token。
-- 位置是倒数第二个下标，一个位置的 $d$ 个元素连续存放，同一个头的 K 是一段连续的内存，相邻位置相距 $d \times b$ 字节。
-""")
+    p.frames("assets/kv-vram-1.svg", "assets/kv-vram-2.svg", width_px=820)
+    p.highlight("如果 KV Cache 始终驻留在显存中，显存迟早会被占满，怎么办？")
     p.notes("""
-图自上而下逐层放大，每一行是上一行中被框出的一格的内部。第一行是 L 层，第二行是某一层中的 K 与 V，第三行是 K 中的 n 个头，第四行是一个头中的各个位置，第五行是一个位置的 d 个元素。左侧的下标名与代码中的数组下标一致。
-第四行中，浅蓝色的位置已经存放了 token 的 k，橙色的位置 t 是当前步追加的，白色虚线的位置是预分配而尚未使用的空位。
-元素的地址 = 起始地址 + ((((层 × 2 + kv) × n_kv + 头) × MAX + 位置) × d + 维度) × b，b 是每个元素的字节数。位置在维度之前，所以一个头的 K 是 MAX × d 个元素的连续区域，已用的部分是它的前 (t+1) × d 个元素。
-预分配到 MAX 的原因是追加时不需要移动已有的数据，写入位置 t 只是一次顺序写。这个选择的代价在后面讨论分块分配时再看。
+共 2 帧。第 1 帧展示大模型推理时显存的组织：模型权重在载入后大小固定，由所有请求共用。中间结果是当前步算出的临时向量，占用的空间较小。其余显存用于存放各会话的 KV Cache，以便用户在多轮对话或继续生成时直接复用前序 token 的 k、v。新到达的会话 4 放入剩余显存空间。
+第 2 帧：用户结束或暂停对话后，如果旧会话的 KV Cache 始终驻留在显存中，随着后续会话（会话 5、会话 6 等）不断到达，显存迟早会被占满。下一页先给出服务端针对这一问题的常规过期机制。
 """)
 
 
-KV_APPEND = """// cache[layer][K or V][head][pos][dim]
-float cache[L][2][H][MAX][D];
-// write k, v of the token at position t
-void kv_append(int layer, int t,
-    float k[H][D], float v[H][D]) {
-    float (*K)[MAX][D] = cache[layer][0];
-    float (*V)[MAX][D] = cache[layer][1];
-    for (int h = 0; h < H; h++)
-        for (int d = 0; d < D; d++) {
-            K[h][t][d] = k[h][d];
-            V[h][t][d] = v[h][d];
-        }
-}"""
-
-KV_ATTEND = """// one head, positions 0..t
-void attention(int layer, int h, int t,
-    const float *q, float *o) {
-    float (*K)[D] = cache[layer][0][h];
-    float (*V)[D] = cache[layer][1][h];
-    float score[MAX];
-    for (int i = 0; i <= t; i++)  // reads K
-        score[i] = dot(q, K[i]) / sqrtf(D);
-    softmax(score, t + 1);
-    for (int d = 0; d < D; d++) o[d] = 0;
-    for (int i = 0; i <= t; i++)  // reads V
-        for (int d = 0; d < D; d++)
-            o[d] += score[i] * V[i][d];
-}"""
-
-
-# 上一页给出布局。本页用这个布局写出追加与读取，并指出两者的访问序列：追加是顺序写，读取的步长为 1。
-def kv_code(p):
-    p.title("追加与读取")
-    with p.flex("row", widths=[10, 11]):
-        p.code("c", KV_APPEND)
-        p.code("c", KV_ATTEND)
+# 上一页提出缓存永久驻留会占满显存的问题。本页给出服务端的过期时间机制（动画），并提出请求密集到达时未过期即占满显存的问题。
+def kv_expire(p):
+    p.title("KV Cache 的过期时间")
     slide(p, r"""
-- `kv_append` 把新的 $k$、$v$ 写到位置 $t$，**追加是顺序写**。
-- `attention` 对位置 0 到 $t$ 依次读 K，再依次读 V，**读取的步长为 1**，一个块取入缓存后被完整使用。
+- 算力服务商为 KV Cache 设定**过期时间**（如 1 小时），超期后缓存自动失效并释放显存。
+- 过期后如果用户继续同一会话，服务端重新计算前序 token 的 $k$、$v$。
 """)
+    p.frames("assets/kv-expire-1.svg", "assets/kv-expire-2.svg", "assets/kv-expire-3.svg", width_px=820)
+    p.highlight("若同一时间请求密集到达，未到过期时间显存就已占满，怎么办？")
     p.notes("""
-左侧是数组的声明与追加。右侧是一个头的注意力，`dot` 与 `softmax` 是辅助函数，省略。代码用于说明访问序列，没有写出多头的循环与批量。
-`kv_append`：每个头把 D 个元素写到 cache[layer][0][h][t]（K）与 cache[layer][1][h][t]（V）。对固定的头，位置 t 紧接在位置 t−1 之后，所以一个头的 K 在生成过程中是顺序增长的。
-`attention`：`K[i]` 是位置 i 的 D 个元素。i 从 0 增加到 t，读过的地址从 K 的起点连续增加到 (t+1) × D 个元素处，步长为 1 个元素。V 的读取同样。这是步长为 1 的引用模式，空间局部性最好，一个块中的元素依次被用到。
-每个元素在一个 token 的计算中只用一次：K[i][d] 只参加一个乘加，V[i][d] 同样。没有重复引用，即没有时间局部性。下一页给出读取的数据量。
+共 3 帧。
+第 1 帧：服务端记录每个会话距离上次访问的闲置时间。未达到过期时间（例如 1 小时）时，各会话的 KV Cache 保留在显存中。
+第 2 帧：会话 1 超过 1 小时没有新请求，对应的 KV Cache 自动失效并释放显存空间，腾出的显存可供后续新会话使用，从而避免已结束的会话永久占用显存。
+第 3 帧：如果会话 1 在过期之后再次发来请求，由于原 KV Cache 已释放，服务端重新计算会话 1 前序 token 的 k、v，生成新的 KV Cache 后继续解码。
+过期机制解决了旧会话长期占用显存的问题。但如果同一时间有大量请求密集到达，在过期时间之内所有活跃会话的 KV Cache 总和就超出了显存容量，下一页讨论此时的处理方式。
 """)
 
 
-# 上一页指出访问序列对缓存友好，但读取的数据量未给出。本页用公式与一个公开模型的参数算出缓存的容量。
-def kv_size(p):
-    per_token = kv_bytes_per_token()
-    p.title("KV Cache 的容量")
+# 上一页提出请求密集到达导致未过期即占满显存的问题。本页展示把 KV Cache 换出到内存、按需换入显存的朴素设想，并提问该设想的问题。
+def kv_swap(p):
+    p.title("显存不足时的换入换出设想")
     slide(p, r"""
-每个 token 在每一层保存 K 与 V，各有 $n_{kv}$ 个头，每个头 $d_{head}$ 个元素：
- $$\text{KV Cache 的字节数} = 2 \times L \times n_{kv} \times d_{head} \times T \times b$$
-$L$ 是层数，$T$ 是上下文长度，$b$ 是每个元素的字节数。取 $L = 32$，$n_{kv} = 8$，$d_{head} = 128$，fp16 的 $b = 2$：
+- 同一时间大量请求密集到达时，显存中的 KV Cache 均未到期，剩余空间不足以容纳新请求。
+- **朴素设想**：把暂不使用的 KV Cache 从显存**换出**到内存，待该会话继续时再从内存**换入**显存。
 """)
-    p.table(
-        headers=["上下文长度 $T$", "KV Cache"],
-        rows=[
-            ["1 个 token", f"{per_token} B = {per_token // 1024} KiB"],
-            [f"{KV_CTX_SHORT} 个 token", f"{KV_CTX_SHORT * per_token / GIB * 1024:.0f} MiB"],
-            [f"{KV_CTX_LONG} 个 token（128k）", f"{KV_CTX_LONG * per_token / GIB:.0f} GiB"],
-            ["对照：模型权重（fp16）", f"{KV_PARAMS * 2 / GIB:.1f} GiB"],
-        ],
-        widths=[3, 2],
-        align=["left", "right"],
-    ).footnote("Llama 3.1 8B 的公开配置：32 层，8 个 KV 头，头维度 128，上下文 131072，8.03×10⁹ 个参数。")
-    p.highlight("128k 上下文的 KV Cache 与模型权重一样大")
-    p.notes(f"""
-公式中的 2 是 K 与 V。每个 token 的字节数 = 2 × {KV_LAYERS} × {KV_HEADS} × {KV_DIM} × 2 = {per_token} B = {per_token // 1024} KiB。
-上下文 {KV_CTX_SHORT}：{KV_CTX_SHORT} × {per_token // 1024} KiB = {KV_CTX_SHORT * per_token // 2**20} MiB。上下文 {KV_CTX_LONG}：{KV_CTX_LONG} × {per_token // 1024} KiB = {KV_CTX_LONG * per_token // GIB} GiB。
-权重：8.03 × 10^9 个参数，每个 2 字节，共 {KV_PARAMS * 2 / 1e9:.2f} GB，即 {KV_PARAMS * 2 / GIB:.1f} GiB。
-模型取 Llama 3.1 8B：32 层，32 个查询头，8 个 KV 头，头维度 128，上下文长度 131072。数字取自公开发布的模型配置。其他模型的数字按同一公式代入。
-这里的 KV Cache 是一个请求的。服务器同时处理多个请求时，每个请求各有一份，总容量乘以并发数，常常比权重大得多。
+    p.frames("assets/kv-swap-1.svg", "assets/kv-swap-2.svg", "assets/kv-swap-3.svg", width_px=820)
+    p.highlight("在显存与内存之间换入换出 KV Cache 会带来什么问题？")
+    p.notes("""
+共 3 帧。
+第 1 帧（请求密集到达）：短时间内大量请求同时到达，显存中会话 1、2、3 的最后访问时间都在几分钟以内，均未达到过期时间，而新到达的会话 4 已无法放入显存。
+第 2 帧（换出）：一种直接的朴素设想是利用容量更大的主存（内存）：把暂时不活跃的会话 1 的 KV Cache 从显存复制到内存中保存，腾出显存给新到达的会话 4。
+第 3 帧（换入）：当会话 1 再次发来请求时，动态把它的 KV Cache 从内存复制回显存，使原有的 KV Cache 得以保留。
+这一设想能否奏效，取决于从内存换入 KV Cache 的速度是否比直接重新计算更快，下一页对此作分析。
 """)
 
 
-# 上一页给出容量。本页给出读取它的代价：每生成一个 token 读出多少字节，速度的上限是多少，并说明与缓存的关系。
-def kv_bandwidth(p):
-    p.title("解码的访存量与速度上限")
+# 上一页提问换入换出有什么问题。本页指出解码是访存受限的，直接使部分缓存失效并按需重新计算（动画）。
+def kv_recompute(p):
+    p.title("访存受限与缓存失效")
     slide(p, r"""
-- 批大小为 1 时，生成一个 token 要把全部权重与整个 KV Cache 各读出一次。每个元素读入后只参加一次乘加，每读 1 字节只做 1 次浮点运算。
-- GPU 每秒能完成的浮点运算数比每秒能读入的字节数大两个数量级以上，运算单元在等待数据，解码是**访存受限**的。
-- 速度上限 = 显存或内存的带宽 ÷ 每个 token 读出的字节数。
+- 解码每步都要读取权重与 KV Cache，属于**访存受限**计算，从内存交换缓存比直接重算更慢。
+- KV Cache 超出显存时，直接使部分缓存**失效**，会话再次请求时重新计算前序 $k$、$v$。
 """)
-    rows = []
-    for ctx in (KV_CTX_SHORT, KV_CTX_LONG):
-        total = KV_PARAMS * 2 + ctx * kv_bytes_per_token()
-        rows.append([f"{ctx}", f"{total / 1e9:.1f} GB",
-                     f"{kv_decode_rate(ctx, KV_GPU_BW):.0f}", f"{kv_decode_rate(ctx, KV_DRAM_BW):.1f}"])
-    p.table(
-        headers=["上下文 $T$", "每个 token 读出", "显存 1792 GB/s", "内存 102.4 GB/s"],
-        rows=rows,
-        widths=[2, 2.4, 2.4, 2.4],
-        align=["left", "right", "right", "right"],
-    ).footnote("参数同上一页。显存带宽取自带 32 GB GDDR7 的 GeForce RTX 5090 的公布规格，内存带宽是双通道 DDR5-6400 的理论值 6400 MT/s × 8 B × 2。表中最后两列的单位是 token/s。")
-    slide(p, r"""
-对 K、V 的读取是步长为 1 的顺序读，每个块被完整使用。但 KV Cache 以 GiB 计，各级缓存以 KB 至 MB 计，每个字节在一个 token 内只用一次，所以每个 token 都从显存或内存读出整个 KV Cache，读取的速度等于带宽。
-""")
-    p.notes(f"""
-每个 token 读出的字节数 = 权重 {KV_PARAMS * 2 / 1e9:.2f} GB + 上下文长度 × 每个 token 的 KV Cache（{kv_bytes_per_token()} B）。T = {KV_CTX_SHORT} 时 KV Cache 为 {KV_CTX_SHORT * kv_bytes_per_token() / 1e9:.2f} GB，共 {(KV_PARAMS * 2 + KV_CTX_SHORT * kv_bytes_per_token()) / 1e9:.2f} GB。T = {KV_CTX_LONG} 时 KV Cache 为 {KV_CTX_LONG * kv_bytes_per_token() / 1e9:.2f} GB，共 {(KV_PARAMS * 2 + KV_CTX_LONG * kv_bytes_per_token()) / 1e9:.2f} GB。
-速度上限用带宽除以字节数：显存 1792 GB/s 对应 {kv_decode_rate(KV_CTX_SHORT, KV_GPU_BW):.0f} 与 {kv_decode_rate(KV_CTX_LONG, KV_GPU_BW):.0f} token/s，内存 102.4 GB/s 对应 {kv_decode_rate(KV_CTX_SHORT, KV_DRAM_BW):.1f} 与 {kv_decode_rate(KV_CTX_LONG, KV_DRAM_BW):.1f} token/s。实际速度低于上限，上限只由读出的字节数决定。
-算术强度是每字节完成的浮点运算数。fp16 的一个元素 2 字节，参加一次乘加即 2 次浮点运算，约 1 FLOP/B。GPU 的峰值算力与显存带宽之比在百 FLOP/B 量级，所以运算单元大部分时间空闲。
-批量中的各请求共用一次权重的读取，各自读取自己的 KV Cache。批量越大，权重在总读出量中的占比越小，KV Cache 的读取越成为主要部分。
-关系：访问序列的步长为 1，空间局部性最好。数据量远大于缓存的容量，且没有重复引用，缓存无从发挥作用，速度由带宽决定。减小读出的字节数，是提高解码速度的直接方法。
+    p.frames("assets/kv-recompute-1.svg", "assets/kv-recompute-2.svg", "assets/kv-recompute-3.svg", width_px=820)
+    p.highlight("显存不足时直接使部分 KV Cache 失效，应当选择哪些缓存？")
+    p.notes("""
+共 3 帧。解码生成每个 token 时，GPU 都要把模型权重和当前会话的 KV Cache 从显存读出一次，而每个元素只参加一次内积或加权求和，计算量很小，大部分时间花在等待数据读入上，即访存受限（memory-bound）。在访存受限下，若再跨内存交换 KV Cache，速度反而不如 GPU 直接重新算一遍快。
+第 1 帧：同一时间大量请求密集到达，显存中会话 1、2、3 的 KV Cache 均未到过期时间，而剩余空间已不足以容纳新到达的会话 4。
+第 2 帧：服务端直接使会话 1 的 KV Cache 失效（invalidate），立即腾出显存空间放入会话 4。
+第 3 帧：当被使失效的会话 1 后续再次发来请求时，服务端重新计算会话 1 前序 token 的 k、v，生成新的 KV Cache 后继续解码。接下来需要决定优先使哪些缓存失效。
 """)
 
 
-# 上一页的结论是速度由读出的字节数决定，KV Cache 的字节数是 2 L n_kv d_head T b 的乘积。
-# 本页起讨论减小它的三个因子，先从 n_kv 开始。
-def kv_gqa(p):
-    p.title("分组查询注意力")
-    slide(p, r"""
-容量与读出量都与 KV 头数 $n_{kv}$ 成正比。**分组查询注意力**（GQA）让一组查询头共享同一个 K 头与 V 头。
-""")
-    p.image("assets/kv-gqa.svg", width_px=820)
-    slide(p, r"""
-- **MHA** 每个查询头有自己的 K、V 头，**MQA** 全部查询头共享 1 组，**GQA** 每 $g$ 个查询头共享 1 组，$n_{kv} = n_q / g$。
-- Llama 3.1 8B 有 32 个查询头与 8 个 KV 头，$g = 4$：128k 上下文的 KV Cache 由 64 GiB 降到 16 GiB。
-- 代价：KV 头变少，表达能力减弱。结构在训练时确定。
-""")
-    p.notes(f"""
-图中每个面板有 8 个查询头（橙色，当前步算出的 q），下方是 K、V 头（浅蓝，缓存中保存的）。每个查询头只读与它相连的 K、V 头。
-MHA：8 个查询头对应 8 个 KV 头，缓存的大小为基准。GQA：每 4 个查询头共享一个 KV 头，共 2 个，缓存为 MHA 的 1/4。MQA：8 个查询头共享 1 个，缓存为 MHA 的 1/8。
-Llama 3.1 8B：32 个查询头，8 个 KV 头，g = 4。若为 MHA，n_kv = 32，每个 token 为 {kv_bytes_per_token(heads=KV_QUERY_HEADS) // 1024} KiB，128k 上下文为 {KV_CTX_LONG * kv_bytes_per_token(heads=KV_QUERY_HEADS) // GIB} GiB。GQA 为 {KV_CTX_LONG * kv_bytes_per_token() // GIB} GiB。
-GQA 不改变查询头的个数，计算量基本不变，减少的是要存储和读出的 K、V。
-代价：多个查询头看到同样的 K、V，头与头之间的差异减少。模型在训练时就按这个结构训练，或从 MHA 模型出发用少量数据继续训练。
-""")
-
-
-# 上一页减小了头数。本页减小另一个因子，每个元素的字节数 b：把 k、v 存成低精度。
-def kv_quant(p):
-    p.title("KV Cache 的量化")
-    slide(p, r"""
-容量公式中的 $b$ 也可以减小：$k$、$v$ 写入缓存时存为低精度的整数，读出时用**缩放因子**（量化值乘以它，还原为浮点数）还原。每 32 个元素共用一个 fp16 的缩放因子。
-""")
-    rows = []
-    for name, bits in (("fp16", 16), ("int8，每 32 个元素共用一个缩放因子", 8.5), ("Q4_0，每 32 个元素共用一个缩放因子", 4.5)):
-        elem = bits / 8
-        kv = KV_CTX_LONG * kv_bytes_per_token(elem=elem)
-        rate = KV_GPU_BW / (KV_PARAMS * 2 + kv)
-        rows.append([name, f"{bits:g}", f"{kv / GIB:.1f} GiB", f"{rate:.0f}"])
-    p.table(
-        headers=["存储格式", "位 / 元素", "KV Cache（128k）", "速度上限 token/s"],
-        rows=rows,
-        widths=[4.4, 1.4, 2.2, 2.2],
-        align=["left", "right", "right", "right"],
-    ).footnote("模型参数与带宽同上一页，权重仍为 fp16，带宽取 1792 GB/s。")
-    slide(p, r"""
-- int8 每个元素 8 位加缩放因子的 16/32 位，共 8.5 位。Q4_0 每个元素 4 位加 0.5 位，共 4.5 位。
-- 代价：量化误差进入注意力的输出。每次读出都要还原，增加了运算，而解码受访存限制，读入的字节数减少带来的收益更大。
-""")
-    p.notes(f"""
-每个元素的字节数 b = 位数 ÷ 8。fp16 为 2 B。int8 的 32 个元素占 32 B，加 2 B 的 fp16 缩放因子，共 34 B，34 × 8 ÷ 32 = 8.5 位。Q4_0 的 32 个元素占 16 B，加 2 B，共 18 B，4.5 位。
-128k 上下文的 KV Cache：{KV_CTX_LONG} × 128 KiB 乘 位数 ÷ 16。fp16 为 16 GiB，int8 为 {16 * 8.5 / 16:.2f} GiB，Q4_0 为 {16 * 4.5 / 16:.2f} GiB。
-速度上限仍取每个 token 读出的字节数：权重 {KV_PARAMS * 2 / 1e9:.2f} GB 加 KV Cache，除以带宽 1792 GB/s。KV Cache 变小后，上限从 {KV_GPU_BW / (KV_PARAMS * 2 + KV_CTX_LONG * kv_bytes_per_token()):.0f} 提高到 {KV_GPU_BW / (KV_PARAMS * 2 + KV_CTX_LONG * kv_bytes_per_token(elem=0.5625)):.0f} token/s。权重也可以量化，这里只改 KV Cache。
-量化在 k、v 追加时执行一次，读出时每次都要还原。注意力在还原后的浮点数上计算，误差来自量化。误差的大小取决于数据的分布，页面只陈述方向。
-""")
-
-
-# 上两页减小了 n_kv 与 b。本页减小第三个因子 T：只保留一部分 token 的 k、v。
+# 上一页得出直接使部分 KV Cache 失效的做法。本页给出选择淘汰对象的两条策略：LRU 与最小缓存优先。
 def kv_evict(p):
-    p.title("淘汰 token")
+    p.title("KV Cache 的淘汰策略")
+    p.image("assets/kv-evict.svg", width_px=800)
     slide(p, r"""
-容量公式中的 $T$ 也可以减小：缓存只保留一部分 token 的 $k$、$v$，容量不再随上下文增长。
-""")
-    p.image("assets/kv-evict.svg", width_px=740)
-    slide(p, r"""
-- 缓存满时淘汰哪一项是替换策略的问题。**滑动窗口**保留最近的 $W$ 个 token，淘汰最早的，是先进先出。
-- 序列最前面的几个 token 获得后续几乎所有 token 的较大注意力权重，称为**注意力汇聚点**。窗口淘汰它们后输出质量明显下降，与窗口一起保留则恢复。
-- 代价：被淘汰的 $k$、$v$ 不再存放在任何一层，之后的 token 不能再关注它们。
-""").footnote("Xiao et al., Efficient Streaming Language Models with Attention Sinks, ICLR 2024。")
-    p.notes("""
-图中 16 个 token 的 k、v 已在缓存中，第 17 个（橙色）正在生成。灰色虚线的位置表示 k、v 已被淘汰。
-第一行：保留全部，缓存随 t 增长。第二行：滑动窗口 W = 6，保留位置 11 至 16，位置 1 至 10 被淘汰。缓存固定为 6 个位置，与上下文长度无关。第三行：保留最前 4 个位置作为汇聚点，再加最近 6 个，缓存固定为 10 个位置。
-与缓存的替换策略的对应：硬件缓存满时用 LRU 等策略选出被替换的行，这里选出被淘汰的 token 的 k、v。滑动窗口按位置的先后淘汰，对应先进先出。区别在于硬件缓存的行被替换后仍在下一层，可以再取回。这里被淘汰的 k、v 没有下一层保存。
-汇聚点来自文献的观察：前几个 token 的 k、v 即使内容无关紧要，也获得大量的注意力权重。仅用窗口时这些 token 被淘汰，注意力的权重分布被破坏。保留它们与窗口，可以在固定的容量下持续生成很长的序列。
-代价是信息丢失：窗口之外的内容不再能被引用。窗口的大小与汇聚点的个数是需要选择的参数。
-""")
-
-
-# 上面三页减小每个请求的缓存。本页回到服务器：同时处理许多请求，最大长度的预分配会留下大量空位。
-def kv_fragment(p):
-    p.title("按最大长度预分配")
-    slide(p, r"""
-服务器同时处理许多请求，请求的最终长度在生成结束前未知。最直接的做法是为每个请求预分配最大长度（图中 4096 个 token）的连续内存。
-""")
-    p.image("assets/kv-fragment.svg", width_px=900)
-    slide(p, r"""
-预留而未使用的位置属于这个请求，其他请求不能使用，这是**内部碎片**。同一块显存能同时容纳的请求数因此减少。
+- **最近最少使用（LRU）**：主流推理系统的默认策略，优先使最久未访问的会话缓存失效。
+- **最小缓存优先**：优先使已缓存 token 数最少的会话失效，尽量减小对用户体验的影响：
+  1. 算力服务对 hit 缓存的 token 收取更低费用，保留大缓存能为用户节省更多开支。
+  2. 缓存较少的会话即使失效，后续重新计算所需的额外计算量也较少。
 """)
     p.notes("""
-图中 4 个请求各预留 4096 个位置，当前的长度分别是 37、612、1500 与 90。蓝色是已经存放了 k、v 的位置，红色是预留而未使用的位置。合计预留 16384 个位置，已用 2239 个，未使用的占 86.3%。
-请求的输出长度在生成结束前不知道，所以只能按允许的最大长度预留，否则长度超过预留时需要把整个缓存搬到更大的一段内存中。请求结束之前，这些预留的位置一直被占用。
-每个请求要求一段连续的内存，大小不同的请求先后到达和结束，空闲的内存被分割成不连续的小段，较大的请求即使总空闲量足够也放不下，这是外部碎片。下一页的按块分配同时解决这两种碎片。
-""")
-
-
-# 上一页的问题：预留的位置无法被别的请求使用。本页的回答：以块为单位按需分配，用块表记录位置。
-def kv_paged(p):
-    p.title("按块分配与块表")
-    slide(p, r"""
-把 KV Cache 划分为固定大小的**块**，每块容纳 $B$ 个 token 的 $k$、$v$（图中 $B = 4$，实际系统常取 16）。**块表**记录一个请求的逻辑块号到物理块号的映射，请求需要新位置时才分配一块。
-""")
-    p.frames(*(f"assets/kv-paged-{k}.svg" for k in range(1, 7)), width_px=920)
-    slide(p, r"""
-位置 $i$ 的 $k$、$v$ 在物理块 `table[i / B]` 的第 `i % B` 个位置。每个请求至多浪费 $B - 1$ 个位置。
-""")
-    p.notes("""
-共 6 帧。右侧是 12 个物理块，每块 4 个位置，格中的字母是请求。左侧是各请求的块表。橙色表示这一步新分配的块或新写入的 token。空闲块的分配顺序是编号最小的优先。
-第 1 帧：A 有 5 个 token，占 2 块，B 有 3 个，占 1 块。A 的块表是 0→P0、1→P1，B 的是 0→P2。
-第 2 帧：B 生成第 4 个 token，放进 P2 的最后一个空位，没有新分配。
-第 3 帧：B 生成第 5 个 token，P2 已满，分配 P3，B 的块表增加 1→P3。
-第 4 帧：C 到达，6 个 token 需要 2 块，取到 P4、P5。
-第 5 帧：A 结束，P0 与 P1 释放。这两块立即可被其他请求使用。
-第 6 帧：D 到达，9 个 token 需要 3 块，取空闲块中编号最小的 P0、P1 与 P6。D 的 3 块在物理上不连续，块表按逻辑顺序记录它们。
-读取时，注意力按逻辑块号依次访问，每块内的 B 个位置是连续的，块与块之间通过块表跳转。块内仍是步长为 1 的读取。
-浪费的位置只在每个请求的最后一块，至多 B − 1 个。图中各帧左下角的数字由脚本统计。块表本身很小，每块只记录一个编号。
-""")
-
-
-# 分块使块成为分配与共享的单位。本页的扩展：相同前缀的块可以由多个请求共用。
-def kv_prefix(p):
-    p.title("sidebar：前缀缓存")
-    slide(p, r"""
-许多请求以相同的前缀开头，例如同一个系统提示。**预填充**是一次算出输入中全部 token 的 $k$、$v$ 的阶段，之后逐个生成 token 的阶段是**解码**。
-""")
-    p.image("assets/kv-prefix.svg", width_px=740)
-    slide(p, f"""
-- 一个块与它之前所有块的 token 序列都相同，它的 $k$、$v$ 就相同，可以共用。请求到达时按块依次查找，**hit** 的块写入块表并跳过预填充，从第一个 miss 的块起重新计算。
-- 图中请求 2 hit 3 块，只预填充 11 个 token，占全部 59 个的 {11 / 59 * 100:.1f}%。
-- 只有完整的块能 hit。共用的块记录被引用的次数，次数为 0 时才释放。
-""")
-    p.notes(f"""
-图中块长 16 个 token。请求 1 的系统提示 48 个 token，占 P0 至 P2，输入 20 个 token 占 P3 与 P4。请求 2 到达，它的系统提示相同，前 3 块在缓存中找到，块表直接写入 0→P0、1→P1、2→P2，绿色表示 hit。它自己的 11 个 token 在 P5 中重新计算，橙色表示 miss。
-识别共用的块靠块的内容：块内的 token 序列加上它之前全部 token 的序列决定 k、v，对这些内容取哈希作为查找的键。前缀必须从序列开头起完全一致，中间插入不同的内容后，之后的块都 miss。
-这与硬件缓存的 hit 类似：缓存中已有所需的数据则 hit，hit 的块不再从下一层读取，这里 hit 的块不再重新计算。hit 率取决于请求的前缀是否相同。
-块被多个请求引用，所以每个块记录被引用的次数，所有请求都结束后才能释放。
-预填充一次并行处理整个输入，计算量大，解码逐个 token 生成，访存量大。前缀缓存减少的是预填充的计算量，也让请求更快得到第一个 token。
-""")
-
-
-def _kv_exercise_numbers():
-    layers, heads, dim = 28, 4, 128
-    per_token = 2 * layers * heads * dim * 2
-    ctx = 32768
-    kv = per_token * ctx
-    rate = 1e12 / (15e9 + kv)
-    mha = kv * 28 / 4
-    q40 = kv * 4.5 / 16
-    lens = [50, 300, 1201]
-    blocks = [-(-n // 16) for n in lens]
-    idle = sum(b * 16 - n for b, n in zip(blocks, lens))
-    unused = 3 * 4096 - sum(lens)
-    return dict(per_token=per_token, ctx=ctx, kv=kv, rate=rate, mha=mha, q40=q40, lens=lens,
-                blocks=blocks, idle=idle, unused=unused)
-
-
-EXERCISE_KV = r"""
-1. 某模型 $L = 28$，$n_{kv} = 4$，$d_{head} = 128$，KV Cache 为 fp16。每个 token 的 KV Cache 是多少字节？上下文 32768 个 token 时是多少 GiB？
-2. 该模型的权重共 15 GB，显存带宽 1 TB/s，批大小为 1，上下文 32768 个 token。解码速度的上限是多少 token/s？（1 GB = $10^9$ B）
-3. 若 KV 头改为 28 个，第 1 题的容量是它的多少倍？若改存 Q4_0（4.5 位 / 元素），第 1 题的容量是多少 GiB？
-4. 块长 16 个 token，3 个请求当前的长度是 50、300、1201。分块分配共用多少块，块内未填的位置有多少个？按最大长度 4096 预分配，未使用的位置有多少个？
-"""
-
-
-# 部分末尾的练习：题目页只有题目。
-def exercise_kv(p):
-    p.title("练习：大模型推理中的缓存")
-    slide(p, EXERCISE_KV)
-    p.notes("""
-第 1 题用容量公式。第 2 题用权重与 KV Cache 的字节数除带宽。第 3 题比较 MHA 与 GQA，并代入 Q4_0 的位数。第 4 题计算块表的浪费与预分配的浪费。
-""")
-
-
-# 题目页之后：同样的题目加答案。数字由 _kv_exercise_numbers 算出。
-def exercise_kv_2(p):
-    n = _kv_exercise_numbers()
-    p.title("练习：大模型推理中的缓存")
-    slide(p, EXERCISE_KV)
-    slide(p, rf"""
-答案：
-1. $2 \times 28 \times 4 \times 128 \times 2 = {n['per_token']}$ B，即 {n['per_token'] // 1024} KiB。32768 个 token 时 {n['kv'] / GIB:.2f} GiB。
-2. 读出 $(15 + {n['kv'] / 1e9:.2f}) \times 10^9$ B，上限 $10^{{12}} \div ({(15e9 + n['kv']) / 1e9:.2f} \times 10^9) = {n['rate']:.1f}$ token/s。
-3. $28 / 4 = 7$ 倍，即 {n['mha'] / GIB:.2f} GiB。Q4_0 为 $1.75 \times 4.5 / 16 = {n['q40'] / GIB:.3f}$ GiB。
-4. 各需 {n['blocks'][0]}、{n['blocks'][1]}、{n['blocks'][2]} 块，共 {sum(n['blocks'])} 块，块内未填 **{n['idle']}** 个位置。预分配未使用 {n['unused']} 个位置。
-""")
-    p.notes(f"""
-答案由 `_kv_exercise_numbers` 计算。
-1. 每个 token {n['per_token']} B = {n['per_token'] // 1024} KiB，乘 32768 得 {n['kv']} B = {n['kv'] / GIB:.2f} GiB。
-2. 读出的字节数 = 权重 15 × 10^9 B + KV Cache {n['kv']} B = {15e9 + n['kv']:.0f} B，带宽 10^12 B/s，每个 token 需要 {(15e9 + n['kv']) / 1e12 * 1e3:.2f} ms，上限 {n['rate']:.1f} token/s。
-3. 28 个 KV 头是 4 个的 7 倍，容量 {n['mha'] / GIB:.2f} GiB。Q4_0 的容量是 fp16 的 4.5 / 16 = 0.28125，{n['kv'] / GIB:.2f} × 0.28125 = {n['q40'] / GIB:.3f} GiB。
-4. 50、300、1201 个 token 各需 ⌈50/16⌉ = 4、⌈300/16⌉ = 19、⌈1201/16⌉ = 76 块，共 99 块 = 1584 个位置，已存放 1551 个，块内未填 {n['idle']} 个，分别为 14、4、15。预分配 3 × 4096 = 12288 个位置，已存放 1551 个，未使用 {n['unused']} 个。
+图中左右两栏对比两种淘汰策略。
+左栏是最近最少使用（LRU）：记录每个会话最后一次访问的时间，当显存不足时，淘汰最长时间没有新请求的会话（图中会话 A 已闲置 45 分钟）。这是 vLLM、SGLang、TensorRT-LLM 等主流推理系统管理闲置 KV Cache 的默认策略。
+右栏是最小缓存优先：比较各会话当前已缓存的 KV Cache 规模（例如缓存的层数或已积累的 token 数量），优先淘汰缓存量最少的会话（图中会话 C）。在并发请求抢占（如 vLLM 淘汰最新到达、已生成进度最短的请求以减少重算开销）与计费感知的场景中采用这一思路：第一，算力厂商对 hit KV Cache 的前序 token 按优惠价格计费，已缓存内容越多的会话，保留其缓存为用户节省的费用越多。第二，缓存量越少的会话，即使缓存被使失效，下次继续时重新计算所需的额外计算量也很小，用户感知的等待时间很短。
 """)

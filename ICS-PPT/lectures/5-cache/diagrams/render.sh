@@ -18,7 +18,7 @@ done
 # svgkit.py is a module; check_bounds.py and margins.py inspect the output
 for py in "$here"/*.py; do
     [ -e "$py" ] || continue
-    case $(basename "$py") in svgkit.py|check_bounds.py|margins.py) continue ;; esac
+    case $(basename "$py") in svgkit.py|check_bounds.py|margins.py|cachekit.py|cdraw.py|kv_kit.py|kv_matrix.py) continue ;; esac
     python3 "$py"
 done
 

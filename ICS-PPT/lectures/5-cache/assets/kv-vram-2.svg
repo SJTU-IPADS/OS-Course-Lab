@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 336" width="960" height="336">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="36.0" y="48.0" width="676.0" height="172.0" rx="8" fill="#ffffff" stroke="#0e2841" stroke-width="2.2"/>
+<text x="52.0" y="76.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="start">显存（GPU 内存）</text>
+<rect x="52.0" y="94.0" width="168.0" height="108.0" rx="6" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.6"/>
+<text x="136.0" y="145.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">模型权重</text>
+<text x="136.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">固定大小，各请求共用</text>
+<rect x="230.0" y="94.0" width="84.0" height="108.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="272.0" y="145.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">中间结果</text>
+<text x="272.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">当前步</text>
+<rect x="326.0" y="62.0" width="370.0" height="146.0" rx="6" fill="none" stroke="#156082" stroke-width="1.8" stroke-dasharray="6 4"/>
+<text x="511.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">KV Cache 区（按会话存放）</text>
+<rect x="336.0" y="94.0" width="98.0" height="108.0" rx="5" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="385.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 1</text>
+<text x="385.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">已暂停</text>
+<rect x="440.0" y="94.0" width="82.0" height="108.0" rx="5" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="481.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 2</text>
+<text x="481.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">已暂停</text>
+<rect x="528.0" y="94.0" width="90.0" height="108.0" rx="5" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="573.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 3</text>
+<text x="573.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">进行中</text>
+<rect x="624.0" y="94.0" width="68.0" height="108.0" rx="5" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="658.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 4</text>
+<text x="658.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">新加入</text>
+<line x1="742.0" y1="148.0" x2="716.0" y2="148.0" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ah-c0392b)"/>
+<rect x="746.0" y="94.0" width="90.0" height="108.0" rx="5" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.8"/>
+<text x="791.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 5</text>
+<text x="791.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="middle">放不下</text>
+<rect x="844.0" y="94.0" width="90.0" height="108.0" rx="5" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.8"/>
+<text x="889.0" y="144.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 6</text>
+<text x="889.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="middle">放不下</text>
+<text x="840.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">后续不断到达的会话</text>
+<text x="480.0" y="274.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">若旧会话的 KV Cache 始终驻留在显存中，随新会话不断积累，显存迟早被占满</text>
+<rect x="173.4" y="299.0" width="24.0" height="17.0" rx="3" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<text x="205.4" y="313.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">模型权重</text>
+<rect x="287.4" y="299.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="319.4" y="313.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">长期驻留的 KV Cache</text>
+<rect x="490.6" y="299.0" width="24.0" height="17.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="522.6" y="313.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">刚放入的会话</text>
+<rect x="634.6" y="299.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="666.6" y="313.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">显存已满，放不下</text>
+</svg>

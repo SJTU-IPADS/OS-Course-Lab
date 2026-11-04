@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 296" width="960" height="296">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="48.0" y="18.0" width="376.0" height="184.0" rx="8" fill="#ffffff" stroke="#0e2841" stroke-width="2.0"/>
+<text x="66.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">显存（容量小、速度快）</text>
+<rect x="576.0" y="18.0" width="336.0" height="184.0" rx="8" fill="#ffffff" stroke="#2e7d4f" stroke-width="2.0"/>
+<text x="594.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">内存（容量大、速度慢）</text>
+<rect x="66.0" y="56.0" width="340.0" height="38.0" rx="5" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="82.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">会话 1（继续请求）</text>
+<text x="390.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="end">等待从内存换入</text>
+<rect x="66.0" y="102.0" width="340.0" height="38.0" rx="5" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="82.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">会话 2</text>
+<text x="390.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">保留在显存</text>
+<rect x="66.0" y="148.0" width="340.0" height="38.0" rx="5" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="82.0" y="173.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">会话 3</text>
+<text x="390.0" y="173.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">保留在显存</text>
+<line x1="568.0" y1="75.0" x2="430.0" y2="75.0" stroke="#c0392b" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
+<text x="500.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c0392b" text-anchor="middle">② 从内存换入显存</text>
+<text x="500.0" y="98.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">跨总线传输大量数据</text>
+<rect x="594.0" y="56.0" width="300.0" height="38.0" rx="5" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
+<text x="610.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">会话 1 的 KV Cache</text>
+<text x="878.0" y="81.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="end">从内存读出</text>
+<rect x="594.0" y="102.0" width="300.0" height="38.0" rx="5" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="610.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">会话 4 的 KV Cache</text>
+<text x="878.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">换出到内存</text>
+<text x="480.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">朴素设想（换入）：会话 1 继续请求时，把 KV Cache 从内存复制回显存</text>
+<rect x="208.2" y="263.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="240.2" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">显存中的 KV Cache</text>
+<rect x="396.5" y="263.0" width="24.0" height="17.0" rx="3" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="428.5" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">内存中的 KV Cache</text>
+<rect x="584.8" y="263.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="616.8" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">跨总线换入（耗时）</text>
+</svg>

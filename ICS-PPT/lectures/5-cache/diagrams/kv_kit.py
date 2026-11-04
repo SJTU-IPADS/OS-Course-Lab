@@ -4,7 +4,8 @@ Every figure of the sixth part draws the same entities in the same colours:
 an entry stored in the KV cache is light blue, the data computed in the current
 step (the new token) is orange, an entry read from the cache instead of being
 computed again is green, a repeated computation or a wasted slot is red, and a
-slot that is reserved but empty is white with a dashed outline.
+slot that is reserved but empty is white with a dashed outline. A model parameter
+(a weight matrix) is purple, and a vector that is neither cached nor new is grey.
 """
 
 import pathlib
@@ -12,9 +13,9 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, FILL_RED, GREEN,
-                    INK, LINE, MUTED, ORANGE, RED, WHITE, arrow, brace, elbow, line, mono,
-                    rect, save, text)
+from svgkit import (BLUE, FILL_BLUE, FILL_GREEN, FILL_GREY, FILL_ORANGE, FILL_PURPLE, FILL_RED,
+                    GREEN, INK, LINE, MUTED, ORANGE, PURPLE, RED, WHITE, arrow, brace, elbow,
+                    line, mono, rect, save, text, vbrace)
 
 # kind -> (fill, stroke)
 KINDS = {
@@ -25,6 +26,7 @@ KINDS = {
     "empty": (WHITE, LINE),
     "gone": (FILL_GREY, LINE),
     "mid": (FILL_GREY, MUTED),
+    "param": (FILL_PURPLE, PURPLE),
 }
 
 

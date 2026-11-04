@@ -1,30 +1,56 @@
 #!/usr/bin/env python3
-"""Autoregressive generation: the tokens so far go into the model, one new token comes out
-and is appended to the input of the next step. Run it to refresh ../assets/kv-generate.svg."""
+"""Autoregressive generation in two phases. The prefill takes the whole prompt at once and
+outputs the first new token; each decoding step appends the token just produced to the
+input and outputs one more. One row per step, the same sentence as the attention figures.
+Run it to refresh ../assets/kv-generate.svg.
+"""
 
 from kv_kit import *
+from kv_matrix import WORDS
 from svgkit import box
 
-W, H = 1000, 210
-X0, CW, PITCH, Y = 40, 70, 80, 70
-N = 5
+W, H = 1000, 236
+N = 4                                    # prompt tokens
+LX = 150                                 # right edge of the row names
+X0, CW, PITCH = 166, 62, 68              # token cells: left edge, width, pitch
+MX, MW = 640, 150                        # the model box
+OX = 848                                 # the output token
+Y0, RP, RH = 22, 72, 34                  # first row, row pitch, cell height
+
+
+def step(row, name, n):
+    """Row `row`: the first n words go in, word n comes out."""
+    y = Y0 + row * RP
+    out = [text(LX, y + RH / 2 + 6, name, 17, INK, "bold", "end")]
+    for i in range(n):
+        kind = "new" if row and i == n - 1 else "mid"
+        out += cell(X0 + i * PITCH, y, CW, RH, "", kind)
+        out.append(text(X0 + i * PITCH + CW / 2, y + RH / 2 + 6, WORDS[i], 16, INK, "bold"))
+    out.append(arrow(X0 + n * PITCH, y + RH / 2, MX - 6, y + RH / 2, INK, 2))
+    out += box(MX, y - 4, MW, RH + 8, "模型", fill=FILL_GREY, stroke=INK, size=17)
+    out.append(arrow(MX + MW, y + RH / 2, OX - 6, y + RH / 2, INK, 2))
+    out += cell(OX, y, CW, RH, "", "new")
+    out.append(text(OX + CW / 2, y + RH / 2 + 6, WORDS[n], 16, INK, "bold"))
+    return out
+
+
+def append(row, n):
+    """The output of row `row` becomes the last input of the next row."""
+    y = Y0 + row * RP + RH
+    ox = OX + CW / 2
+    tx = X0 + n * PITCH + CW / 2
+    mid = y + (RP - RH) / 2
+    return [elbow([(ox, y + 2), (ox, mid), (tx, mid), (tx, y + RP - RH - 4)], ORANGE, 2)]
 
 
 def figure():
-    out = [text(X0 + (N * PITCH) / 2 - 5, 40, f"输入：已有的 {N} 个 token", 17, INK, "bold")]
-    for i in range(1, N + 2):
-        x = X0 + (i - 1) * PITCH
-        out += cell(x, Y, CW, 36, f"x{i}", "cache" if i <= N else "empty", size=17)
-    out.append(arrow(X0 + (N + 1) * PITCH - 6, Y + 18, 556, Y + 18, INK, 2.2))
-    out += box(560, Y - 14, 200, 64, "模型", sub="L 层 Transformer", fill=FILL_GREY, stroke=INK,
-               size=19)
-    out.append(arrow(760, Y + 18, 806, Y + 18, INK, 2.2))
-    out.append(text(845, 40, "输出：下一个 token", 17, INK, "bold"))
-    out += cell(810, Y, CW, 36, f"x{N + 1}", "new", size=17)
-    cx = 845
-    tx = X0 + N * PITCH + CW / 2
-    out.append(elbow([(cx, Y + 36 + 4), (cx, 150), (tx, 150), (tx, Y + 36 + 8)], ORANGE, 2.4))
-    out.append(text((cx + tx) / 2, 176, f"x{N + 1} 接在输入末尾，进入下一步", 17, ORANGE, "bold"))
+    out = []
+    out += step(0, "预填充", N)
+    out += append(0, N)
+    out += step(1, "解码第 1 步", N + 1)
+    out += append(1, N + 1)
+    out += step(2, "解码第 2 步", N + 2)
+    out.append(text(OX + CW / 2, Y0 - 4 + 3 * RP, "⋯ 直到输出结束符", 15, MUTED, "bold"))
     return out
 
 

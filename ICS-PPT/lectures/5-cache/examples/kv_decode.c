@@ -1,4 +1,4 @@
-/* One attention head decodes T tokens, without and with a KV cache.
+/* One attention head decodes T tokens, without and with a KV cache, for several T.
    Weights are fixed pseudo-random numbers; each output is fed back as the next input.
 
      gcc -O2 kv_decode.c -o kv_decode -lm && ./kv_decode */
@@ -7,14 +7,13 @@
 #include <string.h>
 #include <time.h>
 
-#define D 64                              /* head dimension */
-#define T 1024                            /* tokens to generate */
+#define D 128                             /* head dimension */
+#define TMAX 1024                         /* the longest run */
 
 static float WQ[D][D], WK[D][D], WV[D][D];
-static float X[T][D];                     /* the input vector of every position */
-static float K[T][D], V[T][D];            /* the KV cache */
-static float out_plain[T][D], out_cached[T][D];
-static long projections;                  /* k, v computed so far */
+static float X[TMAX][D];                  /* the input vector of every position */
+static float K[TMAX][D], V[TMAX][D];      /* the KV cache */
+static float out_plain[TMAX][D], out_cached[TMAX][D];
 
 static double now(void) {
     struct timespec ts;
@@ -23,7 +22,7 @@ static double now(void) {
 }
 
 static unsigned seed = 1;
-static float rnd(void) {                  /* uniform in [-0.5, 0.5) / sqrt(D) */
+static float rnd(void) {                  /* uniform in [-0.5, 0.5) / 8 */
     seed = seed * 1664525u + 1013904223u;
     return ((seed >> 8) / 16777216.0f - 0.5f) / 8.0f;
 }
@@ -40,12 +39,11 @@ static void project(const float W[D][D], const float *x, float *y) {
 static void compute_kv(int pos) {         /* the k and v of one token */
     project(WK, X[pos], K[pos]);
     project(WV, X[pos], V[pos]);
-    projections++;
 }
 
 /* o = softmax(q K^T / sqrt(D)) V over positions 0..t */
 static void attend(const float *q, int t, float *o) {
-    float score[T], max = -1e30f, sum = 0;
+    float score[TMAX], max = -1e30f, sum = 0;
     for (int i = 0; i <= t; i++) {
         float acc = 0;
         for (int d = 0; d < D; d++)
@@ -68,8 +66,8 @@ static void next_input(const float *o, float *x) {   /* the output becomes the n
         x[d] = tanhf(o[d]);
 }
 
-static double decode(int cached, float (*out)[D]) {
-    projections = 0;
+/* generate T tokens; returns the time in seconds */
+static double decode(int T, int cached, float (*out)[D]) {
     for (int d = 0; d < D; d++)
         X[0][d] = 0.5f;
     double start = now();
@@ -89,20 +87,23 @@ static double decode(int cached, float (*out)[D]) {
 }
 
 int main(void) {
+    static const int lengths[] = {64, 128, 256, 512, 1024};
+    int identical = 1;
     for (int i = 0; i < D; i++)
         for (int j = 0; j < D; j++) {
             WQ[i][j] = rnd();
             WK[i][j] = rnd();
             WV[i][j] = rnd();
         }
-    double t_plain = decode(0, out_plain);
-    long n_plain = projections;
-    double t_cached = decode(1, out_cached);
-    long n_cached = projections;
-    printf("tokens %d, head dimension %d\n", T, D);
-    printf("no cache  %8ld k,v projections  %8.1f ms\n", n_plain, t_plain * 1e3);
-    printf("KV cache  %8ld k,v projections  %8.1f ms\n", n_cached, t_cached * 1e3);
-    printf("outputs identical: %s\n",
-           memcmp(out_plain, out_cached, sizeof out_plain) == 0 ? "yes" : "no");
+    printf("tokens   no cache   KV cache   speedup\n");
+    for (int n = 0; n < (int)(sizeof lengths / sizeof lengths[0]); n++) {
+        int T = lengths[n];
+        double t_plain = decode(T, 0, out_plain);
+        double t_cached = decode(T, 1, out_cached);
+        identical &= memcmp(out_plain, out_cached, T * sizeof out_plain[0]) == 0;
+        printf("%6d %8.1f ms %8.1f ms %8.1f\n",
+               T, t_plain * 1e3, t_cached * 1e3, t_plain / t_cached);
+    }
+    printf("outputs identical: %s\n", identical ? "yes" : "no");
     return 0;
 }
