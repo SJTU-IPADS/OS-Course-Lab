@@ -82,4 +82,10 @@
 <text x="438.2" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">从 KV Cache 读出</text>
 <rect x="587.8" y="409.0" width="24.0" height="17.0" rx="3" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
 <text x="619.8" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">模型参数</text>
+<line x1="432.0" y1="63.0" x2="432.0" y2="102.0" stroke="#e97132" stroke-width="3"/>
+<text x="441.0" y="77.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">查询 q6：只用于「出门」自己的输出 o6</text>
+<text x="441.0" y="98.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">上一步的 q5 没有保存，这一步也不需要它</text>
+<line x1="520.0" y1="330.0" x2="520.0" y2="369.0" stroke="#156082" stroke-width="3"/>
+<text x="529.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">k5、v5 已在上一步存入缓存，这一步直接读出</text>
+<text x="529.0" y="365.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">缓存每步增加一行，已有的行不改变</text>
 </svg>

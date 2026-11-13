@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 274" width="960" height="274">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<circle cx="37.8" cy="12.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 19.8 46.0 C 19.8 26.0 55.8 26.0 55.8 46.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="19.8" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">嘉宾 1</text>
+<path d="M 19.8 85.0 L 201.8 85.0 L 209.8 93.0 L 209.8 197.0 L 19.8 197.0 Z" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<path d="M 201.8 85.0 L 201.8 93.0 L 209.8 93.0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="27.8" y="93.0" width="138.8" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="35.8" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">q1</text>
+<text x="60.6" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱读书的人</text>
+<rect x="27.8" y="127.0" width="174.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="35.8" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">k1</text>
+<text x="60.6" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱跑步</text>
+<rect x="27.8" y="161.0" width="174.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="35.8" y="180.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">v1</text>
+<text x="60.6" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">一起跑步</text>
+<circle cx="273.8" cy="12.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 255.8 46.0 C 255.8 26.0 291.8 26.0 291.8 46.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="255.8" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">嘉宾 2</text>
+<path d="M 255.8 85.0 L 437.8 85.0 L 445.8 93.0 L 445.8 197.0 L 255.8 197.0 Z" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<path d="M 437.8 85.0 L 437.8 93.0 L 445.8 93.0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="263.8" y="93.0" width="138.8" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="271.8" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">q2</text>
+<text x="296.6" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱运动的人</text>
+<rect x="263.8" y="127.0" width="174.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="271.8" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">k2</text>
+<text x="296.6" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱读书</text>
+<rect x="263.8" y="161.0" width="174.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="271.8" y="180.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">v2</text>
+<text x="296.6" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">推荐好书</text>
+<circle cx="509.8" cy="12.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 491.8 46.0 C 491.8 26.0 527.8 26.0 527.8 46.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="491.8" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">嘉宾 3</text>
+<path d="M 491.8 85.0 L 673.8 85.0 L 681.8 93.0 L 681.8 197.0 L 491.8 197.0 Z" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<path d="M 673.8 85.0 L 673.8 93.0 L 681.8 93.0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="499.8" y="93.0" width="138.8" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="507.8" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">q3</text>
+<text x="532.6" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱户外活动的人</text>
+<rect x="499.8" y="127.0" width="174.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="507.8" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">k3</text>
+<text x="532.6" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱摄影</text>
+<rect x="499.8" y="161.0" width="174.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="507.8" y="180.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">v3</text>
+<text x="532.6" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">一起外出拍照</text>
+<circle cx="745.8" cy="12.0" r="10.0" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<path d="M 727.8 46.0 C 727.8 26.0 763.8 26.0 763.8 46.0 Z" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="727.8" y="63.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">嘉宾 4（B）</text>
+<path d="M 727.8 85.0 L 909.8 85.0 L 917.8 93.0 L 917.8 197.0 L 727.8 197.0 Z" fill="#ffffff" stroke="#e97132" stroke-width="1.4"/>
+<path d="M 909.8 85.0 L 909.8 93.0 L 917.8 93.0" fill="none" stroke="#e97132" stroke-width="1.2"/>
+<rect x="735.8" y="93.0" width="138.8" height="28.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="743.8" y="112.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">q4</text>
+<text x="768.6" y="112.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱摄影的人</text>
+<rect x="735.8" y="127.0" width="174.0" height="28.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="743.8" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">k4</text>
+<text x="768.6" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱跑步</text>
+<rect x="735.8" y="161.0" width="174.0" height="28.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
+<text x="743.8" y="180.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">v4</text>
+<text x="768.6" y="180.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">一起跑马拉松</text>
+<text x="480.0" y="268.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">① B 作为嘉宾 4 入场，节目组记下嘉宾 4 的纸条，此前已有嘉宾 1 至 3 的纸条</text>
+</svg>

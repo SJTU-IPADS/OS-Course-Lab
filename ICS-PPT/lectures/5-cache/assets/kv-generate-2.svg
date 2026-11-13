@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 809 254" width="809" height="254">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="732.0" y="19.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#5a6b78" text-anchor="middle">输出</text>
+<text x="117.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">预填充</text>
+<rect x="129.0" y="40.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="158.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">今天</text>
+<rect x="192.0" y="40.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="221.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">天气</text>
+<rect x="255.0" y="40.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="284.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">很</text>
+<rect x="318.0" y="40.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="347.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">好</text>
+<line x1="381.0" y1="56.0" x2="549.0" y2="56.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="555.0" y="36.0" width="96.0" height="40.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="603.0" y="62.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">模型</text>
+<line x1="651.0" y1="56.0" x2="695.0" y2="56.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="701.0" y="40.0" width="62.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="732.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">适合</text>
+<path d="M 732.0 74.0 L 732.0 95.0 L 410.0 95.0 L 410.0 114.0" fill="none" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="117.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="end">解码第 1 步</text>
+<rect x="129.0" y="118.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="158.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">今天</text>
+<rect x="192.0" y="118.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="221.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">天气</text>
+<rect x="255.0" y="118.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="284.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">很</text>
+<rect x="318.0" y="118.0" width="58.0" height="32.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="347.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">好</text>
+<rect x="381.0" y="118.0" width="58.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="410.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">适合</text>
+<line x1="444.0" y1="134.0" x2="549.0" y2="134.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="555.0" y="114.0" width="96.0" height="40.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="603.0" y="140.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">模型</text>
+<line x1="651.0" y1="134.0" x2="695.0" y2="134.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="701.0" y="118.0" width="62.0" height="32.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="732.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">出门</text>
+</svg>

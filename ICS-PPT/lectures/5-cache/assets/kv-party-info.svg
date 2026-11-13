@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 0 960 186" width="960" height="186">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<circle cx="206.0" cy="87.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 188.0 121.0 C 188.0 101.0 224.0 101.0 224.0 121.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="206.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">嘉宾 3</text>
+<rect x="260.0" y="95.0" width="150.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="268.0" y="114.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">x3</text>
+<text x="292.8" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">工程师，爱摄影</text>
+<text x="335.0" y="85.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">个人资料</text>
+<line x1="413.0" y1="109.0" x2="594.0" y2="54.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="413.0" y1="109.0" x2="594.0" y2="109.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="413.0" y1="109.0" x2="594.0" y2="164.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="598.0" y="40.0" width="160.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="606.0" y="59.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">k3</text>
+<text x="630.8" y="59.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱摄影</text>
+<rect x="598.0" y="95.0" width="160.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="606.0" y="114.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">v3</text>
+<text x="630.8" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">一起外出拍照</text>
+<rect x="598.0" y="150.0" width="160.0" height="28.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="606.0" y="169.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">q3</text>
+<text x="630.8" y="169.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">爱户外活动的人</text>
+<text x="778.0" y="59.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="start">特点</text>
+<text x="778.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="start">价值</text>
+<text x="778.0" y="169.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="start">兴趣</text>
+</svg>

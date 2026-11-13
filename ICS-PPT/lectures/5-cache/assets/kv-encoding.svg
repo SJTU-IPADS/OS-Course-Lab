@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 226" width="1000" height="226">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="30.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">UTF-8 编码</text>
+<rect x="30.0" y="80.0" width="63.0" height="122.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="61.5" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">今</text>
+<line x1="42.0" y1="122.0" x2="81.0" y2="122.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="61.5" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">E4</text>
+<text x="61.5" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">BB</text>
+<text x="61.5" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">8A</text>
+<rect x="98.0" y="80.0" width="63.0" height="122.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="129.5" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">天</text>
+<line x1="110.0" y1="122.0" x2="149.0" y2="122.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="129.5" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">E5</text>
+<text x="129.5" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">A4</text>
+<text x="129.5" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">A9</text>
+<rect x="166.0" y="80.0" width="63.0" height="122.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="197.5" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">天</text>
+<line x1="178.0" y1="122.0" x2="217.0" y2="122.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="197.5" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">E5</text>
+<text x="197.5" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">A4</text>
+<text x="197.5" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">A9</text>
+<rect x="234.0" y="80.0" width="63.0" height="122.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="265.5" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">气</text>
+<line x1="246.0" y1="122.0" x2="285.0" y2="122.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="265.5" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">E6</text>
+<text x="265.5" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">B0</text>
+<text x="265.5" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">94</text>
+<rect x="302.0" y="80.0" width="63.0" height="122.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="333.5" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">很</text>
+<line x1="314.0" y1="122.0" x2="353.0" y2="122.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="333.5" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">E5</text>
+<text x="333.5" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">BE</text>
+<text x="333.5" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">88</text>
+<rect x="370.0" y="80.0" width="63.0" height="122.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="401.5" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">好</text>
+<line x1="382.0" y1="122.0" x2="421.0" y2="122.0" stroke="#9fb5c3" stroke-width="1.2"/>
+<text x="401.5" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">E5</text>
+<text x="401.5" y="168.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">A5</text>
+<text x="401.5" y="190.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="middle">BD</text>
+<text x="490.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">Unicode 编号</text>
+<line x1="490.0" y1="144.0" x2="888.0" y2="144.0" stroke="#5a6b78" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<text x="520.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">佳</text>
+<text x="520.0" y="127.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">U+4F73</text>
+<text x="860.0" y="108.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">好</text>
+<text x="860.0" y="127.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">U+597D</text>
+<line x1="520.0" y1="132.0" x2="520.0" y2="141.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<line x1="860.0" y1="132.0" x2="860.0" y2="141.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="860.0" y="188.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">她</text>
+<text x="860.0" y="207.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#5a6b78" text-anchor="middle">U+5979</text>
+<line x1="860.0" y1="147.0" x2="860.0" y2="172.0" stroke="#9fb5c3" stroke-width="1.4"/>
+<circle cx="520.0" cy="144.0" r="5.0" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
+<circle cx="860.0" cy="144.0" r="5.0" fill="#0e2841" stroke="#0e2841" stroke-width="1.4"/>
+<path d="M 520.0 76 L 520.0 68 L 860.0 68 L 860.0 76" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="690.0" y="60.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">相差 2570，含义相近</text>
+<path d="M 886.0 92 L 894.0 92 L 894.0 194 L 886.0 194" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="906.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">相差 4</text>
+<text x="906.0" y="161.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">含义无关</text>
+<line x1="462.0" y1="20.0" x2="462.0" y2="210.0" stroke="#9fb5c3" stroke-width="1.2"/>
+</svg>

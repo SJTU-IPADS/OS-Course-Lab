@@ -76,4 +76,10 @@
 <text x="438.2" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">从 KV Cache 读出</text>
 <rect x="587.8" y="409.0" width="24.0" height="17.0" rx="3" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
 <text x="619.8" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">模型参数</text>
+<line x1="432.0" y1="48.0" x2="432.0" y2="87.0" stroke="#e97132" stroke-width="3"/>
+<text x="441.0" y="62.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">查询 q5：「适合」要查找的信息，只用于它自己的输出 o5</text>
+<text x="441.0" y="83.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">算出 o5 之后不再使用，不保存</text>
+<line x1="520.0" y1="330.0" x2="520.0" y2="369.0" stroke="#156082" stroke-width="3"/>
+<text x="529.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">键与值：已有 token 提供给之后每个 token 的信息</text>
+<text x="529.0" y="365.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">不随新 token 改变，每一步都要读取，保存在缓存中</text>
 </svg>

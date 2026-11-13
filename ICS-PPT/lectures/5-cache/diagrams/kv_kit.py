@@ -54,6 +54,16 @@ def legend(x, y, items, size=15, gap=22):
     return out
 
 
+def note(x, y, lines, color=MUTED, size=16):
+    """An annotation beside a matrix: a bar in the colour of the rows it is about, then
+    the lines of text, the first one bold. y is the baseline of the first line."""
+    lh = size + 5
+    out = [line(x - 9, y - size + 2, x - 9, y + (len(lines) - 1) * lh + 4, color, 3)]
+    out += [text(x, y + i * lh, s, size, INK, "bold" if i == 0 else "normal", "start")
+            for i, s in enumerate(lines)]
+    return out
+
+
 def legend_width(items, size=15, gap=22):
     return sum(32 + sum(1.0 if ord(c) > 0x2e80 else 0.55 for c in label) * size + gap
                for _, label in items) - gap

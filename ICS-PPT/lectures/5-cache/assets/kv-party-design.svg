@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="7 0 960 100" width="960" height="100">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="20.0" y="4.0" width="140.0" height="92.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="90.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">幕后</text>
+<circle cx="48.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 30.0 84.0 C 30.0 64.0 66.0 64.0 66.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<circle cx="90.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 72.0 84.0 C 72.0 64.0 108.0 64.0 108.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<circle cx="132.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 114.0 84.0 C 114.0 64.0 150.0 64.0 150.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="190.0" y="4.0" width="288.0" height="92.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="334.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">舞台</text>
+<circle cx="262.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 244.0 84.0 C 244.0 64.0 280.0 64.0 280.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<circle cx="334.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 316.0 84.0 C 316.0 64.0 352.0 64.0 352.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<circle cx="406.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 388.0 84.0 C 388.0 64.0 424.0 64.0 424.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="556.0" y="4.0" width="398.0" height="92.0" rx="6" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="755.0" y="28.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">节目组</text>
+<circle cx="655.5" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 637.5 84.0 C 637.5 64.0 673.5 64.0 673.5 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<circle cx="755.0" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 737.0 84.0 C 737.0 64.0 773.0 64.0 773.0 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<circle cx="854.5" cy="50.0" r="10.0" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 836.5 84.0 C 836.5 64.0 872.5 64.0 872.5 84.0 Z" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+</svg>

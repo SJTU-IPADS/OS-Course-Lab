@@ -2853,83 +2853,677 @@ src_hash = 'c7bc71d3'
 text = 'Part 5: Caches in LLM Inference'
 # src: 第五部分：大模型推理中的缓存
 
+['kv-party-design.title']
+src_hash = '0651c887'
+text = 'Design of a Matchmaking Show'
+# src: 相亲节目的设计
+
+['kv-party-design.slide.1']
+src_hash = '239a8935'
+text = '''
+Design a matchmaking show. Each guest has their own features and interests, which the crew does not know in advance. The show must meet the following requirements:
+
+- Guests enter one after another.
+- The crew learns the relevant information about each guest only from that guest's own introduction.
+- The next guest is invited from the waiting guests and must be closely related both to the previous guest and to all guests who have entered. This way, the change from one guest to the next is not abrupt, and the show as a whole is not abrupt either.
+- After each guest enters, the crew must decide on the next guest as quickly as possible.
+'''
+# src:
+# 
+# 设计一档相亲节目。每位嘉宾都有自己的特点与兴趣，节目组事先并不知道。节目要满足下面的要求：
+# 
+# - 嘉宾一位接一位地入场。
+# - 节目组只能从每位嘉宾自己的介绍里得知相关的信息。
+# - 下一位嘉宾从候场的嘉宾中邀请，要同时与上一位嘉宾以及已经入场的全部嘉宾关联紧密。这样相邻嘉宾之间的切换不突兀，整场节目也不突兀。
+# - 每位嘉宾入场后，节目组要尽快决定下一位嘉宾。
+
+['kv-party-design.image.1.alt']
+src_hash = 'd5a97369'
+text = 'Waiting guests backstage, guests who have entered on the stage, and the crew on the right'
+# src: 幕后有候场的嘉宾，舞台上有已入场的嘉宾，右边是节目组
+
+['kv-party-design.highlight.1']
+src_hash = '4fff9de3'
+text = 'By what process does the crew decide the order in which guests enter?'
+# src: 节目组按怎样的流程决定嘉宾入场的顺序？
+
+['kv-party-design.notes.1']
+src_hash = '3e6888dc'
+text = '''
+This part discusses LLM inference, which means using a model to generate text after training is complete. It first designs a matchmaking show. The following pages give the process of the show and a concrete example, and then map each item of the example to the computation of the model.
+Only each guest knows their own features and interests. The crew does not know them in advance.
+Requirement 1: guests enter one after another.
+Requirement 2: the crew learns the relevant information about each guest only from that guest's own introduction.
+Requirement 3: the crew invites the next guest from the waiting guests. The invited guest must be closely related both to the previous guest and to all guests who have entered. This way, the change from one guest to the next is not abrupt, and the show as a whole is not abrupt either.
+Requirement 4: after each guest enters, the crew must decide on the next guest as quickly as possible.
+The figure shows the three parties of the show: the waiting guests backstage, the guests on the stage who have entered, and the crew.
+Think first: by what process does the crew decide the order in which guests enter?
+'''
+# src:
+# 
+# 本部分讨论大模型推理，推理指模型训练完成之后用它生成文本。先设计一档相亲节目，之后的页面给出节目的流程与具体例子，再把例子中的每一项对应到模型的计算。
+# 每位嘉宾的特点与兴趣只有嘉宾自己知道，节目组事先并不知道。
+# 第一条要求：嘉宾一位接一位地入场。
+# 第二条要求：节目组只能从每位嘉宾自己的介绍里得知相关的信息。
+# 第三条要求：节目组从候场的嘉宾中邀请下一位。被邀请的嘉宾要同时与上一位嘉宾以及已经入场的全部嘉宾关联紧密。这样相邻嘉宾之间的切换不突兀，整场节目也不突兀。
+# 第四条要求：每位嘉宾入场后，节目组要尽快决定下一位嘉宾。
+# 图中画出节目的三方：幕后候场的嘉宾、舞台上已入场的嘉宾与节目组。
+# 请先想一想：节目组按怎样的流程决定嘉宾入场的顺序。
+
+['kv-party-flow.title']
+src_hash = '8a46df9e'
+text = 'Process of a Matchmaking Show'
+# src: 相亲节目的流程
+
+['kv-party-flow.slide.1']
+src_hash = '081d0562'
+text = '''
+A matchmaking show runs in the following steps:
+
+1. **Entry**: guests enter one after another.
+2. **Introduction**: the guest introduces themselves, and the crew records the introduction on a note.
+3. **Reading**: the crew reads every note by the interest of the new guest, the new guest's own note included, and writes a conclusion.
+4. **Invitation**: with the new guest and the conclusion as a reference, the crew goes backstage and invites the most relevant next guest to enter, and the process returns to step 1.
+'''
+# src:
+# 
+# 一档相亲节目按下面的流程进行：
+# 
+# 1. **入场**：嘉宾一位接一位地入场。
+# 2. **介绍**：嘉宾介绍自己，节目组把介绍记录在一张纸条上。
+# 3. **阅读**：节目组按新嘉宾的兴趣阅读每张纸条，包括新嘉宾自己的，写成结论。
+# 4. **邀请**：节目组参考新嘉宾本人与结论，到幕后邀请最相关的下一位嘉宾入场，回到第 1 步。
+
+['kv-party-flow.notes.1']
+src_hash = '7fd6930b'
+text = '''
+The previous page asked by what process the crew decides the order in which guests enter. This page gives the process of the show. The following pages give a concrete example and then map each item of the example to the computation of the model.
+4 frames, one per step. Guests do not talk to each other. The crew does both the reading and the inviting.
+Frame 1: guests enter one after another. The crew has already recorded a note for each guest who entered earlier.
+Frame 2: the newly entered guest introduces themselves, and the crew records the introduction on a note.
+Frame 3: the crew reads every note by the interest of the new guest, the new guest's own note included, and writes a conclusion.
+Frame 4: with the new guest and the conclusion as a reference, the crew goes backstage and invites the most relevant of the waiting guests to enter, and the process returns to step 1.
+This example is adapted from an answer on Zhihu. In the original example all guests are present at the same time, and every guest learns about all guests. Here the guests enter one after another, the crew records and reads the notes, and a step is added in which the crew invites the next guest.
+'''
+# src:
+# 
+# 上一页提出问题：节目组按怎样的流程决定嘉宾入场的顺序。本页给出节目的流程，之后的页面给出具体例子，再把例子中的每一项对应到模型的计算。
+# 共 4 帧，一帧对应一个步骤。嘉宾之间不交流，阅读与邀请都由节目组完成。
+# 第 1 帧：嘉宾一位接一位地入场。节目组已经记录了先入场的每位嘉宾的纸条。
+# 第 2 帧：新入场的嘉宾介绍自己，节目组把介绍记录在一张纸条上。
+# 第 3 帧：节目组按新嘉宾的兴趣阅读每张纸条，包括新嘉宾自己的，写成结论。
+# 第 4 帧：节目组参考新嘉宾本人与结论，到幕后从候场的嘉宾中邀请最相关的一位入场，流程回到第 1 步。
+# 这个例子改编自知乎上的一个回答。原例子中嘉宾同时在场，每位嘉宾了解全部嘉宾。这里改为依次入场，由节目组记录与阅读纸条，并加上节目组邀请下一位嘉宾的一步。
+
+['kv-party-info.title']
+src_hash = '79c5e1af'
+text = 'Information of a Guest'
+# src: 嘉宾的信息
+
+['kv-party-info.slide.1']
+src_hash = 'b223a0d1'
+text = '''
+Taking guest 3 as the example, after entering, a guest introduces the following three items of information to the crew, all obtained from the **profile** x:
+
+- **Feature** k: what kind of person the guest is.
+- **Value** v: what the guest can bring to another guest.
+- **Interest** q: what kind of person the guest looks for.
+'''
+# src:
+# 
+# 以嘉宾 3 为例，嘉宾入场后向节目组介绍下面三项信息，三项都由**个人资料** x 得出：
+# 
+# - **特点** k：嘉宾是怎样的人。
+# - **价值** v：嘉宾能带给对方的东西。
+# - **兴趣** q：嘉宾要找怎样的人。
+
+['kv-party-info.highlight.1']
+src_hash = '8d18599e'
+text = 'How does the crew combine the information of the guests who have entered, so that the next guest fits the whole show?'
+# src: 节目组怎样整合已入场嘉宾的信息，与整场节目衔接？
+
+['kv-party-info.notes.1']
+src_hash = 'd299d9db'
+text = '''
+The previous page gave the process. This page gives the information a guest introduces after entering, taking guest 3 as the example. The contents in the figure are schematic.
+The profile x3 of guest 3 is 「工程师，爱摄影」 ("engineer, likes photography"), and the other three items are obtained from it.
+The feature k3 「爱摄影」 ("likes photography") states what kind of person guest 3 is. The value v3 「一起外出拍照」 ("going out to take photos together") is what guest 3 can bring to another guest. The interest q3 「爱户外活动的人」 ("people who like outdoor activities") states what kind of person guest 3 looks for.
+Every guest obtains these three items from the profile in the same way and introduces them to the crew after entering. The crew records all three items on one note for later use.
+'''
+# src:
+# 
+# 上一页给出流程。本页以嘉宾 3 为例给出一位嘉宾入场后介绍的信息，图中的内容是示意。
+# 嘉宾 3 的个人资料 x3 是「工程师，爱摄影」，其余三项都由它得出。
+# 特点 k3「爱摄影」说明嘉宾 3 是怎样的人。价值 v3「一起外出拍照」是嘉宾 3 能带给对方的东西。兴趣 q3「爱户外活动的人」说明嘉宾 3 要找怎样的人。
+# 每位嘉宾都按同样的方式由资料得出这三项，入场后向节目组介绍。节目组把三项都记录在一张纸条上，供之后使用。
+
+['kv-party-read.title']
+src_hash = '449835ef'
+text = 'Reading the Notes'
+# src: 纸条的阅读
+
+['kv-party-read.slide.1']
+src_hash = '76e8550f'
+text = 'After guest 3 enters, the crew reads all the notes by the interest of guest 3, which combines the information of the guests who have entered.'
+# src: 嘉宾 3 入场后，节目组按嘉宾 3 的兴趣阅读全部纸条，整合已入场嘉宾的信息。
+
+['kv-party-read.slide.2']
+src_hash = '3fe7c327'
+text = 'The **conclusion** is the average of the values on the notes weighted by the attention levels. It shows, from the point of view of guest 3, which values the guests on the stage can bring. The crew uses the conclusion as a reference to invite the next guest.'
+# src: **结论**是各张纸条上的价值按注意程度加权平均，表示从嘉宾 3 的角度看，场上的嘉宾能带来哪些价值。节目组以结论为参考，邀请下一位嘉宾。
+
+['kv-party-read.highlight.1']
+src_hash = 'e618ae0d'
+text = 'How does the crew use the conclusion to invite the next guest?'
+# src: 节目组怎样用结论邀请下一位嘉宾？
+
+['kv-party-read.notes.1']
+src_hash = '801d02c7'
+text = '''
+The previous page gave the information guest 3 introduces and asked how the crew combines the information of the guests who have entered. This page shows that after guest 3 enters, the crew reads all the notes by the interest of guest 3.
+3 frames. The numbers in the figure are schematic.
+Frame 1: guests 1 and 2 entered first, and the crew has already recorded their two notes. Guest 3 enters and introduces themselves, and the crew records the note of guest 3 as well. Each note records the interest, the feature and the value of one guest.
+Frame 2: the crew compares the interest q3 「爱户外活动的人」 ("people who like outdoor activities") on the note of guest 3 with the feature on every note, the note of guest 3 included. The better a feature matches the interest, the higher the attention level. 「爱跑步」 ("likes running") matches best and gets 0.6, 「爱摄影」 ("likes photography") gets 0.3, and 「爱读书」 ("likes reading") gets 0.1. The three attention levels sum to 1.
+Frame 3: the crew records the value on each note according to the attention levels and writes the conclusion $c_3 = 0.6 v_1 + 0.1 v_2 + 0.3 v_3$, which comes mostly from 「一起跑步」 ("running together") of guest 1. The line width shows the share.
+The feature only decides whom to attend to, and the content of the conclusion comes from the values. The feature 「爱跑步」 ("likes running") states what kind of person guest 1 is, and the value 「一起跑步」 is what guest 1 can bring to another guest.
+The conclusion shows, from the point of view of guest 3, which values the guests on the stage can bring. The crew uses the conclusion as a reference to invite the next guest.
+When guests 1 and 2 entered, the crew did the same reading once for each of them. When guest 1 entered, the crew held only the note of guest 1. When guest 2 entered, it held only the notes of guests 1 and 2.
+'''
+# src:
+# 
+# 上一页给出嘉宾 3 介绍的信息，并问节目组怎样整合已入场嘉宾的信息。本页说明嘉宾 3 入场之后，节目组按嘉宾 3 的兴趣阅读全部纸条。
+# 共 3 帧，图中的数值是示意。
+# 第 1 帧：嘉宾 1、2 先入场，节目组已经记录了两人的纸条。嘉宾 3 入场并介绍自己，节目组又记下嘉宾 3 的纸条。每张纸条上记录了一位嘉宾的兴趣、特点与价值。
+# 第 2 帧：节目组用嘉宾 3 纸条上的兴趣 q3「爱户外活动的人」对照每张纸条上的特点，包括嘉宾 3 自己的。特点与兴趣越相符，注意程度越高。「爱跑步」最相符，得到 0.6，「爱摄影」得到 0.3，「爱读书」得到 0.1。三个注意程度之和为 1。
+# 第 3 帧：节目组按注意程度记录各张纸条上的价值，写成结论 $c_3 = 0.6 v_1 + 0.1 v_2 + 0.3 v_3$，主要来自嘉宾 1 的「一起跑步」。线的粗细表示比例。
+# 特点只用于决定注意谁，结论的内容来自价值。特点「爱跑步」说明嘉宾 1 是怎样的人，价值「一起跑步」是嘉宾 1 能带给对方的东西。
+# 结论表示从嘉宾 3 的角度看，场上的嘉宾能带来哪些价值。节目组以结论为参考，邀请下一位嘉宾。
+# 嘉宾 1、2 入场时，节目组也各做过一次同样的阅读。嘉宾 1 入场时只有嘉宾 1 的纸条，嘉宾 2 入场时只有嘉宾 1、2 的纸条。
+
+['kv-party-invite.title']
+src_hash = '66f32c3c'
+text = 'Inviting the Next Guest'
+# src: 下一位嘉宾的邀请
+
+['kv-party-invite.slide.1']
+src_hash = 'f8ef09fc'
+text = 'The next guest must be closely related both to the previous guest (guest 3) and to all guests who have entered, so the crew combines the profile of guest 3 with the conclusion and compares them with the waiting list.'
+# src: 下一位嘉宾要同时与上一位嘉宾（嘉宾 3）以及已经入场的全部嘉宾关联紧密，所以节目组把嘉宾 3 的资料与结论合起来，与候场名单比对。
+
+['kv-party-invite.highlight.1']
+src_hash = 'a20c1708'
+text = 'After B enters, must the crew rewrite the notes it already holds?'
+# src: B 入场之后，节目组已有的纸条要重写吗？
+
+['kv-party-invite.notes.1']
+src_hash = 'e11d9bd0'
+text = '''
+The previous page gave the conclusion the crew wrote after guest 3 entered. This page shows how the crew invites the next guest. This step is added by this lecture to the original example.
+3 frames.
+Frame 1: the crew combines the profile x3 of guest 3 with the conclusion c3 into x3 + c3, which holds both the situation of guest 3 and the contents of every note. The profile corresponds to "closely related to the previous guest" in the requirements of the show. The conclusion is made only of the values on the notes and corresponds to "closely related to all guests who have entered".
+Frame 2: the waiting list holds A, B and C. x3 + c3 is compared with the profile of each of them, which gives one score each.
+Frame 3: the profile of B, 「学生，爱跑步」 ("student, likes running"), matches x3 + c3 best and has the highest score, so the crew invites B to enter. The numbers in the figure are schematic.
+'''
+# src:
+# 
+# 上一页得到嘉宾 3 入场后节目组写成的结论。本页说明节目组怎样邀请下一位嘉宾，这一步是本讲在原例子上补充的。
+# 共 3 帧。
+# 第 1 帧：节目组把嘉宾 3 的资料 x3 与结论 c3 合起来，得到 x3 + c3，其中既有嘉宾 3 自己的情况，又有每张纸条的内容。资料对应节目要求中的「与上一位嘉宾关联紧密」，结论只由各张纸条上的价值组成，对应「与已经入场的全部嘉宾关联紧密」。
+# 第 2 帧：候场名单上有 A、B、C 三人，x3 + c3 与每人的资料比对，得到一个得分。
+# 第 3 帧：B 的资料「学生，爱跑步」与 x3 + c3 最相符，得分最高，节目组邀请 B 入场。图中的数值是示意。
+
+['kv-party-enter.title']
+src_hash = '71f92364'
+text = 'A New Guest Enters'
+# src: 新嘉宾的入场
+
+['kv-party-enter.slide.1']
+src_hash = '4c4a5e3f'
+text = 'B enters as guest 4, and the crew follows the same process: it records a note, reads the notes and writes a conclusion. The notes it already holds are all kept, and guests 1 to 3 need not introduce themselves again, so the crew can decide on the next guest quickly.'
+# src: B 作为嘉宾 4 入场，节目组按同样的流程记录纸条、阅读纸条、写成结论。已有的纸条全部保留，不必请嘉宾 1 至 3 重新介绍，所以节目组能尽快决定下一位嘉宾。
+
+['kv-party-enter.highlight.1']
+src_hash = 'b4ce0d2a'
+text = 'Does a note still need to record the interest?'
+# src: 纸条上还需要记录兴趣吗？
+
+['kv-party-enter.notes.1']
+src_hash = 'ee10a1af'
+text = '''
+The previous page invited B. This page shows the process after B enters.
+3 frames.
+Frame 1: B enters as guest 4 and obtains the feature k4, the value v4 and the interest q4 from the profile in the same way. The crew records the interest, the feature and the value on a note. It already holds the notes of guests 1 to 3.
+Frame 2: the crew reads the 4 notes by the interest q4 of guest 4 and writes the conclusion c4 according to the attention levels. The crew then uses the profile of guest 4 and the conclusion to invite the next guest.
+Frame 3: the notes of guests 1 to 3 are the same as before and need not be rewritten. The interests of these 3 guests on the notes were already used when each of them entered, and the conclusion c4 does not need them.
+Each time a guest enters, the only new note the crew records is the note of this guest, and the only interest newly used is the interest of this guest.
+The notes the crew already holds are all kept, so it does not need the earlier guests to introduce themselves again and can decide on the next guest quickly, which meets the fourth requirement of the show.
+'''
+# src:
+# 
+# 上一页邀请 B 入场。本页说明 B 入场之后的过程。
+# 共 3 帧。
+# 第 1 帧：B 作为嘉宾 4 入场，同样由资料得出特点 k4、价值 v4 与兴趣 q4。节目组把兴趣、特点与价值记录在纸条上，此前已有嘉宾 1 至 3 的纸条。
+# 第 2 帧：节目组用嘉宾 4 的兴趣 q4 阅读 4 张纸条，按注意程度写成结论 c4。之后节目组用嘉宾 4 的资料与结论邀请下一位。
+# 第 3 帧：嘉宾 1 至 3 的纸条与之前相同，不需要重写。纸条上这 3 人的兴趣在各自入场时已经用过，结论 c4 不需要它们。
+# 每入场一位嘉宾，节目组新记录的只有这位嘉宾的一张纸条，新用到的兴趣只有这位嘉宾的兴趣。
+# 已有的纸条全部保留，节目组不必请先入场的嘉宾重新介绍，所以能尽快决定下一位嘉宾，满足节目的第四条要求。
+
+['kv-party-note.title']
+src_hash = '3d73a1d1'
+text = 'Information on the Note'
+# src: 纸条上的信息
+
+['kv-party-note.slide.1']
+src_hash = '92690741'
+text = '''
+When each guest enters, the crew reads all the notes:
+
+- The crew compares the interest of this guest with the **feature** on each note, which decides the attention to each note.
+- The crew records the **value** on the note according to the attention.
+
+The reading uses only the feature and the value. The interest of each guest is used only when that guest enters, so the interest can be left off the note.
+'''
+# src:
+# 
+# 每位嘉宾入场时，节目组都要阅读全部纸条：
+# 
+# - 用这位嘉宾的兴趣与每张纸条上的**特点**对照，决定对每张纸条的注意程度。
+# - 按注意程度记录纸条上的**价值**。
+# 
+# 阅读只用到特点与价值。每位嘉宾的兴趣只在自己入场时使用，所以纸条上可以省去兴趣。
+
+['kv-party-note.highlight.1']
+src_hash = 'eff6a39a'
+text = 'In text generation by an LLM, what does a guest correspond to?'
+# src: 大模型生成文本时，嘉宾对应什么？
+
+['kv-party-note.notes.1']
+src_hash = 'c727da55'
+text = '''
+The previous page gave the process after guest 4 enters, in which the interests of guests 1 to 3 on the notes are no longer used. This page shows that the interest can be left off the note.
+When each guest enters, the crew reads all the notes. It compares the interest of this guest with the feature on each note, which decides how much attention it gives to each note, and then records the value on the note according to that attention.
+This process does not use the interests on the notes. The interest of each guest is used only when that guest enters, and the crew uses it directly once it has heard the introduction. So the interest can be left off the note, which records only the feature and the value.
+The figure takes guest 3 as the example: the note records only the feature 「爱摄影」 ("likes photography") and the value 「一起外出拍照」 ("going out to take photos together"), and the interest 「爱户外活动的人」 ("people who like outdoor activities") stays outside the note.
+'''
+# src:
+# 
+# 上一页给出嘉宾 4 入场后的过程，纸条上嘉宾 1 至 3 的兴趣不再使用。本页说明纸条上可以省去兴趣。
+# 每位嘉宾入场时，节目组都要阅读全部纸条：拿这位嘉宾的兴趣与每张纸条上的特点对照，决定对每张纸条注意多少，再按注意的程度记录纸条上的价值。
+# 这一过程用不到纸条上的兴趣。每位嘉宾的兴趣只在自己入场时使用，节目组听完介绍就直接使用。所以纸条上可以省去兴趣，只记录特点与价值。
+# 图中以嘉宾 3 为例：纸条只记录特点「爱摄影」与价值「一起外出拍照」，兴趣「爱户外活动的人」留在纸条之外。
+
 ['kv-generate.title']
-src_hash = '3596a133'
-text = 'Autoregressive Generation'
-# src: 自回归生成
+src_hash = '57af630f'
+text = 'Text Generation in an LLM'
+# src: 大模型的文本生成
 
 ['kv-generate.slide.1']
-src_hash = '22b7acd6'
+src_hash = 'e8f1bbe6'
 text = '''
-- An LLM processes text in units of **tokens**. A token is a word or a part of a word.
-- **Prefill** processes all tokens of the input at once and outputs the first new token. Each step of **decode** appends the token output by the previous step to the end of the input and outputs the next token, until the end-of-sequence token is output.
-- The model is a stack of $L$ structurally identical Transformer layers. In each layer, **attention** makes the vector of a token depend on the tokens before it.
+- An LLM processes text in units of **tokens**. A token is a word or a part of a word and corresponds to a guest.
+- The model reads all tokens so far and outputs the next token. The output token is appended to the end of the input and fed to the model again, which corresponds to the invited guest entering, until the end token is output.
+- **Prefill** processes all tokens of the input and outputs the first new token. Each later step is called **decode**, and its input has only one token more than the step before.
 '''
 # src:
 # 
-# - 大模型以 **token** 为单位处理文本，一个 token 是一个词或词的一部分。
-# - **预填充**一次处理输入的全部 token，输出第一个新 token。**解码**的每一步把上一步输出的 token 接在输入末尾，再输出下一个 token，直到输出结束符。
-# - 模型由 $L$ 层结构相同的 Transformer 层叠成，每一层用**注意力**使一个 token 的向量依赖于它之前的 token。
+# - 大模型以 **token** 为单位处理文本，一个 token 是一个词或词的一部分，对应一位嘉宾。
+# - 模型读入已有的全部 token，输出下一个 token。输出的 token 接在输入末尾再次送入模型，对应被邀请的嘉宾入场，直到输出结束符。
+# - **预填充**处理输入的全部 token，输出第一个新 token。之后的每一步称为**解码**，输入只比上一步多一个 token。
 
-['kv-generate.slide.2']
-src_hash = '8a632f25'
-text = 'The input of each decode step has only one token more than that of the previous step.'
-# src:
-# 
-# 解码每一步的输入只比上一步多一个 token。
+['kv-generate.highlight.1']
+src_hash = 'eb4011d7'
+text = 'Natural language in the input is made of characters. How is it encoded as an input the model can compute on?'
+# src: 输入的自然语言由字符组成，怎样编码为模型可以计算的输入？
 
 ['kv-generate.notes.1']
-src_hash = '7d64cd46'
+src_hash = 'af478725'
 text = '''
-This part discusses LLM inference, that is, using a model to generate text after training is finished. An LLM processes text in tokens. The tokenizer splits the text into tokens, and a token can be a word, a Chinese character or a part of a word.
-In the figure the input is the 4 tokens 「今天 天气 很 好」 ("the weather is nice today"). Prefill feeds these 4 tokens into the model at once, and the model outputs the first new token 「适合」 ("good for"). The input of decode step 1 is 5 tokens and the output is 「出门」 ("going out"). The input of step 2 is 6 tokens and the output is 「散步」 ("a walk"). Each output is appended to the end of the input for the next step, until the model outputs the special token that marks the end.
-Autoregressive means that each output token becomes part of the input for generating the next token.
-Each layer of the model contains attention and a feed-forward network. Attention makes the vector of a token depend on the tokens before it, and the next page gives its computation.
-This page establishes one fact: the inputs of two adjacent decode steps differ only in the last token. The following pages discuss whether the intermediate results of the earlier tokens are recomputed at every step.
+The guests of the matchmaking show correspond to tokens. An LLM processes text in tokens. Tokens are cut by a tokenizer and can be a word, a Chinese character or a part of a word. The set of all tokens is called the vocabulary and corresponds to the waiting list.
+3 frames. Each frame adds a row, and one row is one run of the model.
+Frame 1: the input is the 4 tokens 「今天 天气 很 好」 ("the weather is nice today"), and the model outputs 「适合」 ("good for"). This run processes all tokens of the input and is called prefill.
+Frame 2: 「适合」 is appended to the end of the input, the 5 tokens are fed to the model again, and it outputs 「出门」 ("going out"). This is decode step 1.
+Frame 3: the input of decode step 2 is 6 tokens, and the output is 「散步」 ("a walk"). This repeats until the model outputs the special token that marks the end.
+This way of generating is called autoregressive: every output token becomes part of the input and takes part in generating the next token.
+This page establishes one fact: the inputs of two consecutive decode steps differ only in the last token.
+Inside the model everything is arithmetic on numbers, while a token is text, so the first step is to turn tokens into numbers.
 '''
 # src:
 # 
-# 本部分讨论大模型推理，推理指模型训练完成之后用它生成文本。大模型按 token 处理文本，token 由分词器切分，可以是一个词、一个汉字或词的一部分。
-# 图中输入是「今天 天气 很 好」4 个 token。预填充把这 4 个 token 一次送入模型，输出第一个新 token「适合」。解码第 1 步的输入是 5 个 token，输出「出门」，第 2 步的输入是 6 个 token，输出「散步」。每一步的输出都接在输入末尾，进入下一步，直到模型输出表示结束的特殊 token。
-# 自回归的含义是：输出的每个 token 都作为输入的一部分参与下一个 token 的生成。
-# 模型的每一层包含注意力与前馈网络。注意力使一个 token 的向量依赖于它之前的 token，下一页给出它的计算。
-# 这一页建立一个事实：解码的相邻两步，输入只差最后一个 token。后面各页讨论前面那些 token 的中间结果是否每步重新计算。
+# 相亲节目中的嘉宾对应 token。大模型按 token 处理文本，token 由分词器切分，可以是一个词、一个汉字或词的一部分。全部 token 的集合称为词表，对应候场名单。
+# 共 3 帧，每帧增加一行，一行是模型的一次运行。
+# 第 1 帧：输入是「今天 天气 很 好」4 个 token，模型输出「适合」。这一次运行处理输入的全部 token，称为预填充。
+# 第 2 帧：「适合」接在输入末尾，5 个 token 再次送入模型，输出「出门」。这是解码的第 1 步。
+# 第 3 帧：解码第 2 步的输入是 6 个 token，输出「散步」。如此重复，直到模型输出表示结束的特殊 token。
+# 这种生成方式称为自回归：输出的每个 token 都作为输入的一部分，参与下一个 token 的生成。
+# 这一页建立一个事实：解码的相邻两步，输入只差最后一个 token。
+# 模型内部是数的运算，而 token 是文字，所以第一步是把 token 变成数。
 
-['kv-attention.title']
-src_hash = '89e46e52'
-text = 'Attention Computation'
-# src: 注意力的计算
+['kv-encoding.title']
+src_hash = '4c3d86a1'
+text = 'Limits of Character Codes'
+# src: 字符编码的局限
 
-['kv-attention.slide.1']
-src_hash = '75bfa63f'
-text = 'Each row of $X$ is the vector of one token, and $W_Q$, $W_K$, $W_V$ are model parameters obtained by training.'
+['kv-encoding.slide.1']
+src_hash = 'c20212d8'
+text = '''
+- A computer represents text with **character codes**: ASCII uses 1 byte for an English character, and UTF-8 uses 1 to 4 bytes for a character. The vocabulary likewise gives every token an integer **index** in order.
+- Indices are assigned in order. How close two values are has nothing to do with meaning, and the difference of two indices has no meaning either.
+- What the model needs: tokens with similar meanings are close to each other, and operations on them also reflect the relations between tokens.
+'''
 # src:
 # 
-# $X$ 的每行是一个 token 的向量，$W_Q$、$W_K$、$W_V$ 是训练得到的模型参数。
+# - 计算机用**字符编码**表示文本：ASCII 用 1 个字节表示一个英文字符，UTF-8 用 1 至 4 个字节表示一个字符。词表也按顺序给每个 token 一个整数**编号**。
+# - 编号按顺序分配，数值的远近与含义无关，两个编号相减得到的数也没有含义。
+# - 模型需要的表示：含义相近的 token 相互接近，它们的运算也能反映 token 之间的关系。
 
-['kv-attention.highlight.1']
-src_hash = '9e91c480'
-text = 'During decode $X$ gains only one row. Are the other rows recomputed?'
-# src: 解码时 $X$ 只多出一行，其余各行要重新计算吗？
+['kv-encoding.highlight.1']
+src_hash = 'c4ccc5a8'
+text = 'How can tokens be represented so that the relations between their meanings show?'
+# src: 怎样表示 token，才能反映含义之间的关系？
+
+['kv-encoding.notes.1']
+src_hash = 'e6d64662'
+text = '''
+The model computes on numbers, so tokens first have to become numbers. The most direct way is to use the character codes a computer already has.
+ASCII assigns a 7-bit number to each of 128 characters, and one character takes 1 byte, for example A is 65 and B is 66. UTF-8 can represent every character of Unicode, one character takes 1 to 4 bytes, and a common Chinese character takes 3 bytes.
+The left half of the figure is the UTF-8 encoding of the example sentence, 3 bytes per character. The two 「天」 have the same code.
+The vocabulary of a tokenizer likewise gives every token an index in order, and these indices are what the model receives as input.
+The right half of the figure shows three Chinese characters at their Unicode code points. Unicode orders the common Chinese characters by radical and stroke count. 「她」 ("she") and 「好」 ("good") share the radical 女, their code points differ by only 4, and their meanings are unrelated. 「佳」 ("fine") and 「好」 have similar meanings, and their code points differ by 2570. The difference of two code points does not stand for any meaning either.
+So an index only tells tokens apart. It does not reflect how their meanings relate. The representation the model needs must meet two requirements: tokens with similar meanings are close to each other, and operations on the representations reflect relations of meaning. For example, the difference between 「女人」 and 「男人」 should be close to the difference between 「王后」 and 「国王」, since both are a difference of gender.
+'''
+# src:
+# 
+# 模型对数作运算，所以 token 先要变成数。最直接的做法是使用计算机已有的字符编码。
+# ASCII 为 128 个字符各分配一个 7 位的编号，一个字符占 1 个字节，例如 A 是 65，B 是 66。UTF-8 可以表示 Unicode 的全部字符，一个字符占 1 至 4 个字节，常用汉字占 3 个字节。
+# 图的左半部分是例句的 UTF-8 编码，每个汉字 3 个字节，两个「天」的编码相同。
+# 分词器的词表同样按顺序给每个 token 一个编号，模型收到的输入是这些编号。
+# 图的右半部分是三个汉字在 Unicode 中的编号。Unicode 的常用汉字按部首与笔画排列，「她」与「好」都是女字旁，编号只差 4，含义无关。「佳」与「好」含义相近，编号相差 2570。编号相减得到的数也不表示任何含义。
+# 所以编号只能区分不同的 token，不能反映 token 之间含义的关系。模型需要的表示要满足两点：含义相近的 token 相互接近，表示之间的运算反映含义的关系。例如「女人」与「男人」的差应当接近「王后」与「国王」的差，两者都是性别的差别。
+
+['kv-token-vector.title']
+src_hash = '14ff318d'
+text = 'Vector Representation of Tokens'
+# src: token 的向量表示
+
+['kv-token-vector.slide.1']
+src_hash = 'a451605d'
+text = '''
+- The model represents every token as a **vector** of length $d$, which is called an **embedding** and corresponds to the profile of a guest. The **embedding matrix** stores one row for every token of the vocabulary and is looked up by index.
+- The embedding matrix is obtained by training on data. Tokens with similar meanings have vectors pointing in similar directions, and the difference of two vectors stands for the difference of meaning: 「女人」 ("woman") − 「男人」 ("man") is close to 「王后」 ("queen") − 「国王」 ("king").
+- The **inner product** of two vectors measures how close their directions are: positive for the same direction, 0 when perpendicular, negative for opposite directions.
+'''
+# src:
+# 
+# - 模型把每个 token 表示为一个长度为 $d$ 的**向量**，称为**嵌入**（embedding），对应嘉宾的资料。**嵌入矩阵**为词表中的每个 token 保存一行，按编号查表。
+# - 嵌入矩阵由数据训练得到。含义相近的 token 向量方向接近，向量的差表示含义的差：「女人」−「男人」接近「王后」−「国王」。
+# - 两个向量的**内积**衡量方向的接近程度：方向相同时为正，垂直时为 0，相反时为负。
+
+['kv-token-vector.image.1.footnote.1']
+src_hash = 'e140dde7'
+text = 'The word-vector example is from [Mikolov et al., 2013](https://arxiv.org/abs/1301.3781).'
+# src: 词向量的例子取自 [Mikolov et al., 2013](https://arxiv.org/abs/1301.3781)
+
+['kv-token-vector.highlight.1']
+src_hash = 'fc4a3f7c'
+text = 'How are the interest, the feature and the value obtained from the vector of a token?'
+# src: 怎样由 token 的向量得到兴趣、特点与价值？
+
+['kv-token-vector.notes.1']
+src_hash = '211f7875'
+text = '''
+Vectors meet the two requirements of the previous page. Every token is represented as a vector of length d, and this step is called embedding. The embedding matrix has as many rows as the vocabulary has tokens, each row is the vector of one token, and the index of a token is its row number. Here the index is used only for the lookup and takes no part in the arithmetic. The embedding matrix is part of the model parameters and is obtained by training.
+The left half of the figure shows the result of the lookup for the 4 tokens of the example sentence, written $x_1$ to $x_4$. The numbers in the figure are schematic. The vocabulary of GPT-3 has 50257 tokens and each vector has 12288 numbers, so the embedding matrix holds about 620 million numbers.
+The right half of the figure draws the vectors of four words in a plane. Real vectors have more than ten thousand dimensions, so this is a sketch. "king" minus "man" plus "woman" gives a vector that is closest to "queen". One direction of the vector space corresponds to one meaning, here gender.
+The inner product multiplies corresponding components and adds the products. It is positive when two vectors point in the same direction, 0 when they are perpendicular and negative when they point in opposite directions. The model uses the inner product to judge how related two vectors are.
+A vector from the lookup depends only on the token itself. 「好」 gets the same vector in every sentence, and it holds no information about 「今天」 or 「天气」.
+The embedding vector corresponds to the profile of a guest in the matchmaking show, and the interest, the feature and the value are all obtained from it.
+'''
+# src:
+# 
+# 上一页要求的两点由向量满足。每个 token 表示为一个长度为 d 的向量，这一步称为嵌入（embedding）。嵌入矩阵的行数等于词表的大小，每行是一个 token 的向量，token 的编号就是行号。编号在这里只用来查表，不参与运算。嵌入矩阵是模型参数的一部分，由训练得到。
+# 图的左半部分是例句的 4 个 token 查表的结果，记作 $x_1$ 到 $x_4$，图中的数值是示意。GPT-3 的词表有 50257 个 token，每个向量有 12288 个数，嵌入矩阵共约 6.2 亿个数。
+# 图的右半部分把四个词的向量画在平面上。实际的向量有上万维，这里是示意。「国王」减去「男人」再加上「女人」，得到的向量与「王后」最接近。向量空间中的一个方向对应一种含义，这里是性别。
+# 内积是对应分量相乘再相加。两个向量方向相同时内积为正，垂直时为 0，方向相反时为负。模型用内积判断两个向量的相关程度。
+# 查表得到的向量只取决于 token 本身。「好」在任何句子中查到的都是同一个向量，其中没有「今天」「天气」的信息。
+# 嵌入向量对应相亲节目中嘉宾的资料，兴趣、特点与价值都由它得到。
+
+['kv-qkv.title']
+src_hash = 'ddaad626'
+text = 'Queries, Keys and Values in Attention'
+# src: 注意力的查询、键与值
+
+['kv-qkv.slide.1']
+src_hash = '315f9dac'
+text = '''
+The vector $x$ of a token is multiplied by three **weight matrices**, which gives three different vectors. The matrices are obtained by training and shared by all tokens. The lookup done by the three vectors is called **attention**:
+
+- **Query** $q = xW_Q$: corresponds to the interest of a guest, and is used only to compute the output of this token itself.
+- **Key** $k = xW_K$: corresponds to the feature, and is compared with the query of this token and the queries of every later token.
+- **Value** $v = xW_V$: corresponds to the guest's value, and is taken according to the result of the comparison.
+'''
+# src:
+# 
+# token 的向量 $x$ 乘以三个**权重矩阵**，得到三个不同的向量。矩阵由训练得到，所有 token 共用。三个向量完成的查找称为**注意力**：
+# 
+# - **查询** $q = xW_Q$：对应嘉宾的兴趣，只用于计算这个 token 自己的输出。
+# - **键** $k = xW_K$：对应特点，供这个 token 自己与之后各 token 的查询比较。
+# - **值** $v = xW_V$：对应价值，按比较的结果被取走。
+
+['kv-qkv.highlight.1']
+src_hash = '68ff22d4'
+text = 'How are queries and keys compared, and how are the values combined?'
+# src: 查询与键怎样比较，各个值怎样合并？
+
+['kv-qkv.notes.1']
+src_hash = 'acd350bf'
+text = '''
+In the matchmaking show, every guest obtains a feature, a value and an interest from their own profile. In the model, the profile of a token is its vector x, and the three items are three vectors computed from x.
+The most direct way to obtain three different vectors from the same vector is to multiply it by three different matrices. A vector of length d multiplied by a d × d matrix gives another vector of length d. $W_Q$, $W_K$ and $W_V$ are parameters of the model. All parameters of the model are stored as matrices, called weight matrices, which are obtained by training and do not change during inference. All tokens use the same matrices, which corresponds to every guest obtaining the three items from the profile in the same way.
+The query corresponds to the interest and states what this token looks for. The key corresponds to the feature, states what this token is, and is compared with queries. The value v corresponds to the guest's value and is the content that is taken. The feature used for comparison differs from the content that is taken, so the key and the value are two vectors.
+The three names come from key-value lookup: a query is compared with the keys, and on a match the corresponding value is taken out. In attention a match has a degree, and the result is all values added according to the degree of match.
+The figure is one lookup of 「好」. The query $q_4$ of 「好」 is compared with the keys of the 4 tokens of the input. The word beside each key is the feature the key stands for in this example: 「今天」 is a time, 「天气」 is a thing, 「很」 is a degree and 「好」 is a quality. 「好」 looks for the thing it describes, and the key of 「天气」 matches best. The length of a bar is the degree of match. The 4 values are added according to the degree of match to give the output $o_4$ of 「好」, which corresponds to the conclusion written by the crew.
+The three vectors have different users. The query of a token is used only to compute its own output. Its key and value are read by its own query and by the query of every token after it, which corresponds to the crew reading the note of a guest when that guest enters and each time a later guest enters.
+The meanings in the example are schematic. Training adjusts the parameters of the model so that related tokens match to a high degree, and real queries and keys need not have such clear meanings.
+'''
+# src:
+# 
+# 相亲节目中，每位嘉宾由自己的资料得出特点、价值与兴趣。模型中，token 的资料是它的向量 x，三样信息是由 x 算出的三个向量。
+# 从同一个向量得到三个不同的向量，最直接的做法是乘以三个不同的矩阵。一个长度为 d 的向量乘以 d × d 的矩阵，得到另一个长度为 d 的向量。$W_Q$、$W_K$、$W_V$ 是模型的参数。模型的参数都以矩阵的形式存放，称为权重矩阵，由训练得到，推理时不变。所有 token 用同一组矩阵，对应每位嘉宾都按同样的方式由资料得出三样信息。
+# 查询对应兴趣，表示这个 token 要找什么。键对应特点，表示这个 token 是什么，用来与查询比较。值对应价值，是被取走的内容。用来比较的特征与被取走的内容不同，所以键与值是两个向量。
+# 三个名称来自键值查找：查询与键比较，匹配时取出对应的值。注意力的匹配有程度，结果是全部的值按匹配的程度相加。
+# 图是「好」的一次查找。「好」的查询 $q_4$ 与输入中 4 个 token 的键比较。键旁边的词是这个例子里键所表示的特征：「今天」是时间，「天气」是事物，「很」是程度，「好」是性质。「好」要找它形容的事物，「天气」的键最匹配。横条的长度是匹配的程度。4 个值按匹配的程度相加，得到「好」的输出 $o_4$，对应节目组写成的结论。
+# 三个向量的使用者不同。一个 token 的查询只用于计算它自己的输出。它的键与值由它自己与它之后每个 token 的查询读取，对应这位嘉宾与之后的每位嘉宾入场时，节目组都要阅读这张纸条。
+# 例子中的含义是示意。训练调整模型的参数，使相关的 token 之间匹配的程度高，实际的查询与键不一定有这样明确的含义。
+
+['kv-qkv-steps.title']
+src_hash = '220759f3'
+text = 'Steps of the Attention Computation'
+# src: 注意力的计算步骤
+
+['kv-qkv-steps.slide.1']
+src_hash = 'fc66edd6'
+text = '''
+- The query $q_i$ takes the **inner product** with every key $k_j$. The larger the inner product, the better $k_j$ matches $q_i$.
+- The inner products are normalised into **weights** that sum to 1, which correspond to the attention levels.
+- The output $o_i$ is the sum of the values $v_j$ weighted by them, which corresponds to the conclusion and holds the information of the earlier tokens.
+'''
+# src:
+# 
+# - 查询 $q_i$ 与每个键 $k_j$ 作**内积**，内积越大，$k_j$ 与 $q_i$ 越匹配。
+# - 内积归一化为和为 1 的**权重**，对应注意程度。
+# - 输出 $o_i$ 是各个值 $v_j$ 按权重相加，对应结论，含有之前各 token 的信息。
+
+['kv-qkv-steps.highlight.1']
+src_hash = '32613966'
+text = 'How does the output $o_4$ of 「好」 give the next token?'
+# src: 「好」的输出 $o_4$ 怎样给出下一个 token？
+
+['kv-qkv-steps.notes.1']
+src_hash = '95a35914'
+text = '''
+3 frames. Each row of the table belongs to the query of one token and each column to the key of one token. The numbers in the figure are schematic.
+The three weight matrices $W_Q$, $W_K$, $W_V$ are obtained by training and do not change during generation. The vector of each token is multiplied by them to give the query, the key and the value of that token.
+Frame 1: look only at the last token 「好」. The inner products of its query $q_4$ with the keys of the 4 tokens are 1.2, 2.4, 1.7 and 0.8. The inner product of $q_4$ and $k_2$ is the largest, so the key of 「天气」 matches the query of 「好」 best.
+Frame 2: softmax turns the inner products into weights. Softmax maps a group of numbers to a group of positive numbers that sum to 1, and a larger number gets a larger weight. The weights in the row of 「好」 are 0.15, 0.50, 0.25 and 0.10. The other three tokens go through the same computation and each gets a row of weights. Each token uses only itself and the tokens before it, so the dashed cells in the upper right of the table take no part in the computation. This is called the causal mask and corresponds to the crew holding, when a guest enters, only the notes of the guests who have already entered.
+Frame 3: the output of each token is the sum of the values weighted by its row. $o_4 = 0.15 v_1 + 0.50 v_2 + 0.25 v_3 + 0.10 v_4$, where the value of 「天气」 takes one half. $o_4$ holds the information of 「今天」, 「天气」 and 「很」, in shares set by the degree of match, and corresponds to the conclusion written by the crew.
+'''
+# src:
+# 
+# 共 3 帧。表的每一行对应一个 token 的查询，每一列对应一个 token 的键，图中的数值是示意。
+# 三个权重矩阵 $W_Q$、$W_K$、$W_V$ 由训练得到，生成过程中不变。每个 token 的向量乘以它们，得到这个 token 的查询、键、值。
+# 第 1 帧：只看最后一个 token「好」。它的查询 $q_4$ 与 4 个 token 的键分别作内积，得到 1.2、2.4、1.7、0.8。$q_4$ 与 $k_2$ 的内积最大，「天气」的键与「好」的查询最匹配。
+# 第 2 帧：内积经过 softmax 变为权重。softmax 把一组数变为一组和为 1 的正数，原来较大的数得到较大的权重。「好」这一行的权重是 0.15、0.50、0.25、0.10。其余三个 token 作同样的计算，各得到一行权重。每个 token 只使用它自己与它之前的 token，表中右上方的虚线格不参与计算，这称为因果掩码，对应嘉宾入场时，节目组只有已入场嘉宾的纸条。
+# 第 3 帧：每个 token 的输出是各个值按这一行的权重相加。$o_4 = 0.15 v_1 + 0.50 v_2 + 0.25 v_3 + 0.10 v_4$，其中「天气」的值占一半。$o_4$ 含有「今天」「天气」「很」的信息，比例由匹配的程度决定，对应节目组写成的结论。
+
+['kv-predict.title']
+src_hash = '1b3eddef'
+text = 'Predicting the Next Token'
+# src: 下一个 token 的预测
+
+['kv-predict.slide.1']
+src_hash = 'bab62f6c'
+text = '''
+- Consider one attention layer only. The last token 「好」 has used the whole input, and the prediction is made from $x_4 + o_4$ (profile plus conclusion).
+- The **output layer** stores one vector for every token of the vocabulary (the profiles on the waiting list). Each takes the inner product with $x_4 + o_4$, and **softmax** normalises the results into the **probability** of each token being the next token.
+- A model made of embedding, attention and the output layer is called a **Transformer**. A real model also has a **feed-forward network** after attention and repeats such a layer $L$ times. GPT-3 has 96 layers.
+'''
+# src:
+# 
+# - 只考虑一层注意力。最后的「好」用到了全部输入，由 $x_4 + o_4$（资料加结论）预测。
+# - **输出层**为词表中每个 token 保存一个向量（候场名单上的资料），与 $x_4 + o_4$ 作内积，经 **softmax** 归一化为下一个 token 的**概率**。
+# - 由嵌入、注意力与输出层组成的模型称为 **Transformer**。实际的模型在注意力之后还有**前馈网络**，并把这样的层重复 $L$ 次，GPT-3 有 96 层。
+
+['kv-predict.highlight.1']
+src_hash = '5d1761a1'
+text = 'How is the attention of all tokens computed together?'
+# src: 全部 token 的注意力怎样一起计算？
+
+['kv-predict.notes.1']
+src_hash = '1a6eb6d3'
+text = '''
+The previous page gave the attention output $o_4$ of 「好」. Only one attention layer is considered here. Each token uses only itself and the tokens before it, and only the last token 「好」 has used every token of the input, so the next token is predicted from its vector. This corresponds to the crew using every note when it writes the conclusion for the guest who entered last. In training every position predicts the token after it, and in generation only the token after the last position is unknown.
+$o_4$ is added to the original vector $x_4$ of 「好」, and $x_4 + o_4$ holds both the meaning of 「好」 itself and the information of the tokens before it. This corresponds to the crew combining the profile of the guest with the conclusion.
+The weights of the output layer store one vector of length d for every token of the vocabulary, which corresponds to the profile of every person on the waiting list. $x_4 + o_4$ takes the inner product with each of them, which gives as many numbers as there are tokens in the vocabulary. The figure draws the three largest.
+Softmax normalises the inner products into probabilities. Softmax maps a group of numbers to a group of positive numbers that sum to 1, and a larger number gets a larger probability. The numbers in the figure are schematic.
+「适合」 has the largest probability and is chosen as the next token. It is appended to the end of the input, which corresponds to the invited guest entering. There are several rules for choosing a token: always take the most probable one, or draw one at random by probability. The figure takes the most probable one.
+A model made of embedding, attention and the output layer is called a Transformer. A real model groups attention and a feed-forward network into one layer and repeats it L times, and the output of one layer is the input of the next. The feed-forward network transforms each vector on its own and does not involve relations between tokens. Its main part is also matrix multiplication. GPT-3 has 96 layers and about 175 billion parameters.
+The attention of every layer is the same as the one layer here, so the analysis that follows holds for each layer.
+'''
+# src:
+# 
+# 上一页得到「好」的注意力输出 $o_4$。这里只考虑一层注意力。每个 token 只用到它自己与之前的 token，只有最后一个 token「好」用到了输入的全部 token，所以预测下一个 token 用它的向量，对应节目组为最后入场的嘉宾写结论时用到了全部纸条。训练时每个位置都预测它之后的 token，生成时只有最后一个位置之后的 token 未知。
+# $o_4$ 加到「好」原来的向量 $x_4$ 上，$x_4 + o_4$ 既有「好」自己的含义，又有之前各 token 的信息，对应节目组把嘉宾的资料与结论合起来。
+# 输出层的权重为词表中的每个 token 保存一个长度为 d 的向量，对应候场名单上每人的资料。$x_4 + o_4$ 与它们分别作内积，得到与词表一样多的数，图中画出最大的三个。
+# 内积经过 softmax 归一化为概率。softmax 把一组数变为一组和为 1 的正数，原来较大的数得到较大的概率。图中的数值是示意。
+# 「适合」的概率最大，选为下一个 token，它接在输入末尾，对应被邀请的嘉宾入场。选出 token 的规则有多种，可以总是取概率最大的，也可以按概率随机抽取。图中取概率最大的。
+# 由嵌入、注意力与输出层组成的模型称为 Transformer。实际的模型把注意力与前馈网络组成一层，重复 L 层，一层的输出是下一层的输入。前馈网络对每个向量单独变换，不涉及 token 之间的关系，主体也是矩阵乘法。GPT-3 有 96 层，约 1750 亿个参数。
+# 各层的注意力与这里的一层相同，下面的分析对每一层都成立。
+
+['kv-attention.title']
+src_hash = 'a6410777'
+text = 'Attention in Matrix Form'
+# src: 注意力的矩阵形式
+
+['kv-attention.slide.1']
+src_hash = '42fbb717'
+text = 'Writing the vector of each token as one row of a matrix merges the attention of all tokens into matrix operations. Each row of $X$ is the vector of one token, and $W_Q$, $W_K$, $W_V$ are weight matrices.'
+# src:
+# 
+# 把每个 token 的向量写成矩阵的一行，全部 token 的注意力合并为矩阵运算。$X$ 的每行是一个 token 的向量，$W_Q$、$W_K$、$W_V$ 是权重矩阵。
+
+['kv-attention.slide.2']
+src_hash = 'f9ead876'
+text = 'Row $i$ of $A$ has weights only in its first $i$ columns, and row $i$ of $O$ depends only on the first $i$ tokens.'
+# src:
+# 
+# $A$ 的第 $i$ 行只在前 $i$ 列有权重，$O$ 的第 $i$ 行只依赖前 $i$ 个 token。
 
 ['kv-attention.notes.1']
-src_hash = '8fcd6105'
+src_hash = '41cca1ff'
 text = '''
 3 frames, one for each step of attention. In the figure, one row of each matrix corresponds to one token, and purple marks the model parameters.
-Frame 1: row i of $X$, $x_i$, is the vector of token i. Multiplying by $W_Q$, $W_K$, $W_V$ (each d × d) gives $Q = XW_Q$, $K = XW_K$, $V = XW_V$, all N × d. Row i is written $q_i$, $k_i$, $v_i$, called the query, the key and the value.
-Frame 2: $QK^\top$ is an N × N matrix whose row i, column j is the inner product of $q_i$ and $k_j$. The causal mask removes the positions with j > i (the dashed cells). After division by $\sqrt d$ and a row-wise softmax, this gives the weight matrix $A$. The weights of each row are non-negative and sum to 1.
-Frame 3: $O = AV$. Row i, $o_i$, is the sum of $v_1$ to $v_i$ weighted by row i. The last row of $O$ goes through the following layers and is used to generate the next token 「适合」.
-The causal mask makes token i depend only on the first i tokens, so the result of row i does not depend on tokens at positions after i. This property is used on the next two pages. In the figure N = 4, and the vector length is d.
-A real model has many heads and many layers, and each head has its own $W_Q$, $W_K$, $W_V$. The $X$ of the first layer comes from the table of token vectors, and the $X$ of each later layer is the output of the layer before. The analysis of one head in one layer applies to all of them.
+Frame 1: row i of $X$, $x_i$, is the vector of token i. Multiplying by $W_Q$, $W_K$, $W_V$ (each d × d) gives $Q = XW_Q$, $K = XW_K$, $V = XW_V$, all N × d. Row i holds the query $q_i$, the key $k_i$ and the value $v_i$ of token i.
+Frame 2: $QK^\top$ is an N × N matrix whose row i, column j is the inner product of $q_i$ and $k_j$. The causal mask removes the positions with j > i (the dashed cells). After division by $\sqrt d$ and a row-wise softmax, this gives the weight matrix $A$. The weights of each row are non-negative and sum to 1. $A$ is the table of weights shown earlier.
+Frame 3: $O = AV$. Row i, $o_i$, is the sum of $v_1$ to $v_i$ weighted by row i. The last row of $O$, added to $x_4$, goes through the output layer and gives the next token 「适合」.
+The causal mask makes token i depend only on the first i tokens, so the result of row i does not depend on tokens at positions after i. In the figure N = 4, and the vector length is d.
+A real model has many heads and many layers, and each head has its own $W_Q$, $W_K$, $W_V$. The $X$ of the first layer comes from the embedding, and the $X$ of each later layer is the output of the layer before, so the output of every token has to be computed. The analysis of one head in one layer applies to all of them.
 '''
 # src:
 # 
 # 共 3 帧，对应注意力的三步。图中每个矩阵的一行对应一个 token，紫色是模型参数。
-# 第 1 帧：$X$ 的第 i 行 $x_i$ 是第 i 个 token 的向量，乘以 $W_Q$、$W_K$、$W_V$（都是 d × d）得到 $Q = XW_Q$、$K = XW_K$、$V = XW_V$，三者都是 N × d。第 i 行记作 $q_i$、$k_i$、$v_i$，分别称为查询、键与值。
-# 第 2 帧：$QK^\top$ 是 N × N 的矩阵，第 i 行第 j 列是 $q_i$ 与 $k_j$ 的内积。因果掩码把 j > i 的位置去掉（虚线格），再除以 $\sqrt d$，按行作 softmax，得到权重矩阵 $A$。每行的权重非负且和为 1。
-# 第 3 帧：$O = AV$，第 i 行 $o_i$ 是 $v_1$ 到 $v_i$ 按第 i 行的权重相加。$O$ 的最后一行经过后续的层，用于生成下一个 token「适合」。
-# 因果掩码（mask）使第 i 个 token 只依赖前 i 个 token，第 i 行的结果与位置大于 i 的 token 无关。这个性质在下面两页用到。图中 N = 4，向量长度为 d。
-# 实际的模型有多个头与多个层，每个头各有一组 $W_Q$、$W_K$、$W_V$。第一层的 $X$ 来自 token 的向量表，之后各层的 $X$ 是上一层的输出。一个头一层的分析适用于全部。
+# 第 1 帧：$X$ 的第 i 行 $x_i$ 是第 i 个 token 的向量，乘以 $W_Q$、$W_K$、$W_V$（都是 d × d）得到 $Q = XW_Q$、$K = XW_K$、$V = XW_V$，三者都是 N × d。第 i 行是第 i 个 token 的查询 $q_i$、键 $k_i$ 与值 $v_i$。
+# 第 2 帧：$QK^\top$ 是 N × N 的矩阵，第 i 行第 j 列是 $q_i$ 与 $k_j$ 的内积。因果掩码把 j > i 的位置去掉（虚线格），再除以 $\sqrt d$，按行作 softmax，得到权重矩阵 $A$。每行的权重非负且和为 1。$A$ 是前面的权重表。
+# 第 3 帧：$O = AV$，第 i 行 $o_i$ 是 $v_1$ 到 $v_i$ 按第 i 行的权重相加。$O$ 的最后一行加上 $x_4$ 之后经过输出层，给出下一个 token「适合」。
+# 因果掩码（mask）使第 i 个 token 只依赖前 i 个 token，第 i 行的结果与位置大于 i 的 token 无关。图中 N = 4，向量长度为 d。
+# 实际的模型有多个头与多个层，每个头各有一组 $W_Q$、$W_K$、$W_V$。第一层的 $X$ 来自嵌入，之后各层的 $X$ 是上一层的输出，所以每个 token 的输出都要算出。一个头一层的分析适用于全部。
+
+['kv-features.title']
+src_hash = '685fc867'
+text = 'Computational Characteristics of the Transformer'
+# src: Transformer 的计算特征
+
+['kv-features.slide.1']
+src_hash = 'c0bf01f8'
+text = '''
+**Most of the computation is matrix multiplication**
+
+Attention consists of five matrix multiplications, $XW_Q$, $XW_K$, $XW_V$, $QK^\top$ and $AV$, and the feed-forward network is also mostly matrix multiplication.
+'''
+# src:
+# 
+# **计算的主体是矩阵乘法**
+# 
+# 注意力由 $XW_Q$、$XW_K$、$XW_V$、$QK^\top$、$AV$ 五次矩阵乘法组成，前馈网络的主体也是矩阵乘法。
+
+['kv-features.slide.2']
+src_hash = '0c9b85d8'
+text = '''
+**Every token uses all the weights**
+
+The weights do not change during generation. Generating one token reads all the weights of the $L$ layers once.
+'''
+# src:
+# 
+# **每个 token 用到全部权重**
+# 
+# 权重在生成过程中不变。每生成一个 token，$L$ 层的全部权重都要读取一次。
+
+['kv-features.slide.3']
+src_hash = '0e9ed895'
+text = '''
+**Each step adds only one token**
+
+At each decode step $X$ gains only one row. The query of the new token reads the keys and values of all tokens.
+'''
+# src:
+# 
+# **每步只增加一个 token**
+# 
+# 解码每一步，$X$ 只多一行。新 token 的查询要读取全部 token 的键与值。
+
+['kv-features.highlight.1']
+src_hash = 'e649f5dc'
+text = 'Are the queries, keys and values of existing tokens recomputed?'
+# src: 已有 token 的查询、键与值要重新计算吗？
+
+['kv-features.notes.1']
+src_hash = '53e33162'
+text = '''
+All three characteristics come from the computation shown on the previous pages.
+First: one layer of attention is five matrix multiplications and one softmax. The feed-forward network is two matrix multiplications with an element-wise function between them. The model has few kinds of operations, and the computation is concentrated in matrix multiplication.
+Second: the weights do not change during inference. The vector of a token goes from layer 1 to layer L and is multiplied by the weight matrices of every layer once, so generating one token reads all the weights from storage once. GPT-3 has about 175 billion weights.
+Third: the input of each decode step has only one token more than that of the previous step, so $X$ gains only one row. Generating the next token uses the output of the new token, which is obtained by comparing the query of the new token with the keys of all tokens and taking the values of all tokens by weight. The causal mask makes the result of each token depend only on itself and the tokens before it.
+The third characteristic corresponds to a new guest entering the matchmaking show: the crew reads every note by the interest of the new guest, and the existing notes do not change.
+The third characteristic raises a question: in a decode step the first rows of $X$ are the same as in the previous step. Are the queries, keys and values of the existing tokens recomputed?
+'''
+# src:
+# 
+# 三条特征都来自前面几页的计算过程。
+# 第一条：一层注意力是五次矩阵乘法与一次 softmax。前馈网络是两次矩阵乘法，中间有一个逐元素的函数。模型的运算种类很少，计算量集中在矩阵乘法上。
+# 第二条：推理时权重不变。一个 token 的向量从第 1 层到第 L 层，每一层的权重矩阵都与它相乘一次，所以每生成一个 token，全部权重都要从存储中读出一次。GPT-3 约有 1750 亿个权重。
+# 第三条：解码每一步的输入只比上一步多一个 token，$X$ 只多一行。生成下一个 token 要用新 token 的输出，它由新 token 的查询与全部 token 的键比较、按权重取全部 token 的值得到。因果掩码使每个 token 的结果只依赖它与它之前的 token。
+# 第三条对应相亲节目中新嘉宾的入场：节目组用新嘉宾的兴趣阅读每张纸条，已有的纸条不变。
+# 第三条引出一个问题：解码一步时，$X$ 的前几行与上一步相同，已有 token 的查询、键与值是否重新计算。
 
 ['kv-naive.title']
 src_hash = '11fe0800'
@@ -2949,19 +3543,21 @@ text = 'The $k$ and $v$ of existing tokens are the same at every step and can be
 # src: 已有 token 的 $k$、$v$ 每一步都相同，可以保存下来重复使用
 
 ['kv-naive.notes.1']
-src_hash = '3f70150b'
+src_hash = 'da693cea'
 text = '''
-2 frames, with the same layout as the previous page.
+3 frames, with the same layout as the previous page.
 Frame 1: the first 4 rows of $X$ are the same as in the previous step, and row 5 is the new token 「适合」 (orange). $Q$, $K$, $V$, $A$ and $O$ are all recomputed from $X$. The red rows were already computed in the previous step and are computed again in this step.
-Frame 2: generating the next token 「出门」 uses only the last row of $O$, $o_5$. $o_5$ is computed from the last row of $A$ and all of $V$, and the last row of $A$ is computed from $q_5$ and all of $K$. So $q_1$ to $q_4$ and the first 4 rows of $A$ and $O$ are not needed (grey, dashed). What is needed is $q_5$ together with $k_1$ to $k_5$ and $v_1$ to $v_5$.
+Frame 2: generating the next token 「出门」 uses only the last row of $O$, $o_5$, which is the output of the new token 「适合」. A query is the information a token itself looks for, so $q_1$ to $q_4$ are used only for $o_1$ to $o_4$. This step does not need $o_1$ to $o_4$, so $q_1$ to $q_4$ and the first 4 rows of $A$ and $O$ are not needed (grey, dashed).
+Frame 3: $o_5$ is computed from the last row of $A$ and all of $V$, and the last row of $A$ is computed from $q_5$ and all of $K$. The key and the value are the information a token provides to every token after it, so $q_5$ reads $k_1$ to $k_5$ and $v_1$ to $v_5$.
 $k_1$ to $k_4$ and $v_1$ to $v_4$ are computed from $x_1$ to $x_4$ and the unchanged weights. In the first layer $x_i$ is the vector of a token and does not change. In later layers $x_i$ is row i of the output of the layer before, which the causal mask makes depend only on the first i tokens, so it does not change either. These $k$ and $v$ are therefore exactly the same as in the previous step.
 The repetition happens for every generated token. Step t recomputes the k and v of t tokens, so the longer the generation, the more repeated computation.
 '''
 # src:
 # 
-# 共 2 帧，布局与上一页相同。
+# 共 3 帧，布局与上一页相同。
 # 第 1 帧：$X$ 的前 4 行与上一步相同，第 5 行是新 token「适合」（橙色）。$Q$、$K$、$V$、$A$、$O$ 全部从 $X$ 重新算出。红色的行在上一步已经算过，这一步又算了一遍。
-# 第 2 帧：生成下一个 token「出门」只用 $O$ 的最后一行 $o_5$。$o_5$ 由 $A$ 的最后一行与全部 $V$ 算出，$A$ 的最后一行由 $q_5$ 与全部 $K$ 算出。所以 $q_1$ 到 $q_4$、$A$ 与 $O$ 的前 4 行都不需要（灰色虚线）。需要的是 $q_5$ 与 $k_1$ 到 $k_5$、$v_1$ 到 $v_5$。
+# 第 2 帧：生成下一个 token「出门」只用 $O$ 的最后一行 $o_5$，它是新 token「适合」的输出。查询是一个 token 自己要查找的信息，$q_1$ 到 $q_4$ 只用于 $o_1$ 到 $o_4$。这一步不需要 $o_1$ 到 $o_4$，所以 $q_1$ 到 $q_4$、$A$ 与 $O$ 的前 4 行都不需要（灰色虚线）。
+# 第 3 帧：$o_5$ 由 $A$ 的最后一行与全部 $V$ 算出，$A$ 的最后一行由 $q_5$ 与全部 $K$ 算出。键与值是一个 token 提供给它之后每个 token 的信息，所以 $q_5$ 要读取 $k_1$ 到 $k_5$、$v_1$ 到 $v_5$。
 # $k_1$ 到 $k_4$、$v_1$ 到 $v_4$ 由 $x_1$ 到 $x_4$ 与不变的权重算出。第一层的 $x_i$ 是 token 的向量，不变。之后各层的 $x_i$ 是上一层第 i 行的输出，因果掩码使它只依赖前 i 个 token，也不变。所以这些 $k$、$v$ 与上一步的结果完全相同。
 # 每生成一个 token 都重复一次。第 t 步要重算 t 个 token 的 k、v，生成越长，重复的计算越多。
 
@@ -2971,34 +3567,42 @@ text = 'How the KV Cache Works'
 # src: KV Cache 的做法
 
 ['kv-cache.slide.1']
-src_hash = '78932b4d'
-text = 'The **KV Cache** stores the $k$ and $v$ of existing tokens. Each decode step computes one row each of $q$, $k$, $v$ for the new token only, appends $k$ and $v$ to the cache, and then uses $q$ and all $k$, $v$ in the cache to compute one row of $A$ and $O$.'
+src_hash = 'fcf096ff'
+text = 'The **KV Cache** stores the $k$ and $v$ of existing tokens, and each decode step computes one row each of $q$, $k$, $v$ for the new token only.'
 # src:
 # 
-# **KV Cache** 保存已有 token 的 $k$、$v$。解码的每一步只为新 token 计算 $q$、$k$、$v$ 各一行，把 $k$、$v$ 追加到缓存，再用 $q$ 与缓存中的全部 $k$、$v$ 算出 $A$ 与 $O$ 的一行。
+# **KV Cache** 保存已有 token 的 $k$ 与 $v$，解码每一步只为新 token 计算 $q$、$k$、$v$ 各一行。
 
 ['kv-cache.slide.2']
-src_hash = '0ebe86d5'
-text = 'The $k$ and $v$ of existing tokens no longer change and are read at every later step, so they are cached. $q$ is used only once and is not cached.'
+src_hash = '027d5373'
+text = '''
+- Keys and values are read by the query of every later token, and those of existing tokens no longer change, so they are cached.
+- A query is used only to compute the output of the token it belongs to and is not used after that, so it is not cached.
+'''
 # src:
 # 
-# 已有 token 的 $k$、$v$ 不再改变，之后每一步都要读取，所以缓存。$q$ 只用一次，不缓存。
+# - 键与值由之后每个 token 的查询读取，已有 token 的键与值不再改变，所以缓存。
+# - 查询只用于计算它所属 token 的输出，算出输出之后不再使用，所以不缓存。
 
 ['kv-cache.notes.1']
-src_hash = 'adf26c13'
+src_hash = 'a3645d0a'
 text = '''
-2 frames, with the same layout as the previous two pages. The blue dashed box is the KV Cache. Light blue rows are read from the cache, and orange rows are computed in this step.
+2 frames, with the same layout as the previous two pages. The blue dashed box is the KV Cache. Light blue rows are read from the cache, and orange rows are computed in this step. Each frame has two annotations: the upper one is about the query, the lower one about the keys and values.
 Frame 1: prefill has already stored $k_1$ to $k_4$ and $v_1$ to $v_4$ in the cache. Decode step 1 uses only $x_5$ of the new token 「适合」 to compute $q_5$, $k_5$, $v_5$, and appends $k_5$, $v_5$ to the cache. $q_5$ and the 5 $k$ in the cache give one row of $A$ (1 × (N+1)), and with the 5 $v$ this gives $o_5$, which generates 「出门」.
 Frame 2: decode step 2 computes $q_6$, $k_6$, $v_6$ only for 「出门」, and the cache gains a row, growing to 6 rows.
 Compared with the previous page, $X$, $Q$, $A$ and $O$ have only one row per step, and the old rows of $K$ and $V$ are read from the cache instead of being recomputed. The cache does not change the result of the computation.
+What the vectors mean decides which of them are cached. A query is the information a token itself looks for. It is used only to compute the output of that token, and no other token uses it afterwards. The key and the value are the information a token provides to every token after it. The new token of every later step reads them, and they do not change when a new token arrives.
+The KV Cache corresponds to the notes the crew records in the matchmaking show: a note is recorded once, and the crew reads it directly each time a later guest enters.
 Every layer and every head has its own KV Cache.
 '''
 # src:
 # 
-# 共 2 帧，布局与前两页相同。蓝色虚线框内是 KV Cache，浅蓝色的行从缓存读出，橙色的行是本步新算的。
+# 共 2 帧，布局与前两页相同。蓝色虚线框内是 KV Cache，浅蓝色的行从缓存读出，橙色的行是本步新算的。每帧有两条标注，上面一条说明查询，下面一条说明键与值。
 # 第 1 帧：预填充已经把 $k_1$ 到 $k_4$、$v_1$ 到 $v_4$ 存入缓存。解码第 1 步只用新 token「适合」的 $x_5$ 计算 $q_5$、$k_5$、$v_5$，把 $k_5$、$v_5$ 追加到缓存。$q_5$ 与缓存中的 5 个 $k$ 得到 $A$ 的一行（1 × (N+1)），再与 5 个 $v$ 得到 $o_5$，生成「出门」。
 # 第 2 帧：解码第 2 步只为「出门」计算 $q_6$、$k_6$、$v_6$，缓存增加一行，变为 6 行。
 # 与上一页相比，$X$、$Q$、$A$、$O$ 每步只有一行，$K$、$V$ 的旧行从缓存读出，不再重新计算。缓存不改变计算的结果。
+# 缓存哪些向量由它们的含义决定。查询是一个 token 自己要查找的信息，只用于计算这个 token 的输出，算出之后没有别的 token 使用它。键与值是一个 token 提供给它之后每个 token 的信息，之后每一步的新 token 都要读取，并且不随新 token 改变。
+# KV Cache 对应相亲节目中节目组记录的纸条：纸条记录一次，之后每位嘉宾入场时节目组都直接阅读。
 # 每一层、每个头各有自己的 KV Cache。
 
 ['kv-run.title']
@@ -3196,17 +3800,17 @@ text = 'Eviction Policies for the KV Cache'
 # src: KV Cache 的淘汰策略
 
 ['kv-evict.slide.1']
-src_hash = '22875639'
+src_hash = 'e51b5324'
 text = '''
 - **Least Recently Used (LRU)**: the default policy in mainstream inference systems, invalidating the session cache that has not been accessed for the longest time first.
-- **Smallest cache first**: invalidate the session with the fewest cached layers or tokens first, minimising the impact on user experience:
+- **Smallest cache first**: invalidate the session with the fewest cached tokens first, minimising the impact on user experience:
   1. Compute services charge less for tokens that hit the cache, so keeping large caches saves users more money.
   2. A session with a small cache needs little extra computation when recomputed after invalidation.
 '''
 # src:
 # 
 # - **最近最少使用（LRU）**：主流推理系统的默认策略，优先使最久未访问的会话缓存失效。
-# - **最小缓存优先**：优先使已缓存层数或 token 数最少的会话失效，尽量减小对用户体验的影响：
+# - **最小缓存优先**：优先使已缓存 token 数最少的会话失效，尽量减小对用户体验的影响：
 #   1. 算力服务对 hit 缓存的 token 收取更低费用，保留大缓存能为用户节省更多开支。
 #   2. 缓存较少的会话即使失效，后续重新计算所需的额外计算量也较少。
 

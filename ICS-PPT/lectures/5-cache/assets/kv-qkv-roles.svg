@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 220" width="900" height="220">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="124.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">「好」的查询</text>
+<text x="124.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">要找：它形容的事物</text>
+<text x="362.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="end">输入的 token</text>
+<text x="404.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">键</text>
+<text x="536.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">匹配的程度</text>
+<text x="636.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">值</text>
+<text x="740.0" y="32.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">按匹配的程度相加</text>
+<text x="822.0" y="86.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">「好」的输出</text>
+<text x="822.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">加入「好」的向量，</text>
+<text x="822.0" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">用于预测下一个 token</text>
+<text x="222.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">比较</text>
+<rect x="92.0" y="95.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="124.0" y="111.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">q4</text>
+<line x1="161.0" y1="107.0" x2="320.0" y2="56.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<text x="362.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="end">今天</text>
+<rect x="372.0" y="44.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="404.0" y="60.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">k1</text>
+<text x="444.0" y="61.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">时间</text>
+<rect x="486.0" y="50.0" width="30.1" height="12.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="604.0" y="44.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="636.0" y="60.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">v1</text>
+<line x1="673.0" y1="56.0" x2="752.0" y2="107.0" stroke="#5a6b78" stroke-width="1.9037290246115424"/>
+<line x1="161.0" y1="107.0" x2="320.0" y2="90.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<text x="362.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="end">天气</text>
+<rect x="372.0" y="78.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="2.2"/>
+<text x="404.0" y="94.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">k2</text>
+<text x="444.0" y="95.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="start">事物</text>
+<rect x="486.0" y="84.0" width="100.0" height="12.0" rx="2" fill="#eef2f4" stroke="#0e2841" stroke-width="2"/>
+<rect x="604.0" y="78.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#0e2841" stroke-width="2.2"/>
+<text x="636.0" y="94.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">v2</text>
+<line x1="673.0" y1="90.0" x2="752.0" y2="107.0" stroke="#0e2841" stroke-width="4.000486028180975"/>
+<line x1="161.0" y1="107.0" x2="320.0" y2="124.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<text x="362.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="end">很</text>
+<rect x="372.0" y="112.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="404.0" y="128.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">k3</text>
+<text x="444.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">程度</text>
+<rect x="486.0" y="118.0" width="49.7" height="12.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="604.0" y="112.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="636.0" y="128.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">v3</text>
+<line x1="673.0" y1="124.0" x2="752.0" y2="107.0" stroke="#5a6b78" stroke-width="2.48999726582613"/>
+<line x1="161.0" y1="107.0" x2="320.0" y2="158.0" stroke="#5a6b78" stroke-width="1.4" marker-end="url(#ah-5a6b78)"/>
+<text x="362.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="end">好</text>
+<rect x="372.0" y="146.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="404.0" y="162.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">k4</text>
+<text x="444.0" y="163.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">性质</text>
+<rect x="486.0" y="152.0" width="20.2" height="12.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="604.0" y="146.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="636.0" y="162.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">v4</text>
+<line x1="673.0" y1="158.0" x2="752.0" y2="107.0" stroke="#5a6b78" stroke-width="1.6057876813813525"/>
+<line x1="752.0" y1="107.0" x2="784.0" y2="107.0" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="790.0" y="95.0" width="64.0" height="24.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="822.0" y="111.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">o4</text>
+<text x="450.0" y="210.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">「好」的查询与输入中每个 token 的键比较，键越匹配，从这个 token 取得的值越多</text>
+</svg>

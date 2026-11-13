@@ -111,11 +111,14 @@
 <rect x="856.0" y="140.5" width="72.0" height="30.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
 <text x="892.0" y="161.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">出门</text>
 <text x="892.0" y="129.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">下一个 token</text>
-<text x="486.0" y="396.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">生成下一个 token 只用到 q5 与全部的 k、v，k1–k4、v1–v4 与上一步相同</text>
+<text x="486.0" y="396.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">生成下一个 token 只用新 token 的输出 o5，已有 token 的查询不需要</text>
 <rect x="178.2" y="409.0" width="24.0" height="17.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>
 <text x="210.2" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">新 token 的一行</text>
 <rect x="350.0" y="409.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
 <text x="382.0" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">重新计算，与上一步相同</text>
 <rect x="569.0" y="409.0" width="24.0" height="17.0" rx="3" fill="#eef2f4" stroke="#9fb5c3" stroke-width="1.4" stroke-dasharray="5 4"/>
 <text x="601.0" y="423.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">生成下一个 token 时不需要</text>
+<line x1="432.0" y1="20.0" x2="432.0" y2="59.0" stroke="#9fb5c3" stroke-width="3"/>
+<text x="441.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">q1–q4：已有 token 的查询，各自只用于自己的输出 o1–o4</text>
+<text x="441.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="start">生成下一个 token 只用 o5，这一步不需要它们</text>
 </svg>
