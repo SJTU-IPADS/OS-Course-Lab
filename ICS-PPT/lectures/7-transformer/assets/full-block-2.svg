@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 332" width="1040" height="332">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<rect x="32.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#97a2aa" stroke="#ffffff" stroke-width="1"/>
+<rect x="32.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#a4aeb5" stroke="#ffffff" stroke-width="1"/>
+<rect x="32.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#9aa4ac" stroke="#ffffff" stroke-width="1"/>
+<rect x="32.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#e1e5e7" stroke="#ffffff" stroke-width="1"/>
+<rect x="32.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#bfc6cb" stroke="#ffffff" stroke-width="1"/>
+<rect x="32.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="48.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#cad0d4" stroke="#ffffff" stroke-width="1"/>
+<rect x="48.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#95a0a9" stroke="#ffffff" stroke-width="1"/>
+<rect x="48.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#9fa9b1" stroke="#ffffff" stroke-width="1"/>
+<rect x="48.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#8d99a2" stroke="#ffffff" stroke-width="1"/>
+<rect x="48.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#d4d8db" stroke="#ffffff" stroke-width="1"/>
+<rect x="48.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="64.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#a3adb4" stroke="#ffffff" stroke-width="1"/>
+<rect x="64.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#939ea7" stroke="#ffffff" stroke-width="1"/>
+<rect x="64.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#dbdee1" stroke="#ffffff" stroke-width="1"/>
+<rect x="64.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#d4d8db" stroke="#ffffff" stroke-width="1"/>
+<rect x="64.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#e8ebed" stroke="#ffffff" stroke-width="1"/>
+<rect x="64.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="80.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#d0d5d9" stroke="#ffffff" stroke-width="1"/>
+<rect x="80.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#bbc2c7" stroke="#ffffff" stroke-width="1"/>
+<rect x="80.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#c2c8cd" stroke="#ffffff" stroke-width="1"/>
+<rect x="80.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#a6afb6" stroke="#ffffff" stroke-width="1"/>
+<rect x="80.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#99a4ac" stroke="#ffffff" stroke-width="1"/>
+<rect x="80.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="32.0" y="196.0" width="64.0" height="80.0" rx="2" fill="none" stroke="#5a6b78" stroke-width="1.8"/>
+<text x="64.0" y="312.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="22" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="22.0" font-style="italic" dy="0.0">X</tspan></text>
+<line x1="100.0" y1="236.0" x2="494.0" y2="236.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="329.0" y="224.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">残差</text>
+<path d="M 146.0 236.0 L 146.0 126.0 L 162.0 126.0" fill="none" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="166.0" y="96.0" width="112.0" height="60.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="222.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#5a6b78" text-anchor="middle">LayerNorm</text>
+<text x="222.0" y="146.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="18.0" font-style="normal" dy="0.0">γ</tspan><tspan font-size="18.0" font-style="normal" dy="0.0">,</tspan><tspan font-size="18.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="18.0" font-style="normal" dy="0.0">β</tspan></text>
+<line x1="282.0" y1="126.0" x2="296.0" y2="126.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="300.0" y="96.0" width="176.0" height="60.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="388.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#156082" text-anchor="middle">多头注意力</text>
+<text x="388.0" y="146.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="18.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="12.2" font-style="italic" dy="5.0">Q</tspan><tspan font-size="18.0" font-style="normal" dy="-5.0">,</tspan><tspan font-size="18.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="18.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="12.2" font-style="italic" dy="5.0">K</tspan><tspan font-size="18.0" font-style="normal" dy="-5.0">,</tspan><tspan font-size="18.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="18.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="12.2" font-style="italic" dy="5.0">V</tspan><tspan font-size="18.0" font-style="normal" dy="-5.0">,</tspan><tspan font-size="18.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="18.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="12.2" font-style="italic" dy="5.0">O</tspan></text>
+<path d="M 480.0 126.0 L 512.0 126.0 L 512.0 218.0" fill="none" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<circle cx="512.0" cy="236.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<line x1="505.0" y1="236.0" x2="519.0" y2="236.0" stroke="#0e2841" stroke-width="2"/>
+<line x1="512.0" y1="229.0" x2="512.0" y2="243.0" stroke="#0e2841" stroke-width="2"/>
+<line x1="530.0" y1="236.0" x2="844.0" y2="236.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<text x="532.0" y="272.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="start"><tspan font-size="20.0" font-style="italic" dy="0.0">X</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">′</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="normal" dy="0.0">=</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="italic" dy="0.0">X</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="normal" dy="0.0">+</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="normal" dy="0.0">M</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">H</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">A</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">(</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">L</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">N</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">(</tspan><tspan font-size="20.0" font-style="italic" dy="0.0">X</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">)</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">)</tspan></text>
+<text x="735.0" y="224.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">残差</text>
+<path d="M 548.0 236.0 L 548.0 126.0 L 564.0 126.0" fill="none" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="568.0" y="96.0" width="112.0" height="60.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="624.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#5a6b78" text-anchor="middle">LayerNorm</text>
+<text x="624.0" y="146.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="18.0" font-style="normal" dy="0.0">γ</tspan><tspan font-size="18.0" font-style="normal" dy="0.0">,</tspan><tspan font-size="18.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="18.0" font-style="normal" dy="0.0">β</tspan></text>
+<line x1="684.0" y1="126.0" x2="698.0" y2="126.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="702.0" y="96.0" width="140.0" height="60.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="772.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#2e7d4f" text-anchor="middle">前馈网络</text>
+<text x="772.0" y="146.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="18.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="12.2" font-style="normal" dy="5.0">1</tspan><tspan font-size="18.0" font-style="normal" dy="-5.0">,</tspan><tspan font-size="18.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="18.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="12.2" font-style="normal" dy="5.0">2</tspan></text>
+<path d="M 846.0 126.0 L 862.0 126.0 L 862.0 218.0" fill="none" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<circle cx="862.0" cy="236.0" r="14.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<line x1="855.0" y1="236.0" x2="869.0" y2="236.0" stroke="#0e2841" stroke-width="2"/>
+<line x1="862.0" y1="229.0" x2="862.0" y2="243.0" stroke="#0e2841" stroke-width="2"/>
+<line x1="880.0" y1="236.0" x2="912.0" y2="236.0" stroke="#0e2841" stroke-width="2.4" marker-end="url(#ah-0e2841)"/>
+<rect x="916.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#c3c9ce" stroke="#ffffff" stroke-width="1"/>
+<rect x="916.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#e5e7e9" stroke="#ffffff" stroke-width="1"/>
+<rect x="916.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#97a2aa" stroke="#ffffff" stroke-width="1"/>
+<rect x="916.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#89959e" stroke="#ffffff" stroke-width="1"/>
+<rect x="916.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#dee2e4" stroke="#ffffff" stroke-width="1"/>
+<rect x="916.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="932.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#bbc2c8" stroke="#ffffff" stroke-width="1"/>
+<rect x="932.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#a0aab1" stroke="#ffffff" stroke-width="1"/>
+<rect x="932.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#b8bfc5" stroke="#ffffff" stroke-width="1"/>
+<rect x="932.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#e8eaec" stroke="#ffffff" stroke-width="1"/>
+<rect x="932.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#afb7be" stroke="#ffffff" stroke-width="1"/>
+<rect x="932.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="948.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#96a1a9" stroke="#ffffff" stroke-width="1"/>
+<rect x="948.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#8e9aa3" stroke="#ffffff" stroke-width="1"/>
+<rect x="948.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#aab3ba" stroke="#ffffff" stroke-width="1"/>
+<rect x="948.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#8b97a0" stroke="#ffffff" stroke-width="1"/>
+<rect x="948.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#e6e9eb" stroke="#ffffff" stroke-width="1"/>
+<rect x="948.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="964.0" y="196.0" width="16.0" height="16.0" rx="0" fill="#afb7be" stroke="#ffffff" stroke-width="1"/>
+<rect x="964.0" y="212.0" width="16.0" height="16.0" rx="0" fill="#8e99a2" stroke="#ffffff" stroke-width="1"/>
+<rect x="964.0" y="228.0" width="16.0" height="16.0" rx="0" fill="#a6afb6" stroke="#ffffff" stroke-width="1"/>
+<rect x="964.0" y="244.0" width="16.0" height="16.0" rx="0" fill="#e5e8ea" stroke="#ffffff" stroke-width="1"/>
+<rect x="964.0" y="260.0" width="16.0" height="16.0" rx="0" fill="#d2d7da" stroke="#ffffff" stroke-width="1"/>
+<rect x="964.0" y="196.0" width="16.0" height="80.0" rx="0" fill="none" stroke="#5a6b78" stroke-width="1.2"/>
+<rect x="916.0" y="196.0" width="64.0" height="80.0" rx="2" fill="none" stroke="#5a6b78" stroke-width="1.8"/>
+<text x="980.0" y="312.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="end"><tspan font-size="20.0" font-style="italic" dy="0.0">X</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">′</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="normal" dy="0.0">+</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="normal" dy="0.0">F</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">F</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">N</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">(</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">L</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">N</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">(</tspan><tspan font-size="20.0" font-style="italic" dy="0.0">X</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">′</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">)</tspan><tspan font-size="20.0" font-style="normal" dy="0.0">)</tspan></text>
+</svg>

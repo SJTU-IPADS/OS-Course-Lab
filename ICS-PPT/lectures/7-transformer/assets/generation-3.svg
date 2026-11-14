@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 400" width="1040" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<rect x="40.0" y="16.0" width="640.0" height="48.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="58.0" y="47.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" fill="#0e2841" text-anchor="start">Behold, a wild pi creature, foraging in its native<tspan fill="#2e7d4f" font-weight="bold"> woodland</tspan></text>
+<rect x="70.0" y="196.0" width="180.0" height="68.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="160.0" y="237.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">Transformer</text>
+<line x1="160.0" y1="66.0" x2="160.0" y2="192.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<line x1="256.0" y1="230.0" x2="326.0" y2="230.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="420.0" y="107.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">land</text>
+<rect x="432.0" y="92.0" width="200.0" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="640.0" y="107.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">22%</text>
+<text x="420.0" y="130.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">forest</text>
+<rect x="432.0" y="115.0" width="81.8" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="521.8" y="130.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">9%</text>
+<text x="420.0" y="153.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">country</text>
+<rect x="432.0" y="138.0" width="45.5" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="485.5" y="153.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">5%</text>
+<text x="420.0" y="176.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">habitat</text>
+<rect x="432.0" y="161.0" width="36.4" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="476.4" y="176.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">4%</text>
+<text x="420.0" y="199.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">forests</text>
+<rect x="432.0" y="184.0" width="36.4" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="476.4" y="199.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">4%</text>
+<text x="420.0" y="222.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">soil</text>
+<rect x="432.0" y="207.0" width="36.4" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="476.4" y="222.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">4%</text>
+<text x="420.0" y="245.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">territory</text>
+<rect x="432.0" y="230.0" width="18.2" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="458.2" y="245.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">2%</text>
+<text x="420.0" y="268.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">woods</text>
+<rect x="432.0" y="253.0" width="18.2" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="458.2" y="268.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">2%</text>
+<text x="420.0" y="291.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">lands</text>
+<rect x="432.0" y="276.0" width="9.1" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="449.1" y="291.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">1%</text>
+<text x="420.0" y="314.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">waters</text>
+<rect x="432.0" y="299.0" width="9.1" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="449.1" y="314.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">1%</text>
+<text x="420.0" y="337.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="end">woodland</text>
+<rect x="432.0" y="322.0" width="9.1" height="18.0" rx="2" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4"/>
+<text x="449.1" y="337.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">1%</text>
+<text x="420.0" y="360.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">grass</text>
+<rect x="432.0" y="345.0" width="9.1" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="449.1" y="360.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">1%</text>
+<text x="390.0" y="386.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="normal" fill="#5a6b78" text-anchor="middle">⋮</text>
+<rect x="740.0" y="311.0" width="40.0" height="40.0" rx="7" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<circle cx="750.0" cy="321.0" r="3.4" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<circle cx="770.0" cy="321.0" r="3.4" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<circle cx="760.0" cy="331.0" r="3.4" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<circle cx="750.0" cy="341.0" r="3.4" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<circle cx="770.0" cy="341.0" r="3.4" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<text x="794.0" y="327.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">随机采样</text>
+<line x1="736.0" y1="331.0" x2="480.0" y2="331.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="794.0" y="353.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">低概率的词也可能被选中</text>
+<path d="M 760.0 307.0 L 760.0 40.0 L 686.0 40.0" fill="none" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="772.0" y="196.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#2e7d4f" text-anchor="start">追加到文本末尾</text>
+</svg>

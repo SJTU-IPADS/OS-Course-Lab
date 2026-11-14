@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 400" width="1040" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="178.0" y="62.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="26" text-anchor="end"><tspan font-size="26.0" font-style="italic" fill="#0e2841" dy="0.0">p</tspan><tspan font-size="18.2" font-style="italic" fill="#0e2841" dy="6.5">i</tspan><tspan font-size="26.0" font-style="normal" fill="#0e2841" dy="-6.5"> =</tspan></text>
+<text x="250.0" y="46.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="28" text-anchor="middle"><tspan font-size="28.0" font-style="italic" fill="#0e2841" dy="0.0">e</tspan><tspan font-size="19.6" font-style="italic" fill="#0e2841" dy="-11.8">x</tspan><tspan font-size="14.0" font-style="italic" fill="#0e2841" dy="5.0">i</tspan><tspan font-size="19.6" font-style="normal" fill="#0e2841" dy="-5.0"> / </tspan><tspan font-size="19.6" font-style="italic" fill="#c0392b" dy="0.0">T</tspan></text>
+<line x1="188.0" y1="56.0" x2="312.0" y2="56.0" stroke="#0e2841" stroke-width="1.4"/>
+<text x="250.0" y="90.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="26" text-anchor="middle"><tspan font-size="26.0" font-style="normal" fill="#0e2841" dy="0.0">Σ</tspan><tspan font-size="18.2" font-style="italic" fill="#0e2841" dy="6.5">j</tspan><tspan font-size="26.0" font-style="italic" fill="#0e2841" dy="-6.5"> e</tspan><tspan font-size="18.2" font-style="italic" fill="#0e2841" dy="-10.9">x</tspan><tspan font-size="13.0" font-style="italic" fill="#0e2841" dy="4.7">j</tspan><tspan font-size="18.2" font-style="normal" fill="#0e2841" dy="-4.7"> / </tspan><tspan font-size="18.2" font-style="italic" fill="#c0392b" dy="0.0">T</tspan></text>
+<line x1="560.0" y1="74.0" x2="960.0" y2="74.0" stroke="#0e2841" stroke-width="1.4"/>
+<line x1="560.0" y1="68.0" x2="560.0" y2="80.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="560.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">0</text>
+<line x1="600.0" y1="70.0" x2="600.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="640.0" y1="70.0" x2="640.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="680.0" y1="70.0" x2="680.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="720.0" y1="70.0" x2="720.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="760.0" y1="68.0" x2="760.0" y2="80.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="760.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">5</text>
+<line x1="800.0" y1="70.0" x2="800.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="840.0" y1="70.0" x2="840.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="880.0" y1="70.0" x2="880.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="920.0" y1="70.0" x2="920.0" y2="78.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="960.0" y1="68.0" x2="960.0" y2="80.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="960.0" y="98.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">10</text>
+<path d="M 552.0 52.0 L 568.0 52.0 L 560.0 66.0 Z" fill="#c0392b" stroke="#c0392b" stroke-width="1"/>
+<text x="574.0" y="50.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="24" text-anchor="start"><tspan font-size="24.0" font-style="italic" fill="#c0392b" dy="0.0">T</tspan><tspan font-size="24.0" font-style="normal" fill="#c0392b" dy="0.0"> = 0</tspan></text>
+<text x="140.0" y="147.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Dumbledore</text>
+<text x="222.0" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">6.0</text>
+<rect x="298.0" y="128.0" width="78.0" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="686.0" y="146.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.00</text>
+<rect x="698.0" y="128.0" width="1.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="140.0" y="184.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Flitwick</text>
+<text x="222.0" y="183.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">−5.0</text>
+<rect x="233.0" y="165.0" width="65.0" height="24.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="686.0" y="183.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.00</text>
+<rect x="698.0" y="165.0" width="1.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="140.0" y="221.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">McGonagall</text>
+<text x="222.0" y="220.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">4.0</text>
+<rect x="298.0" y="202.0" width="52.0" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="686.0" y="220.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.00</text>
+<rect x="698.0" y="202.0" width="1.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="140.0" y="258.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Quirrell</text>
+<text x="222.0" y="257.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">1.5</text>
+<rect x="298.0" y="239.0" width="19.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="686.0" y="257.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.00</text>
+<rect x="698.0" y="239.0" width="1.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="140.0" y="295.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Snape</text>
+<text x="222.0" y="294.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">9.9</text>
+<rect x="298.0" y="276.0" width="128.7" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="686.0" y="294.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">1.00</text>
+<rect x="698.0" y="276.0" width="290.0" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="140.0" y="332.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Sprout</text>
+<text x="222.0" y="331.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">−2.3</text>
+<rect x="268.1" y="313.0" width="29.9" height="24.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="686.0" y="331.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.00</text>
+<rect x="698.0" y="313.0" width="1.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="140.0" y="369.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Trelawney</text>
+<text x="222.0" y="368.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">4.0</text>
+<rect x="298.0" y="350.0" width="52.0" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="686.0" y="368.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.00</text>
+<rect x="698.0" y="350.0" width="1.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<line x1="298.0" y1="122.0" x2="298.0" y2="380.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="698.0" y1="122.0" x2="698.0" y2="380.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="458.0" y1="251.0" x2="600.0" y2="251.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="529.0" y="239.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">softmax</text>
+<text x="529.0" y="281.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="20" text-anchor="middle"><tspan font-size="20.0" font-style="italic" fill="#c0392b" dy="0.0">T</tspan><tspan font-size="20.0" font-style="normal" fill="#c0392b" dy="0.0"> = 0</tspan></text>
+</svg>

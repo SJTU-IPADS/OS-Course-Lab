@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 400" width="1040" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<rect x="40.0" y="20.0" width="440.0" height="108.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="56.0" y="50.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="start">Behold, a wild pi creature,</text>
+<text x="56.0" y="80.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" fill="#0e2841" text-anchor="start">foraging in its native<tspan fill="#2e7d4f" font-weight="bold"> woodland</tspan></text>
+<rect x="56.0" y="96.0" width="54.0" height="22.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="118.0" y="96.0" width="38.0" height="22.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="164.0" y="96.0" width="62.0" height="22.0" rx="4" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="244.0" y="113.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#2e7d4f" text-anchor="middle">⋯</text>
+<path d="M 295.1 202.1 A 80 80 0 0 1 339.8 279.6" fill="none" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<path d="M 304.7 340.3 A 80 80 0 0 1 215.3 340.3" fill="none" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<path d="M 180.2 279.6 A 80 80 0 0 1 224.9 202.1" fill="none" stroke="#0e2841" stroke-width="2.2" marker-end="url(#ah-0e2841)"/>
+<rect x="228.0" y="177.0" width="64.0" height="34.0" rx="17" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="260.0" y="200.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">预测</text>
+<rect x="297.3" y="297.0" width="64.0" height="34.0" rx="17" fill="#ffffff" stroke="#0e2841" stroke-width="1.6"/>
+<text x="329.3" y="320.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">采样</text>
+<rect x="158.7" y="297.0" width="64.0" height="34.0" rx="17" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="190.7" y="320.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#2e7d4f" text-anchor="middle">追加</text>
+<line x1="260.0" y1="132.0" x2="260.0" y2="173.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<path d="M 156.7 314.0 L 62.0 314.0 L 62.0 132.0" fill="none" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<g transform="translate(0 102.5)">
+<rect x="540.0" y="0.0" width="340.0" height="195.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="554.0" y="30.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">What follows is a conversation</text>
+<text x="554.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">between a user and a helpful,</text>
+<text x="554.0" y="78.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">very knowledgeable AI assistant.</text>
+<text x="554.0" y="114.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">User: Give me some ideas for</text>
+<text x="554.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">what to do when visiting Paris.</text>
+<text x="554.0" y="174.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" fill="#0e2841" text-anchor="start">AI Assistant: <tspan fill="#2e7d4f" font-weight="bold">▍</tspan></text>
+<path d="M 890.0 13.0 L 898.0 13.0 L 898.0 85.0 L 890.0 85.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
+<text x="906.0" y="55.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">系统提示词</text>
+<path d="M 890.0 97.0 L 898.0 97.0 L 898.0 145.0 L 890.0 145.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
+<text x="906.0" y="127.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">用户的问题</text>
+<path d="M 890.0 157.0 L 898.0 157.0 L 898.0 181.0 L 890.0 181.0" fill="none" stroke="#2e7d4f" stroke-width="1.6"/>
+<text x="906.0" y="175.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">模型从这里续写</text>
+</g>
+</svg>

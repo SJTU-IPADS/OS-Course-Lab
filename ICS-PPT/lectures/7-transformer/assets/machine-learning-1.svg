@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 400" width="1040" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="170.0" y="34.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">输入 → 输出</text>
+<rect x="24.0" y="74.0" width="96.0" height="84.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 46.0 110.0 L 50.0 84.0 L 66.0 100.0 Z M 98.0 110.0 L 94.0 84.0 L 78.0 100.0 Z" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<circle cx="72.0" cy="122.0" r="26.0" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
+<circle cx="62.0" cy="118.0" r="3.0" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<circle cx="82.0" cy="118.0" r="3.0" fill="#0e2841" stroke="#0e2841" stroke-width="0.5"/>
+<path d="M 68.0 127.0 L 76.0 127.0 L 72.0 131.0 Z" fill="#0e2841" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="64.0" y1="130.0" x2="38.0" y2="127.6" stroke="#0e2841" stroke-width="1.1"/>
+<line x1="64.0" y1="135.0" x2="38.0" y2="138.6" stroke="#0e2841" stroke-width="1.1"/>
+<line x1="80.0" y1="130.0" x2="106.0" y2="127.6" stroke="#0e2841" stroke-width="1.1"/>
+<line x1="80.0" y1="135.0" x2="106.0" y2="138.6" stroke="#0e2841" stroke-width="1.1"/>
+<line x1="126.0" y1="116.0" x2="152.0" y2="116.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="158.0" y="88.0" width="56.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="186.0" y="125.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="28" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="28.0" font-style="italic" dy="0.0">f</tspan></text>
+<line x1="220.0" y1="116.0" x2="246.0" y2="116.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="254.0" y="123.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="21" font-weight="normal" fill="#0e2841" text-anchor="start">cat</text>
+<rect x="14.0" y="214.0" width="132.0" height="94.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="24.0" y="236.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">Behold, a wild</text>
+<text x="24.0" y="256.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">pi creature,</text>
+<text x="24.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">foraging in its</text>
+<text x="24.0" y="296.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">native</text>
+<line x1="150.0" y1="261.0" x2="176.0" y2="261.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<rect x="182.0" y="233.0" width="56.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="210.0" y="270.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="28" font-weight="normal" fill="#0e2841" text-anchor="middle"><tspan font-size="28.0" font-style="italic" dy="0.0">f</tspan></text>
+<line x1="244.0" y1="261.0" x2="270.0" y2="261.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="278.0" y="268.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="21" font-weight="normal" fill="#0e2841" text-anchor="start">land</text>
+</svg>

@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 420" width="1040" height="420">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="256.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">1</tspan></text>
+<text x="296.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">2</tspan></text>
+<text x="336.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">3</tspan></text>
+<text x="376.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#e97132" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">4</tspan></text>
+<text x="416.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">5</tspan></text>
+<text x="456.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">6</tspan></text>
+<text x="496.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">7</tspan></text>
+<text x="536.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">8</tspan></text>
+<text x="160.0" y="67.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">a</text>
+<text x="186.0" y="67.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">1</tspan></text>
+<rect x="208.0" y="43.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="51.5" x2="220.0" y2="51.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="60.0" x2="220.0" y2="60.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="68.5" x2="220.0" y2="68.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="107.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">fluffy</text>
+<text x="186.0" y="107.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">2</tspan></text>
+<rect x="208.0" y="83.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="91.5" x2="220.0" y2="91.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="100.0" x2="220.0" y2="100.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="108.5" x2="220.0" y2="108.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="147.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">blue</text>
+<text x="186.0" y="147.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">3</tspan></text>
+<rect x="208.0" y="123.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="131.5" x2="220.0" y2="131.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="140.0" x2="220.0" y2="140.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="148.5" x2="220.0" y2="148.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="187.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">creature</text>
+<text x="186.0" y="187.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">4</tspan></text>
+<rect x="208.0" y="163.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="171.5" x2="220.0" y2="171.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="180.0" x2="220.0" y2="180.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="188.5" x2="220.0" y2="188.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="227.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">roamed</text>
+<text x="186.0" y="227.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">5</tspan></text>
+<rect x="208.0" y="203.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="211.5" x2="220.0" y2="211.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="220.0" x2="220.0" y2="220.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="228.5" x2="220.0" y2="228.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="267.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">the</text>
+<text x="186.0" y="267.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">6</tspan></text>
+<rect x="208.0" y="243.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="251.5" x2="220.0" y2="251.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="260.0" x2="220.0" y2="260.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="268.5" x2="220.0" y2="268.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="307.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">verdant</text>
+<text x="186.0" y="307.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">7</tspan></text>
+<rect x="208.0" y="283.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="291.5" x2="220.0" y2="291.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="300.0" x2="220.0" y2="300.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="308.5" x2="220.0" y2="308.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="347.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">forest</text>
+<text x="186.0" y="347.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#6c5a9c" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">8</tspan></text>
+<rect x="208.0" y="323.0" width="14.0" height="34.0" rx="1" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.4"/>
+<line x1="210.0" y1="331.5" x2="220.0" y2="331.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="340.0" x2="220.0" y2="340.0" stroke="#6c5a9c" stroke-width="0.8"/>
+<line x1="210.0" y1="348.5" x2="220.0" y2="348.5" stroke="#6c5a9c" stroke-width="0.8"/>
+<text x="160.0" y="28.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="20" font-weight="normal" fill="#6c5a9c" text-anchor="end"><tspan font-size="20.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="13.6" font-style="italic" dy="5.6">i</tspan><tspan font-size="20.0" font-style="normal" dy="-5.6"> </tspan><tspan font-size="20.0" font-style="normal" dy="0.0">=</tspan><tspan font-size="20.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="20.0" font-style="italic" dy="0.0">W</tspan><tspan font-size="13.6" font-style="italic" dy="5.6">V</tspan><tspan font-size="20.0" font-style="normal" dy="-5.6"> </tspan><tspan font-size="20.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="13.6" font-style="italic" dy="5.6">i</tspan></text>
+<rect x="236.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="40.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="80.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="120.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="160.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="200.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="240.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="280.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="236.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="276.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="316.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="356.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#fce9df" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="396.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="436.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="476.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="516.0" y="320.0" width="40.0" height="40.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<text x="256.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">1.00</text>
+<text x="296.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.65</text>
+<text x="336.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.54</text>
+<text x="416.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.25</text>
+<text x="456.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.07</text>
+<text x="496.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.16</text>
+<text x="536.0" y="65.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="256.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.35</text>
+<text x="336.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.30</text>
+<text x="416.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.14</text>
+<text x="456.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.34</text>
+<text x="496.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.09</text>
+<text x="536.0" y="105.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.02</text>
+<text x="256.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="336.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.16</text>
+<text x="416.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.08</text>
+<text x="456.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.18</text>
+<text x="496.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.05</text>
+<text x="536.0" y="145.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.01</text>
+<text x="256.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="336.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="416.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.34</text>
+<text x="456.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.10</text>
+<text x="496.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.22</text>
+<text x="536.0" y="185.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="256.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="336.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="416.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.19</text>
+<text x="456.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.06</text>
+<text x="496.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.12</text>
+<text x="536.0" y="225.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.01</text>
+<text x="256.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="336.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="416.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="456.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.25</text>
+<text x="496.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.07</text>
+<text x="536.0" y="265.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.01</text>
+<text x="256.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="336.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="416.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="456.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="496.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.30</text>
+<text x="536.0" y="305.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.94</text>
+<text x="256.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="296.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="336.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="416.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="456.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="496.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#9fb5c3" text-anchor="middle">0</text>
+<text x="536.0" y="345.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.02</text>
+<rect x="356.0" y="40.0" width="40.0" height="320.0" rx="2" fill="none" stroke="#e97132" stroke-width="2.4"/>
+<rect x="369.0" y="43.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="369.0" y1="77.0" x2="383.0" y2="77.0" stroke="#6c5a9c" stroke-width="2"/>
+<rect x="369.0" y="83.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="369.0" y="102.7" width="14.0" height="14.3" rx="1" fill="#c9c0e4" stroke="#6c5a9c" stroke-width="1.4"/>
+<rect x="369.0" y="123.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="369.0" y="137.4" width="14.0" height="19.6" rx="1" fill="#c9c0e4" stroke="#6c5a9c" stroke-width="1.4"/>
+<rect x="369.0" y="163.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="369.0" y1="197.0" x2="383.0" y2="197.0" stroke="#6c5a9c" stroke-width="2"/>
+<rect x="369.0" y="203.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="369.0" y1="237.0" x2="383.0" y2="237.0" stroke="#6c5a9c" stroke-width="2"/>
+<rect x="369.0" y="243.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="369.0" y1="277.0" x2="383.0" y2="277.0" stroke="#6c5a9c" stroke-width="2"/>
+<rect x="369.0" y="283.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="369.0" y1="317.0" x2="383.0" y2="317.0" stroke="#6c5a9c" stroke-width="2"/>
+<rect x="369.0" y="323.0" width="14.0" height="34.0" rx="1" fill="none" stroke="#6c5a9c" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="369.0" y1="357.0" x2="383.0" y2="357.0" stroke="#6c5a9c" stroke-width="2"/>
+<text x="612.0" y="126.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="22" font-weight="normal" fill="#2e7d4f" text-anchor="start"><tspan font-size="22.0" font-style="normal" dy="0.0">Δ</tspan><tspan font-size="22.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="15.0" font-style="normal" dy="6.2">4</tspan><tspan font-size="22.0" font-style="normal" dy="-6.2"> </tspan><tspan font-size="22.0" font-style="normal" dy="0.0">=</tspan><tspan font-size="22.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="22.0" font-style="normal" dy="0.0">0</tspan><tspan font-size="22.0" font-style="normal" dy="0.0">.</tspan><tspan font-size="22.0" font-style="normal" dy="0.0">4</tspan><tspan font-size="22.0" font-style="normal" dy="0.0">2</tspan><tspan font-size="22.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="22.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="15.0" font-style="normal" dy="6.2">2</tspan><tspan font-size="22.0" font-style="normal" dy="-6.2"> </tspan><tspan font-size="22.0" font-style="normal" dy="0.0">+</tspan><tspan font-size="22.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="22.0" font-style="normal" dy="0.0">0</tspan><tspan font-size="22.0" font-style="normal" dy="0.0">.</tspan><tspan font-size="22.0" font-style="normal" dy="0.0">5</tspan><tspan font-size="22.0" font-style="normal" dy="0.0">8</tspan><tspan font-size="22.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="22.0" font-style="italic" dy="0.0">v</tspan><tspan font-size="15.0" font-style="normal" dy="6.2">3</tspan><tspan font-size="22.0" font-style="normal" dy="-6.2"> </tspan><tspan font-size="22.0" font-style="normal" dy="0.0">+</tspan><tspan font-size="22.0" font-style="normal" dy="0.0"> </tspan><tspan font-size="22.0" font-style="normal" dy="0.0">⋯</tspan></text>
+<rect x="619.0" y="167.0" width="42.0" height="126.0" rx="4" fill="none" stroke="#5a6b78" stroke-width="1.8"/>
+<rect x="622.0" y="170.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="622.0" y="194.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="622.0" y="218.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="622.0" y="242.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="622.0" y="266.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<text x="692.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="28" font-weight="normal" fill="#0e2841" text-anchor="middle">+</text>
+<rect x="723.0" y="167.0" width="42.0" height="126.0" rx="4" fill="none" stroke="#2e7d4f" stroke-width="1.8"/>
+<rect x="726.0" y="170.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="726.0" y="194.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="726.0" y="218.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="726.0" y="242.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="726.0" y="266.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<text x="796.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="28" font-weight="normal" fill="#0e2841" text-anchor="middle">=</text>
+<rect x="827.0" y="167.0" width="42.0" height="126.0" rx="4" fill="none" stroke="#2e7d4f" stroke-width="1.8"/>
+<rect x="830.0" y="170.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="830.0" y="194.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="830.0" y="218.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="830.0" y="242.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<rect x="830.0" y="266.0" width="36.0" height="24.0" rx="0" fill="#ffffff" stroke="#9fb5c3" stroke-width="1"/>
+<text x="640.0" y="324.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="21" font-weight="normal" fill="#5a6b78" text-anchor="middle"><tspan font-size="21.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="14.3" font-style="normal" dy="5.9">4</tspan></text>
+<text x="744.0" y="324.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="21" font-weight="normal" fill="#2e7d4f" text-anchor="middle"><tspan font-size="21.0" font-style="normal" dy="0.0">Δ</tspan><tspan font-size="21.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="14.3" font-style="normal" dy="5.9">4</tspan></text>
+<text x="848.0" y="324.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="21" font-weight="normal" fill="#2e7d4f" text-anchor="middle"><tspan font-size="21.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="21.0" font-style="normal" dy="0.0">′</tspan><tspan font-size="14.3" font-style="normal" dy="5.9">4</tspan></text>
+<text x="376.0" y="386.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#2e7d4f" text-anchor="middle"><tspan font-size="19.0" font-style="normal" dy="0.0">Δ</tspan><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">4</tspan></text>
+<text x="376.0" y="410.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" font-weight="normal" fill="#2e7d4f" text-anchor="middle"><tspan font-size="19.0" font-style="italic" dy="0.0">E</tspan><tspan font-size="19.0" font-style="normal" dy="0.0">′</tspan><tspan font-size="12.9" font-style="normal" dy="5.3">4</tspan></text>
+</svg>

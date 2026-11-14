@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 400" width="1040" height="400">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<rect x="346.5" y="12.0" width="347.0" height="38.0" rx="6" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="520.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="normal" fill="#0e2841" text-anchor="middle">Once upon a time, there was a</text>
+<line x1="470.0" y1="54.0" x2="300.0" y2="92.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="368.0" y="72.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="21" fill="#c0392b" text-anchor="end"><tspan font-style="italic">T</tspan> = 0</text>
+<rect x="40.0" y="96.0" width="450.0" height="156.0" rx="8" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="56.0" y="124.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#5a6b78" text-anchor="start">近似 Goldilocks 的老套故事</text>
+<rect x="58.0" y="146.0" width="29.4" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="96.4" y="146.0" width="44.1" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="149.5" y="146.0" width="35.8" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="194.3" y="146.0" width="47.0" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="250.3" y="146.0" width="48.0" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="307.3" y="146.0" width="21.1" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="337.5" y="146.0" width="18.6" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="365.1" y="146.0" width="58.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="432.3" y="146.0" width="30.4" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="58.0" y="170.0" width="65.8" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="132.8" y="170.0" width="40.6" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="182.4" y="170.0" width="58.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="249.5" y="170.0" width="40.9" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="299.4" y="170.0" width="48.7" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="357.1" y="170.0" width="25.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="391.3" y="170.0" width="48.5" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="58.0" y="194.0" width="43.1" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="110.1" y="194.0" width="53.6" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="172.7" y="194.0" width="50.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="231.9" y="194.0" width="21.1" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="262.0" y="194.0" width="54.4" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="325.4" y="194.0" width="46.4" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="380.8" y="194.0" width="32.5" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="422.2" y="194.0" width="19.5" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="58.0" y="218.0" width="40.7" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="107.7" y="218.0" width="52.5" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="169.2" y="218.0" width="60.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="238.4" y="218.0" width="52.3" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<line x1="570.0" y1="54.0" x2="740.0" y2="92.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="672.0" y="72.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="21" fill="#c0392b" text-anchor="start"><tspan font-style="italic">T</tspan> = 5</text>
+<rect x="550.0" y="96.0" width="450.0" height="156.0" rx="8" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="566.0" y="124.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c0392b" text-anchor="start">随后变得混乱</text>
+<rect x="564.0" y="139.0" width="337.2" height="24.0" rx="4" fill="#fce9df" stroke="#e97132" stroke-width="1.2"/>
+<text x="569.0" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="start">a young web artist from South Korea</text>
+<rect x="911.2" y="146.0" width="47.9" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="568.0" y="170.0" width="56.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="633.2" y="170.0" width="63.2" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="705.4" y="170.0" width="53.5" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="767.9" y="170.0" width="62.3" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="839.2" y="170.0" width="19.4" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<path d="M 890.0 175.0 L 903.5 176.2 L 916.8 171.9 L 926.5 173.0 L 936.9 175.6 L 943.0 172.7 L 951.2 178.3 L 963.3 172.3 L 975.7 172.1 L 980.0 172.0" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="568.0" y="194.0" width="18.1" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="595.1" y="194.0" width="59.8" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<rect x="663.9" y="194.0" width="28.1" height="10.0" rx="5" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<path d="M 710.0 199.0 L 723.9 204.2 L 732.2 205.5 L 742.5 201.5 L 750.1 205.2 L 761.7 205.5 L 774.8 196.2 L 783.7 194.3 L 790.9 192.9 L 799.3 200.4 L 805.3 201.5 L 814.0 196.3 L 826.5 198.7 L 835.1 198.7 L 846.7 192.8 L 860.5 192.3 L 872.5 203.8 L 878.7 203.0 L 887.6 200.1 L 893.7 192.7 L 901.1 205.4 L 908.7 202.6 L 922.1 205.2 L 930.9 197.0 L 941.1 202.9 L 947.9 202.5 L 960.3 204.0 L 966.6 205.2 L 973.3 196.8 L 980.0 204.9" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<path d="M 568.0 223.0 L 576.7 230.6 L 587.1 219.6 L 595.6 217.2 L 602.2 216.7 L 613.8 231.9 L 621.0 214.9 L 634.9 223.6 L 644.2 218.3 L 654.9 228.9 L 664.6 221.6 L 671.0 230.5 L 677.3 222.9 L 690.0 216.4 L 701.9 231.1 L 712.9 228.2 L 719.7 221.8 L 726.9 229.2 L 735.3 222.2 L 749.3 229.3 L 763.1 222.2 L 773.0 227.1 L 782.8 219.2 L 792.1 216.6 L 801.1 231.8 L 814.8 225.3 L 824.8 220.1 L 831.5 218.9 L 843.7 229.6 L 852.6 228.1 L 864.8 226.5 L 876.1 227.7 L 885.0 226.7 L 893.3 222.7 L 900.0 226.4" fill="none" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="40.0" y="296.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">演示方法：取 API 返回的前 20 个候选，</text>
+<text x="40.0" y="322.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">把概率取 1/5 次方后重新归一化</text>
+<rect x="447.0" y="300.0" width="34.0" height="62.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="464.0" y="294.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.40</text>
+<rect x="495.0" y="323.2" width="34.0" height="38.8" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="512.0" y="317.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.25</text>
+<rect x="543.0" y="338.8" width="34.0" height="23.2" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="560.0" y="332.8" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.15</text>
+<rect x="591.0" y="343.4" width="34.0" height="18.6" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="608.0" y="337.4" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.12</text>
+<rect x="639.0" y="349.6" width="34.0" height="12.4" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="656.0" y="343.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.08</text>
+<line x1="441.0" y1="362.0" x2="679.0" y2="362.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="560.0" y="384.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">原概率</text>
+<rect x="767.0" y="325.5" width="34.0" height="36.5" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="784.0" y="319.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.24</text>
+<rect x="815.0" y="328.7" width="34.0" height="33.3" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="832.0" y="322.7" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.21</text>
+<rect x="863.0" y="332.0" width="34.0" height="30.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="880.0" y="326.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.19</text>
+<rect x="911.0" y="333.3" width="34.0" height="28.7" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="928.0" y="327.3" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.19</text>
+<rect x="959.0" y="335.5" width="34.0" height="26.5" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.2"/>
+<text x="976.0" y="329.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="middle">0.17</text>
+<line x1="761.0" y1="362.0" x2="999.0" y2="362.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="880.0" y="384.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="middle">调整后</text>
+<line x1="694.0" y1="322.0" x2="750.0" y2="322.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="722" y="310" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="19" fill="#0e2841" text-anchor="middle"><tspan font-style="italic">p</tspan><tspan font-size="13" dy="-8">1/5</tspan></text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 375" width="1040" height="375">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="140.0" y="89.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Dumbledore</text>
+<text x="140.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Flitwick</text>
+<text x="140.0" y="165.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">McGonagall</text>
+<text x="140.0" y="203.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Quirrell</text>
+<text x="140.0" y="241.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Snape</text>
+<text x="140.0" y="279.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Sprout</text>
+<text x="140.0" y="317.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="normal" fill="#0e2841" text-anchor="end">Trelawney</text>
+<text x="300.0" y="42.0" font-family="Times New Roman, Liberation Serif, Noto Serif, serif" font-size="24" text-anchor="middle"><tspan font-size="24.0" font-style="italic" fill="#0e2841" dy="0.0">x</tspan><tspan font-size="16.8" font-style="italic" fill="#0e2841" dy="6.0">i</tspan></text>
+<text x="222.0" y="88.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">−0.8</text>
+<rect x="314.8" y="70.0" width="15.2" height="24.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="222.0" y="126.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">−5.0</text>
+<rect x="235.0" y="108.0" width="95.0" height="24.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="222.0" y="164.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">0.5</text>
+<rect x="330.0" y="146.0" width="9.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="222.0" y="202.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">1.5</text>
+<rect x="330.0" y="184.0" width="28.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="222.0" y="240.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">3.4</text>
+<rect x="330.0" y="222.0" width="64.6" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="222.0" y="278.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">−2.3</text>
+<rect x="286.3" y="260.0" width="43.7" height="24.0" rx="2" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="222.0" y="316.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="end">2.5</text>
+<rect x="330.0" y="298.0" width="47.5" height="24.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<line x1="330.0" y1="64.0" x2="330.0" y2="328.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="282.0" y="358.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#c0392b" text-anchor="middle">不是概率分布：有负数，和不为 1</text>
+</svg>
