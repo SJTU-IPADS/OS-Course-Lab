@@ -15,7 +15,7 @@ from PIL import ImageFont
 
 from tk import *
 
-H = 340
+H = 310
 FONTS = "/usr/share/fonts/truetype/liberation/LiberationSerif-{}.ttf"
 _cache = {}
 
@@ -124,10 +124,8 @@ def build():
 
     # the layout of the grids in this part: queries as columns, the transpose
     b.append(line(W / 2 - 300, 252, W / 2 + 300, 252, "#dbe4ea", 1.2))
-    b.append(text(W / 2 + 20, 292, "以查询为列的表是它的转置：", 17, MUTED, anchor="end"))
+    b.append(text(W / 2 + 20, 292, "本讲中以查询为列，使用转置形式：", 17, MUTED, anchor="end"))
     b += math(W / 2 + 32, 292, "V \\up{softmax}(K^T Q / √d_k)", 22, INK, anchor="start")
-    b.append(text(W / 2, 326, "论文中每个 token 占一行。本讲的表键为行、查询为列，softmax 逐列进行，"
-                  "V 的每一列是一个值向量", 17, MUTED))
     save("attention-formula", b, H)
 
 

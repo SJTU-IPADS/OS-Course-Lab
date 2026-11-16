@@ -21,7 +21,7 @@ import html
 import re
 from pathlib import Path
 
-from lecturekit import model
+from lecturekit import model, variables
 from lecturekit.dsl import slugify
 
 from .blocks import render_annotations, render_block
@@ -52,6 +52,8 @@ class TranscriptRenderer:
 
 def build_html(lecture: model.Lecture, embedder: Embedder) -> str:
     """The whole sheet as one self-contained HTML document."""
+    # The sheet is drawn at each variable's default.
+    lecture = variables.for_static(lecture)
     keep = kept_page_ids(lecture)
     body = _embed_inline_images(
         "".join(_nodes(lecture.children, keep, embedder, prefix="", depth=0)),

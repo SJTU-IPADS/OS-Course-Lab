@@ -3,9 +3,11 @@
 vectors, and their sum updates the embedding at the top of the column.
 
 Keys (here: their value vectors v_i) are rows, queries (the embeddings E_j
-being updated) are columns; the weights are attn_data.pattern(causal=True).
+being updated) are columns; the weights are attn_data.pattern(causal=False),
+the unmasked pattern of the attention-pattern page.
 1: the pattern, two decimals, near-zero entries written 0; v_1..v_8 at the
-   left of the rows.
+   left of the rows. Every frame names the grid under it (注意力模式), and
+   the rows of frames 3 and 4 stand below that name.
 2: the creature column: each v_i scaled by its weight (fluffy 0.42, blue
    0.58, the rest about 0), drawn as scaled purple columns.
 3: their sum Delta E_4 (green) under the column, and E'_4 = E_4 + Delta E_4.
@@ -15,11 +17,14 @@ from tk import *
 from attn_data import WORDS, N, CREATURE, pattern
 
 H = 420
-CELL = 40
+CELL = 36         # smaller than the 40 of attention-pattern, so that the
+                  # grid's name and the two rows of frame 4 fit in H
 GX, GY = 236, 40
-P = pattern(causal=True)
+NAME_Y = GY + N * CELL + 26    # baseline of the grid's name
+ROW_Y = NAME_Y + 32            # baselines of Delta E_j, then E'_j 24 px lower
+P = pattern(causal=False)
 GW = 14           # width of a value-vector glyph
-GH = 34           # its full height
+GH = 30           # its full height
 SCALED = "#c9c0e4"  # a scaled value vector: PURPLE, lighter
 
 
@@ -107,17 +112,18 @@ def frame(n):
         b += math(ex + 122, top + vh + 34, f"ΔE_{j}", 21, UPD)
         b += math(ex + 226, top + vh + 34, f"E′_{j}", 21, UPD)
 
-    # under the grid: the change and the new embedding of each column
+    # under the grid: its name, then the change and the new embedding of each
+    # column
+    b.append(text(GX + N * CELL / 2, NAME_Y, "注意力模式", 20, INK, "bold"))
     cols = [CREATURE] if n == 3 else (range(N) if n == 4 else [])
     for j in cols:
         x = GX + (j + .5) * CELL
-        b += math(x, GY + N * CELL + 26, f"ΔE_{j + 1}", 19, UPD)
-        b += math(x, GY + N * CELL + 50, f"E′_{j + 1}", 19, UPD)
+        b += math(x, ROW_Y, f"ΔE_{j + 1}", 19, UPD)
+        b += math(x, ROW_Y + 24, f"E′_{j + 1}", 19, UPD)
     if n == 4:
-        b.append(text(GX - 76, GY + N * CELL + 26, "改变量", 17, UPD, anchor="end"))
-        b.append(text(GX - 76, GY + N * CELL + 50, "新的嵌入", 17, UPD, anchor="end"))
-        b.append(text(rx, GY + N * CELL + 46, "一个注意力头", 22, INK, "bold",
-                      anchor="start"))
+        b.append(text(GX - 76, ROW_Y, "改变量", 17, UPD, anchor="end"))
+        b.append(text(GX - 76, ROW_Y + 24, "新的嵌入", 17, UPD, anchor="end"))
+        b.append(text(rx, ROW_Y + 20, "一个注意力头", 22, INK, "bold", anchor="start"))
     save(f"weighted-values-{n}", b, H)
 
 

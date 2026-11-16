@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """token-vectors: every token is looked up as a vector of numbers.
 
-1: the tokens of "the cleverest thinker", each above its column vector (the
-   numbers the video shows for these tokens).
-2: + the vectors read as points of a space, drawn in three dimensions:
-   dog, cat, rabbit close together; Paris, France, Italy; run, walk, jump.
+The tokens of "the cleverest thinker", each above its column vector (the
+numbers the video shows for these tokens). Beside them, the vectors read as
+points of a space, drawn in three dimensions: dog, cat, rabbit close together;
+Paris, France, Italy; run, walk, jump.
 """
 from tk import *
 
@@ -37,7 +37,7 @@ CLUSTERS = [  # word, (x, y, z), label dx, dy, anchor
 ]
 
 
-def frame(n):
+def figure():
     b = []
     top = 60
     for k, (tok, vals) in enumerate(zip(TOKS, VALS)):
@@ -49,29 +49,27 @@ def frame(n):
         b += els
     b.append(note(CX0 - 14, top + 61, "查表", anchor="end"))
 
-    if n >= 2:
-        # the floor (x-z plane) and the axes
-        f = [P(0, 0, 0), P(1, 0, 0), P(1, 0, 1), P(0, 0, 1)]
-        d = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in f) + " Z"
-        b.append(path(d, "none", 0, fill=FILL_GREY, head=False))
-        for t in (.25, .5, .75):
-            b.append(line(*P(t, 0, 0), *P(t, 0, 1), WHITE, 1.4))
-            b.append(line(*P(0, 0, t), *P(1, 0, t), WHITE, 1.4))
-        b.append(arrow(*O, *P(1.05, 0, 0), LINE, 1.6))
-        b.append(arrow(*O, *P(0, 1.08, 0), LINE, 1.6))
-        b.append(arrow(*O, *P(0, 0, 1.12), LINE, 1.6))
-        for group in CLUSTERS:
-            for word, (x, y, z), dx, dy, anc in group:
-                px, py = P(x, y, z)
-                fx, fy = P(x, 0, z)
-                b.append(line(px, py, fx, fy, LINE, 1.2, dash="3 4"))
-                b.append(circle(fx, fy, 2.2, LINE, LINE, 0.5))
-        for group in CLUSTERS:
-            for word, (x, y, z), dx, dy, anc in group:
-                b += point(*P(x, y, z), word, INK, dx=dx, dy=dy, size=18, anchor=anc)
-        b.append(label(820, 34, "含义相近的词，向量相近", 19, INK, "bold"))
-    save(f"token-vectors-{n}", b, H)
+    # the floor (x-z plane) and the axes
+    f = [P(0, 0, 0), P(1, 0, 0), P(1, 0, 1), P(0, 0, 1)]
+    d = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in f) + " Z"
+    b.append(path(d, "none", 0, fill=FILL_GREY, head=False))
+    for t in (.25, .5, .75):
+        b.append(line(*P(t, 0, 0), *P(t, 0, 1), WHITE, 1.4))
+        b.append(line(*P(0, 0, t), *P(1, 0, t), WHITE, 1.4))
+    b.append(arrow(*O, *P(1.05, 0, 0), LINE, 1.6))
+    b.append(arrow(*O, *P(0, 1.08, 0), LINE, 1.6))
+    b.append(arrow(*O, *P(0, 0, 1.12), LINE, 1.6))
+    for group in CLUSTERS:
+        for word, (x, y, z), dx, dy, anc in group:
+            px, py = P(x, y, z)
+            fx, fy = P(x, 0, z)
+            b.append(line(px, py, fx, fy, LINE, 1.2, dash="3 4"))
+            b.append(circle(fx, fy, 2.2, LINE, LINE, 0.5))
+    for group in CLUSTERS:
+        for word, (x, y, z), dx, dy, anc in group:
+            b += point(*P(x, y, z), word, INK, dx=dx, dy=dy, size=18, anchor=anc)
+    b.append(label(820, 34, "含义相近的词，向量相近", 19, INK, "bold"))
+    save("token-vectors", b, H)
 
 
-for n in (1, 2):
-    frame(n)
+figure()

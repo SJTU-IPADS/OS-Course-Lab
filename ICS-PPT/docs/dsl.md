@@ -120,9 +120,15 @@ inline notebook rendering; it is inert for the CLI build. See
   to name the page for `--pages`. A pure-number `--pages` index still counts
   bridge slides, like an animation's frames.
 
+- `lec.variable(name, default, *, min, max, step=None)` — declare a deck
+  variable, a number the room can change in the viewer with a
+  [slider or an input box](#variables-and-controls). Pages and bound figures
+  refer to it by name.
+
 `SectionBuilder` exposes the same `.section(...)`, `.page(...)`, and
 `.bridge(...)` methods, and doubles as a context manager
-(`with lec.section("…") as s:`). `close(...)` lives on `Lecture` only.
+(`with lec.section("…") as s:`). `close(...)` and `variable(...)` live on
+`Lecture` only.
 
 IDs must be unique across the whole lecture; a duplicate raises a
 `ValidationError` at build time.
@@ -370,6 +376,8 @@ handle for chaining (see [Footnotes](#footnotes) and
 | `p.architecture(…)` | `architecture` | A layered + modular system diagram (see [Architecture diagrams](#architecture-diagrams)). |
 | `p.aside(content)` | `aside` | A secondary remark. |
 | `p.spacer(px)` | `spacer` | A fixed vertical gap between blocks (see [Spacer](#spacer)). |
+| `p.slider(name, …)` | `slider` | A slider bound to a deck variable (see [Variables and controls](#variables-and-controls)). |
+| `p.input(name, …)` | `input` | An input box bound to a deck variable (same section). |
 | `p.notes(content)` | `notes` | Speaker notes — emitted as a Marp presenter note (speaker view only), never shown on the slide. |
 | `p.prose(content)` | `prose` | Textbook prose — rendered by the book, never by the deck (see [book.md](book.md)). |
 | `p.demo(name, command, output=…, bold=…, timeout=…, interactive=…, pwd=…, show=…, files=…)` | `demo` | A command, shown as a transcript; the deck can [run it and stream the output](usage.md#running-a-demo-from-the-deck), take typed input when it is `interactive=True`, and [show the files it names](usage.md#showing-a-source-file-from-the-deck). |
@@ -814,7 +822,7 @@ Three cross-cutting controls decide whether a block is rendered:
 1. **Targets of a kind.** Each element class names the targets that draw it
    (`TARGETS` in `lecturekit/elements/`). The viewer renders `slide`, `columns`, `code`, `link`, `image`, `side_image`, `row`,
    `architecture`, `sidenote`, `aside`, `highlight`, `demo`, `table`, `spacer`,
-   and the `cover` and `bridge` pages. `notes` is emitted into the Marp deck as a
+   `slider`, `input`, and the `cover` and `bridge` pages. `notes` is emitted into the Marp deck as a
    **presenter note** — an HTML comment the speaker view shows (press `p`) but
    the audience slide never renders. The `latex` (book) target renders `prose`,
    `demo`, and the shared blocks, but never `slide` or `columns`.
@@ -864,7 +872,9 @@ value raises a `ValidationError`).
 
 Size is **unit-explicit** — a bare number is never ambiguous. Pass `width_px` /
 `height_px` for pixels or `width_pct` / `height_pct` for a percentage of the
-slide. Passing both units for one dimension raises a `ValidationError`.
+slide. Passing both units for one dimension raises a `ValidationError`. Each of
+the four also takes a [deck variable](#variables-and-controls), `width_px="$size"`,
+here and on `p.frames`, `row.image`, `image_right` and the `ImageHandle` setters.
 
 Setting one dimension leaves the other `auto`, so the **aspect ratio is always
 preserved** — changing the width changes the rendered height to match (and vice
@@ -1482,12 +1492,151 @@ p.spacer(32)                       # 空一档，把下一块推开
 p.slide("第二步：再谈解决方案")
 ```
 
+`px` may also be a [deck variable](#variables-and-controls), `p.spacer("$gap")`,
+whose values are whole pixels from 1 up.
+
 Like any block it accepts `only=` / `except_=`. It is meant for normal pages;
 combining it with `p.gap(...)` on the same page mixes two spacing policies and
 is not recommended. The viewer/Marp deck (HTML, PDF, PNG, live preview) honors
 it; PPTX ignores it, like the other geometry-only blocks. A spacer is pure
 whitespace, so in `--watch --reveal` mode it is always visible and never claims a
 reveal step of its own.
+
+### Variables and controls
+
+A **deck variable** is a number the room can change while the deck is shown: a
+temperature, a size, a step of a schedule. The lecture declares it once, a
+**control** on a page sets it, and every place that uses it is drawn again
+with the new value.
+
+```python
+# lecture.py
+lecture.variable("T", 1, min=0, max=10)
+
+# pages.py
+def temperature(p):
+    p.title("温度")
+    p.slider("T", marks=[0, 1, 10])
+    p.image("assets/temperature.svg", width_px=1040)   # a bound figure
+```
+
+**Declaring.** `lecture.variable(name, default, *, min, max, step=None)`. The
+name is letters, digits and `_`, not starting with a digit, and is declared
+once per lecture. Without `step` the variable takes any value from `min` to
+`max`; with one, only `min`, `min + step`, … up to `max`, so `max` and
+`default` lie on that grid. A variable belongs to the whole lecture, so two
+pages that use it show the same value. A value is printed with as many
+decimals as it has (`1`, `0.37`).
+
+**Using it.** A size names the variable with a `$`, as its whole value:
+
+| where | spelling | what moves in the viewer |
+| --- | --- | --- |
+| an image's size: `width_px`, `width_pct`, `height_px`, `height_pct` (on `p.image`, `p.frames`, `row.image`, `image_right`) | `"$size"` or `"${size}"` | the size, through a CSS custom property |
+| `p.spacer(px)` | `"$gap"` | the gap |
+
+A figure uses it through its own file: a [bound figure](#bound-figures) is an
+SVG whose attributes and text are expressions over the variables, and the page
+shows it with `p.image` (or `row.image`, `image_right`, `p.side_image`) like
+any other figure.
+
+Other numbers are laid out when the deck is built, before any control could
+move them, and refuse a reference: `side_image(width=...)`, `annotate(dx=, dy=)`,
+`p.gap(...)`, the `widths=` of a table, a row or columns.
+
+**The controls.**
+
+- `p.slider(name, *, label=None, marks=None, step=None)` draws the label, `=`,
+  a box with the value, and a slider over the variable's range. `marks` are
+  values of the variable, labelled under the track as written (by default
+  `min` and `max`); pressing one sets it. The thumb moves in steps of `step`:
+  by default the variable's step, or else the power of ten nearest below a
+  hundredth of the range (0 to 10: 0.1); a `step` given here must be a
+  multiple of the variable's. The value box keeps at least the decimals of
+  that step (`1.0`), so it does not change width as the thumb moves, and a
+  value typed into it is taken as typed (`0.37`).
+- `p.input(name, *, label=None)` draws the label, `=`, an input box holding the
+  value, and the range after it.
+
+A value typed into a box is set at each keystroke that leaves a number in the
+range; `Enter` or leaving the box sets what is there, a value outside the
+range brought to its nearest end, and `Escape` puts the box back. A variable
+with a step takes the nearest value on its grid.
+
+`label` is plain text and a translation entry (`<page>.slider.<n>.label`) when
+given. Without one the control is labelled with the variable's name set as a
+math symbol, in the face and italic the figures set it in. A control is
+centred on its line, and in the viewer carries a ↺ button that puts the
+variable back to its default. Any number of controls may be bound to one
+variable, on one slide or on several: moving one moves the others.
+
+**Checked when the lecture is built** (so `inspect` reports it): a reference
+or a control naming a variable that was not declared, a mark out of range (or
+off the grid), a slider step that is not positive or not a multiple of the
+variable's, a size whose variable goes below 0, a spacer whose variable is not
+a whole number from 1 up (it needs a whole `step`), and a malformed
+declaration. Loading a lecture from its directory also checks every bound
+figure its pages show (below).
+
+**Each target.**
+
+| target | what it draws |
+| --- | --- |
+| the viewer, live preview and the rendered bundle | the controls, live; every use follows the value (see [usage.md](usage.md#deck-variables-in-the-viewer)) |
+| PDF, PNG | the same page at the defaults: the slider at its default position with its marks, the bound figure as its file shows it. No ↺ button |
+| PowerPoint, the transcript sheet, the book | the default size and the figure's file; a control prints as one line, `T = 1.0（取值 0 – 10，刻度 0、1、10）` with `T` as math (English: `T = 1.0 (range 0 – 10, ticks 0, 1, 10)`) |
+
+The static line says what the slider shows: the label, the value the page is
+drawn at, the range and the marks.
+
+#### Bound figures
+
+A bound figure is an SVG drawn at the variables' defaults that also carries,
+on the elements that depend on them, the expressions they are computed from.
+Every static target uses the file as it is. The viewer evaluates the
+expressions again whenever a variable moves, for any value it takes, and
+shows the result in place of the file. Three attributes carry the bindings
+(`lecturekit/bind.py` documents them in full):
+
+| attribute | on | holds |
+| --- | --- | --- |
+| `data-lk-vars` | one `<metadata>` element | the deck variables the figure reads and the values it is drawn at: `T = 1` |
+| `data-lk-let` | the same element | values derived once for the whole figure, in order: `x = [6, -5, 4]; p = softmax(x, T)` |
+| `data-lk-attr` / `data-lk-text` | any element | attributes (`width: max(1.5, p[4] * 290)`) and the element's text (`fmt(p[4], 2)`) |
+
+The expressions are a small language with no access to the page: numbers,
+`'strings'`, lists and indexing from 0, `+ - * / % ^` (item by item over
+lists), comparisons, `&& || !`, `c ? a : b`, and the functions `abs sqrt exp
+log floor ceil round min max pow clamp sum len softmax fmt`. `softmax(x, t)`
+takes `t = 0` as its limit (all weight on the largest entries), and
+`fmt(v, nd)` prints `nd` decimals (or as few as `v` needs) with a typographic
+minus. The viewer evaluates them with `bind.js`, which gives the same values
+and prints them alike.
+
+A figure is never written by hand: its script under `diagrams/` draws it with
+`lecturekit.bind.Bindings`, which puts the value at the defaults into each
+bound attribute and text and the expression beside it:
+
+```python
+from lecturekit.bind import Bindings
+
+bind = Bindings(T=1)                     # the variables, at their defaults
+bind.let("x", [6.0, -5.0, 4.0])
+bind.let("p", "softmax(x, T)")
+b = [bind.declare()]                     # the <metadata> element
+b.append(bind.attrs(rect(698, top, 0, 24, ...), width="max(1.5, p[0] * 290)"))
+b.append(bind.text(text(686, cy, "", 18, ...), "fmt(p[0], 2)"))
+```
+
+`attrs` and `text` take the markup any drawing helper returns; a keyword's
+underscores stand for hyphens (`stroke_width=`). Loading the lecture checks
+each bound figure a page shows: every expression parses and evaluates, every
+variable it reads is declared and drawn at its default, and each bound
+attribute and text in the file is what its expression gives there.
+
+A borrowed [review](#review-replaying-another-lectures-pages) page brings the
+variables it uses with it. A host that declares the same name with another
+definition is refused.
 
 ### Figure refs (book only)
 

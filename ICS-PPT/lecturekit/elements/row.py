@@ -12,6 +12,7 @@ class Row(Block):
     TARGETS = frozenset({"viewer", "pptx", "latex", "transcript"})
     REF = True
     CENTERED = True
+    VARIABLE_KEYS = frozenset({"width", "height"})
 
     def check_content(self, page_id: str) -> None:
         content = self.content

@@ -3,10 +3,9 @@
 
 The names and the scores are the video's example; every other number is
 computed here.
-1: the raw scores x_i as signed bars: some are negative and they do not
-   sum to 1.
-2: e^{x_i} of each: all positive; their sum.
-3: each e^{x_i} divided by that sum: the probabilities.
+One frame, three columns left to right: the raw scores x_i as signed bars
+(some are negative and they do not sum to 1); e^{x_i} of each, all positive,
+and their sum; each e^{x_i} divided by that sum, the probabilities.
 """
 import math as m
 
@@ -64,26 +63,25 @@ def column(vx, values, nd, zero, scale, signed=False):
     return out
 
 
-def frame(n):
+def figure():
     b = []
     for i, name in enumerate(NAMES):
         b.append(text(NX, row_y(i) + BH / 2 + 7, name, 19, INK, anchor="end"))
     foot = row_y(6) + BH + 36
-    # 1: the raw scores
+    # the raw scores
     b.append(rich(300, 42, [("x", ""), ("i", "sub")], 24))
     b += column(222, X, 1, 330, 19, signed=True)
     b.append(text(282, foot, "不是概率分布：有负数，和不为 1", 18, RED))
-    if n >= 2:
-        b.append(rich(590, 42, [("e", ""), ("x", "sup"), ("i", "supsub")], 26))
-        b += column(522, E, 2, 534, 160 / max(E))
-        b.append(text(590, foot, f"总和 {TOTAL:.2f}", 18, INK, font=FONT))
-    if n >= 3:
-        b.append(rich(880, 42, [("e", ""), ("x", "sup"), ("i", "supsub"),
-                                (f" / {TOTAL:.2f}", "")], 26))
-        b += column(806, P, 2, 818, 200)
-        b.append(text(880, foot, f"总和 {sum(P):.0f}", 18, GREEN, "bold"))
-    save(f"softmax-{n}", b, H)
+    # their exponentials and the sum
+    b.append(rich(590, 42, [("e", ""), ("x", "sup"), ("i", "supsub")], 26))
+    b += column(522, E, 2, 534, 160 / max(E))
+    b.append(text(590, foot, f"总和 {TOTAL:.2f}", 18, INK, font=FONT))
+    # divided by the sum: the probabilities
+    b.append(rich(880, 42, [("e", ""), ("x", "sup"), ("i", "supsub"),
+                            (f" / {TOTAL:.2f}", "")], 26))
+    b += column(806, P, 2, 818, 200)
+    b.append(text(880, foot, f"总和 {sum(P):.0f}", 18, GREEN, "bold"))
+    save("softmax", b, H)
 
 
-for n in (1, 2, 3):
-    frame(n)
+figure()

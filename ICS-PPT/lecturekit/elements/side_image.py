@@ -13,6 +13,7 @@ class SideImage(Block):
     IN_CONTAINER = False
     REVEAL_STEP = False
     IN_FLOW = False
+    # Its path may name a variable; its width is laid out in Python, so not.
 
     def to_marp(self, ctx):
         from ..renderers.viewer import blocks

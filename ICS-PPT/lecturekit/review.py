@@ -18,6 +18,10 @@ directory changes nothing downstream:
   another chapter, and its figure ``ref``s are dropped along with it (they
   anchor figures in the source chapter, and would otherwise collide).
 
+The deck variables a borrowed page uses come with it (``lecture.variable``), and
+the host declares them alongside its own; the same name declared differently
+by the two is refused.
+
 Everything else -- title, blocks, tags, annotations, notes, citations, and the
 frames of an animation -- rides along untouched: a review slide is the original
 slide, not a variation on it.
@@ -28,7 +32,7 @@ from __future__ import annotations
 from dataclasses import replace
 from pathlib import Path
 
-from . import model
+from . import model, variables
 from .model import ValidationError
 
 # Image sources are lecture-relative, and only the lecture's `assets/` tree is
@@ -38,21 +42,24 @@ from .model import ValidationError
 _ASSET_PREFIX = "assets/"
 
 
-def borrow(base_dir: Path, source_spec: str, page_ids: list[str]) -> tuple[list[model.Page], model.Borrowed]:
+def borrow(
+    base_dir: Path, source_spec: str, page_ids: list[str]
+) -> tuple[list[model.Page], model.Borrowed, list[model.Variable]]:
     """Load `source_spec` and return its `page_ids`, re-branded for a host lecture.
 
     `base_dir` is what a relative `source_spec` resolves against; `~` and
     absolute paths are taken as given. Returns the pages in the order asked for,
-    plus the `Borrowed` record naming the source for the renderers.
+    the `Borrowed` record naming the source for the renderers, and the source's
+    variables those pages use.
     """
     directory = resolve_dir(base_dir, source_spec)
     source = load_source(directory, source_spec)
     entry = model.Borrowed(lecture_id=source.id, directory=str(directory))
-    pages = [
-        rebrand(page, source.id)
-        for page in take_pages(source, page_ids, source_spec)
-    ]
-    return pages, entry
+    taken = take_pages(source, page_ids, source_spec)
+    bound = variables.figures(source, directory)
+    used = {name for page in taken for name in variables.page_names(page, bound)}
+    pages = [rebrand(page, source.id) for page in taken]
+    return pages, entry, [var for var in source.variables if var.name in used]
 
 
 def resolve_dir(base_dir: Path, source_spec: str) -> Path:

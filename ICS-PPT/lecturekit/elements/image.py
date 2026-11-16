@@ -13,6 +13,7 @@ class Image(Block):
     TARGETS = frozenset({"viewer", "pptx", "latex", "transcript"})
     REF = True
     CENTERED = True
+    VARIABLE_KEYS = frozenset({"width", "height"})
 
     def to_marp(self, ctx):
         from ..renderers.viewer.blocks import figure_classes, figure_inner

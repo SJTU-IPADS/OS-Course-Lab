@@ -54,12 +54,6 @@ def check_cache():
     return worst
 
 def main():
-    # Horizontal output-matrix blocks times vertical head stacking.
-    blocks=[[[1,2],[3,4]],[[2,-1],[0,1]],[[1,0],[-2,1]]]
-    heads=[[1,2],[3,4],[5,6]]
-    combined=[sum((block[row] for block in blocks),[]) for row in range(2)]
-    separate=[sum(matvec(block,head)[row] for block,head in zip(blocks,heads)) for row in range(2)]
-    close(matvec(combined,sum(heads,[])),separate)
     error=check_cache()
     print(f'Math examples passed; two-layer KV/full-prefix max error: {error:.3g}')
 

@@ -156,6 +156,13 @@ figcaption { font-size: 7pt; color: var(--grey); margin-top: 0.5mm; }
 }
 .tx-anno::before { content: "▸ "; color: var(--pseudo-state); }
 
+/* --- A slider or input box: the value the page is drawn at, and its range --- */
+.tx-control {
+  text-align: center;
+  color: var(--ink);
+  margin: 0 0 1mm;
+}
+
 .tx-aside {
   font-size: 7.8pt;
   color: var(--grey);

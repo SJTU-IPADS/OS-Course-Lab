@@ -1,38 +1,39 @@
 #!/usr/bin/env python3
 """temperature: softmax with a temperature T, on the video's inputs.
 
-The inputs and the three temperatures are the video's; the outputs are
-computed here (T = 0 is the limit: all the weight on the largest input).
-The formula and a T scale sit above the table, T in red.
-1: T = 10: the distribution is flatter.
-2: T = 1.76: the largest input dominates.
-3: T = 0: all the weight on 9.9.
+One figure bound to the deck variable T (`lecture.variable("T", ...)` in
+lecture.py), drawn at its default. The probabilities, their bars and the
+"T = ..." label carry the expressions they are computed from
+(lecturekit.bind), and the viewer computes them again for the value the
+slider or the box sets, any value from 0 to 10. `inspect` checks that the
+file matches the expressions at the default.
+
+The inputs are the video's; p = softmax(x, T), with T = 0 the limit (all the
+weight on the largest input). Inputs on the left as signed bars, the
+probabilities on the right, and between them an arrow labelled with the
+formula, T in red under it.
 """
-import math as m
+from lecturekit.bind import Bindings
 
 from tk import *
 
-H = 400
+T_DEFAULT = 1                            # lecture.variable("T", 1, ...)
+
+H = 336
 NAMES = ["Dumbledore", "Flitwick", "McGonagall", "Quirrell", "Snape", "Sprout", "Trelawney"]
 X = [6.0, -5.0, 4.0, 1.5, 9.9, -2.3, 4.0]
-TEMPS = {1: 10, 2: 1.76, 3: 0}
-Y0, RH, BH = 128, 37, 24
+Y0, RH, BH = 74, 37, 24
 NX = 140
 
-
-def softmax(x, t):
-    if t == 0:
-        top = max(x)
-        hits = [1.0 if v == top else 0.0 for v in x]
-        return [h / sum(hits) for h in hits]
-    e = [m.exp(v / t) for v in x]
-    s = sum(e)
-    return [v / s for v in e]
+bind = Bindings(T=T_DEFAULT)
+bind.let("x", X)
+bind.let("p", "softmax(x, T)")
 
 
 def rich(x, y, parts, size=22, anchor="middle"):
-    """One line of math from (text, level[, colour]) parts; level is '' (base),
-    'sup', 'sub' or 'supsub' (a subscript inside a superscript)."""
+    """One line of math from (text, level[, colour[, binding]]) parts; level is
+    '' (base), 'sup', 'sub' or 'supsub' (a subscript inside a superscript). A
+    part with a binding takes its text from that expression."""
     geo = {"": (1.0, 0.0), "sup": (0.7, -0.42), "sub": (0.7, 0.25), "supsub": (0.5, -0.24)}
     spans, cur = [], 0.0
     for part in parts:
@@ -42,8 +43,9 @@ def rich(x, y, parts, size=22, anchor="middle"):
         dy = off * size - cur
         cur = off * size
         style = "italic" if any(ch.isascii() and ch.isalpha() for ch in s) else "normal"
-        spans.append(f'<tspan font-size="{k * size:.1f}" font-style="{style}" fill="{c}" '
-                     f'dy="{dy:.1f}">{esc(s)}</tspan>')
+        span = (f'<tspan font-size="{k * size:.1f}" font-style="{style}" fill="{c}" '
+                f'dy="{dy:.1f}">{esc(s)}</tspan>')
+        spans.append(bind.text(span, part[3]) if len(part) > 3 else span)
     return (f'<text x="{x:.1f}" y="{y:.1f}" font-family="{MATH}" font-size="{size}" '
             f'text-anchor="{anchor}">' + "".join(spans) + "</text>")
 
@@ -52,60 +54,34 @@ def num(v, nd):
     return f"{v:.{nd}f}".replace("-", "−")
 
 
-def tlabel(t):
-    return f"{t:g}"
-
-
-def frame(n):
-    t = TEMPS[n]
-    p = softmax(X, t)
-    b = []
-    # the formula, T in red
-    fx = 250
-    b.append(rich(fx - 72, 62, [("p", ""), ("i", "sub"), (" =", "")], 26, "end"))
-    b.append(rich(fx, 46, [("e", ""), ("x", "sup"), ("i", "supsub"), (" / ", "sup"),
-                           ("T", "sup", RED)], 28))
-    b.append(line(fx - 62, 56, fx + 62, 56, INK, 1.4))
-    b.append(rich(fx, 90, [("Σ", ""), ("j", "sub"), (" e", ""), ("x", "sup"), ("j", "supsub"),
-                           (" / ", "sup"), ("T", "sup", RED)], 26))
-    # the T scale
-    sx0, sx1, sy = 560, 960, 74
-    b.append(line(sx0, sy, sx1, sy, INK, 1.4))
-    for k in range(11):
-        x = sx0 + (sx1 - sx0) * k / 10
-        b.append(line(x, sy - (6 if k % 5 == 0 else 4), x, sy + (6 if k % 5 == 0 else 4),
-                      INK, 1.2))
-        if k % 5 == 0:
-            b.append(text(x, sy + 24, str(k), 16, MUTED, font=MONO))
-    tx = sx0 + (sx1 - sx0) * t / 10
-    b.append(path(f"M {tx - 8:.1f} {sy - 22:.1f} L {tx + 8:.1f} {sy - 22:.1f} "
-                  f"L {tx:.1f} {sy - 8:.1f} Z", RED, 1, fill=RED, head=False))
-    b.append(rich(tx + (14 if t < 9 else -14), sy - 24,
-                  [("T", "", RED), (f" = {tlabel(t)}", "", RED)], 24,
-                  "start" if t < 9 else "end"))
-    # the table
-    bottom = Y0 + 6 * RH + BH
-    zero, scale = 298, 13
-    for i, (name, v, q) in enumerate(zip(NAMES, X, p)):
-        top = Y0 + i * RH
-        cy = top + BH / 2 + 6
-        b.append(text(NX, cy + 1, name, 19, INK, anchor="end"))
-        b.append(text(222, cy, num(v, 1), 18, INK, anchor="end", font=MONO))
-        w = max(1.5, abs(v) * scale)
-        if v < 0:
-            b.append(rect(zero - w, top, w, BH, FILL_RED, RED, rx=2, width=1.4))
-        else:
-            b.append(rect(zero, top, w, BH, FILL_BLUE, BLUE, rx=2, width=1.4))
-        b.append(text(686, cy, num(q, 2), 18, INK, anchor="end", font=MONO))
-        b.append(rect(698, top, max(1.5, q * 290), BH, FILL_BLUE, BLUE, rx=2, width=1.4))
-    b.append(line(zero, Y0 - 6, zero, bottom + 6, INK, 1.2))
-    b.append(line(698, Y0 - 6, 698, bottom + 6, INK, 1.2))
-    my = (Y0 + bottom) / 2
-    b.append(arrow(458, my, 600, my, INK, 2))
-    b.append(text(529, my - 12, "softmax", 20, INK, font=MATH))
-    b.append(rich(529, my + 30, [("T", "", RED), (f" = {tlabel(t)}", "", RED)], 20))
-    save(f"temperature-{n}", b, H)
-
-
-for n in (1, 2, 3):
-    frame(n)
+b = [bind.declare()]
+bottom = Y0 + 6 * RH + BH
+b.append(label(300, 44, "输入", 20, MUTED))
+b.append(label(840, 44, "输出", 20, MUTED))
+zero, scale = 298, 13
+for i, (who, v) in enumerate(zip(NAMES, X)):
+    top = Y0 + i * RH
+    cy = top + BH / 2 + 6
+    b.append(text(NX, cy + 1, who, 19, INK, anchor="end"))
+    b.append(text(222, cy, num(v, 1), 18, INK, anchor="end", font=MONO))
+    w = max(1.5, abs(v) * scale)
+    if v < 0:
+        b.append(rect(zero - w, top, w, BH, FILL_RED, RED, rx=2, width=1.4))
+    else:
+        b.append(rect(zero, top, w, BH, FILL_BLUE, BLUE, rx=2, width=1.4))
+    b.append(bind.text(text(686, cy, "", 18, INK, anchor="end", font=MONO), f"fmt(p[{i}], 2)"))
+    b.append(bind.attrs(rect(698, top, 0, BH, FILL_BLUE, BLUE, rx=2, width=1.4),
+                        width=f"max(1.5, p[{i}] * 290)"))
+b.append(line(zero, Y0 - 6, zero, bottom + 6, INK, 1.2))
+b.append(line(698, Y0 - 6, 698, bottom + 6, INK, 1.2))
+# the arrow, labelled with the formula, T in red
+my = (Y0 + bottom) / 2
+fx = 529
+b.append(rich(fx, my - 52, [("e", ""), ("x", "sup"), ("i", "supsub"), (" / ", "sup"),
+                            ("T", "sup", RED)], 24))
+b.append(line(fx - 54, my - 42, fx + 54, my - 42, INK, 1.2))
+b.append(rich(fx, my - 14, [("Σ", ""), ("j", "sub"), (" e", ""), ("x", "sup"),
+                            ("j", "supsub"), (" / ", "sup"), ("T", "sup", RED)], 22))
+b.append(arrow(458, my, 600, my, INK, 2))
+b.append(rich(fx, my + 34, [("T", "", RED), ("", "", RED, "' = ' + fmt(T)")], 22))
+save("temperature", b, H)

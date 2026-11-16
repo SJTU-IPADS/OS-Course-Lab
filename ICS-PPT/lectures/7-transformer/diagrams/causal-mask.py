@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 """causal-mask: later words must not influence earlier ones.
 
-Keys run down the left, queries across the top, as in attention-scores.
-1: the cells where the key comes after the query (row > column) are red.
-2: a naive fix: softmax without a mask (pattern(causal=False)), then the red
-   cells set to 0; the column sums under the grid fall below 1.
-3: masking: the scores of the red cells are set to −∞ before softmax
-   (pattern(causal=True)); the red cells come out 0 and every column still
-   sums to 1.
+Keys run down the left, queries across the top, as in attention-scores. The
+cells where the key comes after the query (row > column) are red. Masking:
+their scores are set to −∞ before softmax (pattern(causal=True)); the red
+cells come out 0 and every column still sums to 1.
 Weights are shown to two decimals, rounded so that each column of the
 softmax output adds up to 1.00 (largest remainder).
 """
@@ -53,50 +50,38 @@ def labels():
     return b
 
 
-def frame(n):
+def figure():
     b = labels()
     masked = [[i > j for j in range(N)] for i in range(N)]
-    if n == 1:
-        fills = [[FILL_RED if masked[i][j] else WHITE for j in range(N)] for i in range(N)]
-        b += grid(GX, GY, N, N, CELL, fills=fills)
-    else:
-        cols = [round_col(column(q, causal=(n == 3))) for q in range(N)]
-        fills = [[FILL_RED if masked[i][j] else shade(cols[j][i])[0] for j in range(N)]
-                 for i in range(N)]
-        b += grid(GX, GY, N, N, CELL, fills=fills)
-        for i in range(N):
-            for j in range(N):
-                y = GY + (i + .5) * CELL + 5.5
-                x = GX + (j + .5) * CELL
-                if masked[i][j]:
-                    b.append(text(x, y, "0", 15, RED))
-                else:
-                    h = cols[j][i]
-                    b.append(text(x, y, f"{h / 100:.2f}", 15, shade(h)[1]))
-        # column sums
-        sy = GY + N * CELL + 26
-        b.append(text(GX - 10, sy, "列和", 17, MUTED, anchor="end"))
+    cols = [round_col(column(q, causal=True)) for q in range(N)]
+    fills = [[FILL_RED if masked[i][j] else shade(cols[j][i])[0] for j in range(N)]
+             for i in range(N)]
+    b += grid(GX, GY, N, N, CELL, fills=fills)
+    for i in range(N):
         for j in range(N):
-            s = sum(cols[j][i] for i in range(N) if not masked[i][j])
-            c = GREEN if s == 100 else RED
-            b.append(text(GX + (j + .5) * CELL, sy, f"{s / 100:.2f}", 15, c, "bold"))
+            y = GY + (i + .5) * CELL + 5.5
+            x = GX + (j + .5) * CELL
+            if masked[i][j]:
+                b.append(text(x, y, "0", 15, RED))
+            else:
+                h = cols[j][i]
+                b.append(text(x, y, f"{h / 100:.2f}", 15, shade(h)[1]))
+    # column sums
+    sy = GY + N * CELL + 26
+    b.append(text(GX - 10, sy, "列和", 17, MUTED, anchor="end"))
+    for j in range(N):
+        s = sum(cols[j][i] for i in range(N) if not masked[i][j])
+        c = GREEN if s == 100 else RED
+        b.append(text(GX + (j + .5) * CELL, sy, f"{s / 100:.2f}", 15, c, "bold"))
 
     tx = GX + N * CELL + 50
     b.append(rect(tx, GY + 24, 26, 26, FILL_RED, LINE, rx=0, width=1))
     b.append(text(tx + 38, GY + 44, "键在查询之后", 18, INK, anchor="start"))
-    if n == 1:
-        b.append(text(tx, GY + 104, "后面的词不能影响前面的词", 19, RED, "bold", anchor="start"))
-    if n == 2:
-        b.append(text(tx, GY + 104, "先做 softmax，", 19, INK, anchor="start"))
-        b.append(text(tx, GY + 134, "再把红色格子置 0", 19, INK, anchor="start"))
-        b.append(text(tx, GY + 184, "各列的和小于 1", 19, RED, "bold", anchor="start"))
-    if n == 3:
-        b.append(text(tx, GY + 104, "softmax 之前，", 19, INK, anchor="start"))
-        b.append(text(tx, GY + 134, "把红色格子的分数设为 −∞", 19, INK, anchor="start"))
-        b += math(tx, GY + 184, "e^{−∞} = 0", 22, INK, anchor="start")
-        b.append(text(tx, GY + 222, "各列的和仍为 1", 19, GREEN, "bold", anchor="start"))
-    save(f"causal-mask-{n}", b, H)
+    b.append(text(tx, GY + 104, "softmax 之前，", 19, INK, anchor="start"))
+    b.append(text(tx, GY + 134, "把红色格子的分数设为 −∞", 19, INK, anchor="start"))
+    b += math(tx, GY + 184, "e^{−∞} = 0", 22, INK, anchor="start")
+    b.append(text(tx, GY + 222, "各列的和仍为 1", 19, GREEN, "bold", anchor="start"))
+    save("causal-mask", b, H)
 
 
-for n in (1, 2, 3):
-    frame(n)
+figure()

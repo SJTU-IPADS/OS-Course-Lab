@@ -44,6 +44,8 @@ def build_one_page_lecture(lecture, page_spec) -> model.Lecture:
         subtitle=lecture.subtitle,
         ratio=lecture.ratio,
         children=dsl.build_child(page_spec),
+        # The page may use the lecture's variables (`lecture.variable`).
+        variables=tuple(getattr(lecture, "_variables", ())),
     )
     model.validate_lecture(one_page_lecture)
     return one_page_lecture

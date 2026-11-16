@@ -86,7 +86,7 @@ def float_image_html(image: dict) -> str:
     style = "; ".join(decls)
     src = escape_html(image["src"])
     alt = escape_html(image.get("alt") or "")
-    return f'<img src="{src}" alt="{alt}" style="{style};" />'
+    return f'<img src="{src}"{figure_attr(image)} alt="{alt}" style="{style};" />'
 
 
 def file_button(label: str, path: str) -> str:
@@ -146,6 +146,18 @@ def pseudo_html(content: str, marked: set[int], tone: str) -> str:
     return '<pre class="lk-pseudo"><code>%s</code></pre>' % "\n".join(out)
 
 
+def figure_attr(image: dict) -> str:
+    """The ``data-lk-figure`` attribute of the picture of a bound figure.
+
+    ``variables.for_deck`` marks such a picture (``image["figure"]``, its
+    ``src``), and the page carries the figure's source under the same name
+    (``variables.page_table``). The ``<img>`` shows the file, drawn at the
+    defaults; ``vars.js`` shows the figure computed again as a variable moves.
+    """
+    figure = image.get("figure")
+    return f' data-lk-figure="{escape_html(figure)}"' if figure else ""
+
+
 def css_length(value) -> str:
     """A unit-bearing CSS length string, treating a bare number as pixels."""
     return value if isinstance(value, str) else f"{value}px"
@@ -165,7 +177,7 @@ def figure_inner(image: dict) -> tuple[str, str]:
         sizes.append(f"height:{css_length(image['height'])}")
     style = f' style="{";".join(sizes)}"' if sizes else ""
     img = (
-        f'<img src="{escape_html(image["src"])}" '
+        f'<img src="{escape_html(image["src"])}"{figure_attr(image)} '
         f'alt="{escape_html(image.get("alt") or "")}"{style}>'
     )
     caption = ""
@@ -245,8 +257,8 @@ def side_column(
         fit = ' class="lk-side-fit"' if SIDE_FIT & set(words) else ""
         alt = " ".join(word for word in words if word not in SIDE_KEYWORDS)
         images.append(
-            f'<img src="{escape_html(block.content["src"])}" '
-            f'alt="{escape_html(alt)}"{fit}>'
+            f'<img src="{escape_html(block.content["src"])}"'
+            f'{figure_attr(block.content)} alt="{escape_html(alt)}"{fit}>'
         )
     style = ["<style scoped>", f"section {{ --lk-side-width: {width}px; }}", "</style>", ""]
     if marks:

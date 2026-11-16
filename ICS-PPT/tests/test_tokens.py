@@ -59,7 +59,7 @@ class FlattenTest(unittest.TestCase):
         # add it here so the list stays a statement of what the theme carries.
         others = {n for n in tokens.tokens() if not tokens.is_colour(n)}
         self.assertEqual(others, {
-            "--font-base", "--font-mono", "--pptx-font-cjk", "--pptx-font-mono",
+            "--font-base", "--font-mono", "--font-math", "--pptx-font-cjk", "--pptx-font-mono",
             "--mark-top", "--mark-bottom", "--mark-tex-raise", "--mark-tex-height",
             "--layout-gutter",
         })

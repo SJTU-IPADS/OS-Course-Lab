@@ -56,6 +56,12 @@ UI_STRINGS: dict[str, dict[str, str]] = {
         "todo": "TODO",
         "figure": "图",
         "page": "P",
+        # A control (`p.slider`, `p.input`) where nothing can move it, and the
+        # deck's button that puts its variable back. See `variables`.
+        "control_range": "{label} = {value}（取值 {min} – {max}）",
+        "control_marks": "{label} = {value}（取值 {min} – {max}，刻度 {marks}）",
+        "control_reset": "恢复默认值 {value}",
+        "list_sep": "、",
     },
     "en": {
         "references": "References",
@@ -65,6 +71,10 @@ UI_STRINGS: dict[str, dict[str, str]] = {
         "todo": "TODO",
         "figure": "Figure",
         "page": "P",
+        "control_range": "{label} = {value} (range {min} – {max})",
+        "control_marks": "{label} = {value} (range {min} – {max}, ticks {marks})",
+        "control_reset": "Reset to {value}",
+        "list_sep": ", ",
     },
 }
 DEFAULT_UI_LANG = "zh"
@@ -109,7 +119,7 @@ def content_slots(kind: str, content: Any) -> list[tuple[str, tuple]]:
     elif kind == "sidenote":
         add("title", ("title",))
         add("text", ("text",))
-    elif kind == "link":
+    elif kind in ("link", "slider", "input"):
         add("label", ("label",))
     elif kind == "demo":
         add("name", ("name",))

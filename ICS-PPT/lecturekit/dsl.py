@@ -8,7 +8,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Self
 
-from . import bibtex, marks, model, source
+from . import bibtex, marks, model, source, variables
 from . import demo as demo_module
 from .autobold import autobold as _autobold
 
@@ -53,6 +53,34 @@ class Lecture:
         # Auto-numbered ids for `bridge(...)` pages, lecture-wide — bridges in
         # different sections must not collide.
         self._bridge_count = 0
+        # The deck's variables, in declaration order, its own and those its
+        # review pages brought (see `variable`, `_add_variable`).
+        self._variables: list[model.Variable] = []
+        self._own_variables: set[str] = set()
+
+    def variable(
+        self,
+        name: str,
+        default: float,
+        *,
+        min: float,
+        max: float,
+        step: float | None = None,
+    ) -> None:
+        """Declare a deck variable: a number the room can change in the viewer.
+
+        A page binds a control to it (``p.slider(name)``, ``p.input(name)``)
+        and refers to it as ``"$name"`` where a number is taken (an image's
+        ``width_px`` and the other sizes, ``p.spacer``); a bound figure
+        (``lecturekit.bind``) computes attributes and text from it. The value
+        is any number from ``min`` to ``max``, or ``min + k * step`` when
+        ``step`` is given. Every target without a browser behind it draws
+        ``default``. Checked when the lecture is built: the range, the default
+        in it (and on the grid), every reference to a declared variable.
+        """
+        _add_variable(lecture=self, var=model.Variable(
+            name=name, default=default, min=min, max=max, step=step,
+        ), origin="this lecture")
 
     def section(self, title: str, *, id: str | None = None, collapsed: bool = False) -> "SectionBuilder":
         section = SectionBuilder(
@@ -160,6 +188,7 @@ class Lecture:
             lang=self.lang,
             children=build_children(self._children),
             borrowed=tuple(self._borrowed),
+            variables=tuple(self._variables),
         )
         model.validate_lecture(lecture)
         return lecture
@@ -316,8 +345,10 @@ def review_section(
     base_dir = _caller_dir()
     section = lecture.section(title, id=id, collapsed=collapsed)
     for source_spec, page_ids in sources.items():
-        pages, entry = review.borrow(base_dir, source_spec, list(page_ids))
+        pages, entry, used = review.borrow(base_dir, source_spec, list(page_ids))
         _record_borrowed(lecture, entry, source_spec)
+        for var in used:
+            _add_variable(lecture, var, f"review source {source_spec!r}")
         section._children.append(BorrowedPages(pages))
     return section
 
@@ -343,6 +374,29 @@ def _record_borrowed(lecture: Lecture, entry: model.Borrowed, source_spec: str) 
             f"  {seen.directory}\n  {entry.directory}"
         )
     lecture._borrowed.append(entry)
+
+
+def _add_variable(lecture: Lecture, var: model.Variable, origin: str) -> None:
+    """Declare ``var`` on ``lecture``, once per name.
+
+    A borrowed review page brings the variables it uses; the host may declare
+    the same one itself, before or after. The same definition twice is one
+    variable, two different ones under one name are refused.
+    """
+    own = origin == "this lecture"
+    for seen in lecture._variables:
+        if seen.name != var.name:
+            continue
+        if seen != var or (own and var.name in lecture._own_variables):
+            raise model.ValidationError(
+                f"variable {var.name!r} is declared twice ({origin}: {var}; "
+                f"before: {seen})"
+            )
+        break
+    else:
+        lecture._variables.append(var)
+    if own:
+        lecture._own_variables.add(var.name)
 
 
 def _caller_dir() -> Path:
@@ -531,8 +585,60 @@ class PageBuilder(ElementHandle):
         evenly across *every* block seam — a spacer is a manual, exact gap at
         one position, and a page may carry several. Intended for normal (non
         ``gap(...)``) pages. Honored by the viewer/Marp deck; PPTX ignores it.
+        ``px`` may be a variable, ``"$gap"``, of whole pixels from 1 up.
         """
+        px = variables.number_or_ref(px, "spacer px")
         return self._block("spacer", {"px": px}, only=only, except_=except_, key=key)
+
+    def slider(
+        self,
+        name: str,
+        *,
+        label: str | None = None,
+        marks: Iterable[float] | None = None,
+        step: float | None = None,
+        only: Iterable[str] | None = None,
+        except_: Iterable[str] | None = None,
+        key: str | None = None,
+    ) -> "BlockHandle":
+        """A slider bound to the deck variable ``name`` (``lecture.variable``).
+
+        The viewer draws the label, a box with the value and a slider over the
+        variable's range, with ``marks`` (values of the variable, by default
+        ``min`` and ``max``) labelled under it as written; pressing a mark sets
+        the value. The thumb moves in steps of ``step``: by default the
+        variable's step, or a power of ten near a hundredth of the range (0 to
+        10: 0.1). A value typed into the box is taken as typed. Moving it moves
+        every use of the variable, on every slide and in every window of the
+        deck. ``label`` defaults to the variable's name, set as a math symbol.
+        A target that cannot move it prints one line: the label, the default,
+        the range and the marks.
+        """
+        content: dict = {"var": name, "label": label}
+        if marks is not None:
+            content["marks"] = list(marks)
+        if step is not None:
+            content["step"] = step
+        return self._block("slider", content, only=only, except_=except_, key=key)
+
+    def input(
+        self,
+        name: str,
+        *,
+        label: str | None = None,
+        only: Iterable[str] | None = None,
+        except_: Iterable[str] | None = None,
+        key: str | None = None,
+    ) -> "BlockHandle":
+        """An input box bound to the deck variable ``name``, with its range.
+
+        A value typed in is set as it is typed, any number in the range (the
+        nearest on the variable's grid when it has a step); Enter or leaving
+        the box puts one outside the range back inside. Otherwise as
+        :meth:`slider`.
+        """
+        return self._block("input", {"var": name, "label": label},
+                           only=only, except_=except_, key=key)
 
     def highlight(
         self,
@@ -800,6 +906,7 @@ class PageBuilder(ElementHandle):
                 f"side_image valign must be one of {', '.join(model.SIDE_VALIGNS)}, "
                 f"got {valign!r}"
             )
+        variables.refuse_ref(width, "side_image width")
         return self._block(
             "side_image",
             {"src": src, "alt": alt, "width": width, "side": side, "valign": valign},
@@ -1330,6 +1437,8 @@ class BlockHandle(_BlockElementHandle):
         accumulates like :meth:`footnote`: ``.annotate(a).annotate(b)`` adds two.
         """
         block = self._builder.blocks[self._index]
+        variables.refuse_ref(dx, "annotate dx")
+        variables.refuse_ref(dy, "annotate dy")
         note = model.Annotation(text=text, at=at, dx=dx, dy=dy)
         self._builder.blocks[self._index] = replace(
             block, annotations=block.annotations + (note,)
@@ -1436,10 +1545,11 @@ def _size_value(px: int | None, pct: int | None, dim: str) -> str | None:
         raise model.ValidationError(
             f"image {dim}: pass {dim}_px or {dim}_pct, not both"
         )
+    # Either may be a deck variable, "$size", stored as `${size}px`.
     if px is not None:
-        return f"{px}px"
+        return f"{variables.number_or_ref(px, f'image {dim}_px')}px"
     if pct is not None:
-        return f"{pct}%"
+        return f"{variables.number_or_ref(pct, f'image {dim}_pct')}%"
     return None
 
 
@@ -1557,20 +1667,20 @@ class ImageHandle(BlockHandle):
     last call for a given option wins.
     """
 
-    def width_px(self, value: int) -> "ImageHandle":
-        self._content()["width"] = f"{value}px"
+    def width_px(self, value: int | str) -> "ImageHandle":
+        self._content()["width"] = _size_value(value, None, "width")
         return self
 
-    def width_pct(self, value: int) -> "ImageHandle":
-        self._content()["width"] = f"{value}%"
+    def width_pct(self, value: int | str) -> "ImageHandle":
+        self._content()["width"] = _size_value(None, value, "width")
         return self
 
-    def height_px(self, value: int) -> "ImageHandle":
-        self._content()["height"] = f"{value}px"
+    def height_px(self, value: int | str) -> "ImageHandle":
+        self._content()["height"] = _size_value(value, None, "height")
         return self
 
-    def height_pct(self, value: int) -> "ImageHandle":
-        self._content()["height"] = f"{value}%"
+    def height_pct(self, value: int | str) -> "ImageHandle":
+        self._content()["height"] = _size_value(None, value, "height")
         return self
 
     def framed(self, value: bool = True) -> "ImageHandle":

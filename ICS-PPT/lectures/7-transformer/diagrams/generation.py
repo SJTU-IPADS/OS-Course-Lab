@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """generation: predict, sample, append, repeat.
 
-1: the seed text goes into the Transformer, which returns a probability for
+1: the seed text goes into the Transformer, which predicts a probability for
    every candidate next word (the twelve the video shows, then the rest).
-2: a random sample picks "woodland", a word of low probability.
-3: "woodland" is appended to the text.
-4: the longer text goes back into the model, which returns a new
+2: a random sample favours the word of highest probability, "land".
+3: this sample picks "woodland", a word of low probability.
+4: "woodland" is appended to the text.
+5: the longer text goes back into the model, which returns a new
    distribution; the arrows close the loop.
 """
 from tk import *
@@ -24,6 +25,8 @@ BX, BY, BW, BH, GAP = 420, 92, 200, 18, 5     # the bars
 PMAX = .22
 ROWY = [BY + i * (BH + GAP) + BH / 2 for i in range(len(CANDS))]
 DX, DY = 760, ROWY[10]                        # the die, level with woodland
+TOP = CANDS[0][0]                             # the word of highest probability
+TOP_END = BX + 12 + BW + 8 + width(f"{CANDS[0][1] * 100:.0f}%", 16) + 12
 
 
 def textline(appended):
@@ -43,15 +46,17 @@ def die(cx, cy, s=40):
 def frame(n):
     b = []
     b.append(rect(TB_X, TB_Y, TB_W, TB_H, FILL_DATA, DATA, rx=6, width=1.4))
-    b.append(textline(n >= 3))
+    b.append(textline(n >= 4))
     b.append(rect(MX, MY, MW, MH, FILL_BLUE, BLUE, rx=6, width=1.6))
     b.append(label(MX + MW / 2, MY + MH / 2 + 7, "Transformer", 20, INK, "bold"))
     b.append(arrow(MX + 90, TB_Y + TB_H + 2, MX + 90, MY - 4, INK, 2))
-    b.append(arrow(MX + MW + 6, MY + MH / 2, BX - 94 if n < 4 else BX + 4, MY + MH / 2, INK, 2))
+    b.append(arrow(MX + MW + 6, MY + MH / 2, BX - 94 if n < 5 else BX + 4, MY + MH / 2, INK, 2))
+    b.append(label((MX + MW + 6 + BX - 94) / 2, MY + MH / 2 - 10, "预测", 18, INK, "bold"))
 
-    if n < 4:
+    if n < 5:
+        pick = TOP if n == 2 else PICK if n >= 3 else None
         els, _ = hbars(BX, BY, CANDS, bar_w=BW, bar_h=BH, gap=GAP, size=17,
-                       pick=PICK if n >= 2 else None, pmax=PMAX)
+                       pick=pick, pmax=PMAX)
         b += els
         b.append(label(BX - 30, BY + 12 * (BH + GAP) + 18, "⋮", 20, MUTED))
     else:
@@ -62,22 +67,28 @@ def frame(n):
                        INK, anchor="start"))
         b.append(label(BX + 18, BY + 12 * (BH + GAP) + 18, "⋮", 20, MUTED))
 
-    if n >= 2:
+    if n == 2:
+        top_y = ROWY[0]
+        b += die(DX, top_y)
+        b.append(label(DX + 34, top_y - 4, "随机采样", 19, INK, "bold", anchor="start"))
+        b.append(arrow(DX - 24, top_y, TOP_END, top_y, GREEN, 2))
+        b.append(note(DX + 34, top_y + 22, "概率越高的词越容易被选中", anchor="start"))
+    if n >= 3:
         b += die(DX, DY)
         b.append(label(DX + 34, DY - 4, "随机采样", 19, INK, "bold", anchor="start"))
-    if n in (2, 3):
+    if n in (3, 4):
         b.append(arrow(DX - 24, DY, BX + 60, DY, GREEN, 2))
         b.append(note(DX + 34, DY + 22, "低概率的词也可能被选中", anchor="start"))
-    if n == 4:
+    if n == 5:
         b.append(arrow(DX - 24, DY, BX + 60, DY, MUTED, 2, dash="6 5"))
-    if n >= 3:
+    if n >= 4:
         b.append(elbow([(DX, DY - 24), (DX, TB_Y + TB_H / 2), (TB_X + TB_W + 6, TB_Y + TB_H / 2)],
                        GREEN, 2))
         b.append(label(DX + 12, 196, "追加到文本末尾", 17, GREEN, anchor="start"))
-    if n == 4:
+    if n == 5:
         b.append(label(MX + 102, 132, "更长的文本再次输入", 17, INK, anchor="start"))
     save(f"generation-{n}", b, H)
 
 
-for n in (1, 2, 3, 4):
+for n in (1, 2, 3, 4, 5):
     frame(n)

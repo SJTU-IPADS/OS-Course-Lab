@@ -20,6 +20,10 @@ lecture = Lecture(
     ratio="16:9",
 )
 
+# Softmax 的温度，「温度」一页的滑动条调节它。图 assets/temperature.svg 按默认值画出，
+# 查看器按当前的 T 重新计算图中的概率与条形（diagrams/temperature.py）。
+lecture.variable("T", 1, min=0, max=10)
+
 lecture.cover(
     "Transformer",
     author="古金宇 · 廖承凡",
@@ -28,25 +32,22 @@ lecture.cover(
 
 lecture.bridge('第一部分：GPT 的数据流与词嵌入', id='bridge-gpt')
 with lecture.section('第一部分：GPT 的数据流与词嵌入', id='gpt-part') as s:
-    with s.section('预测下一个词', id='predict-section') as ss:
+    s.bridge('什么是 GPT', id='bridge-gpt-section')
+    with s.section('什么是 GPT', id='gpt-section') as ss:
         ss.page('gpt', body=pages.gpt)
         ss.page('tasks', body=pages.tasks)
         ss.page('generation', body=pages.generation)
+        ss.page('chat', body=pages.chat)
         ss.page('gpt2-gpt3', body=pages.gpt2_gpt3)
+    s.bridge('Transformer 的数据流', id='bridge-dataflow-section')
     with s.section('Transformer 的数据流', id='dataflow-section') as ss:
+        ss.page('dataflow-overview', body=pages.dataflow_overview)
         ss.page('tokens', body=pages.tokens)
         ss.page('token-vectors', body=pages.token_vectors)
         ss.page('attention-preview', body=pages.attention_preview)
         ss.page('mlp-preview', body=pages.mlp_preview)
         ss.page('layer-stack', body=pages.layer_stack)
-        ss.page('chat', body=pages.chat)
-    with s.section('深度学习的计算形式', id='dl-form-section') as ss:
-        ss.page('machine-learning', body=pages.machine_learning)
-        ss.page('scale', body=pages.scale)
-        ss.page('tensors', body=pages.tensors)
-        ss.page('weights-data', body=pages.weights_data)
-        ss.page('gpt3-matrices', body=pages.gpt3_matrices)
-        ss.page('weights-vs-data', body=pages.weights_vs_data)
+    s.bridge('词嵌入', id='bridge-embedding-section')
     with s.section('词嵌入', id='embedding-section') as ss:
         ss.page('embedding-matrix', body=pages.embedding_matrix)
         ss.page('embedding-space', body=pages.embedding_space)
@@ -55,64 +56,55 @@ with lecture.section('第一部分：GPT 的数据流与词嵌入', id='gpt-part
         ss.page('analogies', body=pages.analogies)
         ss.page('dot-product', body=pages.dot_product)
         ss.page('plural-direction', body=pages.plural_direction)
-        ss.page('embedding-params', body=pages.embedding_params)
-        ss.page('contextual-king', body=pages.contextual_king)
         ss.page('context-size', body=pages.context_size)
+        ss.page('context-overflow', body=pages.context_overflow)
+    s.bridge('解嵌入与 Softmax', id='bridge-output-section')
     with s.section('解嵌入与 Softmax', id='output-section') as ss:
         ss.page('unembedding', body=pages.unembedding)
-        ss.page('all-predictions', body=pages.all_predictions)
-        ss.page('unembedding-params', body=pages.unembedding_params)
         ss.page('softmax', body=pages.softmax)
         ss.page('softmax-behavior', body=pages.softmax_behavior)
         ss.page('temperature', body=pages.temperature)
         ss.page('temperature-stories', body=pages.temperature_stories)
-        ss.page('logits', body=pages.logits)
 
 lecture.bridge('第二部分：注意力机制', id='bridge-attention')
 with lecture.section('第二部分：注意力机制', id='attention-part') as s:
+    s.bridge('注意力要解决的问题', id='bridge-attention-goal-section')
     with s.section('注意力要解决的问题', id='attention-goal-section') as ss:
         ss.page('attention-goal', body=pages.attention_goal)
         ss.page('mole', body=pages.mole)
         ss.page('tower-refine', body=pages.tower_refine)
-        ss.page('long-range', body=pages.long_range)
+    s.bridge('查询、键与注意力模式', id='bridge-qk-section')
     with s.section('查询、键与注意力模式', id='qk-section') as ss:
+        ss.page('block-structure', body=pages.block_structure)
         ss.page('fluffy-example', body=pages.fluffy_example)
         ss.page('query', body=pages.query)
         ss.page('key', body=pages.key)
         ss.page('attention-scores', body=pages.attention_scores)
         ss.page('attention-pattern', body=pages.attention_pattern)
-        ss.page('attention-formula', body=pages.attention_formula)
-    with s.section('掩码与注意力模式的规模', id='mask-section') as ss:
-        ss.page('training-targets', body=pages.training_targets)
-        ss.page('causal-mask', body=pages.causal_mask)
-        ss.page('context-cost', body=pages.context_cost)
-    with s.section('值与嵌入的更新', id='value-section') as ss:
         ss.page('value', body=pages.value)
         ss.page('weighted-values', body=pages.weighted_values)
-    with s.section('一个注意力头的参数', id='head-params-section') as ss:
-        ss.page('head-params', body=pages.head_params)
-        ss.page('value-lowrank', body=pages.value_lowrank)
-    with s.section('交叉注意力与多头注意力', id='multi-head-section') as ss:
+        ss.page('attention-formula', body=pages.attention_formula)
+    s.bridge('因果掩码', id='bridge-mask-section')
+    with s.section('因果掩码', id='mask-section') as ss:
+        ss.page('training-targets', body=pages.training_targets)
+        ss.page('full-pattern-training', body=pages.full_pattern_training)
+        ss.page('answer-leak', body=pages.answer_leak)
+        ss.page('generation-gap', body=pages.generation_gap)
+        ss.page('causal-mask', body=pages.causal_mask)
+    s.bridge('交叉注意力', id='bridge-multi-head-section')
+    with s.section('交叉注意力', id='multi-head-section') as ss:
         ss.page('cross-attention', body=pages.cross_attention)
-        ss.page('context-kinds', body=pages.context_kinds)
-        ss.page('multi-head', body=pages.multi_head)
-        ss.page('block-params', body=pages.block_params)
-        ss.page('output-matrix', body=pages.output_matrix)
-    with s.section('多层与规模', id='layers-section') as ss:
-        ss.page('deep-layers', body=pages.deep_layers)
-        ss.page('attention-total', body=pages.attention_total)
-        ss.page('parallel-gpu', body=pages.parallel_gpu)
+        ss.page('cross-vs-self', body=pages.cross_vs_self)
 
 lecture.bridge('第三部分：KV cache', id='bridge-kv')
 with lecture.section('第三部分：KV cache', id='kv-part') as s:
+    s.bridge('重复计算与前缀不变性', id='bridge-recompute-section')
     with s.section('重复计算与前缀不变性', id='recompute-section') as ss:
         ss.page('recompute', body=pages.recompute)
-        ss.page('feedforward', body=pages.feedforward)
-        ss.page('full-block', body=pages.full_block)
         ss.page('prefix-invariance', body=pages.prefix_invariance)
+    s.bridge('KV cache 的建立与使用', id='bridge-kv-section')
     with s.section('KV cache 的建立与使用', id='kv-section') as ss:
         ss.page('kv-cache', body=pages.kv_cache)
         ss.page('query-lifetime', body=pages.query_lifetime)
-        ss.page('prefill-decode', body=pages.prefill_decode)
 
 lecture.close("sources", body=pages.sources)

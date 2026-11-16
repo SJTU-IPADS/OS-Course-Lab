@@ -88,7 +88,7 @@ def frame(n):
         b.append(scribble(rx + 160, y + 2 * LH, rx + w - 20, rng, 7))
         b.append(scribble(rx + 18, y + 3 * LH, rx + w - 100, rng, 9))
         # how the demo was made
-        b.append(note(40, 296, "演示方法：取 API 返回的前 20 个候选，", anchor="start"))
+        b.append(note(40, 296, "取 API 返回的前 20 个候选，", anchor="start"))
         b.append(note(40, 322, "把概率取 1/5 次方后重新归一化", anchor="start"))
         root = [p ** (1 / 5) for p in BEFORE]
         after = [r / sum(root) for r in root]

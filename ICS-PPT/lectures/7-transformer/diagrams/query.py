@@ -4,7 +4,8 @@
 1: creature asks "我前面有形容词吗？" (orange); fluffy and blue answer
    "我是形容词，在这个位置" (blue, the colour of the keys to come).
 2: q_4 = W_Q E_4: the weight grid W_Q (128 × 12,288, drawn wide and short)
-   maps the tall grey E_4 (12,288) to the short orange q_4 (128).
+   maps the tall grey E_4 (12,288) to the short orange q_4 (128). Each of the
+   three is labelled with its symbol, its name and its size.
 3: the same W_Q applied to every E_i gives q_1 .. q_8.
 """
 from tk import *
@@ -82,12 +83,15 @@ def frame(n):
         b.append(text(qx + 62, mid + 12, "=", 34, INK))
         b += weights(mx, mid - qh / 2, 4, 28, 16, 16, seed="WQ")
         b += col(ex, ey0, en, "creature", "data", cw=28, ch=ech)
-        b += math(qx + 14, mid + qh / 2 + 34, "q_4", 22, Q)
-        b.append(text(qx + 14, mid + qh / 2 + 60, "128 维", 17, MUTED))
+        b += math(qx + 14, mid + qh / 2 + 32, "q_4", 22, Q)
+        b.append(text(qx + 14, mid + qh / 2 + 56, "查询的问题", 17, Q))
+        b.append(text(qx + 14, mid + qh / 2 + 80, "128 维", 17, MUTED))
         b += math(mx + 28 * 8, mid - qh / 2 - 16, "W_Q", 24, INK)
-        b.append(text(mx + 28 * 8, mid + qh / 2 + 30, "128 × 12,288", 18, MUTED))
+        b.append(text(mx + 28 * 8, mid + qh / 2 + 30, "查询矩阵", 17, INK))
+        b.append(text(mx + 28 * 8, mid + qh / 2 + 54, "128 × 12,288", 18, MUTED))
         b += math(ex + 44, mid, "E_4", 22, DATA, anchor="start")
-        b.append(text(ex + 44, mid + 28, "12,288 维", 17, MUTED, anchor="start"))
+        b.append(text(ex + 44, mid + 26, "当前 token", 17, DATA, anchor="start"))
+        b.append(text(ex + 44, mid + 50, "12,288 维", 17, MUTED, anchor="start"))
 
     if n == 3:
         ey, eh = 138, 8 * 14

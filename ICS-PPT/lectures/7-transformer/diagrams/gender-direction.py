@@ -3,9 +3,8 @@
 
 Points are placed by hand in a 2D view: they show the relation the video
 draws, not coordinates of a trained model.
-1: the four words and the step woman - man.
-2: the same step moved to king lands near queen, but not on it.
-3: the family pairs of the video (uncle/aunt, brother/sister, nephew/niece,
+1: the step woman - man, moved to king, lands near queen, but not on it.
+2: the family pairs of the video (uncle/aunt, brother/sister, nephew/niece,
    father/mother, son/daughter): the same step joins each pair.
 """
 from tk import *
@@ -29,12 +28,11 @@ def frame(n):
     b += axes(X0, Y0, 900, 330)
     b += point(*MAN, "man", INK, dx=-12, dy=22, anchor="end")
     b += point(*WOMAN, "woman", INK, dx=-12, dy=-8, anchor="end")
-    if n < 3:
+    if n == 1:
         b += point(*KING, "king", INK, dx=12, dy=20)
         b.append(vec(*MAN, *WOMAN, ORANGE))
         b += math((MAN[0] + WOMAN[0]) / 2 + 14, (MAN[1] + WOMAN[1]) / 2 + 6,
                   "E(\\up{woman}) − E(\\up{man})", 20, ORANGE, anchor="start")
-    if n >= 2 and n < 3:
         b.append(vec(*KING, *IDEAL, ORANGE, dash="6 5"))
         b.append(circle(*IDEAL, 7, WHITE, ORANGE, 2))
         b.append(text(IDEAL[0] - 14, IDEAL[1] - 14, "king + (woman − man)", 19, ORANGE,
@@ -43,9 +41,7 @@ def frame(n):
         b.append(line(*IDEAL, *QUEEN, GREEN, 1.6, dash="3 4"))
         b.append(text(QUEEN[0] + 14, QUEEN[1] + 22, "实际的 queen 有偏离", 18, GREEN,
                       anchor="start"))
-    if n < 2:
-        b += point(*QUEEN, "queen", INK, dx=14, dy=-6)
-    if n == 3:
+    if n == 2:
         # the video's family pairs, each joined by the same step
         pairs = [("uncle", "aunt", P(246, 40)), ("brother", "sister", P(376, 40)),
                  ("nephew", "niece", P(506, 40)), ("father", "mother", P(636, 40)),
@@ -61,5 +57,5 @@ def frame(n):
     save(f"gender-direction-{n}", b, H)
 
 
-for n in (1, 2, 3):
+for n in (1, 2):
     frame(n)

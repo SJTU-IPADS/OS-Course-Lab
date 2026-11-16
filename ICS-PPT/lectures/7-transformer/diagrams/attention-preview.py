@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """attention-preview: in an attention block the vectors exchange information.
 
-1: a row of six vectors (grey), arrows between many pairs.
-2: + the word "model" in "a machine learning model" and in "a fashion
-   model": its two vectors start identical and attention moves them in
-   different directions (a 2D view).
+A row of six vectors (grey), arrows between many pairs. Beside it, the word
+"model" in "a machine learning model" and in "a fashion model": its two
+vectors start identical and attention moves them in different directions
+(a 2D view).
 """
 from tk import *
 
@@ -29,7 +29,7 @@ def phrase(x, y, words, tag, links):
     return out
 
 
-def frame(n):
+def figure():
     b = []
     b.append(label(CX0 + 2.5 * PITCH, 104, "注意力：向量之间传递信息", 20, INK, "bold"))
     for k, vals in enumerate(VALS):
@@ -42,24 +42,22 @@ def frame(n):
         tx = CX0 + j * PITCH - 18 + 7 * ins.index(i)
         b.append(curve(sx, VY - 6, tx, VY - 8, bend=-30 - 24 * (j - i), color=INK, width=1.5))
 
-    if n >= 2:
-        b += phrase(620, 46, ["a", "machine", "learning", "model"], "①", [1, 2])
-        b += phrase(620, 132, ["a", "fashion", "model"], "②", [1])
-        # the 2D view
-        x0, y0 = 590, 384
-        b += axes(x0, y0, 420, 168)
-        s = (680, 306)
-        t1, t2 = (846, 240), (846, 352)
-        b.append(vec(*s, *t1, GREEN, 2.6))
-        b.append(vec(*s, *t2, GREEN, 2.6))
-        b.append(dot(*s, 6, DATA))
-        b.append(label(s[0] - 12, s[1] + 6, "model", 19, INK, anchor="end"))
-        b.append(dot(*t1, 5, GREEN))
-        b.append(dot(*t2, 5, GREEN))
-        b.append(label(t1[0] + 12, t1[1] + 6, "① 数学模型、算法", 19, GREEN, anchor="start"))
-        b.append(label(t2[0] + 12, t2[1] + 6, "② 时尚、走秀", 19, GREEN, anchor="start"))
-    save(f"attention-preview-{n}", b, H)
+    b += phrase(620, 46, ["a", "machine", "learning", "model"], "①", [1, 2])
+    b += phrase(620, 132, ["a", "fashion", "model"], "②", [1])
+    # the 2D view
+    x0, y0 = 590, 384
+    b += axes(x0, y0, 420, 168)
+    s = (680, 306)
+    t1, t2 = (846, 240), (846, 352)
+    b.append(vec(*s, *t1, GREEN, 2.6))
+    b.append(vec(*s, *t2, GREEN, 2.6))
+    b.append(dot(*s, 6, DATA))
+    b.append(label(s[0] - 12, s[1] + 6, "model", 19, INK, anchor="end"))
+    b.append(dot(*t1, 5, GREEN))
+    b.append(dot(*t2, 5, GREEN))
+    b.append(label(t1[0] + 12, t1[1] + 6, "① 数学模型、算法", 19, GREEN, anchor="start"))
+    b.append(label(t2[0] + 12, t2[1] + 6, "② 时尚、走秀", 19, GREEN, anchor="start"))
+    save("attention-preview", b, H)
 
 
-for n in (1, 2):
-    frame(n)
+figure()

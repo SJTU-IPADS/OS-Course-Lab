@@ -13,7 +13,7 @@ import sys
 from dataclasses import replace
 from pathlib import Path
 
-from lecturekit import model, references
+from lecturekit import model, references, variables
 from lecturekit.book import BookModel
 
 from .assets import AssetCopier
@@ -175,6 +175,8 @@ def _document(book: BookModel, includes: list[str]) -> str:
 
 
 def _chapter(lecture: model.Lecture, asset_root: Path, assets: AssetCopier) -> str:
+    # A page of the book is drawn at each variable's default.
+    lecture = variables.for_static(lecture)
     width = model.RATIOS[lecture.ratio][0]
     parts = [f"\\chapter{{{inline(lecture.title)}}}", ""]
     news: list[model.NewsItem] = []

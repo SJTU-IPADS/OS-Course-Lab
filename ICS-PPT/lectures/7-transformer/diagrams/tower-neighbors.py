@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """tower-neighbors: the nearest neighbours of tower in a word-vector model.
 
-One frame, 600 px wide (it sits beside the code that runs the search). A 3D
-view with a ground grid: tower in orange, the ten neighbours the search
-returns in grey around it, a few unrelated words far away. Points stand on
-dashed drop lines so their height reads.
+One frame, 600 px wide. A 3D view with a ground grid: tower in orange, the
+ten neighbours the search returns in grey around it, inside a dashed box, and
+a few unrelated words far away. Points stand on dashed drop lines so their
+height reads.
 """
 from tk import *
 
@@ -39,7 +39,7 @@ NEAR = [  # word, position, label side
     ("lighthouse", at(418, 76, 200), "start"),
     ("gate", at(258, 170, 180), "end"),
 ]
-FAR = [("banana", at(80, 262, 30), "start"), ("seven", at(150, 66, 210), "start"),
+FAR = [("banana", at(80, 262, 30), "start"), ("seven", at(100, 66, 210), "start"),
        ("happy", at(520, 300, 20), "start")]
 
 
@@ -60,12 +60,23 @@ def main():
         top, foot = P(x, y, z), P(x, y, 0)
         b.append(line(*top, *foot, LINE, 1, dash="3 4"))
         b.append(circle(*foot, 2.5, LINE, LINE, 1))
+    # the dashed box around tower and its neighbours: the extent of their labels
+    near = {w for w, _, _ in NEAR} | {"tower"}
+    xs, ys = [], []
     for w, (x, y, z), side, c, size, r in pts:
         sx, sy = P(x, y, z)
         dx = r + 5 if side == "start" else -r - 5
         b.append(dot(sx, sy, r, c))
         b.append(text(sx + dx, sy + 6, w, size, c, "bold" if w == "tower" else "normal",
                       side))
+        if w in near:
+            tw = width(w, size)
+            xs += [sx - r, sx + r, sx + dx + (tw if side == "start" else -tw)]
+            ys += [sy - r, sy + r, sy - size * 0.75, sy + 8]
+    pad = 10
+    b.append(rect(min(xs) - pad, min(ys) - pad, max(xs) - min(xs) + 2 * pad,
+                  max(ys) - min(ys) + 2 * pad, "none", ORANGE, rx=10, width=1.6,
+                  dash="6 5"))
     save("tower-neighbors", b, H, w=WIDTH)
 
 

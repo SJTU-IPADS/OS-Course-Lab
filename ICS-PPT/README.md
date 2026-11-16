@@ -64,6 +64,14 @@ under it. Each frame is a slide of its own; the outline gives the three one row.
 
 <img src="docs/images/frames-strip.png" alt="The same figure in three states: the bank file copied to a dashed bank_temp, then bank_temp holding the changed values, then renamed over bank" width="560">
 
+`lecture.variable("T", 1, min=0, max=10)` declares a number the room can
+change, and `p.slider("T")` (or `p.input("T")`) draws a control for it. A
+figure script can bind an SVG's attributes and text to it
+(`lecturekit.bind.Bindings`): the file is drawn at the default, and the viewer
+computes the figure again for any value the control sets. An image's size can
+be `width_px="$size"`. The PDF and PowerPoint are drawn at the default. See
+[variables and controls](docs/dsl.md#variables-and-controls).
+
 `arch.layer(title, modules)` says what is stacked on what; the theme draws it.
 
 ![A slide showing four stacked layers, Application over Recovery over File system over Disk, with chevrons between them](docs/images/slide-architecture.png)

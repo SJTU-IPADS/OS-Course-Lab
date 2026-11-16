@@ -5,7 +5,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, ClassVar, Iterable, Self
 
-from . import filelinks, marks
+from . import filelinks, marks, variables
 
 
 # Deck-level aspect-ratio presets, anchored on a fixed 720px height so the pixel
@@ -117,6 +117,24 @@ class Annotation:
     at: str = "top-right"
     dx: int = 0
     dy: int = 0
+
+
+@dataclass(frozen=True)
+class Variable:
+    """A number of the deck that the room can change: ``lecture.variable(...)``.
+
+    A control (``p.slider`` / ``p.input``) sets it within ``[min, max]``, to
+    any value, or to ``min + k * step`` when ``step`` is given. A page refers
+    to it as ``"$name"`` where a number is taken, and a bound figure
+    (:mod:`lecturekit.bind`) computes attributes and text from it. Every
+    target without a browser behind it draws the ``default``. See
+    :mod:`lecturekit.variables`.
+    """
+    name: str
+    default: float
+    min: float
+    max: float
+    step: float | None = None
 
 
 @dataclass(frozen=True)
@@ -315,6 +333,11 @@ class Block(LecturekitElement):
     REVEAL_STEP: ClassVar[bool] = True
     IN_FLOW: ClassVar[bool] = True
     CENTERED: ClassVar[bool] = False
+    # Deck variables (``lecturekit.variables``): the content keys that may
+    # hold a reference, at any depth of the content (a row's items included),
+    # and whether the block is a control bound to one (``content["var"]``).
+    VARIABLE_KEYS: ClassVar[frozenset[str]] = frozenset()
+    CONTROL: ClassVar[bool] = False
 
     def __new__(cls, *args: Any, **kwargs: Any):
         if cls is Block:
@@ -560,6 +583,8 @@ class Lecture:
     # Full i18n keys whose overlay entry was missing, so the baseline text is
     # what renders. `--strict` refuses to render a lecture with any. See `i18n`.
     untranslated: tuple[str, ...] = ()
+    # The deck's variables, in the order they were declared. See `Variable`.
+    variables: tuple[Variable, ...] = ()
 
 
 def resolve_asset(src: str, asset_root: Path | None, borrowed: tuple[Borrowed, ...] = ()) -> Path:
@@ -909,6 +934,7 @@ def validate_lecture(lecture: Lecture) -> None:
 
     seen: set[str] = set()
     seen_refs: set[str] = set()
+    declared = variables.check_definitions(lecture.variables)
 
     def check_node(node: Lecture | Section | Page) -> None:
         if not node.id:
@@ -940,6 +966,7 @@ def validate_lecture(lecture: Lecture) -> None:
             keys: set[str] = set()
             for block in node.blocks:
                 check_block(block, page_id=node.id, refs=seen_refs, keys=keys)
+                variables.check_block(block, declared, page_id=node.id)
             check_side_text(node)
             check_side_valign(node)
             check_layout(node)

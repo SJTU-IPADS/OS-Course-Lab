@@ -392,50 +392,6 @@ def dots_in_grid(x, y, values, cell=44, rmax=None, color=INK, fill=None, neg=RED
     return out
 
 
-# ---------------------------------------------------------------- the tally
-
-TALLY = [  # (Chinese name, symbol, count, colour) in the video's order
-    ("嵌入", "W_E", 617_558_016, INK),
-    ("键", "W_K", 14_495_514_624, K),
-    ("查询", "W_Q", 14_495_514_624, Q),
-    ("值", "W_{V↓}", 14_495_514_624, V),
-    ("输出", "W_O", 14_495_514_624, V),
-    ("MLP 升维", "W_↑", 57_982_058_496, GREEN),
-    ("MLP 降维", "W_↓", 57_982_058_496, GREEN),
-    ("解嵌入", "W_U", 617_558_016, INK),
-]
-
-
-def tally(x, y, filled, w=440, rh=34, size=18, total=True, focus=()):
-    """The running parameter count of GPT-3, one row per matrix category.
-    `filled` is a set of row indices whose counts are shown; `focus` rows are
-    washed orange. Returns (elements, height)."""
-    out = [rect(x, y, w, rh * (len(TALLY) + (1 if total else 0)) + 12, WHITE, LINE,
-                rx=6, width=1.4)]
-    s = 0
-    for i, (name, sym, n, c) in enumerate(TALLY):
-        top = y + 6 + i * rh
-        if i in focus:
-            out.append(rect(x + 4, top, w - 8, rh, FILL_ORANGE, "none", rx=4, width=0))
-        out.append(text(x + 16, top + rh / 2 + size * 0.36, name, size, INK, anchor="start"))
-        out += math(x + 150, top + rh / 2 + size * 0.36, sym, size + 2, c, anchor="start")
-        if i in filled:
-            s += n
-            out.append(text(x + w - 16, top + rh / 2 + size * 0.36, f"{n:,}", size,
-                            INK, anchor="end", font=MONO))
-        else:
-            out.append(text(x + w - 16, top + rh / 2 + size * 0.36, "?", size,
-                            LINE, anchor="end", font=MONO))
-    if total:
-        top = y + 6 + len(TALLY) * rh
-        out.append(line(x + 10, top + 2, x + w - 10, top + 2, INK, 1.4))
-        out.append(text(x + 16, top + rh / 2 + size * 0.36 + 2, "合计", size, INK, "bold",
-                        anchor="start"))
-        out.append(text(x + w - 16, top + rh / 2 + size * 0.36 + 2, f"{s:,}", size, INK,
-                        "bold", anchor="end", font=MONO))
-    return out, rh * (len(TALLY) + (1 if total else 0)) + 12
-
-
 # ---------------------------------------------------------------- misc
 
 def panel(x, y, w, h, title=None, fill=WHITE, stroke=LINE, size=18):

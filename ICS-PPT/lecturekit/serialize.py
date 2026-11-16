@@ -16,6 +16,11 @@ def lecture_to_dict(lecture: model.Lecture) -> dict:
             {"lecture_id": entry.lecture_id, "directory": entry.directory}
             for entry in lecture.borrowed
         ],
+        "variables": [
+            {"name": var.name, "default": var.default, "min": var.min,
+             "max": var.max, "step": var.step}
+            for var in lecture.variables
+        ],
         "children": [_node(child) for child in lecture.children],
     }
 

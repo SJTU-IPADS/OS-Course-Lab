@@ -17,6 +17,10 @@ Node; `render` and `view` produce a complete viewer bundle and run Marp (the
 viewer's own tool) to build `slides.html`. `render --to` picks what to produce,
 as described in [Targets](#targets).
 
+`inspect` prints the deck's [variables](dsl.md#variables-and-controls) under
+its title, one line each (`$T = 1 in [0, 10]`, `$size = 480 in [100, 800] step 10`),
+before the tree.
+
 ```bash
 # 1. Print and validate the lecture tree (human-readable)
 python3 -m lecturekit.cli inspect "$LEC"
@@ -111,6 +115,41 @@ Open a previously rendered bundle later with:
 scripts/view-viewer.sh build/lecture-viewer
 ```
 
+### Deck variables in the viewer
+
+A page with a [slider or an input box](dsl.md#variables-and-controls) is live
+in every deck the viewer shows: a rendered bundle, the live preview and the
+speaker view alike. Moving the control redraws every use of its variable at
+once, on every slide: an image's size follows a CSS custom property
+(`--lkv-<name>`), and a [bound figure](dsl.md#bound-figures) is computed again
+from the SVG the page carries, for any value the control sets. The result
+replaces the picture once it has loaded, through the same `<img>`, so the
+figure never blanks and keeps the file's size, fonts and look. At the values
+the file is drawn at, the picture is the file itself.
+
+- **Keys.** Dragging a slider, or pressing a mark or ↺, gives the keyboard
+  back to the deck, so `←` / `→` page as before. A slider reached with `Tab`
+  keeps the keys and moves one step per arrow. A value box (beside a slider,
+  or an input box) takes the keys from a click until `Enter` (which sets the
+  value) or `Escape` (which puts the box back).
+- **Where the value lives.** In the browser's `localStorage`, under
+  `lecturekit:vars:<lecture id>`, so it survives paging, a reload and a
+  live-preview rebuild. Every window of the deck on one origin shares it: the
+  speaker view (`p`), its next-slide preview and a second tab follow a change
+  made in any of them, the way the speaker view follows a page turn. Only a value
+  that differs from the default is stored, so a default changed in the source
+  takes effect unless the room has moved the control.
+- **Back to the default.** The ↺ button beside each control, greyed while the
+  value is the default. Clearing the site's data resets every variable.
+- **From disk.** Chrome and Edge keep the values for a bundle opened as a
+  `file://` page too. A browser that refuses storage there, or a private window,
+  keeps a value only until the page is reloaded; the controls still work.
+
+The PDF and the PNG are printed at the defaults: the control at its default
+position, the bound figure as its file shows it. PowerPoint, the transcript
+sheet and the book draw the defaults and print each control as one line of
+text.
+
 ### Marp is a viewer detail
 
 Marp is not a separate target — it is the tool the viewer uses to turn `slides.md`
@@ -136,6 +175,12 @@ you paged to when you return to the outline, and to come back to the same slide
 after a reload. It cannot read the number from the deck itself: Chrome treats
 every `file://` page as its own origin, so a shell opened from disk may not
 look inside its own deck.
+
+Two more serve the [deck variables](#deck-variables-in-the-viewer):
+`assets/bind.js` is the expression language of bound figures (the twin of
+`lecturekit/bind.py`), and `assets/vars.js` arms the controls and redraws the
+bound figures with it; a deck that declares no variable returns from it at
+once.
 
 ### Rendering offline
 

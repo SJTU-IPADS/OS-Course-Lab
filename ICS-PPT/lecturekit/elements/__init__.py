@@ -11,6 +11,7 @@ from .aside import Aside
 from .bridge import Bridge
 from .code import Code
 from .columns import Columns
+from .control import NumberInput, Slider
 from .cover import Cover
 from .demo import Demo
 from .highlight import Highlight
@@ -26,4 +27,4 @@ from .spacer import Spacer
 from .table import Table
 from .container import EndMarker, FlexMarker
 
-__all__ = ["Architecture", "Aside", "Bridge", "Code", "Columns", "Cover", "Demo", "EndMarker", "FlexMarker", "Highlight", "Image", "Link", "Notes", "Prose", "Row", "SideImage", "Sidenote", "Slide", "Spacer", "Table"]
+__all__ = ["Architecture", "Aside", "Bridge", "Code", "Columns", "Cover", "Demo", "EndMarker", "FlexMarker", "Highlight", "Image", "Link", "Notes", "NumberInput", "Prose", "Row", "SideImage", "Sidenote", "Slide", "Slider", "Spacer", "Table"]

@@ -16,7 +16,7 @@ from pathlib import Path
 from pptx import Presentation
 from pptx.util import Inches
 
-from lecturekit import model, rasterize
+from lecturekit import model, rasterize, variables
 from lecturekit.dsl import slugify
 from .blocks import (
     Ctx, draw_footnotes,
@@ -37,6 +37,8 @@ class PptxRenderer:
 
     def render(self, lecture: model.Lecture, output_dir: Path) -> Path:
         output_dir.mkdir(parents=True, exist_ok=True)
+        # Nothing moves in PowerPoint: each variable takes its default.
+        lecture = variables.for_static(lecture)
         # PowerPoint cannot embed SVG, so vector figures are rasterized on the
         # way in. python-pptx copies a picture's bytes into the package as the
         # picture is added, so the PNGs are only needed while slides are built.

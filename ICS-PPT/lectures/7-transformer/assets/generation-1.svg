@@ -6,6 +6,7 @@
 <text x="160.0" y="237.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">Transformer</text>
 <line x1="160.0" y1="66.0" x2="160.0" y2="192.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
 <line x1="256.0" y1="230.0" x2="326.0" y2="230.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="291.0" y="220.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">预测</text>
 <text x="420.0" y="107.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="end">land</text>
 <rect x="432.0" y="92.0" width="200.0" height="18.0" rx="2" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
 <text x="640.0" y="107.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="start">22%</text>

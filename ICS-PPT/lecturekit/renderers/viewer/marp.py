@@ -169,7 +169,7 @@ def render_pages_png(output_dir: Path, *, theme_dir: Path = THEME_DIR) -> None:
 #: Controllers of ours that ride every deck: written into the file a render
 #: produces, and injected into the watch server's response (where slides.html
 #: belongs to `marp --watch`). Each file says why it is there.
-DECK_SCRIPTS = ("svg-scope.js", "position.js")
+DECK_SCRIPTS = ("svg-scope.js", "position.js", "bind.js", "vars.js")
 
 
 def inject_deck_scripts(html: str) -> str:
@@ -180,7 +180,10 @@ def inject_deck_scripts(html: str) -> str:
     long after the session that produced it. ``svg-scope.js`` keeps
     marpit-svg-polyfill off the slides nobody is looking at, which Safari pays
     for otherwise; ``position.js`` tells the viewer shell which slide is on
-    screen, which Chrome will not let it read from a file:// frame.
+    screen, which Chrome will not let it read from a file:// frame;
+    ``bind.js`` is the expression language of bound figures, and ``vars.js``
+    arms the controls of the deck's variables and redraws the bound figures
+    with it, returning at once in a deck that declares none.
     """
     bundle = "".join(
         f"<script>\n{(ASSETS_DIR / name).read_text(encoding='utf-8')}</script>"

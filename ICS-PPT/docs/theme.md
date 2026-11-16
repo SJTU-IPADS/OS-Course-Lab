@@ -76,10 +76,20 @@ A class says everything its kind knows about itself:
 | What | Where |
 | --- | --- |
 | the targets that draw it, what it may carry | class constants `TARGETS`, `REF`, `MARKS`, `FILE_LINKS`, `VERBATIM` |
+| where it may use a deck variable, whether it is a control | `VARIABLE_KEYS` (content keys that may hold `$name`), `CONTROL` |
 | how the viewer lays it out | `REVEAL_STEP`, `IN_FLOW`, `CENTERED`, `HOLDABLE`, `IN_CONTAINER` |
 | how it validates its content | `check_content(page_id)` |
 | how it is drawn | `to_marp` (deck: HTML, PDF, PNG), `to_pptx`, `to_latex`, `to_transcript` |
 | where a footnote's superscript goes | `footnote_marker` |
+
+A deck variable is spelled once per target before any block draws itself:
+`variables.for_deck(lecture, figures)` for the Marp deck,
+`variables.for_static(lecture)` for PowerPoint, the book and the transcript
+sheet (see `lecturekit/variables.py`). A new target calls the one that fits it
+at its entry, and its blocks see plain values. A bound figure needs nothing
+from a static target: its file is drawn at the defaults. The controls' colours
+are the `--control-*` tokens of the theme, and a control's default label, the
+variable's symbol, is set in `--font-math`, the face the figures' math uses.
 
 A renderer calls the method of its target on each block of the page. A method is
 needed only for a target the class lists in `TARGETS`. The `renderers/*/blocks.py`

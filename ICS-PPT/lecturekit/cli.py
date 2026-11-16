@@ -26,6 +26,7 @@ from .model import (
 from .renderers import get_renderer
 from .renderers.viewer.marp import build_deck
 from .serialize import lecture_to_dict
+from . import variables
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -462,13 +463,16 @@ def load_lecture(lecture_dir: Path) -> Lecture:
         raise ValueError(f"{lecture_file} must define a variable named 'lecture'")
 
     lecture = module.lecture
-    if isinstance(lecture, Lecture):
-        return lecture
-    if isinstance(lecture, LectureBuilder):
-        return lecture.build()
-    if hasattr(lecture, "build"):
-        return lecture.build()
-    raise TypeError("'lecture' must be a lecturekit Lecture builder or model")
+    if isinstance(lecture, LectureBuilder) or (
+        not isinstance(lecture, Lecture) and hasattr(lecture, "build")
+    ):
+        lecture = lecture.build()
+    if not isinstance(lecture, Lecture):
+        raise TypeError("'lecture' must be a lecturekit Lecture builder or model")
+    # A bound figure is checked against the lecture's variables here, where
+    # the directory its files are in is known.
+    variables.check_figures(lecture, lecture_dir)
+    return lecture
 
 
 def load_module(path: Path) -> ModuleType:
@@ -556,6 +560,7 @@ def _module_path(module: ModuleType | None) -> Path | None:
 
 def format_tree(lecture: Lecture) -> str:
     lines = [f"v {lecture.title} ({lecture.id})"]
+    lines.extend(f"  {variables.describe(var)}" for var in lecture.variables)
     folds = outline_folds(lecture.children)
     for child in lecture.children:
         append_node(lines, child, depth=1, folds=folds)

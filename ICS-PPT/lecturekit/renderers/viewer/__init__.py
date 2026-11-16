@@ -6,7 +6,7 @@ import shutil
 from dataclasses import replace
 from pathlib import Path
 
-from lecturekit import demo, i18n, model, references, source
+from lecturekit import demo, i18n, model, references, source, variables
 from .blocks import (
     MarpCtx, annotation_markup, escape_html, render_block, render_footnotes,
     side_column,
@@ -353,7 +353,8 @@ class StaticViewerRenderer:
             encoding="utf-8",
         )
         Path(output_dir, "slides.md").write_text(
-            build_marp_markdown(lecture, reveal=self.reveal, paginate=self.paginate),
+            build_marp_markdown(lecture, reveal=self.reveal, paginate=self.paginate,
+                                asset_root=self.asset_root),
             encoding="utf-8",
         )
         Path(output_dir, "outline.html").write_text(
@@ -518,6 +519,7 @@ def build_marp_markdown(
     *,
     reveal: bool = False,
     paginate: bool = True,
+    asset_root: Path | None = None,
 ) -> str:
     lecture = with_references_page(lecture)
     paginate_value = "true" if paginate else "false"
@@ -531,10 +533,20 @@ def build_marp_markdown(
         "---",
     ]
     slide_size = model.RATIOS[lecture.ratio]
-    slides = [
-        render_marp_page(page, slide_size, reveal=reveal and _steps_through(page))
-        for page in model.flatten_pages(lecture.children)
-    ]
+    # The deck spells each variable as a CSS custom property and marks the
+    # pictures of bound figures (`variables.for_deck`); a page that uses a
+    # variable also carries its definition and the source of its bound
+    # figures, which `vars.js` reads (`variables.page_table`). Bound figures
+    # are found under `asset_root`, the lecture directory.
+    bound = variables.figures(lecture, asset_root) if lecture.variables else {}
+    pages = model.flatten_pages(lecture.children)
+    deck_pages = model.flatten_pages(variables.for_deck(lecture, bound).children)
+    slides = []
+    for page, deck_page in zip(pages, deck_pages):
+        slide = render_marp_page(deck_page, slide_size,
+                                 reveal=reveal and _steps_through(deck_page))
+        table = variables.page_table(lecture, page, bound)
+        slides.append(slide if table is None else f"{slide}\n\n{table}")
     return "\n".join(header) + "\n\n" + "\n\n---\n\n".join(slides) + "\n"
 
 
