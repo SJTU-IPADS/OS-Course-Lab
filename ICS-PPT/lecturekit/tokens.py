@@ -130,6 +130,22 @@ def numbered(prefix: str, theme: str = DEFAULT_THEME) -> list[str]:
     return sorted(names, key=lambda n: int(n[len(prefix):]))
 
 
+def px(name: str, theme: str = DEFAULT_THEME) -> float:
+    """A length token in CSS pixels: ``--footnote-band-min: 56px`` is ``56.0``.
+
+    The page geometry (the slide's padding, the footnote band, the gap beside
+    the image column) is stated once in the theme; a renderer without CSS
+    lays its boxes out from these numbers.
+    """
+    css = value(name, theme)
+    if css.endswith("px"):
+        try:
+            return float(css[:-2])
+        except ValueError:
+            pass
+    raise ValueError(f"{name}: {css!r} is not a length in px")
+
+
 def css(name: str, theme: str = DEFAULT_THEME) -> str:
     """The token as a standalone stylesheet wants it: a colour composited onto
     white (the printed sheet has no alpha), anything else verbatim."""

@@ -15,7 +15,7 @@
 <rect x="548.0" y="66.0" width="356.0" height="96.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
 <text x="726.0" y="111.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">会话 1 再次发来请求</text>
 <text x="726.0" y="132.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">重新计算前序 token 的 k、v，生成新缓存</text>
-<text x="480.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">③ 被使失效的会话再次继续时，服务端重新计算前序 token 的 k、v</text>
+<text x="480.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">③ 会话 1 再次继续时，服务端重新计算前序 token 的 k、v</text>
 <rect x="270.9" y="263.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
 <text x="302.9" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">保留的 KV Cache</text>
 <rect x="444.1" y="263.0" width="24.0" height="17.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>

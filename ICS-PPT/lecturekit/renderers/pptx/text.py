@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from ... import filelinks, marks
+from ... import filelinks, inlinemath, marks
 from . import omml
 
 
@@ -41,11 +41,14 @@ class Para:
     kind: str  # "para" | "heading" | "bullet" | "ordered" | "math"
     runs: list[Run] = field(default_factory=list)
     level: int = 0
+    # The number an ordered item is written with. Only the first item of a
+    # list uses it (as in CommonMark): it is the number the list starts at.
+    number: int = 1
 
 
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 _BULLET_RE = re.compile(r"^(\s*)[-*+]\s+(.*)$")
-_ORDERED_RE = re.compile(r"^(\s*)\d+[.)]\s+(.*)$")
+_ORDERED_RE = re.compile(r"^(\s*)(\d+)[.)]\s+(.*)$")
 
 # Inline spans, longest-delimiter-first so `**` wins over `*`. Math comes first
 # so a `*` or `_` inside a formula is never read as markdown emphasis. A mark's
@@ -53,7 +56,7 @@ _ORDERED_RE = re.compile(r"^(\s*)\d+[.)]\s+(.*)$")
 _INLINE_RE = re.compile(
     rf"{marks.SPAN_RE.pattern}"                     # <mark>keyword</mark>
     r"|\$\$(?P<dmath>.+?)\$\$"                      # $$\frac{a}{b}$$
-    r"|\$(?P<math>[^$\n]+)\$"                       # $x^2$
+    rf"|{inlinemath.INLINE}"                        # $x^2$
     r"|\[(?P<ltext>[^\]]+)\]\((?P<lurl>[^)\s]+)\)"  # [label](url)
     r"|\*\*(?P<bold>.+?)\*\*"                       # **bold**
     r"|\*(?P<italic>[^*]+?)\*"                       # *italic*
@@ -98,7 +101,8 @@ def parse_markdown(md: str) -> list[Para]:
         ordered = _ORDERED_RE.match(line)
         if ordered:
             level = len(ordered.group(1)) // 2
-            paras.append(Para("ordered", parse_inline(ordered.group(2)), level))
+            paras.append(Para("ordered", parse_inline(ordered.group(3)), level,
+                              int(ordered.group(2))))
             continue
         paras.append(Para("para", parse_inline(line.strip())))
     return paras

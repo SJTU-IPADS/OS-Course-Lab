@@ -1,7 +1,7 @@
 """Slide text set under a side image: `p.slide(...).under_side_image()`.
 
-The image column, on either side, then holds the picture at its top and the
-text below it; the other blocks keep the text column.
+The image column, on either side, then holds the picture and the text below
+it; the other blocks keep the main column.
 """
 
 import base64
@@ -66,23 +66,23 @@ def test_it_needs_a_side_image():
 def test_the_viewer_draws_the_text_in_the_image_column():
     md = render_marp_page(_lecture().build().children[0], reveal=True)
     lines = md.split("\n")
-    start = lines.index('<div class="lk-side lk-side-stack">')
+    start = lines.index('<div class="lk-side" style="--lk-side-width: 448px;">')
     end = lines.index("</div>", start)
-    # the images come first, on the line that keeps the HTML block open
-    assert lines[start + 1] == (
-        '<div class="lk-side-images">'
-        '<img src="assets/pic.png" alt="" class="lk-side-fit"></div>'
+    # the picture first, as wide as the column
+    assert lines[start + 2] == (
+        '<figure class="lk-side-img lk-side-fit"><img src="assets/pic.png" alt=""></figure>'
     )
     # the text is markdown of its own, between blank lines, inside the column
-    assert lines[start + 2] == ""
-    assert "- under the picture" in lines[start + 3:end]
+    assert lines[start + 3] == ""
+    assert "- under the picture" in lines[start + 4:end]
     assert md.count("under the picture") == 1
     # the column is not a reveal step; the code block beside it is the only one
     assert md.count('class="reveal-block"') == 1
-    assert md.index("</div>", md.index("lk-side-stack")) < md.index("int beside;")
+    # the image column is on the left: it comes before the main column
+    assert md.index("</div>", md.index('<div class="lk-side"')) < md.index("int beside;")
 
 
-def test_a_column_without_text_is_drawn_as_before():
+def test_a_column_without_text_holds_only_its_picture():
     lecture = Lecture(id="lec", title="T")
 
     def body(p):
@@ -91,8 +91,10 @@ def test_a_column_without_text_is_drawn_as_before():
         p.slide("beside the picture")
     lecture.page("pg", body=body)
     md = render_marp_page(lecture.build().children[0])
-    assert '<figure class="lk-side">' in md
-    assert "lk-side-stack" not in md
+    column = md[md.index('<div class="lk-side"'):]
+    column = column[:column.index("</div>")]
+    assert column.count("<figure") == 1
+    assert "beside the picture" not in column
 
 
 def test_powerpoint_stacks_the_picture_and_the_text_in_the_column():
@@ -102,30 +104,30 @@ def test_powerpoint_stacks_the_picture_and_the_text_in_the_column():
     out = PptxRenderer(asset_root=src).render(_lecture().build(), Path(tempfile.mkdtemp()))
     slide = Presentation(str(out)).slides[0]
     layout = Layout.from_ratio("16:9")
-    column = round(layout.width * 0.4)
+    column = px(model.side_column_px("40%", 1120))
     pic = next(s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
     under = next(s for s in slide.shapes if s.has_text_frame
                  and s.text_frame.text.endswith("under the picture"))
     beside = next(s for s in slide.shapes if s.has_text_frame
                   and "int beside;" in s.text_frame.text)
-    # the picture is as wide as the column, which keeps the slide's margins
+    # the picture is as wide as the column, its share of the body
     assert pic.left == layout.content_left
-    assert pic.left + pic.width == column + px(40)
+    assert pic.width == column
     # the text is in the same column, below the picture
     assert under.left == pic.left
     assert under.top >= pic.top + pic.height
     assert under.left + under.width <= pic.left + pic.width
-    # the other block keeps the text column and starts under the title
-    assert beside.left >= column + layout.content_left
+    # the other block takes the main column, 40px on, and starts under the title
+    assert beside.left == layout.content_left + column + px(40)
     assert beside.top < under.top
 
 
 def test_the_viewer_stacks_a_right_column_the_same_way():
     md = render_marp_page(_lecture("right").build().children[0])
-    assert md.startswith("<!-- _class: lk-side-right -->")
-    assert '<div class="lk-side lk-side-stack">' in md
+    side = md.index('<div class="lk-side" style="--lk-side-width: 448px;">')
     assert md.count("under the picture") == 1
-    assert md.index("</div>", md.index("lk-side-stack")) < md.index("int beside;")
+    # the main column comes first, the image column, with the text, after it
+    assert md.index("int beside;") < side < md.index("under the picture")
 
 
 def test_powerpoint_stacks_a_right_column_against_the_right_margin():
@@ -136,17 +138,17 @@ def test_powerpoint_stacks_a_right_column_against_the_right_margin():
         _lecture("right").build(), Path(tempfile.mkdtemp()))
     slide = Presentation(str(out)).slides[0]
     layout = Layout.from_ratio("16:9")
-    column = round(layout.width * 0.4)
+    column = px(model.side_column_px("40%", 1120))
     pic = next(s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
     under = next(s for s in slide.shapes if s.has_text_frame
                  and s.text_frame.text.endswith("under the picture"))
     beside = next(s for s in slide.shapes if s.has_text_frame
                   and "int beside;" in s.text_frame.text)
     # the mirror of the left column: the outer edge at the side padding, the
-    # inner edge 40px into the text column's share
+    # main column 40px short of it
     assert pic.left + pic.width == layout.width - layout.content_left
-    assert pic.left == layout.width - column - px(40)
+    assert pic.left == layout.width - layout.content_left - column
     assert under.left == pic.left
     assert under.top >= pic.top + pic.height
     assert beside.left == layout.content_left
-    assert beside.left + beside.width <= layout.content_left + layout.content_width - column
+    assert beside.left + beside.width <= pic.left - px(40)

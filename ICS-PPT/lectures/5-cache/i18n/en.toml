@@ -589,6 +589,49 @@ The cache has far less capacity than main memory and holds only a subset of its 
 # 数值参考 Intel 的 Memory Performance in a Nutshell 与 Arm 的 About memory latency。前者给出约 1 ns、4 ns 与 40 ns 的缓存访问示例，后者给出约 100 ns 的内存访问示例。
 # 缓存的容量远小于内存，只能保存内存的一部分块。
 
+['cache-naive.title']
+src_hash = 'afb3ead0'
+text = 'The Most Direct Cache'
+# src: 最直接的缓存
+
+['cache-naive.slide.1']
+src_hash = 'd31f3c8c'
+text = 'Each entry of the cache holds a complete address and the data at that address, and a lookup compares the address with that of every entry, an equal one being a hit:'
+# src:
+# 
+# 缓存的每一项保存一个完整的地址和该地址的数据，查找时与每一项的地址比较，相等即 hit：
+
+['cache-naive.slide.2']
+src_hash = '52224ee0'
+text = '''
+- Addresses take up cache storage, for example when an address and its data are both 8 bytes, the data occupy only half of the storage.
+- When the cache has $n$ entries, every lookup compares $n$ addresses.
+'''
+# src:
+# 
+# - 地址占用缓存的存储，比如地址与数据都是 8 字节时，数据只占一半的存储。
+# - 缓存有 $n$ 项时，每次查找都要比较 $n$ 个地址。
+
+['cache-naive.highlight.1']
+src_hash = '7543af16'
+text = 'How can the share of the data be raised and the comparisons in each lookup be reduced?'
+# src: 怎样提高数据所占的比例，并减少每次查找的比较？
+
+['cache-naive.notes.1']
+src_hash = 'cd2175c0'
+text = '''
+When the CPU reads or writes memory it gives an address, and the cache uses that address to find the data or to decide that the data are not in the cache.
+The most direct design treats the cache as a table: each entry holds a complete address and the 8 bytes of data at that address. A lookup compares the address given by the CPU with the address of every entry in the table. An equal entry is a hit, and no equal entry is a miss. The figure writes the addresses as short hexadecimal numbers, and each address actually takes 8 bytes.
+This cache works, but it has two defects. First, the purpose of a cache is to hold data, and the storage that holds addresses is extra overhead. When an address and its data are both 8 bytes, the data occupy only half. Second, a piece of data can be placed in any entry, so a lookup has to compare with all $n$ entries.
+The organisation of a cache starts from this design, raises the share of the data and reduces the comparisons in a lookup. The next page gives this organisation.
+'''
+# src:
+# 
+# CPU 读写内存时给出地址，缓存要根据这个地址找到数据，或者判定数据不在缓存中。
+# 最直接的做法把缓存当作一张表：每一项保存一个完整的地址和该地址处的 8 字节数据。查找时，把 CPU 给出的地址与表中每一项的地址比较，有相等的项即 hit，没有相等的项即 miss。图中的地址写成较短的十六进制数，每个地址实际占 8 字节。
+# 这种缓存能够工作，但有两个缺陷。第一，缓存的用途是保存数据，保存地址的存储是额外的开销，地址与数据都是 8 字节时，数据只占一半。第二，一份数据可以放在任意一项中，查找时必须与全部 $n$ 项比较。
+# 缓存的组织在这一做法的基础上提高数据所占的比例，减少查找时的比较，下一页给出这种组织。
+
 ['cache-organization.title']
 src_hash = '8430b3d4'
 text = 'Sets, Lines and Blocks of a Cache'
@@ -613,20 +656,27 @@ text = 'A cache consists of S sets, each set has E lines, each line has a valid 
 # src: 缓存由 S 个组构成，每组 E 行，每行有有效位、标记和 B 字节的块；容量 C 等于 S、E、B 之积
 
 ['cache-organization.slide.2']
-src_hash = '3994d583'
-text = '- The capacity of a cache counts only data bytes: $C=S\times E\times B$.'
+src_hash = 'd9359b0b'
+text = '''
+- The capacity of a cache counts only data bytes: $C=S\times E\times B$.
+- One tag covers a block of $B$ bytes, for example when $B=64$ bytes, a tag shorter than 8 bytes covers 64 bytes of data.
+- Some bits of the address select one set directly, and a lookup compares only the tags of the $E$ lines in that set.
+'''
 # src:
 # 
 # - 缓存的容量只计数据字节：$C=S\times E\times B$。
+# - 一个标记对应 $B$ 字节的块，比如 $B=64$ 字节时，不到 8 字节的标记对应 64 字节的数据。
+# - 地址中的一部分位直接选出一组，查找只比较组内 $E$ 行的标记。
 
 ['cache-organization.notes.1']
-src_hash = '006c05f4'
+src_hash = '6e5828c7'
 text = '''
 The cache in the figure has $S=4$, $E=2$ and $B=8$.
 A block is $B$ bytes of data, with $B=8$ in the figure. The bytes of a block are a contiguous stretch of main memory.
 A line consists of a valid bit, a tag and a block. The valid bit and the tag are extra storage needed to manage the data. The tag is the high part of the address left after removing the set index and the block offset, and it identifies where the block is in main memory.
 $E$ lines make up a set, with $E=2$ in the figure. The cache consists of $S$ sets, with $S=4$ in the figure. $S$ and $B$ are powers of 2, so $s$ bits and $b$ bits are enough to express the set number and the byte number within a block.
 The capacity counts only data bytes, $4\times2\times8=64$ bytes, and the valid bits and tags are not counted in the capacity.
+This organisation answers the two defects of the most direct cache. First, a line has only one tag, and the tag covers $B$ bytes, so the cost of storing the address is spread over the whole block. With 64-bit addresses and $B=64$ bytes, the tag is shorter than 64 bits and the data occupy about nine tenths of a line. Second, some bits of the address select one set, a block can be placed only in that set, and a lookup compares only the tags of the $E$ lines in the set.
 '''
 # src:
 # 
@@ -635,6 +685,7 @@ The capacity counts only data bytes, $4\times2\times8=64$ bytes, and the valid b
 # 一行由有效位、标记和一个块构成。有效位和标记是管理数据所需的额外存储。标记是地址中除去组索引和块偏移之后的高位部分，标识块在内存中的位置。
 # $E$ 行构成一组，图中 $E=2$。缓存由 $S$ 个组构成，图中 $S=4$。$S$ 与 $B$ 取 2 的幂，所以用 $s$ 位和 $b$ 位就能表示组号与块内字节号。
 # 容量只计数据字节，$4\times2\times8=64$ 字节，有效位和标记不计入容量。
+# 这一组织回答最直接的缓存的两个缺陷。第一，一行只有一个标记，标记对应 $B$ 个字节，保存地址的开销分摊到整个块。地址为 64 位、$B=64$ 字节时，标记不到 64 位，数据约占一行的九成。第二，地址中的一部分位选出一组，块只能放入这一组，查找只比较组内 $E$ 行的标记。
 
 ['cache-address.title']
 src_hash = '14381722'
@@ -655,15 +706,15 @@ text = '''
 # - 字段的位数由缓存的参数决定：$s=\log_2 S$，$b=\log_2 B$，$t=m-s-b$。
 
 ['cache-address.notes.1']
-src_hash = '9fff3a4b'
+src_hash = 'b919bdfa'
 text = '''
-The division of an address depends only on the cache parameters $S$ and $B$. The block offset is the low $b$ bits of the address, and the $B$ addresses within one block have the same tag and set index and differ only in the block offset.
+The division of an address depends only on the cache parameters $S$ and $B$. The block offset is the low $b$ bits of the address, and the $B$ addresses within one block have the same tag and set index and differ only in the block offset. With the block offset in the lowest bits, a block is $B$ contiguous bytes of main memory, so fetching a block also fetches the bytes next to the one accessed, which exploits spatial locality.
 The set index determines the set in which a block is placed, and the tag distinguishes the different blocks that map to the same set. So the position of a block is determined by the set index, and the identity of a block is determined by the tag.
 The division on this page holds for the three cache models, direct-mapped, set-associative and fully associative, and the three differ only in the number of lines in each set.
 '''
 # src:
 # 
-# 地址的拆分只取决于缓存的参数 $S$ 与 $B$。块偏移是地址的低 $b$ 位，同一个块内的 $B$ 个地址有相同的标记与组索引，只有块偏移不同。
+# 地址的拆分只取决于缓存的参数 $S$ 与 $B$。块偏移是地址的低 $b$ 位，同一个块内的 $B$ 个地址有相同的标记与组索引，只有块偏移不同。块偏移取最低位，一个块才是内存中连续的 $B$ 个字节，取入一个块就取入了被访问字节的相邻字节，从而利用空间局部性。
 # 组索引决定块放在哪个组，标记区分映射到同一个组的不同块。所以一个块的位置由组索引确定，块的身份由标记确定。
 # 这一页的拆分对直接映射、组相联与全相联三种缓存模型都成立，三者的差别只是每个组里有几行。
 
@@ -1239,9 +1290,16 @@ LFU selects by access count, and random replacement does not record the access h
 # LFU 按访问次数选择，随机替换不记录各行的访问历史。直接映射缓存每组只有一行，被替换的行没有选择。硬件实现 LRU 需要为每组保存访问顺序，路数较多时代价增大，这些实现细节不在这里展开。
 
 ['cache-compare.title']
-src_hash = 'acf37caa'
-text = 'Comparison of the Three Models'
-# src: 三种模型的对比
+src_hash = '3edb6650'
+text = 'Three Configurations of One Model'
+# src: 同一模型的三种配置
+
+['cache-compare.slide.1']
+src_hash = '4e6bb097'
+text = 'The address has no line number, $E$ is the flexibility of placement, and direct mapping ($E=1$) and full associativity ($S=1$) are the two extremes.'
+# src:
+# 
+# 地址中没有行号，$E$ 是放置的灵活程度，直接映射（$E=1$）与全相联（$S=1$）是两端。
 
 ['cache-compare.table.1.cell.0.0']
 src_hash = 'c98e118e'
@@ -1364,20 +1422,72 @@ text = 'High'
 # src: 高
 
 ['cache-compare.highlight.1']
-src_hash = '3494e6ac'
-text = 'The usual compromise: set associativity.'
-# src: 通常选择“中庸之道”：组相联
+src_hash = '1899b6d2'
+text = 'How should each cache level choose $E$?'
+# src: 各级缓存应当怎样选择 $E$？
 
 ['cache-compare.notes.1']
-src_hash = 'e49c7ae7'
+src_hash = 'd72e587a'
 text = '''
+The three caches are one model: the address is split into tag, set index and block offset, the set index selects a set, and the tags within the set are compared. The three differ only in the value of E. The address has no field for the line, so any line of the set may hold the block, and a lookup compares the tags of all lines in the set.
 The caches in the figure all have 8 lines: the direct-mapped cache has 8 sets of 1 line each, the 2-way or 4-way set-associative caches lie in between, and the fully associative cache has 1 set of 8 lines. The three models have the same capacity; the number of set index bits in the address decreases in this order, and the number of tags compared per access increases.
-Conflict misses decrease as $E$ increases, and the hardware cost (comparators and replacement logic) increases as $E$ increases. Real caches choose a compromise $E$: caches with many lines use 4 to 20 ways.
+The two extremes have clear advantages and disadvantages. A direct-mapped cache compares only one tag, so its lookup is fast. A block can be placed in only one line, so conflict misses occur even while the cache still has empty lines. A fully associative cache can place a block in any empty line and has no conflict misses. Every access compares the tags of all lines, so its lookup is slow, and a miss is determined only after all lines have been compared.
+Conflict misses decrease as E increases, and the hardware cost (comparators and replacement logic) increases as E increases. Real caches choose a compromise E, and the cache levels choose different values of E. The next page explains why.
 '''
 # src:
 # 
+# 三种缓存是同一个模型：地址拆成标记、组索引与块偏移，组索引选出一组，组内比较标记。三者的差别只在 E 的取值。地址中没有表示行的字段，所以组内每一行都可能保存这个块，查找时要比较组内全部行的标记。
 # 图中的缓存都是 8 行：直接映射是 8 组每组 1 行，2 路或 4 路组相联居中，全相联是 1 组 8 行。三种模型容量相同，地址的组索引位数依次减少，一次访问需要比较的标记个数依次增加。
-# 冲突 miss 随 E 增大而减少，硬件代价（比较器与替换逻辑）随 E 增大而增大。实际的缓存取折中的 E：行数较多的缓存取 4 至 20 路。
+# 两端的优缺点明确。直接映射只比较一个标记，查找快，块只能放入一行，缓存仍有空行时也会发生冲突 miss。全相联的块可以放入任意空行，没有冲突 miss，每次访问要比较全部行的标记，查找慢，miss 时也要比较完全部的行才能确定。
+# 冲突 miss 随 E 增大而减少，硬件代价（比较器与替换逻辑）随 E 增大而增大。实际的缓存取折中的 E，各级缓存取的 E 不同，下一页说明原因。
+
+['assoc-levels.title']
+src_hash = 'feb6d50e'
+text = 'Associativity of Each Cache Level'
+# src: 各级缓存的相联度
+
+['assoc-levels.slide.1']
+src_hash = '79888723'
+text = 'The caches of a CPU are usually organized in three levels, L1, L2 and L3. L1 is the smallest and fastest, and L3 is the largest and slowest. The hit time consists of tag comparison and data readout. The larger $E$ is, the slower the comparison.'
+# src:
+# 
+# CPU 的缓存通常分为 L1、L2、L3 三级，L1 最小、最快，L3 最大、最慢。hit 时间由比较标记与读出数据组成，$E$ 越大，比较越慢。
+
+['assoc-levels.slide.2']
+src_hash = '26c8b765'
+text = 'The comparison takes a similar time at every level and is a large share of the L1 hit time, so L1 uses a smaller $E$ and L3 a larger $E$, for example the L1 data cache of AMD Zen 4 is 8-way and its L3 is 16-way.'
+# src:
+# 
+# 比较的时间在各级相近，在 L1 的 hit 时间中占比大，所以 L1 取较小的 $E$，L3 取较大的 $E$，比如 AMD Zen 4 的 L1 数据缓存为 8 路，L3 为 16 路。
+
+['assoc-levels.slide.2.footnote.1']
+src_hash = '513aefeb'
+text = 'AMD: [EPYC 9004 architecture overview](https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/white-papers/58015-epyc-9004-tg-architecture-overview.pdf); Chips and Cheese: [V-Cache on Zen 4](https://chipsandcheese.com/p/amds-7950x3d-zen-4-gets-vcache).'
+# src: AMD：[EPYC 9004 架构概述](https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/white-papers/58015-epyc-9004-tg-architecture-overview.pdf)；Chips and Cheese：[Zen 4 的 V-Cache](https://chipsandcheese.com/p/amds-7950x3d-zen-4-gets-vcache)。
+
+['assoc-levels.highlight.1']
+src_hash = '1c371962'
+text = 'Before optimizing a part, look at its share of the total time.'
+# src: 优化一个部分之前，先看它在总时间中的占比。
+
+['assoc-levels.notes.1']
+src_hash = '273bbe7c'
+text = '''
+A larger E reduces conflict misses and raises the hit rate. This holds for every cache level, so it does not explain why the levels choose different values of E. What differs between the levels is the share of tag comparison in the hit time.
+The cycle counts in the figure are schematic: tag comparison takes 1 cycle when E is small and 2 cycles when E is large. Data readout takes 3 cycles in L1 and 48 cycles in L3. The four bars are drawn to the same scale.
+For the same increase from 1 cycle to 2 cycles, the hit time of L1 grows from 4 to 5 cycles, an increase of one quarter. The hit time of L3 grows from 49 to 50 cycles and stays almost unchanged. A smaller E therefore matters for L1 and matters little for L3. L3 uses a larger E in exchange for fewer conflict misses.
+In a real processor, tag comparison and data readout can partly overlap. Here the two are shown separately to explain their shares.
+L1 does not use E = 1 either: comparators work in parallel in hardware. The E tags of a set are compared by E comparators at the same time, and a selection circuit then picks out the line that hits. A 4-way cache therefore compares in about the same time as a 1-way cache and has far fewer conflict misses. As E grows further, the comparators and the selection circuit grow, and latency and power increase, so real caches rarely exceed 16 to 32 ways.
+Data: the L1 data cache of AMD Zen 4 is 32 KB and 8-way (AMD's EPYC 9004 architecture overview). The L3 controller compares a set of 16 tags at a time, that is, 16 ways (Chips and Cheese's tests of the 7950X3D). An L1 access on Zen 4 takes 4 cycles, and an L3 access about 50 cycles.
+'''
+# src:
+# 
+# E 增大使冲突 miss 减少，hit 率提高。这一点对各级缓存都成立，不能说明各级为什么取不同的 E。各级不同的是比较标记在 hit 时间中的占比。
+# 图中的周期数是示意：比较标记在 E 较小时 1 个周期，E 较大时 2 个周期。读出数据在 L1 为 3 个周期，在 L3 为 48 个周期。四条横条用同一个比例画出。
+# 同样从 1 个周期增加到 2 个周期，L1 的 hit 时间由 4 增加到 5 个周期，增加四分之一。L3 由 49 增加到 50 个周期，几乎不变。所以减小 E 对 L1 有意义，对 L3 意义很小。L3 取较大的 E，换取更少的冲突 miss。
+# 实际的处理器中，比较标记与读出数据可以部分重叠，这里把两者分开说明占比。
+# L1 也不取 E = 1：比较器在硬件中并行工作，组内 E 个标记由 E 个比较器同时比较，再由一个选择电路取出 hit 的行，所以 4 路与 1 路的比较时间接近，冲突 miss 却少得多。E 继续增大时，比较器与选择电路变大，延迟与功耗增加，所以实际的缓存很少超过 16 至 32 路。
+# 数据：AMD Zen 4 的 L1 数据缓存为 32 KB、8 路（AMD 的 EPYC 9004 架构概述），L3 的控制器每次比较一组 16 个标记，即 16 路（Chips and Cheese 对 7950X3D 的测试）。Zen 4 的 L1 访问为 4 个周期，L3 约为 50 个周期。
 
 ['section.exercise-summary-section.title']
 src_hash = 'c97a3708'
@@ -1788,23 +1898,28 @@ src_hash = '7badefe8'
 text = 'Part 3: Write Policies and Performance Metrics'
 # src: 第三部分：写策略与性能指标
 
+['section.write-consistency-section.title']
+src_hash = '7ddcbd50'
+text = 'Consistency of Cached Copies'
+# src: 缓存副本的一致性
+
 ['copy-fail.title']
 src_hash = '2f84f72a'
 text = 'News: the Copy Fail vulnerability'
 # src: 新闻：Copy Fail 漏洞
 
 ['copy-fail.slide.1']
-src_hash = 'f16275b7'
+src_hash = '11f65d73'
 text = '''
 The Linux kernel vulnerability **Copy Fail (CVE-2026-31431)** was publicly disclosed on April 29, 2026.
 - **Page cache**: file contents kept in memory for reuse when files are read or executed.
-- **Zero-copy** reduces copying by sharing data pages. An error in kernel cryptographic processing allowed unauthorized writes to these shared file pages.
+- **Zero-copy** reduces copying by sharing data pages. An error in kernel cryptographic processing allowed unauthorized writes to these shared file pages. Executing the modified su can grant root privileges.
 '''
 # src:
 # 
 # 2026 年 4 月 29 日，Linux 内核漏洞 **Copy Fail（CVE-2026-31431）** 被公开。
 # - **page cache（文件页缓存）**：把文件内容保存在内存中，供文件读取与执行复用。
-# - **零拷贝**通过共享数据页减少复制。内核加解密处理中的错误使这些共享文件页被越权写入。
+# - **零拷贝**通过共享数据页减少复制。内核加解密处理中的错误使这些共享文件页被越权写入，执行被修改的 su 可获得 root 权限。
 
 ['copy-fail.image.1.alt']
 src_hash = '99b80488'
@@ -1817,13 +1932,14 @@ text = 'Theori / Xint: [Copy Fail technical analysis](https://xint.io/blog/copy-
 # src: Theori / Xint：[Copy Fail 技术说明](https://xint.io/blog/copy-fail-linux-distributions)。
 
 ['copy-fail.highlight.1']
-src_hash = 'f3aed4f2'
-text = 'The cached contents differ from the disk file. Executing the modified su can grant root privileges.'
-# src: 缓存与磁盘内容不一致，执行被修改的 su 可获得 root 权限。
+src_hash = '5a553764'
+text = 'Caching creates several copies of one piece of data. After a copy is modified, which copy is authoritative?'
+# src: 缓存使一份数据有多个副本。副本被修改后，以哪一份为准？
 
 ['copy-fail.notes.1']
-src_hash = 'bc3d1f69'
+src_hash = '6edfb871'
 text = '''
+A cache provides a faster access path and also makes one piece of data exist in several places: one copy on disk and one in memory. When the copies are inconsistent, errors occur.
 The page cache is the operating system's in-memory copy of file contents. Reading or executing a file can use its cached contents.
 Copy Fail is CVE-2026-31431, publicly disclosed on April 29, 2026. The default target in the published example is /usr/bin/su.
 Zero-copy avoids copying by sharing pages. An incorrect in-place operation in the kernel cryptographic interface made shared file pages part of a writable destination, allowing a local unprivileged user to modify cached contents that should have been read-only.
@@ -1835,6 +1951,7 @@ Linux fix: https://github.com/torvalds/linux/commit/a664bf3d603dc3bdcf9ae47cc21e
 '''
 # src:
 # 
+# 缓存提供了一条更快的访问路径，同时使一份数据同时存在于多处：磁盘上一份，内存中一份。副本之间不一致，就会出现错误。
 # page cache 是操作系统在内存中保存的文件内容副本。文件被读取或执行时，系统可以使用已缓存的内容。
 # Copy Fail 的编号为 CVE-2026-31431，2026 年 4 月 29 日公开。公开示例的默认目标是 /usr/bin/su。
 # 零拷贝通过共享页面避免复制。内核加解密接口的原地处理错误让共享文件页进入可写目标，导致普通本地用户越权修改本应只读的缓存内容。
@@ -1861,8 +1978,13 @@ src_hash = 'da4d40d2'
 text = 'Modifications must be preserved and written to memory before the cache line is replaced.'
 # src: 写入之后，必须保存修改，并在替换缓存行之前把新值写入内存。
 
+['write-problem.highlight.1']
+src_hash = '93627eb6'
+text = 'Modifications must be written to memory. When should they be written?'
+# src: 修改必须写入内存，应当在什么时候写？
+
 ['write-problem.notes.1']
-src_hash = 'dd718689'
+src_hash = '4acfa1f7'
 text = '''
 The figure contains only a CPU, one cache, and memory. Registers and the cache are inside the CPU boundary. Orange marks a newly written copy, and a red outline marks the old value.
 Frame 1: the cache and memory each hold a copy of x with value 1.
@@ -1871,6 +1993,7 @@ Frame 3: only the cache is updated. Memory still holds 1, so the copies differ.
 Frame 4 shows an incorrect action: replace the line with another block without saving its modifications to memory. The new value 2 is lost.
 Frame 5: reading x again misses, and the value fetched from memory is 1. The program cannot read the 2 it wrote.
 A write policy must therefore specify when memory is updated and ensure that replacement does not lose modifications. The incorrect sequence motivates this requirement.
+Memory and disk have the same problem: when the modifications of a document exist only in memory and the power fails before they are saved to disk, the modifications are lost. Cache and memory lose power together, and their contents are lost together, so consistency after a power failure need not be considered between them. Modifications in the cache must still be written to memory, or they are lost when the line is replaced.
 '''
 # src:
 # 
@@ -1881,39 +2004,12 @@ A write policy must therefore specify when memory is updated and ensure that rep
 # 第四帧演示一种错误处理：直接用其他块替换这一行，未把修改保存到内存，新值 2 丢失。
 # 第五帧：再读 x，缓存 miss，从内存取回的值为 1，程序读不到自己写入的 2。
 # 因此必须规定何时更新内存，并确保修改不会在替换时丢失。图中的错误过程用于提出问题。
+# 内存与磁盘之间也有同样的问题：文档的修改只在内存中，没有保存到磁盘时断电，修改就丢失了。缓存与内存一同掉电，两者的内容一起丢失，所以两者之间不需要考虑掉电后的一致性。缓存中的修改仍然必须写入内存，否则替换之后就丢失了。
 
-['write-through.title']
-src_hash = 'd4566e09'
-text = 'Write Hit: Write-Through'
-# src: 写 hit：写直达
-
-['write-through.slide.1']
-src_hash = 'ae4fc244'
-text = '''
-A **write hit** occurs when the block containing the CPU's write address is already cached.
-
-**Write-through** updates the cache and writes the same word to memory on every write hit. A replaced cache line can be discarded.
-'''
-# src:
-# 
-# CPU 写入的地址所在的块已在缓存中，称为**写 hit**。
-# 
-# **写直达**（write-through，也称写穿）：每次写 hit，更新缓存，并把这个字写入内存。缓存行被替换时可以直接丢弃。
-
-['write-through.notes.1']
-src_hash = 'e51e2ddd'
-text = '''
-The right-hand column counts writes to the cache and memory. One arrow transfers one word.
-The four frames show one write hit and the accumulated result: the CPU issues a write, the cache is updated, and the same word is written to memory. Both copies then agree.
-Writing the same word 100 times updates the cache 100 times and sends 100 word writes to memory. The line has no modifications awaiting transmission to memory, so it can be discarded when replaced.
-The figures explain data transfers without expanding write buffers. Actual CPUs can use a write buffer to reduce waiting, so write-through does not imply that every CPU write blocks until memory has completed the write.
-'''
-# src:
-# 
-# 右侧记录缓存与内存被写入的次数，一个箭头表示传送一个字。
-# 四帧展开一次写 hit 的处理与累计结果：CPU 发出写入，缓存更新，并把同一个字写入内存，随后两份数据一致。
-# 对同一个字连续写 100 次，缓存更新 100 次，内存也接收 100 次字写入。替换缓存行时没有尚未传往内存的修改，可以直接丢弃。
-# 这里用数据传输说明写直达，不展开写缓冲。实际 CPU 可以借助写缓冲减少等待，不能据此断言每次写都阻塞到内存完成。
+['section.write-hit-section.title']
+src_hash = 'e9836922'
+text = 'Write Hits: Write-Back and Write-Through'
+# src: 写 hit：写回与写直达
 
 ['write-back.title']
 src_hash = 'c08ebc30'
@@ -1921,36 +2017,209 @@ text = 'Write Hit: Write-Back'
 # src: 写 hit：写回
 
 ['write-back.slide.1']
-src_hash = 'd1a28591'
+src_hash = '6ec94638'
 text = '''
+A **write hit** occurs when the block containing the CPU's write address is already cached.
+
 **Write-back** updates only the cache on a write hit and postpones the memory update until the line is replaced:
 - Each line has a **dirty bit**: D = 1 indicates modifications that have not been written back to memory.
 - Before replacement, a line with D = 1 is written back to memory as a whole block. A line with D = 0 can be discarded.
 '''
 # src:
 # 
+# CPU 写入的地址所在的块已在缓存中，称为**写 hit**。
+# 
 # **写回**（write-back）在写 hit 时只更新缓存，内存的更新推迟到该行被替换时：
 # - 每行增加一位**脏位**（dirty bit）：D = 1 表示有尚未写回内存的修改。
 # - 替换前，D = 1 的行先整块写回内存，D = 0 的行直接丢弃。
 
+['write-back.highlight.1']
+src_hash = 'dbba11b0'
+text = 'The two copies in the cache and in memory differ. Can they always be kept consistent?'
+# src: 缓存与内存中的两份副本不一致，能否始终保持一致？
+
 ['write-back.notes.1']
-src_hash = 'ec74f74d'
+src_hash = '43d03cea'
 text = '''
+The most direct design writes memory on every write, so writing the same word 100 times also writes memory 100 times, and the cache does not reduce the writes. Write-back postpones the memory update until replacement.
 The cache line has a dirty bit D. Four parallel arrows transfer a whole block.
 Frame 1: the CPU writes x = 2, updating only the cache and setting D to 1. Memory still holds 1.
 Frame 2: another 99 writes increase x to 101. Each updates only the cache. The cache has been updated 100 times, and memory has not been written.
 Frame 3: when the line must be replaced, first write the entire dirty block to memory. The old line still holds the data being written back.
 Frame 4: only after writeback completes is the line used for another block. The 100 cached word writes are combined into one whole-block write to memory.
 The example assumes that the block remains cached during all 100 writes. D = 1 means writeback is required; the values need not differ, since the program could write the original value again.
+Under write-back, the cache holds the new value and memory holds the old one, so the two copies differ, and D = 1 records this. The cost of write-back appears at replacement: before a dirty line is replaced, the whole block must first be written back to memory, and the level below a cache is usually several times slower than the cache.
 '''
 # src:
 # 
+# 最直接的做法是每次写都同时写内存，这样对同一个字写 100 次，内存也被写 100 次，缓存不能减少写入。写回把内存的更新推迟到替换时。
 # 缓存行增加脏位 D，四个并排的箭头表示传送整个块。
 # 第一帧：CPU 写 x = 2，只更新缓存，D 置 1，内存仍为 1。
 # 第二帧：同一个字再写 99 次，x 增至 101，每次只更新缓存。缓存更新 100 次，内存未被写入。
 # 第三帧：需要替换该行时，先将脏块完整写入内存。此时旧行仍保存着待写回的数据。
 # 第四帧：写回完成后，该行才用于其他块。缓存中的 100 次字写入合为 1 次内存整块写入。
 # 本例假设 100 次写期间没有逐出该块。D = 1 表示需要写回，不要求缓存值一定与内存值不同，例如程序也可能写回原值。
+# 写回期间，缓存中是新值，内存中是旧值，两份副本不一致，D = 1 记录这一点。写回的代价出现在替换时：替换脏行之前要先把整个块写回内存，缓存的下一层通常比它慢数倍。
+
+['write-through.title']
+src_hash = 'd4566e09'
+text = 'Write Hit: Write-Through'
+# src: 写 hit：写直达
+
+['write-through.slide.1']
+src_hash = '2f47fa96'
+text = '**Write-through** updates the cache and writes the same word to memory on every write hit.'
+# src:
+# 
+# **写直达**（write-through，也称写穿）：每次写 hit，更新缓存，并把这个字写入内存。
+
+['write-through.slide.2']
+src_hash = '4e34701e'
+text = '''
+- A cache line always agrees with memory, so it is discarded directly at replacement without a writeback.
+- Writing the same word 100 times also writes memory 100 times. The cache does not reduce the number of writes.
+'''
+# src:
+# 
+# - 缓存行总与内存一致，替换时直接丢弃，不需要写回。
+# - 对同一个字写 100 次，内存也被写 100 次，写入的次数不因缓存而减少。
+
+['write-through.highlight.1']
+src_hash = 'f41daf7c'
+text = 'Write-back and write-through each have a cost. Which one should a processor choose?'
+# src: 写回与写直达各有代价，处理器应当选择哪一种？
+
+['write-through.notes.1']
+src_hash = '1450a29e'
+text = '''
+The right-hand column counts writes to the cache and memory. One arrow transfers one word.
+The four frames show one write hit and the accumulated result: the CPU issues a write, the cache is updated, and the same word is written to memory. Both copies then agree.
+A write-through line has no modifications awaiting transmission to memory, so it is discarded directly at replacement without a writeback. This is its advantage over write-back.
+The cost is that writing the same word 100 times updates the cache 100 times and also sends 100 word writes to memory.
+The figures explain data transfers without expanding write buffers. Actual CPUs can use a write buffer to reduce waiting, so write-through does not imply that every CPU write blocks until memory has completed the write.
+'''
+# src:
+# 
+# 右侧记录缓存与内存被写入的次数，一个箭头表示传送一个字。
+# 四帧展开一次写 hit 的处理与累计结果：CPU 发出写入，缓存更新，并把同一个字写入内存，随后两份数据一致。
+# 写直达的缓存行没有尚未传往内存的修改，替换时直接丢弃，不需要写回，这是它相对写回的优势。
+# 代价是对同一个字连续写 100 次，缓存更新 100 次，内存也接收 100 次字写入。
+# 这里用数据传输说明写直达，不展开写缓冲。实际 CPU 可以借助写缓冲减少等待，不能据此断言每次写都阻塞到内存完成。
+
+['wt-wb-compare.title']
+src_hash = '1af3761a'
+text = 'Comparison of Write-Back and Write-Through'
+# src: 写回与写直达的比较
+
+['wt-wb-compare.table.1.cell.0.1']
+src_hash = 'e8ba10c3'
+text = 'Write-back'
+# src: 写回
+
+['wt-wb-compare.table.1.cell.0.2']
+src_hash = 'f216ebfa'
+text = 'Write-through'
+# src: 写直达
+
+['wt-wb-compare.table.1.cell.1.0']
+src_hash = '9f5c65d0'
+text = 'Write hit'
+# src: 写 hit
+
+['wt-wb-compare.table.1.cell.1.1']
+src_hash = '4b5aa324'
+text = 'Update only the cache, set D to 1'
+# src: 只更新缓存，D 置 1
+
+['wt-wb-compare.table.1.cell.1.2']
+src_hash = '27b7a5c7'
+text = 'Update the cache and write memory'
+# src: 更新缓存，并写内存
+
+['wt-wb-compare.table.1.cell.2.0']
+src_hash = 'd238ae22'
+text = 'Replacing a line'
+# src: 替换一行
+
+['wt-wb-compare.table.1.cell.2.1']
+src_hash = '19a8f855'
+text = 'Write back a line with D = 1 as a whole block first, discard a line with D = 0 directly'
+# src: D = 1 的行先整块写回，D = 0 的行直接丢弃
+
+['wt-wb-compare.table.1.cell.2.2']
+src_hash = '7c830cfd'
+text = 'Discard it directly'
+# src: 直接丢弃
+
+['wt-wb-compare.table.1.cell.3.0']
+src_hash = '50670a10'
+text = 'Miss that causes a replacement'
+# src: 引起替换的 miss
+
+['wt-wb-compare.table.1.cell.3.1']
+src_hash = '3cb77b26'
+text = 'May first wait for one whole-block writeback'
+# src: 可能先等待一次整块写回
+
+['wt-wb-compare.table.1.cell.3.2']
+src_hash = '32e22cdc'
+text = 'Fetch the new block directly'
+# src: 直接取入新块
+
+['wt-wb-compare.table.1.cell.4.0']
+src_hash = '020e1956'
+text = 'Extra bits per line'
+# src: 每行额外的位
+
+['wt-wb-compare.table.1.cell.4.1']
+src_hash = 'e2f24c49'
+text = 'Dirty bit D'
+# src: 脏位 D
+
+['wt-wb-compare.table.1.cell.4.2']
+src_hash = '484d5561'
+text = 'None'
+# src: 无
+
+['wt-wb-compare.slide.1']
+src_hash = '9e1a94ce'
+text = '''
+- The cost of write-back appears at replacement: a miss that replaces a dirty line first writes the dirty block back to memory and then fetches the new block. A write-through line always agrees with memory and is discarded directly at replacement.
+- The dirty bit lets unmodified lines be discarded directly. Replacement can first choose an invalid line and then a line with D = 0, which reduces writebacks.
+- Write-back performs far fewer memory writes, so processor caches usually use write-back.
+'''
+# src:
+# 
+# - 写回的代价出现在替换时：替换脏行的 miss 要先把脏块写回内存，再取入新块。写直达的行总与内存一致，替换时直接丢弃。
+# - 脏位使未修改的行直接丢弃。替换时可以先选无效的行，再选 D = 0 的行，减少写回。
+# - 写回的内存写入少得多，处理器的缓存通常采用写回。
+
+['wt-wb-compare.highlight.1']
+src_hash = '7f67ebf0'
+text = 'When the written block is not in the cache, how should the write be handled?'
+# src: 写的块不在缓存中时，应当怎样处理？
+
+['wt-wb-compare.notes.1']
+src_hash = 'b964af06'
+text = '''
+Write-back updates only the cache on a write hit. When a dirty line is replaced, the miss first writes the whole dirty block back to memory and then fetches the new block, so this miss waits longer. The level below a cache is usually several times slower than the cache, so the time of one writeback is not negligible.
+Write-through writes the word to memory on a write hit, so a cache line always agrees with memory. At replacement the line has no unsaved modifications and is discarded directly, so a miss that causes a replacement only fetches the new block.
+Without a dirty bit, a write-back policy must write back every line at replacement. Read-only data and unmodified lines are written back as well, which wastes transfers. The dirty bit records whether the line has been modified. A line with D = 0 agrees with memory and is discarded directly.
+The dirty bit also affects the choice of replacement. A miss first uses an invalid line. When all lines are valid, choosing a line with D = 0 saves one writeback, and a policy such as LRU then makes the choice. The write policy therefore affects the time of a read miss and the choice of replacement, and the policies must be considered together.
+Write-back combines multiple writes to one block into one memory write, and the cache levels of a processor usually use write-back.
+'''
+# src:
+# 
+# 写回在写 hit 时只更新缓存。替换一个脏行时，miss 要先把整个脏块写回内存，再取入新块，这次 miss 等待的时间更长。缓存的下一层通常比它慢数倍，一次写回的时间不可忽略。
+# 写直达在写 hit 时就把字写入内存，缓存行总与内存一致。替换时没有尚未保存的修改，直接丢弃，引起替换的 miss 只需取入新块。
+# 没有脏位时，写回策略只能在替换时写回每一行。只读的数据与没有修改过的行也要写回，浪费传输。脏位记录这一行是否被修改过，D = 0 的行与内存一致，直接丢弃。
+# 脏位还影响替换的选择。miss 时先用无效的行。各行都有效时，选 D = 0 的行可以省去一次写回，之后再按 LRU 等策略选择。写策略因此会影响读 miss 的时间与替换的选择，各个策略需要一起考虑。
+# 写回把同一块的多次写合为一次内存写入，处理器的各级缓存通常采用写回。
+
+['section.write-miss-section.title']
+src_hash = '6915f741'
+text = 'Write Misses: Write-Allocate and No-Write-Allocate'
+# src: 写 miss：写分配与非写分配
 
 ['write-allocate.title']
 src_hash = 'd84e8b07'
@@ -1965,17 +2234,23 @@ text = "A **write miss** occurs when the block containing the CPU's write addres
 # CPU 写入的地址所在的块不在缓存中，称为**写 miss**。**写分配**（write-allocate）先把该块从内存取入缓存，再按写 hit 处理。
 
 ['write-allocate.slide.2']
-src_hash = '373dc61b'
-text = 'Write-back is commonly paired with write-allocate: keep the written block cached for reuse by later reads and writes.'
-# src: 写回通常配写分配：把写过的块留在缓存中，供后续读写复用。
+src_hash = '6329c847'
+text = 'Written data is often read and written again later. The fetched block makes these accesses hit, so write-back is usually paired with write-allocate.'
+# src: 写过的数据之后常被再次读写，取入的块使这些访问 hit，所以写回通常配写分配。
+
+['write-allocate.highlight.1']
+src_hash = 'b03f4549'
+text = 'For data that is not accessed again after the write, what problem does fetching its block cause?'
+# src: 写入之后不再访问的数据，取入它的块有什么问题？
 
 ['write-allocate.notes.1']
-src_hash = 'a45a2a21'
+src_hash = 'd2773eb6'
 text = '''
 Frame 1: the CPU writes x = 2. The cache does not hold the block, so the write misses.
 Frame 2: fetch the entire block from memory into the cache. Four green arrows transfer the block. An empty line is available in this example, so no dirty block needs to be evicted.
 Frame 3: handle the write as a write hit, using write-back in this example. Update cached x and set D to 1. Memory keeps the old value.
 Frame 4: subsequent reads and writes hit while the block remains cached. Reusing written data exploits temporal locality, and accessing neighboring words in the block exploits spatial locality.
+The block fetched by write-allocate amounts to a prefetch for later reads and writes. When the block is not accessed again, the prefetch is of no use. The next page discusses this case.
 '''
 # src:
 # 
@@ -1983,6 +2258,7 @@ Frame 4: subsequent reads and writes hit while the block remains cached. Reusing
 # 第二帧：从内存把整个块取入缓存，四个绿色箭头表示整个块。本例有可用的空行，无需逐出脏块。
 # 第三帧：按写 hit 处理，图中搭配写回策略。更新缓存中的 x，D 置 1，内存保持旧值。
 # 第四帧：该块仍驻留时，后续对它的读写 hit。重复使用已写入的数据利用时间局部性，访问同块中的邻近字利用空间局部性。
+# 写分配取入的块相当于为之后的读写作了一次预取。之后不再访问这个块时，预取没有用处，下一页讨论这种情况。
 
 ['no-write-allocate.title']
 src_hash = '55d04955'
@@ -1997,18 +2273,25 @@ text = '**No-write-allocate** does not fetch a block on a write miss. It writes 
 # **非写分配**（no-write-allocate）在写 miss 时不取块，直接把这个字写入内存，缓存保持不变。
 
 ['no-write-allocate.slide.2']
-src_hash = '899d86bb'
-text = 'Write-through is commonly paired with no-write-allocate: transfer only the written word and avoid fetching the whole block.'
-# src: 写直达常配非写分配：这次写只传输一个字，省去取入整个块。
+src_hash = '4e3428a0'
+text = '''
+- For data written once and not read afterwards (for example logs and the final output of a program), no-write-allocate does not fetch its block, so the data occupies no cache line and evicts no block that will still be used.
+- Write-through is commonly paired with no-write-allocate. A piece of data is usually read and written many times, so the more common combination is write-back with write-allocate.
+'''
+# src:
+# 
+# - 只写一次、之后不再读的数据（比如日志、程序最终的输出），非写分配不取入它的块，不占用缓存行，也不逐出仍会使用的块。
+# - 写直达常配非写分配。一个数据通常被多次读写，所以更常见的组合是写回加写分配。
 
 ['no-write-allocate.notes.1']
-src_hash = '5212d466'
+src_hash = '0180e1a9'
 text = '''
 Frame 1: the CPU writes x = 2. The cache does not hold the block, so the write misses.
 Frame 2: the word bypasses the cache and is written directly to memory. No block is fetched from memory.
 Frame 3: memory now holds 2, while the cache still does not hold the block.
 Frame 4: reading x later still misses. The block containing x is then fetched into the cache, yielding the new value 2.
 Not fetching the block saves a block read on the current write miss, but a later read can still miss. Write-hit and write-miss policies are independent choices. Write-through with no-write-allocate is one common combination.
+If a block fetched by write-allocate is not accessed again, it occupies a line and may evict a block that will still be used. This is called cache pollution. For data written only once, for example logs and the final output of a program, not fetching the block avoids pollution. Such data is rare, and a program usually cannot identify it in advance, so the usual practice is write-back with write-allocate.
 '''
 # src:
 # 
@@ -2017,6 +2300,12 @@ Not fetching the block saves a block read on the current write miss, but a later
 # 第三帧：内存已变为 2，缓存仍没有该块。
 # 第四帧：之后读 x，仍然读 miss，这时才把含 x 的块取入缓存，得到新值 2。
 # 不取块可以省去当前写 miss 的一次块读取，但后续读取仍可能 miss。写 hit 与写 miss 的策略是两个独立选择，写直达加非写分配是一种常见组合。
+# 写分配取入的块如果之后不再被访问，它占用一行，还可能逐出仍会使用的块，这称为缓存污染。只写一次的数据，比如日志与程序最终的输出，不取块可以避免污染。这类数据较少，程序通常也难以预先判断，所以一般的做法是写回加写分配。
+
+['section.metrics-section.title']
+src_hash = 'e1d54471'
+text = 'Performance Metrics and Design Parameters'
+# src: 性能指标与设计参数
 
 ['metrics.title']
 src_hash = 'e82572b4'
@@ -2051,13 +2340,20 @@ Assume serial reads with:
 # - $t_{pen}=100\ \mathrm{ns}$。
 # - $m=5\%$。
 
+['metrics.slide.3']
+src_hash = '8703ba64'
+text = '**Average memory access time** $=t_{hit}+m\times t_{pen}=1+5\%\times100=6\ \mathrm{ns}$, which is 6 times the hit time. When $m$ falls to 1%, it is 2 ns, so caches are commonly measured by the miss rate.'
+# src:
+# 
+# **平均访存时间** $=t_{hit}+m\times t_{pen}=1+5\%\times100=6\ \mathrm{ns}$，是 hit 时间的 6 倍。$m$ 降到 1% 时为 2 ns，所以常用 miss 率衡量缓存。
+
 ['metrics.highlight.1']
-src_hash = 'a01a94c8'
-text = 'Average memory access time $=t_{hit}+m\times t_{pen}=1+5\%\times100=6\ \mathrm{ns}$'
-# src: 平均访存时间 $=t_{hit}+m\times t_{pen}=1+5\%\times100=6\ \mathrm{ns}$
+src_hash = '1bd009a3'
+text = 'The miss penalty is 100 times the hit time. How can the average memory access time approach the hit time?'
+# src: miss 惩罚是 hit 时间的 100 倍，怎样使平均访存时间接近 hit 时间？
 
 ['metrics.notes.1']
-src_hash = 'd82a0176'
+src_hash = 'd3c12d46'
 text = '''
 This page uses a CPU, one cache, and memory. It considers serial reads and ignores prefetching, overlapping accesses, and the additional cost of writing back dirty evictions.
 Miss and hit rates refer to the same execution interval. Every read first checks the cache and pays the hit time; a fraction m also pays the additional miss penalty.
@@ -2065,6 +2361,7 @@ The 1 ns and 100 ns values are teaching assumptions. The 100 ns represents the a
 A hit takes 1 ns in total, and a miss takes 1 + 100 = 101 ns. Of 100 reads, 95 hit and 5 miss, taking 95 × 1 + 5 × 101 = 600 ns, or 6 ns per read.
 Equivalently, each read pays 1 ns and 5% pay an additional 100 ns, giving 1 + 0.05 × 100 = 6 ns.
 The figure shows the hit time and total miss time for this example to scale.
+A hit rate of 95% sounds high, yet the average memory access time is 6 times the hit time, and the memory accesses of the program are 6 times slower on average. Raising the hit rate from 95% to 99% appears to change it by only 4 percentage points, yet the average memory access time falls from 6 ns to 2 ns. The miss rate falls from 5% to 1%, which shows this difference directly, so caches are commonly measured by the miss rate.
 '''
 # src:
 # 
@@ -2074,6 +2371,57 @@ The figure shows the hit time and total miss time for this example to scale.
 # hit 总用时 1 ns，miss 总用时 1 + 100 = 101 ns。100 次读取中，95 次 hit，5 次 miss，总时间 95 × 1 + 5 × 101 = 600 ns，平均 6 ns。
 # 也可以按每次读取都支付的 1 ns，加上 5% 的读取多支付的 100 ns，得到 1 + 0.05 × 100 = 6 ns。
 # 右图按比例画出同一个例子的 hit 时间与 miss 总时间。
+# hit 率 95% 听起来很高，平均访存时间却是 hit 时间的 6 倍，程序的访存平均慢 6 倍。hit 率由 95% 提高到 99%，看起来只差 4 个百分点，平均访存时间却由 6 ns 降到 2 ns。miss 率由 5% 降到 1%，直接反映了这一差别，所以常用 miss 率衡量缓存。
+
+['cache-levels.title']
+src_hash = '400e8706'
+text = 'Multilevel Caches'
+# src: 多级缓存
+
+['cache-levels.slide.1']
+src_hash = '7db71f67'
+text = '''
+- When the lower level is $r$ times slower than the upper level, $t_{pen}\approx r\times t_{hit}$, and the average memory access time is about $1+m\times r$ times the hit time of the upper level.
+- At $m=5\%$, $r=100$ makes accesses 6 times slower, and $r=10$ only 1.5 times slower. Adjacent levels therefore differ in speed by no more than one order of magnitude.
+'''
+# src:
+# 
+# - 下一层比上一层慢 $r$ 倍时，$t_{pen}\approx r\times t_{hit}$，平均访存时间约为上一层 hit 时间的 $1+m\times r$ 倍。
+# - $m=5\%$ 时，$r=100$ 慢 6 倍，$r=10$ 只慢 1.5 倍。所以相邻两层的速度相差不超过一个数量级。
+
+['cache-levels.slide.2']
+src_hash = '3b855da8'
+text = 'The access times of L1 and memory differ by a factor of about 100, so two levels, L2 and L3, are added between them, for example adjacent levels of AMD Zen 4 differ by a factor of about 3.5 to 9.'
+# src:
+# 
+# L1 与内存的访问时间相差约 100 倍，中间加入 L2 与 L3 两级，比如 AMD Zen 4 相邻两级相差约 3.5 至 9 倍。
+
+['cache-levels.slide.2.footnote.1']
+src_hash = 'a2a09867'
+text = 'Chips and Cheese: [Memory subsystem of Zen 4](https://chipsandcheese.com/p/amds-zen-4-part-2-memory-subsystem-and-conclusion).'
+# src: Chips and Cheese：[Zen 4 的存储子系统](https://chipsandcheese.com/p/amds-zen-4-part-2-memory-subsystem-and-conclusion)。
+
+['cache-levels.highlight.1']
+src_hash = '3311d1ac'
+text = 'When two adjacent levels differ in speed by more than one order of magnitude, a cache level is added between them.'
+# src: 相邻两层的速度相差超过一个数量级时，在两层之间加入一层缓存。
+
+['cache-levels.notes.1']
+src_hash = 'a2bac096'
+text = '''
+The formula of the previous page holds for any two adjacent levels: the upper level is the cache, and the lower level is the level it accesses on a miss. The access time of the lower level is about r times the hit time of the upper level, the miss penalty is about r times the hit time, and the average memory access time is about 1 + m × r times the hit time.
+At m = 5%, r = 100 gives 1 + 0.05 × 100 = 6 times, and r = 10 gives 1 + 0.05 × 10 = 1.5 times. The miss rate of each real cache level is kept below a few percent. When adjacent levels differ in speed by about one order of magnitude, the average memory access time exceeds the hit time of the upper level by only a few tens of percent.
+The figure shows the measured access times of AMD Zen 4 (Ryzen 9 7950X, DDR5-6000): L1 about 0.7 ns (4 cycles), L2 about 2.4 ns (14 cycles), L3 about 8 to 9 ns, and memory about 73 ns. L1 and memory differ by a factor of about 100, and adjacent levels differ by factors of about 3.5, 3.5 and 8.6.
+Processor speed has grown faster than memory speed, the gap between the two has widened, and the cache has grown from one level to several levels. Each level is in turn a cache for the level below it: the cache holds some blocks of memory, and memory holds some data of the disk.
+Source: Chips and Cheese, AMD's Zen 4, Part 2: Memory Subsystem and Conclusion, https://chipsandcheese.com/p/amds-zen-4-part-2-memory-subsystem-and-conclusion .
+'''
+# src:
+# 
+# 上一页的公式对任意相邻两层成立：上一层是缓存，下一层是它 miss 时访问的层。下一层的访问时间约为上一层 hit 时间的 r 倍，miss 惩罚约为 r 倍的 hit 时间，平均访存时间约为 hit 时间的 1 + m × r 倍。
+# m = 5% 时，r = 100 得到 1 + 0.05 × 100 = 6 倍，r = 10 得到 1 + 0.05 × 10 = 1.5 倍。实际各级缓存的 miss 率控制在百分之几以下，相邻两层的速度相差约一个数量级时，平均访存时间只比上一层的 hit 时间多几十个百分点。
+# 图中是 AMD Zen 4（Ryzen 9 7950X，DDR5-6000）的实测访问时间：L1 约 0.7 ns（4 个周期），L2 约 2.4 ns（14 个周期），L3 约 8 至 9 ns，内存约 73 ns。L1 与内存相差约 100 倍，相邻两级相差约 3.5、3.5、8.6 倍。
+# 处理器的速度增长得比内存快，两者的差距逐渐扩大，缓存由一级增加为多级。每一层又是下一层的缓存：缓存保存内存的一部分块，内存保存磁盘的一部分数据。
+# 数据来源：Chips and Cheese，AMD's Zen 4, Part 2: Memory Subsystem and Conclusion，https://chipsandcheese.com/p/amds-zen-4-part-2-memory-subsystem-and-conclusion 。
 
 ['design-factors.title']
 src_hash = '9dfbbe89'
@@ -2155,18 +2503,25 @@ src_hash = 'b623cad8'
 text = 'Each line needs a dirty bit. A dirty line must be written back as a whole block before replacement'
 # src: 每行需要脏位。替换脏行前要整块写回内存
 
+['design-factors.slide.1']
+src_hash = '996dd4f5'
+text = 'Every improvement of a parameter has a cost, and the parameters also affect each other, for example the write policy affects replacement, so they must be chosen together.'
+# src: 每个参数的改善都有代价，各参数还相互影响，比如写策略影响替换，需要一起选择。
+
 ['design-factors.highlight.1']
-src_hash = 'f09a36d3'
-text = 'The hardware fixes the cache parameters. A program changes the access sequence and thereby the miss rate'
-# src: 缓存的参数由硬件确定。程序改变的是访问序列，从而改变 miss 率
+src_hash = '690021b2'
+text = 'Once the hardware fixes the cache parameters, how should a program be written to reduce misses?'
+# src: 缓存的参数由硬件确定之后，程序怎样写才能减少 miss？
 
 ['design-factors.notes.1']
-src_hash = '39c4ac4d'
+src_hash = '2c8141d8'
 text = '''
 Each row answers the same question: when this parameter is increased, which metric improves and which becomes worse?
 A larger cache retains more data and reduces capacity misses, but takes longer to search and increases hit time. A larger block fetches more neighboring data, reducing cold misses for programs with spatial locality. At a fixed capacity, larger blocks mean fewer lines, more conflict misses, and more transferred bytes per miss. Higher associativity retains more competing blocks in a set but requires more tag comparisons per access.
 Write-back can combine multiple writes to one block into a single memory writeback. Its costs are a dirty bit per line and a whole-block transfer before replacing a dirty line. Write-through generates a memory word write for each write.
 These parameters are fixed when the processor is designed. On the same processor, different access sequences have different miss rates. The program can change its access sequence.
+The main cost of a larger capacity is area, that is, cost, and this cost must also be divided among L1, L2 and L3. A larger block fetches more neighboring data on one miss, which amounts to a prefetch. When the block is too large, the fetched data goes unused and still occupies the cache. The lower the level, the more data one transfer moves: a 64-byte block between the cache and memory, and a 512-byte or 4 KB sector per disk read or write.
+Each parameter is simple to consider on its own. The difficulty lies in how they affect each other: the write policy affects the time of a miss and replacement, and the block size affects the number of lines and conflict misses. Cache design is a system design problem.
 '''
 # src:
 # 
@@ -2174,6 +2529,8 @@ These parameters are fixed when the processor is designed. On the same processor
 # 容量增大使更多的数据留在缓存中，容量 miss 减少，但大缓存查找慢，hit 时间增大。块增大使每次 miss 取入更多相邻数据，空间局部性好的程序冷 miss 减少。容量不变时行数减少，冲突 miss 增加，一次 miss 传输的字节也更多。相联度增大使一个组能容纳更多冲突的块，但每次访问要比较更多的标记。
 # 写回可以把同一块的多次写合并为一次内存写回，代价是每行一位脏位与替换脏行前的整块传输。写直达每次写都产生内存字写入。
 # 这些参数在处理器设计时确定。同一个处理器上，访问序列不同，miss 率不同，这是编写程序时能够改变的。
+# 容量增大的主要代价是面积，即成本，成本还要在 L1、L2、L3 之间分配。块增大使一次 miss 取入更多相邻的数据，相当于预取，块过大时取入的数据用不上，还占用缓存。越靠下的层，一次传输的数据越多：缓存与内存之间是 64 字节的块，磁盘一次读写 512 字节或 4 KB 的扇区。
+# 每个参数单独考虑都不难，难在它们相互影响：写策略影响 miss 的时间与替换，块长影响行数与冲突 miss。缓存的设计是一个系统的设计问题。
 
 ['bridge-part5.title']
 src_hash = 'c7627151'
@@ -2189,6 +2546,11 @@ text = 'Part 4: Cache-Friendly Code'
 src_hash = 'c7627151'
 text = 'Part 4: Cache-Friendly Code'
 # src: 第四部分：缓存友好的代码
+
+['section.friendly-section.title']
+src_hash = '52e2b6be'
+text = 'Rules for Cache-Friendly Code'
+# src: 缓存友好的规则
 
 ['friendly-rules.title']
 src_hash = '62cca350'
@@ -2326,6 +2688,11 @@ The three assumptions each have a role. Block alignment ensures that a block is 
 # 步长 16：相邻两次访问相差 64 字节，每个块只访问 1 次，每次访问都 miss，miss 率 1。k 大于 16 时仍然每次访问都 miss，所以 miss 率取 min(1, 4k/B)。
 # 三条假设各有作用：起点对齐保证一个块从第一个元素算起。缓存起初为空保证每个块的第一次访问 miss。数组远大于缓存保证遍历结束前，已用过的块不会再被用到，也就没有因重复访问产生的 hit。
 
+['section.matmul-section.title']
+src_hash = '41961bc8'
+text = 'Loop Orders of Matrix Multiplication'
+# src: 矩阵乘法的循环顺序
+
 ['matmul-def.title']
 src_hash = '3d3a96e7'
 text = 'Matrix Multiplication'
@@ -2351,9 +2718,15 @@ The three loop variables can be nested in any order, which gives six orders, and
 # 
 # 三个循环变量可以按任意次序嵌套，共六种顺序，按内层循环的变量分为三类。
 
+['matmul-def.highlight.1']
+src_hash = '61ef1dac'
+text = 'The six orders perform the same operations and give the same result. Do they also take the same running time?'
+# src: 六种顺序的运算与结果都相同，运行时间也相同吗？
+
 ['matmul-def.notes.1']
-src_hash = 'ac038779'
+src_hash = 'f3502ffd'
 text = '''
+Matrix multiplication used to be regarded as a simple example. Today most of the computation in machine-learning programs is matrix operations, and the way matrix multiplication is written directly affects the speed of these programs.
 The number of operations in matrix multiplication is the cube of n: the n² elements of C each need n multiply-adds. The three loop variables i, j, k of the triple loop can be nested in any order, 6 in all, and the operations and the result are the same, while the order of the accesses differs.
 A[i][k], B[k][j] and C[i][j] are all stored in row order in memory: adjacent elements of a row are adjacent, and adjacent elements of a column are n doubles apart.
 In the assumptions of the analysis, a 64-byte block holds 8 doubles. n is large, so the cache cannot hold the n blocks that contain one column: when B is accessed along a column, each access falls in a different block, and by the time the next element of the same column is reached this block has been replaced, so every reference along a column misses. In the figure, orange marks the elements used to compute C[i][j].
@@ -2361,6 +2734,7 @@ The six orders are divided into three classes by the inner-loop variable, and ea
 '''
 # src:
 # 
+# 矩阵乘法过去常被看作一个简单的例子。现在机器学习的程序大部分是矩阵运算，矩阵乘法的写法直接影响这些程序的速度。
 # 矩阵乘法的运算次数是 n 的三次方：C 的 n² 个元素，每个元素 n 次乘加。三重循环的三个循环变量 i、j、k 可以按任意次序嵌套，共 6 种，运算与结果相同，访问的次序不同。
 # A[i][k]、B[k][j] 与 C[i][j] 在内存中都按行存放：同一行相邻的元素相邻，同一列相邻的元素相差 n 个 double。
 # 分析假设中，块 64 字节放 8 个 double。n 很大使得缓存容纳不下一列所在的 n 个块：沿一列访问 B 时每次落在不同的块中，当同一列的下一个元素到达时这个块已被替换，沿列访问的每次引用都 miss。图中橙色是计算 C[i][j] 用到的元素。
@@ -2612,28 +2986,35 @@ text = 'Time per inner iteration for the six loop orders'
 # src: 六种循环顺序每次内层迭代的时间
 
 ['matmul-run.slide.2']
-src_hash = '6f7d2a50'
+src_hash = '050dc895'
 text = '''
 - The two orders of each class take similar times. The kij class is fastest, the ijk class next, and the jki class slowest, in the same order as the miss counts 0.25, 1.125, 2.0.
-- The times of the three classes are in the ratio of about 1 : 3 : 7, and the miss counts are in the ratio 1 : 4.5 : 8.
+- The times of the three classes are in the ratio of about 1 : 3 : 7, and the miss counts are in the ratio 1 : 4.5 : 8. **The algorithm and the result are the same, and changing only the loop order makes the running times differ by a factor of about 7.**
 '''
 # src:
 # 
 # - 每类的两种顺序时间接近，kij 类最快，ijk 类次之，jki 类最慢，次序与 miss 次数 0.25、1.125、2.0 一致。
-# - 三类的时间之比约 1 : 3 : 7，miss 次数之比为 1 : 4.5 : 8。
+# - 三类的时间之比约 1 : 3 : 7，miss 次数之比为 1 : 4.5 : 8。**算法与结果相同，只调整循环顺序，运行时间相差约 7 倍。**
 
 ['matmul-run.notes.1']
-src_hash = 'a17b2a60'
+src_hash = '0dd68da3'
 text = '''
 `matmul_order.c` writes the six orders as six functions, each computing the same product; for n = 768 each of the three matrices is 4.5 MB, which exceeds L2. The program times each function and divides the total time by the cube of n to obtain the time per inner iteration.
 Measured: the ijk class 1.46 ns, the kij class 0.48 ns, the jki class 3.19 ns. The ratio of the miss counts 0.25 : 1.125 : 2.0 is 1 : 4.5 : 8. The ratio of the times is close to the ratio of the miss counts but not equal to it: the processor executes several memory instructions at the same time and fetches later blocks ahead of time, so part of the miss time overlaps with other work; this is only stated here and not developed.
 The two orders of the same class have the same inner loop and similar times, which is a direct test of the statement that the inner loop determines the misses.
+The ijk order, written directly from the definition of matrix multiplication, is the most intuitive form, and its running time is about 3 times that of the fastest class, kij. Adjusting only the loop order to the cache, with the algorithm unchanged, gives a speedup of several times.
 '''
 # src:
 # 
 # `matmul_order.c` 把六种顺序写成六个函数，每个函数计算同一个乘积，n = 768 时三个矩阵各 4.5 MB，超过 L2。程序对每个函数计时，把总时间除以 n 的三次方，得到每次内层迭代的时间。
 # 实测：ijk 类 1.46 ns，kij 类 0.48 ns，jki 类 3.19 ns。miss 次数之比 0.25 : 1.125 : 2.0 即 1 : 4.5 : 8。时间之比与 miss 次数之比数值接近但不相等：处理器同时执行多条访存指令，并提前取入后续的块，使一部分 miss 的时间与其他工作重叠，这里只陈述这一点，不展开。
 # 同一类的两种顺序内层循环相同，时间接近，是对“内层循环决定 miss”的直接检验。
+# 按矩阵乘法的定义写出的 ijk 是最直观的写法，它的运行时间是最快的 kij 类的约 3 倍。不改变算法，只按缓存调整循环顺序，就能得到数倍的加速。
+
+['section.mountain-section.title']
+src_hash = '99e24344'
+text = 'The Memory Mountain'
+# src: 存储器山
 
 ['mountain-def.title']
 src_hash = '99e24344'
@@ -2653,18 +3034,27 @@ The **memory mountain** is the read throughput as a function $f(\text{size}, \te
 # - size 决定重复读取时数据留在哪一层：时间局部性。
 # - stride 决定一个块中被读取的元素个数：空间局部性。
 
+['mountain-def.highlight.1']
+src_hash = 'e7816cd3'
+text = 'How does the read throughput change as the working set and the stride increase?'
+# src: 工作集与步长增大时，读吞吐率怎样变化？
+
 ['mountain-def.notes.1']
-src_hash = 'bafdf9a9'
+src_hash = '18f3e95b'
 text = '''
 The memory mountain puts the rules of this part onto one function. The two arguments correspond to the two kinds of locality: the working set size changes whether the data can stay in a higher level, and the stride changes how much of a block is used.
 The array in the figure consists of 8-byte longs, and the thick lines are 64-byte blocks, with 8 longs per block. Orange marks the elements that are read. With stride 1 every element is read and all 8 elements of a block are used. With stride 4 only 2 elements of each block are read. The gray part is outside the working set and is not read.
-The measurement reads the same working set repeatedly, so from the second pass on, data that fits in a level stays in that level.
+The measurement reads the same working set repeatedly, so from the second pass on, data that fits in a level stays in that level. Every measurement performs the same number of reads, and what is compared is the number of bytes read per unit time.
+A processor manual does not always give all the parameters of every cache level. The memory mountain is measured by a program, and the capacity of each cache level can be read from its shape. A three-dimensional plot of a memory mountain is the cover of the book CS:APP.
+Before looking at the results, one can predict them. As the working set grows, the data falls in L1, L2, L3 and memory in turn. Does the throughput decrease continuously or in steps? As the stride grows, how does the throughput decrease, and does it keep decreasing?
 '''
 # src:
 # 
 # 存储器山把本部分的规则放到一个函数上。函数的两个自变量对应两种局部性：工作集大小改变数据能否留在较高的层，步长改变一个块被使用的程度。
 # 图中的数组由 8 字节的 long 组成，粗线是 64 字节的块，每块 8 个 long。橙色是被读取的元素：步长 1 读每个元素，一个块内 8 个元素都被使用。步长 4 每个块只读 2 个元素。灰色部分在工作集之外，不被读取。
-# 测量时对同一个工作集重复读取，所以第二遍起，能放进某一层的数据就留在这一层。
+# 测量时对同一个工作集重复读取，所以第二遍起，能放进某一层的数据就留在这一层。各次测量读取的次数相同，比较的是单位时间读取的字节数。
+# 处理器的手册不一定给出各层缓存的全部参数。存储器山由一个程序测出，从它的形状可以读出各层缓存的容量。存储器山的一张三维图是 CS:APP 一书的封面。
+# 看结果之前，可以先推测：工作集由小变大，数据依次落在 L1、L2、L3 与内存中，吞吐率是连续下降，还是分段下降？步长由小变大，吞吐率怎样下降，会不会一直下降？
 
 ['mountain-image.title']
 src_hash = 'f3766002'
@@ -2715,13 +3105,20 @@ text = '- When the working set does not exceed the capacity of a level, the data
 # 
 # - 工作集不超过某一层的容量时，数据留在这一层，吞吐率由这一层决定。工作集越过容量，吞吐率降到下一个平台。
 
+['mountain-ridges.highlight.1']
+src_hash = '3dfb99e2'
+text = 'With the working set fixed, how does the read throughput change as the stride grows?'
+# src: 工作集固定时，步长增大，读吞吐率怎样变化？
+
 ['mountain-ridges.notes.1']
-src_hash = 'af633dbe'
+src_hash = '67ad327a'
 text = '''
 This shows the change along the working set size for the stride 1 and stride 8 columns of the heat map. The dashed lines on the horizontal axis are the capacities of the levels, and the name of each segment is marked above.
 Stride 1: the L1 segment (8 KB to 32 KB) is 46.7 to 51.1 GB/s, the L2 segment (64 KB to 1 MB) is 41.7 to 45.0 GB/s, the L3 segment (2 MB to 8 MB) is 34.2 to 37.7 GB/s, and the main memory segment (32 MB to 128 MB) is 13.6 to 14.1 GB/s. When the working set is within the capacity, the reads from the second pass on all hit this level, so the curve forms steps, each corresponding to one level. This is temporal locality: the same data is read repeatedly, and the smaller the working set, the closer to the processor the level that holds it.
 At stride 8, each read touches a new block, each step is lower, and the decline is steeper.
 The capacity of L3 is 24 MB, and the curve declines gradually from 8 MB to 32 MB without an abrupt change at 24 MB.
+At the boundary between L1 and L2, the stride 1 curve drops by only about one tenth, and the stride 8 curve drops by nearly half.
+The throughput of the 8 KB row is slightly lower than that of 16 KB and 32 KB. With a very small working set one measurement takes a short time, so the measurement fluctuates more.
 '''
 # src:
 # 
@@ -2729,6 +3126,8 @@ The capacity of L3 is 24 MB, and the curve declines gradually from 8 MB to 32 MB
 # 步长 1：L1 的段（8 KB 至 32 KB）为 46.7 至 51.1 GB/s，L2 的段（64 KB 至 1 MB）为 41.7 至 45.0 GB/s，L3 的段（2 MB 至 8 MB）为 34.2 至 37.7 GB/s，内存的段（32 MB 至 128 MB）为 13.6 至 14.1 GB/s。工作集在容量以内时，第二遍起的读都 hit 这一层，所以曲线分成台阶，每个台阶对应一层。这是时间局部性：同一批数据被重复读取，工作集越小，它所在的层越靠近处理器。
 # 步长 8 时，每次读取一个新的块，每个台阶更低，下降更陡。
 # L3 的容量是 24 MB，曲线在 8 MB 到 32 MB 之间逐步下降，没有在 24 MB 处突变。
+# 步长 1 的曲线在 L1 与 L2 的边界处只下降约十分之一，步长 8 的曲线下降近一半。
+# 8 KB 一行的吞吐率略低于 16 KB 与 32 KB，工作集很小时一次测量的时间短，测量的波动较大。
 
 ['mountain-slopes.title']
 src_hash = 'ae15fba4'
@@ -2746,6 +3145,11 @@ text = '''
 # - 工作集为 128 MB 时，步长从 1 增大到 8，吞吐率从 14.1 降到 2.1 GB/s。
 # - 步长为 8 个元素即 64 字节，每次读取一个新的块。步长再增大，每次读取的块数不变，吞吐率不再明显下降。
 
+['mountain-slopes.highlight.1']
+src_hash = 'bc83cdfb'
+text = 'At stride 1, why does the throughput barely drop when the working set exceeds the capacity of L1?'
+# src: 步长 1 时，工作集越过 L1 的容量，吞吐率为什么几乎不降？
+
 ['mountain-slopes.notes.1']
 src_hash = '5f0845cf'
 text = '''
@@ -2761,82 +3165,48 @@ The point at stride 16 (1.1 GB/s for 128 MB) is below the values for strides 8 t
 # 步长 8 起每次读取都要一个新块，取一个块的时间与步长无关，所以 128 MB 一行在步长 8 至 15 约 1.6 至 2.1 GB/s。256 KB 一行在步长 8 之后下降缓慢。
 # 步长 16 的一点（128 MB 为 1.1 GB/s）低于步长 8 至 15 的值，原因没有查明。
 
-['exercise-friendly.title']
-src_hash = '53faa214'
-text = 'Exercise: Cache-Friendly Code'
-# src: 练习：缓存友好的代码
+['mountain-prefetch.title']
+src_hash = 'dd484e88'
+text = 'Hardware Prefetching'
+# src: 硬件预取
 
-['exercise-friendly.slide.1']
-src_hash = 'fe53447e'
+['mountain-prefetch.slide.1']
+src_hash = '5ce6f111'
 text = '''
-1. `int a[1024][1024]` is much larger than the cache, and blocks are 64 bytes. In the three code fragments below, `i` and `j` both run from 0 to 1023. Decide which fragment is cache-friendly, and estimate the miss rate of each access:
-   - (a) `for i: for j: sum += a[i][j];`
-   - (b) `for j: for i: sum += a[i][j];`
-   - (c) `for i: for (j = 0; j < 1024; j += 4): sum += a[i][j];`
-2. The elements of the matrix multiplication are changed to 4-byte floats, $n$ is large, and blocks are 64 bytes. Estimate the number of misses per inner-loop iteration for the ijk and ikj orders. By what factor do they differ?
+- As the working set grows from 32 KB to 256 KB, the data moves from L1 to L2. The throughput at stride 1 drops by only 11%, and at stride 8 by 42%.
+- The hardware recognizes sequential accesses and fetches the following blocks into L1 before the CPU reads them. This is called **hardware prefetching**. Most reads at stride 1 hit in L1, and the throughput stays close to that of L1.
 '''
 # src:
 # 
-# 1. `int a[1024][1024]` 远大于缓存，块为 64 字节。下列三段代码中，`i` 与 `j` 均从 0 到 1023。判断哪段对缓存友好，并估算每次访问的 miss 率：
-#    - (a) `for i: for j: sum += a[i][j];`
-#    - (b) `for j: for i: sum += a[i][j];`
-#    - (c) `for i: for (j = 0; j < 1024; j += 4): sum += a[i][j];`
-# 2. 矩阵乘法的元素改为 4 字节的 float，$n$ 很大，块为 64 字节。估算 ijk 与 ikj 两种顺序内层循环每次迭代的 miss 次数，二者相差多少倍？
+# - 工作集由 32 KB 增大到 256 KB，数据由 L1 移到 L2。步长 1 的吞吐率只下降 11%，步长 8 下降 42%。
+# - 硬件识别出连续的访问，在 CPU 读取之前把后续的块取入 L1，称为**硬件预取**。步长 1 的读取大部分在 L1 中 hit，吞吐率接近 L1。
 
-['exercise-friendly.notes.1']
-src_hash = 'dbe8437f'
-text = 'Question 1 uses the relation between stride and miss rate. Question 2 uses the inner-loop analysis of the three classes, with the number of elements per block changed from 8 to 16.'
-# src:
-# 
-# 第 1 题用步长与 miss 率的关系。第 2 题用三类顺序的内层循环分析，块内元素个数由 8 变为 16。
+['mountain-prefetch.highlight.1']
+src_hash = '9fb68b23'
+text = 'The more regular the accesses, the better the hardware can fetch data in advance.'
+# src: 访问越有规律，硬件越能提前取入数据。
 
-['exercise-friendly-2.title']
-src_hash = '53faa214'
-text = 'Exercise: Cache-Friendly Code'
-# src: 练习：缓存友好的代码
+['mountain-prefetch.highlight.1.footnote.1']
+src_hash = '27e9b7b8'
+text = "Bryant & O'Hallaron, CS:APP, 3rd edition, Section 6.6.1; the memory mountain in the [CMU 15-213 slides](https://www.cs.cmu.edu/afs/cs/academic/class/18213-f25/www/lectures/10-cache-memories.pdf) marks aggressive prefetching on the stride 1 side."
+# src: Bryant & O'Hallaron，CS:APP 第 3 版 6.6.1 节；[CMU 15-213 课件](https://www.cs.cmu.edu/afs/cs/academic/class/18213-f25/www/lectures/10-cache-memories.pdf)的存储器山标出步长 1 一侧的 aggressive prefetching。
 
-['exercise-friendly-2.slide.1']
-src_hash = 'fe53447e'
+['mountain-prefetch.notes.1']
+src_hash = '9ef76eae'
 text = '''
-1. `int a[1024][1024]` is much larger than the cache, and blocks are 64 bytes. In the three code fragments below, `i` and `j` both run from 0 to 1023. Decide which fragment is cache-friendly, and estimate the miss rate of each access:
-   - (a) `for i: for j: sum += a[i][j];`
-   - (b) `for j: for i: sum += a[i][j];`
-   - (c) `for i: for (j = 0; j < 1024; j += 4): sum += a[i][j];`
-2. The elements of the matrix multiplication are changed to 4-byte floats, $n$ is large, and blocks are 64 bytes. Estimate the number of misses per inner-loop iteration for the ijk and ikj orders. By what factor do they differ?
+The figure shows the stride 1 and stride 8 columns along the working set size. Stride 1: 50.7 GB/s at 32 KB and 45.0 GB/s at 256 KB. Stride 8: 43.6 GB/s at 32 KB and 25.1 GB/s at 256 KB.
+At stride 8 each read touches a new block. Once the working set exceeds the capacity of L1, every read fetches a block from L2, and the throughput drops markedly. At stride 1, an estimate from the miss rate gives one block fetched from L2 per 8 reads, so the throughput should drop in the same way. The measured throughput drops by only about one tenth.
+The cause is hardware prefetching: the processor monitors the accessed addresses, and when it finds them increasing sequentially, it fetches the following blocks into the cache before the CPU reads them. When the CPU reaches these addresses, the blocks are already in L1. Without prefetching, reads and writes access the next level only when the CPU requests them. Prefetching fetches data before the request.
+Prefetching is most effective for regular accesses. At stride 1 every byte of a prefetched block is used. CS:APP uses the same measurement to explain the plateau on the stride 1 side of the memory mountain.
+Good locality enables the hardware to prefetch, so the measured performance can exceed the estimate based on the miss rate.
 '''
 # src:
 # 
-# 1. `int a[1024][1024]` 远大于缓存，块为 64 字节。下列三段代码中，`i` 与 `j` 均从 0 到 1023。判断哪段对缓存友好，并估算每次访问的 miss 率：
-#    - (a) `for i: for j: sum += a[i][j];`
-#    - (b) `for j: for i: sum += a[i][j];`
-#    - (c) `for i: for (j = 0; j < 1024; j += 4): sum += a[i][j];`
-# 2. 矩阵乘法的元素改为 4 字节的 float，$n$ 很大，块为 64 字节。估算 ijk 与 ikj 两种顺序内层循环每次迭代的 miss 次数，二者相差多少倍？
-
-['exercise-friendly-2.slide.2']
-src_hash = 'b6e4cdae'
-text = '''
-Answer:
-1. (a) Friendly, stride 1, miss rate **1/16**. (b) Not friendly, stride of 1024 elements, each access touches a new block, miss rate **1**. (c) A stride of 4 elements is 16 bytes, a block is accessed 4 times, miss rate **1/4**.
-2. A block holds 16 floats. ijk: A along a row 1/16, B along a column 1, misses **1.0625**. ikj: B and C along rows 1/16 each, misses **0.125**. ijk is **8.5 times** ikj.
-'''
-# src:
-# 
-# 答案：
-# 1. (a) 友好，步长 1，miss 率 **1/16**。(b) 不友好，步长 1024 个元素，每次访问一个新块，miss 率 **1**。(c) 步长 4 个元素即 16 字节，一个块被访问 4 次，miss 率 **1/4**。
-# 2. 一个块放 16 个 float。ijk：A 沿行 1/16，B 沿列 1，miss **1.0625**。ikj：B 与 C 沿行各 1/16，miss **0.125**。ijk 是 ikj 的 **8.5 倍**。
-
-['exercise-friendly-2.notes.1']
-src_hash = 'ddf27271'
-text = '''
-Question 1: miss rate = min(1, 4k/B). (a) k = 1. (b) Two consecutive accesses are 1024 ints apart, that is, 4096 bytes, so each access falls in a different block, and since the array is much larger than the cache, the same block is not used again before it is evicted. (c) k = 4, 4 × 4 / 64 = 1/4.
-Question 2 is analyzed as for double, with 16 elements per block: the inner loop of ijk reads A[i][k] (row, 1/16) and B[k][j] (column, 1). The inner loop of ikj reads B[k][j] and C[i][j] (both rows, 1/16 each), and A[i][k] is in a register.
-The answers were checked with a small cache simulator: the program generates the access address sequence for each order and counts misses with a fully associative LRU cache, and the results agree with the formulas above.
-'''
-# src:
-# 
-# 第 1 题的 miss 率 = min(1, 4k/B)：(a) k = 1。(b) 相邻两次访问相差 1024 个 int，即 4096 字节，每次落在不同的块中，数组远大于缓存，同一个块不会在被换出前再次使用。(c) k = 4，4 × 4 / 64 = 1/4。
-# 第 2 题与 double 的分析相同，块内元素个数是 16：ijk 的内层循环读 A[i][k]（行，1/16）与 B[k][j]（列，1）。ikj 的内层循环读 B[k][j] 与 C[i][j]（均为行，各 1/16），A[i][k] 在寄存器中。
-# 答案由小型缓存模拟程序核对：程序按各顺序生成访问地址序列，用全相联 LRU 缓存统计 miss，结果与上面的算式一致。
+# 图是步长 1 与步长 8 两列沿工作集大小的切片。步长 1：32 KB 为 50.7 GB/s，256 KB 为 45.0 GB/s。步长 8：32 KB 为 43.6 GB/s，256 KB 为 25.1 GB/s。
+# 步长 8 时每次读取一个新的块，工作集越过 L1 的容量后，每次读取都要从 L2 取块，吞吐率明显下降。步长 1 时，按 miss 率估算，每 8 次读取也要从 L2 取一个块，吞吐率应当同样下降，实测却只下降约十分之一。
+# 原因是硬件预取：处理器监视访问的地址，发现地址连续增长时，在 CPU 读取之前把后面的块取入缓存。CPU 读到这些地址时，块已经在 L1 中。不预取时，读写都在 CPU 请求时才访问下一层。预取在请求之前主动取入数据。
+# 预取对有规律的访问最有效。步长 1 时预取的块中每个字节都被使用。CS:APP 用同样的测量解释了存储器山中步长 1 一侧的平台。
+# 良好的局部性使硬件能预取，所以实测的性能可以好于按 miss 率的估算。
 
 ['bridge-part6.title']
 src_hash = 'c7bc71d3'
@@ -2852,6 +3222,11 @@ text = 'Part 5: Caches in LLM Inference'
 src_hash = 'c7bc71d3'
 text = 'Part 5: Caches in LLM Inference'
 # src: 第五部分：大模型推理中的缓存
+
+['section.party-section.title']
+src_hash = 'ca5f88ba'
+text = 'The Matchmaking Show'
+# src: 相亲节目
 
 ['kv-party-design.title']
 src_hash = '0651c887'
@@ -3012,11 +3387,6 @@ src_hash = '3fe7c327'
 text = 'The **conclusion** is the average of the values on the notes weighted by the attention levels. It shows, from the point of view of guest 3, which values the guests on the stage can bring. The crew uses the conclusion as a reference to invite the next guest.'
 # src: **结论**是各张纸条上的价值按注意程度加权平均，表示从嘉宾 3 的角度看，场上的嘉宾能带来哪些价值。节目组以结论为参考，邀请下一位嘉宾。
 
-['kv-party-read.highlight.1']
-src_hash = 'e618ae0d'
-text = 'How does the crew use the conclusion to invite the next guest?'
-# src: 节目组怎样用结论邀请下一位嘉宾？
-
 ['kv-party-read.notes.1']
 src_hash = '801d02c7'
 text = '''
@@ -3046,9 +3416,9 @@ text = 'Inviting the Next Guest'
 # src: 下一位嘉宾的邀请
 
 ['kv-party-invite.slide.1']
-src_hash = 'f8ef09fc'
-text = 'The next guest must be closely related both to the previous guest (guest 3) and to all guests who have entered, so the crew combines the profile of guest 3 with the conclusion and compares them with the waiting list.'
-# src: 下一位嘉宾要同时与上一位嘉宾（嘉宾 3）以及已经入场的全部嘉宾关联紧密，所以节目组把嘉宾 3 的资料与结论合起来，与候场名单比对。
+src_hash = 'e05a1519'
+text = 'The next guest must be closely related both to the previous guest and to all guests who have entered, so the crew combines the profile of this guest with the conclusion and compares them with the waiting list.'
+# src: 下一位嘉宾要同时与上一位嘉宾以及已经入场的全部嘉宾关联紧密，所以节目组把这位嘉宾的资料与结论合起来，与候场名单比对。
 
 ['kv-party-invite.highlight.1']
 src_hash = 'a20c1708'
@@ -3151,6 +3521,11 @@ The figure takes guest 3 as the example: the note records only the feature 「�
 # 每位嘉宾入场时，节目组都要阅读全部纸条：拿这位嘉宾的兴趣与每张纸条上的特点对照，决定对每张纸条注意多少，再按注意的程度记录纸条上的价值。
 # 这一过程用不到纸条上的兴趣。每位嘉宾的兴趣只在自己入场时使用，节目组听完介绍就直接使用。所以纸条上可以省去兴趣，只记录特点与价值。
 # 图中以嘉宾 3 为例：纸条只记录特点「爱摄影」与价值「一起外出拍照」，兴趣「爱户外活动的人」留在纸条之外。
+
+['section.attention-section.title']
+src_hash = '1ad4a5b8'
+text = 'Text Generation and Attention in Large Models'
+# src: 大模型的文本生成与注意力
 
 ['kv-generate.title']
 src_hash = '57af630f'
@@ -3381,17 +3756,17 @@ text = 'Predicting the Next Token'
 # src: 下一个 token 的预测
 
 ['kv-predict.slide.1']
-src_hash = 'bab62f6c'
+src_hash = '25fcc0cb'
 text = '''
 - Consider one attention layer only. The last token 「好」 has used the whole input, and the prediction is made from $x_4 + o_4$ (profile plus conclusion).
 - The **output layer** stores one vector for every token of the vocabulary (the profiles on the waiting list). Each takes the inner product with $x_4 + o_4$, and **softmax** normalises the results into the **probability** of each token being the next token.
-- A model made of embedding, attention and the output layer is called a **Transformer**. A real model also has a **feed-forward network** after attention and repeats such a layer $L$ times. GPT-3 has 96 layers.
+- A model made of embedding, attention and the output layer is called a **Transformer**. A real model also has a **feed-forward network** after attention and repeats such a layer $L$ times.
 '''
 # src:
 # 
 # - 只考虑一层注意力。最后的「好」用到了全部输入，由 $x_4 + o_4$（资料加结论）预测。
 # - **输出层**为词表中每个 token 保存一个向量（候场名单上的资料），与 $x_4 + o_4$ 作内积，经 **softmax** 归一化为下一个 token 的**概率**。
-# - 由嵌入、注意力与输出层组成的模型称为 **Transformer**。实际的模型在注意力之后还有**前馈网络**，并把这样的层重复 $L$ 次，GPT-3 有 96 层。
+# - 由嵌入、注意力与输出层组成的模型称为 **Transformer**。实际的模型在注意力之后还有**前馈网络**，并把这样的层重复 $L$ 次。
 
 ['kv-predict.highlight.1']
 src_hash = '5d1761a1'
@@ -3525,6 +3900,11 @@ The third characteristic raises a question: in a decode step the first rows of $
 # 第三条对应相亲节目中新嘉宾的入场：节目组用新嘉宾的兴趣阅读每张纸条，已有的纸条不变。
 # 第三条引出一个问题：解码一步时，$X$ 的前几行与上一步相同，已有 token 的查询、键与值是否重新计算。
 
+['section.kv-cache-section.title']
+src_hash = 'caf24fa2'
+text = 'KV Cache'
+# src: KV Cache
+
 ['kv-naive.title']
 src_hash = '11fe0800'
 text = 'Repeated Computation Without a Cache'
@@ -3574,15 +3954,17 @@ text = 'The **KV Cache** stores the $k$ and $v$ of existing tokens, and each dec
 # **KV Cache** 保存已有 token 的 $k$ 与 $v$，解码每一步只为新 token 计算 $q$、$k$、$v$ 各一行。
 
 ['kv-cache.slide.2']
-src_hash = '027d5373'
+src_hash = 'de0c7862'
 text = '''
 - Keys and values are read by the query of every later token, and those of existing tokens no longer change, so they are cached.
 - A query is used only to compute the output of the token it belongs to and is not used after that, so it is not cached.
+- Accesses to the KV Cache are mostly reads: every step reads all cached $k$ and $v$ and appends only one row for the new token.
 '''
 # src:
 # 
 # - 键与值由之后每个 token 的查询读取，已有 token 的键与值不再改变，所以缓存。
 # - 查询只用于计算它所属 token 的输出，算出输出之后不再使用，所以不缓存。
+# - KV Cache 的访问以读为主：每一步读出全部缓存的 $k$、$v$，只追加新 token 的一行。
 
 ['kv-cache.notes.1']
 src_hash = 'a3645d0a'
@@ -3611,11 +3993,11 @@ text = 'Running Time Without and With the Cache'
 # src: 无缓存与有缓存的运行时间
 
 ['kv-run.slide.1']
-src_hash = '7b848f44'
-text = '`kv_decode.c` generates 64 to 1024 tokens with one attention head ($d = 128$), runs once without the cache and once with it for each length, compares the running times, and compares the two outputs bit by bit. speedup is the ratio of the two times.'
+src_hash = 'dd952153'
+text = '`kv_decode.c` generates 64 to 1024 tokens and compares the running times and the outputs without a cache and with the KV Cache.'
 # src:
 # 
-# `kv_decode.c` 用同一个输入分别生成 64 至 1024 个 token，比较无缓存与使用 KV Cache 的运行时间，并逐位比较两种输出。
+# `kv_decode.c` 生成 64 至 1024 个 token，比较无缓存与使用 KV Cache 的运行时间与输出。
 
 ['kv-run.demo.1.name']
 src_hash = '51560f76'
@@ -3623,22 +4005,27 @@ text = 'Decoding without and with the cache'
 # src: 无缓存与有缓存的解码
 
 ['kv-run.slide.2']
-src_hash = 'e72d35a5'
+src_hash = 'e23365fb'
 text = '''
 - The two outputs are identical bit by bit. For 1024 tokens, the cache makes decoding about 55 times faster.
-- The more tokens, the larger the speedup: about 16 times for 64 tokens and about 55 times for 1024. Without the cache, step $t$ recomputes the $k$ and $v$ of $t$ tokens, and with the cache it computes only 1.
+- The more tokens, the larger the speedup: about 16 times for 64 tokens and about 55 times for 1024.
 '''
 # src:
 # 
 # - 两种方式的输出逐位相同。生成 1024 个 token 时，使用缓存快约 55 倍。
-# - token 越多，加速越大：64 个 token 时约 16 倍，1024 个时约 55 倍。不用缓存时第 $t$ 步要重算 $t$ 个 token 的 $k$、$v$，使用缓存时只算 1 个。
+# - token 越多，加速越大：64 个 token 时约 16 倍，1024 个时约 55 倍。
+
+['kv-run.highlight.1']
+src_hash = '2a7c1391'
+text = 'The more tokens, the larger the KV Cache. How can GPU memory hold it?'
+# src: token 越多，KV Cache 越大，显存怎样容纳它？
 
 ['kv-run.notes.1']
-src_hash = '22b65a23'
+src_hash = 'de32e2ec'
 text = '''
 `kv_decode.c` implements decoding for a single attention head, without multiple heads, layers or feed-forward networks. `decode(T, cached, out)` executes step by step: it computes q for the current token, then calls `compute_kv(t)` once if `cached` is true, or once for each position 0 to t if it is false, and finally `attend` performs attention over positions 0 to t, and the output becomes the input of the next step through tanh. The weights are fixed pseudo-random numbers.
 The two modes perform the operations in the same order, so the outputs are identical bit by bit (the last line, yes). The cache only removes repeated computation and does not change the result.
-Each time the number of tokens doubles, the time without the cache grows about 4 times: step t recomputes t tokens, so the total number of projections grows as T². With the cache each step computes the k and v of only 1 token, so the time grows more slowly and the speedup increases with the number of tokens.
+Without the cache, step t recomputes the k and v of t tokens, and with the cache it computes only 1. Each time the number of tokens doubles, the time without the cache grows about 4 times: step t recomputes t tokens, so the total number of projections grows as T². With the cache each step computes the k and v of only 1 token, so the time grows more slowly and the speedup increases with the number of tokens.
 With the cache each step still performs attention over t positions, and this part grows with the number of tokens, so the growth of the speedup gradually slows down. In a real model each token goes through the computation of all layers, so far more computation is saved than in this single-head program, and the speedup is larger.
 Times vary from machine to machine. The numbers on the page are from one run.
 '''
@@ -3646,9 +4033,14 @@ Times vary from machine to machine. The numbers on the page are from one run.
 # 
 # `kv_decode.c` 实现单个注意力头的解码，没有多头、层与前馈网络。`decode(T, cached, out)` 逐步执行：为当前 token 计算 q，然后 `cached` 为真时只调用一次 `compute_kv(t)`，为假时对位置 0 到 t 各调用一次 `compute_kv`，最后 `attend` 对位置 0 到 t 作注意力，输出经 tanh 成为下一步的输入。权重是固定的伪随机数。
 # 两种方式的运算顺序相同，所以输出逐位相同（最后一行 yes）。缓存只省去重复的计算，不改变结果。
-# token 数每增加一倍，不用缓存的时间约增为 4 倍：第 t 步重算 t 个 token，总的投影次数随 T² 增长。使用缓存时每步只算 1 个 token 的 k、v，时间增长得慢，所以加速比随 token 数增大。
+# 不用缓存时第 t 步要重算 t 个 token 的 k、v，使用缓存时只算 1 个。token 数每增加一倍，不用缓存的时间约增为 4 倍：第 t 步重算 t 个 token，总的投影次数随 T² 增长。使用缓存时每步只算 1 个 token 的 k、v，时间增长得慢，所以加速比随 token 数增大。
 # 使用缓存时每步仍要对 t 个位置作注意力，这部分随 token 数增长，所以加速比的增长逐渐变慢。实际的模型每个 token 要经过全部层的计算，省去的计算远多于这个单头的程序，加速比更大。
 # 时间随机器而异，页面上的数字取一次运行的结果。
+
+['section.kv-memory-section.title']
+src_hash = '77393478'
+text = 'Managing the KV Cache in GPU Memory'
+# src: 显存中的 KV Cache 管理
 
 ['kv-vram.title']
 src_hash = '7b706bd7'
@@ -3656,15 +4048,17 @@ text = 'Model and KV Cache in GPU Memory'
 # src: 显存中的模型与 KV Cache
 
 ['kv-vram.slide.1']
-src_hash = '340a79e1'
+src_hash = '0b5419ef'
 text = '''
-- **GPU memory** holds three parts at the same time: the shared **model weights**, the **intermediate results** of the current step, and the **KV Cache** of each session.
+- **GPU memory** holds the shared **model weights**, the **intermediate results** of the current step and the **KV Cache** of each session.
 - The KV Cache of a single session grows with the number of tokens, and the total size grows with the number of sessions retained in GPU memory.
+- With a long context, the KV Cache of one session is as large as the model weights, for example with a context of 128K tokens the KV Cache of Llama 3.1 8B is about 17 GB, and its weights are about 16 GB.
 '''
 # src:
 # 
-# - 显卡的**显存**同时存放三部分数据：共用的**模型权重**、当前步的**中间结果**与各会话的 **KV Cache**。
+# - **显存**同时存放共用的**模型权重**、当前步的**中间结果**与各会话的 **KV Cache**。
 # - 单个会话的 KV Cache 随 token 数量增长，总容量随显存中保留的会话数增加。
+# - 上下文很长时，一个会话的 KV Cache 与模型权重一样大，比如 Llama 3.1 8B 的上下文为 128K 个 token 时，KV Cache 约 17 GB，权重约 16 GB。
 
 ['kv-vram.highlight.1']
 src_hash = '9ece98e4'
@@ -3672,14 +4066,16 @@ text = 'If the KV Cache stays resident in GPU memory forever, GPU memory will ev
 # src: 如果 KV Cache 始终驻留在显存中，显存迟早会被占满，怎么办？
 
 ['kv-vram.notes.1']
-src_hash = '229f93cf'
+src_hash = '45a0d357'
 text = '''
 2 frames. Frame 1 shows the layout of GPU memory during LLM inference: the model weights have a fixed size after loading and are shared by all requests. Intermediate results are temporary vectors computed in the current step and take a small space. The rest of GPU memory holds the KV Cache of each session so that the k and v of earlier tokens can be reused directly across turns or decoding steps. The newly arrived session 4 is placed into the remaining GPU memory space.
+Llama 3.1 8B has 32 layers, 8 KV heads per layer and 128 dimensions per head, and each number of k and v takes 2 bytes, so the KV Cache of one token is 2 × 32 × 8 × 128 × 2 = 131,072 bytes, that is, 128 KB. With a context of 128K (131,072) tokens, the KV Cache of one session is about 17 GB. The weights have 8.03 billion parameters of 2 bytes each, about 16 GB. The figures come from config.json of meta-llama/Llama-3.1-8B on Hugging Face.
 Frame 2: after users finish or pause their conversations, if the KV Caches of old sessions stay resident in GPU memory forever, GPU memory will eventually fill up as later sessions (session 5, session 6 and so on) keep arriving. The next page introduces the server's standard expiration mechanism for this problem.
 '''
 # src:
 # 
 # 共 2 帧。第 1 帧展示大模型推理时显存的组织：模型权重在载入后大小固定，由所有请求共用。中间结果是当前步算出的临时向量，占用的空间较小。其余显存用于存放各会话的 KV Cache，以便用户在多轮对话或继续生成时直接复用前序 token 的 k、v。新到达的会话 4 放入剩余显存空间。
+# Llama 3.1 8B 有 32 层，每层 8 个 KV 头，每个头 128 维，k 与 v 各 2 字节一个数，每个 token 的 KV Cache 为 2 × 32 × 8 × 128 × 2 = 131,072 字节，即 128 KB。上下文为 128K（131,072）个 token 时，一个会话的 KV Cache 约 17 GB。权重有 80.3 亿个参数，每个 2 字节，约 16 GB。数据取自 Hugging Face 上 meta-llama/Llama-3.1-8B 的 config.json。
 # 第 2 帧：用户结束或暂停对话后，如果旧会话的 KV Cache 始终驻留在显存中，随着后续会话（会话 5、会话 6 等）不断到达，显存迟早会被占满。下一页先给出服务端针对这一问题的常规过期机制。
 
 ['kv-expire.title']
@@ -3720,109 +4116,133 @@ The expiration mechanism solves the problem of old sessions occupying GPU memory
 # 第 3 帧：如果会话 1 在过期之后再次发来请求，由于原 KV Cache 已释放，服务端重新计算会话 1 前序 token 的 k、v，生成新的 KV Cache 后继续解码。
 # 过期机制解决了旧会话长期占用显存的问题。但如果同一时间有大量请求密集到达，在过期时间之内所有活跃会话的 KV Cache 总和就超出了显存容量，下一页讨论此时的处理方式。
 
-['kv-swap.title']
-src_hash = '8546df01'
-text = 'The Swap-Out and Swap-In Idea When GPU Memory Is Full'
-# src: 显存不足时的换入换出设想
-
-['kv-swap.slide.1']
-src_hash = '959c0741'
-text = '''
-- When many requests arrive densely at the same time, none of the KV Caches in GPU memory have expired, and the remaining space is insufficient for new requests.
-- **Naive idea**: **swap out** temporarily unused KV Caches from GPU memory to main memory, and **swap** them back **in** to GPU memory when the session resumes.
-'''
-# src:
-# 
-# - 同一时间大量请求密集到达时，显存中的 KV Cache 均未到期，剩余空间不足以容纳新请求。
-# - **朴素设想**：把暂不使用的 KV Cache 从显存**换出**到内存，待该会话继续时再从内存**换入**显存。
-
-['kv-swap.highlight.1']
-src_hash = '3659932d'
-text = 'What problem arises from swapping KV Cache between GPU memory and main memory?'
-# src: 在显存与内存之间换入换出 KV Cache 会带来什么问题？
-
-['kv-swap.notes.1']
-src_hash = '7e036727'
-text = '''
-3 frames.
-Frame 1 (dense requests): many requests arrive within a short time. The last access times of sessions 1, 2 and 3 in GPU memory are all within a few minutes and none have expired, while the newly arrived session 4 no longer fits in GPU memory.
-Frame 2 (swap out): a direct naive idea is to use the larger main memory: copy the KV Cache of the temporarily inactive session 1 from GPU memory to main memory to free GPU memory for the newly arrived session 4.
-Frame 3 (swap in): when session 1 sends a request again, dynamically copy its KV Cache from main memory back to GPU memory so that the original KV Cache is preserved.
-Whether this idea works depends on whether swapping in the KV Cache from main memory is faster than recomputing it directly, which the next page analyzes.
-'''
-# src:
-# 
-# 共 3 帧。
-# 第 1 帧（请求密集到达）：短时间内大量请求同时到达，显存中会话 1、2、3 的最后访问时间都在几分钟以内，均未达到过期时间，而新到达的会话 4 已无法放入显存。
-# 第 2 帧（换出）：一种直接的朴素设想是利用容量更大的主存（内存）：把暂时不活跃的会话 1 的 KV Cache 从显存复制到内存中保存，腾出显存给新到达的会话 4。
-# 第 3 帧（换入）：当会话 1 再次发来请求时，动态把它的 KV Cache 从内存复制回显存，使原有的 KV Cache 得以保留。
-# 这一设想能否奏效，取决于从内存换入 KV Cache 的速度是否比直接重新计算更快，下一页对此作分析。
-
-['kv-recompute.title']
-src_hash = 'da70bd25'
-text = 'Memory-Bound Decoding and Cache Invalidation'
-# src: 访存受限与缓存失效
-
-['kv-recompute.slide.1']
-src_hash = 'ed5ab684'
-text = '''
-- Every decode step reads the weights and the KV Cache, making it **memory-bound**, so exchanging the cache with main memory is slower than recomputing directly.
-- When the KV Cache exceeds GPU memory, part of the cache is **invalidated** directly, and the earlier $k$ and $v$ are recomputed when that session requests again.
-'''
-# src:
-# 
-# - 解码每步都要读取权重与 KV Cache，属于**访存受限**计算，从内存交换缓存比直接重算更慢。
-# - KV Cache 超出显存时，直接使部分缓存**失效**，会话再次请求时重新计算前序 $k$、$v$。
-
-['kv-recompute.highlight.1']
-src_hash = 'db6573d4'
-text = 'When GPU memory is full and part of the KV Cache is invalidated directly, which caches should be chosen?'
-# src: 显存不足时直接使部分 KV Cache 失效，应当选择哪些缓存？
-
-['kv-recompute.notes.1']
-src_hash = '31b9ad95'
-text = '''
-3 frames. When decoding each token, the GPU reads the model weights and the current session's KV Cache from GPU memory once, while each element participates in only one inner product or weighted sum. The amount of arithmetic is small and most of the time is spent waiting for data to be read in, so decoding is memory-bound. When decoding is already memory-bound, exchanging the KV Cache across main memory is slower than having the GPU recompute it directly.
-Frame 1: many requests arrive densely at the same time. None of the KV Caches of sessions 1, 2 and 3 in GPU memory have expired, while the remaining space is insufficient for the newly arrived session 4.
-Frame 2: the server directly invalidates the KV Cache of session 1 to immediately free GPU memory space and place session 4.
-Frame 3: when session 1 whose cache was invalidated sends a request again later, the server recomputes the k and v of the earlier tokens of session 1 and generates a new KV Cache before continuing decoding. The next step is to decide which caches to invalidate first.
-'''
-# src:
-# 
-# 共 3 帧。解码生成每个 token 时，GPU 都要把模型权重和当前会话的 KV Cache 从显存读出一次，而每个元素只参加一次内积或加权求和，计算量很小，大部分时间花在等待数据读入上，即访存受限（memory-bound）。在访存受限下，若再跨内存交换 KV Cache，速度反而不如 GPU 直接重新算一遍快。
-# 第 1 帧：同一时间大量请求密集到达，显存中会话 1、2、3 的 KV Cache 均未到过期时间，而剩余空间已不足以容纳新到达的会话 4。
-# 第 2 帧：服务端直接使会话 1 的 KV Cache 失效（invalidate），立即腾出显存空间放入会话 4。
-# 第 3 帧：当被使失效的会话 1 后续再次发来请求时，服务端重新计算会话 1 前序 token 的 k、v，生成新的 KV Cache 后继续解码。接下来需要决定优先使哪些缓存失效。
-
 ['kv-evict.title']
 src_hash = '5c031adb'
 text = 'Eviction Policies for the KV Cache'
 # src: KV Cache 的淘汰策略
 
 ['kv-evict.slide.1']
-src_hash = 'e51b5324'
+src_hash = '9354cd4d'
+text = 'The model weights are used at every step. When GPU memory is full, sessions give up their KV Cache, and an eviction policy selects the session:'
+# src:
+# 
+# 模型权重每一步都要使用，显存不足时由会话让出 KV Cache，按淘汰策略选出会话：
+
+['kv-evict.slide.2']
+src_hash = '0d30287e'
 text = '''
-- **Least Recently Used (LRU)**: the default policy in mainstream inference systems, invalidating the session cache that has not been accessed for the longest time first.
-- **Smallest cache first**: invalidate the session with the fewest cached tokens first, minimising the impact on user experience:
-  1. Compute services charge less for tokens that hit the cache, so keeping large caches saves users more money.
-  2. A session with a small cache needs little extra computation when recomputed after invalidation.
+- **Least Recently Used (LRU)**: the default policy in mainstream inference systems, evicting the session that has not been accessed for the longest time first.
+- **Smallest cache first**: evict the session with the fewest cached tokens first. Tokens that hit the cache are charged less, so keeping large caches saves users money. A session with a small cache is also cheap to restore after it is evicted.
 '''
 # src:
 # 
-# - **最近最少使用（LRU）**：主流推理系统的默认策略，优先使最久未访问的会话缓存失效。
-# - **最小缓存优先**：优先使已缓存 token 数最少的会话失效，尽量减小对用户体验的影响：
-#   1. 算力服务对 hit 缓存的 token 收取更低费用，保留大缓存能为用户节省更多开支。
-#   2. 缓存较少的会话即使失效，后续重新计算所需的额外计算量也较少。
+# - **最近最少使用（LRU）**：主流推理系统的默认策略，优先淘汰最久未访问的会话。
+# - **最小缓存优先**：优先淘汰已缓存 token 数最少的会话。hit 缓存的 token 收费更低，保留大缓存为用户节省开支。缓存少的会话被淘汰后，恢复的代价也小。
+
+['kv-evict.highlight.1']
+src_hash = '8498bce5'
+text = 'Where should the evicted KV Cache go?'
+# src: 被淘汰的 KV Cache 应当放到哪里？
 
 ['kv-evict.notes.1']
-src_hash = 'f2021be1'
+src_hash = '09fb703f'
 text = '''
+All model weights are read once for every generated token, so they must stay in GPU memory. A session's KV Cache is used only when that session continues, and users usually do not tell the server that a conversation has ended, so sessions that have had no request for a long time give up GPU memory first. The expiration time is a simple form of eviction: a session idle for longer than a set time gives up its GPU memory directly.
 The left and right panels of the figure compare two eviction policies.
-The left panel is Least Recently Used (LRU): record the last access time of each session, and when GPU memory is full, evict the session that has had no new request for the longest time (in the figure, session A has been idle for 45 minutes). This is the default policy for managing idle KV Caches in mainstream inference systems such as vLLM, SGLang and TensorRT-LLM.
-The right panel is smallest cache first: compare the amount of KV Cache currently accumulated by each session (such as the number of cached layers or tokens), and evict the session with the smallest cache first (session C in the figure). This approach is used in concurrent request preemption (for example, vLLM evicts the most recently arrived request with the shortest generation progress to reduce recomputation overhead) and billing-aware scenarios: first, compute providers charge a discounted price for earlier tokens that hit the KV Cache, so the more content a session has cached, the more money keeping its cache saves the user. Second, the smaller a session's cache is, the less extra computation is needed to recompute it when the session resumes after invalidation, so the waiting time perceived by the user is short.
+The left panel is Least Recently Used (LRU): record the last access time of each session, and when GPU memory is full, evict the session that has had no new request for the longest time (in the figure, session A has been idle for 45 minutes). This is the default policy for managing idle KV Caches in mainstream inference systems such as vLLM, SGLang and TensorRT-LLM. Sessions can also be evicted by access count, the least accessed first (Least Frequently Used, LFU).
+The right panel is smallest cache first: compare the amount of KV Cache each session has accumulated (such as the number of cached layers or tokens), and evict the session with the smallest cache first (session C in the figure). This approach is used in preemption among concurrent requests (for example, vLLM evicts the most recently arrived request with the least generation progress to reduce recomputation overhead) and in billing-aware scenarios. First, compute providers charge a discounted price for earlier tokens that hit the KV Cache, so the more a session has cached, the more money keeping its cache saves the user. Second, the smaller a session's cache, the less data has to be transferred or recomputed to restore it later, so the waiting time the user perceives is short.
+After the session to evict is selected, it remains to decide where its KV Cache goes, which the next page discusses.
 '''
 # src:
 # 
+# 模型权重每生成一个 token 都要全部读取一次，必须留在显存中。会话的 KV Cache 只在该会话继续时使用，用户通常不会告诉服务端对话已经结束，所以长时间没有请求的会话最先让出显存。过期时间就是一种简单的淘汰：闲置超过一定时间的会话直接让出显存。
 # 图中左右两栏对比两种淘汰策略。
-# 左栏是最近最少使用（LRU）：记录每个会话最后一次访问的时间，当显存不足时，淘汰最长时间没有新请求的会话（图中会话 A 已闲置 45 分钟）。这是 vLLM、SGLang、TensorRT-LLM 等主流推理系统管理闲置 KV Cache 的默认策略。
-# 右栏是最小缓存优先：比较各会话当前已缓存的 KV Cache 规模（例如缓存的层数或已积累的 token 数量），优先淘汰缓存量最少的会话（图中会话 C）。在并发请求抢占（如 vLLM 淘汰最新到达、已生成进度最短的请求以减少重算开销）与计费感知的场景中采用这一思路：第一，算力厂商对 hit KV Cache 的前序 token 按优惠价格计费，已缓存内容越多的会话，保留其缓存为用户节省的费用越多。第二，缓存量越少的会话，即使缓存被使失效，下次继续时重新计算所需的额外计算量也很小，用户感知的等待时间很短。
+# 左栏是最近最少使用（LRU）：记录每个会话最后一次访问的时间，当显存不足时，淘汰最长时间没有新请求的会话（图中会话 A 已闲置 45 分钟）。这是 vLLM、SGLang、TensorRT-LLM 等主流推理系统管理闲置 KV Cache 的默认策略。也可以按访问的次数，优先淘汰访问最少的会话（最不经常使用，LFU）。
+# 右栏是最小缓存优先：比较各会话当前已缓存的 KV Cache 规模（例如缓存的层数或已积累的 token 数量），优先淘汰缓存量最少的会话（图中会话 C）。在并发请求抢占（如 vLLM 淘汰最新到达、已生成进度最短的请求以减少重算开销）与计费感知的场景中采用这一思路：第一，算力厂商对 hit KV Cache 的前序 token 按优惠价格计费，已缓存内容越多的会话，保留其缓存为用户节省的费用越多。第二，缓存量越少的会话，即使被淘汰，之后恢复它要传输或重新计算的数据也很少，用户感知的等待时间很短。
+# 选出淘汰的会话之后，还要决定它的 KV Cache 放到哪里，下一页讨论。
+
+['kv-swap.title']
+src_hash = '47602318'
+text = 'Swapping the KV Cache Out and In'
+# src: KV Cache 的换出与换入
+
+['kv-swap.slide.1']
+src_hash = 'a9476039'
+text = '- A block replaced from a hardware cache is still kept in the next level. The KV Cache is kept only in GPU memory, so when it is evicted it can be **swapped out** to larger main memory or an SSD, and **swapped** back **in** to GPU memory when the session continues.'
+# src:
+# 
+# - 硬件缓存被替换的块仍保存在下一层。KV Cache 只保存在显存中，被淘汰时可以**换出**到容量更大的内存或 SSD，会话继续时再**换入**显存。
+
+['kv-swap.highlight.1']
+src_hash = 'bdc3b0a3'
+text = 'The KV Cache is computed. What else can be done with it when it is evicted?'
+# src: KV Cache 由计算得出，被淘汰时还有什么做法？
+
+['kv-swap.notes.1']
+src_hash = 'af523c91'
+text = '''
+3 frames.
+Frame 1 (dense requests): many requests arrive within a short time. The last access times of sessions 1, 2 and 3 in GPU memory are all within a few minutes and none have expired, while the newly arrived session 4 no longer fits in GPU memory.
+Frame 2 (swap out): the KV Cache of session 1, selected by the eviction policy, is copied from GPU memory to main memory, freeing GPU memory for the newly arrived session 4.
+Frame 3 (swap in): when session 1 sends a request again, its KV Cache is copied from main memory back to GPU memory, with no recomputation. To make room, the figure swaps the KV Cache of session 4 out to main memory.
+In a hardware cache, an unmodified block already has a copy in the next level and is discarded directly when replaced, and a modified block is first written back to the next level, so replaced data is always kept in the next level. The KV Cache is computed in GPU memory and main memory holds no copy of it, so an evicted KV Cache must be swapped out to be kept.
+'''
+# src:
+# 
+# 共 3 帧。
+# 第 1 帧（请求密集到达）：短时间内大量请求同时到达，显存中会话 1、2、3 的最后访问时间都在几分钟以内，均未达到过期时间，而新到达的会话 4 已无法放入显存。
+# 第 2 帧（换出）：把按淘汰策略选出的会话 1 的 KV Cache 从显存复制到内存中保存，腾出显存给新到达的会话 4。
+# 第 3 帧（换入）：会话 1 再次发来请求时，把它的 KV Cache 从内存复制回显存，不需要重新计算。图中为了腾出空间，会话 4 的 KV Cache 换出到内存。
+# 硬件缓存中，未修改的块在下一层已有副本，被替换时直接丢弃，修改过的块先写回下一层，所以被替换的数据总保存在下一层。KV Cache 是在显存中算出的，内存中没有它的副本，被淘汰时需要换出才能保留。
+
+['kv-recompute.title']
+src_hash = '4160e0f2'
+text = 'Cache Invalidation and Recomputation'
+# src: 缓存失效与重新计算
+
+['kv-recompute.slide.1']
+src_hash = 'ee4c9141'
+text = '- The KV Cache is computed from the tokens and the weights, so when it is evicted it can also be discarded directly, that is, **invalidated**, and the $k$ and $v$ of the earlier tokens are recomputed when the session continues.'
+# src:
+# 
+# - KV Cache 由 token 与权重计算得出，被淘汰时还可以直接丢弃，即使缓存**失效**，会话继续时重新计算前序 token 的 $k$、$v$。
+
+['kv-recompute.slide.2']
+src_hash = '001e6af1'
+text = '- The time of a swap-in depends on the amount of data and the bus bandwidth, the time of a recomputation depends on the number of tokens and the compute power, and a system chooses the faster one, for example LMCache stores the KV Cache of long conversations in main memory and on SSDs, because reading it back is faster than recomputing it.'
+# src:
+# 
+# - 换入的时间取决于数据量与总线带宽，重新计算的时间取决于 token 数与算力，系统选择更快的一种，比如 LMCache 把长对话的 KV Cache 存到内存与 SSD，读回比重新计算快。
+
+['kv-recompute.slide.2.footnote.1']
+src_hash = 'a1688324'
+text = 'Kwon et al.: [vLLM and PagedAttention](https://arxiv.org/abs/2309.06180), SOSP 2023; [LMCache](https://arxiv.org/abs/2510.09665).'
+# src: Kwon 等：[vLLM 与 PagedAttention](https://arxiv.org/abs/2309.06180)，SOSP 2023；[LMCache](https://arxiv.org/abs/2510.09665)。
+
+['kv-recompute.highlight.1']
+src_hash = '57cc5787'
+text = 'The KV Cache trades GPU memory for computation, and when GPU memory is full it trades computation back for GPU memory.'
+# src: KV Cache 用显存换取计算，显存不足时又用计算换取显存。
+
+['kv-recompute.notes.1']
+src_hash = '6b91fa09'
+text = '''
+3 frames.
+Frame 1: many requests arrive densely at the same time. None of the KV Caches of sessions 1, 2 and 3 in GPU memory have expired, while the remaining space is insufficient for the newly arrived session 4.
+Frame 2: session 1 is selected by the eviction policy, and the server directly invalidates its KV Cache to free GPU memory at once and place session 4.
+Frame 3: when session 1 sends a request again later, the server recomputes the k and v of the earlier tokens of session 1 and generates a new KV Cache before continuing decoding.
+The data in a hardware cache can only be obtained from the next level. The KV Cache can also be recomputed from the tokens and the weights, so it has one more option than a hardware cache: discard it and compute it again.
+Recomputing the k and v of the earlier tokens amounts to a second prefill over these tokens, which is mostly matrix multiplication, and the amount of computation grows with the number of tokens, for example Llama 3.1 8B needs about 2 × 8.03 billion operations per token. A swap-in sends the KV Cache from main memory back to GPU memory over the bus, and the amount transferred also grows with the number of tokens, 128 KB per token for Llama 3.1 8B. Which one is faster depends on the compute power of the GPU and the bandwidth of the bus.
+The vLLM paper compares the two: recomputation is faster when each transfer is small, and swapping is faster when it is large. LMCache stores the KV Cache in main memory and on SSDs for long conversations and repeated prefixes, because reading it back is faster than recomputing it.
+The KV Cache stores the results of computation in GPU memory to avoid repeating it. When GPU memory is full, part of those results is discarded and computed again when needed, which trades computation back for GPU memory.
+'''
+# src:
+# 
+# 共 3 帧。
+# 第 1 帧：同一时间大量请求密集到达，显存中会话 1、2、3 的 KV Cache 均未到过期时间，而剩余空间已不足以容纳新到达的会话 4。
+# 第 2 帧：会话 1 按淘汰策略被选出，服务端直接使它的 KV Cache 失效（invalidate），立即腾出显存空间放入会话 4。
+# 第 3 帧：会话 1 后续再次发来请求时，服务端重新计算会话 1 前序 token 的 k、v，生成新的 KV Cache 后继续解码。
+# 硬件缓存中的数据只能从下一层取得。KV Cache 还可以由 token 与权重重新算出，所以比硬件缓存多一种做法：丢弃之后重新计算。
+# 重新计算前序 token 的 k、v 相当于对这些 token 再做一次预填充，主要是矩阵乘法，计算量随 token 数增长，比如 Llama 3.1 8B 每个 token 约需 2 × 80.3 亿次运算。换入要把 KV Cache 经总线从内存传回显存，传输量也随 token 数增长，Llama 3.1 8B 每个 token 为 128 KB。哪一种更快取决于 GPU 的算力与总线的带宽。
+# vLLM 的论文比较了两种做法：每次传输的数据较小时重新计算更快，较大时换出更快。LMCache 把 KV Cache 存到内存与 SSD，用于长对话与重复的前缀，读回比重新计算快。
+# KV Cache 本来是用显存保存计算的结果，省去重复的计算。显存不足时，丢弃一部分结果，需要时再算一遍，又用计算换回了显存。

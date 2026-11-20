@@ -78,39 +78,40 @@ class RenderBlockTest(unittest.TestCase):
             ['<figure class="lk-figure"><img src="x.svg" alt=""><figcaption>c</figcaption></figure>', ""],
         )
 
-    def test_side_image_is_left_to_the_page_on_either_side(self):
-        # Marp's split would take the title into the text column and cut its
-        # rule short; the page draws the column itself (`side_column`).
+    def test_side_image_draws_its_figure_on_either_side(self):
+        # The page sets the figure in its image column; the side only decides
+        # where that column goes.
         for side in ("left", "right"):
             block = Block(kind="side_image", content={"src": "x.png", "alt": "", "side": side, "width": "34%"})
-            self.assertEqual(render_block(block), [])
+            self.assertEqual(
+                render_block(block),
+                ['<figure class="lk-side-img lk-side-cover"><img src="x.png" alt=""></figure>', ""],
+            )
 
-    def test_side_column_holds_the_images_and_hands_the_theme_its_width(self):
-        from lecturekit.renderers.viewer.blocks import side_column
+    def test_side_figure_fits_or_covers_and_drops_the_keywords_from_alt(self):
+        from lecturekit.renderers.viewer.blocks import side_figure
 
-        sides = [
-            Block(kind="side_image", content={"src": "a.png", "alt": "contain", "side": "left", "width": "40%"}),
-            Block(kind="side_image", content={"src": "b.png", "alt": "a map", "side": "left", "width": None}),
-        ]
-        lines = side_column(sides, 1280)
         self.assertEqual(
-            lines[0],
-            '<figure class="lk-side">'
-            '<img src="a.png" alt="" class="lk-side-fit">'
-            '<img src="b.png" alt="a map">'
-            '</figure>',
+            side_figure({"src": "a.png", "alt": "contain"}),
+            '<figure class="lk-side-img lk-side-fit"><img src="a.png" alt=""></figure>',
         )
-        # the first image sets the column: 40% of a 1280px slide
-        self.assertIn("section { --lk-side-width: 512px; }", lines)
-        self.assertIn("<style scoped>", lines)
+        self.assertEqual(
+            side_figure({"src": "b.png", "alt": "fit a map"}),
+            '<figure class="lk-side-img lk-side-fit"><img src="b.png" alt="a map"></figure>',
+        )
+        self.assertEqual(
+            side_figure({"src": "c.png", "alt": "cover a map"}),
+            '<figure class="lk-side-img lk-side-cover"><img src="c.png" alt="a map"></figure>',
+        )
 
-    def test_side_width_px_reads_percent_pixels_and_the_half_default(self):
-        from lecturekit.renderers.viewer.blocks import side_width_px
+    def test_side_column_px_reads_a_share_of_the_body_pixels_and_the_half_default(self):
+        from lecturekit.model import side_column_px
 
-        self.assertEqual(side_width_px("38%", 1280), 486)
-        self.assertEqual(side_width_px("480px", 1280), 480)
-        self.assertEqual(side_width_px(300, 1280), 300)
-        self.assertEqual(side_width_px(None, 1280), 640)
+        # A 16:9 slide's body is 1280 - 2 * 80 = 1120px wide.
+        self.assertEqual(side_column_px("38%", 1120), 426)
+        self.assertEqual(side_column_px("480px", 1120), 480)
+        self.assertEqual(side_column_px(300, 1120), 300)
+        self.assertEqual(side_column_px(None, 1120), 560)
 
     def test_aside_block_is_blockquote(self):
         block = Block(kind="aside", content="note")

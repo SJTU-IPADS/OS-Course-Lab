@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import re
 
-from ... import filelinks, marks
+from ... import filelinks, inlinemath, marks
 
 # Tone -> the \definecolor name of the marker ink `\lkmark` draws with, shared
 # with the marked code line `blocks.py` washes with `\lkpshl` — a marked word and
@@ -57,7 +57,7 @@ _SENTINEL_RE = re.compile("\x00LKPH(\\d+)\x00")
 _PROTECT_RE = re.compile(
     rf"(?P<mark>{marks.SPAN_RE.pattern})"
     r"|(?P<dmath>\$\$.+?\$\$)"
-    r"|(?P<math>\$[^$]+?\$)"
+    rf"|{inlinemath.INLINE}"
     r"|(?P<code>`[^`]+?`)"
     r"|(?P<link>\[[^\]]+?\]\([^)]+?\))"
     r"|(?P<ref>\[@[A-Za-z0-9:_-]+\])",

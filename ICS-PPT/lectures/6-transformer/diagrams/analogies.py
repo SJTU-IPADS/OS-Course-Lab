@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""analogies: more directions that carry meaning, in gender-direction's style.
+"""analogies: more directions that carry meaning, in embedding-direction's style.
 
 Points are placed by hand in a 2D view: they show the relations the video
 reports, not coordinates of a trained model. One panel per frame:

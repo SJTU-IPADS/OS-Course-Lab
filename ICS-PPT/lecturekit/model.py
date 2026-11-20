@@ -170,7 +170,7 @@ LEGACY_GAP_MAX_PX = 28
 # The word ``p.gap(...)`` takes instead of a cap to lift it entirely.
 GAP_FILL = "fill"
 
-# Where a ``side_image`` page's columns sit in the band under the title. It is
+# Where a ``side_image`` page's columns sit in its body. It is
 # the page's own ``valign`` (see ``page_valign``), so it takes the same values.
 # See dsl.PageBuilder.side_image.
 SIDE_VALIGNS = VALIGNS
@@ -194,8 +194,28 @@ def side_valign(blocks: Iterable[Block]) -> str:
     return DEFAULT_SIDE_VALIGN
 
 
+def side_column_px(width, body_width: float) -> int:
+    """The width in px of a page's image column inside a body ``body_width`` wide.
+
+    A content page is three bands, top to bottom: the title, the body and the
+    footnote band. With a ``side_image`` the body is two columns side by side,
+    the image column and the main column. ``width`` is the image column's share
+    of the body: a percentage (``"40%"``), a pixel count (``"480px"`` or a bare
+    number), or ``None`` for half of it. Every renderer sizes the column here.
+    """
+    if isinstance(width, (int, float)):
+        return round(width)
+    text = str(width or "50%").strip()
+    try:
+        if text.endswith("%"):
+            return round(body_width * float(text[:-1]) / 100)
+        return round(float(text.removesuffix("px")))
+    except ValueError:
+        return round(body_width / 2)
+
+
 def page_valign(page: Page, blocks: Iterable[Block] | None = None) -> str | None:
-    """The page's own ``valign``: where its elements sit in the band under the title.
+    """The page's own ``valign``: where the content of each column of its body sits.
 
     ``p.valign(...)`` sets it; ``p.side_image(..., valign=...)`` says the same
     thing for a page with an image column, and is read when the page sets none.
@@ -248,9 +268,10 @@ class LecturekitElement:
     element.
 
     Footnotes and callouts hang off any element, so they are fields of this
-    class: each footnote renders as small bottom-left text with a matching
-    superscript on the element, and a callout is a bubble floating over the
-    slide next to it (see dsl.BlockHandle.footnote / annotate and Annotation).
+    class: each footnote renders as small text in the page's footnote band, at
+    the bottom of the slide, with a matching superscript on the element, and a
+    callout is a bubble floating over the slide next to it (see
+    dsl.BlockHandle.footnote / annotate and Annotation).
     A container draws its footnote marker on its last leaf.
     """
     halign: str | None = None
@@ -328,8 +349,9 @@ class Block(LecturekitElement):
     # inside a ``flex`` container.
     HOLDABLE: ClassVar[bool] = True
     IN_CONTAINER: ClassVar[bool] = True
-    # Viewer: takes a reveal step / is set in the page's flow (in the gap split,
-    # in the footnote numbering) / sits centred in its box unless aligned.
+    # Viewer: takes a reveal step / is set in the page's main column (a
+    # ``side_image`` is drawn in the image column) / sits centred in its box
+    # unless aligned.
     REVEAL_STEP: ClassVar[bool] = True
     IN_FLOW: ClassVar[bool] = True
     CENTERED: ClassVar[bool] = False
@@ -368,7 +390,7 @@ class Block(LecturekitElement):
     # wraps around it. Only set on slide blocks. See dsl.BlockHandle.image_right.
     float_image: dict | None = None
     # When True, this slide block is set in the page's image column, under
-    # the ``side_image``, instead of in the text column beside it. Only set on
+    # the ``side_image``, instead of in the main column beside it. Only set on
     # slide blocks, and only on a page with a ``side_image``. See
     # dsl.BlockHandle.under_side_image.
     in_side: bool = False
@@ -514,9 +536,10 @@ def kinds_drawn_by(target: str) -> frozenset[str]:
 class Page(LecturekitElement):
     """One slide's worth of content: the root container of its elements.
 
-    As an element, the page is a column whose box is the band under its title;
-    its ``halign`` / ``valign`` place its elements there (see ``page_valign``
-    for the ``side_image`` spelling of the latter).
+    As an element, the page is a column whose box is the main column of its
+    body, between the title and the footnote band; its ``halign`` / ``valign``
+    place its elements there (see ``page_valign`` for the ``side_image``
+    spelling of the latter).
     """
     id: str
     title: str
@@ -995,8 +1018,8 @@ def check_side_valign(page: Page) -> None:
     """A page's side images agree on ``valign``, with each other and the page.
 
     A side image's ``valign`` is the page's (see ``page_valign``): one page has
-    one band under its title, so its side images cannot ask for different
-    places in it, nor for another than ``p.valign(...)`` set.
+    one body, so its side images cannot ask for different places in it, nor
+    for another than ``p.valign(...)`` set.
     """
     valigns = []
     for block in page.blocks:
@@ -1062,8 +1085,8 @@ def check_layout(page: Page) -> None:
     container's last leaf) but no callouts, filters or key, since it draws
     nothing of its own. A container
     holds no ``side_image`` and no text set under one, which belong to the
-    page's image column. A page set in the middle or at the bottom of its band
-    cannot also share that band out with ``p.gap(...)``.
+    page's image column. A page set in the middle or at the bottom of its body
+    cannot also share that height out with ``p.gap(...)``.
     """
     check_alignment(page, f"page {page.id}")
     valign = page_valign(page)

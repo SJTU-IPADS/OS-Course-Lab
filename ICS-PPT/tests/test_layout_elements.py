@@ -201,7 +201,9 @@ def test_pptx_leaf_and_page_alignment_use_their_content_band(axis, value, tmp_pa
     else:
         plain = _pptx(_body, tmp_path)
         top = _text(plain, "short").top
-        expected = top + round((layout.content_bottom - top - text.height)
+        # the body ends where the footnote band, at its least height, begins
+        body_bottom = px(720 - 70)
+        expected = top + round((body_bottom - top - text.height)
                                * model.ALIGN_FRACTION[value])
         assert abs(text.top - expected) <= 1
 

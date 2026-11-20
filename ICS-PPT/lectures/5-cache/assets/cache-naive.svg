@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 262" width="820" height="262">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="105.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">CPU 给出的地址</text>
+<rect x="30.0" y="140.0" width="150.0" height="40.0" rx="4" fill="#eeebf6" stroke="#6c5a9c" stroke-width="1.8"/>
+<text x="105.0" y="166.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#6c5a9c" text-anchor="middle">0x1040</text>
+<line x1="184.0" y1="160.0" x2="324.0" y2="88.0" stroke="#6c5a9c" stroke-width="1.6" marker-end="url(#ah-6c5a9c)"/>
+<line x1="184.0" y1="160.0" x2="324.0" y2="124.0" stroke="#6c5a9c" stroke-width="1.6" marker-end="url(#ah-6c5a9c)"/>
+<line x1="184.0" y1="160.0" x2="324.0" y2="160.0" stroke="#6c5a9c" stroke-width="1.6" marker-end="url(#ah-6c5a9c)"/>
+<line x1="184.0" y1="160.0" x2="324.0" y2="196.0" stroke="#6c5a9c" stroke-width="1.6" marker-end="url(#ah-6c5a9c)"/>
+<line x1="184.0" y1="160.0" x2="324.0" y2="232.0" stroke="#6c5a9c" stroke-width="1.6" marker-end="url(#ah-6c5a9c)"/>
+<text x="105.0" y="206.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#6c5a9c" text-anchor="middle">与每一项的地址比较</text>
+<rect x="330.0" y="70.0" width="170.0" height="36.0" rx="0" fill="#eeebf6" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="500.0" y="70.0" width="170.0" height="36.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<text x="415.0" y="94.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">0x2000</text>
+<text x="585.0" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据</text>
+<rect x="330.0" y="106.0" width="170.0" height="36.0" rx="0" fill="#eeebf6" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="500.0" y="106.0" width="170.0" height="36.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<text x="415.0" y="130.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">0x1008</text>
+<text x="585.0" y="130.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据</text>
+<rect x="330.0" y="142.0" width="170.0" height="36.0" rx="0" fill="#eeebf6" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="500.0" y="142.0" width="170.0" height="36.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<text x="415.0" y="166.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">0x1040</text>
+<text x="585.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据</text>
+<rect x="330.0" y="178.0" width="170.0" height="36.0" rx="0" fill="#eeebf6" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="500.0" y="178.0" width="170.0" height="36.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<text x="415.0" y="202.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">0x3ff8</text>
+<text x="585.0" y="202.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据</text>
+<rect x="330.0" y="214.0" width="170.0" height="36.0" rx="0" fill="#eeebf6" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="500.0" y="214.0" width="170.0" height="36.0" rx="0" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.2"/>
+<text x="415.0" y="238.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="bold" fill="#6c5a9c" text-anchor="middle">0x0ff0</text>
+<text x="585.0" y="238.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#5a6b78" text-anchor="middle">数据</text>
+<rect x="330.0" y="70.0" width="340.0" height="180.0" rx="0" fill="none" stroke="#0e2841" stroke-width="1.8"/>
+<line x1="500.0" y1="70.0" x2="500.0" y2="250.0" stroke="#0e2841" stroke-width="1.8"/>
+<rect x="326.0" y="138.0" width="348.0" height="44.0" rx="5" fill="none" stroke="#2e7d4f" stroke-width="3.2"/>
+<text x="684.0" y="166.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#2e7d4f" text-anchor="start">hit</text>
+<path d="M 330.0 60.0 L 330.0 52.0 L 500.0 52.0 L 500.0 60.0" fill="none" stroke="#6c5a9c" stroke-width="1.6"/>
+<text x="415.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#6c5a9c" text-anchor="middle">地址：8 字节</text>
+<path d="M 500.0 60.0 L 500.0 52.0 L 670.0 52.0 L 670.0 60.0" fill="none" stroke="#156082" stroke-width="1.6"/>
+<text x="585.0" y="46.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#156082" text-anchor="middle">数据：8 字节</text>
+<path d="M 734.0 70.0 L 742.0 70.0 L 742.0 250.0 L 734.0 250.0" fill="none" stroke="#0e2841" stroke-width="1.6"/>
+<text x="750.0" y="165.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="start">n 项</text>
+</svg>

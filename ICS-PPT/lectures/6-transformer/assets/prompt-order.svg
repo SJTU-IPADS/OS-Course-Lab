@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-126 0 1040 356" width="1040" height="356">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<text x="30.0" y="20.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">时间写在最后一条消息中</text>
+<text x="30.0" y="60.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">请求 1</text>
+<text x="30.0" y="112.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">请求 2</text>
+<rect x="180.0" y="34.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="300.0" y="60.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="432.0" y="34.0" width="170.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="517.0" y="60.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">工具说明</text>
+<rect x="614.0" y="34.0" width="143.8" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="653.9" y="60.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">问题 1</text>
+<rect x="691.8" y="41.0" width="56.0" height="26.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="719.8" y="59.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">10:01</text>
+<rect x="180.0" y="86.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="300.0" y="112.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="180.0" y="130.0" width="240.0" height="6.0" rx="1" fill="#7ea8ba" stroke="#156082" stroke-width="1"/>
+<rect x="180.0" y="136.0" width="240.0" height="6.0" rx="1" fill="#aea4c9" stroke="#6c5a9c" stroke-width="1"/>
+<rect x="432.0" y="86.0" width="170.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="517.0" y="112.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">工具说明</text>
+<rect x="432.0" y="130.0" width="170.0" height="6.0" rx="1" fill="#7ea8ba" stroke="#156082" stroke-width="1"/>
+<rect x="432.0" y="136.0" width="170.0" height="6.0" rx="1" fill="#aea4c9" stroke="#6c5a9c" stroke-width="1"/>
+<rect x="614.0" y="86.0" width="143.8" height="40.0" rx="4" fill="#eef2f4" stroke="#c0392b" stroke-width="2.4"/>
+<text x="653.9" y="112.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">问题 2</text>
+<rect x="691.8" y="93.0" width="56.0" height="26.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="719.8" y="111.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">10:02</text>
+<text x="391.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">复用</text>
+<text x="685.9" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="middle">不同</text>
+<text x="30.0" y="204.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="start">时间写在系统提示词中</text>
+<text x="30.0" y="244.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">请求 1</text>
+<text x="30.0" y="296.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="start">请求 2</text>
+<rect x="180.0" y="218.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="354.0" y="244.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="232.0" y="225.0" width="56.0" height="26.0" rx="3" fill="#ffffff" stroke="#5a6b78" stroke-width="1.4"/>
+<text x="260.0" y="243.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">10:01</text>
+<rect x="432.0" y="218.0" width="170.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="517.0" y="244.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">工具说明</text>
+<rect x="614.0" y="218.0" width="104.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="666.0" y="244.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">问题 1</text>
+<rect x="180.0" y="270.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<line x1="288.0" y1="280.0" x2="297.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="288.0" y1="286.0" x2="303.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="288.0" y1="292.0" x2="309.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="288.0" y1="298.0" x2="315.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="288.0" y1="304.0" x2="321.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="289.0" y1="309.0" x2="327.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="295.0" y1="309.0" x2="333.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="301.0" y1="309.0" x2="339.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="307.0" y1="309.0" x2="345.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="313.0" y1="309.0" x2="351.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="319.0" y1="309.0" x2="357.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="325.0" y1="309.0" x2="363.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="331.0" y1="309.0" x2="369.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="337.0" y1="309.0" x2="375.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="343.0" y1="309.0" x2="381.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="349.0" y1="309.0" x2="387.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="355.0" y1="309.0" x2="393.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="361.0" y1="309.0" x2="399.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="367.0" y1="309.0" x2="405.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="373.0" y1="309.0" x2="411.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="379.0" y1="309.0" x2="417.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="385.0" y1="309.0" x2="419.0" y2="275.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="391.0" y1="309.0" x2="419.0" y2="281.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="397.0" y1="309.0" x2="419.0" y2="287.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="403.0" y1="309.0" x2="419.0" y2="293.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="409.0" y1="309.0" x2="419.0" y2="299.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="415.0" y1="309.0" x2="419.0" y2="305.0" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="302.0" y="277.0" width="104.0" height="26.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<rect x="180.0" y="314.0" width="52.0" height="6.0" rx="1" fill="#7ea8ba" stroke="#156082" stroke-width="1"/>
+<rect x="180.0" y="320.0" width="52.0" height="6.0" rx="1" fill="#aea4c9" stroke="#6c5a9c" stroke-width="1"/>
+<text x="354.0" y="296.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="232.0" y="277.0" width="56.0" height="26.0" rx="3" fill="#ffffff" stroke="#c0392b" stroke-width="2.4"/>
+<text x="260.0" y="295.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#0e2841" text-anchor="middle">10:02</text>
+<rect x="432.0" y="270.0" width="170.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<line x1="433.0" y1="280.0" x2="442.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="433.0" y1="286.0" x2="448.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="433.0" y1="292.0" x2="454.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="433.0" y1="298.0" x2="460.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="433.0" y1="304.0" x2="466.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="434.0" y1="309.0" x2="472.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="440.0" y1="309.0" x2="478.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="446.0" y1="309.0" x2="484.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="452.0" y1="309.0" x2="490.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="458.0" y1="309.0" x2="496.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="464.0" y1="309.0" x2="502.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="470.0" y1="309.0" x2="508.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="476.0" y1="309.0" x2="514.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="482.0" y1="309.0" x2="520.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="488.0" y1="309.0" x2="526.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="494.0" y1="309.0" x2="532.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="500.0" y1="309.0" x2="538.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="506.0" y1="309.0" x2="544.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="309.0" x2="550.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="518.0" y1="309.0" x2="556.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="524.0" y1="309.0" x2="562.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="530.0" y1="309.0" x2="568.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="536.0" y1="309.0" x2="574.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="542.0" y1="309.0" x2="580.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="548.0" y1="309.0" x2="586.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="554.0" y1="309.0" x2="592.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="560.0" y1="309.0" x2="598.0" y2="271.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="566.0" y1="309.0" x2="601.0" y2="274.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="572.0" y1="309.0" x2="601.0" y2="280.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="578.0" y1="309.0" x2="601.0" y2="286.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="584.0" y1="309.0" x2="601.0" y2="292.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="590.0" y1="309.0" x2="601.0" y2="298.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="596.0" y1="309.0" x2="601.0" y2="304.0" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="474.0" y="277.0" width="86.0" height="26.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<text x="517.0" y="296.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">工具说明</text>
+<rect x="614.0" y="270.0" width="104.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="666.0" y="296.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">问题 2</text>
+<text x="206.0" y="348.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">复用</text>
+<text x="260.0" y="348.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c0392b" text-anchor="middle">不同</text>
+<text x="445.0" y="348.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="middle">缓存未命中，重新计算</text>
+</svg>

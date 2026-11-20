@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 168" width="1000" height="168">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<rect x="31.0" y="14.0" width="120.0" height="72.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="91.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">L1</text>
+<text x="91.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">约 0.7 ns</text>
+<rect x="257.0" y="14.0" width="140.0" height="72.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="327.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">L2</text>
+<text x="327.0" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">约 2.4 ns</text>
+<rect x="503.0" y="14.0" width="165.0" height="72.0" rx="6" fill="#eaf3f7" stroke="#0e2841" stroke-width="1.8"/>
+<text x="585.5" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">L3</text>
+<text x="585.5" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">约 9 ns</text>
+<rect x="774.0" y="14.0" width="195.0" height="72.0" rx="6" fill="#e5f3ea" stroke="#2e7d4f" stroke-width="1.8"/>
+<text x="871.5" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="20" font-weight="bold" fill="#0e2841" text-anchor="middle">内存</text>
+<text x="871.5" y="72.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">约 73 ns</text>
+<line x1="161.0" y1="50.0" x2="247.0" y2="50.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="204.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">×3.5</text>
+<line x1="407.0" y1="50.0" x2="493.0" y2="50.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="450.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">×3.5</text>
+<line x1="678.0" y1="50.0" x2="764.0" y2="50.0" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="721.0" y="38.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">×8.6</text>
+<path d="M 91.0 86.0 L 91.0 120.0 L 871.5 120.0 L 871.5 88.0" fill="none" stroke="#0e2841" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="481.2" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">约 ×100</text>
+</svg>

@@ -1,11 +1,11 @@
 """Guard the reveal.css <-> theme coupling.
 
-reveal.css (live-preview only) re-applies the theme's `section > X` direct-child
-rules one level deeper (`section > .reveal-block > X`), because wrapping a block
-in `.reveal-block` would otherwise make it a grandchild of <section> and drop
-that styling. If someone adds a new `section > X` rule to the theme and forgets
-reveal.css, wrapped blocks in the live preview silently lose it. This test fails
-when the two drift apart.
+reveal.css (live-preview only) re-applies the theme's rules for a column's
+direct children (`section :where(.lk-main, .lk-side) > X`) one level deeper
+(`… > .reveal-block > X`), because wrapping a block in `.reveal-block` would
+otherwise make it a grandchild of its column and drop that styling. If someone
+adds a new column-child rule to the theme and forgets reveal.css, wrapped blocks
+in the live preview silently lose it. This test fails when the two drift apart.
 """
 
 import re
@@ -17,36 +17,34 @@ REVEAL_CSS = (
     / "lecturekit" / "renderers" / "viewer" / "assets" / "reveal.css"
 )
 
-# `section > <selector> {` — capture the whole direct-child chain after the
-# first `section >`, up to the rule's `{`. The chain may itself contain `>`
-# combinators (e.g. "figure.lk-row > figcaption"), so the capture must allow
-# `>` — a `[^{>]` class would silently skip every two-level `section > A > B`
-# rule and let it drift unmirrored. Examples captured: "*", "table",
+COLUMN = "section :where(.lk-main, .lk-side) > "
+# `<COLUMN><selector>` up to the next `,` of a selector list or the rule's `{`.
+# The selector may itself contain `>` combinators (e.g.
+# "figure.lk-row > figcaption"). Examples captured: "*", "table",
 # "figure.lk-figure", "figure.lk-row > figcaption".
-_SECTION_CHILD = re.compile(r"section\s*>\s*([^{]+?)\s*\{")
+_COLUMN_CHILD = re.compile(re.escape(COLUMN) + r"([^{,]+?)\s*[{,]")
 
 
 def _theme_direct_child_selectors() -> set[str]:
-    selectors = set()
-    for match in _SECTION_CHILD.finditer(THEME.read_text()):
-        for selector in match.group(1).split(","):
-            selector = re.sub(r"^section\s*>\s*", "", selector.strip())
-            selectors.add(selector)
-    return selectors
+    return {
+        match.group(1).strip()
+        for match in _COLUMN_CHILD.finditer(THEME.read_text())
+        if not match.group(1).startswith(".reveal-block")
+    }
 
 
-def test_reveal_css_mirrors_every_theme_section_child_rule():
+def test_reveal_css_mirrors_every_theme_column_child_rule():
     theme_selectors = _theme_direct_child_selectors()
-    assert theme_selectors, "expected `section > X` rules in the theme"
+    assert {"*", "table", "figure.lk-figure"} <= theme_selectors
 
     reveal_text = REVEAL_CSS.read_text()
     missing = [
         sel for sel in theme_selectors
-        if f"section > .reveal-block > {sel}" not in reveal_text
+        if f"{COLUMN}.reveal-block > {sel}" not in reveal_text
     ]
     assert not missing, (
-        "reveal.css must mirror the theme's `section > X` rules as "
-        f"`section > .reveal-block > X`; missing: {sorted(missing)}"
+        "reveal.css must mirror the theme's column-child rules as "
+        f"`{COLUMN}.reveal-block > X`; missing: {sorted(missing)}"
     )
 
 

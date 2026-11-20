@@ -205,6 +205,25 @@ def body(p):
 
 ### Page layout
 
+A content page (every page but the cover and a bridge) is three bands, top to
+bottom:
+
+1. **the title**, with its rule, across the content width;
+2. **the body**, everything else on the page, in the height between the title
+   and the footnote band. It is one column, the main column, or with a
+   [side image](#side-images) two: the image column and the main column, 40px
+   apart. The page's alignment and `p.gap(...)` work inside it;
+3. **the footnote band**, the page's [footnotes](#footnotes), across the
+   content width at the bottom of the slide. It is there on every page, empty
+   without footnotes, and at least 56px tall, which holds three lines of notes.
+   More notes make it taller and the body shorter, so nothing overlaps.
+
+The slide's padding is 44px at the top, 80px at the sides and 14px at the
+bottom, so with up to three lines of footnotes the body ends 70px above the
+slide's bottom edge. These numbers are tokens of the theme
+([theme.md](theme.md)), and the PowerPoint export lays its slides out from the
+same ones.
+
 Pages, blocks and containers share two alignment methods. `halign` takes
 `left`, `center`, `right`; `valign` takes `top`, `middle`, `bottom`. They move
 the content as a group within its box, preserving the alignment of text lines.
@@ -246,7 +265,7 @@ For the box model, renderer behaviour and the mapping of older layout calls,
 see [layout.md](layout.md).
 
 `p.gap(spread=None, *, min_px=None, max_px=None)` opts the page into adaptive
-spacing between viewer-visible blocks: the slide's leftover vertical space is
+spacing between viewer-visible blocks: the main column's leftover height is
 split evenly across the seams between blocks, each seam capped at `spread`
 pixels. It is useful for slides with several short blocks that should fill the
 vertical canvas instead of clustering near the top.
@@ -273,8 +292,8 @@ exactly as before. Giving the cap both positionally and as `max_px` is a
 
 The setting is page-level. HTML, PDF, PNG, live preview, notebook inline slides,
 and PPTX honor it. The PPTX renderer keeps each block's native geometry, then
-distributes the remaining canvas between block groups. Pages that do not call
-`p.gap(...)` keep the normal theme rhythm.
+distributes the main column's remaining height between block groups. Pages
+that do not call `p.gap(...)` keep the normal theme rhythm.
 
 A container is one group for this spacing policy. Page `valign="middle"` and
 `valign="bottom"` use that same leftover space, so they cannot combine with
@@ -767,6 +786,14 @@ levels too shallow.
 A [`p.highlight(...)`](#highlight) chip takes the same `$…$` / `$$…$$`, and
 needs no indent — see there for how a `$$` fence lands on one row of the chip.
 
+**A dollar sign is text unless it opens a formula.** The opening `$` is
+followed by a character that is not a space; the closing `$` is the next `$`,
+follows a character that is not a space, and is not followed by a digit. So
+`$55 和 $4`, `$8，$10`, and an assembly immediate such as `movl $1, %eax` are
+plain text, and `$x$` is a formula. This is the deck's rule (Marp's, and
+pandoc's); the PowerPoint, the transcript sheet and the book read `$` the same
+way (`lecturekit/inlinemath.py`).
+
 This applies to the viewer, watch mode, PDF, and PNG exports because they share
 the Marp deck. The PPTX export translates the same `$…$` / `$$…$$` into
 **OMML**, PowerPoint's own equation markup, so a formula is typeset there too —
@@ -905,37 +932,37 @@ p.image("arch.svg", caption="图 1").caption_align("right")
 
 ### Side images
 
-`p.side_image(src, *, alt="", width=None, side="right", valign="top")` places
-the image in a side column and reflows the slide text into the other column.
-`side` is `"right"` (default) or `"left"`; `width` (e.g. `"38%"`) sets the
-column width, defaulting to half the slide. `alt` carries Marp's background
-keywords: `alt="contain"` (or `"fit"`) shows the whole image inside the column,
-and without it the image covers the column and is cropped to it. `valign` is
-`"top"` (default) or `"middle"`, see [below](#both-columns-in-the-middle).
+`p.side_image(src, *, alt="", width=None, side="right", valign="top")` puts the
+image in the page's image column, beside the main column; the other blocks go
+in the main column. `side` is `"right"` (default) or `"left"`. `width` is the
+image column's share of the body's width (the content width, the slide less
+its 80px side paddings): a percentage (`"38%"`), a pixel count (`"480px"`), or
+half the body by default. The main column takes the rest, 40px away. `valign`
+is `"top"` (default), `"middle"` or `"bottom"`, see
+[below](#both-columns-in-the-middle).
 
-The title keeps the slide's full width, rule included, above both columns.
-The image column runs from under the title's rule to the slide's outer edge
-(left or right) and its bottom edge. The theme draws this column on either
-side; Marp's own split background is not used, since it would move the title
-into the text column and cut its rule short.
+Both columns are inside the body, under the title's full-width rule and above
+the footnote band. `alt` carries Marp's background keywords: `alt="contain"`
+(or `"fit"`) draws the whole picture as wide as the column, as tall as its
+aspect ratio makes it, and never taller than the column, where it is shrunk to
+fit. Without either, the picture covers the room the column leaves it and is
+cropped to it. Several side images stack top to bottom, in the order written;
+the first one sets the side and the width.
 
-A covering image is a backdrop: it fills the column out to the slide's edges.
-A fitted one (`contain`) is a figure beside the text, so the box it is fitted
-into keeps the slide's margins. That box ends at the side padding (80px) on
-the outside, in line with the title's edge, and stops 40px short of the text
-column and 40px above the slide's bottom edge. The picture is centred in it,
-which puts it nearer the text than the slide's edge. `width` therefore counts the outer margin: a fitted image is drawn at
-most `width` minus 40px wide.
+A footnote on a side image puts its marker at the picture's top-right corner,
+as on a captionless `p.image`. A fitted picture shrunk to fit the column's
+height is narrower than the column, and the marker then stays at the column's
+edge.
 
-The text column has the same width on either side, fitted image or covering.
-The PPTX export draws the same layouts: the picture fills (or, with `contain`,
-fits into the inset box of) its column, and the other blocks are laid out in
-the rest of the slide.
+The PPTX export lays out the same bands and columns: the image column as wide
+as `side_column_px` makes it, the main column in the rest of the body, 40px
+apart. A fitted picture is as wide as its column and is drawn smaller when it
+would be taller than the column; a covering one fills the height the column has
+left and is cropped to it.
 
 `p.slide(...).under_side_image()` sets that slide block in the image column,
-under the picture, instead of in the text column. It is for a figure much
-shorter than the slide, which would otherwise sit in the middle of an empty
-column:
+under the pictures, instead of in the main column. It is for a figure much
+shorter than the slide, which would otherwise leave most of its column empty:
 
 ```python
 p.side_image("assets/stack.svg", width="42%", alt="contain")
@@ -943,43 +970,40 @@ p.slide("""
 - the rule the figure shows
 - in a few short lines
 """).under_side_image()
-p.demo("compile it", "gcc -S args8.c -o -", output="...")   # the text column
+p.demo("compile it", "gcc -S args8.c -o -", output="...")   # the main column
 ```
 
-The column is then a stack: the picture at its top, as wide as the column and
-as tall as its aspect ratio makes it, and the text below it at the column's
-width. The column keeps the slide's margins, as a fitted image's box does, and
-it is not a reveal step. The handle is valid **only on a `slide` block**, and
-the page needs a `side_image`, on either side; either mistake is a
-`ValidationError`. In a target that does not draw the image column (the block
-filtered out with `only=`), the text stays where it was written. The PPTX
-export draws the same stack; the transcript prints the text in source order.
+The text is set at the column's width, below the pictures, and it is not a
+reveal step. The handle is valid **only on a `slide` block**, and the page
+needs a `side_image`, on either side; either mistake is a `ValidationError`. In
+a target that does not draw the image column (the block filtered out with
+`only=`), the text stays where it was written. The PPTX export draws the same
+column; the transcript prints the text in source order.
 
 #### Both columns in the middle
 
-`p.side_image(..., valign="middle")` centres the page vertically: the text
-column's blocks (everything under the title that is not in the image column)
-are centred in the band from the title's rule to the slide's bottom padding,
-as one group, and the image column is centred in the same band, so the two
-columns share one middle line. A stack (`under_side_image`) is centred as one
-group, the picture with the text under it, and a fitted image's box ends at
-the bottom padding instead of 40px above the slide's edge. It is for a short
-table or a few lines beside a figure that would otherwise both hug the title:
+The page's `valign` places the content of both columns: `"top"` puts it at the
+top of the body, `"middle"` centres each column's content in the body's height,
+so the two share one middle line, and `"bottom"` sets it at the bottom.
+`p.side_image(..., valign="middle")` says the same as `p.valign("middle")`. A
+column taller than the body stays at the top. It is for a short table or a few
+lines beside a figure that would otherwise both hug the title:
 
 ```python
 p.side_image("assets/op-encoding.svg", alt="contain", width="44%", side="left",
              valign="middle")
 p.slide("the byte layout the figure shows").under_side_image()
-p.table(rows, headers=["field", "bits"])                 # the text column
+p.table(rows, headers=["field", "bits"])                 # the main column
 ```
 
-The default, `valign="top"`, is the layout described above. The viewer centres
-the text column with two flex spacers around its blocks; the PPTX export draws
-the blocks with their ordinary rhythm and moves each group down to the band's
-middle. A group taller than the band stays where it is. Centring and
-`p.gap(...)` both claim the page's leftover vertical space, so a page that
-sets both is a `ValidationError`, as is a page whose side images disagree on
-`valign`. The transcript and the book have no slide to centre in and ignore it.
+A fitted picture follows the same rule, so under the default `"top"` it sits at
+the top of its column. Centring and `p.gap(...)` both claim the page's leftover
+vertical space, so a page that sets both is a `ValidationError`, as is a page
+whose side images disagree on `valign`. The PPTX export draws each column's
+blocks with their ordinary rhythm from the top of the body, then moves the
+column as one group to the page's valign. A column taller than the body stays
+at its top. The transcript and the book have no slide to centre in and ignore
+it.
 
 `p.slide(...).image_right(src, *, alt="", width_px=None, width_pct=None,
 height_px=None, height_pct=None, valign="top")` floats a **small** image on the
@@ -1004,8 +1028,8 @@ p.slide("""
 """).image_right("assets/car-wash.svg", width_px=456, valign="middle")
 ```
 
-This is distinct from `side_image`: `side_image` splits the slide under its
-title into two columns, whereas `image_right` is a single small figure beside one block of
+This is distinct from `side_image`: `side_image` splits the page's body into
+two columns, whereas `image_right` is a single small figure beside one block of
 text that does not claim the full slide height.
 
 In the PPTX export the picture keeps its place at the right edge, but the text
@@ -1034,7 +1058,7 @@ height; the optional `caption` renders below the whole row. An empty row (no
 `.image(...)`) raises a `ValidationError` at build time.
 
 This is distinct from the other image placements: `side_image` splits the
-slide under its title into two columns, `image_right` floats one small image beside
+page's body into two columns, `image_right` floats one small image beside
 a single text block, and `row` is a self-contained band of N images with no
 slide text flowing around them.
 
@@ -1673,9 +1697,16 @@ p.slide("每个进程看到独立地址空间").footnote("故障不会跨进程�
 ```
 
 The annotated block gets a superscript number; the footnotes collect as small,
-grey text pinned to the slide's bottom-left, numbered to match (sequentially
-across the whole slide). Footnote bodies use the same inline formatting as a
-sidenote. **The marker never claims a line of its own.** On a figure (`image`,
+grey text in the page's footnote band, across the content width at the bottom
+of the slide, numbered to match (sequentially across the whole slide). The
+band holds three lines and grows with more, taking the height from the body
+above it; see [Page layout](#page-layout). PowerPoint draws the band as one
+text box across the padding box, the notes at its bottom. Its height is
+estimated from the notes' wrapped lines (10pt at line-height 1.3, plus the 4px
+inset), so three one-line notes fill the 56px minimum.
+
+Footnote bodies use the same inline formatting as a sidenote. **The marker
+never claims a line of its own.** On a figure (`image`,
 `row`, `architecture`) it rides the figure: on the figure's caption when it has
 one, otherwise as a small superscript pinned to the top-right corner (the
 image's own corner for a single image, the figure box's for a row/diagram). A
@@ -1686,9 +1717,10 @@ at zero width, so a line that already fills the column keeps its own wrapping
 and the number hangs into the slide's right margin rather than dropping onto a
 line by itself.
 
-Every element takes a footnote, the page's image column and a `p.flex(...)`
-container included. A `side_image` carries its marker at the inner top corner of
-its column, next to the picture. A container carries its marker on its last
+Every element takes a footnote, a side image and a `p.flex(...)` container
+included. A `side_image` carries its marker at the picture's top-right corner,
+as a captionless image does; its notes are numbered first, ahead of the text
+under it and the main column. A container carries its marker on its last
 leaf, so the number follows the group the note is about.
 
 ## Annotations (callout bubbles)

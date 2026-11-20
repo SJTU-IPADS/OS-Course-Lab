@@ -17,7 +17,7 @@ from __future__ import annotations
 import html
 import re
 
-from lecturekit import filelinks, marks
+from lecturekit import filelinks, inlinemath, marks
 
 from .math import math_html
 
@@ -37,7 +37,7 @@ _IMG_RE = re.compile(r"&lt;img\s+([^&<>]*?)/?&gt;", re.IGNORECASE)
 _INLINE_RE = re.compile(
     rf"{marks.SPAN_RE.pattern}"                      # <mark>keyword</mark>
     r"|\$\$(?P<dmath>.+?)\$\$"                       # $$\frac{a}{b}$$
-    r"|\$(?P<math>[^$\n]+)\$"                        # $x^2$
+    rf"|{inlinemath.INLINE}"                         # $x^2$
     r"|\[(?P<ltext>[^\]]+)\]\((?P<lurl>[^)\s]+)\)"   # [label](url)
     r"|\*\*(?P<bold>.+?)\*\*"                        # **bold**
     r"|\*(?P<italic>[^*]+?)\*"                       # *italic*

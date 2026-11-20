@@ -4,16 +4,14 @@ An element class (``lecturekit.elements``) draws itself from a :class:`Ctx`
 (slide, layout, vertical cursor, asset root): it adds shape(s) at the cursor and
 advances the cursor by the block's estimated height. This module holds the
 shapes and measures several of them share. Styling comes from :mod:`theme`.
-Annotation bubbles are the one deferred overlay and never reach here. A side
-image does not wrap text the way CSS floats do, since PowerPoint has no text
-wrap around a shape, so the text box is narrowed to sit beside the picture
-instead.
+Annotation bubbles are the one deferred overlay and never reach here. The page
+itself (its bands, the image column, the footnotes) is laid out in :mod:`page`.
 """
 
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 
 from pptx.dml.color import RGBColor
@@ -29,7 +27,7 @@ from .layout import (
     LINE_HEIGHT, Cursor, Layout, estimate_text_height, estimate_text_width,
     fit_within, px,
 )
-from .text import Para, Run, emphasize, parse_inline, parse_markdown
+from .text import Para, Run, emphasize, parse_inline
 
 # Image formats python-pptx can embed. `.svg` is not one of them — it is
 # rasterized to PNG first (see `resolve_image`), so authors need no separate
@@ -374,7 +372,9 @@ def fill_paras(tf, paras: list[Para]) -> None:
             for deeper in [lv for lv in ordinals if lv > para.level]:
                 del ordinals[deeper]
             if para.kind == "ordered":
-                ordinals[para.level] = ordinals.get(para.level, 0) + 1
+                # The first item sets the start; later items count up from it.
+                ordinals[para.level] = (ordinals[para.level] + 1
+                                        if para.level in ordinals else para.number)
             else:
                 ordinals.pop(para.level, None)
             marker = f"{ordinals[para.level]}.  " if para.kind == "ordered" else "•  "
@@ -471,7 +471,7 @@ def fill_cell(cell, text: str, *, bold: bool, align, col: int) -> None:
                 color=theme.FG)
 
 
-# --- image / side_image ---
+# --- image ---
 
 
 def resolve_image(src: str, ctx: Ctx) -> Path | None:
@@ -527,127 +527,6 @@ def size_to_emu(value, whole: int) -> int | None:
     if text.endswith("%"):
         return round(whole * float(text[:-1]) / 100)
     return None
-
-
-def side_column(block, layout: Layout) -> tuple[int, int]:
-    """Left edge and width (EMU) of a ``side_image``'s column.
-
-    Without a width the column takes half the slide.
-    """
-    width = size_to_emu(block.content.get("width") or "50%", layout.width)
-    width = min(width or layout.width // 2, layout.content_width)
-    left = 0 if block.content.get("side") == "left" else layout.width - width
-    return left, width
-
-
-def side_layout(sides: list, layout: Layout) -> Layout:
-    """The content box a page's ``side_image`` column leaves to the other blocks.
-
-    The blocks keep the ordinary padding in the rest of the slide's width, as
-    Marp's split background would leave them; the title, drawn before this box
-    applies, keeps the slide's width. The first ``side_image`` sets the side
-    and the width.
-    """
-    left, width = side_column(sides[0], layout)
-    return replace(
-        layout,
-        content_left=layout.content_left + (width if left == 0 else 0),
-        content_width=layout.content_width - width,
-    )
-
-
-# A fitted side image keeps the slide's margins (theme `.lk-side:has(> img.lk-side-fit)`):
-# the side padding on the outside, and this far from the text column and from
-# the slide's bottom edge.
-SIDE_FIT_GAP = 40
-
-
-def fitted(block) -> bool:
-    return bool({"contain", "fit"} & set(str(block.content.get("alt") or "").split()))
-
-
-def draw_side_images(sides: list, ctx: Ctx, top: int, texts: list = (),
-                     fit_bottom: int | None = None) -> None:
-    """Draw a page's ``side_image`` blocks into their column, from ``top`` down.
-
-    The column starts under the title (``top``), on either side, and runs to
-    the slide's outer and bottom edges. Several images share it side by side,
-    as in Marp. ``contain`` or ``fit`` in ``alt`` fits the whole picture in its
-    cell, centred; otherwise it covers the cell and is cropped to it, Marp's
-    default for a background.
-
-    A covering image is a backdrop and bleeds to the slide's edges. A fitted
-    one is a figure beside the text, so its column is first drawn in to the
-    slide's margins: the picture then sits nearer the text than the edge.
-    ``fit_bottom`` moves the bottom of that box: under ``valign="middle"`` it
-    is the content box's bottom, where the text column's band ends.
-
-    ``texts`` are the slide blocks set under the image (``under_side_image``);
-    with any, the column is a stack, see `draw_side_stack`.
-    """
-    if texts:
-        draw_side_stack(sides, texts, ctx, top)
-        return
-    layout = ctx.layout
-    column, width = side_column(sides[0], layout)
-    bottom = layout.height
-    if any(fitted(block) for block in sides):
-        pad, gap = layout.content_left, px(SIDE_FIT_GAP)
-        column = pad if column == 0 else column - gap
-        width = max(width - pad + gap, len(sides))
-        top = max(top, layout.content_top)
-        bottom = bottom - gap if fit_bottom is None else fit_bottom
-    cell, height = width // len(sides), bottom - top
-    for i, block in enumerate(sides):
-        path = resolve_image(block.content["src"], ctx)
-        if path is None:
-            continue
-        left = column + i * cell
-        pic = ctx.slide.shapes.add_picture(str(path), left, top)
-        w, h = pic.width, pic.height
-        if fitted(block):
-            scale = min(cell / w, height / h)
-            pic.width, pic.height = round(w * scale), round(h * scale)
-            pic.left = left + (cell - pic.width) // 2
-            pic.top = top + (height - pic.height) // 2
-            continue
-        scale = max(cell / w, height / h)
-        crop_x = (1 - cell / (w * scale)) / 2
-        crop_y = (1 - height / (h * scale)) / 2
-        pic.crop_left = pic.crop_right = crop_x
-        pic.crop_top = pic.crop_bottom = crop_y
-        pic.width, pic.height = cell, height
-
-
-def draw_side_stack(sides: list, texts: list, ctx: Ctx, top: int) -> None:
-    """The image column as a stack: the images across its top, text below.
-
-    The theme's ``.lk-side-stack``. The column keeps the slide's margins, as a
-    fitted image's box does; each image is as wide as its share of the column
-    and as tall as its aspect ratio makes it; the slide blocks follow, laid out
-    in the column's width by the ordinary drawers.
-    """
-    layout = ctx.layout
-    left, width = side_column(sides[0], layout)
-    width = max(width - layout.content_left + px(SIDE_FIT_GAP), len(sides))
-    column = (layout.content_left if left == 0
-              else layout.width - layout.content_left - width)
-    top = max(top, layout.content_top)
-    cell, bottom = width // len(sides), top
-    for i, block in enumerate(sides):
-        path = resolve_image(block.content["src"], ctx)
-        if path is None:
-            continue
-        pic = ctx.slide.shapes.add_picture(str(path), column + i * cell, top)
-        pic.width, pic.height = cell, round(pic.height * cell / pic.width)
-        bottom = max(bottom, top + pic.height)
-    main = ctx.layout, ctx.cursor
-    ctx.layout = replace(layout, content_left=column, content_width=width)
-    ctx.cursor = Cursor(ctx.layout)
-    ctx.cursor.top = bottom + GAP
-    for block in texts:
-        block.to_pptx(ctx)
-    ctx.layout, ctx.cursor = main
 
 
 def _caption(text: str, align: str, ctx: Ctx) -> None:
@@ -868,23 +747,3 @@ def row_caption(text: str, pic, ctx: Ctx) -> int:
     style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2,
                italic=True)
     return GAP + height
-
-
-# --- footnotes (pinned bottom-left; drawn by the renderer after the blocks) ---
-
-
-def draw_footnotes(texts: list[str], ctx: Ctx) -> None:
-    if not texts:
-        return
-    size = theme.FOOTNOTE_PT
-    height = Emu(Pt(len(texts) * size * 1.3 + 6))
-    top = ctx.layout.content_bottom - height
-    box = ctx.slide.shapes.add_textbox(
-        ctx.layout.content_left, top, ctx.layout.content_width, height
-    )
-    tf = box.text_frame
-    tf.word_wrap = True
-    for i, text in enumerate(texts, 1):
-        p = tf.paragraphs[0] if i == 1 else tf.add_paragraph()
-        style_run(p.add_run(), f"{i} ", size_pt=size, color=theme.ACCENT1)
-        apply_runs(p, parse_markdown(text)[0].runs, size_pt=size, color=theme.DK2)

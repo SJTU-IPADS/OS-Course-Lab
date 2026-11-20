@@ -1,8 +1,8 @@
 """Helpers the elements' ``to_marp`` methods render with.
 
 Each element class (``lecturekit.elements``) says how it reads in the deck;
-this module holds the escaping, footnote markers and side column several of
-them share, and :func:`render_block`, which asks a block to draw itself.
+this module holds the escaping, footnote markers and figures several of them
+share, and :func:`render_block`, which asks a block to draw itself.
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from lecturekit import filelinks, model, pseudo
+from lecturekit import filelinks, inlinemath, model, pseudo
 
 
 def escape_html(text: str) -> str:
@@ -201,80 +201,28 @@ def figure_classes(image: dict) -> str:
     return classes
 
 
-def _side_image(block):
-    # Drawn once per page by `side_column`, under the full-width title.
-    return []
-
-
 # Marp's background keywords that ask for the whole image, uncropped.
 SIDE_FIT = frozenset({"contain", "fit"})
 SIDE_KEYWORDS = SIDE_FIT | {"cover"}
 
 
-def side_width_px(width, slide_width: int) -> int:
-    """A ``side_image`` column's width in pixels on a slide ``slide_width`` wide.
+def side_figure(image: dict) -> str:
+    """One picture of a page's image column, as a ``<figure>``.
 
-    ``width`` is a percentage of the slide (``"40%"``), a pixel count
-    (``"480px"`` or a bare number), or ``None`` for half the slide.
+    ``contain`` or ``fit`` in ``alt`` draws the whole picture as wide as the
+    column (``lk-side-fit``); otherwise it covers the room the column leaves
+    it, cropped (``lk-side-cover``). The keywords are not alt text, so they
+    leave it. A footnote marker is tucked in by :func:`mark_figure`, at the
+    picture's corner, as on a captionless ``p.image``.
     """
-    if isinstance(width, (int, float)):
-        return round(width)
-    text = str(width or "50%").strip()
-    try:
-        if text.endswith("%"):
-            return round(slide_width * float(text[:-1]) / 100)
-        return round(float(text.removesuffix("px")))
-    except ValueError:
-        return slide_width // 2
-
-
-def side_column(
-    sides: list, slide_width: int, texts: list = (), marks: tuple[int, ...] = ()
-) -> list[str]:
-    """The image column of a page with ``side_image`` blocks, on either side.
-
-    Marp's split background moves the whole slide into the other column, the
-    title with it: the title leaves the slide's edge on the left, and its rule
-    stops at the column on either side. So the column is drawn by the theme
-    instead (``section.lk-side-left`` / ``section.lk-side-right``): the title
-    keeps the slide's width, and the images share one column that starts
-    under it. The scoped style hands the theme that column's width, set by
-    the first image.
-
-    ``texts`` is the rendered markdown of the slide blocks set under the image
-    (``under_side_image``), one list of lines per block. With any, the column
-    is a stack (``lk-side-stack``): the images across its top at the column's
-    width, the text below. Each text sits between blank lines so Marp parses it
-    as markdown (an HTML block ends at a blank line).
-
-    ``marks`` are the footnote numbers the images carry; their superscript is
-    drawn at the column's inner top corner, next to the picture.
-    """
-    width = side_width_px(sides[0].content.get("width"), slide_width)
-    images = []
-    for block in sides:
-        words = str(block.content.get("alt") or "").split()
-        fit = ' class="lk-side-fit"' if SIDE_FIT & set(words) else ""
-        alt = " ".join(word for word in words if word not in SIDE_KEYWORDS)
-        images.append(
-            f'<img src="{escape_html(block.content["src"])}"'
-            f'{figure_attr(block.content)} alt="{escape_html(alt)}"{fit}>'
-        )
-    style = ["<style scoped>", f"section {{ --lk-side-width: {width}px; }}", "</style>", ""]
-    if marks:
-        images.append(marker_html(marks).replace(
-            'class="footnote-ref"', 'class="footnote-ref footnote-ref--side"'
-        ))
-    if not texts:
-        return [f'<figure class="lk-side">{"".join(images)}</figure>', "", *style]
-    lines = [
-        '<div class="lk-side lk-side-stack">',
-        f'<div class="lk-side-images">{"".join(images)}</div>',
-        "",
-    ]
-    for text in texts:
-        lines += [*text, ""]
-    return [*lines, "</div>", "", *style]
+    words = str(image.get("alt") or "").split()
+    fit = "lk-side-fit" if SIDE_FIT & set(words) else "lk-side-cover"
+    alt = " ".join(word for word in words if word not in SIDE_KEYWORDS)
+    return (
+        f'<figure class="lk-side-img {fit}">'
+        f'<img src="{escape_html(image["src"])}"{figure_attr(image)} alt="{escape_html(alt)}">'
+        "</figure>"
+    )
 
 
 ALIGN_DELIMITERS = {"left": ":---", "center": ":---:", "right": "---:"}
@@ -332,8 +280,7 @@ def anchor_axes(at: str) -> tuple[str, str]:
 # start=0, center=0.5, end=1.0; the matching self-translate is 0 / -50% / -100%.
 # Positioning is emitted as a generated CSS *rule* (keyed by a unique class), not
 # the aside's inline style: Marp strips positioning out of inline `style`
-# attributes, but rules in a <style> block are honored — as the theme's working
-# `.footnotes` rule shows.
+# attributes, but rules in a <style> block are honored.
 AXIS = {"start": (0.0, 0), "center": (0.5, -50), "end": (1.0, -100)}
 
 
@@ -366,7 +313,7 @@ def annotation_markup(note, uid: str, width: int, height: int) -> tuple[str, str
 
 
 # Math inside a chip: `$$…$$` (a whole row, set in display style) or `$…$`.
-CHIP_MATH_RE = re.compile(r"\$\$(?P<display>.+?)\$\$|\$(?P<inline>[^$\n]+)\$")
+CHIP_MATH_RE = re.compile(rf"\$\$(?P<display>.+?)\$\$|{inlinemath.INLINE}")
 
 # The characters markdown still reads as markup in text that is already HTML.
 MD_INERT = {"*": "&#42;", "_": "&#95;", "`": "&#96;", "\\": "&#92;"}
@@ -402,7 +349,7 @@ def chip_math_md(line: str) -> str:
         if match.start() > pos:
             out.append(inert_md(inline_md(line[pos:match.start()])))
         display = match.group("display")
-        latex = display if display is not None else match.group("inline")
+        latex = display if display is not None else match.group("math")
         prefix = "\\displaystyle " if display is not None else ""
         out.append(f"${prefix}{latex.strip()}$")
         pos = match.end()
@@ -575,10 +522,17 @@ def mark_highlight(lines: list[str], numbers: tuple[int, ...]) -> list[str]:
 
 
 def render_footnotes(texts: list[str]) -> str:
-    """A bottom-left aside listing a page's footnotes, numbered to match markers."""
+    """The page's footnote band: its footnotes, numbered to match the markers.
+
+    Every content page has the band, the last of its three bands (title, body,
+    footnote band), so it is drawn empty on a page without footnotes: the body
+    above it ends at the same height on every page.
+    """
+    if not texts:
+        return '<div class="lk-footnote-band"></div>'
     items = "".join(
         f'<p class="footnote-item">'
         f'<sup class="footnote-ref">{i}</sup> {inline_md(text)}</p>'
         for i, text in enumerate(texts, 1)
     )
-    return f'<aside class="footnotes">{items}</aside>'
+    return f'<div class="lk-footnote-band"><aside class="footnotes">{items}</aside></div>'

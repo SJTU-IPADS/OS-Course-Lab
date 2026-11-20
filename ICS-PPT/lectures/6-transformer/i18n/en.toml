@@ -29,19 +29,19 @@ text = 'IPADS, Shanghai Jiao Tong University'
 # src: 上海交通大学 IPADS
 
 ['bridge-gpt.title']
-src_hash = 'bffbb78e'
-text = 'Part 1: Data flow in GPT and word embeddings'
-# src: 第一部分：GPT 的数据流与词嵌入
+src_hash = 'ffce59c4'
+text = 'Part 1: The computation flow of GPT'
+# src: 第一部分：GPT 的计算流程
 
 ['bridge-gpt.bridge.1']
-src_hash = 'bffbb78e'
-text = 'Part 1: Data flow in GPT and word embeddings'
-# src: 第一部分：GPT 的数据流与词嵌入
+src_hash = 'ffce59c4'
+text = 'Part 1: The computation flow of GPT'
+# src: 第一部分：GPT 的计算流程
 
 ['section.gpt-part.title']
-src_hash = 'bffbb78e'
-text = 'Part 1: Data flow in GPT and word embeddings'
-# src: 第一部分：GPT 的数据流与词嵌入
+src_hash = 'ffce59c4'
+text = 'Part 1: The computation flow of GPT'
+# src: 第一部分：GPT 的计算流程
 
 ['bridge-gpt-section.title']
 src_hash = 'be9752c8'
@@ -113,6 +113,26 @@ src_hash = 'aae431bd'
 text = 'Predict, sample, append, then predict again from the longer text.'
 # src: 预测、采样、追加，再用加长后的文本重新预测。
 
+['chat.title']
+src_hash = '714b2a3d'
+text = 'Continuation and chat'
+# src: 续写与对话
+
+['chat.slide.1']
+src_hash = 'ba6fb353'
+text = 'What a Transformer can do: given a starting text, repeated prediction, sampling and appending produce a continuation.'
+# src: Transformer 能够做到的事情是：给定起始文本，反复预测、采样、追加，就得到续写。
+
+['chat.notes.1']
+src_hash = 'f27db35c'
+text = "Before ChatGPT appeared, the early demos of GPT-3 continued stories and essays from an opening. The simplest way to build a chatbot is to first write a piece of text that sets up a conversation between a user and a helpful AI assistant. This text is called the system prompt. The user's question is placed as the first line of the conversation, and the model then predicts what the AI assistant would say. Making it behave well requires training the model further after pre-training, and this step is called fine-tuning, for example, ChatGPT was obtained by fine-tuning a model of the GPT-3.5 series. Fine-tuning uses conversations written by people, and people's rankings of the model's answers."
+# src: 在 ChatGPT 出现之前，GPT-3 的早期演示就是根据开头续写故事和文章。要得到聊天机器人，最简单的做法是先写一段文字，设定用户与一个乐于助人的 AI 助手对话的场景，这段文字称为系统提示词。用户的问题作为对话的第一句，模型接着预测 AI 助手会说什么。要让它表现良好，还需要在预训练之后继续训练模型，这一步称为微调，比如 ChatGPT 由 GPT-3.5 系列的一个模型微调得到。微调使用人工编写的对话，以及人工对模型回答的排序。
+
+['chat.slide.2']
+src_hash = 'cb67dc13'
+text = "The conversation mode of an agent is also a continuation: the input text begins with the system prompt and the user's question, and the model continues with the AI assistant's reply."
+# src: Agent 的对话模式本质上也是一种续写：输入的文本里，系统提示词和用户的问题放在开头，由模型续写 AI 助手的回答。
+
 ['bridge-dataflow-section.title']
 src_hash = 'ba437c4e'
 text = 'The data flow of a Transformer'
@@ -129,19 +149,24 @@ text = 'The data flow of a Transformer'
 # src: Transformer 的数据流
 
 ['dataflow-overview.title']
-src_hash = 'ab79a0fa'
-text = 'The inside of a Transformer'
-# src: Transformer 的内部结构
+src_hash = '7d2a34db'
+text = 'The computation flow of a Transformer'
+# src: Transformer 的计算流程
 
 ['dataflow-overview.slide.1']
-src_hash = 'e21a150f'
-text = 'Inside a Transformer, text passes in turn through the embedding, attention blocks, multilayer perceptrons and the unembedding.'
-# src: 文本在 Transformer 中依次经过词嵌入、注意力块、多层感知机和解嵌入。
+src_hash = '2118d1a2'
+text = 'The input tokens pass in turn through the embedding, many layers of attention blocks and multilayer perceptrons, the unembedding and Softmax.'
+# src: 输入的 token 依次经过嵌入、多层的注意力块与多层感知机、解嵌入与 Softmax。
 
 ['dataflow-overview.notes.1']
-src_hash = 'c33e754e'
-text = 'The left of the figure is the whole model: a text goes into the Transformer, and the completed text comes out. The right is the computation inside the model, where the data flows from bottom to top. The input text is first cut into small pieces, and each piece is called a token. The figure shows only the last four tokens, and aging is the second piece of foraging. The embedding replaces each token with a vector, a column of numbers. The sequence of vectors enters an attention block, where the vectors pass information to one another. It then enters a multilayer perceptron, where each vector goes through the same operation on its own. An attention block and a multilayer perceptron form one layer. Such layers are repeated many times, and the output of one layer is the input of the next. The last vector output by the last layer goes through the unembedding and is then converted into probabilities, giving the probability distribution over all possible next tokens. Sampling from this distribution gives woodland, which is appended to the end of the text: this is the completed text at the top left of the figure.'
-# src: 图左侧是整个模型：一段文本输入 Transformer，输出补全后的文本。右侧是模型内部的计算，数据自下而上流动。输入的文本先被切成小段，每一段称为一个 token。图中只画出最后四个 token，其中 aging 是 foraging 切开后的后一段。词嵌入把每个 token 换成一个向量，即一列数。向量序列进入注意力块，各向量之间传递信息。之后进入多层感知机，每个向量各自经过同一个运算。一个注意力块和一个多层感知机组成一层，这样的层重复多次，前一层的输出是后一层的输入。最后一层输出的最后一个向量经过解嵌入，再换算成概率，得到所有可能的下一个 token 的概率分布。从这个分布中采样得到 woodland，追加到文本末尾，就是图左侧上方补全后的文本。
+src_hash = '3ab85ec0'
+text = 'The input text is first cut into tokens. The figure shows only the last four tokens, and aging is the second piece of foraging. The embedding takes the corresponding column of the embedding matrix for each token, giving a vector. The sequence of vectors enters an attention block, where the vectors at the different positions pass information to one another through matrix multiplications, dot products and Softmax. It then enters a multilayer perceptron, where each vector goes through the same set of matrix multiplications on its own. An attention block and a multilayer perceptron form one layer. Such layers are repeated many times, and the output of one layer is the input of the next. The last vector output by the last layer is multiplied by the unembedding matrix, giving a score for each token in the vocabulary, and Softmax turns the scores into a probability distribution. Sampling from the distribution gives woodland, which is appended to the end of the text before the next prediction starts.'
+# src: 输入的文本先被切成 token，图中只画出最后四个 token，其中 aging 是 foraging 切开后的后一段。嵌入为每个 token 取出嵌入矩阵中对应的一列，得到一个向量。向量序列进入注意力块，各位置的向量经矩阵乘法、点积与 Softmax 互相传递信息。之后进入多层感知机，每个向量各自经过同一组矩阵乘法。一个注意力块和一个多层感知机组成一层，这样的层重复多次，前一层的输出是后一层的输入。最后一层输出的最后一个向量乘以解嵌入矩阵，为词表中每个 token 得到一个分数，Softmax 把分数变为概率分布。从分布中采样得到 woodland，追加到文本末尾，再开始下一次预测。
+
+['dataflow-overview.slide.2']
+src_hash = '85bb79f5'
+text = 'After the embedding, every step is mainly matrix multiplication. Only the attention block passes information between positions.'
+# src: 嵌入之后的各步主要是矩阵乘法。只有注意力块在位置之间传递信息。
 
 ['tokens.title']
 src_hash = 'c464628f'
@@ -163,25 +188,45 @@ src_hash = '434b1b82'
 text = 'A token can be a word, a piece of a word or a punctuation mark, and also a small patch of an image or a short clip of sound.'
 # src: token 可以是词、词的一部分或标点，也可以是图像的小块、声音的短片段。
 
-['token-vectors.title']
-src_hash = 'c464628f'
-text = 'What is a token'
-# src: 什么是 token
+['embedding-matrix.title']
+src_hash = '4e64a7a9'
+text = 'The embedding matrix'
+# src: 嵌入矩阵
 
-['token-vectors.slide.1']
-src_hash = '1d12ed8d'
-text = 'Each token corresponds to a vector, a list of numbers that encodes the meaning of that token.'
-# src: 每个 token 对应一个向量，即一列数，用来编码这个 token 的含义。
+['embedding-matrix.slide.1']
+src_hash = 'fe77363e'
+text = 'The model has a predetermined vocabulary. The embedding matrix $W_E$ holds one column for each token in the vocabulary.'
+# src: 模型有一个预先确定的词表。嵌入矩阵 $W_E$ 为词表中的每个 token 保存一列。
 
-['token-vectors.notes.1']
-src_hash = 'cdd5dea3'
-text = 'A vector can be viewed as coordinates in a high-dimensional space. In a trained model, words with similar meanings land at nearby positions in the space.'
-# src: 把向量看作高维空间中的坐标。在训练好的模型里，含义相近的词落在空间中彼此接近的位置。
+['embedding-matrix.notes.1']
+src_hash = '9ce9f660'
+text = "Each token corresponds to a vector, a column of numbers that encodes the meaning of that token. For ease of illustration, tokens are treated here as whole words. GPT-3's vocabulary has 50,257 tokens. W_E is part of the model's parameters. Its values start out random and are learned from data during pre-training, together with the other parameters of the network. The entries of the matrix in the figure are coloured by sign, blue for positive and red for negative. The embedding that enters layer 1 also has the column of the position embedding matrix for its position added to it, so that it encodes both the token and its position in the text. The position embedding matrix is also learned during pre-training, for example, GPT-2 stores one column for each of 1,024 positions. Turning words into vectors was already common practice in machine learning before the Transformer, for example, word2vec and GloVe train a dedicated table of word vectors, which other models then use."
+# src: 每个 token 对应一个向量，即一列数，用来编码这个 token 的含义。为了举例方便，这里把 token 当作完整的词。GPT-3 的词表有 50,257 个 token。W_E 是模型参数的一部分，它的值从随机数开始，在预训练中与网络的其他参数一起根据数据学习。图中矩阵的元素按正负着色，蓝色为正，红色为负。输入第 1 层的嵌入还要加上位置嵌入矩阵中这个位置的一列，使它同时编码 token 和它在文本中的位置。位置嵌入矩阵也在预训练中学习，比如 GPT-2 为 1,024 个位置各保存一列。把词变成向量在 Transformer 之前已是机器学习的常用做法，比如 word2vec 与 GloVe 专门训练一张词向量表，再交给其他模型使用。
 
-['token-vectors.slide.2']
-src_hash = '00a8b2c6'
-text = 'For words with similar meanings, the distance between the vectors of their tokens is also small.'
-# src: 含义相近的词语，对应 token 的向量之间的距离也较小。
+['embedding-matrix.slide.2']
+src_hash = '74c7483d'
+text = 'Each input token takes the corresponding column of $W_E$ as its vector.'
+# src: 输入的每个 token 取出 $W_E$ 中对应的一列，作为它的向量。
+
+['embedding-direction.title']
+src_hash = '009cd9f6'
+text = 'Directions and dot products in the embedding space'
+# src: 嵌入空间中的方向与点积
+
+['embedding-direction.slide.1']
+src_hash = '7b5f6f22'
+text = 'Directions in the embedding space can carry meaning, for example, the difference between woman and man is close to the difference between queen and king.'
+# src: 嵌入空间中的方向可以带有语义，比如 woman 与 man 之差接近 queen 与 king 之差。
+
+['embedding-direction.notes.1']
+src_hash = '828c9ddb'
+text = 'An embedding is a point in a high-dimensional space, for example, a GPT-3 embedding is a point in a 12,288-dimensional space, and words with similar meanings lie close to each other. The positions of the points in the figure are schematic. The example on the left is computed with the GloVe word-vector model: the word closest to king plus woman minus man is queen, but the actual position of queen lies some distance from that point. The dot product multiplies the corresponding components of two vectors and adds the results, for example, the dot product of (2, 1, −1, 3) and (1, 3, 0, 2) is 2 + 3 + 0 + 6 = 11. woman − man and queen − king point in similar directions, and their dot product is positive.'
+# src: 嵌入是高维空间中的点，比如 GPT-3 的嵌入是 12,288 维空间中的点，含义相近的词彼此靠近。图中点的位置是示意。左边的例子用 GloVe 词向量模型计算：king 加上 woman 减 man，离结果最近的词是 queen，但 queen 的实际位置与这个点有一段距离。点积把两个向量的对应分量相乘再相加，比如 (2, 1, −1, 3) 与 (1, 3, 0, 2) 的点积为 2 + 3 + 0 + 6 = 11。woman − man 与 queen − king 方向接近，它们的点积为正。
+
+['embedding-direction.slide.2']
+src_hash = 'a25c80b7'
+text = 'The dot product of two vectors measures how well their directions align: it is positive when the directions are similar, zero when they are perpendicular, and negative when they are opposite.'
+# src: 两个向量的点积衡量它们的方向是否一致：方向相近时为正，垂直时为零，相反时为负。
 
 ['attention-preview.title']
 src_hash = 'e0e8d982'
@@ -209,9 +254,9 @@ text = 'The output vectors of the attention block then pass through a multilayer
 # src: 注意力块的输出向量接下来经过多层感知机（也称前馈层），它对每个向量单独变换，加入模型在预训练中学到的知识。
 
 ['mlp-preview.notes.1']
-src_hash = '64162690'
-text = 'The multilayer perceptron computes on each vector separately. It first checks which features the vector encodes (written as questions in the figure), then produces an update from the results and adds it to that vector. For example, after the attention block a vector may encode the name Michael Jordan. Even if basketball does not appear in the context, the multilayer perceptron can add a direction related to basketball to this vector. This piece of knowledge is stored in the parameters of the multilayer perceptron and comes from pre-training. About two thirds of the parameters of GPT-3 are in the multilayer perceptrons. The computation in both the attention block and the multilayer perceptron is mostly linear, that is, matrix multiplication, and understanding these matrices is the main task of this lecture. A normalization step also sits between the two kinds of blocks and is omitted here.'
-# src: 多层感知机对每个向量单独计算：先检验向量编码了哪些特征（图中写成问题），再根据结果给出一个更新量，加到这个向量上。例如，一个向量经过注意力块后编码了 Michael Jordan 这个名字，上下文中没有出现篮球，多层感知机可以在这个向量上加入与篮球相关的方向。这条知识存在多层感知机的参数中，由预训练得到。GPT-3 约三分之二的参数在多层感知机中。注意力块和多层感知机的运算都主要是线性运算，即矩阵乘法，理解这些矩阵是本讲的主要任务。两种块之间还有归一化步骤，这里略去。
+src_hash = '02bc01a7'
+text = 'The multilayer perceptron computes on each vector separately. It first checks which features the vector encodes (written as questions in the figure), then produces an update from the results and adds it to that vector, for example: after the attention block a vector may encode the name Michael Jordan. Even if basketball does not appear in the context, the multilayer perceptron can add a direction related to basketball to this vector. This piece of knowledge is stored in the parameters of the multilayer perceptron and comes from pre-training. About two thirds of the parameters of GPT-3 are in the multilayer perceptrons. The computation in both the attention block and the multilayer perceptron is mostly linear, that is, matrix multiplication, and understanding these matrices is the main task of this lecture. A normalization step also sits between the two kinds of blocks and is omitted here.'
+# src: 多层感知机对每个向量单独计算：先检验向量编码了哪些特征（图中写成问题），再根据结果给出一个更新量，加到这个向量上，比如一个向量经过注意力块后编码了 Michael Jordan 这个名字，上下文中没有出现篮球，多层感知机可以在这个向量上加入与篮球相关的方向。这条知识存在多层感知机的参数中，由预训练得到。GPT-3 约三分之二的参数在多层感知机中。注意力块和多层感知机的运算都主要是线性运算，即矩阵乘法，理解这些矩阵是本讲的主要任务。两种块之间还有归一化步骤，这里略去。
 
 ['mlp-preview.slide.2']
 src_hash = '01f02ffd'
@@ -238,312 +283,192 @@ src_hash = '4ad72d54'
 text = 'With many layers, a vector can repeatedly use the context gathered in earlier layers and encode more complex meanings step by step.'
 # src: 重复多层，向量才能多次利用在前面各层已经汇集的上下文，逐步编码更复杂的含义。
 
-['chat.title']
-src_hash = '714b2a3d'
-text = 'Continuation and chat'
-# src: 续写与对话
-
-['chat.slide.1']
-src_hash = 'ba6fb353'
-text = 'What a Transformer can do: given a starting text, repeated prediction, sampling and appending produce a continuation.'
-# src: Transformer 能够做到的事情是：给定起始文本，反复预测、采样、追加，就得到续写。
-
-['chat.notes.1']
-src_hash = 'f27db35c'
-text = "Before ChatGPT appeared, the early demos of GPT-3 continued stories and essays from an opening. The simplest way to build a chatbot is to first write a piece of text that sets up a conversation between a user and a helpful AI assistant. This text is called the system prompt. The user's question is placed as the first line of the conversation, and the model then predicts what the AI assistant would say. Making it behave well requires training the model further after pre-training, and this step is called fine-tuning, for example, ChatGPT was obtained by fine-tuning a model of the GPT-3.5 series. Fine-tuning uses conversations written by people, and people's rankings of the model's answers."
-# src: 在 ChatGPT 出现之前，GPT-3 的早期演示就是根据开头续写故事和文章。要得到聊天机器人，最简单的做法是先写一段文字，设定用户与一个乐于助人的 AI 助手对话的场景，这段文字称为系统提示词。用户的问题作为对话的第一句，模型接着预测 AI 助手会说什么。要让它表现良好，还需要在预训练之后继续训练模型，这一步称为微调，比如 ChatGPT 由 GPT-3.5 系列的一个模型微调得到。微调使用人工编写的对话，以及人工对模型回答的排序。
-
-['chat.slide.2']
-src_hash = 'cb67dc13'
-text = "The conversation mode of an agent is also a continuation: the input text begins with the system prompt and the user's question, and the model continues with the AI assistant's reply."
-# src: Agent 的对话模式本质上也是一种续写：输入的文本里，系统提示词和用户的问题放在开头，由模型续写 AI 助手的回答。
-
-['bridge-embedding-section.title']
-src_hash = '751b6d95'
-text = 'Word embeddings'
-# src: 词嵌入
-
-['bridge-embedding-section.bridge.1']
-src_hash = '751b6d95'
-text = 'Word embeddings'
-# src: 词嵌入
-
-['section.embedding-section.title']
-src_hash = '751b6d95'
-text = 'Word embeddings'
-# src: 词嵌入
-
-['embedding-matrix.title']
-src_hash = '4e64a7a9'
-text = 'The embedding matrix'
-# src: 嵌入矩阵
-
-['embedding-matrix.slide.1']
-src_hash = 'fe77363e'
-text = 'The model has a predetermined vocabulary. The embedding matrix $W_E$ holds one column for each token in the vocabulary.'
-# src: 模型有一个预先确定的词表。嵌入矩阵 $W_E$ 为词表中的每个 token 保存一列。
-
-['embedding-matrix.notes.1']
-src_hash = 'a6fa8895'
-text = "For ease of illustration, tokens are treated here as whole words. GPT-3's vocabulary has 50,257 tokens. W_E is part of the model's parameters. Its values start out random and are learned from data during pre-training, together with the other parameters of the network. The entries of the matrix in the figure are coloured by sign, blue for positive and red for negative. Turning words into vectors was already common practice in machine learning before the Transformer, for example, word2vec and GloVe train a dedicated table of word vectors, which other models then use."
-# src: 为了举例方便，这里把 token 当作完整的词。GPT-3 的词表有 50,257 个 token。W_E 是模型参数的一部分，它的值从随机数开始，在预训练中与网络的其他参数一起根据数据学习。图中矩阵的元素按正负着色，蓝色为正，红色为负。把词变成向量在 Transformer 之前已是机器学习的常用做法，比如 word2vec 与 GloVe 专门训练一张词向量表，再交给其他模型使用。
-
-['embedding-matrix.slide.2']
-src_hash = '74c7483d'
-text = 'Each input token takes the corresponding column of $W_E$ as its vector.'
-# src: 输入的每个 token 取出 $W_E$ 中对应的一列，作为它的向量。
-
-['embedding-space.title']
-src_hash = 'e09f6303'
-text = 'Projecting high-dimensional vectors onto a low-dimensional subspace'
-# src: 在低维子空间里投影高维向量
-
-['embedding-space.slide.1']
-src_hash = 'a3f717e9'
-text = 'An embedding vector can be seen as a point in a high-dimensional space. For example, a GPT-3 embedding can be seen as a point in a 12,288-dimensional space.'
-# src: 嵌入向量可以看作高维空间中的点，比如 GPT-3 的嵌入可以看作 12,288 维空间中的点。
-
-['embedding-space.notes.1']
-src_hash = '1f0cb14d'
-text = 'Three numbers can be drawn as a point in three-dimensional space. Projecting points in three-dimensional space onto a two-dimensional plane follows the same idea as projecting high-dimensional vectors onto a three-dimensional subspace. A high-dimensional space has a great many distinct directions, and this matters for the computations that follow.'
-# src: 三个数可以画成三维空间中的点。把三维空间中的点投影到一个二维平面上，与把高维向量投影到一个三维子空间是同样的思路。高维空间中有大量不同的方向，这一点在后面的计算中很重要。
-
-['embedding-space.slide.2']
-src_hash = 'e20f938c'
-text = 'Projecting the vectors onto a three-dimensional subspace makes it possible to draw the positions of words, but this loses most of the information in the token.'
-# src: 把向量投影到一个三维子空间，就能画出词的位置，但这样会损失 token 的大部分信息。
-
-['tower-neighbors.title']
-src_hash = '8f9598ca'
-text = 'Observation: the neighbors of tower'
-# src: 现象：tower 的近邻
-
-['tower-neighbors.slide.1']
-src_hash = '96cee8b3'
-text = 'In trained embeddings, words with similar meanings lie close to each other, for example, the neighbors of tower in the GloVe word-vector model.'
-# src: 训练得到的嵌入中，含义相近的词彼此靠近，比如 GloVe 词向量模型中 tower 的近邻。
-
-['tower-neighbors.notes.1']
-src_hash = 'ea2381d5'
-text = 'GloVe is a word-vector model proposed in 2014. It learns only a table of word vectors, and its training data are statistics of how often words occur together in a corpus. The figure uses the 50-dimensional GloVe, trained on the Wikipedia and Gigaword news corpora. These pages use it to show that positions and directions in the embedding space can carry meaning. The embedding matrix of GPT is learned during pre-training, together with the other parameters of the network, with the objective of predicting the next token. The dashed box holds the ten words closest to tower, with distance measured as Euclidean distance.'
-# src: GloVe 是 2014 年提出的词向量模型，它只学习一张词向量表，训练数据是语料中词与词共同出现的统计。图中是 50 维的 GloVe，用 Wikipedia 与 Gigaword 新闻语料训练。这几页用它说明嵌入空间中的位置与方向可以带有语义。GPT 的嵌入矩阵在预训练中与网络的其他参数一起学习，训练目标是预测下一个 token。虚线框内是与 tower 距离最近的十个词，距离按欧氏距离计算。
-
-['tower-neighbors.image.1.footnote.1']
-src_hash = 'c9a3717f'
-text = '[GloVe (glove-wiki-gigaword-50)](https://nlp.stanford.edu/projects/glove/)'
-# src: [GloVe（glove-wiki-gigaword-50）](https://nlp.stanford.edu/projects/glove/)
-
-['tower-neighbors.slide.2']
-src_hash = 'ab8bfa84'
-text = 'The words whose embeddings are closest to that of tower are all related to towers and buildings.'
-# src: 与 tower 的嵌入距离最近的词，都与塔和建筑相关。
-
-['gender-direction.title']
-src_hash = 'cced9094'
-text = 'Observation: the gender direction'
-# src: 现象：性别方向
-
-['gender-direction.slide.1']
-src_hash = '0b3f31c4'
-text = 'The difference between the embeddings of woman and man is close to the difference between the embeddings of queen and king.'
-# src: woman 与 man 的嵌入之差，接近 queen 与 king 的嵌入之差。
-
-['gender-direction.notes.1']
-src_hash = 'f1c65319'
-text = 'Without knowing the word for a female monarch, one can compute king plus woman minus man and search for the embedding nearest to the result. In GloVe, the actual position of queen lies some distance from that point, possibly because in the training corpus queen is used as more than the feminine form of king. Words for family relations show this direction better: uncle and aunt, brother and sister, nephew and niece, father and mother, son and daughter.'
-# src: 若不知道女性君主这个词，可以计算 king 加上 woman 减 man，再找离结果最近的嵌入。在 GloVe 中，queen 的实际位置与这个点有一段距离，原因可能是训练语料中 queen 的用法不只是 king 的女性形式。家庭关系的词更好地体现了这个方向：uncle 与 aunt、brother 与 sister、nephew 与 niece、father 与 mother、son 与 daughter。
-
-['gender-direction.slide.2']
-src_hash = '4b301472'
-text = 'There is a direction in the embedding space that encodes gender information.'
-# src: 嵌入空间中存在某一个方向编码性别信息。
-
-['analogies.title']
-src_hash = 'f36abaeb'
-text = 'Analogies between word vectors'
-# src: 词向量的类比
-
-['analogies.slide.1']
-src_hash = '6628caf5'
-text = 'Many other directions in the embedding space also carry meaning, and vector addition and subtraction can reveal the associations between words in the training corpus.'
-# src: 嵌入空间中还有许多方向带有语义，向量的加减能揭示训练语料中词与词的关联。
-
-['analogies.notes.1']
-src_hash = 'f7d33bc1'
-text = 'The examples in the figure are computed with GloVe. Italy minus Germany plus Hitler gives a result close to Mussolini, as if GloVe had learned one direction for Italy and another for Axis leaders of World War II. Adding Germany minus Japan to sushi gives a result close to bratwurst (a German sausage).'
-# src: 图中的例子用 GloVe 计算。Italy 减 Germany 再加 Hitler，结果接近 Mussolini，好像 GloVe 学到了一个表示意大利的方向和一个表示二战轴心国领导人的方向。Germany 减 Japan 加到 sushi 上，结果接近 bratwurst（德国香肠）。
-
-['analogies.highlight.1']
-src_hash = '916d8781'
-text = 'How can the relation between word vectors be quantified?'
-# src: 如何量化词向量之间的关系？
-
-['dot-product.title']
-src_hash = '512d6682'
-text = 'The dot product of word vectors'
-# src: 词向量的点积
-
-['dot-product.slide.1']
-src_hash = '64a4c7f4'
-text = 'The dot product of two vectors measures how well their directions align.'
-# src: 两个向量的点积衡量它们的方向是否一致。
-
-['dot-product.notes.1']
-src_hash = '36817af5'
-text = 'The dot product multiplies corresponding components and adds the results. For example, woman − man and queen − king point in similar directions, and their dot product is positive.'
-# src: 计算点积就是把对应分量相乘再相加。比如 woman − man 与 queen − king 方向接近，它们的点积为正。
-
-['dot-product.slide.2']
-src_hash = '7411a2be'
-text = 'The dot product is positive when the directions are similar, zero when they are perpendicular, and negative when they are opposite.'
-# src: 方向相近时点积为正，垂直时为零，相反时为负。
-
-['context-size.title']
-src_hash = '7af57fd1'
-text = 'Context size'
-# src: 上下文长度
-
-['context-size.slide.1']
-src_hash = '558f58cb'
-text = 'The network can process only a fixed number of vectors at a time, called the context size, for example 2,048 for GPT-3.'
-# src: 网络一次只能处理固定数量的向量，称为上下文长度，比如 GPT-3 的上下文长度为 2,048。
-
-['context-size.notes.1']
-src_hash = 'bc491fe7'
-text = "Each vector produced by the first step is the sum of the token's column in the embedding matrix and the position's column in the position embedding matrix, and it encodes only a single word and its position. The position embedding matrix is also learned during pre-training, for example, GPT-2 stores one column for each of 1,024 positions. The main goal of the network is to let each vector absorb a meaning far richer than a single word. Early versions of ChatGPT appeared to forget earlier parts of a long conversation, and the cause was this limit on length."
-# src: 第一步得到的每个向量由嵌入矩阵中这个 token 的一列与位置嵌入矩阵中这个位置的一列相加得到，只编码单个词和它的位置。位置嵌入矩阵也在预训练中学习，比如 GPT-2 为 1,024 个位置各保存一列。网络的主要目标是让每个向量吸收比单个词丰富得多的含义。早期版本的 ChatGPT 在对话很长之后会显得忘记前面的内容，原因就在这个长度限制。
-
-['context-size.highlight.1']
-src_hash = '461dcde7'
-text = 'How is input that exceeds the context size handled?'
-# src: 如何处理上下文超出上限的情况？
-
-['context-overflow.title']
-src_hash = '11fc5d44'
-text = 'Handling input that exceeds the context size'
-# src: 上下文超出上限的处理方法
-
-['context-overflow.slide.1']
-src_hash = '751a4ab7'
-text = 'When the number of input tokens exceeds the context size, there are three common ways to handle it.'
-# src: 输入的 token 数超过上下文长度时，常见的处理方法有三种。
-
-['context-overflow.notes.1']
-src_hash = '3aecb3f2'
-text = 'The first method keeps only the most recent tokens, and earlier content outside the window no longer takes part in the prediction. The second method rejects the whole request and returns an error, leaving the caller to shorten the input, and the cloud APIs of models work this way by default. The third method, when the context nears its limit, has the model write the conversation so far as a summary, replaces the original conversation with the summary and continues, and agents mostly work this way. The summary keeps the main points of the earlier conversation, and details may be lost.'
-# src: 第一种方法只保留最近的 token，窗口之外的早期内容不再参与预测。第二种方法拒绝整个请求并返回错误，由调用方自行缩短输入，模型的云服务接口默认采用这种方式。第三种方法在上下文接近上限时，让模型把此前的会话写成一段摘要，用摘要替换原来的会话再继续，Agent 多采用这种方式。摘要保留此前会话的要点，细节可能丢失。
-
-['context-overflow.slide.2']
-src_hash = '3555718c'
-text = 'Discarding and returning an error are simple to implement. Summarizing keeps the main points of earlier content, but generating the summary takes an extra inference pass of the model.'
-# src: 舍弃与报错实现简单，总结能保留早先内容的要点，但生成摘要需要模型额外推理一次。
-
-['bridge-output-section.title']
-src_hash = '5fa72c2c'
-text = 'Unembedding and Softmax'
-# src: 解嵌入与 Softmax
-
-['bridge-output-section.bridge.1']
-src_hash = '5fa72c2c'
-text = 'Unembedding and Softmax'
-# src: 解嵌入与 Softmax
-
-['section.output-section.title']
-src_hash = '5fa72c2c'
-text = 'Unembedding and Softmax'
-# src: 解嵌入与 Softmax
-
-['unembedding.title']
-src_hash = '8e6fb15f'
-text = 'The unembedding matrix and the prediction of the next token'
-# src: 解嵌入矩阵与下一个 token 的预测
-
-['unembedding.slide.1']
-src_hash = 'e78600a3'
-text = 'The input of the unembedding matrix is the output of the attention block and multilayer perceptron of the last layer. Its output is called the logits, which reflect the relative probabilities of the tokens and, normalized by Softmax, give the probability distribution over the next token.'
-# src: 解嵌入矩阵的输入是最后一层注意力块和多层感知机的输出，输出称为 logits，反映各 token 概率的相对高低，经 Softmax 归一化后是下一个 token 的概率分布。
-
-['unembedding.notes.1']
-src_hash = 'c2e2d03c'
-text = 'The text mentions Harry Potter, the words right before the last one are least favourite teacher, and the last word is Professor. A well-trained network that knows Harry Potter would give Snape a high probability. The computation has two steps. First, the unembedding matrix maps the last vector to a list of numbers, one value per token, and this list is the logits. Then Softmax normalizes the logits into a probability distribution. Like those of the embedding matrix, the entries of W_U start out random and are learned during pre-training. W_U can also be taken directly as the transpose of W_E, so that the two share the same parameters, for example, in GPT-2.'
-# src: 文本中出现了 Harry Potter，紧挨着最后一个词的是 least favourite teacher，最后一个词是 Professor。训练良好、熟悉哈利·波特的网络会给 Snape 很高的概率。计算分两步。先用解嵌入矩阵把最后一个向量映射为一列数，每个 token 一个值，这列数就是 logits。再用 Softmax 把 logits 归一化为概率分布。W_U 的元素与嵌入矩阵一样从随机数开始，在预训练中学习。W_U 也可以直接取 W_E 的转置，两者共用同一组参数，比如 GPT-2。
-
-['unembedding.slide.2']
-src_hash = 'e6ba3792'
-text = 'For example, the unembedding matrix $W_U$ of GPT-3 maps the last vector to 50,257 values, the same as the number of tokens in the vocabulary, and Softmax then normalizes them into probabilities.'
-# src: 比如 GPT-3 的解嵌入矩阵 $W_U$ 把最后一个向量映射为 50,257 个值，与词表中 token 的总数相同，Softmax 再把它们归一化为概率。
-
 ['softmax.title']
 src_hash = '02fc7694'
 text = 'Softmax'
 # src: Softmax
 
 ['softmax.slide.1']
-src_hash = '92f8aab8'
-text = 'A probability distribution requires every value to lie between 0 and 1 and all values to sum to 1. The output of a matrix multiplication satisfies neither condition.'
-# src: 概率分布要求每个值在 0 与 1 之间，且总和为 1。矩阵乘法的输出不满足这两条。
+src_hash = '4b0a43e7'
+text = 'The last vector is multiplied by the unembedding matrix $W_U$, giving a score for each token in the vocabulary. The scores are not yet a probability distribution.'
+# src: 最后一个向量乘以解嵌入矩阵 $W_U$，得到词表中各 token 的分数。分数还不是概率分布。
 
 ['softmax.notes.1']
-src_hash = 'd047abbb'
-text = 'The values from multiplying a matrix by a vector are often negative or much greater than 1, and their sum is almost never 1. Exponentiation makes all the values positive, and dividing by their sum normalizes them into a list that sums to 1. The largest input gives the output closest to 1, and smaller inputs give outputs close to 0.'
-# src: 矩阵与向量相乘得到的值常常是负数或远大于 1，总和也几乎不会是 1。取指数后所有值都为正，再除以总和就归一化为和为 1 的一列数。最大的输入对应最接近 1 的输出，较小的输入对应接近 0 的输出。
+src_hash = '61ea5b05'
+text = 'A probability distribution requires every value to lie between 0 and 1 and all values to sum to 1. The scores from a matrix multiplication are often negative or much greater than 1, and their sum is almost never 1. Exponentiation makes all the values positive, and dividing by their sum normalizes them into a list that sums to 1. The largest input gives the output closest to 1, and smaller inputs give outputs close to 0. The figure shows the scores of several candidate tokens after a text that mentions Harry Potter and ends with least favourite teacher, Professor.'
+# src: 概率分布要求每个值在 0 与 1 之间，且总和为 1。矩阵乘法得到的分数常常是负数或远大于 1，总和也几乎不会是 1。取指数后所有值都为正，再除以总和就归一化为和为 1 的一列数。最大的输入对应最接近 1 的输出，较小的输入对应接近 0 的输出。图中是一段提到 Harry Potter、以 least favourite teacher, Professor 结尾的文本之后，几个候选 token 的分数。
 
 ['softmax.slide.2']
 src_hash = '50fa2f76'
 text = 'Softmax raises $e$ to the power of each number and divides by the sum of these powers: $p_i = e^{x_i} / \sum_j e^{x_j}$.'
 # src: Softmax 先对每个数取 $e$ 的幂，再除以它们的总和：$p_i = e^{x_i} / \sum_j e^{x_j}$。
 
-['softmax-behavior.title']
-src_hash = 'a1939df6'
-text = 'Behavior of Softmax'
-# src: Softmax 的取值特点
+['bridge-sidebar-section.title']
+src_hash = '2aca0c68'
+text = 'Sidebar'
+# src: sidebar
 
-['softmax-behavior.slide.1']
+['bridge-sidebar-section.bridge.1']
+src_hash = '2aca0c68'
+text = 'Sidebar'
+# src: sidebar
+
+['section.sidebar-section.title']
+src_hash = '2aca0c68'
+text = 'Sidebar'
+# src: sidebar
+
+['sidebar-tower-neighbors.title']
+src_hash = '505a189d'
+text = 'Sidebar: neighbors of word vectors'
+# src: sidebar：词向量的近邻
+
+['sidebar-tower-neighbors.slide.1']
+src_hash = '96cee8b3'
+text = 'In trained embeddings, words with similar meanings lie close to each other, for example, the neighbors of tower in the GloVe word-vector model.'
+# src: 训练得到的嵌入中，含义相近的词彼此靠近，比如 GloVe 词向量模型中 tower 的近邻。
+
+['sidebar-tower-neighbors.notes.1']
+src_hash = 'c232f5a8'
+text = 'GloVe is a word-vector model proposed in 2014. It learns only a table of word vectors, and its training data are statistics of how often words occur together in a corpus. The figure uses the 50-dimensional GloVe, trained on the Wikipedia and Gigaword news corpora. The embedding matrix of GPT is learned during pre-training, together with the other parameters of the network, with the objective of predicting the next token. The dashed box holds the ten words closest to tower, with distance measured as the Euclidean distance between the 50-dimensional vectors. The positions of the points in the figure are schematic: the high-dimensional vectors are drawn in a three-dimensional space, and their components along all other directions are lost.'
+# src: GloVe 是 2014 年提出的词向量模型，它只学习一张词向量表，训练数据是语料中词与词共同出现的统计。图中是 50 维的 GloVe，用 Wikipedia 与 Gigaword 新闻语料训练。GPT 的嵌入矩阵在预训练中与网络的其他参数一起学习，训练目标是预测下一个 token。虚线框内是与 tower 距离最近的十个词，距离按 50 维向量之间的欧氏距离计算。图中点的位置是示意，把高维向量画在三维空间中，其余方向上的分量全部丢失。
+
+['sidebar-tower-neighbors.image.1.footnote.1']
+src_hash = 'c9a3717f'
+text = '[GloVe (glove-wiki-gigaword-50)](https://nlp.stanford.edu/projects/glove/)'
+# src: [GloVe（glove-wiki-gigaword-50）](https://nlp.stanford.edu/projects/glove/)
+
+['sidebar-tower-neighbors.slide.2']
+src_hash = 'ab8bfa84'
+text = 'The words whose embeddings are closest to that of tower are all related to towers and buildings.'
+# src: 与 tower 的嵌入距离最近的词，都与塔和建筑相关。
+
+['sidebar-analogies.title']
+src_hash = '7c8f970a'
+text = 'Sidebar: analogies between word vectors'
+# src: sidebar：词向量的类比
+
+['sidebar-analogies.slide.1']
+src_hash = '6628caf5'
+text = 'Many other directions in the embedding space also carry meaning, and vector addition and subtraction can reveal the associations between words in the training corpus.'
+# src: 嵌入空间中还有许多方向带有语义，向量的加减能揭示训练语料中词与词的关联。
+
+['sidebar-analogies.notes.1']
+src_hash = '42f29703'
+text = 'The examples in the figure are computed with GloVe, and the positions of the points are schematic. Italy minus Germany plus Hitler gives a result close to Mussolini, as if GloVe had learned one direction for Italy and another for Axis leaders of World War II. Adding Germany minus Japan to sushi gives a result close to bratwurst (a German sausage).'
+# src: 图中的例子用 GloVe 计算，点的位置是示意。Italy 减 Germany 再加 Hitler，结果接近 Mussolini，好像 GloVe 学到了一个表示意大利的方向和一个表示二战轴心国领导人的方向。Germany 减 Japan 加到 sushi 上，结果接近 bratwurst（德国香肠）。
+
+['sidebar-context-size.title']
+src_hash = 'bbe71c99'
+text = 'Sidebar: context size'
+# src: sidebar：上下文长度
+
+['sidebar-context-size.slide.1']
+src_hash = '558f58cb'
+text = 'The network can process only a fixed number of vectors at a time, called the context size, for example 2,048 for GPT-3.'
+# src: 网络一次只能处理固定数量的向量，称为上下文长度，比如 GPT-3 的上下文长度为 2,048。
+
+['sidebar-context-size.notes.1']
+src_hash = '54cf3c4d'
+text = 'Each token corresponds to a vector, and the context size limits the number of tokens one prediction can use. Early versions of ChatGPT appeared to forget earlier parts of a long conversation, and the cause was this limit on length.'
+# src: 每个 token 对应一个向量，上下文长度限制了一次预测能用到的 token 数。早期版本的 ChatGPT 在对话很长之后会显得忘记前面的内容，原因就在这个长度限制。
+
+['sidebar-context-size.highlight.1']
+src_hash = '461dcde7'
+text = 'How is input that exceeds the context size handled?'
+# src: 如何处理上下文超出上限的情况？
+
+['sidebar-context-overflow.title']
+src_hash = '27b9f367'
+text = 'Sidebar: handling input that exceeds the context size'
+# src: sidebar：上下文超出上限的处理方法
+
+['sidebar-context-overflow.slide.1']
+src_hash = '751a4ab7'
+text = 'When the number of input tokens exceeds the context size, there are three common ways to handle it.'
+# src: 输入的 token 数超过上下文长度时，常见的处理方法有三种。
+
+['sidebar-context-overflow.notes.1']
+src_hash = '3aecb3f2'
+text = 'The first method keeps only the most recent tokens, and earlier content outside the window no longer takes part in the prediction. The second method rejects the whole request and returns an error, leaving the caller to shorten the input, and the cloud APIs of models work this way by default. The third method, when the context nears its limit, has the model write the conversation so far as a summary, replaces the original conversation with the summary and continues, and agents mostly work this way. The summary keeps the main points of the earlier conversation, and details may be lost.'
+# src: 第一种方法只保留最近的 token，窗口之外的早期内容不再参与预测。第二种方法拒绝整个请求并返回错误，由调用方自行缩短输入，模型的云服务接口默认采用这种方式。第三种方法在上下文接近上限时，让模型把此前的会话写成一段摘要，用摘要替换原来的会话再继续，Agent 多采用这种方式。摘要保留此前会话的要点，细节可能丢失。
+
+['sidebar-context-overflow.slide.2']
+src_hash = '3555718c'
+text = 'Discarding and returning an error are simple to implement. Summarizing keeps the main points of earlier content, but generating the summary takes an extra inference pass of the model.'
+# src: 舍弃与报错实现简单，总结能保留早先内容的要点，但生成摘要需要模型额外推理一次。
+
+['sidebar-unembedding.title']
+src_hash = '1632ad89'
+text = 'Sidebar: the unembedding matrix and logits'
+# src: sidebar：解嵌入矩阵与 logits
+
+['sidebar-unembedding.slide.1']
+src_hash = 'e78600a3'
+text = 'The input of the unembedding matrix is the output of the attention block and multilayer perceptron of the last layer. Its output is called the logits, which reflect the relative probabilities of the tokens and, normalized by Softmax, give the probability distribution over the next token.'
+# src: 解嵌入矩阵的输入是最后一层注意力块和多层感知机的输出，输出称为 logits，反映各 token 概率的相对高低，经 Softmax 归一化后是下一个 token 的概率分布。
+
+['sidebar-unembedding.notes.1']
+src_hash = 'c2e2d03c'
+text = 'The text mentions Harry Potter, the words right before the last one are least favourite teacher, and the last word is Professor. A well-trained network that knows Harry Potter would give Snape a high probability. The computation has two steps. First, the unembedding matrix maps the last vector to a list of numbers, one value per token, and this list is the logits. Then Softmax normalizes the logits into a probability distribution. Like those of the embedding matrix, the entries of W_U start out random and are learned during pre-training. W_U can also be taken directly as the transpose of W_E, so that the two share the same parameters, for example, in GPT-2.'
+# src: 文本中出现了 Harry Potter，紧挨着最后一个词的是 least favourite teacher，最后一个词是 Professor。训练良好、熟悉哈利·波特的网络会给 Snape 很高的概率。计算分两步。先用解嵌入矩阵把最后一个向量映射为一列数，每个 token 一个值，这列数就是 logits。再用 Softmax 把 logits 归一化为概率分布。W_U 的元素与嵌入矩阵一样从随机数开始，在预训练中学习。W_U 也可以直接取 W_E 的转置，两者共用同一组参数，比如 GPT-2。
+
+['sidebar-unembedding.slide.2']
+src_hash = 'e6ba3792'
+text = 'For example, the unembedding matrix $W_U$ of GPT-3 maps the last vector to 50,257 values, the same as the number of tokens in the vocabulary, and Softmax then normalizes them into probabilities.'
+# src: 比如 GPT-3 的解嵌入矩阵 $W_U$ 把最后一个向量映射为 50,257 个值，与词表中 token 的总数相同，Softmax 再把它们归一化为概率。
+
+['sidebar-softmax-behavior.title']
+src_hash = '0066ee9a'
+text = 'Sidebar: behavior of Softmax'
+# src: sidebar：Softmax 的取值特点
+
+['sidebar-softmax-behavior.slide.1']
 src_hash = '0167c9c6'
 text = 'Softmax is a "soft" version of taking the maximum. When one input is clearly the largest, it takes almost all the probability. When several inputs are equally large, they share the probability.'
 # src: Softmax 是一种“柔和”的取最大值。一个输入明显最大时，它几乎占据全部概率。几个输入同样大时，它们共同分得概率。
 
-['softmax-behavior.notes.1']
+['sidebar-softmax-behavior.notes.1']
 src_hash = '28379a0b'
 text = 'When sampling from this distribution, an input that is clearly the largest is chosen almost every time. Unlike taking the maximum directly, it gives other values a substantial share of the probability when they are equally large.'
 # src: 若从这个分布采样，一个明显最大的输入几乎总会被选中。与直接取最大值不同，其他值同样大时，它们也分得可观的概率。
 
-['temperature.title']
-src_hash = '3732e264'
-text = 'Temperature'
-# src: 温度
+['sidebar-temperature.title']
+src_hash = '86dc3b83'
+text = 'Sidebar: the temperature of Softmax'
+# src: sidebar：Softmax 的温度
 
-['temperature.slide.1']
+['sidebar-temperature.slide.1']
 src_hash = '25f2ba66'
 text = 'The exponents of Softmax can be divided by a constant $T$, called the temperature.'
 # src: Softmax 的指数中可以除以一个常数 $T$，称为温度。
 
-['temperature.notes.1']
+['sidebar-temperature.notes.1']
 src_hash = 'dee8f6c2'
 text = 'The name comes from its resemblance to the temperature in certain thermodynamics equations. When ChatGPT uses this distribution to generate the next word, the temperature adjusts the randomness. T = 0 is understood as a limit, meaning that the largest value is always chosen. The three marks under the slider are three typical cases: at T = 10 the probabilities are close to each other, at T = 1 the result equals Softmax without a temperature, and at T = 0 all the probability falls on Snape.'
 # src: 这个名称来自它与某些热力学公式中温度的相似。ChatGPT 用这个分布生成下一个词时，可以用温度调节随机性。T = 0 按极限理解，即总是选择最大的值。滑动条下的三个刻度是三种典型情形：T = 10 时各个概率相近，T = 1 时结果与不带温度的 Softmax 相同，T = 0 时全部概率落在 Snape 上。
 
-['temperature.slide.2']
+['sidebar-temperature.slide.2']
 src_hash = 'ba63d1fa'
 text = 'The larger $T$, the more uniform the distribution. The smaller $T$, the more the largest value dominates. At $T = 0$, all the probability falls on the largest value.'
 # src: $T$ 越大，分布越均匀。$T$ 越小，最大值越占优势。$T = 0$ 时全部概率落在最大值上。
 
-['temperature-stories.title']
-src_hash = 'bb0b4a0c'
-text = 'Temperature and model performance'
-# src: 温度与模型的表现
+['sidebar-temperature-stories.title']
+src_hash = 'e944640d'
+text = 'Sidebar: the effect of temperature on generated text'
+# src: sidebar：温度对生成文本的影响
 
-['temperature-stories.slide.1']
+['sidebar-temperature-stories.slide.1']
 src_hash = 'd3ceafc6'
 text = 'GPT-3 writes a story starting from Once upon a time, there was a, at different temperatures.'
 # src: 让 GPT-3 从 Once upon a time, there was a 开始写故事，取不同的温度。
 
-['temperature-stories.notes.1']
+['sidebar-temperature-stories.notes.1']
 src_hash = '4de1e700'
 text = 'At temperature 0, the model always picks the most likely word, and the story is a trite derivative of Goldilocks. A higher temperature gives the model a chance to pick less likely words, and the story begins with a young web artist from South Korea but quickly degenerates into nonsense. The API at the time did not allow temperatures above 2. This is not a mathematical limit, only a way to keep the tool from generating overly absurd content. The high-temperature demo in the video takes the top 20 candidates returned by the API, raises their probabilities to the power 1/5 and renormalizes them, which is equivalent to T = 5 over these 20 candidates.'
 # src: 温度为 0 时，模型总是选择最可能的词，故事是 Goldilocks 的老套翻版。较高的温度让模型有机会选择不太可能的词，故事从一位韩国的年轻网络艺术家开始，但很快变得没有意义。当时的 API 不允许温度超过 2，这不是数学上的限制，只是为了避免工具生成过于荒谬的内容。视频中的高温演示取 API 返回的前 20 个候选，把概率取 1/5 次方后重新归一化，相当于在这 20 个候选上取 T = 5。
 
-['temperature-stories.slide.2']
+['sidebar-temperature-stories.slide.2']
 src_hash = '67dc7e26'
 text = 'At temperature 0 the story is trite. At a higher temperature the opening is more original, at the risk of losing coherence.'
 # src: 温度为 0 时故事老套。温度较高时开头更新颖，但有失去连贯的风险。
@@ -589,9 +514,9 @@ text = 'The attention mechanism was introduced in the 2017 paper *Attention Is A
 # src: 注意力机制由 2017 年的论文 *Attention Is All You Need* 提出。
 
 ['attention-goal.notes.1']
-src_hash = 'a5047629'
+src_hash = '564e1b1e'
 text = "Directions in the embedding space can correspond to meanings, for example, one direction corresponds to gender. One can imagine many more directions, each corresponding to another aspect of a word's meaning. An initial embedding encodes only a single word, and the goal of a Transformer is to adjust the vector at each position layer by layer, so that it carries much richer contextual meaning. The vector obtained after an embedding is updated by an attention block or a multilayer perceptron is called a hidden state. The attention mechanism often confuses people, so the following pages first look at several behaviors that attention should achieve, and then at the computation."
-# src: 嵌入空间中的方向可以对应语义，例如有一个方向对应性别。可以设想还有许多方向，分别对应词义的其他方面。初始嵌入只编码单个词，Transformer 的目标是逐层调整每个位置的向量，使它带有丰富得多的上下文含义。嵌入经过注意力块或多层感知机更新后得到的向量称为隐藏状态（hidden state）。注意力机制常让人困惑，下面先看几个希望注意力实现的行为，再看计算。
+# src: 嵌入空间中的方向可以对应语义，比如有一个方向对应性别。可以设想还有许多方向，分别对应词义的其他方面。初始嵌入只编码单个词，Transformer 的目标是逐层调整每个位置的向量，使它带有丰富得多的上下文含义。嵌入经过注意力块或多层感知机更新后得到的向量称为隐藏状态（hidden state）。注意力机制常让人困惑，下面先看几个希望注意力实现的行为，再看计算。
 
 ['attention-goal.slide.2']
 src_hash = '603dd1db'
@@ -773,96 +698,6 @@ src_hash = '2a24ace5'
 text = 'Applying Softmax to each column gives a grid called the attention pattern.'
 # src: 对每一列做 Softmax，得到的表称为注意力模式。
 
-['attention-formula.title']
-src_hash = 'dc093bba'
-text = 'The attention formula in matrix form'
-# src: 注意力的矩阵公式
-
-['attention-formula.slide.1']
-src_hash = '9e786e41'
-text = 'The paper Attention Is All You Need writes these computations as one compact formula.'
-# src: Attention Is All You Need 论文把这些计算写成一个紧凑的式子。
-
-['attention-formula.notes.1']
-src_hash = 'fc392b51'
-text = 'Q and K are the arrays of all query vectors and all key vectors. The numerator is a compact representation of all the dot products between keys and queries. Dividing by √d_k is for numerical stability. V is the array of value vectors, used to update the vector at each position. After layer 1, the Q, K and V of each layer are computed in the same way from the hidden states output by the previous layer. In the paper each token occupies a row, each row of QKᵀ belongs to one query, and Softmax runs along the rows. The grids before have queries as columns, which is the transpose. Written that way, the formula is V·softmax(KᵀQ/√d_k), where each column of V is a value vector.'
-# src: Q、K 分别是全部查询向量与全部键向量组成的数组。分子紧凑地表示所有键与查询的点积。除以 √d_k 是为了数值稳定。V 是值向量组成的数组，用于更新每个位置的向量。第 1 层之后，各层的 Q、K、V 由上一层输出的隐藏状态算出，计算方法相同。论文中每个 token 占一行，QKᵀ 的每一行对应一个查询，Softmax 沿行进行。前面的表以查询为列，是它的转置，对应的写法是 V·softmax(KᵀQ/√d_k)，V 的每一列是一个值向量。
-
-['attention-formula.slide.2']
-src_hash = '57aa2664'
-text = 'The dot products are divided by the square root of the dimension of the key-query space, $\sqrt{d_k}$, and then Softmax is applied for each query.'
-# src: 点积除以键查询空间维数的平方根 $\sqrt{d_k}$，再对每个查询做 Softmax。
-
-['bridge-mask-section.title']
-src_hash = '66f6d33d'
-text = 'Causal masking'
-# src: 因果掩码
-
-['bridge-mask-section.bridge.1']
-src_hash = '66f6d33d'
-text = 'Causal masking'
-# src: 因果掩码
-
-['section.mask-section.title']
-src_hash = '66f6d33d'
-text = 'Causal masking'
-# src: 因果掩码
-
-['attention-example.title']
-src_hash = 'd12c06ae'
-text = 'A worked example of attention'
-# src: 注意力的计算示例
-
-['attention-example.slide.1']
-src_hash = '3046a9df'
-text = 'Two tokens have embeddings of dimension 4. Given $W_Q$, $W_K$ and $W_V$, compute the output of one attention head with the attention formula.'
-# src: 两个 token 的嵌入维数为 4，给定 $W_Q$、$W_K$、$W_V$，按注意力公式计算一个注意力头的输出。
-
-['attention-example.notes.1']
-src_hash = '86c8cb28'
-text = 'Here the dimension of queries and keys is d_k = 4, so √d_k = 2. Each column of every matrix corresponds to one token: Q = W_Q E, K = W_K E, V = W_V E. Row i, column j of KᵀQ is the dot product of the i-th key and the j-th query. Dividing by 2 and applying Softmax to each column gives the attention pattern. The scores in the creature column are 3 and 1, which become 0.88 and 0.12 after Softmax. Each column of the output adds the two value vectors with the weights of that column.'
-# src: 这里查询与键的维数 d_k = 4，√d_k = 2。各矩阵的每一列对应一个 token：Q = W_Q E，K = W_K E，V = W_V E。KᵀQ 第 i 行第 j 列是第 i 个键与第 j 个查询的点积，除以 2 后对每一列做 Softmax，得到注意力模式。creature 一列的分数为 3 和 1，Softmax 后为 0.88 和 0.12。输出的每一列按这一列的权重把两个值向量相加。
-
-['attention-example.slide.2']
-src_hash = 'e0f4d711'
-text = 'In the creature column the weight is concentrated on fluffy, so its output comes mainly from the value vector of fluffy.'
-# src: creature 一列的权重集中在 fluffy 上，它的输出主要来自 fluffy 的值向量。
-
-['generation-gap.title']
-src_hash = '0fcab6fc'
-text = 'Missing following text during inference'
-# src: 推理中的下文缺失
-
-['generation-gap.slide.1']
-src_hash = '553daf6a'
-text = 'During training, each position predicts its next token, for example, the creature column predicts roamed, and attention can read roamed. During inference, the token to be predicted does not exist yet.'
-# src: 训练时，每个位置预测它的下一个 token，比如 creature 一列预测 roamed，而注意力能读到 roamed。推理时，要预测的 token 还不存在。
-
-['generation-gap.notes.1']
-src_hash = '276e0772'
-text = 'During training the whole text is input at once, and every vector of the last layer is used to predict the token that immediately follows it. Without a restriction, the query of each column applies Softmax over all keys, and the creature column can read through attention the token roamed that it is to predict. Training adjusts the parameters according to the probability the model gives to the true next token, so the model only needs to read out this token to give it a probability close to 1. During inference there is no token after the last position, so this approach cannot be used, and the predictions the model gives are meaningless. For what training teaches to work during inference as well, the information each position sees during training must be the same as during inference, that is, only the tokens before it.'
-# src: 训练时整段文本一次输入，最后一层的每个向量都用于预测紧跟在它后面的 token。没有限制时，每一列的查询对全部键做 Softmax，creature 一列能经注意力读到它要预测的 roamed。训练按模型给真实的下一个 token 的概率高低调整参数，模型只需读出这个 token，就能给它接近 1 的概率。推理时，最后一个位置之后没有 token，这种做法无从使用，模型给出的预测没有意义。要让训练学到的做法在推理时同样可用，训练时每个位置看到的信息就必须与推理时相同，也就是只看它之前的 token。
-
-['generation-gap.highlight.1']
-src_hash = 'd27a1a23'
-text = 'How can each position be influenced only by the tokens before it?'
-# src: 如何让每个位置只受它之前的 token 影响？
-
-['causal-mask.title']
-src_hash = '66f6d33d'
-text = 'Causal masking'
-# src: 因果掩码
-
-['causal-mask.notes.1']
-src_hash = '2f316f29'
-text = 'Every entry of the grid where a later token influences an earlier token must be 0. The simplest idea is to set these entries directly to 0, but then the columns no longer sum to 1. GPT always uses masking. Masking matters most during training, and it is applied in the same way when the model runs as a chatbot.'
-# src: 表中后面的 token 影响前面 token 的位置都必须为 0。最简单的想法是直接把它们设为 0，但这样各列之和不再为 1。GPT 总是使用掩码。掩码在训练中最关键，模型作为聊天机器人运行时也同样使用。
-
-['causal-mask.slide.1']
-src_hash = 'a94eea46'
-text = 'Before Softmax is applied, the scores of the red cells are first set to $-\infty$, so after the computation their weights become 0 and the probabilities in each column still sum to 1. This is called causal masking.'
-# src: 在做 Softmax 之前先把红色格子的分数设定为 $-\infty$，运算后它们的权重变为 0，此时各列概率之和仍为 1。这称为因果掩码。
-
 ['value.title']
 src_hash = 'd02f72c2'
 text = 'The value vector'
@@ -902,6 +737,96 @@ text = 'Once the attention pattern is computed, the queries and keys are no long
 src_hash = 'bdcfed0b'
 text = "Each column adds up the value vectors with its weights to give $\\Delta E$, and adding it to the original embedding gives the updated vector: $E' = E + \\Delta E$."
 # src: 每列按权重把值向量相加得到 $\Delta E$，加到原嵌入上即为更新后的向量：$E' = E + \Delta E$。
+
+['attention-formula.title']
+src_hash = 'dc093bba'
+text = 'The attention formula in matrix form'
+# src: 注意力的矩阵公式
+
+['attention-formula.slide.1']
+src_hash = '9e786e41'
+text = 'The paper Attention Is All You Need writes these computations as one compact formula.'
+# src: Attention Is All You Need 论文把这些计算写成一个紧凑的式子。
+
+['attention-formula.notes.1']
+src_hash = 'fc392b51'
+text = 'Q and K are the arrays of all query vectors and all key vectors. The numerator is a compact representation of all the dot products between keys and queries. Dividing by √d_k is for numerical stability. V is the array of value vectors, used to update the vector at each position. After layer 1, the Q, K and V of each layer are computed in the same way from the hidden states output by the previous layer. In the paper each token occupies a row, each row of QKᵀ belongs to one query, and Softmax runs along the rows. The grids before have queries as columns, which is the transpose. Written that way, the formula is V·softmax(KᵀQ/√d_k), where each column of V is a value vector.'
+# src: Q、K 分别是全部查询向量与全部键向量组成的数组。分子紧凑地表示所有键与查询的点积。除以 √d_k 是为了数值稳定。V 是值向量组成的数组，用于更新每个位置的向量。第 1 层之后，各层的 Q、K、V 由上一层输出的隐藏状态算出，计算方法相同。论文中每个 token 占一行，QKᵀ 的每一行对应一个查询，Softmax 沿行进行。前面的表以查询为列，是它的转置，对应的写法是 V·softmax(KᵀQ/√d_k)，V 的每一列是一个值向量。
+
+['attention-formula.slide.2']
+src_hash = '57aa2664'
+text = 'The dot products are divided by the square root of the dimension of the key-query space, $\sqrt{d_k}$, and then Softmax is applied for each query.'
+# src: 点积除以键查询空间维数的平方根 $\sqrt{d_k}$，再对每个查询做 Softmax。
+
+['attention-example.title']
+src_hash = 'd12c06ae'
+text = 'A worked example of attention'
+# src: 注意力的计算示例
+
+['attention-example.slide.1']
+src_hash = '3046a9df'
+text = 'Two tokens have embeddings of dimension 4. Given $W_Q$, $W_K$ and $W_V$, compute the output of one attention head with the attention formula.'
+# src: 两个 token 的嵌入维数为 4，给定 $W_Q$、$W_K$、$W_V$，按注意力公式计算一个注意力头的输出。
+
+['attention-example.notes.1']
+src_hash = '86c8cb28'
+text = 'Here the dimension of queries and keys is d_k = 4, so √d_k = 2. Each column of every matrix corresponds to one token: Q = W_Q E, K = W_K E, V = W_V E. Row i, column j of KᵀQ is the dot product of the i-th key and the j-th query. Dividing by 2 and applying Softmax to each column gives the attention pattern. The scores in the creature column are 3 and 1, which become 0.88 and 0.12 after Softmax. Each column of the output adds the two value vectors with the weights of that column.'
+# src: 这里查询与键的维数 d_k = 4，√d_k = 2。各矩阵的每一列对应一个 token：Q = W_Q E，K = W_K E，V = W_V E。KᵀQ 第 i 行第 j 列是第 i 个键与第 j 个查询的点积，除以 2 后对每一列做 Softmax，得到注意力模式。creature 一列的分数为 3 和 1，Softmax 后为 0.88 和 0.12。输出的每一列按这一列的权重把两个值向量相加。
+
+['attention-example.slide.2']
+src_hash = 'e0f4d711'
+text = 'In the creature column the weight is concentrated on fluffy, so its output comes mainly from the value vector of fluffy.'
+# src: creature 一列的权重集中在 fluffy 上，它的输出主要来自 fluffy 的值向量。
+
+['bridge-mask-section.title']
+src_hash = '66f6d33d'
+text = 'Causal masking'
+# src: 因果掩码
+
+['bridge-mask-section.bridge.1']
+src_hash = '66f6d33d'
+text = 'Causal masking'
+# src: 因果掩码
+
+['section.mask-section.title']
+src_hash = '66f6d33d'
+text = 'Causal masking'
+# src: 因果掩码
+
+['generation-gap.title']
+src_hash = '0fcab6fc'
+text = 'Missing following text during inference'
+# src: 推理中的下文缺失
+
+['generation-gap.slide.1']
+src_hash = '553daf6a'
+text = 'During training, each position predicts its next token, for example, the creature column predicts roamed, and attention can read roamed. During inference, the token to be predicted does not exist yet.'
+# src: 训练时，每个位置预测它的下一个 token，比如 creature 一列预测 roamed，而注意力能读到 roamed。推理时，要预测的 token 还不存在。
+
+['generation-gap.notes.1']
+src_hash = '276e0772'
+text = 'During training the whole text is input at once, and every vector of the last layer is used to predict the token that immediately follows it. Without a restriction, the query of each column applies Softmax over all keys, and the creature column can read through attention the token roamed that it is to predict. Training adjusts the parameters according to the probability the model gives to the true next token, so the model only needs to read out this token to give it a probability close to 1. During inference there is no token after the last position, so this approach cannot be used, and the predictions the model gives are meaningless. For what training teaches to work during inference as well, the information each position sees during training must be the same as during inference, that is, only the tokens before it.'
+# src: 训练时整段文本一次输入，最后一层的每个向量都用于预测紧跟在它后面的 token。没有限制时，每一列的查询对全部键做 Softmax，creature 一列能经注意力读到它要预测的 roamed。训练按模型给真实的下一个 token 的概率高低调整参数，模型只需读出这个 token，就能给它接近 1 的概率。推理时，最后一个位置之后没有 token，这种做法无从使用，模型给出的预测没有意义。要让训练学到的做法在推理时同样可用，训练时每个位置看到的信息就必须与推理时相同，也就是只看它之前的 token。
+
+['generation-gap.highlight.1']
+src_hash = 'd27a1a23'
+text = 'How can each position be influenced only by the tokens before it?'
+# src: 如何让每个位置只受它之前的 token 影响？
+
+['causal-mask.title']
+src_hash = '66f6d33d'
+text = 'Causal masking'
+# src: 因果掩码
+
+['causal-mask.notes.1']
+src_hash = '2f316f29'
+text = 'Every entry of the grid where a later token influences an earlier token must be 0. The simplest idea is to set these entries directly to 0, but then the columns no longer sum to 1. GPT always uses masking. Masking matters most during training, and it is applied in the same way when the model runs as a chatbot.'
+# src: 表中后面的 token 影响前面 token 的位置都必须为 0。最简单的想法是直接把它们设为 0，但这样各列之和不再为 1。GPT 总是使用掩码。掩码在训练中最关键，模型作为聊天机器人运行时也同样使用。
+
+['causal-mask.slide.1']
+src_hash = 'a94eea46'
+text = 'Before Softmax is applied, the scores of the red cells are first set to $-\infty$, so after the computation their weights become 0 and the probabilities in each column still sum to 1. This is called causal masking.'
+# src: 在做 Softmax 之前先把红色格子的分数设定为 $-\infty$，运算后它们的权重变为 0，此时各列概率之和仍为 1。这称为因果掩码。
 
 ['bridge-kv.title']
 src_hash = '8b4cd83a'
@@ -1028,31 +953,272 @@ src_hash = 'f3db7a88'
 text = 'The queries of old positions produced their outputs in their own steps, and later steps produce new queries. Only K and V therefore need to be stored.'
 # src: 旧位置的查询在它们自己那一步已经完成了输出，之后的步骤会产生新的查询。所以只需要保存 K、V。
 
+['bridge-prefix-section.title']
+src_hash = '8d1f10ee'
+text = 'Prefix caching'
+# src: 前缀缓存
+
+['bridge-prefix-section.bridge.1']
+src_hash = '8d1f10ee'
+text = 'Prefix caching'
+# src: 前缀缓存
+
+['section.prefix-section.title']
+src_hash = '8d1f10ee'
+text = 'Prefix caching'
+# src: 前缀缓存
+
+['request-recompute.title']
+src_hash = '4c9968a4'
+text = 'Repeated computation across requests'
+# src: 请求之间的重复计算
+
+['request-recompute.slide.1']
+src_hash = 'a656e02b'
+text = 'Users of Claude Code run the same client, and every request begins with the same system prompt.'
+# src: Claude Code 的用户运行同一个客户端，每个请求都以同一段系统提示词开头。
+
+['request-recompute.notes.1']
+src_hash = '35654777'
+text = "Claude Code is Anthropic's command-line coding assistant. Its system prompt describes how it works and how each of its tools is used. The figure shows only the first sentence, and the code is schematic. Many users run the same Claude Code client, and each of them asks a different question. The client joins the system prompt and the user's question into one input and sends it to Anthropic's server as a request. The system prompt also embeds content of each user's own, such as the paths of memory files, so what all users share is the fixed part at its beginning. A request is one input sent to the model, from which the model generates tokens one by one until it finishes. The server releases the KV cache of a request when the request ends. When the next request arrives, the server computes the K and V of the same system prompt in every layer once more, marked by hatching in the figure. The next turn of the same user begins with the whole conversation so far, and that earlier conversation is computed again as well."
+# src: Claude Code 是 Anthropic 的命令行编程助手。它的系统提示词说明它的工作方式和各个工具的用法，图中只写出第一句，代码是示意。许多用户运行同一个 Claude Code 客户端，各自提出不同的问题。客户端把系统提示词和用户的问题接成一段输入，作为一个请求发往 Anthropic 的服务器。系统提示词中还嵌有每个用户自己的内容，比如记忆文件的路径，各个用户相同的是它前面固定的部分。一个请求是送给模型的一段输入，模型从它开始逐个生成 token，直到结束。服务器在一个请求结束后释放它的 KV cache，下一个请求到来时，再计算一遍同一段系统提示词在各层的 K、V，图中用斜线标出。同一个用户的下一轮对话以之前的全部对话开头，之前的对话也被再次计算。
+
+['request-recompute.image.1.footnote.1']
+src_hash = 'bd16ab64'
+text = "[Claude Code's npm package @anthropic-ai/claude-code (2.1.87)](https://unpkg.com/@anthropic-ai/claude-code@2.1.87/cli.js)"
+# src: [Claude Code 的 npm 包 @anthropic-ai/claude-code（2.1.87）](https://unpkg.com/@anthropic-ai/claude-code@2.1.87/cli.js)
+
+['request-recompute.highlight.1']
+src_hash = '81294b9f'
+text = 'Can the K and V of the system prompt that all requests share be computed only once?'
+# src: 所有请求共用的系统提示词，K、V 能否只计算一次？
+
+['prefix-tree.title']
+src_hash = '8d1f10ee'
+text = 'Prefix caching'
+# src: 前缀缓存
+
+['prefix-tree.slide.1']
+src_hash = 'a6bcb34e'
+text = 'Where two requests are identical from the first token on, their K and V in every layer are identical as well and can be kept for reuse.'
+# src: 两个请求从第一个 token 起相同的部分，各层的 K、V 也相同，可以保留下来复用。
+
+['prefix-tree.notes.1']
+src_hash = '2619f769'
+text = 'Under a causal mask, the K and V of a position in every layer depend only on that position and the tokens before it. The server keeps the KV cache of a request after the request ends. A new request finds the longest prefix it shares with a cached sequence, uses the K and V of those positions directly, and computes only the remaining tokens. This is called prefix caching. Reuse stops at the first different token. The positions after it read this different token in attention, so their K and V differ as well. The same token at a different position has a different position embedding and therefore a different K and V, so matching starts from the first token. The cached sequences are merged along their common prefixes into a tree, called a prefix tree. Each node of the tree holds a run of tokens and their K and V in every layer, and the path from the root to a node is a cached prefix. In the figure, all requests share the node of the system prompt, and the two turns of user A share their first segments. In frame 1, a new request is matched down the tree as far as answer 1, reuses the K and V along this path, and gets a new node for question 4. GPU memory is limited, so some nodes must be evicted when the cache is full. An internal node is a prefix of every sequence below it, so only leaves are evicted, and among the leaves the least recently used one is evicted first, which is called LRU. Frame 2 evicts answer 3 of user B. An evicted prefix is computed again when it appears again. Inference systems already organise the cache this way. For example, the RadixAttention of SGLang stores the KV cache in such a tree and evicts leaves in LRU order. vLLM looks up the cache block by block, and the identifier of a block is a hash of the tokens of the block together with the whole prefix before it, so equal identifiers mean that the prefixes are identical from the first token on.'
+# src: 因果掩码下，一个位置在每一层的 K、V 只依赖它自己和它之前的 token。服务器在请求结束后保留它的 KV cache，新请求找出与已缓存的序列相同的最长前缀，直接使用这些位置的 K、V，只为其余的 token 计算，这称为前缀缓存（prefix caching）。复用只到第一个不同的 token 为止，之后的位置在注意力中读取了这个不同的 token，K、V 也不同。同一个 token 出现在不同的位置，位置嵌入不同，K、V 也不同，所以匹配从第一个 token 开始。缓存的各个序列按公共前缀合并成一棵树，称为前缀树。树的每个结点保存一段 token 和这些 token 在各层的 K、V，从根到一个结点的路径是一个已缓存的前缀。图中所有请求共用系统提示词这个结点，用户 A 的两轮共用前几段。第 1 帧中新请求沿树向下匹配到回答 1 为止，复用这条路径上的 K、V，为问题 4 新建一个结点。显存有限，缓存放满时要淘汰一部分结点。内部结点是它下面各个序列的前缀，所以只淘汰叶结点，在叶结点中先淘汰最久没有使用的，即 LRU。第 2 帧淘汰了用户 B 的回答 3。被淘汰的前缀再次出现时重新计算。推理系统已经采用这种组织方式，比如 SGLang 的 RadixAttention 用这样的树保存 KV cache，按 LRU 淘汰叶结点。vLLM 按块查找，每一块的标识是这一块的 token 与它之前整个前缀的哈希值，标识相同就表示从第一个 token 起的前缀相同。
+
+['prefix-tree.slide.2']
+src_hash = 'e9b1a6b4'
+text = 'When GPU memory runs out, the least recently used leaf is evicted first.'
+# src: 显存装不下时，先淘汰最久没有使用的叶结点。
+
+['prompt-order.title']
+src_hash = '1cdb96d7'
+text = 'A fixed prefix'
+# src: 固定前缀
+
+['prompt-order.slide.1']
+src_hash = '84fbfae8'
+text = 'To let the agent know the time, one implementation writes the current time into the system prompt of every request, but then the KV cache of the prompt after the time can no longer be reused at all.'
+# src: 为了让 Agent 能够感知时间，一种实现是在每次请求的系统提示词中写入当前时间，但这会导致时间之后的提示词的 KV cache 全部无法复用。
+
+['prompt-order.notes.1']
+src_hash = '53a2802f'
+text = "An agent harness is the program that calls the model and assembles the prompt of every request, for example the Claude Code client. Some implementations want the model to know the current time, so they write the current time into the system prompt of every request. The time is different every time, so every request differs from the cached prefix from that point on. The rest of the system prompt after the time, the tool descriptions and the conversation so far must all be computed again, and most of the prompt misses the cache. The lower part of the figure shows this implementation. The upper part writes the time into the last message, and everything before the question is reused. The system prompt, the tool descriptions and reference documents are the same every time and go at the beginning. The user's question and the current time differ every time and go at the end. Model providers also offer prefix caching, and input tokens that hit the cache are billed at a lower price. Providers isolate caches between organizations, so requests from different organizations do not share a cache even when their prefixes are identical. Claude Code orders its requests in exactly this way: the system prompt and the tool descriptions first, then the project context, and the conversation last. It uses the prefix caching of the Anthropic API."
+# src: Agent harness 是调用模型的程序，它组织每次请求的提示词，比如 Claude Code 的客户端。有的实现希望模型知道当前时间，于是在每次请求的系统提示词中写入当前时间。时间每次都不同，每个请求从这里开始与缓存的前缀不同，时间之后的系统提示词、工具的说明和之前的对话都要重新计算，缓存大量未命中。图中下方是这种实现，上方把时间写在最后一条消息中，问题之前的部分全部复用。系统提示词、工具的说明和作为参考的文档每次都相同，放在前面。用户的问题和当前时间每次不同，放在末尾。模型的服务商也提供前缀缓存，命中缓存的输入 token 按较低的价格计费。服务商按组织隔离缓存，不同组织的请求即使前缀相同，也不共用缓存。Claude Code 的请求就按这个顺序排列：系统提示词与工具的说明在前，然后是项目的上下文，最后是对话，并使用 Anthropic 接口的前缀缓存。
+
+['prompt-order.slide.2']
+src_hash = '38b90da4'
+text = 'When designing an agent harness, keep the prefix as fixed as possible and put changing content at the end.'
+# src: 设计 Agent harness 时应当尽量固定前缀，变化的内容放在末尾。
+
+['news-anthropic-blog.title']
+src_hash = '9b4410a6'
+text = 'News: Anthropic blog'
+# src: 新闻：Anthropic 博客
+
+['news-anthropic-blog.side_image.1.alt']
+src_hash = 'dd9245cc'
+text = 'contain'
+# src: contain
+
+['news-anthropic-blog.side_image.1.footnote.1']
+src_hash = '5565a76a'
+text = '[Thariq Shihipar · Lessons from building Claude Code: Prompt caching is everything (2026-04-30)](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything)'
+# src: [Thariq Shihipar · Lessons from building Claude Code: Prompt caching is everything（2026-04-30）](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything)
+
+['news-anthropic-blog.slide.1']
+src_hash = '3b85154b'
+text = "Anthropic's blog of April 2026 shows the prompt layout of Claude Code and writes:"
+# src: Anthropic 2026 年 4 月的博客给出了 Claude Code 的提示词布局，并写道：
+
+['news-anthropic-blog.aside.1']
+src_hash = '3461a760'
+text = 'But this approach can be surprisingly fragile. We’ve broken this ordering before for a variety of reasons, including: putting an in-depth timestamp in the static system prompt, shuffling tool order definitions non-deterministically, and updating parameters of tools (e.g., what agents the Agent tool can call).'
+# src: But this approach can be surprisingly fragile. We’ve broken this ordering before for a variety of reasons, including: putting an in-depth timestamp in the static system prompt, shuffling tool order definitions non-deterministically, and updating parameters of tools (e.g., what agents the Agent tool can call).
+
+['news-anthropic-blog.notes.1']
+src_hash = 'd8d61b4d'
+text = "The post was written by Thariq Shihipar and published on 30 April 2026. The figure on the right is the prompt layout of Claude Code from the post. From top to bottom it holds the base system instructions, the tools, CLAUDE.md and memory, the session state, and the messages, which grow with each turn. The lower a layer, the more often it changes. The quotation says that this ordering is fragile, and that Claude Code has broken it for several reasons: a detailed timestamp written into the static system prompt, tool definitions in no fixed order, and changes to the parameters of tools, for example which agents the Agent tool can call. The timestamp is the case of the previous page: the time differs every time, so nothing after it can hit the cache. The post's approach is to put information that goes out of date into the messages of the conversation. Claude Code adds a system-reminder tag to the next user message or tool result and writes the updated information into it. The post also notes that a cache miss rate of a few percentage points already has a marked effect on cost and latency."
+# src: 博客的作者是 Thariq Shihipar，2026 年 4 月 30 日发表。右图是博客中 Claude Code 的提示词布局，从上到下依次是基础的系统指令、工具、CLAUDE.md 与记忆、会话状态、每轮增长的消息，越往下变化越多。引文的意思是：这种排列很脆弱，Claude Code 曾经因为几种原因破坏它，包括在静态的系统提示词中写入详细的时间戳、工具定义的顺序不固定、修改工具的参数，比如 Agent 工具可以调用哪些 agent。写入时间戳就是上一页的情形，时间每次不同，之后的内容都不能命中缓存。博客的做法是把会过时的信息放进对话中的消息，Claude Code 在下一条用户消息或工具的结果中加一个 system-reminder 标签，写入更新后的信息。博客还提到，几个百分点的缓存未命中率就会显著影响成本和延迟。
+
+['cache-cost.title']
+src_hash = '78948cdf'
+text = 'The cost of filling the context'
+# src: 填满上下文的费用
+
+['cache-cost.slide.1']
+src_hash = 'e270f9cc'
+text = "In Requesty's statistics, a request of Claude Code has 84,000 input tokens on average and 92% of them hit the cache, so each request adds about 6,700 new tokens, and filling a context of 300,000 tokens takes about 45 requests."
+# src: Requesty 的统计中，Claude Code 的请求平均输入 84,000 个 token，92% 命中缓存，即每个请求约新增 6,700 个 token，填满 300,000 个 token 的上下文约需 45 个请求。
+
+['cache-cost.slide.1.footnote.1']
+src_hash = '661c0858'
+text = '[Thibault Jaigu · The Coding Agent Economy (Requesty, 2026-05)](https://www.requesty.ai/coding-agent-economy)'
+# src: [Thibault Jaigu · The Coding Agent Economy（Requesty，2026-05）](https://www.requesty.ai/coding-agent-economy)
+
+['cache-cost.table.1.cell.0.0']
+src_hash = '54df9d9b'
+text = 'Billed item'
+# src: 计费项
+
+['cache-cost.table.1.cell.0.1']
+src_hash = '126ba39c'
+text = 'Price (per million tokens)'
+# src: 价格（每百万 token）
+
+['cache-cost.table.1.cell.0.2']
+src_hash = '84d9f678'
+text = 'No KV cache'
+# src: 没有 KV cache
+
+['cache-cost.table.1.cell.0.3']
+src_hash = '4d0e94dc'
+text = 'KV cache hit every time'
+# src: 每次都命中 KV cache
+
+['cache-cost.table.1.cell.1.0']
+src_hash = 'faa58c14'
+text = 'Base input'
+# src: 普通输入
+
+['cache-cost.table.1.cell.1.1']
+src_hash = '5282dcb7'
+text = '$8'
+# src: $8
+
+['cache-cost.table.1.cell.1.2']
+src_hash = '58e3a34f'
+text = '6,900,000 tokens, $55.20'
+# src: 6,900,000 个，$55.20
+
+['cache-cost.table.1.cell.1.3']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['cache-cost.table.1.cell.2.0']
+src_hash = '83f9962d'
+text = 'Cache read'
+# src: 读取缓存
+
+['cache-cost.table.1.cell.2.1']
+src_hash = '1c65ee96'
+text = '$0.20'
+# src: $0.20
+
+['cache-cost.table.1.cell.2.2']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['cache-cost.table.1.cell.2.3']
+src_hash = 'a38082ff'
+text = '6,600,000 tokens, $1.32'
+# src: 6,600,000 个，$1.32
+
+['cache-cost.table.1.cell.3.0']
+src_hash = '7e6fefb1'
+text = 'Cache write'
+# src: 写入缓存
+
+['cache-cost.table.1.cell.3.1']
+src_hash = 'a5e5e8d3'
+text = '$10'
+# src: $10
+
+['cache-cost.table.1.cell.3.2']
+src_hash = '5feceb66'
+text = '0'
+# src: 0
+
+['cache-cost.table.1.cell.3.3']
+src_hash = '5e4a7bd7'
+text = '300,000 tokens, $3.00'
+# src: 300,000 个，$3.00
+
+['cache-cost.table.1.cell.4.0']
+src_hash = '3efc8c8c'
+text = 'Input total'
+# src: 输入合计
+
+['cache-cost.table.1.cell.4.2']
+src_hash = '85a1e491'
+text = '$55.20'
+# src: $55.20
+
+['cache-cost.table.1.cell.4.3']
+src_hash = '9677e554'
+text = '$4.32'
+# src: $4.32
+
+['cache-cost.table.1.footnote.1']
+src_hash = 'aed9fc0f'
+text = '[Anthropic · Claude API pricing (queried 2026-11-19)](https://platform.claude.com/docs/en/about-claude/pricing)'
+# src: [Anthropic · Claude API 定价（2026-11-19 查询）](https://platform.claude.com/docs/en/about-claude/pricing)
+
+['cache-cost.slide.2']
+src_hash = '9aa64cbb'
+text = 'At the prices of Claude Fable 5.2, the input costs about $55 and $4 in the two cases, a difference of about 13 times.'
+# src: 按 Claude Fable 5.2 的价格，两种情况输入的费用约为 $55 和 $4，相差约 13 倍。
+
+['cache-cost.notes.1']
+src_hash = 'e55759b2'
+text = "Requesty is a gateway that forwards requests to model APIs. It collected the requests of 9 coding agents that passed through it from May 2025 to April 2026. In April 2026, a request of Claude Code had 84,000 input tokens on average, with a cache hit rate of 92%, so only 8% of the input had to be computed again, about 6,700 tokens per request on average. This part is the new content of each request, including the output of the previous request, tool results and user messages. The report also mentions that a Claude Code session usually involves 50 to 200 calls. OpenRouter's statistics agree with this: in October 2026, the median cache hit rate of agent requests was above 90%. Starting from an empty context, each request adds about 6,700 tokens, and about 45 requests fill 300,000 tokens. The calculation below assumes that exactly 45 requests fill the context, each adding 300,000 / 45 tokens. The prices are taken from Anthropic's pricing page, in US dollars per million tokens. For Claude Fable 5.2, base input is $8, a cache write is $10 (kept for 5 minutes), a cache read is $0.20, and output is $40. Without a KV cache, all the input of every request is billed as base input: the 45 requests total (300,000 / 45) × (1 + 2 + … + 45) = 6,900,000 tokens, at a cost of $55.20. With a hit every time, request i reads from the cache the tokens accumulated by the first i − 1 requests, 6,600,000 tokens in total, at a cost of $1.32. Each request writes its new tokens to the cache, 300,000 tokens in total, at a cost of $3.00. The two add up to $4.32. The output is the same in both cases and is left out of the table. By default the cache is kept for 5 minutes, and every hit restarts the timer. The requests an agent sends in a row are much less than 5 minutes apart, so they keep hitting the cache. Without a KV cache, the server must also compute the K and V of every position again for each request, and the longer the context, the longer the wait before the first token is returned."
+# src: Requesty 是转发模型 API 请求的网关，它统计了 2025 年 5 月到 2026 年 4 月经过它的 9 个编码 Agent 的请求。2026 年 4 月 Claude Code 的请求平均输入 84,000 个 token，缓存命中率为 92%，即只有 8% 的输入需要重新计算，平均每个请求约 6,700 个 token。这部分是每个请求新增的内容，包括上一个请求的输出、工具的结果和用户的消息。报告还提到一次 Claude Code 会话通常有 50 到 200 次调用。OpenRouter 的统计与此相符，2026 年 10 月 Agent 请求的缓存命中率中位数超过 90%。从空的上下文开始，每个请求新增约 6,700 个 token，约 45 个请求填满 300,000 个 token。下面按 45 个请求恰好填满计算，每个请求新增 300,000 / 45 个 token。价格取自 Anthropic 的定价页，单位是每百万 token 的美元数，Claude Fable 5.2 的普通输入为 $8，写入缓存为 $10（保留 5 分钟），读取缓存为 $0.20，输出为 $40。没有 KV cache 时，每个请求的全部输入都按普通输入计费，45 个请求共 (300,000 / 45) × (1 + 2 + … + 45) = 6,900,000 个 token，费用为 $55.20。每次都命中时，第 i 个请求读取前 i − 1 个请求累积的 token，共 6,600,000 个，费用为 $1.32。每个请求把新增的 token 写入缓存，共 300,000 个，费用为 $3.00。两项合计 $4.32。输出在两种情况下相同，表中不计入。缓存默认保留 5 分钟，每次命中重新计时，Agent 连续发出的请求间隔远小于 5 分钟，所以能够持续命中。没有 KV cache 时，服务器还要为每个请求重新计算全部位置的 K、V，上下文越长，返回第一个 token 之前的等待越长。
+
 ['sources.title']
 src_hash = '8224c4e8'
 text = 'References'
 # src: 参考资料
 
 ['sources.slide.1']
-src_hash = 'da64e721'
+src_hash = '9be1ca28'
 text = '''
 - [3Blue1Brown · Deep Learning chapter 5](https://www.youtube.com/watch?v=wjZofJX0v4M) · [text version](https://www.3blue1brown.com/lessons/gpt)
 - [3Blue1Brown · Deep Learning chapter 6](https://www.youtube.com/watch?v=eMlx5fFNoYc) · [text version](https://www.3blue1brown.com/lessons/attention)
 - [Andrej Karpathy · Let's build GPT: from scratch, in code, spelled out](https://www.youtube.com/watch?v=kCc8FmEb1nY)
-- [Chris Olah's blog](https://colah.github.io/)
 - [Vivek · What does it mean for computers to understand language?](https://www.youtube.com/watch?v=1il-s4mgNdI)
 - [Art of the Problem · 30 Year History of ChatGPT](https://www.youtube.com/watch?v=OFS90-FX6pg)
 - [Vaswani et al. · Attention Is All You Need (2017)](https://arxiv.org/abs/1706.03762)
 - [Brown et al. · Language Models are Few-Shot Learners (2020)](https://arxiv.org/abs/2005.14165)
 - [Hugging Face · Caching in Transformers](https://huggingface.co/docs/transformers/main/cache_explanation)
+- [Zheng et al. · SGLang: Efficient Execution of Structured Language Model Programs (2024)](https://arxiv.org/abs/2312.07104)
+- [vLLM · Automatic Prefix Caching](https://docs.vllm.ai/en/latest/design/prefix_caching.html)
+- [Claude Code · Prompt caching](https://code.claude.com/docs/en/prompt-caching)
+- [Anthropic · Lessons from building Claude Code: Prompt caching is everything](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything)
 '''
 # src:
 # - [3Blue1Brown · 深度学习第 5 章](https://www.youtube.com/watch?v=wjZofJX0v4M) · [图文版](https://www.3blue1brown.com/lessons/gpt)
 # - [3Blue1Brown · 深度学习第 6 章](https://www.youtube.com/watch?v=eMlx5fFNoYc) · [图文版](https://www.3blue1brown.com/lessons/attention)
 # - [Andrej Karpathy · Let's build GPT: from scratch, in code, spelled out](https://www.youtube.com/watch?v=kCc8FmEb1nY)
-# - [Chris Olah 的博客](https://colah.github.io/)
 # - [Vivek · What does it mean for computers to understand language?](https://www.youtube.com/watch?v=1il-s4mgNdI)
 # - [Art of the Problem · 30 Year History of ChatGPT](https://www.youtube.com/watch?v=OFS90-FX6pg)
 # - [Vaswani 等 · Attention Is All You Need（2017）](https://arxiv.org/abs/1706.03762)
 # - [Brown 等 · Language Models are Few-Shot Learners（2020）](https://arxiv.org/abs/2005.14165)
 # - [Hugging Face · Transformers 的缓存机制](https://huggingface.co/docs/transformers/main/cache_explanation)
+# - [Zheng 等 · SGLang: Efficient Execution of Structured Language Model Programs（2024）](https://arxiv.org/abs/2312.07104)
+# - [vLLM · Automatic Prefix Caching](https://docs.vllm.ai/en/latest/design/prefix_caching.html)
+# - [Claude Code · Prompt caching](https://code.claude.com/docs/en/prompt-caching)
+# - [Anthropic · Lessons from building Claude Code: Prompt caching is everything](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything)

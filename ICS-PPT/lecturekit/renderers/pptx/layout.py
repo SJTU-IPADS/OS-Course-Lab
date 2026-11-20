@@ -2,8 +2,9 @@
 
 No browser measures text here, so blocks are stacked top-to-bottom by an
 estimated height instead of a real layout pass. ``Layout`` derives the slide
-size and content box from the deck ratio (the viewer's pixel sizes are at 96
-dpi, so ``inches = px / 96``) and the theme's ``padding: 44px 80px 70px``.
+size and its padding box from the deck ratio (the viewer's pixel sizes are at
+96 dpi, so ``inches = px / 96``) and the theme's slide padding; a page's
+bands and columns are boxes of the same type inside it (see :mod:`page`).
 ``Cursor`` tracks the current top and advances by each block's estimated height;
 ``estimate_text_height`` is the rough wrapped-line heuristic that drives it.
 """
@@ -15,12 +16,12 @@ from dataclasses import dataclass
 
 from pptx.util import Emu, Inches, Pt
 
-from lecturekit import model
+from lecturekit import model, tokens
 
-# Theme padding (themes/basic-office.css `section`): 44px top, 80px sides, 70px bottom.
-_PAD_TOP = 44
-_PAD_SIDE = 80
-_PAD_BOTTOM = 70
+# The slide's padding (themes/basic-office.css `:root`), in CSS px.
+PAD_TOP = tokens.px("--slide-padding-top")
+PAD_SIDE = tokens.px("--slide-padding-x")
+PAD_BOTTOM = tokens.px("--slide-padding-bottom")
 
 # python-pptx length units.
 _EMU_PER_PT = 12700
@@ -63,7 +64,13 @@ def px(value: float) -> int:
 
 @dataclass
 class Layout:
-    """Slide size and content box, all in EMU."""
+    """Slide size and a box on it, all in EMU.
+
+    From :meth:`from_ratio` the box is the slide's padding box. A page's body,
+    its columns and its footnote band are the same slide with a smaller box,
+    made with ``dataclasses.replace``; the blocks draw into whichever one the
+    context holds.
+    """
 
     width: int
     height: int
@@ -78,10 +85,10 @@ class Layout:
         return cls(
             width=px(px_w),
             height=px(px_h),
-            content_left=px(_PAD_SIDE),
-            content_top=px(_PAD_TOP),
-            content_width=px(px_w - 2 * _PAD_SIDE),
-            content_bottom=px(px_h - _PAD_BOTTOM),
+            content_left=px(PAD_SIDE),
+            content_top=px(PAD_TOP),
+            content_width=px(px_w - 2 * PAD_SIDE),
+            content_bottom=px(px_h - PAD_BOTTOM),
         )
 
 

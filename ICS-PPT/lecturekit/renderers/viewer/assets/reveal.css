@@ -2,19 +2,20 @@
    server at serve time; never written to disk, never on the export path. */
 
 /* The wrapper must be layout-transparent. The theme (basic-office.css) styles
-   the slide's blocks as DIRECT children of <section> (`section > *`,
-   `section > table`, `section > figure.lk-figure`, ...). A block wrapped in
-   .reveal-block becomes a grandchild and loses all of that. display:contents
-   drops the wrapper's own box so its child block becomes a real flex item of
-   the section again; the rules below re-apply the theme's `section > X`
-   declarations one level deeper, for wrapped blocks only. Keep in sync with the
-   `section > ` rules in themes/basic-office.css. */
+   the slide's blocks as DIRECT children of their column
+   (`section :where(.lk-main, .lk-side) > *`, `… > table`,
+   `… > figure.lk-figure`, ...). A block wrapped in .reveal-block becomes a
+   grandchild and loses all of that. display:contents drops the wrapper's own
+   box so its child block becomes a real flex item of the column again; the
+   rules below re-apply the theme's column declarations one level deeper, for
+   wrapped blocks only. Keep in sync with the `:where(.lk-main, .lk-side) > `
+   rules in themes/basic-office.css. */
 .reveal-block {
   display: contents;
 }
 
-/* Except on a `p.gap("auto")` page, where the wrapper IS the layout unit: the
-   theme sizes `.lk-gap-block` as one unshrinkable flex item of .lk-gap-flow
+/* Except on a `p.gap(...)` page, where the wrapper IS the layout unit: the
+   theme sizes `.lk-gap-block` as one unshrinkable flex item of the main column
    (`flex: 0 0 auto`). Dropping its box would hand its children to the flow as
    separate, shrinkable items, so the page lays out differently than the very
    same page without reveal — and since only an animation's first frame steps,
@@ -31,26 +32,26 @@
   display: flex;
 }
 
-section > .reveal-block > * {
+section :where(.lk-main, .lk-side) > .reveal-block > * {
   flex: 0 0 auto;
 }
-section > .reveal-block > table {
+section :where(.lk-main, .lk-side) > .reveal-block > table {
   align-self: center;
 }
-section > .reveal-block > .lk-float {
+section :where(.lk-main, .lk-side) > .reveal-block > .lk-float {
   display: flow-root;
   margin: 0 0 0.4em;
 }
-section > .reveal-block > .lk-float.lk-float-middle {
+section :where(.lk-main, .lk-side) > .reveal-block > .lk-float.lk-float-middle {
   display: flex;
 }
-section > .reveal-block > figure.lk-figure {
+section :where(.lk-main, .lk-side) > .reveal-block > figure.lk-figure {
   flex: 0 1 auto;
   min-height: 0;
   margin: 0 0 0.6em;
   text-align: center;
 }
-section > .reveal-block > figure.lk-arch {
+section :where(.lk-main, .lk-side) > .reveal-block > figure.lk-arch {
   flex: 0 1 auto;
   min-height: 0;
   display: flex;
@@ -59,13 +60,13 @@ section > .reveal-block > figure.lk-arch {
   margin: 0 0 0.6em;
   font-size: 0.9em;
 }
-section > .reveal-block > figure.lk-row {
+section :where(.lk-main, .lk-side) > .reveal-block > figure.lk-row {
   flex: 0 1 auto;
   min-height: 0;
   margin: 0 0 0.6em;
   text-align: center;
 }
-section > .reveal-block > figure.lk-row > figcaption {
+section :where(.lk-main, .lk-side) > .reveal-block > figure.lk-row > figcaption {
   margin-top: 0.4em;
   text-align: center;
   font-style: italic;

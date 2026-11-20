@@ -488,7 +488,7 @@ class PptxRendererTest(unittest.TestCase):
         # the text box stops short of the picture rather than running under it
         self.assertLessEqual(text.left + text.width, pic.left)
 
-    def test_side_image_takes_a_column_and_the_text_reflows_beside_it(self):
+    def _side_deck(self, side_image, *, notes=(), text_notes=()):
         src = Path(tempfile.mkdtemp())
         (src / "assets").mkdir()
         (src / "assets" / "pic.png").write_bytes(_PNG)
@@ -496,105 +496,127 @@ class PptxRendererTest(unittest.TestCase):
 
         def body(p):
             p.title("P")
-            p.side_image("assets/pic.png", width="40%", alt="contain")
-            p.slide("beside the picture")
+            handle = p.side_image("assets/pic.png", **side_image)
+            for note in notes:
+                handle.footnote(note)
+            text = p.slide("beside the picture")
+            for note in text_notes:
+                text.footnote(note)
 
         lecture.page("p1", body=body)
         prs, _ = self.render(lecture, asset_root=src)
         slide = prs.slides[0]
-        layout = Layout.from_ratio("16:9")
-        column = round(layout.width * 0.4)
-        pic = next(
-            s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
-        )
+        pic = next(s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
         title, text = (
             next(s for s in slide.shapes if s.has_text_frame and s.text_frame.text == name)
             for name in ("P", "beside the picture")
         )
-        # the title keeps the slide's width, as on the left: Marp's split
-        # would cut it (and its rule) short at the column
+        return slide, pic, title, text
+
+    def test_side_image_takes_a_column_and_the_text_reflows_beside_it(self):
+        _, pic, title, text = self._side_deck({"width": "40%", "alt": "contain"})
+        layout = Layout.from_ratio("16:9")
+        column = px(model.side_column_px("40%", 1120))
+        # the title keeps the padding box's width, rule included
         self.assertEqual(title.left, layout.content_left)
         self.assertEqual(title.width, layout.content_width)
-        # a fitted picture keeps the slide's margins: its box ends at the side
-        # padding and starts 40px from the text, and the square picture fills
-        # that width, centred between the title and 40px above the bottom
-        self.assertEqual(pic.left, layout.width - column - px(40))
+        # the column is its share of the body, against the right padding; the
+        # square picture is as wide as it and sits at the top of the body
         self.assertEqual(pic.left + pic.width, layout.content_left + layout.content_width)
-        top, bottom = text.top, layout.height - px(40)
-        self.assertGreater(top, title.top + title.height)
-        self.assertEqual(pic.top, top + (bottom - top - pic.height) // 2)
-        # the text reflows beside the column and starts under the title
+        self.assertEqual(pic.width, column)
+        self.assertEqual(pic.height, column)
+        self.assertGreater(text.top, title.top + title.height)
+        self.assertEqual(pic.top, text.top)
+        # the text takes the rest of the body, 40px short of the column
         self.assertEqual(text.left, layout.content_left)
-        self.assertLessEqual(text.left + text.width,
-                             layout.content_left + layout.content_width - column)
-        self.assertLess(text.top, layout.height // 3)
+        self.assertLessEqual(text.left + text.width, pic.left - px(40))
 
     def test_fitted_side_image_on_the_left_keeps_the_slide_margins(self):
-        src = Path(tempfile.mkdtemp())
-        (src / "assets").mkdir()
-        (src / "assets" / "pic.png").write_bytes(_PNG)
-        lecture = Lecture(id="lec", title="L")
-
-        def body(p):
-            p.title("P")
-            p.side_image("assets/pic.png", width="30%", alt="contain", side="left")
-            p.slide("beside the picture")
-
-        lecture.page("p1", body=body)
-        prs, _ = self.render(lecture, asset_root=src)
-        slide = prs.slides[0]
+        _, pic, _, text = self._side_deck(
+            {"width": "30%", "alt": "contain", "side": "left"})
         layout = Layout.from_ratio("16:9")
-        column = round(layout.width * 0.3)
-        pic = next(
-            s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
-        )
-        text = next(s for s in slide.shapes if s.has_text_frame
-                    and s.text_frame.text == "beside the picture")
+        column = px(model.side_column_px("30%", 1120))
         # the picture starts in line with the title and ends 40px from the text
         self.assertEqual(pic.left, layout.content_left)
         self.assertEqual(pic.left + pic.width, text.left - px(40))
-        self.assertEqual(text.left, column + layout.content_left)
-        self.assertLessEqual(pic.top + pic.height, layout.height - px(40))
+        self.assertEqual(text.left, layout.content_left + column + px(40))
+        self.assertLessEqual(pic.top + pic.height, px(720 - 70))
 
     def test_side_image_on_the_left_covers_its_column(self):
-        src = Path(tempfile.mkdtemp())
-        (src / "assets").mkdir()
-        (src / "assets" / "pic.png").write_bytes(_PNG)
-        lecture = Lecture(id="lec", title="L")
-
-        def body(p):
-            p.title("P")
-            p.side_image("assets/pic.png", side="left")
-            p.slide("beside the picture")
-
-        lecture.page("p1", body=body)
-        prs, _ = self.render(lecture, asset_root=src)
-        slide = prs.slides[0]
+        _, pic, title, text = self._side_deck({"side": "left"})
         layout = Layout.from_ratio("16:9")
-        pic = next(
-            s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE
-        )
-        title = next(s for s in slide.shapes if s.has_text_frame
-                     and s.text_frame.text == "P")
-        # the title keeps the slide's width; the column starts under it
         self.assertEqual(title.left, layout.content_left)
         self.assertEqual(title.width, layout.content_width)
         self.assertGreater(pic.top, title.top + title.height)
-        # Marp's default: half the slide, filled to the left and bottom edges
-        # and cropped
-        self.assertEqual(pic.left, 0)
-        self.assertEqual(pic.width, layout.width // 2)
-        self.assertEqual(pic.top + pic.height, layout.height)
-        # under the title the half-slide column is wider than it is tall, so
-        # the square picture fills its width and loses its top and bottom
+        # half the body, filled from under the title to the footnote band and
+        # cropped; nothing reaches the slide's edges
+        self.assertEqual(pic.left, layout.content_left)
+        self.assertEqual(pic.width, px(560))
+        self.assertEqual(pic.top + pic.height, px(720 - 70))
+        # under the title the column is wider than it is tall, so the square
+        # picture fills its width and loses its top and bottom
         self.assertGreater(pic.crop_top, 0)
         self.assertAlmostEqual(pic.crop_top, pic.crop_bottom)
         self.assertEqual(pic.crop_left, 0)
-        text = next(s for s in slide.shapes if s.has_text_frame
-                    and s.text_frame.text == "beside the picture")
-        self.assertEqual(text.left, layout.width // 2 + layout.content_left)
+        self.assertEqual(text.left, layout.content_left + px(560 + 40))
         # the text starts level with the column, under the title
         self.assertEqual(text.top, pic.top)
+
+    def _footnote_box(self, slide):
+        return next(s for s in slide.shapes if s.has_text_frame
+                    and s.text_frame.text.startswith("1 "))
+
+    def test_footnotes_span_the_padding_box_on_a_side_page(self):
+        layout = Layout.from_ratio("16:9")
+        for side in ("left", "right"):
+            with self.subTest(side=side):
+                slide, pic, _, text = self._side_deck(
+                    {"width": "40%", "alt": "contain", "side": side},
+                    notes=["picture source"], text_notes=["claim"])
+                band = self._footnote_box(slide)
+                # one band under both columns, numbered image column first
+                self.assertEqual(band.text_frame.text, "1 picture source\n2 claim")
+                self.assertEqual(band.left, layout.content_left)
+                self.assertEqual(band.width, layout.content_width)
+                self.assertEqual(band.top, px(720 - 70))
+                self.assertEqual(band.top + band.height, layout.content_bottom)
+                self.assertLessEqual(pic.top + pic.height, band.top)
+
+    def test_the_footnote_band_grows_and_the_body_ends_where_it_begins(self):
+        from PIL import Image
+
+        src = Path(tempfile.mkdtemp())
+        (src / "assets").mkdir()
+        # far taller than the body, so its height is the room the body leaves
+        Image.new("RGB", (100, 1000), "white").save(src / "assets" / "pic.png")
+
+        def deck(count):
+            lecture = Lecture(id="lec", title="L")
+
+            def body(p):
+                p.title("P")
+                image = p.image("assets/pic.png")      # fills the body's height
+                for i in range(count):
+                    image.footnote(f"note {i}")
+
+            lecture.page("p1", body=body)
+            prs, _ = self.render(lecture, asset_root=src)
+            slide = prs.slides[0]
+            pic = next(s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
+            return pic, self._footnote_box(slide)
+
+        layout = Layout.from_ratio("16:9")
+        three, band3 = deck(3)
+        five, band5 = deck(5)
+        # up to three lines the band keeps its least height
+        self.assertEqual(band3.height, px(56))
+        self.assertEqual(band5.height, px(56) + 2 * Emu(Pt(10 * 1.3)))
+        for pic, band in ((three, band3), (five, band5)):
+            self.assertEqual(band.top + band.height, layout.content_bottom)
+            self.assertEqual(band.width, layout.content_width)
+            self.assertLessEqual(pic.top + pic.height, band.top)
+        # the taller band leaves the picture less room
+        self.assertLess(five.height, three.height)
 
     def test_architecture_draws_a_band_and_a_box_per_module(self):
         lecture = Lecture(id="lec", title="L")
@@ -643,7 +665,7 @@ class PptxRendererTest(unittest.TestCase):
         # within a point of the content box's floor — per-band rounding is the
         # only slack, not another band's worth of height
         self.assertLessEqual(
-            tall[-1].top + tall[-1].height, layout.content_bottom + Emu(Pt(1))
+            tall[-1].top + tall[-1].height, px(720 - 70) + Emu(Pt(1))
         )
 
     def test_row_centers_top_aligned_pictures(self):

@@ -25,9 +25,9 @@ def figure():
     lx, lw = 32, 434
     out.append(rect(lx, 14, lw, 194, WHITE, INK, rx=8, width=1.8))
     out.append(text(lx + lw / 2, 42, "策略一：最近最少使用（LRU）", 18, INK, "bold"))
-    out.append(text(lx + lw / 2, 64, "优先使最久未访问的会话缓存失效", 14, MUTED))
+    out.append(text(lx + lw / 2, 64, "优先淘汰最久未访问的会话", 14, MUTED))
     lru_rows = [
-        ("会话 A", "最后访问：45 分钟前", "使失效", "waste"),
+        ("会话 A", "最后访问：45 分钟前", "淘汰", "waste"),
         ("会话 B", "最后访问：6 分钟前", "保留", "cache"),
         ("会话 C", "最后访问：1 分钟前", "保留", "cache"),
     ]
@@ -43,11 +43,11 @@ def figure():
     rx, rw = 494, 434
     out.append(rect(rx, 14, rw, 194, WHITE, INK, rx=8, width=1.8))
     out.append(text(rx + rw / 2, 42, "策略二：最小缓存优先", 18, INK, "bold"))
-    out.append(text(rx + rw / 2, 64, "优先使已缓存层数或 token 最少的会话失效", 14, MUTED))
+    out.append(text(rx + rw / 2, 64, "优先淘汰已缓存 token 最少的会话", 14, MUTED))
     size_rows = [
-        ("会话 A", 236, "已缓存多（省费用、重算慢）", "", "保留", "cache"),
+        ("会话 A", 236, "已缓存多（省费用、恢复慢）", "", "保留", "cache"),
         ("会话 B", 152, "已缓存中等", "", "保留", "cache"),
-        ("会话 C", 76, "缓存少", "重算代价小", "使失效", "waste"),
+        ("会话 C", 76, "缓存少", "恢复代价小", "淘汰", "waste"),
     ]
     for i, (name, bw, inside, outside, act, kind) in enumerate(size_rows):
         y = 78 + i * 40
@@ -60,9 +60,9 @@ def figure():
         out += badge(rx + 332, y, 84, 32, act, kind)
 
     out.append(text(W / 2, CAPTION_Y,
-                    "LRU 淘汰最久未访问的缓存，最小缓存优先淘汰重算代价最小、对用户体验影响最小的缓存",
+                    "LRU 淘汰最久未访问的会话，最小缓存优先淘汰恢复代价最小、对用户体验影响最小的会话",
                     18, INK, "bold"))
-    items = [("cache", "保留在显存的 KV Cache"), ("waste", "选中使失效的 KV Cache")]
+    items = [("cache", "保留在显存的 KV Cache"), ("waste", "选中淘汰的 KV Cache")]
     out += legend((W - legend_width(items)) / 2, LEGEND_Y, items)
     return out
 

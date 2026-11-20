@@ -9,7 +9,7 @@ python3 check_math.py
 python3 attn_data.py >/dev/null
 for py in *.py; do
     case "$py" in
-        svgkit.py|tk.py|kv_grid.py|math_data.py|attn_data.py|check_math.py|check_bounds.py) continue ;;
+        svgkit.py|tk.py|kv_grid.py|prompt_bar.py|math_data.py|attn_data.py|check_math.py|check_bounds.py) continue ;;
     esac
     python3 "$py" >/dev/null
 done

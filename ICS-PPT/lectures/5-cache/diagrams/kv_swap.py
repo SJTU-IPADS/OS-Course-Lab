@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """When dense concurrent requests exhaust GPU memory before any KV cache expires (frame 1),
-the naive idea swaps an inactive session's KV cache out to main memory (frame 2) and swaps
-it back in when that session resumes (frame 3).
+the evicted session's KV cache is swapped out to main memory (frame 2) and swapped back in
+when that session resumes, without recomputation (frame 3).
 Run it to refresh ../assets/kv-swap-1..3.svg.
 """
 
@@ -57,7 +57,7 @@ def frame2():
     out += slot(594, 56, 300, 38, "会话 1 的 KV Cache", "暂存于内存", "reuse")
     out += slot(594, 102, 300, 38, "空闲内存空间", "", "empty")
     out.append(text(W / 2, CAPTION_Y,
-                    "朴素设想（换出）：把暂不使用的会话 1 的 KV Cache 复制到内存，腾出显存",
+                    "换出：把被淘汰的会话 1 的 KV Cache 复制到内存，腾出显存",
                     19, INK, "bold"))
     items = [("cache", "显存中的 KV Cache"), ("new", "新到达的会话"), ("reuse", "换出到内存的 KV Cache")]
     out += legend((W - legend_width(items)) / 2, LEGEND_Y, items)
@@ -66,18 +66,18 @@ def frame2():
 
 def frame3():
     out = two_boxes()
-    out += slot(66, 56, 340, 38, "会话 1（继续请求）", "等待从内存换入", "waste")
+    out += slot(66, 56, 340, 38, "会话 1（继续请求）", "从内存换入", "reuse")
     out += slot(66, 102, 340, 38, "会话 2", "保留在显存", "cache")
     out += slot(66, 148, 340, 38, "会话 3", "保留在显存", "cache")
-    out.append(arrow(568, 75, 430, 75, RED, 2.4))
-    out.append(text(500, 60, "② 从内存换入显存", 16, RED, "bold"))
-    out.append(text(500, 98, "跨总线传输大量数据", 14, RED, "bold"))
-    out += slot(594, 56, 300, 38, "会话 1 的 KV Cache", "从内存读出", "waste")
+    out.append(arrow(568, 75, 430, 75, GREEN, 2.4))
+    out.append(text(500, 60, "② 换入显存", 16, GREEN, "bold"))
+    out.append(text(500, 98, "经总线传回", 14, MUTED))
+    out += slot(594, 56, 300, 38, "会话 1 的 KV Cache", "从内存读出", "reuse")
     out += slot(594, 102, 300, 38, "会话 4 的 KV Cache", "换出到内存", "reuse")
     out.append(text(W / 2, CAPTION_Y,
-                    "朴素设想（换入）：会话 1 继续请求时，把 KV Cache 从内存复制回显存",
+                    "换入：会话 1 继续请求时，把 KV Cache 从内存复制回显存，不需要重新计算",
                     19, INK, "bold"))
-    items = [("cache", "显存中的 KV Cache"), ("reuse", "内存中的 KV Cache"), ("waste", "跨总线换入（耗时）")]
+    items = [("cache", "显存中的 KV Cache"), ("reuse", "换出与换入的 KV Cache")]
     out += legend((W - legend_width(items)) / 2, LEGEND_Y, items)
     return out
 

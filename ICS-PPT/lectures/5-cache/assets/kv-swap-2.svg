@@ -22,7 +22,7 @@
 <rect x="594.0" y="102.0" width="300.0" height="38.0" rx="5" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.6" stroke-dasharray="5 4"/>
 <text x="610.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#5a6b78" text-anchor="start">空闲内存空间</text>
 <text x="878.0" y="127.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end"></text>
-<text x="480.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">朴素设想（换出）：把暂不使用的会话 1 的 KV Cache 复制到内存，腾出显存</text>
+<text x="480.0" y="242.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="19" font-weight="bold" fill="#0e2841" text-anchor="middle">换出：把被淘汰的会话 1 的 KV Cache 复制到内存，腾出显存</text>
 <rect x="215.8" y="263.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
 <text x="247.8" y="277.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">显存中的 KV Cache</text>
 <rect x="404.0" y="263.0" width="24.0" height="17.0" rx="3" fill="#fce9df" stroke="#e97132" stroke-width="1.4"/>

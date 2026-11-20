@@ -2,12 +2,12 @@
 <defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
 <rect x="32.0" y="14.0" width="434.0" height="194.0" rx="8" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
 <text x="249.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">策略一：最近最少使用（LRU）</text>
-<text x="249.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">优先使最久未访问的会话缓存失效</text>
+<text x="249.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">优先淘汰最久未访问的会话</text>
 <rect x="50.0" y="78.0" width="304.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.5"/>
 <text x="64.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">会话 A</text>
 <text x="340.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">最后访问：45 分钟前</text>
 <rect x="364.0" y="78.0" width="84.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
-<text x="406.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">使失效</text>
+<text x="406.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">淘汰</text>
 <rect x="50.0" y="118.0" width="304.0" height="32.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.5"/>
 <text x="64.0" y="139.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">会话 B</text>
 <text x="340.0" y="139.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="end">最后访问：6 分钟前</text>
@@ -20,10 +20,10 @@
 <text x="406.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">保留</text>
 <rect x="494.0" y="14.0" width="434.0" height="194.0" rx="8" fill="#ffffff" stroke="#0e2841" stroke-width="1.8"/>
 <text x="711.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">策略二：最小缓存优先</text>
-<text x="711.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">优先使已缓存层数或 token 最少的会话失效</text>
+<text x="711.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="middle">优先淘汰已缓存 token 最少的会话</text>
 <text x="512.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">会话 A</text>
 <rect x="576.0" y="78.0" width="236.0" height="32.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.5"/>
-<text x="694.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">已缓存多（省费用、重算慢）</text>
+<text x="694.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">已缓存多（省费用、恢复慢）</text>
 <rect x="826.0" y="78.0" width="84.0" height="32.0" rx="4" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
 <text x="868.0" y="99.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#156082" text-anchor="middle">保留</text>
 <text x="512.0" y="139.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">会话 B</text>
@@ -34,12 +34,12 @@
 <text x="512.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">会话 C</text>
 <rect x="576.0" y="158.0" width="76.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.5"/>
 <text x="614.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#0e2841" text-anchor="middle">缓存少</text>
-<text x="660.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">重算代价小</text>
+<text x="660.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c0392b" text-anchor="start">恢复代价小</text>
 <rect x="826.0" y="158.0" width="84.0" height="32.0" rx="4" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.6"/>
-<text x="868.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">使失效</text>
-<text x="480.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">LRU 淘汰最久未访问的缓存，最小缓存优先淘汰重算代价最小、对用户体验影响最小的缓存</text>
-<rect x="272.8" y="265.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
-<text x="304.8" y="279.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">保留在显存的 KV Cache</text>
-<rect x="491.0" y="265.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
-<text x="523.0" y="279.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">选中使失效的 KV Cache</text>
+<text x="868.0" y="179.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c0392b" text-anchor="middle">淘汰</text>
+<text x="480.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">LRU 淘汰最久未访问的会话，最小缓存优先淘汰恢复代价最小、对用户体验影响最小的会话</text>
+<rect x="280.2" y="265.0" width="24.0" height="17.0" rx="3" fill="#eaf3f7" stroke="#156082" stroke-width="1.4"/>
+<text x="312.2" y="279.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">保留在显存的 KV Cache</text>
+<rect x="498.5" y="265.0" width="24.0" height="17.0" rx="3" fill="#fbe7e5" stroke="#c0392b" stroke-width="1.4"/>
+<text x="530.5" y="279.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">选中淘汰的 KV Cache</text>
 </svg>

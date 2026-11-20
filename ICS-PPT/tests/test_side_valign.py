@@ -1,9 +1,9 @@
 """Both columns of a side_image page in the vertical middle:
 `p.side_image(..., valign="middle")`.
 
-The text column's blocks are centred in the band from under the title to the
-slide's bottom padding; the image column (a fitted picture, or a stack with
-text under it) is centred in the same band, on either side.
+The main column's blocks are centred in the page's body, between the title
+and the footnote band; the image column (a fitted picture, with any text under
+it) is centred in the same body, on either side.
 """
 
 import base64
@@ -16,7 +16,7 @@ from pptx.enum.shapes import MSO_SHAPE_TYPE
 
 from lecturekit import Lecture, model
 from lecturekit.renderers.pptx import PptxRenderer
-from lecturekit.renderers.pptx.layout import Layout
+from lecturekit.renderers.pptx.layout import px
 from lecturekit.renderers.viewer import render_marp_page
 
 
@@ -119,51 +119,60 @@ def test_the_side_images_of_a_page_must_agree():
 
 # --- the viewer ---
 
-def test_the_viewer_wraps_the_text_column_in_two_spacers():
+def test_the_viewer_sets_both_columns_at_the_page_valign():
     md = render_marp_page(_page(), reveal=True)
-    lines = md.split("\n")
-    assert lines[0] == "<!-- _class: lk-side-left lk-valign-middle -->"
-    spacer = '<div class="lk-valign-spacer" aria-hidden="true"></div>'
-    assert md.count(spacer) == 2
-    first = lines.index(spacer)
-    last = lines.index(spacer, first + 1)
-    # the first spacer follows the image column, the last one ends the page;
-    # each is its own HTML block between blank lines
-    stack = lines.index('<div class="lk-side lk-side-stack">')
-    assert lines.index("</div>", stack) < first
-    assert lines[first - 1] == "" and lines[first + 1] == ""
-    assert lines[last - 1] == "" and last == len(lines) - 1
-    column = lines[first:last]
-    assert any("| a | 1 |" in line for line in column)
-    assert any("int beside;" in line for line in column)
-    # the spacers are not reveal steps: the table and the code block are
+    assert "_class" not in md and "lk-valign" not in md
+    side_open = ('<div class="lk-side" style="--lk-side-width: 448px; '
+                 'justify-content: safe center;">')
+    main_open = '<div class="lk-main" style="justify-content: safe center;">'
+    # the image column on the left, then the main column, then the band
+    side = md[md.index(side_open):md.index(main_open)]
+    main = md[md.index(main_open):md.index('<div class="lk-footnote-band"')]
+    # the picture and the text under it in the image column
+    assert "lk-side-img lk-side-fit" in side and "- under the picture" in side
+    # the table and the code block in the main column
+    assert "| a | 1 |" in main and "int beside;" in main
+    # the alignment takes no reveal step: the table and the code block do
     assert md.count("reveal-block") == 2
 
 
-def test_the_viewer_centres_a_right_column_page_the_same_way():
+def test_the_viewer_sets_a_right_column_page_the_same_way():
     md = render_marp_page(_page(side="right"))
-    assert md.startswith("<!-- _class: lk-side-right lk-valign-middle -->")
-    assert md.count('class="lk-valign-spacer"') == 2
-    assert '<div class="lk-side lk-side-stack">' in md
+    side = '<div class="lk-side" style="--lk-side-width: 448px; justify-content: safe center;">'
+    main = '<div class="lk-main" style="justify-content: safe center;">'
+    assert md.index(main) < md.index(side)
     assert "![bg" not in md
 
 
-def test_the_viewer_draws_the_default_as_before():
+def test_the_viewer_sets_the_bottom_with_the_same_rule():
+    lecture = _lecture(under=False)
+    page = lecture.build().children[0]
+    page = model.Page(id=page.id, title=page.title, blocks=page.blocks, valign="bottom")
+    md = render_marp_page(page)
+    assert md.count("justify-content: safe flex-end;") == 2
+
+
+def test_the_viewer_draws_the_default_at_the_top():
     md = render_marp_page(_page(valign="top"))
-    assert "lk-valign" not in md
-    assert md.startswith("<!-- _class: lk-side-left -->")
+    assert "justify-content" not in md
+    assert '<div class="lk-main">' in md
+    assert '<div class="lk-side" style="--lk-side-width: 448px;">' in md
 
 
 # --- PowerPoint ---
 
+# The body's bottom on a page without footnotes: where the footnote band, at
+# its least height, begins.
+_BODY_BOTTOM = px(720 - 70)
+
+
 def test_powerpoint_centres_both_columns_on_one_line():
     rule, stack, column = _column_shapes(_render(_lecture()))
-    layout = Layout.from_ratio("16:9")
     # the band starts where both groups start by default: under the title
     _, plain_stack, plain_column = _column_shapes(_render(_lecture(valign="top")))
     band_top = _extent(plain_stack)[0]
     assert band_top == _extent(plain_column)[0] > rule.top
-    middle = (band_top + layout.content_bottom) / 2
+    middle = (band_top + _BODY_BOTTOM) / 2
     top, bottom = _extent(column)
     assert abs((top + bottom) / 2 - middle) <= 1
     top, bottom = _extent(stack)
@@ -178,9 +187,8 @@ def test_powerpoint_centres_both_columns_on_one_line():
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_powerpoint_centres_both_columns_on_either_side(side):
     rule, stack, column = _column_shapes(_render(_lecture(side=side)))
-    layout = Layout.from_ratio("16:9")
     _, plain_stack, _ = _column_shapes(_render(_lecture(side=side, valign="top")))
-    middle = (_extent(plain_stack)[0] + layout.content_bottom) / 2
+    middle = (_extent(plain_stack)[0] + _BODY_BOTTOM) / 2
     for group in (column, stack):
         top, bottom = _extent(group)
         assert abs((top + bottom) / 2 - middle) <= 1
@@ -195,11 +203,10 @@ def test_powerpoint_centres_both_columns_on_either_side(side):
 def test_powerpoint_centres_a_fitted_picture_in_the_same_band():
     slide = _render(_lecture(under=False))
     rule, pics, column = _column_shapes(slide)
-    layout = Layout.from_ratio("16:9")
     pic = pics[0]
     top, bottom = _extent(column)
     assert abs((pic.top + pic.top + pic.height) / 2 - (top + bottom) / 2) <= 1
-    assert pic.top + pic.height <= layout.content_bottom
+    assert pic.top + pic.height <= _BODY_BOTTOM
 
 
 def test_powerpoint_leaves_the_default_at_the_top():
@@ -212,3 +219,15 @@ def test_powerpoint_leaves_the_default_at_the_top():
     # moving the group keeps its height
     assert (_extent(column_c)[1] - _extent(column_c)[0]
             == _extent(column_p)[1] - _extent(column_p)[0])
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_powerpoint_puts_both_columns_at_the_bottom_of_the_body(side):
+    _, stack, column = _column_shapes(_render(_lecture("bottom", side=side)))
+    _, plain_stack, plain_column = _column_shapes(
+        _render(_lecture(valign="top", side=side)))
+    for group, plain in ((column, plain_column), (stack, plain_stack)):
+        top, bottom = _extent(group)
+        assert bottom == _BODY_BOTTOM
+        # moved as one group
+        assert bottom - top == _extent(plain)[1] - _extent(plain)[0]

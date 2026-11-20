@@ -883,18 +883,18 @@ class PageBuilder(ElementHandle):
         except_: Iterable[str] | None = None,
         key: str | None = None,
     ) -> "BlockHandle":
-        """Place an image in a side column; slide text reflows into the other column.
+        """Put an image in the page's image column, beside the main column.
 
-        ``side`` is "right" (default) or "left"; ``width`` sets the column width
-        (e.g. "38%"), defaulting to half the slide. On either side the title
-        keeps the slide's width and the column starts under its rule.
+        A content page is three bands: the title, the body and the footnote
+        band. ``side`` is "right" (default) or "left"; ``width`` sets the image
+        column's share of the body's width (e.g. "38%", or "480px"),
+        defaulting to half of it. Several side images stack top to bottom.
 
         ``valign`` is the page's own (see :meth:`valign`): "top" (default),
-        "middle" or "bottom". The text column's blocks and the image column
-        (the picture with any text set under it) both sit there in the band
-        between the title's rule and the slide's bottom padding, so with
-        "middle" the two columns share one middle line. Anything but "top"
-        claims the page's leftover vertical space, so it excludes
+        "middle" or "bottom". The main column's blocks and the image column
+        (the picture with any text set under it) both sit there in the body,
+        so with "middle" the two columns share one middle line. Anything but
+        "top" claims the page's leftover vertical space, so it excludes
         ``p.gap(...)`` (checked when the lecture is validated).
         """
         if side not in ("left", "right"):
@@ -1495,10 +1495,9 @@ class BlockHandle(_BlockElementHandle):
     def under_side_image(self) -> "BlockHandle":
         """Set this slide block in the image column, under the side image.
 
-        The page's ``p.side_image(...)`` then sits at the top of its column at
-        the column's width, and this text fills the space below it; the other
-        blocks keep the text column. It is for a figure that is much shorter
-        than the slide. Only valid on a ``slide`` block, and only on a page
+        The page's ``p.side_image(...)`` then sits in its column at the
+        column's width, with this text below it; the other blocks keep the
+        main column. It is for a figure that is much shorter than the slide. Only valid on a ``slide`` block, and only on a page
         with a side image (checked when the lecture is validated). Returns
         ``self`` so it chains with ``footnote``.
         """

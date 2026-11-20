@@ -72,7 +72,7 @@ def frame3():
                sub="重新计算前序 token 的 k、v，生成新缓存",
                fill=FILL_ORANGE, stroke=ORANGE, size=17, sub_size=14)
     out.append(text(W / 2, CAPTION_Y,
-                    "③ 被使失效的会话再次继续时，服务端重新计算前序 token 的 k、v",
+                    "③ 会话 1 再次继续时，服务端重新计算前序 token 的 k、v",
                     19, INK, "bold"))
     items = [("cache", "保留的 KV Cache"), ("new", "重新计算前序 k、v 并写入显存")]
     out += legend((W - legend_width(items)) / 2, LEGEND_Y, items)

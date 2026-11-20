@@ -8,9 +8,14 @@ the look of the deck, or adding a renderer; authoring a lecture never needs it.
 `themes/basic-office.css` is the deck's Marp theme, and its `:root` block is the
 single source of every visual constant: the palette, the font stacks, the single
 faces PowerPoint should pick out of them (`--pptx-font-cjk`,
-`--pptx-font-mono`), and the geometry of a `<mark>` stroke.
+`--pptx-font-mono`), the geometry of a `<mark>` stroke, and the geometry of a
+page: the slide's padding (`--slide-padding-top`, `--slide-padding-x`,
+`--slide-padding-bottom`), the footnote band's least height
+(`--footnote-band-min`), the gap between the image column and the main column
+(`--side-gap`) and the gutter of a flex row (`--layout-gutter`).
 
-Every renderer reads those custom properties through `lecturekit/tokens.py`.
+Every renderer reads those custom properties through `lecturekit/tokens.py`;
+`tokens.px(name)` reads a length in pixels.
 No renderer spells a colour, a font, or a stroke height out — a test
 (`tests/test_tokens.py`) refuses a hex literal anywhere under `lecturekit/`.
 
@@ -94,9 +99,10 @@ variable's symbol, is set in `--font-math`, the face the figures' math uses.
 A renderer calls the method of its target on each block of the page. A method is
 needed only for a target the class lists in `TARGETS`. The `renderers/*/blocks.py`
 modules hold the helpers several elements draw with (escaping, shape builders,
-text measures) and nothing per kind. The page's image column is the one thing a
-renderer draws itself, once per page, since it is a layout of its own and not a
-block among others.
+text measures) and nothing per kind. The page's layout is the renderer's, once
+per page: its three bands (the title, the body, the footnote band) and the
+body's columns (the main column, and the image column beside it). In the deck
+each block, a side image included, draws itself into the column it belongs to.
 
 A new kind of block is a new class: a module in `lecturekit/elements/` with
 `@element`, imported in `lecturekit/elements/__init__.py`, plus the DSL method

@@ -159,7 +159,7 @@ class RowPageIntegrationTest(unittest.TestCase):
 
 
 class RowThemeCssTest(unittest.TestCase):
-    """The flex-column section needs lk-row to be a flex item, and the track a
+    """A flex column of the body needs lk-row to be a flex item, and the track a
     flex row. Guard the CSS contract so a theme edit can't silently break it."""
 
     def _css(self):
@@ -176,10 +176,12 @@ class RowThemeCssTest(unittest.TestCase):
         return css[open_brace + 1:close_brace]
 
     def test_row_is_flex_item_in_column(self):
-        # The slide <section> is a flex column; figure.lk-row must declare itself
-        # a flex item or it stretches the column. Pin the properties, not just
-        # the selector — an empty `figure.lk-row {}` rule must not pass.
-        body = self._rule_body(self._css(), "section > figure.lk-row {")
+        # A column of the page's body is a flex column; figure.lk-row must
+        # declare itself a flex item or it stretches the column. Pin the
+        # properties, not just the selector — an empty `figure.lk-row {}` rule
+        # must not pass.
+        body = self._rule_body(
+            self._css(), "section :where(.lk-main, .lk-side) > figure.lk-row {")
         self.assertIn("flex: 0 1 auto", body)
         self.assertIn("min-height: 0", body)
 

@@ -35,9 +35,12 @@ left, figures, tables and highlight chips in the centre, everything at the top.
 
 An element's **box** is the space its container gives it.
 
-- The page's box is the band under the title: from the title's rule to the
-  slide's bottom padding, across the content width (on a
-  [side_image](dsl.md#side-images) page, across the text column).
+- The page's box is the main column of its body. A content page is three
+  bands, top to bottom: the title, the body and the footnote band (see
+  [dsl.md](dsl.md#page-layout)). The body takes the height between the title
+  and the footnote band, across the content width; on a
+  [side_image](dsl.md#side-images) page it is two columns, and the main
+  column is what the image column and the 40px between them leave.
 - A **column** gives each child a box as wide as the column and as tall as the
   child.
 - A **row** gives each child a box as tall as the row, which is as tall as its
@@ -61,7 +64,7 @@ and a figure keeps its caption under it.
 
 Where the box has no room to spare on an axis, alignment on that axis changes
 nothing. A leaf in a column is exactly as tall as its box, so its `valign` has
-no effect; a group taller than the page's band stays at the top.
+no effect; a group taller than the body stays at the top.
 
 ## The DSL
 
@@ -118,21 +121,28 @@ the same leaves in the same order as before, and passes the two markers over.
 
 ## Renderers
 
-**Viewer** (HTML, PDF, PNG, live preview). The slide body is a flex column. A
-weighted row gives each child `flex: <share> 1 0`, the share in percent
-(`--lk-grow`), so the proportions hold whatever the content.
-The page's `valign` puts a flexible spacer above its elements (`middle`,
-`bottom`) and below them (`middle`). An element inside a container, or one
-whose `halign` is set, is drawn in a box (`.lk-box`, a flex column whose
-`align-items` / `justify-content` carry the alignment) around its content
-(`.lk-content`, laid out like the slide body); a container is a box of boxes.
-Elements without either render exactly as they always did.
+**Viewer** (HTML, PDF, PNG, live preview). The slide is a flex column of the
+three bands: the title (`h1`), the body (`.lk-body`) and the footnote band
+(`.lk-footnote-band`). The body is a flex row of its columns, the main column
+(`.lk-main`) and with a side image the image column (`.lk-side`), each a flex
+column. The page's `valign` is each column's `justify-content`. A weighted row
+gives each child `flex: <share> 1 0`, the share in percent (`--lk-grow`), so
+the proportions hold whatever the content. On a page that aligns anything or
+holds a container, every element of the main column is drawn in a box
+(`.lk-box`, a flex column whose `align-items` / `justify-content` carry the
+alignment) around its content (`.lk-content`, laid out like a column); a
+container is a box of boxes. On any other page the blocks are set directly in
+the column.
 
 The box itself carries reveal and held-frame state, so changing either state
 keeps the same geometry. An annotation remains outside the boxes, in slide
-coordinates; footnotes stay at the slide's bottom.
+coordinates; footnotes go in the footnote band.
 
-**PPTX.** Each element draws itself (`to_pptx`) into its box, then its shapes are
+**PPTX.** Each slide's three boxes are computed once: the title, then the
+footnote band (its height from its text, at least 56px, across the content
+width at the bottom), then the body between them, laid out as one or two
+columns at the page's `valign`. Each element draws itself (`to_pptx`) into its
+box, then its shapes are
 moved as one group: right or to the centre by the room the box leaves beside
 them, down by the room below. A weighted row multiplies the width left after the
 gutters by each child's share. A text box is first narrowed to its estimated
@@ -149,11 +159,11 @@ file is written. Existing pages without the new API keep their old geometry.
 
 | call | as elements |
 | --- | --- |
-| `p.side_image(..., valign=...)` | the page is a row of two boxes, the text column and the image column; `valign` is the page's `valign`, and the image column follows it. The image column keeps its own geometry (it runs to the slide's edges). |
-| `p.slide(...).under_side_image()` | the image column is a column: the picture, then this text |
+| `p.side_image(..., valign=...)` | the body is a row of two columns, the main column and the image column, 40px apart; `valign` is the page's `valign`, and both columns follow it |
+| `p.slide(...).under_side_image()` | the image column is a column: the pictures, then this text |
 | `p.slide(...).image_right(src, valign="middle")` | a row of the text and the picture, both at `valign="middle"`; kept as one block so its translation key and its PowerPoint geometry stay. With `valign="top"` the text flows round the picture, which no box can express. |
 | `p.row().image(...)` | one figure: a row of images under one caption and one `ref` |
 | `p.columns(a, b)` | a row of text boxes, kept as one block with one key per column |
-| `p.gap(...)` | the page column's rule for its leftover space: shared between the seams |
+| `p.gap(...)` | the main column's rule for its leftover space: shared between the seams |
 | `p.spacer(px)` | a leaf with a fixed height and nothing in it; PPTX keeps its legacy behaviour of ignoring it |
 | `p.highlight(...)`, figures, tables | leaves whose default `halign` is `center` |

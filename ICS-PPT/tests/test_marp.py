@@ -216,32 +216,35 @@ def test_theme_cover_title_can_use_full_slide_width():
     assert "min(980px" not in rule
 
 
-def test_theme_styles_auto_gap_flow_and_spacers():
+def test_theme_styles_the_main_column_and_gap_spacers():
     theme = (Path(__file__).parents[1] / "themes" / "basic-office.css").read_text(
         encoding="utf-8"
     )
 
-    assert "section.lk-gap-auto > .lk-gap-flow" in theme
-    flow_rule = theme.split("section.lk-gap-auto > .lk-gap-flow", 1)[1].split("}", 1)[0]
+    # The gap's spacers live in the main column, a flex column filling the body.
+    columns_rule = theme.split(".lk-main,\n.lk-side {", 1)[1].split("}", 1)[0]
+    main_rule = theme.split("\n.lk-main {", 1)[1].split("}", 1)[0]
     spacer_rule = theme.split(".lk-gap-spacer", 1)[1].split("}", 1)[0]
 
-    assert "display: flex;" in flow_rule
-    assert "flex-direction: column;" in flow_rule
-    assert "flex: 1 1 auto;" in flow_rule
+    assert "display: flex;" in columns_rule
+    assert "flex-direction: column;" in columns_rule
+    assert "min-height: 0;" in columns_rule
+    assert "flex: 1 1 0;" in main_rule
     assert "flex: 1 0 var(--lk-gap-min);" in spacer_rule
     assert "min-height: var(--lk-gap-min);" in spacer_rule
     assert "max-height: var(--lk-gap-max);" in spacer_rule
+    assert "lk-gap-flow" not in theme and "lk-gap-auto" not in theme
 
 
-def test_theme_preserves_block_layout_inside_auto_gap_wrappers():
+def test_theme_preserves_block_layout_inside_gap_wrappers():
     theme = (Path(__file__).parents[1] / "themes" / "basic-office.css").read_text(
         encoding="utf-8"
     )
 
-    assert "section.lk-gap-auto .lk-gap-block > .lk-float" in theme
-    assert "section.lk-gap-auto .lk-gap-block > figure.lk-figure" in theme
-    assert "section.lk-gap-auto .lk-gap-block > figure.lk-row" in theme
-    assert "section.lk-gap-auto .lk-gap-block > figure.lk-arch" in theme
+    assert "section .lk-gap-block > .lk-float" in theme
+    assert "section .lk-gap-block > figure.lk-figure" in theme
+    assert "section .lk-gap-block > figure.lk-row" in theme
+    assert "section .lk-gap-block > figure.lk-arch" in theme
 
 
 def test_theme_bundles_its_latin_faces_instead_of_fetching_them():

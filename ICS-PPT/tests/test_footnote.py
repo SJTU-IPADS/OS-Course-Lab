@@ -110,7 +110,7 @@ class FootnoteMarkerTest(unittest.TestCase):
 
 
 class FootnotePageTest(unittest.TestCase):
-    """Footnotes number sequentially across a page and collect bottom-left."""
+    """Footnotes number sequentially across a page and collect in its band."""
 
     def _page(self, *blocks):
         from lecturekit.model import Page
@@ -132,9 +132,12 @@ class FootnotePageTest(unittest.TestCase):
         self.assertIn('<sup class="footnote-ref">2</sup> second', md)
         self.assertIn('<sup class="footnote-ref">3</sup> third', md)
 
-    def test_page_without_footnotes_has_no_aside(self):
-        page = self._page(Block(kind="slide", content="x"))
-        self.assertNotIn("footnotes", render_marp_page(page))
+    def test_page_without_footnotes_has_an_empty_band(self):
+        # The band is the page's last band on every content page; without
+        # notes it is empty, and holds no list.
+        md = render_marp_page(self._page(Block(kind="slide", content="x")))
+        self.assertIn('<div class="lk-footnote-band"></div>', md)
+        self.assertNotIn("footnotes", md)
 
     def test_footnote_body_renders_inline_markdown(self):
         page = self._page(Block(kind="slide", content="x", footnotes=("see **bold**",)))

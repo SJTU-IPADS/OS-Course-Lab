@@ -26,6 +26,10 @@ class ParseMarkdownTest(unittest.TestCase):
         self.assertEqual([b.kind for b in blocks], ["ordered", "ordered"])
         self.assertEqual(blocks[0].runs, [Run("first")])
 
+    def test_ordered_item_keeps_its_number(self):
+        blocks = parse_markdown("2. second\n3. third")
+        self.assertEqual([b.number for b in blocks], [2, 3])
+
     def test_headings_carry_level(self):
         blocks = parse_markdown("## Section\n### Sub")
         self.assertEqual(blocks[0].kind, "heading")

@@ -113,26 +113,33 @@ def test_a_flex_footnote_goes_to_the_last_leaf_that_remains(target):
 
 
 @pytest.mark.parametrize("side", ["right", "left"])
-def test_a_side_image_footnote_draws_its_marker_beside_the_picture(side):
+def test_a_side_image_footnote_draws_its_marker_on_the_picture(side):
     def body(p):
         p.title("T")
         p.side_image("image.png", side=side).footnote("image source")
         p.slide("text")
     md = render_marp_page(_page(body))
     assert "image source" in md
-    assert "footnote-ref--side" in md
-    # One superscript, inside the column that holds the picture.
-    column = md[md.index('<figure class="lk-side"'):md.index("</figure>")]
+    # One superscript, in the image column, on the picture's own corner: the
+    # mechanism of a captionless p.image.
+    column = md[md.index('<div class="lk-side"'):]
+    column = column[:column.index("</div>")]
     assert column.count("<sup") == 1
+    assert ('<span class="lk-figure-anchor"><img src="image.png" alt="">'
+            '<sup class="footnote-ref footnote-ref--corner">1</sup></span>') in column
 
 
-def test_a_side_image_footnote_and_a_text_footnote_are_numbered_in_order():
+@pytest.mark.parametrize("side", ["right", "left"])
+def test_a_side_image_footnote_and_a_text_footnote_are_numbered_in_order(side):
     def body(p):
         p.title("T")
-        p.side_image("image.png").footnote("picture")
+        p.side_image("image.png", side=side).footnote("picture")
         p.slide("text").footnote("claim")
     md = render_marp_page(_page(body))
-    assert md.index(">1</sup>") < md.index(">2</sup>")
+    # The image column is numbered first, on either side of the page.
+    assert '<sup class="footnote-ref footnote-ref--corner">1</sup>' in md
+    assert '**text**&#8288;<sup class="footnote-ref footnote-ref--hang">2</sup>' in md
+    assert md.index("</sup> picture") < md.index("</sup> claim")
 
 
 def test_the_handle_of_a_side_image_still_has_no_alignment():

@@ -61,8 +61,22 @@ class FlattenTest(unittest.TestCase):
         self.assertEqual(others, {
             "--font-base", "--font-mono", "--font-math", "--pptx-font-cjk", "--pptx-font-mono",
             "--mark-top", "--mark-bottom", "--mark-tex-raise", "--mark-tex-height",
-            "--layout-gutter",
+            "--layout-gutter", "--slide-padding-top", "--slide-padding-x",
+            "--slide-padding-bottom", "--footnote-band-min", "--side-gap",
         })
+
+    def test_page_geometry_is_read_in_pixels(self):
+        # PowerPoint lays its bands out from the numbers the deck's CSS uses.
+        self.assertEqual(tokens.px("--slide-padding-top"), 44.0)
+        self.assertEqual(tokens.px("--slide-padding-x"), 80.0)
+        self.assertEqual(tokens.px("--slide-padding-bottom"), 14.0)
+        self.assertEqual(tokens.px("--footnote-band-min"), 56.0)
+        self.assertEqual(tokens.px("--side-gap"), 40.0)
+
+    def test_px_refuses_a_token_that_is_not_a_pixel_length(self):
+        for name in ("--font-base", "--mark-top", "--chip-blue"):
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                tokens.px(name)
 
 
 class SubstituteTest(unittest.TestCase):

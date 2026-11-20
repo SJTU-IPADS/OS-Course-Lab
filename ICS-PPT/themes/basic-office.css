@@ -70,6 +70,18 @@
 
 :root {
   --layout-gutter: 24px;
+
+  /* A content page is three bands in the slide's padding box: the title, the
+     body and the footnote band. The band is at least --footnote-band-min tall
+     (three lines of footnotes) and grows with its notes; the body takes the
+     height between the title and the band. With a side_image the body is two
+     columns, --side-gap apart. PowerPoint lays the same boxes out from these
+     numbers (lecturekit/tokens.py, `tokens.px`). */
+  --slide-padding-top: 44px;
+  --slide-padding-x: 80px;
+  --slide-padding-bottom: 14px;
+  --footnote-band-min: 56px;
+  --side-gap: 40px;
   --color-bg: #ffffff;       /* lt1 */
   --color-fg: #000000;       /* dk1 / tx1 */
   --color-dk2: #0e2841;
@@ -184,7 +196,7 @@ section {
   /* 16:9, matching the .potx 13.333in x 7.5in at 96dpi */
   width: 1280px;
   height: 720px;
-  padding: 44px 80px 70px;
+  padding: var(--slide-padding-top) var(--slide-padding-x) var(--slide-padding-bottom);
   box-sizing: border-box;
 
   font-family: var(--font-base);
@@ -195,29 +207,60 @@ section {
 
   -webkit-font-smoothing: antialiased;
 
-  /* lay the slide body out top-to-bottom so an image can claim the leftover
-     vertical space instead of overflowing the fixed-height slide */
+  /* the slide's bands, top to bottom: the title, the body, the footnote band */
   display: flex;
   flex-direction: column;
 }
 
-/* By default every block keeps its natural size... */
 section > * {
   flex: 0 0 auto;
 }
-/* ...keep tables sized to their content, and center them on the slide */
-section > table {
-  align-self: center;
+
+/* --- A content page: the title, the body, the footnote band ---
+   The title and the footnote band keep their height; the body takes the rest.
+   The band is at least --footnote-band-min tall and grows with its notes, so
+   the body shrinks and nothing overlaps. The body is the main column, and with
+   a side_image the image column beside it, --side-gap away; the renderer puts
+   the image column first in the markup on the left, last on the right, and
+   sets its width (--lk-side-width) and each column's valign
+   (`justify-content`) inline. */
+.lk-body {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  gap: var(--side-gap);
 }
 
-/* Page-level adaptive spacing between DSL blocks (`p.gap("auto")`). */
-section.lk-gap-auto > .lk-gap-flow {
+.lk-main,
+.lk-side {
   display: flex;
-  flex: 1 1 auto;
   flex-direction: column;
+  min-width: 0;
   min-height: 0;
 }
 
+.lk-main {
+  flex: 1 1 0;
+}
+
+.lk-side {
+  flex: 0 0 var(--lk-side-width);
+}
+
+/* A column lays its blocks out top to bottom, so an image can claim the
+   leftover height instead of overflowing the slide. These rules once applied
+   to the section's own children; `:where()` keeps the specificity they had. */
+section :where(.lk-main, .lk-side) > * {
+  flex: 0 0 auto;
+}
+/* Tables keep their content's size, centred in the column. */
+section :where(.lk-main, .lk-side) > table {
+  align-self: center;
+}
+
+/* Page-level adaptive spacing between DSL blocks (`p.gap(...)`): the
+   renderer sets --lk-gap-min / --lk-gap-max on the main column, wraps each
+   top-level element in a block and puts a spacer between each two. */
 .lk-gap-block {
   flex: 0 0 auto;
   min-height: 0;
@@ -231,22 +274,6 @@ section.lk-gap-auto > .lk-gap-flow {
   flex: 1 0 var(--lk-gap-min);
   min-height: var(--lk-gap-min);
   max-height: var(--lk-gap-max);
-}
-
-/* Both columns of a side_image page in the vertical middle
-   (p.side_image(..., valign="middle")). The renderer puts one of these
-   spacers before the text column's first block and one after its last; they
-   split the leftover space, so the blocks sit in the middle of the band from
-   the title's rule to the slide's bottom padding. The last block's bottom
-   margin would otherwise count toward the group's height. */
-section.lk-valign-middle > .lk-valign-spacer,
-section.lk-valign-bottom > .lk-valign-spacer {
-  flex: 1 1 0;
-  min-height: 0;
-}
-
-section.lk-valign-middle > :not(h1):has(+ .lk-valign-spacer) {
-  margin-bottom: 0;
 }
 
 /* Layout boxes share one alignment rule for every leaf and container. The
@@ -320,25 +347,25 @@ section.lk-valign-middle > :not(h1):has(+ .lk-valign-spacer) {
   margin-bottom: 0;
 }
 
-section.lk-gap-auto .lk-gap-block > .lk-float {
+section .lk-gap-block > .lk-float {
   display: flow-root;
   margin: 0;
 }
 
-section.lk-gap-auto .lk-gap-block > figure.lk-figure,
-section.lk-gap-auto .lk-gap-block > figure.lk-row {
+section .lk-gap-block > figure.lk-figure,
+section .lk-gap-block > figure.lk-row {
   flex: 0 1 auto;
   min-height: 0;
   margin: 0;
   text-align: center;
 }
 
-section.lk-gap-auto .lk-gap-block > figure.lk-row,
-section.lk-gap-auto .lk-gap-block > figure.lk-arch {
+section .lk-gap-block > figure.lk-row,
+section .lk-gap-block > figure.lk-arch {
   position: relative;
 }
 
-section.lk-gap-auto .lk-gap-block > figure.lk-row > figcaption {
+section .lk-gap-block > figure.lk-row > figcaption {
   margin-top: 0.4em;
   text-align: center;
   font-style: italic;
@@ -346,7 +373,7 @@ section.lk-gap-auto .lk-gap-block > figure.lk-row > figcaption {
   color: var(--color-dk2);
 }
 
-section.lk-gap-auto .lk-gap-block > figure.lk-arch {
+section .lk-gap-block > figure.lk-arch {
   flex: 0 1 auto;
   min-height: 0;
   display: flex;
@@ -478,6 +505,9 @@ section.cover > .lk-cover:not(:has(.lk-cover-logos)) {
 
 section.lk-bridge {
   justify-content: center;
+  /* No footnote band: its room is kept, so the lines sit where they would
+     on a content page's body. */
+  padding-bottom: calc(var(--slide-padding-bottom) + var(--footnote-band-min));
 }
 
 section.lk-bridge > .lk-bridge-body {
@@ -1299,11 +1329,11 @@ img {
 }
 
 /* A small image floated beside a slide block's text (p.slide(...).image_right).
-   The section is a flex column, so a bare floated <img> would be a flex item
+   A column is a flex column, so a bare floated <img> would be a flex item
    and ignore `float`; this wrapper is a flow-root block-formatting context, so
    the image floats and the text wraps around it (and the float can't escape to
    overlap the next block). The float itself is set inline on the <img>. */
-section > .lk-float {
+section :where(.lk-main, .lk-side) > .lk-float {
   display: flow-root;
   margin: 0 0 0.4em;
 }
@@ -1313,7 +1343,7 @@ section > .lk-float {
    image. The selector outranks the flow-root of a `p.gap` page's block, and
    the live preview's reveal wrapper repeats it (reveal.css). */
 section .lk-float.lk-float-middle,
-section.lk-gap-auto .lk-gap-block > .lk-float.lk-float-middle {
+section .lk-gap-block > .lk-float.lk-float-middle {
   display: flex;
   align-items: center;
 }
@@ -1338,7 +1368,7 @@ section.lk-gap-auto .lk-gap-block > .lk-float.lk-float-middle {
 /* A figure frames an image (and optional caption). It shrinks into whatever
    vertical space is left after the title and text, so the image stays fully
    visible, and it centers the image and caption. */
-section > figure.lk-figure {
+section :where(.lk-main, .lk-side) > figure.lk-figure {
   flex: 0 1 auto;
   min-height: 0;
   margin: 0 0 0.6em;
@@ -1383,7 +1413,7 @@ section > figure.lk-figure {
    captions at differing heights line up to the tops. Each item's share is set
    inline (flex:1 1 0 unsized, flex:0 0 <width> sized); the .lk-figure classes
    on each item carry the existing caption/frame/sized rules. */
-section > figure.lk-row {
+section :where(.lk-main, .lk-side) > figure.lk-row {
   flex: 0 1 auto;
   min-height: 0;
   margin: 0 0 0.6em;
@@ -1408,7 +1438,7 @@ section > figure.lk-row {
 }
 
 /* The row's own caption sits below the whole track, like an image caption. */
-section > figure.lk-row > figcaption {
+section :where(.lk-main, .lk-side) > figure.lk-row > figcaption {
   margin-top: 0.4em;
   text-align: center;
   font-style: italic;
@@ -1432,163 +1462,52 @@ section > figure.lk-row > figcaption {
   min-width: 0;       /* a long code span wraps instead of widening its column */
 }
 
-/* --- An image column beside the text (p.side_image(...)) ---
-   Marp's split background moves the whole slide into the other column, the
-   title with it: on the left the title leaves the slide's left edge, and on
-   either side its rule stops at the column. This split is therefore drawn
-   here, on either side: the title keeps the slide's width, the image column
-   runs from under the title's rule to the slide's outer and bottom edges, and
-   the blocks keep their flex column beside it, as wide as Marp's split leaves
-   them. The renderer sets --lk-side-width (px) on the slide and names the
-   side in its class. */
-section.lk-side-left {
-  padding-left: calc(var(--lk-side-width) + 80px);
-}
-
-section.lk-side-right {
-  padding-right: calc(var(--lk-side-width) + 80px);
-}
-
-section.lk-side-left,
-section.lk-side-right {
-  anchor-scope: --lk-title;
-}
-
-section.lk-side-left > h1 {
-  margin-left: calc(-1 * var(--lk-side-width));
-}
-
-section.lk-side-right > h1 {
-  margin-right: calc(-1 * var(--lk-side-width));
-}
-
-section.lk-side-left > h1,
-section.lk-side-right > h1 {
-  anchor-name: --lk-title;
-}
-
-section.lk-side-left > .lk-side,
-section.lk-side-right > .lk-side {
-  position: absolute;
-  bottom: 0;
-  width: var(--lk-side-width);
-  /* Where a one-line title's rule ends (the slide's top padding plus the h1
-     box), for a browser without anchor positioning; then where this title's
-     rule ends, however many lines it takes. */
-  top: calc(44px + 26pt * (1.4 + 0.18) + 1.5px);
-  top: anchor(--lk-title bottom);
-  margin: 13pt 0 0;           /* the title's own bottom margin */
-  display: flex;              /* several images share the column side by side */
-}
-
-section.lk-side-left > .lk-side {
-  left: 0;
-}
-
-section.lk-side-right > .lk-side {
-  right: 0;
-}
-
-.lk-side > img {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: none;
-  height: 100%;
+/* --- The image column (p.side_image(...)) ---
+   The body's column beside the main column (`.lk-side`, at the top of this
+   file): its pictures top to bottom, then the slide text set under them
+   (under_side_image) at the column's width. A fitted picture (alt="contain")
+   is drawn whole, as wide as the column and as tall as its aspect ratio makes
+   it, never taller than the column. A covering one fills the height the column
+   leaves it, cropped. */
+.lk-side-img {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 0;
   margin: 0;
-  object-fit: cover;          /* Marp's default for a background: fill, cropped */
 }
 
-.lk-side > img.lk-side-fit {
-  object-fit: contain;        /* alt="contain": the whole image, centred */
+.lk-side-img:not(:last-child) {
+  margin-bottom: 0.5em;
 }
 
-/* A fitted image is a figure beside the text, where a covering one is a
-   backdrop that bleeds to the slide's edges. So the box it is fitted into
-   keeps the slide's margins: it ends at the side padding (80px) on the
-   outside and 40px short of the text column on the inside, and stops 40px
-   above the bottom edge. The picture then sits nearer the text than the
-   slide's edge, its outer side in line with the title. The text column is
-   the same either way.
-
-   Slide text under the image (p.slide(...).under_side_image()) makes the
-   column a stack: the images across its top, as wide as the column and as
-   tall as their aspect ratio makes them, and the text below. It keeps the
-   slide's margins, as a fitted image's box does. */
-section.lk-side-left > .lk-side:has(> img.lk-side-fit),
-section.lk-side-right > .lk-side:has(> img.lk-side-fit),
-section.lk-side-left > .lk-side.lk-side-stack,
-section.lk-side-right > .lk-side.lk-side-stack {
-  width: calc(var(--lk-side-width) - 40px);
-  bottom: 40px;
+/* A footnote marker's anchor (`.lk-figure-anchor`) is the picture's own box,
+   so it shrinks with the picture. */
+.lk-side-img > .lk-figure-anchor {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 0;
 }
 
-section.lk-side-left > .lk-side:has(> img.lk-side-fit),
-section.lk-side-left > .lk-side.lk-side-stack {
-  left: 80px;
-}
-
-section.lk-side-right > .lk-side:has(> img.lk-side-fit),
-section.lk-side-right > .lk-side.lk-side-stack {
-  right: 80px;
-}
-
-section.lk-side-left > .lk-side.lk-side-stack,
-section.lk-side-right > .lk-side.lk-side-stack {
-  display: block;
-}
-
-.lk-side-stack > .lk-side-images {
-  display: flex;              /* several images share the column side by side */
-  margin: 0 0 0.5em;
-}
-
-.lk-side-stack > .lk-side-images > img {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: none;
+.lk-side-img img {
+  flex: 0 1 auto;
+  min-height: 0;
+  width: 100%;
   height: auto;
+  max-width: none;
   margin: 0;
+  object-fit: contain;
 }
 
-/* The image column under valign="middle" ends at the slide's bottom padding,
-   where the text column's band ends, so the two columns centre on one line:
-   a fitted image is already centred in its box, a stack is centred as one
-   group (the picture with the text under it). */
-section.lk-valign-middle > .lk-side:has(> img.lk-side-fit) {
-  bottom: 70px;
+.lk-side-cover,
+.lk-side-cover > .lk-figure-anchor,
+.lk-side-cover img {
+  flex: 1 1 0;
 }
 
-section.lk-valign-middle > .lk-side.lk-side-stack {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  bottom: 70px;
-}
-
-section.lk-valign-middle > .lk-side.lk-side-stack > :last-child {
-  margin-bottom: 0;
-}
-
-section.lk-valign-bottom > .lk-side:has(> img.lk-side-fit),
-section.lk-valign-bottom > .lk-side.lk-side-stack {
-  bottom: 70px;
-}
-section.lk-valign-bottom > .lk-side > img.lk-side-fit {
-  object-position: center bottom;
-}
-section.lk-valign-bottom > .lk-side.lk-side-stack {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-/* Footnotes stay under the text, as they do inside Marp's split. */
-section.lk-side-left > .footnotes {
-  left: calc(var(--lk-side-width) + 80px);
-}
-
-section.lk-side-right > .footnotes {
-  right: calc(var(--lk-side-width) + 80px);
+.lk-side-cover img {
+  object-fit: cover;          /* Marp's default for a background: fill, cropped */
 }
 
 /* --- Pagination + footer --- */
@@ -1742,17 +1661,24 @@ img.sidenote-logo {
 
 /* --- Footnotes --- */
 
-/* Small grey notes pinned to the slide's bottom-left, each numbered to match the
-   superscript on the block it annotates. The page number sits bottom-right
-   (section::after), so the left edge is free; the right margin clears it. The
-   block grows upward as notes are added, above the bottom rule. */
+/* The footnote band: the last band of a content page, across the content
+   width at the bottom of the slide's padding box. It is at least
+   --footnote-band-min tall, which holds three lines of notes, and grows with
+   more, taking the height from the body; its notes sit at its bottom. The page
+   number is in the corner beside it (section::after). */
+.lk-footnote-band {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: var(--footnote-band-min);
+}
+
+/* Small grey notes under a hairline, each numbered to match the superscript on
+   the block it annotates. The hairline and the padding over the first note
+   are 4px together, which PowerPoint counts too. */
 .footnotes {
-  position: absolute;
-  left: 80px;
-  right: 80px;
-  bottom: 14px;
   margin: 0;
-  padding-top: 4px;
+  padding-top: 3px;
   border-top: 1px solid var(--color-lt2);
   /* Deliberately small: a source line is for the record, not for reading from
      the back row. */
@@ -1763,6 +1689,13 @@ img.sidenote-logo {
 
 .footnote-item {
   margin: 0;
+}
+
+/* The number in front of a note takes no height of its own, so each note
+   line is one line of the band's type and three of them fill
+   --footnote-band-min. */
+.footnote-item > .footnote-ref {
+  line-height: 0;
 }
 
 /* The in-text reference number on an annotated block. A block carrying several
@@ -1795,35 +1728,20 @@ img.sidenote-logo {
    takes no vertical space. A single image hugs the image itself via an
    inline-block anchor (the image is centered and usually narrower than the
    figure); a row / architecture diagram pins to the figure box. (A captioned
-   figure carries the marker on its caption and needs none of this.) */
+   figure carries the marker on its caption and needs none of this.) A side
+   image carries it the same way, on the picture's own corner. */
 .lk-figure-anchor {
   position: relative;
   display: inline-block;
 }
-section > figure.lk-row,
-section > figure.lk-arch {
+section :where(.lk-main, .lk-side) > figure.lk-row,
+section :where(.lk-main, .lk-side) > figure.lk-arch {
   position: relative;
 }
 .footnote-ref--corner {
   position: absolute;
   top: -0.3em;
   right: -0.7em;
-}
-
-/* A footnote marker on a side image. The column holds its pictures edge to edge,
-   so the marker sits inside it, at the corner nearest the text. */
-.lk-side > .footnote-ref--side,
-.lk-side-images > .footnote-ref--side {
-  position: absolute;
-  top: 0.3em;
-}
-section.lk-side-right > .lk-side > .footnote-ref--side,
-section.lk-side-right .lk-side-images > .footnote-ref--side {
-  left: 0.4em;
-}
-section.lk-side-left > .lk-side > .footnote-ref--side,
-section.lk-side-left .lk-side-images > .footnote-ref--side {
-  right: 0.4em;
 }
 
 /* A footnote marker on a code block or table: those end in a syntactic line (a
@@ -1912,7 +1830,7 @@ section.lk-side-left .lk-side-images > .footnote-ref--side {
 /* Stacked layer bands. A flex column so the bands and flow chevrons sit in
    document order; shrinks into the slide's leftover vertical space like a
    figure. The whole thing is structure-only — CSS does all the layout. */
-section > figure.lk-arch {
+section :where(.lk-main, .lk-side) > figure.lk-arch {
   flex: 0 1 auto;
   min-height: 0;
   display: flex;

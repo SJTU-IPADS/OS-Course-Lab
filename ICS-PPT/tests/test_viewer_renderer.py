@@ -274,9 +274,10 @@ class StaticViewerRendererTest(unittest.TestCase):
         lecture.page("gap", body=body)
         md = render_marp_page(lecture.build().children[0])
 
-        self.assertIn("<!-- _class: lk-gap-auto -->", md)
+        # The spacers live in the main column, which carries the gap's bounds.
+        self.assertNotIn("_class", md)
         self.assertIn(
-            '<div class="lk-gap-flow" style="--lk-gap-min: 6px; --lk-gap-max: 30px;">',
+            '<div class="lk-main" style="--lk-gap-min: 6px; --lk-gap-max: 30px;">',
             md,
         )
         self.assertEqual(md.count('class="lk-gap-block"'), 2)
@@ -297,7 +298,7 @@ class StaticViewerRendererTest(unittest.TestCase):
         md = render_marp_page(lecture.build().children[0])
 
         self.assertIn(
-            '<div class="lk-gap-flow" style="--lk-gap-min: 8px; --lk-gap-max: none;">',
+            '<div class="lk-main" style="--lk-gap-min: 8px; --lk-gap-max: none;">',
             md,
         )
 
@@ -662,8 +663,11 @@ def test_render_marp_page_wraps_blocks_when_reveal():
     assert 'data-reveal="2"' not in md
     # the slide's annotation bubble reveals with its block (step 0)
     assert 'data-reveal="0" class="annotation' in md
-    # side_image drawn as the page's column, never wrapped
-    assert '<figure class="lk-side"><img src="assets/x.svg" alt=""></figure>' in md
+    # side_image drawn in the page's image column, never wrapped
+    column = md[md.index('<div class="lk-side"'):]
+    assert column.startswith('<div class="lk-side" style="--lk-side-width: 560px;">\n\n'
+                             '<figure class="lk-side-img lk-side-cover">'
+                             '<img src="assets/x.svg" alt=""></figure>\n\n</div>')
     assert md.count('class="reveal-block"') == 2
 
 
@@ -678,19 +682,21 @@ def _left_side_page():
     return lecture.build().children[0]
 
 
-def test_a_left_side_image_keeps_the_title_across_the_slide():
+def test_a_left_side_image_puts_its_column_first_in_the_body():
     md = render_marp_page(_left_side_page(), reveal=True)
-    # no Marp split: it would move the title into the right column
-    assert "![bg" not in md
-    assert "<!-- _class: lk-side-left -->" in md
-    figure = '<figure class="lk-side"><img src="assets/x.svg" alt="" class="lk-side-fit"></figure>'
-    # the column comes right after the title and is not a reveal step
-    assert md.index("# Title") < md.index(figure) < md.index("beside the picture")
-    assert "section { --lk-side-width: 512px; }" in md
+    # no Marp split, no page class: the title keeps the slide's width and the
+    # body holds both columns, the image column on the left
+    assert "![bg" not in md and "_class" not in md
+    figure = '<figure class="lk-side-img lk-side-fit"><img src="assets/x.svg" alt=""></figure>'
+    assert (md.index("# Title") < md.index('<div class="lk-body">')
+            < md.index('<div class="lk-side" style="--lk-side-width: 448px;">')
+            < md.index(figure) < md.index('<div class="lk-main">')
+            < md.index("beside the picture"))
+    # the column is not a reveal step
     assert md.count('class="reveal-block"') == 1
 
 
-def test_a_right_side_image_keeps_the_title_across_the_slide():
+def test_a_right_side_image_puts_its_column_last_in_the_body():
     lecture = Lecture(id="lec", title="T")
 
     def body(p):
@@ -699,14 +705,22 @@ def test_a_right_side_image_keeps_the_title_across_the_slide():
         p.slide("beside the picture")
     lecture.page("pg", body=body)
     md = render_marp_page(lecture.build().children[0], reveal=True)
-    # no Marp split: it would move the title into the left column and cut
-    # its rule short at the image column
-    assert "![bg" not in md
-    assert "<!-- _class: lk-side-right -->" in md
-    figure = '<figure class="lk-side"><img src="assets/x.svg" alt="" class="lk-side-fit"></figure>'
-    assert md.index("# Title") < md.index(figure) < md.index("beside the picture")
-    assert "section { --lk-side-width: 512px; }" in md
+    assert "![bg" not in md and "_class" not in md
+    figure = '<figure class="lk-side-img lk-side-fit"><img src="assets/x.svg" alt=""></figure>'
+    assert (md.index("# Title") < md.index('<div class="lk-main">')
+            < md.index("beside the picture")
+            < md.index('<div class="lk-side" style="--lk-side-width: 448px;">')
+            < md.index(figure))
     assert md.count('class="reveal-block"') == 1
+
+
+def test_the_side_column_is_a_share_of_the_body_on_any_ratio():
+    # The body is the slide less its two 80px side paddings: 1120px on 16:9,
+    # 800px on 4:3. The column is 40% of it, model.side_column_px.
+    page = _left_side_page()
+    assert "--lk-side-width: 448px;" in render_marp_page(page, (1280, 720))
+    assert "--lk-side-width: 320px;" in render_marp_page(page, (960, 720))
+    assert model.side_column_px("40%", 800) == 320
 
 
 def test_reveal_wrapper_pads_with_blank_lines():

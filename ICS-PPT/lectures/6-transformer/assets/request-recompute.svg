@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 304" width="1040" height="304">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6c5a9c"/></marker></defs>
+<rect x="228.0" y="12.0" width="255.0" height="246.0" rx="8" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="355.5" y="71.3" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">Claude Code 客户端</text>
+<g transform="translate(240.0 90.0)">
+<rect x="0.0" y="0.0" width="231.0" height="124.0" rx="4" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<rect x="0.0" y="0.0" width="4.0" height="124.0" rx="0" fill="#9fb5c3" stroke="none" stroke-width="0"/>
+<text x="14.0" y="23.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#5a6b78" text-anchor="start">// system prompt</text>
+<text x="14.0" y="45.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start">systemPrompt =</text>
+<text x="14.0" y="67.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">  "You are Claude Code,</text>
+<text x="14.0" y="89.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">   Anthropic's official</text>
+<text x="14.0" y="111.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#0e2841" text-anchor="start" xml:space="preserve">   CLI for Claude. …"</text>
+</g>
+<circle cx="40.0" cy="51.0" r="8.0" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<path d="M 24.0 75.0 C 24.0 58.0 56.0 58.0 56.0 75.0 Z" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<text x="40.0" y="96.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">用户 A</text>
+<path d="M 80.0 43.0 H 190.0 Q 196.0 43.0 196.0 49.0 V 71.0 Q 196.0 77.0 190.0 77.0 H 80.0 Q 74.0 77.0 74.0 71.0 V 65.0 L 66.0 60.0 L 74.0 55.0 V 49.0 Q 74.0 43.0 80.0 43.0 Z" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="135.0" y="66.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">修复登录报错</text>
+<line x1="198.0" y1="60.0" x2="226.0" y2="60.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="511.0" y="31.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">请求 1</text>
+<line x1="485.0" y1="60.0" x2="509.0" y2="60.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="511.0" y="40.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="631.0" y="66.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="763.0" y="40.0" width="132.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="829.0" y="66.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">修复登录报错</text>
+<circle cx="40.0" cy="131.0" r="8.0" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<path d="M 24.0 155.0 C 24.0 138.0 56.0 138.0 56.0 155.0 Z" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<text x="40.0" y="176.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">用户 B</text>
+<path d="M 80.0 123.0 H 190.0 Q 196.0 123.0 196.0 129.0 V 151.0 Q 196.0 157.0 190.0 157.0 H 80.0 Q 74.0 157.0 74.0 151.0 V 145.0 L 66.0 140.0 L 74.0 135.0 V 129.0 Q 74.0 123.0 80.0 123.0 Z" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="135.0" y="146.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">解释这个函数</text>
+<line x1="198.0" y1="140.0" x2="226.0" y2="140.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="511.0" y="111.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">请求 2</text>
+<line x1="485.0" y1="140.0" x2="509.0" y2="140.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="511.0" y="120.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<line x1="512.0" y1="130.0" x2="521.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="136.0" x2="527.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="142.0" x2="533.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="148.0" x2="539.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="154.0" x2="545.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="513.0" y1="159.0" x2="551.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="519.0" y1="159.0" x2="557.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="525.0" y1="159.0" x2="563.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="531.0" y1="159.0" x2="569.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="537.0" y1="159.0" x2="575.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="543.0" y1="159.0" x2="581.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="549.0" y1="159.0" x2="587.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="555.0" y1="159.0" x2="593.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="561.0" y1="159.0" x2="599.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="567.0" y1="159.0" x2="605.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="573.0" y1="159.0" x2="611.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="579.0" y1="159.0" x2="617.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="585.0" y1="159.0" x2="623.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="591.0" y1="159.0" x2="629.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="597.0" y1="159.0" x2="635.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="603.0" y1="159.0" x2="641.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="609.0" y1="159.0" x2="647.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="615.0" y1="159.0" x2="653.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="621.0" y1="159.0" x2="659.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="627.0" y1="159.0" x2="665.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="633.0" y1="159.0" x2="671.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="639.0" y1="159.0" x2="677.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="645.0" y1="159.0" x2="683.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="651.0" y1="159.0" x2="689.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="657.0" y1="159.0" x2="695.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="663.0" y1="159.0" x2="701.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="669.0" y1="159.0" x2="707.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="675.0" y1="159.0" x2="713.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="681.0" y1="159.0" x2="719.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="687.0" y1="159.0" x2="725.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="693.0" y1="159.0" x2="731.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="699.0" y1="159.0" x2="737.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="705.0" y1="159.0" x2="743.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="711.0" y1="159.0" x2="749.0" y2="121.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="717.0" y1="159.0" x2="750.0" y2="126.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="723.0" y1="159.0" x2="750.0" y2="132.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="729.0" y1="159.0" x2="750.0" y2="138.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="735.0" y1="159.0" x2="750.0" y2="144.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="741.0" y1="159.0" x2="750.0" y2="150.0" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="579.0" y="127.0" width="104.0" height="26.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<text x="631.0" y="146.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="763.0" y="120.0" width="132.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="829.0" y="146.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">解释这个函数</text>
+<circle cx="40.0" cy="211.0" r="8.0" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<path d="M 24.0 235.0 C 24.0 218.0 56.0 218.0 56.0 235.0 Z" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<text x="40.0" y="256.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">用户 C</text>
+<path d="M 80.0 203.0 H 190.0 Q 196.0 203.0 196.0 209.0 V 231.0 Q 196.0 237.0 190.0 237.0 H 80.0 Q 74.0 237.0 74.0 231.0 V 225.0 L 66.0 220.0 L 74.0 215.0 V 209.0 Q 74.0 203.0 80.0 203.0 Z" fill="#ffffff" stroke="#9fb5c3" stroke-width="1.4"/>
+<text x="135.0" y="226.1" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#0e2841" text-anchor="middle">补充单元测试</text>
+<line x1="198.0" y1="220.0" x2="226.0" y2="220.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="511.0" y="191.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#0e2841" text-anchor="start">请求 3</text>
+<line x1="485.0" y1="220.0" x2="509.0" y2="220.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="511.0" y="200.0" width="240.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<line x1="512.0" y1="210.0" x2="521.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="216.0" x2="527.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="222.0" x2="533.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="228.0" x2="539.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="234.0" x2="545.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="513.0" y1="239.0" x2="551.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="519.0" y1="239.0" x2="557.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="525.0" y1="239.0" x2="563.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="531.0" y1="239.0" x2="569.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="537.0" y1="239.0" x2="575.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="543.0" y1="239.0" x2="581.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="549.0" y1="239.0" x2="587.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="555.0" y1="239.0" x2="593.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="561.0" y1="239.0" x2="599.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="567.0" y1="239.0" x2="605.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="573.0" y1="239.0" x2="611.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="579.0" y1="239.0" x2="617.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="585.0" y1="239.0" x2="623.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="591.0" y1="239.0" x2="629.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="597.0" y1="239.0" x2="635.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="603.0" y1="239.0" x2="641.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="609.0" y1="239.0" x2="647.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="615.0" y1="239.0" x2="653.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="621.0" y1="239.0" x2="659.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="627.0" y1="239.0" x2="665.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="633.0" y1="239.0" x2="671.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="639.0" y1="239.0" x2="677.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="645.0" y1="239.0" x2="683.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="651.0" y1="239.0" x2="689.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="657.0" y1="239.0" x2="695.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="663.0" y1="239.0" x2="701.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="669.0" y1="239.0" x2="707.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="675.0" y1="239.0" x2="713.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="681.0" y1="239.0" x2="719.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="687.0" y1="239.0" x2="725.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="693.0" y1="239.0" x2="731.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="699.0" y1="239.0" x2="737.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="705.0" y1="239.0" x2="743.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="711.0" y1="239.0" x2="749.0" y2="201.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="717.0" y1="239.0" x2="750.0" y2="206.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="723.0" y1="239.0" x2="750.0" y2="212.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="729.0" y1="239.0" x2="750.0" y2="218.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="735.0" y1="239.0" x2="750.0" y2="224.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="741.0" y1="239.0" x2="750.0" y2="230.0" stroke="#0e2841" stroke-width="1.2"/>
+<rect x="579.0" y="207.0" width="104.0" height="26.0" rx="3" fill="#eef2f4" stroke="none" stroke-width="0"/>
+<text x="631.0" y="226.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">系统提示词</text>
+<rect x="763.0" y="200.0" width="132.0" height="40.0" rx="4" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.6"/>
+<text x="829.0" y="226.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="normal" fill="#0e2841" text-anchor="middle">补充单元测试</text>
+<line x1="897.0" y1="60.0" x2="921.0" y2="60.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="897.0" y1="140.0" x2="921.0" y2="140.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="897.0" y1="220.0" x2="921.0" y2="220.0" stroke="#0e2841" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="923.0" y="12.0" width="104.0" height="246.0" rx="8" fill="#ffffff" stroke="#5a6b78" stroke-width="1.6"/>
+<rect x="952.0" y="83.0" width="46.0" height="12.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<line x1="958.0" y1="89.0" x2="970.0" y2="89.0" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="991.0" cy="89.0" r="2.0" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<rect x="952.0" y="99.0" width="46.0" height="12.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<line x1="958.0" y1="105.0" x2="970.0" y2="105.0" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="991.0" cy="105.0" r="2.0" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<rect x="952.0" y="115.0" width="46.0" height="12.0" rx="2" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.2"/>
+<line x1="958.0" y1="121.0" x2="970.0" y2="121.0" stroke="#5a6b78" stroke-width="1.2"/>
+<circle cx="991.0" cy="121.0" r="2.0" fill="#5a6b78" stroke="#5a6b78" stroke-width="1"/>
+<text x="975.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">Anthropic</text>
+<text x="975.0" y="184.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#0e2841" text-anchor="middle">服务器</text>
+<rect x="511.0" y="274.0" width="34.0" height="22.0" rx="3" fill="#eef2f4" stroke="#5a6b78" stroke-width="1.4"/>
+<line x1="512.0" y1="284.0" x2="521.0" y2="275.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="512.0" y1="290.0" x2="527.0" y2="275.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="513.0" y1="295.0" x2="533.0" y2="275.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="519.0" y1="295.0" x2="539.0" y2="275.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="525.0" y1="295.0" x2="544.0" y2="276.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="531.0" y1="295.0" x2="544.0" y2="282.0" stroke="#0e2841" stroke-width="1.2"/>
+<line x1="537.0" y1="295.0" x2="544.0" y2="288.0" stroke="#0e2841" stroke-width="1.2"/>
+<text x="555.0" y="290.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="normal" fill="#5a6b78" text-anchor="start">前面的请求已经计算过</text>
+</svg>
