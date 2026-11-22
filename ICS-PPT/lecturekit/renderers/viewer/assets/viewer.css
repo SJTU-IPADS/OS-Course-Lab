@@ -1,11 +1,5 @@
-:root {
-  color-scheme: light;
-  --fg: #111315;
-  --bg: #ffffff;
-  --muted: #6b6f76;
-  --accent: #2f6feb;
-  --border: #e3e3e0;
-}
+/* The colours are the colour scheme's tokens, declared in the page's <head>
+   (see lecturekit/renderers/viewer/colorscheme.py). */
 
 * { box-sizing: border-box; }
 
@@ -13,18 +7,17 @@ body {
   margin: 0;
   font-family: ui-monospace, "Sarasa Mono SC", "Menlo", "Consolas",
     "PingFang SC", "Microsoft YaHei", monospace;
-  color: var(--fg);
-  background: var(--bg);
+  color: var(--shell-fg);
   line-height: 1.5;
 }
 
 #app { min-height: 100vh; }
 
-/* Slide view: full-viewport Marp deck in an iframe, on a dark stage. */
+/* Slide view: full-viewport Marp deck in an iframe, on a stage. */
 .slide-stage {
   position: fixed;
   inset: 0;
-  background: #1b1d1f;
+  background: var(--stage-bg);
 }
 
 .slide-frame {
@@ -33,6 +26,12 @@ body {
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+/* Until the deck is in (viewer.js sets the mark), a scheme may show the stage
+   instead of the frame. */
+.slide-frame:not([data-loaded]) {
+  opacity: var(--stage-loading);
 }
 
 /* Floating return-to-outline control, outside the iframe. */
@@ -44,11 +43,11 @@ body {
   font: inherit;
   padding: 0.35rem 0.8rem;
   border: none;
-  background: rgba(20, 22, 24, 0.6);
-  color: #f2f2f2;
+  background: var(--stage-button-bg);
+  color: var(--stage-button-fg);
   border-radius: 999px;
   cursor: pointer;
-  opacity: 0.35;
+  opacity: var(--stage-button-opacity);
   transition: opacity 0.2s ease;
 }
 .slide-back:hover,

@@ -126,8 +126,17 @@ def test_the_theme_has_no_page_level_overlay_but_callouts_and_markers():
 
 # --- the geometry, in a browser ---
 
+# A dump under virtual time need not produce an animation frame, and whether it
+# does is a race with the budget. Take the frames away, so that a measurement
+# which waits for one fails on every run.
+_NO_FRAMES = "<script>requestAnimationFrame = function () {};</script>"
+
+# Reading a box lays the page out, so the measurement needs no frame. The load
+# has the pictures in, and that first layout is what asks for the fonts.
 _MEASURE = """<script>
-document.fonts.ready.then(function () { requestAnimationFrame(function () {
+addEventListener('load', function () {
+  document.body.getBoundingClientRect();
+  document.fonts.ready.then(function () {
   var out = {};
   document.querySelectorAll('section').forEach(function (s) {
     var id = s.getAttribute('id');
@@ -199,8 +208,8 @@ def geometry():
             cwd=work, check=True, stdin=subprocess.DEVNULL, capture_output=True,
         )
         html = (work / "slides.html").read_text(encoding="utf-8")
-        (work / "slides.html").write_text(html.replace("</body>", _MEASURE + "</body>"),
-                                          encoding="utf-8")
+        (work / "slides.html").write_text(
+            html.replace("</body>", _NO_FRAMES + _MEASURE + "</body>"), encoding="utf-8")
         dom = subprocess.run(
             print_command() + [f"--user-data-dir={work / 'profile'}",
                                "--virtual-time-budget=5000", "--dump-dom",

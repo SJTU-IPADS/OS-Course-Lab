@@ -39,6 +39,11 @@ def test_build_one_page_lecture_projects_single_page():
     assert one.children[0].title == "Only Me"
 
 
+def test_the_one_page_lecture_keeps_the_language():
+    lec = dsl.Lecture(id="live", title="A Story", lang="en")
+    assert notebook.build_one_page_lecture(lec, _spec()).lang == "en"
+
+
 def test_cache_key_changes_when_page_gap_changes(tmp_path):
     lec = dsl.Lecture(id="live", title="A Story")
     no_gap = notebook.build_one_page_lecture(lec, _spec())

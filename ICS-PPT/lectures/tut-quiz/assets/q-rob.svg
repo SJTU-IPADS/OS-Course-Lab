@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 330" width="1150" height="330">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#156082"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e97132"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0e2841"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2e7d4f"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5a6b78"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9fb5c3"/></marker></defs>
+<text x="614.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">ROB：条目按程序顺序排列</text>
+<rect x="290.0" y="34.0" width="162.0" height="30.0" rx="0" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="371.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">条目 1（最早）</text>
+<rect x="290.0" y="64.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="304.7" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">movl (%rdi), %eax</text>
+<rect x="290.0" y="98.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="312.2" y="121.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">目的寄存器 </text>
+<text x="389.9" y="121.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">%eax</text>
+<rect x="290.0" y="132.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="345.8" y="155.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">结果 </text>
+<text x="381.5" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">—</text>
+<rect x="290.0" y="166.0" width="162.0" height="34.0" rx="0" fill="#fce9df" stroke="#0e2841" stroke-width="1.4"/>
+<text x="371.0" y="189.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">正在执行</text>
+<rect x="452.0" y="34.0" width="162.0" height="30.0" rx="0" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="533.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">条目 2</text>
+<rect x="452.0" y="64.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="482.3" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">addl $1, %ebx</text>
+<rect x="452.0" y="98.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="474.2" y="121.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">目的寄存器 </text>
+<text x="551.9" y="121.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">%ebx</text>
+<rect x="452.0" y="132.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="507.8" y="155.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">结果 </text>
+<text x="543.5" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">8</text>
+<rect x="452.0" y="166.0" width="162.0" height="34.0" rx="0" fill="#e5f3ea" stroke="#0e2841" stroke-width="1.4"/>
+<text x="533.0" y="189.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">已完成</text>
+<rect x="614.0" y="34.0" width="162.0" height="30.0" rx="0" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="695.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">条目 3</text>
+<rect x="614.0" y="64.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="636.5" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">addl %eax, %ecx</text>
+<rect x="614.0" y="98.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="636.2" y="121.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">目的寄存器 </text>
+<text x="713.9" y="121.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">%ecx</text>
+<rect x="614.0" y="132.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="669.8" y="155.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">结果 </text>
+<text x="705.5" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">—</text>
+<rect x="614.0" y="166.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="695.0" y="189.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">未执行</text>
+<rect x="776.0" y="34.0" width="162.0" height="30.0" rx="0" fill="#eef2f4" stroke="#0e2841" stroke-width="1.4"/>
+<text x="857.0" y="55.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#0e2841" text-anchor="middle">条目 4（最晚）</text>
+<rect x="776.0" y="64.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="806.3" y="87.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#0e2841" text-anchor="start">subl $2, %edx</text>
+<rect x="776.0" y="98.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="798.2" y="121.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">目的寄存器 </text>
+<text x="875.9" y="121.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">%edx</text>
+<rect x="776.0" y="132.0" width="162.0" height="34.0" rx="0" fill="#ffffff" stroke="#0e2841" stroke-width="1.4"/>
+<text x="831.8" y="155.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#5a6b78" text-anchor="start">结果 </text>
+<text x="867.5" y="155.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#0e2841" text-anchor="start">5</text>
+<rect x="776.0" y="166.0" width="162.0" height="34.0" rx="0" fill="#e5f3ea" stroke="#0e2841" stroke-width="1.4"/>
+<text x="857.0" y="189.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="middle">已完成</text>
+<rect x="290.0" y="34.0" width="648.0" height="166.0" rx="0" fill="none" stroke="#0e2841" stroke-width="2.4"/>
+<rect x="40.0" y="104.0" width="140.0" height="56.0" rx="6" fill="#eef2f4" stroke="#0e2841" stroke-width="1.6"/>
+<text x="110.0" y="137.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">寄存器堆</text>
+<line x1="286.0" y1="132.0" x2="184.0" y2="132.0" stroke="#2e7d4f" stroke-width="2" marker-end="url(#ah-2e7d4f)"/>
+<text x="237.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#2e7d4f" text-anchor="middle">提交</text>
+<rect x="1008.0" y="104.0" width="120.0" height="56.0" rx="6" fill="#eaf3f7" stroke="#156082" stroke-width="1.6"/>
+<text x="1068.0" y="137.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">译码</text>
+<line x1="1006.0" y1="132.0" x2="942.0" y2="132.0" stroke="#156082" stroke-width="2" marker-end="url(#ah-156082)"/>
+<text x="974.0" y="122.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#156082" text-anchor="middle">进入</text>
+<rect x="290.0" y="252.0" width="648.0" height="44.0" rx="6" fill="#fce9df" stroke="#e97132" stroke-width="1.6"/>
+<text x="614.0" y="279.8" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#0e2841" text-anchor="middle">执行部件：数量足够，多条指令可以同时执行</text>
+<line x1="335.0" y1="204.0" x2="335.0" y2="250.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="347.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">开始执行</text>
+<line x1="497.0" y1="250.0" x2="497.0" y2="204.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="509.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">写入结果</text>
+<text x="695.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#5a6b78" text-anchor="middle">操作数未就绪</text>
+<line x1="821.0" y1="250.0" x2="821.0" y2="204.0" stroke="#e97132" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="833.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#e97132" text-anchor="start">写入结果</text>
+<text x="40.0" y="318.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#0e2841" text-anchor="start">条目 1 尚未完成：条目 2、4 已完成，也不能提交</text>
+</svg>

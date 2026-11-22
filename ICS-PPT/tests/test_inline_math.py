@@ -1,17 +1,20 @@
 """A `$…$` is a formula in every target exactly when it is one in the deck.
 
-The deck's markdown engine (Marp's math rule) decides; `lecturekit.inlinemath`
-states that rule once and every renderer's inline grammar uses it. The table
-below is checked against Marp itself, then against each target.
+The deck's markdown engine (Marp's math rule) decides. PPTX and the transcript
+are read by that engine; `lecturekit.inlinemath` states the rule once for the
+two grammars that are not (the book's, a chip's). The table below is checked
+against Marp itself, then against each target.
 """
 
 import json
+import re
 import shutil
 import subprocess
 
 import pytest
 
 from lecturekit.renderers.latex import text as latex_text
+from lecturekit.markup import Reader, document
 from lecturekit.renderers.pptx import text as pptx_text
 from lecturekit.renderers.transcript import text as transcript_text
 from lecturekit.renderers.viewer import blocks as viewer_blocks
@@ -38,15 +41,27 @@ def _formulas(regex, text, group="math"):
     return [m.group(group) for m in regex.finditer(text) if m.group(group) is not None]
 
 
-@pytest.mark.parametrize("text", CASES)
-def test_pptx_reads_math_as_the_deck_does(text):
-    runs = pptx_text.parse_inline(text)
-    assert [run.math for run in runs if run.math] == CASES[text]
+@pytest.fixture(scope="module")
+def line():
+    """A line of slide text, read."""
+    with Reader() as read:
+        yield lambda text: document.phrasing(read.slide(text))
+
+
+def _sheet(inlines):
+    return transcript_text.HtmlWriter(lambda src: None).inline(inlines)
 
 
 @pytest.mark.parametrize("text", CASES)
-def test_the_transcript_reads_math_as_the_deck_does(text):
-    assert _formulas(transcript_text._INLINE_RE, text) == CASES[text]
+def test_pptx_reads_math_as_the_deck_does(text, line):
+    runs = pptx_text.runs(line(text))
+    assert [run.text for run in runs if run.math] == CASES[text]
+
+
+@pytest.mark.parametrize("text", CASES)
+def test_the_transcript_reads_math_as_the_deck_does(text, line):
+    written = re.findall(r"<mi>(.*?)</mi>", _sheet(line(text)))
+    assert written == CASES[text]
 
 
 @pytest.mark.parametrize("text", CASES)
@@ -59,11 +74,11 @@ def test_a_highlight_chip_reads_math_as_the_deck_does(text):
     assert _formulas(viewer_blocks.CHIP_MATH_RE, text) == CASES[text]
 
 
-def test_dollar_amounts_stay_text():
-    line = "两种情况输入的费用约为 $55 和 $4"
-    assert "".join(run.text for run in pptx_text.parse_inline(line)) == line
-    assert latex_text.inline(line) == r"两种情况输入的费用约为 \$55 和 \$4"
-    assert transcript_text.inline(line) == line
+def test_dollar_amounts_stay_text(line):
+    text = "两种情况输入的费用约为 $55 和 $4"
+    assert pptx_text.plain(pptx_text.runs(line(text))) == text
+    assert latex_text.inline(text) == r"两种情况输入的费用约为 \$55 和 \$4"
+    assert _sheet(line(text)) == text
 
 
 _MARP_COUNT = """

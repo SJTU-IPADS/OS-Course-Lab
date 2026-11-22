@@ -70,6 +70,7 @@
     var said = event.data;
     if (!frame || event.source !== frame.contentWindow) { return; }
     if (!said || said.lecturekit !== "slide") { return; }
+    markLoaded(frame);
     if (pageOrder[said.number - 1]) { state.currentPageId = pageOrder[said.number - 1]; }
   });
 
@@ -237,6 +238,13 @@
     return row;
   }
 
+  // The deck has started (position.js speaks, well before the last image is
+  // in) or the frame has loaded whatever it is, an error page too. A scheme can
+  // keep the frame unseen until then; see --stage-loading in viewer.css.
+  function markLoaded(frame) {
+    frame.setAttribute("data-loaded", "");
+  }
+
   function renderSlide() {
     var idx = pageOrder.indexOf(state.currentPageId);
 
@@ -249,7 +257,10 @@
     frame.src = "slides.html#" + (idx + 1);
     // Keys go to the focused document. Without this the shell keeps focus after
     // a reload or an outline click, and the deck never sees the arrow keys.
-    frame.addEventListener("load", function () { frame.contentWindow.focus(); });
+    frame.addEventListener("load", function () {
+      markLoaded(frame);
+      frame.contentWindow.focus();
+    });
     stage.appendChild(frame);
 
     var back = document.createElement("button");

@@ -1,21 +1,19 @@
-"""LaTeX math → OMML, the equation markup PowerPoint typesets natively.
+"""MathML into OMML, the equation markup PowerPoint edits natively.
 
-The viewer hands `$…$` to MathJax and the book hands it to TeX; PowerPoint has
-its own equation model (OMML), so the pptx renderer translates into that rather
-than shipping a picture. The result is a real PowerPoint equation: it typesets
-with proper spacing and stacked limits, and stays editable in the equation
-editor.
-
-This covers the vocabulary lecture math actually uses — sub/superscripts,
-fractions, roots, big operators with limits, sized delimiters, upright text,
-and the usual symbols. What it does not recognize (matrices, alignment,
-accents) is emitted as literal text: a formula that reads slightly wrong on
-one slide beats an export that fails.
+One function for each MathML element, found by the element's tag (``DRAW``).
+What stretches, what is an accent and what carries limits is read from the
+MathML (``stretchy``, ``accent``, ``largeop``, the atom's class), which
+MathJax has already worked out; no formula language is known here. The
+fallback text and the height estimate come from the same tree.
 """
 
 from __future__ import annotations
 
 import re
+import unicodedata
+from collections.abc import Callable
+from contextlib import contextmanager
+from xml.etree.ElementTree import Element
 
 from lxml import etree
 
@@ -23,483 +21,590 @@ M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 A = "http://schemas.openxmlformats.org/drawingml/2006/main"
 A14 = "http://schemas.microsoft.com/office/drawing/2010/main"
 MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+XML_SPACE = "{http://www.w3.org/XML/1998/namespace}space"
 
-# Commands that set the following group upright (a function name or a word),
-# rather than the italic that math runs default to.
-_UPRIGHT = ("\\mathrm", "\\operatorname", "\\text", "\\textrm", "\\mathsf",
-            "\\mathbf", "\\mathtt")
-# Blackboard bold: \mathbb{R} -> ℝ, via OMML's own double-struck script.
-_SCRIPTS = {"\\mathbb": "double-struck", "\\mathcal": "script",
-            "\\mathfrak": "fraktur"}
-
-# Big operators: the glyph, and whether limits stack above/below (as in a sum)
-# or ride the corner (as in an integral).
-_NARY = {
-    "\\sum": ("∑", "undOvr"), "\\prod": ("∏", "undOvr"),
-    "\\coprod": ("∐", "undOvr"), "\\bigcup": ("⋃", "undOvr"),
-    "\\bigcap": ("⋂", "undOvr"), "\\bigoplus": ("⨁", "undOvr"),
-    "\\int": ("∫", "subSup"), "\\iint": ("∬", "subSup"),
-    "\\oint": ("∮", "subSup"),
+# An empty required slot shows as a dotted box in PowerPoint; this fills one unseen.
+EMPTY = "\u200b"
+INVISIBLE = frozenset("\u2061\u2062\u2063\u2064")
+# The delimiters that may divide the inside of a pair of fences.
+SEPARATORS = frozenset("|∣‖∥/\\")
+LINES = frozenset("―‾¯ˉ_\u0332")
+# An accent as MathML writes it (a spacing character), as OMML does (combining).
+ACCENTS = {
+    "^": "\u0302", "ˆ": "\u0302", "~": "\u0303", "˜": "\u0303",
+    "¯": "\u0304", "ˉ": "\u0304", "˘": "\u0306", "˙": "\u0307",
+    ".": "\u0307", "¨": "\u0308", "˚": "\u030a", "ˇ": "\u030c",
+    "`": "\u0300", "ˋ": "\u0300", "´": "\u0301", "ˊ": "\u0301",
+    "→": "\u20d7", "←": "\u20d6", "↔": "\u20e1",
 }
+SCRIPTS = {"double-struck": "double-struck", "script": "script", "fraktur": "fraktur",
+           "sans": "sans-serif", "monospace": "monospace"}
+# The colour names CSS and DrawingML's presets share.
+COLOR_NAMES = frozenset(
+    "black silver gray white maroon red purple fuchsia green lime olive yellow "
+    "navy blue teal aqua orange pink brown cyan magenta violet gold".split()
+)
+NAMED_WIDTHS = {"thinmathspace": 1 / 6, "mediummathspace": 2 / 9, "thickmathspace": 5 / 18}
+SPACES = ((0.4, "\u2002"), (0.3, "\u2004"), (0.2, "\u2005"), (0.01, "\u2009"))
 
-_SYMBOLS = {
-    # Greek
-    "\\alpha": "α", "\\beta": "β", "\\gamma": "γ", "\\delta": "δ",
-    "\\epsilon": "ϵ", "\\varepsilon": "ε", "\\zeta": "ζ", "\\eta": "η",
-    "\\theta": "θ", "\\iota": "ι", "\\kappa": "κ", "\\lambda": "λ",
-    "\\mu": "μ", "\\nu": "ν", "\\xi": "ξ", "\\pi": "π", "\\rho": "ρ",
-    "\\sigma": "σ", "\\tau": "τ", "\\upsilon": "υ", "\\phi": "ϕ",
-    "\\varphi": "φ", "\\chi": "χ", "\\psi": "ψ", "\\omega": "ω",
-    "\\Gamma": "Γ", "\\Delta": "Δ", "\\Theta": "Θ", "\\Lambda": "Λ",
-    "\\Xi": "Ξ", "\\Pi": "Π", "\\Sigma": "Σ", "\\Upsilon": "Υ",
-    "\\Phi": "Φ", "\\Psi": "Ψ", "\\Omega": "Ω",
-    # Relations and operators
-    "\\times": "×", "\\div": "÷", "\\pm": "±", "\\mp": "∓", "\\cdot": "·",
-    "\\ast": "∗", "\\approx": "≈", "\\sim": "∼", "\\simeq": "≃",
-    "\\equiv": "≡", "\\propto": "∝", "\\neq": "≠", "\\ne": "≠",
-    "\\leq": "≤", "\\le": "≤", "\\geq": "≥", "\\ge": "≥",
-    "\\ll": "≪", "\\gg": "≫", "\\in": "∈", "\\notin": "∉",
-    "\\subset": "⊂", "\\subseteq": "⊆", "\\supset": "⊃", "\\cup": "∪",
-    "\\cap": "∩", "\\emptyset": "∅", "\\forall": "∀", "\\exists": "∃",
-    "\\neg": "¬", "\\land": "∧", "\\lor": "∨",
-    # Arrows and misc
-    "\\to": "→", "\\rightarrow": "→", "\\leftarrow": "←",
-    "\\Rightarrow": "⇒", "\\Leftarrow": "⇐", "\\leftrightarrow": "↔",
-    "\\mapsto": "↦", "\\infty": "∞", "\\partial": "∂", "\\nabla": "∇",
-    "\\cdots": "⋯", "\\ldots": "…", "\\dots": "…", "\\vdots": "⋮",
-    "\\prime": "′", "\\circ": "∘", "\\bullet": "∙", "\\star": "⋆",
-    "\\angle": "∠", "\\perp": "⊥", "\\parallel": "∥",
-}
 
-# Spacing commands, in the width each stands for.
-_SPACES = {
-    "\\,": "\u2009", "\\:": "\u2005", "\\;": "\u2005", "\\ ": " ",
-    "\\quad": "\u2003", "\\qquad": "\u2003\u2003", "\\!": "", "\\thinspace": "\u2009",
-}
+# --- the public functions ---
 
-# `\left(` / `\right)` and friends; the value is the literal delimiter.
-_DELIMS = {"(": "(", ")": ")", "[": "[", "]": "]", "\\{": "{", "\\}": "}",
-           "|": "|", "\\|": "‖", "\\langle": "⟨", "\\rangle": "⟩", ".": ""}
 
-_TOKEN_RE = re.compile(r"\\[a-zA-Z]+|\\.|[{}_^]|\s+|[^\\{}_^\s]")
-_CONTROL_WORD_RE = re.compile(r"\\[a-zA-Z]+")
+def to_omml(math: Element, *, size_pt: float, color: str, display: bool = False):
+    """``math`` as a child of a DrawingML paragraph.
 
-# Where a big operator's body ends: everything up to the next relation belongs
-# to the sum, so `\sum_i O(i) = X` puts `O(i)` under the ∑ and `= X` after it.
-_RELATIONS = frozenset({
-    "=", "<", ">", ",", ";", "\\approx", "\\equiv", "\\sim", "\\simeq",
-    "\\le", "\\leq", "\\ge", "\\geq", "\\ne", "\\neq", "\\to", "\\rightarrow",
-    "\\Rightarrow", "\\quad", "\\qquad", "\\propto", "\\in",
-})
-_STRUCTURAL_STOPS = frozenset({"}", "]", "\\right"})
-
-
-def tokenize(latex: str) -> list[str]:
-    """Split LaTeX into commands, grouping characters, and single characters."""
-    tokens: list[str] = []
-    for token in _TOKEN_RE.findall(latex):
-        if token.isspace():
-            # TeX eats the space that ends a control word, so `\times D` is two
-            # symbols, not two symbols with a gap between them.
-            if token != " " or (tokens and _CONTROL_WORD_RE.fullmatch(tokens[-1])):
-                continue
-            token = " "
-        tokens.append(token)
-    return tokens
-
-
-def _flatten(tokens: list[str]) -> str:
-    """Tokens as literal text — the argument of \\mathrm and friends is a word,
-    not an expression, so it needs no structure."""
-    return "".join(
-        _SYMBOLS.get(t, _SPACES.get(t, t.lstrip("\\") if t.startswith("\\") else t))
-        for t in tokens
-        if t not in ("{", "}")
-    )
-
-
-class _Parser:
-    """Recursive-descent over the token list, emitting OMML elements."""
-
-    def __init__(self, tokens: list[str]):
-        self.tokens = tokens
-        self.pos = 0
-
-    # --- token helpers ---
-
-    def peek(self) -> str | None:
-        return self.tokens[self.pos] if self.pos < len(self.tokens) else None
-
-    def next(self) -> str | None:
-        token = self.peek()
-        if token is not None:
-            self.pos += 1
-        return token
-
-    # --- parsing ---
-
-    def parse(self, stop: str | None = None) -> list:
-        """Elements up to ``stop`` (or the end), with scripts already attached."""
-        out: list = []
-        while True:
-            token = self.peek()
-            if token is None or token == stop:
-                if token == stop and stop is not None:
-                    self.next()
-                break
-            if token in ("_", "^"):
-                # A script with nothing before it: treat the base as empty.
-                self._attach_script(out)
-                continue
-            self.pos += 1
-            element = self._atom(token)
-            if element is None:
-                continue
-            out.append(element)
-            while self.peek() in ("_", "^"):
-                self._attach_script(out)
-        return _merge_runs(_splice(out))
-
-    def parse_until(self, stops: frozenset) -> list:
-        """Elements up to (not consuming) the first token in ``stops``.
-
-        Structural tokens always stop it too: a big operator inside a group or
-        a ``\\left…\\right`` pair must not eat the thing that closes it.
-        """
-        stops = stops | _STRUCTURAL_STOPS
-        out: list = []
-        while (token := self.peek()) is not None and token not in stops:
-            self.pos += 1
-            element = self._atom(token)
-            if element is None:
-                continue
-            out.append(element)
-            while self.peek() in ("_", "^"):
-                self._attach_script(out)
-        return _trim(_merge_runs(_splice(out)))
-
-    def _atom(self, token: str):
-        if token == "{":
-            return _wrap(self.parse("}"))
-        if token == "}":
-            return None
-        if token in _SPACES:
-            return _run(_SPACES[token]) if _SPACES[token] else None
-        if token == "\\frac" or token == "\\dfrac" or token == "\\tfrac":
-            num, den = self._group(), self._group()
-            return _fraction(num, den)
-        if token == "\\sqrt":
-            degree = self._optional_degree()
-            return _radical(self._group(), degree)
-        if token in _NARY:
-            return _nary(token, self)
-        if token == "\\left":
-            return self._delimited()
-        if token == "\\right":  # unmatched: the delimiter itself is enough
-            closing = self.next()
-            return _run(_DELIMS.get(closing, closing or ""))
-        if token in _UPRIGHT:
-            return _text_run(_flatten(self._group_tokens()), upright=True)
-        if token in _SCRIPTS:
-            return _text_run(_flatten(self._group_tokens()), script=_SCRIPTS[token])
-        if token in _SYMBOLS:
-            return _run(_SYMBOLS[token])
-        if token.startswith("\\"):
-            # Unknown command: show its name rather than dropping the formula.
-            return _text_run(token.lstrip("\\"), upright=True)
-        return _run(token)
-
-    def _attach_script(self, out: list) -> None:
-        kind = self.next()  # "_" or "^"
-        base = out.pop() if out else _run("")
-        script = self._group()
-        out.append(_scripted(base, script, sub=(kind == "_")))
-
-    def _group(self):
-        """The next single atom or {...} group, as one element."""
-        token = self.next()
-        if token is None:
-            return _run("")
-        if token == "{":
-            return _wrap(self.parse("}"))
-        element = self._atom(token)
-        return element if element is not None else _run("")
-
-    def _group_tokens(self) -> list[str]:
-        """The raw tokens of the next group — for commands that take text."""
-        token = self.next()
-        if token != "{":
-            return [token] if token else []
-        depth, collected = 1, []
-        while depth and (token := self.next()) is not None:
-            if token == "{":
-                depth += 1
-            elif token == "}":
-                depth -= 1
-                if not depth:
-                    break
-            collected.append(token)
-        return collected
-
-    def _optional_degree(self):
-        """``\\sqrt[3]{x}``'s degree, if the bracket is there."""
-        if self.peek() != "[":
-            return None
-        self.next()
-        return _wrap(self.parse("]"))
-
-    def _delimited(self):
-        opening = _DELIMS.get(self.next() or "", "")
-        body: list = []
-        # Parse to the matching \right, keeping nested \left…\right intact.
-        while (token := self.peek()) is not None and token != "\\right":
-            self.pos += 1
-            element = self._atom(token)
-            if element is not None:
-                body.append(element)
-                while self.peek() in ("_", "^"):
-                    self._attach_script(body)
-        closing = ""
-        if self.peek() == "\\right":
-            self.next()
-            closing = _DELIMS.get(self.next() or "", "")
-        return _delimiter(opening, closing, _merge_runs(body))
-
-
-# --- OMML element builders ---
-
-
-def _el(tag: str, *children):
-    node = etree.Element(f"{{{M}}}{tag}", nsmap={"m": M})
-    for child in children:
-        if child is not None:
-            node.append(child)
-    return node
-
-
-def _val(tag: str, value: str):
-    node = etree.Element(f"{{{M}}}{tag}", nsmap={"m": M})
-    node.set(f"{{{M}}}val", value)
-    return node
-
-
-def _run(text: str):
-    return _text_run(text)
-
-
-def _text_run(text: str, *, upright: bool = False, script: str | None = None):
-    run = _el("r")
-    if upright or script:
-        props = _el("rPr")
-        if script:
-            props.append(_val("scr", script))
-        # Without sty=p a math run italicizes its Latin letters, which is right
-        # for a variable and wrong for a function name like "softmax" — or for
-        # a blackboard-bold set like ℝ, which is upright by convention.
-        props.append(_val("sty", "p"))
-        run.append(props)
-    node = _el("t")
-    node.text = text
-    # Leading/trailing spaces are meaningful between symbols.
-    node.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
-    run.append(node)
-    return run
-
-
-def _wrap(elements: list):
-    """Several elements as one. OMML has no group node, so `{…}` becomes a
-    placeholder that is either poured into a slot (`_unwrap`) or, if the group
-    was just parenthesised source, spliced back into the flow (`_splice`)."""
-    if len(elements) == 1:
-        return elements[0]
-    box = _el("e")
-    for element in elements:
-        box.append(element)
-    return box
-
-
-def _unwrap(element) -> list:
-    """Elements to place inside a slot, undoing ``_wrap``'s placeholder."""
-    if element is None:
-        return []
-    if element.tag == f"{{{M}}}e":
-        return list(element)
-    return [element]
-
-
-def _trim(elements: list) -> list:
-    """Drop the space a body picked up before the relation that ended it."""
-    if elements and elements[-1].tag == f"{{{M}}}r":
-        text = elements[-1].find(f"{{{M}}}t")
-        if text is not None and text.text:
-            text.text = text.text.rstrip()
-            if not text.text:
-                return elements[:-1]
-    return elements
-
-
-def _splice(elements: list) -> list:
-    """Dissolve any group placeholder no script or slot claimed."""
-    out: list = []
-    for element in elements:
-        out.extend(_unwrap(element))
-    return out
-
-
-def _slot(tag: str, element):
-    return _el(tag, *_unwrap(element))
-
-
-def _scripted(base, script, *, sub: bool):
-    """``x_i`` / ``x^2``, folding a base that already has the other script."""
-    other = f"{{{M}}}sSup" if sub else f"{{{M}}}sSub"
-    if base is not None and base.tag == other:
-        # C^{(N)} then _{FFN} (or the reverse): one base carrying both.
-        node = _el("sSubSup", base.find(f"{{{M}}}e"))
-        existing = base.find(f"{{{M}}}{'sup' if sub else 'sub'}")
-        new = _slot("sub" if sub else "sup", script)
-        node.append(new if sub else existing)
-        node.append(existing if sub else new)
-        return node
-    node = _el("sSub" if sub else "sSup")
-    node.append(_slot("e", base))
-    node.append(_slot("sub" if sub else "sup", script))
-    return node
-
-
-def _fraction(num, den):
-    return _el("f", _slot("num", num), _slot("den", den))
-
-
-def _radical(body, degree):
-    props = _el("radPr")
-    if degree is None:
-        props.append(_val("degHide", "1"))
-    return _el("rad", props, _slot("deg", degree), _slot("e", body))
-
-
-def _delimiter(opening: str, closing: str, body: list):
-    props = _el("dPr")
-    props.append(_val("begChr", opening))
-    props.append(_val("endChr", closing))
-    return _el("d", props, _el("e", *body))
-
-
-def _nary(command: str, parser: _Parser):
-    glyph, limits = _NARY[command]
-    sub = sup = None
-    while parser.peek() in ("_", "^"):
-        kind = parser.next()
-        if kind == "_":
-            sub = parser._group()
-        else:
-            sup = parser._group()
-    props = _el("naryPr")
-    props.append(_val("chr", glyph))
-    props.append(_val("limLoc", limits))
-    if sub is None:
-        props.append(_val("subHide", "1"))
-    if sup is None:
-        props.append(_val("supHide", "1"))
-    body = parser.parse_until(_RELATIONS)
-    return _el("nary", props, _slot("sub", sub), _slot("sup", sup),
-               _el("e", *body))
-
-
-def _merge_runs(elements: list) -> list:
-    """Fold neighbouring plain runs together, so `O(i)` is one run not four."""
-    merged: list = []
-    for element in elements:
-        if (merged and element.tag == f"{{{M}}}r" and merged[-1].tag == f"{{{M}}}r"
-                and element.find(f"{{{M}}}rPr") is None
-                and merged[-1].find(f"{{{M}}}rPr") is None):
-            text = merged[-1].find(f"{{{M}}}t")
-            text.text = (text.text or "") + (element.find(f"{{{M}}}t").text or "")
-            continue
-        merged.append(element)
-    return merged
-
-
-# --- public API ---
-
-
-def to_omml(latex: str, *, display: bool = False):
-    """The ``<m:oMath>`` (or ``<m:oMathPara>`` when display) for ``latex``."""
-    body = _Parser(tokenize(latex)).parse()
-    math = _el("oMath", *body)
-    if not display:
-        return math
-    props = _el("oMathParaPr")
-    props.append(_val("jc", "center"))
-    return _el("oMathPara", props, math)
-
-
-def to_alternate_content(latex: str, *, display: bool = False):
-    """OMML wrapped for a DrawingML paragraph, with a plain-text fallback.
-
-    PowerPoint reads the ``mc:Choice``; anything that does not understand the
-    2010 math extension falls back to the text, so the formula is never lost.
+    PowerPoint reads the equation in ``mc:Choice``. A reader without the 2010
+    math extension shows the text in ``mc:Fallback``, so none loses the formula.
     """
-    root = etree.Element(f"{{{MC}}}AlternateContent", nsmap={"mc": MC, "a": A})
-    choice = etree.SubElement(root, f"{{{MC}}}Choice", nsmap={"a14": A14})
+    writer = _Writer(size_pt, color)
+    body = _m("oMath", *writer.node(math))
+    if display:
+        body = _m("oMathPara", _m("oMathParaPr", _m("jc", val="center")), body)
+    root = etree.Element(f"{{{MC}}}AlternateContent",
+                         nsmap={"mc": MC, "a": A, "a14": A14, "m": M})
+    choice = etree.SubElement(root, f"{{{MC}}}Choice")
     choice.set("Requires", "a14")
-    holder = etree.SubElement(choice, f"{{{A14}}}m", nsmap={"a14": A14})
-    holder.append(to_omml(latex, display=display))
-
-    fallback = etree.SubElement(root, f"{{{MC}}}Fallback")
-    run = etree.SubElement(fallback, f"{{{A}}}r", nsmap={"a": A})
-    text = etree.SubElement(run, f"{{{A}}}t")
-    text.text = plain_text(latex)
+    etree.SubElement(choice, f"{{{A14}}}m").append(body)
+    run = etree.SubElement(etree.SubElement(root, f"{{{MC}}}Fallback"), f"{{{A}}}r")
+    run.append(writer.run_properties())
+    etree.SubElement(run, f"{{{A}}}t").text = plain_text(math)
     return root
 
 
-def apply_run_props(node, *, size_pt: float, color: str) -> None:
-    """Give every math run the slide's body size and colour.
+def plain_text(math: Element) -> str:
+    """The formula on one line of text: the fallback, and what width is measured on."""
+    def group(node: Element) -> str:
+        text = plain_text(node)
+        return f"({text})" if len(text) > 1 and not text.isalnum() else text
 
-    A math run's own ``m:rPr`` holds only math properties (style, script), so
-    size and colour ride an ``a:rPr`` from DrawingML, which the schema places
-    right after it.
-    """
-    for run in node.iter(f"{{{M}}}r"):
-        text = run.find(f"{{{M}}}t")
-        if text is None:
+    tag, parts = math.tag, list(math)
+    if tag in TOKENS:
+        return "".join(" " if c == "\u2061" else c
+                       for c in _text(math) if c == "\u2061" or c not in INVISIBLE)
+    if tag == "mphantom" or tag in EMPTY_ELEMENTS:
+        return ""
+    if tag == "mspace":
+        return _space(math)
+    if tag in ("semantics", "maction"):
+        return plain_text(parts[0]) if parts else ""
+    if tag == "mfrac":
+        return f"{group(parts[0])}/{group(parts[1])}"
+    if tag == "msqrt":
+        return "√(%s)" % "".join(plain_text(part) for part in parts)
+    if tag == "mroot":
+        return f"{plain_text(parts[1])}√({plain_text(parts[0])})"
+    if tag in LIMITS:
+        out = plain_text(parts[0])
+        for sign, script in zip(LIMITS[tag], parts[1:]):
+            mark = _single(script)
+            flag = mark.tag == "mo" and mark.get("accent") == "true"
+            out += _text(mark) if flag else f"{sign}{group(script)}"
+        return out
+    if tag == "mtable":
+        return "; ".join(plain_text(row) for row in parts)
+    if tag in ("mtr", "mlabeledtr"):
+        return " ".join(plain_text(cell) for cell in _cells(math))
+    return "".join(plain_text(part) for part in parts)
+
+
+def visual_lines(math: Element) -> float:
+    """About how many lines of text tall the typeset formula is."""
+    tag, parts = math.tag, list(math)
+    if not parts:
+        return 1.4 if math.get("largeop") == "true" else 1.0
+    if tag == "mfrac":
+        return sum(visual_lines(part) for part in parts) + 0.2
+    if tag == "mtable":
+        return sum(visual_lines(row) for row in parts)
+    tallest = max(visual_lines(part) for part in parts)
+    if tag in ("msqrt", "mroot"):
+        return tallest + 0.2
+    if tag in LIMITS:
+        each = 0.2 if tag.startswith("ms") else 0.5
+        return visual_lines(parts[0]) + each * (len(parts) - 1)
+    return tallest
+
+
+# --- reading MathML ---
+
+TOKENS = frozenset({"mi", "mn", "mo", "mtext", "ms"})
+EMPTY_ELEMENTS = frozenset({
+    "none", "mprescripts", "maligngroup", "malignmark", "annotation", "annotation-xml",
+})
+# The elements that hang scripts on a base, and the sign of each script in text.
+LIMITS = {"msub": "_", "msup": "^", "msubsup": "_^",
+          "munder": "_", "mover": "^", "munderover": "_^"}
+
+
+def _text(node: Element) -> str:
+    return "".join(node.itertext())
+
+
+def _single(node: Element) -> Element:
+    """The one element a chain of wrappers holds."""
+    while node.tag in ("mrow", "mstyle", "math") and len(node) == 1:
+        node = node[0]
+    return node
+
+
+def _class(node: Element) -> str | None:
+    return node.get("data-mjx-texclass") or _single(node).get("data-mjx-texclass")
+
+
+def _fence(node: Element, side: str) -> bool:
+    """A delimiter that grows with what it encloses, on ``side`` (OPEN or CLOSE)."""
+    mark = _single(node)
+    return (mark.tag == "mo" and mark.get("data-mjx-texclass") == side
+            and (mark.get("stretchy") == "true" or mark.get("minsize") is not None))
+
+
+def _pairs(nodes: list[Element]) -> dict[int, int]:
+    """Where each growing delimiter of a row closes."""
+    waiting, pairs = [], {}
+    for index, node in enumerate(nodes):
+        if _fence(node, "OPEN"):
+            waiting.append(index)
+        elif _fence(node, "CLOSE") and waiting:
+            pairs[waiting.pop()] = index
+    return pairs
+
+
+def _separator(node: Element) -> str:
+    mark = _single(node)
+    text = _text(mark) if mark.tag == "mo" and mark.get("stretchy") == "true" else ""
+    return text if text in SEPARATORS else ""
+
+
+def _large_operator(node: Element) -> tuple[Element, Element | None, Element | None, str] | None:
+    """``(operator, lower, upper, limit location)`` when ``node`` is an n-ary operator."""
+    node = _single(node)
+    base, lower, upper = node, None, None
+    if node.tag in LIMITS:
+        base, *scripts = node
+        signs = dict(zip(LIMITS[node.tag], scripts))
+        lower, upper = signs.get("_"), signs.get("^")
+    operator = _single(base)
+    if operator.tag != "mo" or operator.get("largeop") != "true":
+        return None
+    location = "undOvr" if node.tag in ("munder", "mover", "munderover") else "subSup"
+    return operator, lower, upper, location
+
+
+def _operand_end(nodes: list[Element], pairs: dict[int, int], start: int) -> int:
+    """An n-ary operator's operand runs to the next relation outside brackets."""
+    index, depth = start, 0
+    while index < len(nodes):
+        if index in pairs:
+            index = pairs[index] + 1
             continue
-        props = etree.Element(f"{{{A}}}rPr", nsmap={"a": A})
-        props.set("lang", "en-US")
-        props.set("sz", str(int(round(size_pt * 100))))
-        fill = etree.SubElement(props, f"{{{A}}}solidFill")
-        etree.SubElement(fill, f"{{{A}}}srgbClr").set("val", color)
-        run.insert(list(run).index(text), props)  # a:rPr sits just before m:t
+        kind = _class(nodes[index])
+        if depth == 0 and _ends_operand(nodes[index], kind):
+            break
+        depth += (kind == "OPEN") - (kind == "CLOSE")
+        index += 1
+    return index
 
 
-# Constructs that stack something above or below the baseline, so a display
-# equation using one needs more than a line of vertical room.
-_STACKING = ("\\frac", "\\dfrac", "\\tfrac", "\\sqrt", "\\binom", *_NARY)
+def _ends_operand(node: Element, kind: str | None) -> bool:
+    """What an operand cannot contain unless brackets enclose it."""
+    if kind in ("REL", "PUNCT", "CLOSE") or _separator(node):
+        return True
+    mark = _single(node)
+    return mark.tag == "mspace" and _width(mark.get("width")) >= 1
 
 
-def visual_lines(latex: str) -> float:
-    """Roughly how many text lines tall the typeset formula will be."""
-    return 2.4 if any(token in latex for token in _STACKING) else 1.2
+def _named_operator(node: Element) -> bool:
+    """An operator written as a word, which is spaced from its argument."""
+    node = _single(node)
+    if node.tag in LIMITS:
+        node = _single(node[0])
+    word = "".join(_text(node).split())
+    if len(word) < 2 or not word.isalpha():
+        return False
+    if node.tag == "mi":
+        return node.get("data-mjx-auto-op") != "false" and node.get("mathvariant") is None
+    return node.get("data-mjx-texclass") == "OP"
 
 
-def plain_text(latex: str) -> str:
-    """A readable one-line rendering, for width estimates and the fallback."""
-    out = []
-    for token in tokenize(latex):
-        if token in _SPACES:
-            out.append(_SPACES[token] or "")
-        elif token in _SYMBOLS:
-            out.append(_SYMBOLS[token])
-        elif token in _NARY:
-            out.append(_NARY[token][0])
-        elif token in ("\\left", "\\right") or token in ("{", "}"):
-            continue
-        elif token in _UPRIGHT or token in _SCRIPTS:
-            continue
-        elif token == "\\frac":
-            continue
-        elif token.startswith("\\"):
-            out.append(token.lstrip("\\"))
+def _needs_space(neighbour: Element, *spaced: str) -> bool:
+    """Whether an operator written as a word needs a thin space beside ``neighbour``:
+    not beside a space, or an atom of a class that OMML spaces by itself."""
+    return bool(_text(neighbour).strip()) and _class(neighbour) not in spaced
+
+
+def _width(value: str | None) -> float:
+    """A MathML width in em."""
+    if value in NAMED_WIDTHS:
+        return NAMED_WIDTHS[value]
+    found = re.fullmatch(r"([+-]?[\d.]+)(em|ex|pt|px)", (value or "").strip())
+    if found is None:
+        return 0.0
+    return float(found[1]) / {"em": 1, "ex": 2, "pt": 10, "px": 16}[found[2]]
+
+
+def _space(node: Element) -> str:
+    width = _width(node.get("width"))
+    if width >= 0.9:
+        return "\u2003" * round(width)
+    return next((space for least, space in SPACES if width >= least), "")
+
+
+def _cells(row: Element) -> list[Element]:
+    """A row's cells as shown: an equation's number comes after it."""
+    cells = list(row)
+    return cells[1:] + cells[:1] if row.tag == "mlabeledtr" else cells
+
+
+# --- writing OMML ---
+
+
+def _m(tag: str, *children, val: str | None = None):
+    node = etree.Element(f"{{{M}}}{tag}", nsmap={"m": M})
+    if val is not None:
+        node.set(f"{{{M}}}val", val)
+    node.extend([child for child in children if child is not None])
+    return node
+
+
+class _Writer:
+    """The state a conversion carries: the size and the colour in force."""
+
+    def __init__(self, size_pt: float, color: str) -> None:
+        self.size = str(round(size_pt * 100))
+        self.color = ("srgbClr", color)
+
+    def run_properties(self, *, bold: bool = False, italic: bool = False):
+        node = etree.Element(f"{{{A}}}rPr", nsmap={"a": A})
+        node.set("lang", "en-US")
+        node.set("sz", self.size)
+        if bold:
+            node.set("b", "1")
+        if italic:
+            node.set("i", "1")
+        fill = etree.SubElement(node, f"{{{A}}}solidFill")
+        kind, value = self.color
+        etree.SubElement(fill, f"{{{A}}}{kind}").set("val", value)
+        return node
+
+    def properties(self, name: str, *children):
+        """A structure's properties, which also size and colour what it draws itself."""
+        return _m(name, *children, _m("ctrlPr", self.run_properties()))
+
+    @contextmanager
+    def colored(self, value: str | None):
+        saved = self.color
+        if value and re.fullmatch("#[0-9A-Fa-f]{6}", value):
+            self.color = ("srgbClr", value[1:].upper())
+        elif value and value.lower() in COLOR_NAMES:
+            self.color = ("prstClr", value.lower())
+        try:
+            yield
+        finally:
+            self.color = saved
+
+    def node(self, node: Element) -> list:
+        try:
+            draw = DRAW[node.tag]
+        except KeyError:
+            raise ValueError(f"MathML element without an OMML form: <{node.tag}>") from None
+        with self.colored(node.get("mathcolor")):
+            return draw(self, node)
+
+    def slot(self, name: str, content: list):
+        return _m(name, *(content or self.run(EMPTY)))
+
+    def of(self, node: Element | None) -> list:
+        return [] if node is None else self.node(node)
+
+    def run(self, text: str, *, style: str = "p", script: str | None = None,
+            normal: bool = False) -> list:
+        if not text:
+            return []
+        if normal:
+            properties = _m("rPr", _m("nor"))
         else:
-            out.append(token)
-    return "".join(out)
+            properties = _m("rPr", script and _m("scr", val=script), _m("sty", val=style))
+        content = _m("t")
+        content.text = text
+        content.set(XML_SPACE, "preserve")
+        italic = not normal and style in ("i", "bi")
+        bold = not normal and style in ("b", "bi")
+        return [_m("r", properties, self.run_properties(bold=bold, italic=italic), content)]
+
+    def row(self, nodes: list[Element]) -> list:
+        """Siblings: fences pair up, and an n-ary operator takes its operand."""
+        pairs = _pairs(nodes)
+        out: list = []
+        index = 0
+        while index < len(nodes):
+            node = nodes[index]
+            if index in pairs:
+                end = pairs[index]
+                out += self.fenced(node, nodes[index + 1:end], nodes[end])
+                index = end + 1
+                continue
+            operator = _large_operator(node)
+            if operator:
+                end = _operand_end(nodes, pairs, index + 1)
+                out += self.nary(*operator, nodes[index + 1:end])
+                index = end
+                continue
+            named = _named_operator(node)
+            if named and index and _needs_space(nodes[index - 1], "OPEN", "REL", "BIN"):
+                out += self.run("\u2009")
+            out += self.node(node)
+            index += 1
+            if named:
+                while index < len(nodes) and _text(nodes[index]) == "\u2061":
+                    index += 1
+                if index < len(nodes) and _needs_space(
+                        nodes[index], "OPEN", "REL", "BIN", "CLOSE", "PUNCT"):
+                    out += self.run("\u2009")
+        return out
+
+    def fenced(self, opening: Element, inside: list[Element], closing: Element) -> list:
+        dividers = [i for i, node in enumerate(inside) if _separator(node)]
+        characters = {_separator(inside[i]) for i in dividers}
+        divider = characters.pop() if len(characters) == 1 else None
+        if divider is None:
+            parts = [inside]
+        else:
+            starts = [0, *(i + 1 for i in dividers)]
+            parts = [inside[a:b] for a, b in zip(starts, [*dividers, len(inside)])]
+        properties = self.properties(
+            "dPr",
+            _m("begChr", val=_text(_single(opening))),
+            None if divider is None else _m("sepChr", val=divider),
+            _m("endChr", val=_text(_single(closing))),
+        )
+        return [_m("d", properties, *(self.slot("e", self.row(part)) for part in parts))]
+
+    def nary(self, operator: Element, lower: Element | None, upper: Element | None,
+             location: str, operand: list[Element]) -> list:
+        properties = self.properties(
+            "naryPr",
+            _m("chr", val=_text(operator)),
+            _m("limLoc", val=location),
+            _m("subHide", val="1") if lower is None else None,
+            _m("supHide", val="1") if upper is None else None,
+        )
+        return [_m("nary", properties,
+                   _m("sub") if lower is None else self.slot("sub", self.node(lower)),
+                   _m("sup") if upper is None else self.slot("sup", self.node(upper)),
+                   self.slot("e", self.row(operand)))]
+
+    def scripts(self, base: list, lower: Element | None, upper: Element | None) -> list:
+        if lower is not None and upper is not None:
+            return [_m("sSubSup", self.properties("sSubSupPr"), self.slot("e", base),
+                       self.slot("sub", self.node(lower)), self.slot("sup", self.node(upper)))]
+        if lower is not None:
+            return [_m("sSub", self.properties("sSubPr"), self.slot("e", base),
+                       self.slot("sub", self.node(lower)))]
+        if upper is not None:
+            return [_m("sSup", self.properties("sSupPr"), self.slot("e", base),
+                       self.slot("sup", self.node(upper)))]
+        return base
+
+    def limit(self, base: list, script: Element, *, over: bool) -> list:
+        """What stands straight over or under ``base``."""
+        mark = _single(script)
+        stretchy = mark.tag == "mo" and mark.get("stretchy") == "true"
+        accent = mark.tag == "mo" and mark.get("accent") == "true"
+        character = _text(mark)
+        position = _m("pos", val="top" if over else "bot")
+        with self.colored(mark.get("mathcolor")):
+            if stretchy and character in LINES:
+                return [_m("bar", self.properties("barPr", position), self.slot("e", base))]
+            combining = ACCENTS.get(character)
+            if len(character) == 1 and unicodedata.combining(character):
+                combining = character
+            if over and accent and combining and (not stretchy or character in "^~ˆ˜"):
+                properties = self.properties("accPr", _m("chr", val=combining))
+                return [_m("acc", properties, self.slot("e", base))]
+            if stretchy and character:
+                properties = self.properties(
+                    "groupChrPr", _m("chr", val=character), position,
+                    _m("vertJc", val="bot" if over else "top"))
+                return [_m("groupChr", properties, self.slot("e", base))]
+        name = "limUpp" if over else "limLow"
+        return [_m(name, self.properties(f"{name}Pr"), self.slot("e", base),
+                   self.slot("lim", self.node(script)))]
+
+
+# --- one function for each element ---
+
+
+def _style_of(node: Element) -> tuple[str, str | None]:
+    """The style and script of a token: an identifier of one letter is italic."""
+    variant = node.get("mathvariant")
+    if variant is None:
+        return ("i" if node.tag == "mi" and len(_text(node)) == 1 else "p"), None
+    bold, italic = "bold" in variant, "italic" in variant
+    style = "bi" if bold and italic else "b" if bold else "i" if italic else "p"
+    return style, next((value for key, value in SCRIPTS.items() if key in variant), None)
+
+
+def token(w: _Writer, node: Element) -> list:
+    style, script = _style_of(node)
+    return w.run("".join(c for c in _text(node) if c not in INVISIBLE),
+                 style=style, script=script)
+
+
+def mtext(w: _Writer, node: Element) -> list:
+    if node.get("mathvariant") not in (None, "normal"):
+        return token(w, node)
+    return w.run(_text(node), normal=True)
+
+
+def mspace(w: _Writer, node: Element) -> list:
+    return w.run(_space(node))
+
+
+def mrow(w: _Writer, node: Element) -> list:
+    return w.row(list(node))
+
+
+def merror(w: _Writer, node: Element) -> list:
+    with w.colored("red"):
+        return w.row(list(node))
+
+
+def first_child(w: _Writer, node: Element) -> list:
+    return w.node(node[0]) if len(node) else []
+
+
+def nothing(w: _Writer, node: Element) -> list:
+    return []
+
+
+def mglyph(w: _Writer, node: Element) -> list:
+    return w.run(node.get("alt", ""), normal=True)
+
+
+def mfrac(w: _Writer, node: Element) -> list:
+    kind = None
+    if node.get("bevelled") == "true":
+        kind = _m("type", val="skw")
+    elif re.match(r"0(\.0*)?([a-z%]*)$", node.get("linethickness", "")):
+        kind = _m("type", val="noBar")
+    top, bottom = node
+    return [_m("f", w.properties("fPr", kind),
+               w.slot("num", w.node(top)), w.slot("den", w.node(bottom)))]
+
+
+def msqrt(w: _Writer, node: Element) -> list:
+    return [_m("rad", w.properties("radPr", _m("degHide", val="1")),
+               _m("deg"), w.slot("e", w.row(list(node))))]
+
+
+def mroot(w: _Writer, node: Element) -> list:
+    base, degree = node
+    return [_m("rad", w.properties("radPr"),
+               w.slot("deg", w.node(degree)), w.slot("e", w.node(base)))]
+
+
+def scripted(w: _Writer, node: Element) -> list:
+    base, *scripts = node
+    signs = dict(zip(LIMITS[node.tag], scripts))
+    return w.scripts(w.node(base), signs.get("_"), signs.get("^"))
+
+
+def stacked(w: _Writer, node: Element) -> list:
+    base, *scripts = node
+    out = w.node(base)
+    for sign, script in zip(LIMITS[node.tag], scripts):
+        out = w.limit(out, script, over=sign == "^")
+    return out
+
+
+def mmultiscripts(w: _Writer, node: Element) -> list:
+    base, *rest = node
+    split = next((i for i, part in enumerate(rest) if part.tag == "mprescripts"), len(rest))
+
+    def given(part: Element) -> Element | None:
+        return None if part.tag == "none" else part
+
+    after, before = rest[:split], rest[split + 1:]
+    out = w.node(base)
+    for lower, upper in zip(after[::2], after[1::2]):
+        out = w.scripts(out, given(lower), given(upper))
+    for lower, upper in zip(before[::2], before[1::2]):
+        out = [_m("sPre", w.properties("sPrePr"), w.slot("sub", w.of(given(lower))),
+                  w.slot("sup", w.of(given(upper))), w.slot("e", out))]
+    return out
+
+
+def mtable(w: _Writer, node: Element) -> list:
+    rows = [_cells(row) if row.tag in ("mtr", "mlabeledtr") else [row] for row in node]
+    across = max((len(row) for row in rows), default=0)
+    if not across:
+        return []
+    aligns = node.get("columnalign", "center").split() or ["center"]
+    columns = [
+        _m("mc", _m("mcPr", _m("count", val="1"),
+                    _m("mcJc", val=aligns[min(index, len(aligns) - 1)])))
+        for index in range(across)
+    ]
+    gaps = node.get("columnspacing", "").split()
+    tight = bool(gaps) and all(_width(gap) == 0 for gap in gaps)
+    properties = w.properties(
+        "mPr", _m("plcHide", val="1"),
+        _m("cGpRule", val="3") if tight else None,
+        _m("cGp", val="0") if tight else None,
+        _m("mcs", *columns),
+    )
+    lines = [
+        _m("mr", *(w.slot("e", w.node(row[i]) if i < len(row) else [])
+                   for i in range(across)))
+        for row in rows
+    ]
+    return [_m("m", properties, *lines)]
+
+
+def menclose(w: _Writer, node: Element) -> list:
+    notation = set(node.get("notation", "longdiv").split())
+    content = w.row(list(node))
+    if "radical" in notation:
+        return [_m("rad", w.properties("radPr", _m("degHide", val="1")),
+                   _m("deg"), w.slot("e", content))]
+    strikes = {"horizontalstrike": "strikeH", "verticalstrike": "strikeV",
+               "updiagonalstrike": "strikeBLTR", "downdiagonalstrike": "strikeTLBR"}
+    drawn = [name for key, name in strikes.items() if key in notation]
+    sides = {"top": "hideTop", "bottom": "hideBot", "left": "hideLeft", "right": "hideRight"}
+    shown = notation & set(sides)
+    boxed = notation & {"box", "roundedbox", "circle"}
+    # All four sides for a box and for a notation OMML has no shape for.
+    around = boxed or not (shown or drawn)
+    hidden = [] if around else [name for key, name in sides.items() if key not in shown]
+    properties = w.properties("borderBoxPr",
+                              *(_m(name, val="1") for name in [*hidden, *drawn]))
+    return [_m("borderBox", properties, w.slot("e", content))]
+
+
+def mphantom(w: _Writer, node: Element) -> list:
+    return [_m("phant", w.properties("phantPr", _m("show", val="0")),
+               w.slot("e", w.row(list(node))))]
+
+
+def mfenced(w: _Writer, node: Element) -> list:
+    separators = node.get("separators", ",").strip()
+    properties = w.properties(
+        "dPr", _m("begChr", val=node.get("open", "(")),
+        _m("sepChr", val=separators[:1]), _m("endChr", val=node.get("close", ")")))
+    return [_m("d", properties, *(w.slot("e", w.node(part)) for part in node))]
+
+
+DRAW: dict[str, Callable[[_Writer, Element], list]] = {
+    "math": mrow, "mrow": mrow, "mstyle": mrow, "mpadded": mrow, "merror": merror,
+    "mi": token, "mn": token, "mo": token, "ms": token, "mtext": mtext,
+    "mspace": mspace, "mglyph": mglyph,
+    "mfrac": mfrac, "msqrt": msqrt, "mroot": mroot,
+    "msub": scripted, "msup": scripted, "msubsup": scripted,
+    "munder": stacked, "mover": stacked, "munderover": stacked,
+    "mmultiscripts": mmultiscripts,
+    "mtable": mtable, "mtr": mrow, "mlabeledtr": mrow, "mtd": mrow,
+    "menclose": menclose, "mphantom": mphantom, "mfenced": mfenced,
+    "semantics": first_child, "maction": first_child,
+    **{tag: nothing for tag in EMPTY_ELEMENTS},
+}

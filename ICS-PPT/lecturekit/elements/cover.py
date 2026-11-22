@@ -48,6 +48,7 @@ class Cover(Block):
         return []
 
     def to_pptx(self, ctx):
+        """The cover owns the whole slide, title included."""
         from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
         from ..renderers.pptx import theme
         from ..renderers.pptx.blocks import (
@@ -56,47 +57,38 @@ class Cover(Block):
             COVER_TIME_PT,
             COVER_TITLE_PT,
             draw_cover_logos,
-            set_line_spacing,
-            style_run,
         )
+        from ..renderers.pptx.draw import Look, space_lines, write_runs
+        from ..renderers.pptx.text import runs
         cover = self.content
         draw_cover_logos(cover.get("logo"), ctx)
 
-        title_width = int(ctx.layout.width * 0.78)
-        title_left = (ctx.layout.width - title_width) // 2
-        title_top = int(ctx.layout.height * 0.24)
-        title_height = int(ctx.layout.height * 0.26)
-        box = ctx.slide.shapes.add_textbox(title_left, title_top, title_width, title_height)
-        tf = box.text_frame
-        tf.word_wrap = True
-        tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
-        tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-        p = tf.paragraphs[0]
-        p.alignment = PP_ALIGN.CENTER
-        set_line_spacing(p, COVER_TITLE_PT)
-        style_run(p.add_run(), ctx.title, size_pt=COVER_TITLE_PT,
-                   color=COVER_ACCENT)
+        width = int(ctx.layout.width * 0.78)
+        left = (ctx.layout.width - width) // 2
 
-        meta_top = int(ctx.layout.height * 0.57)
-        meta_height = int(ctx.layout.height * 0.2)
-        meta = ctx.slide.shapes.add_textbox(
-            title_left, meta_top, title_width, meta_height
-        )
-        mtf = meta.text_frame
-        mtf.word_wrap = True
-        mtf.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-        mtf.margin_left = mtf.margin_right = mtf.margin_top = mtf.margin_bottom = 0
-        first = True
-        if cover.get("author"):
-            p = mtf.paragraphs[0]
-            p.alignment = PP_ALIGN.CENTER
-            set_line_spacing(p, COVER_META_PT)
-            style_run(p.add_run(), cover["author"], size_pt=COVER_META_PT,
-                       color=theme.FG, bold=True)
-            first = False
-        if cover.get("time"):
-            p = mtf.paragraphs[0] if first else mtf.add_paragraph()
-            p.alignment = PP_ALIGN.CENTER
-            set_line_spacing(p, COVER_TIME_PT)
-            style_run(p.add_run(), cover["time"], size_pt=COVER_TIME_PT,
-                       color=theme.DK2)
+        def write(top, height, auto_size, lines):
+            box = ctx.slide.shapes.add_textbox(left, int(ctx.layout.height * top),
+                                               width, int(ctx.layout.height * height))
+            frame = box.text_frame
+            frame.word_wrap = True
+            frame.auto_size = auto_size
+            frame.margin_left = frame.margin_right = 0
+            frame.margin_top = frame.margin_bottom = 0
+            for number, (items, look) in enumerate(lines):
+                paragraph = frame.add_paragraph() if number else frame.paragraphs[0]
+                paragraph.alignment = PP_ALIGN.CENTER
+                space_lines(paragraph, items, look.size)
+                write_runs(paragraph, items, look)
+
+        write(0.24, 0.26, MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE, [
+            (runs(ctx.read.cover_title(ctx.title)),
+             Look(size=COVER_TITLE_PT, color=COVER_ACCENT)),
+        ])
+        looks = {
+            "author": Look(size=COVER_META_PT, color=theme.FG, bold=True),
+            "time": Look(size=COVER_TIME_PT, color=theme.DK2),
+        }
+        write(0.57, 0.2, MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT, [
+            (runs(ctx.read.plain(cover[key])), look)
+            for key, look in looks.items() if cover.get(key)
+        ])

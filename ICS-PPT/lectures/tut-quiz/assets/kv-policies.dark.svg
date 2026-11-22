@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 370" width="1120" height="370">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#68b4d4"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ee8a52"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c6d8ea"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#78c07c"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f37b84"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#99a6b3"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#556067"/></marker></defs>
+<text x="4.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="start">相同的起点：各会话已缓存的 token，各占一块</text>
+<rect x="4.0" y="24.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="4.0" y="24.0" width="228.9" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="5.0" y="52.0" width="226.9" height="5.0" rx="1" fill="#68b4d4" stroke="#68b4d4" stroke-width="1"/>
+<g data-key="start/A">
+<text x="118.5" y="43.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">A 42</text>
+</g>
+<rect x="232.9" y="24.0" width="103.5" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="233.9" y="52.0" width="101.5" height="5.0" rx="1" fill="#b3a2e0" stroke="#b3a2e0" stroke-width="1"/>
+<g data-key="start/B">
+<text x="284.7" y="43.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">B 19</text>
+</g>
+<rect x="336.4" y="24.0" width="114.5" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="337.4" y="52.0" width="112.5" height="5.0" rx="1" fill="#c9aa7c" stroke="#c9aa7c" stroke-width="1"/>
+<g data-key="start/C">
+<text x="393.7" y="43.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">C 21</text>
+</g>
+<g data-key="start/free">
+<text x="489.1" y="43.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#99a6b3" text-anchor="middle">空闲 14</text>
+</g>
+<line x1="527.2" y1="21.0" x2="527.2" y2="56.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="start/order">
+<text x="4.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="start">最近使用的先后（从久到近）：A、B、C，last_use 是 2、3、4</text>
+</g>
+<text x="592.0" y="16.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="start">随后依次到来三次请求，每次最多回答 8 个 token，实际都是 8 个</text>
+<rect x="592.0" y="23.0" width="160.0" height="32.0" rx="5" fill="#1b1d1f" stroke="#b3a2e0" stroke-width="2"/>
+<g data-key="request/0">
+<text x="672.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#b3a2e0" text-anchor="middle">B：37 + 7 = 44 块</text>
+</g>
+<rect x="773.0" y="23.0" width="160.0" height="32.0" rx="5" fill="#1b1d1f" stroke="#68b4d4" stroke-width="2"/>
+<g data-key="request/1">
+<text x="853.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#68b4d4" text-anchor="middle">A：60 + 7 = 67 块</text>
+</g>
+<line x1="754.0" y1="39.0" x2="770.0" y2="39.0" stroke="#99a6b3" stroke-width="1.7" marker-end="url(#ah-5a6b78)"/>
+<rect x="954.0" y="23.0" width="160.0" height="32.0" rx="5" fill="#1b1d1f" stroke="#c9aa7c" stroke-width="2"/>
+<g data-key="request/2">
+<text x="1034.0" y="44.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c9aa7c" text-anchor="middle">C：36 + 7 = 43 块</text>
+</g>
+<line x1="935.0" y1="39.0" x2="951.0" y2="39.0" stroke="#99a6b3" stroke-width="1.7" marker-end="url(#ah-5a6b78)"/>
+<text x="592.0" y="74.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="start">需要：文本 + 回答的前 7 个。发请求的会话记为最近使用，不会被选中</text>
+<line x1="2.0" y1="80.0" x2="1118.0" y2="80.0" stroke="#556067" stroke-width="1.2"/>
+<rect x="4.0" y="83.0" width="93.6" height="22.0" rx="11.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.2"/>
+<text x="50.8" y="98.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#1b1d1f" text-anchor="middle">kv_victim</text>
+<text x="105.6" y="100.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="start">lru</text>
+<text x="142.4" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#c6d8ea" text-anchor="start">最近最少使用：取 last_use 最小</text>
+<g data-key="lru/0/need">
+<text x="4.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">B 的请求：缺 25 块，空闲 14</text>
+</g>
+<g data-key="lru/0/gone">
+<text x="527.2" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="end">A（42 块）失效</text>
+</g>
+<rect x="4.0" y="137.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="4.0" y="137.0" width="136.2" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.3"/>
+<rect x="5.0" y="165.0" width="134.2" height="5.0" rx="1" fill="#b3a2e0" stroke="#b3a2e0" stroke-width="1"/>
+<g data-key="lru/0/part/0/25/B/new">
+<text x="72.1" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">B 新 25</text>
+</g>
+<rect x="232.9" y="137.0" width="103.5" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="233.9" y="165.0" width="101.5" height="5.0" rx="1" fill="#b3a2e0" stroke="#b3a2e0" stroke-width="1"/>
+<g data-key="lru/0/part/42/19/B/cache">
+<text x="284.7" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">B 19</text>
+</g>
+<rect x="336.4" y="137.0" width="114.5" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="337.4" y="165.0" width="112.5" height="5.0" rx="1" fill="#c9aa7c" stroke="#c9aa7c" stroke-width="1"/>
+<g data-key="lru/0/part/61/21/C/cache">
+<text x="393.7" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">C 21</text>
+</g>
+<line x1="527.2" y1="134.0" x2="527.2" y2="169.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="lru/1/need">
+<text x="4.0" y="192.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">A 的请求：缺 67 块，空闲 31</text>
+</g>
+<g data-key="lru/1/gone">
+<text x="527.2" y="192.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="end">先 C（21 块）后 B（44 块）失效</text>
+</g>
+<rect x="4.0" y="200.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="4.0" y="200.0" width="228.9" height="26.0" rx="0" fill="#452726" stroke="#f37b84" stroke-width="1.3"/>
+<rect x="5.0" y="228.0" width="226.9" height="5.0" rx="1" fill="#68b4d4" stroke="#68b4d4" stroke-width="1"/>
+<g data-key="lru/1/part/0/42/A/waste">
+<text x="118.5" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">A 重算 42</text>
+</g>
+<rect x="232.9" y="200.0" width="136.2" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.3"/>
+<rect x="233.9" y="228.0" width="134.2" height="5.0" rx="1" fill="#68b4d4" stroke="#68b4d4" stroke-width="1"/>
+<g data-key="lru/1/part/42/25/A/new">
+<text x="301.0" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">A 新 25</text>
+</g>
+<line x1="527.2" y1="197.0" x2="527.2" y2="232.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="lru/2/need">
+<text x="4.0" y="255.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">C 的请求：缺 43 块，空闲 29</text>
+</g>
+<g data-key="lru/2/gone">
+<text x="527.2" y="255.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="end">A（67 块）失效</text>
+</g>
+<rect x="4.0" y="263.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="4.0" y="263.0" width="114.5" height="26.0" rx="0" fill="#452726" stroke="#f37b84" stroke-width="1.3"/>
+<rect x="5.0" y="291.0" width="112.5" height="5.0" rx="1" fill="#c9aa7c" stroke="#c9aa7c" stroke-width="1"/>
+<g data-key="lru/2/part/0/21/C/waste">
+<text x="61.2" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">C 重算 21</text>
+</g>
+<rect x="118.5" y="263.0" width="119.9" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.3"/>
+<rect x="119.5" y="291.0" width="117.9" height="5.0" rx="1" fill="#c9aa7c" stroke="#c9aa7c" stroke-width="1"/>
+<g data-key="lru/2/part/21/22/C/new">
+<text x="178.4" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">C 新 22</text>
+</g>
+<line x1="527.2" y1="260.0" x2="527.2" y2="295.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="lru/recomputed">
+<text x="4.0" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#f37b84" text-anchor="start">重新计算 42 + 21 = 63 个 token</text>
+</g>
+<g data-key="lru/invalidations">
+<text x="289.0" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">失效 4 次</text>
+</g>
+<text x="527.2" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#99a6b3" text-anchor="end">右端是上限 96 块</text>
+<rect x="592.0" y="83.0" width="93.6" height="22.0" rx="11.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.2"/>
+<text x="638.8" y="98.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#1b1d1f" text-anchor="middle">kv_victim</text>
+<text x="693.6" y="100.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="start">smallest</text>
+<text x="778.4" y="100.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#c6d8ea" text-anchor="start">最小缓存优先：取 n_cached 最小</text>
+<g data-key="smallest/0/need">
+<text x="592.0" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">B 的请求：缺 25 块，空闲 14</text>
+</g>
+<g data-key="smallest/0/gone">
+<text x="1115.2" y="129.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="end">C（21 块）失效</text>
+</g>
+<rect x="592.0" y="137.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="592.0" y="137.0" width="228.9" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="593.0" y="165.0" width="226.9" height="5.0" rx="1" fill="#68b4d4" stroke="#68b4d4" stroke-width="1"/>
+<g data-key="smallest/0/part/0/42/A/cache">
+<text x="706.5" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">A 42</text>
+</g>
+<rect x="820.9" y="137.0" width="103.5" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="821.9" y="165.0" width="101.5" height="5.0" rx="1" fill="#b3a2e0" stroke="#b3a2e0" stroke-width="1"/>
+<g data-key="smallest/0/part/42/19/B/cache">
+<text x="872.7" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">B 19</text>
+</g>
+<rect x="924.5" y="137.0" width="136.2" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.3"/>
+<rect x="925.5" y="165.0" width="134.2" height="5.0" rx="1" fill="#b3a2e0" stroke="#b3a2e0" stroke-width="1"/>
+<g data-key="smallest/0/part/61/25/B/new">
+<text x="992.6" y="156.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">B 新 25</text>
+</g>
+<line x1="1115.2" y1="134.0" x2="1115.2" y2="169.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="smallest/1/need">
+<text x="592.0" y="192.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">A 的请求：缺 25 块，空闲 10</text>
+</g>
+<g data-key="smallest/1/gone">
+<text x="1115.2" y="192.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="end">B（44 块）失效</text>
+</g>
+<rect x="592.0" y="200.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="592.0" y="200.0" width="228.9" height="26.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.3"/>
+<rect x="593.0" y="228.0" width="226.9" height="5.0" rx="1" fill="#68b4d4" stroke="#68b4d4" stroke-width="1"/>
+<g data-key="smallest/1/part/0/42/A/cache">
+<text x="706.5" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">A 42</text>
+</g>
+<rect x="820.9" y="200.0" width="136.2" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.3"/>
+<rect x="821.9" y="228.0" width="134.2" height="5.0" rx="1" fill="#68b4d4" stroke="#68b4d4" stroke-width="1"/>
+<g data-key="smallest/1/part/42/25/A/new">
+<text x="889.0" y="219.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">A 新 25</text>
+</g>
+<line x1="1115.2" y1="197.0" x2="1115.2" y2="232.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="smallest/2/need">
+<text x="592.0" y="255.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">C 的请求：缺 43 块，空闲 29</text>
+</g>
+<g data-key="smallest/2/gone">
+<text x="1115.2" y="255.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="end">A（67 块）失效</text>
+</g>
+<rect x="592.0" y="263.0" width="523.2" height="26.0" rx="0" fill="#2b2f33" stroke="#556067" stroke-width="1.2"/>
+<rect x="592.0" y="263.0" width="114.5" height="26.0" rx="0" fill="#452726" stroke="#f37b84" stroke-width="1.3"/>
+<rect x="593.0" y="291.0" width="112.5" height="5.0" rx="1" fill="#c9aa7c" stroke="#c9aa7c" stroke-width="1"/>
+<g data-key="smallest/2/part/0/21/C/waste">
+<text x="649.2" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">C 重算 21</text>
+</g>
+<rect x="706.5" y="263.0" width="119.9" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.3"/>
+<rect x="707.5" y="291.0" width="117.9" height="5.0" rx="1" fill="#c9aa7c" stroke="#c9aa7c" stroke-width="1"/>
+<g data-key="smallest/2/part/21/22/C/new">
+<text x="766.4" y="282.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">C 新 22</text>
+</g>
+<line x1="1115.2" y1="260.0" x2="1115.2" y2="295.0" stroke="#c6d8ea" stroke-width="2.6"/>
+<g data-key="smallest/recomputed">
+<text x="592.0" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#f37b84" text-anchor="start">重新计算 21 个 token</text>
+</g>
+<g data-key="smallest/invalidations">
+<text x="877.0" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">失效 3 次</text>
+</g>
+<text x="1115.2" y="321.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#99a6b3" text-anchor="end">右端是上限 96 块</text>
+<line x1="560.0" y1="84.0" x2="560.0" y2="329.0" stroke="#556067" stroke-width="1.2" stroke-dasharray="4 4"/>
+<rect x="252.6" y="346.0" width="24.0" height="17.0" rx="3" fill="#223842" stroke="#68b4d4" stroke-width="1.4"/>
+<text x="284.6" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">已缓存，直接读取</text>
+<rect x="434.6" y="346.0" width="24.0" height="17.0" rx="3" fill="#46301f" stroke="#ee8a52" stroke-width="1.4"/>
+<text x="466.6" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">这次请求的新 token</text>
+<rect x="637.4" y="346.0" width="24.0" height="17.0" rx="3" fill="#452726" stroke="#f37b84" stroke-width="1.4"/>
+<text x="669.4" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">失效后重新计算</text>
+<rect x="803.4" y="346.0" width="24.0" height="17.0" rx="3" fill="#2b2f33" stroke="#556067" stroke-width="1.4"/>
+<text x="835.4" y="360.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">空闲</text>
+</svg>

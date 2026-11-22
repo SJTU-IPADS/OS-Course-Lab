@@ -24,9 +24,10 @@ from .model import (
     select_pages,
 )
 from .renderers import get_renderer
+from .renderers.viewer import colorscheme
 from .renderers.viewer.marp import build_deck
 from .serialize import lecture_to_dict
-from . import variables
+from . import tokens, variables, variants
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -58,9 +59,16 @@ def main(argv: list[str] | None = None) -> int:
                 )
             if args.no_build and any(t in DECK_EXPORTS for t in targets):
                 raise ValueError("--no-build skips Marp, which --to pdf and --to png need")
+            if args.color_scheme and "viewer" not in groups:
+                raise ValueError(
+                    "--color-scheme is for the viewer's web pages, and --to "
+                    f"{','.join(targets)} writes none; omit it or add html"
+                )
+            color_scheme = args.color_scheme or colorscheme.AUTO
             for renderer, names in groups.items():
                 output_dir = Path(args.out) if args.out else default_out_dir(lecture, renderer, args.lang)
-                entry = render_lecture(lecture, lecture_dir, renderer, output_dir)
+                options = {"color_scheme": color_scheme} if renderer == "viewer" else {}
+                entry = render_lecture(lecture, lecture_dir, renderer, output_dir, **options)
                 # Only the deck needs the Marp build; pptx writes its file
                 # directly (no Marp/Chrome).
                 if renderer == "viewer" and not args.no_build:
@@ -86,6 +94,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.pages:
                 lecture = select_pages(lecture, args.pages)
             output_dir = Path(args.out) if args.out else default_out_dir(lecture, "viewer", args.lang)
+            color_scheme = args.color_scheme or colorscheme.AUTO
             if args.watch:
                 serve(
                     lecture_dir, output_dir,
@@ -93,15 +102,25 @@ def main(argv: list[str] | None = None) -> int:
                     debounce_ms=args.debounce,
                     lang=args.lang, strict=args.strict,
                     demo_timeout_s=args.demo_timeout,
+                    color_scheme=color_scheme,
                 )
                 return 0
-            entry = render_lecture(lecture, lecture_dir, "viewer", output_dir)
+            entry = render_lecture(
+                lecture, lecture_dir, "viewer", output_dir, color_scheme=color_scheme
+            )
             if not args.no_build:
                 build_deck(output_dir, deck_formats(()), name=slugify(lecture.title))
             open_in_browser(entry)
             return 0
         if args.command == "book":
             return render_book(args)
+    except KeyboardInterrupt:
+        # Ctrl-C is how a watch session is stopped, so also while it loads. For
+        # any other command Python dies by the signal, which a shell loop needs.
+        if not getattr(args, "watch", False):
+            raise
+        print("\nlecturekit: shutting down", file=sys.stderr)
+        return 0
     except Exception as exc:
         print(f"lecturekit: {exc}", file=sys.stderr)
         return 1
@@ -143,6 +162,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--pages",
         help="render only a subset, e.g. '3-7', '2,4,6', or a page id",
     )
+    add_color_scheme_flag(render_parser)
     render_parser.add_argument(
         "--no-build",
         action="store_true",
@@ -191,6 +211,7 @@ def build_parser() -> argparse.ArgumentParser:
             f"(default {DEFAULT_DEMO_TIMEOUT_S:g})"
         ),
     )
+    add_color_scheme_flag(view_parser)
     view_parser.add_argument(
         "--no-build",
         action="store_true",
@@ -260,6 +281,20 @@ def add_lang_flag(parser: argparse.ArgumentParser, *, strict: bool = False) -> N
         )
 
 
+def add_color_scheme_flag(parser: argparse.ArgumentParser) -> None:
+    """``--color-scheme``, on a command that writes the viewer's web pages."""
+    parser.add_argument(
+        "--color-scheme",
+        choices=colorscheme.choices(),
+        # No default, so `render --to pptx` can tell a scheme asked for from none.
+        help=(
+            "the colours of the web pages (outline and deck): a file of "
+            f"themes/schemes/, or {colorscheme.AUTO}, the default, to follow the "
+            f"system. PDF and PNG are always {tokens.DEFAULT_SCHEME}"
+        ),
+    )
+
+
 # What `render --to` produces: target name -> the renderer that writes it. One
 # renderer serves several targets (the deck is html, pdf and png), so a run
 # renders each renderer once and then does the targets' export steps.
@@ -304,14 +339,18 @@ def deck_formats(targets: Iterable[str]) -> tuple[str, ...]:
     return ("html", *(name for name in DECK_EXPORTS if name in targets))
 
 
-def render_lecture(lecture: Lecture, lecture_dir: Path, to: str, output_dir: Path) -> Path:
+def render_lecture(
+    lecture: Lecture, lecture_dir: Path, to: str, output_dir: Path, **options
+) -> Path:
     """Render a lecture bundle to ``output_dir`` and return the entry file to open.
+
+    ``options`` are the renderer's own (the viewer's ``color_scheme``).
 
     A renderer may return its primary output path (the pptx renderer returns the
     ``.pptx``); the viewer renderer returns ``None``, so its entry is ``index.html``.
     """
     renderer_cls = get_renderer(to)
-    entry = renderer_cls(asset_root=lecture_dir).render(lecture, output_dir)
+    entry = renderer_cls(asset_root=lecture_dir, **options).render(lecture, output_dir)
     return entry or Path(output_dir, "index.html")
 
 
@@ -469,9 +508,11 @@ def load_lecture(lecture_dir: Path) -> Lecture:
         lecture = lecture.build()
     if not isinstance(lecture, Lecture):
         raise TypeError("'lecture' must be a lecturekit Lecture builder or model")
-    # A bound figure is checked against the lecture's variables here, where
-    # the directory its files are in is known.
+    # A bound figure is checked against the lecture's variables here, and a
+    # picture's variants against the picture, where the directory the files
+    # are in is known.
     variables.check_figures(lecture, lecture_dir)
+    variants.check(lecture_dir)
     return lecture
 
 

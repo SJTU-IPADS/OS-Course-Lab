@@ -448,18 +448,64 @@ class PptxRendererTest(unittest.TestCase):
             theme.CHIP_INK["orange"],
         )
 
-    def test_annotation_is_the_only_deferred_block(self):
+    def test_annotation_is_a_bubble_over_the_slide(self):
         lecture = Lecture(id="lec", title="L")
 
         def body(p):
             p.title("P")
-            p.slide("text").annotate("a bubble")
+            p.slide("text").annotate("a bubble", at="bottom-right", dx=-96, dy=-48)
+            p.slide("after")
 
         with lecture.section("S", id="s") as s:
             s.page("p1", body=body)
-        prs, _ = self.render(lecture)   # must not raise
-        self.assertEqual(len(prs.slides), 1)
-        self.assertNotIn("a bubble", all_text(prs.slides[0]))
+            s.page("p2", body=body, annotation=False)
+        prs, _ = self.render(lecture)
+        self.assertEqual(len(prs.slides), 2)
+        bubble = list(prs.slides[0].shapes)[-1]     # read last, drawn on top
+        self.assertEqual(bubble.text_frame.text, "a bubble")
+        self.assertEqual(bubble.left + bubble.width, prs.slide_width - px(96))
+        self.assertEqual(bubble.top + bubble.height, prs.slide_height - px(48))
+        self.assertNotIn("a bubble", all_text(prs.slides[1]))
+
+    def test_a_footnote_marker_ends_its_block_and_takes_no_room(self):
+        def deck(noted):
+            lecture = Lecture(id="lec", title="L")
+
+            def body(p):
+                p.title("P")
+                first = p.slide("a claim")
+                listing = p.code("c", "int x;")
+                p.slide("below")
+                if noted:
+                    first.footnote("its source")
+                    listing.footnote("its origin")
+
+            lecture.page("p1", body=body)
+            return list(self.render(lecture)[0].slides[0].shapes)
+
+        plain, noted = deck(False), deck(True)
+
+        def top_of(shapes, text):
+            return next(s.top for s in shapes if s.has_text_frame and s.text_frame.text == text)
+
+        self.assertEqual(top_of(plain, "below"), top_of(noted, "below"))
+        texts = [s.text_frame.text for s in noted if s.has_text_frame and s.text_frame.text]
+        self.assertEqual(texts, ["P", "a claim1", "int x;", "2", "below",
+                                 "1 its source\n2 its origin"])
+
+    def test_the_references_page_closes_the_deck(self):
+        lecture = Lecture(id="lec", title="L")
+
+        def body(p):
+            p.title("P")
+            p.slide("claim")
+            p.cite(title="A Paper", author="Someone", year="2020")
+
+        lecture.page("p1", body=body)
+        prs, _ = self.render(lecture)
+        self.assertEqual(len(prs.slides), 2)
+        self.assertIn("A Paper", all_text(prs.slides[1]))
+        self.assertIn("(P1)", all_text(prs.slides[1]))
 
     def test_image_right_sits_beside_narrowed_text(self):
         src = Path(tempfile.mkdtemp())
@@ -507,9 +553,10 @@ class PptxRendererTest(unittest.TestCase):
         prs, _ = self.render(lecture, asset_root=src)
         slide = prs.slides[0]
         pic = next(s for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
+        marked = "2" if text_notes else ""     # its footnote marker ends the text
         title, text = (
             next(s for s in slide.shapes if s.has_text_frame and s.text_frame.text == name)
-            for name in ("P", "beside the picture")
+            for name in ("P", f"beside the picture{marked}")
         )
         return slide, pic, title, text
 

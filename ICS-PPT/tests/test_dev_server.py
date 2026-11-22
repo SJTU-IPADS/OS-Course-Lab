@@ -357,10 +357,11 @@ class RenderErrorPreviewTest(unittest.TestCase):
         class FakeMarp:
             stdout = []
             pid = -1
+            returncode = 0
 
             def poll(self):
-                # Report "already exited" so _terminate_process_group
-                # short-circuits without touching os.killpg.
+                # Report "already exited"; a pid of -1 also leads no session,
+                # so _terminate_process_group has nothing to signal.
                 return 0
 
             def wait(self, timeout=None):
@@ -581,6 +582,7 @@ class TerminateProcessGroupTest(unittest.TestCase):
         # killing the wrapper alone would leave node holding marp's port.
         class Proc:
             pid = 4242
+            returncode = None
             waited = False
 
             def poll(self):
@@ -591,7 +593,7 @@ class TerminateProcessGroupTest(unittest.TestCase):
                 return 1
 
         proc = Proc()
-        with patch.object(dev_server.os, "name", "nt"), \
+        with patch.object(os, "name", "nt"), \
                 patch.object(dev_server.subprocess, "run") as run:
             dev_server._terminate_process_group(proc)
         self.assertEqual(run.call_args.args[0], ["taskkill", "/T", "/F", "/PID", "4242"])

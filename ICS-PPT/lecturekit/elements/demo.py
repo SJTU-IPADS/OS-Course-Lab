@@ -54,6 +54,10 @@ class Demo(Block):
                     f"Demo bold on {page_id} names line {number}, which is blank"
                 )
 
+    def block_form(self, commands) -> bool:
+        """Whether the demo is a listing under its head, or one line."""
+        return len(commands) > 1 or bool(self.content.get("output"))
+
     def to_marp(self, ctx):
         """A command, drawn as the transcript it is, with a button that runs it.
 
@@ -72,14 +76,15 @@ class Demo(Block):
         an id and not a path, and ship ``disabled``, for the same reasons the run
         button does — see ``lecturekit.source``.
         """
-        from ..renderers.viewer.blocks import demo_files, demo_output, escape_html, inline_md
+        from ..markup.fields import escape_html, inline_md
+        from ..renderers.viewer.blocks import demo_files, demo_output
         from lecturekit import demo as demo_module
 
         content = self.content
         command = str(content["command"])
         output = content.get("output")
         lines = demo_module.prompt_lines(demo_module.shown(content))
-        block_form = len(lines) > 1 or bool(output)
+        block_form = self.block_form(lines)
         # A blank command is a file button with nothing to run: no play button and
         # no `$ …` line. The file buttons are the whole of the block.
         run = ""
@@ -126,73 +131,46 @@ class Demo(Block):
         """A `p.demo(...)` as a still transcript.
 
         Nothing here is runnable — a PPTX is a file on someone else's laptop — so
-        the block prints what the deck prints when nobody presses the button: the
-        name, then the command, then the output the author recorded. The box is the
-        code block's, because on the slide it *is* the code block, and a handout
-        that reflows every listing is a different handout.
+        the block prints what the deck prints when nobody presses a button, in the
+        deck's order: the files' labels, the name, the description, then the
+        command and the output the author recorded in the code block's box. A
+        single command with no output is one line, as in the deck, with the
+        command before the description.
         """
-        from pptx.enum.shapes import MSO_SHAPE
-        from pptx.util import Emu, Pt
         from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import (
-            GAP,
-            _shape,
-            apply_runs,
-            no_line,
-            set_line_spacing,
-            solid,
-            style_run,
-            textbox,
-        )
-        from ..renderers.pptx.layout import estimate_text_height, LINE_HEIGHT
-        from ..renderers.pptx.text import parse_markdown
-        from lecturekit import demo as demo_module
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import Look, draw_code, draw_line
+        from ..renderers.pptx.text import Run, runs
+        from lecturekit import demo as demo_module, source
 
         content = self.content
-        lines = demo_module.prompt_lines(demo_module.shown(content))
+        commands = demo_module.prompt_lines(demo_module.shown(content))
         output = content.get("output")
         outputs = str(output).strip("\n").split("\n") if output else []
+        in_line = not self.block_form(commands)
 
-        # A demo may go without a name, and then the listing is all there is.
-        head = " — ".join(
-            str(part) for part in (content["name"], content.get("description")) if part
-        )
+        files = source.normalize(content.get("files"))
+        parts = [[Run(source.label(path), code=True)] for path in files]
+        if content["name"]:     # a demo may go without a name
+            parts.append([Run(run.text, bold=True) for run in runs(ctx.read.plain(content["name"]))])
+        if in_line:
+            parts.extend([Run(line, code=True)] for line in commands)
+        if content.get("description"):
+            parts.append(runs(ctx.read.inline(content["description"])))
+        head = []
+        for number, part in enumerate(parts):
+            head += [Run("  "), *part] if number else part
         if head:
-            head_height = estimate_text_height(head, font_pt=theme.CAPTION_PT,
-                                               width=ctx.layout.content_width)
-            box, tf = textbox(ctx, head_height)
-            set_line_spacing(tf.paragraphs[0], theme.CAPTION_PT)
-            apply_runs(tf.paragraphs[0], parse_markdown(head)[0].runs,
-                        size_pt=theme.CAPTION_PT, color=theme.DK2)
-            for run in tf.paragraphs[0].runs:
-                run.font.bold = True
-            ctx.cursor.place(head_height)
-
-        vertical_pad_pt = 4
-        rows = lines + outputs
-        if not rows:
-            return
-        bold = {len(lines) + number for number in content.get("bold") or ()}
-        height = Emu(Pt(len(rows) * theme.CODE_PT * LINE_HEIGHT + 2 * vertical_pad_pt))
-        box, tf = textbox(ctx, height)
-        solid(box, theme.LT2)
-        no_line(box)
-        tf.margin_left = Pt(10)
-        tf.margin_top = tf.margin_bottom = Pt(vertical_pad_pt)
-        first = True
-        for number, line in enumerate(rows, start=1):
-            p = tf.paragraphs[0] if first else tf.add_paragraph()
-            first = False
-            set_line_spacing(p, theme.CODE_PT)
-            style_run(p.add_run(), line or " ", size_pt=theme.CODE_PT, mono=True,
-                       color=theme.ACCENT1 if number <= len(lines) else theme.FG,
-                       bold=number in bold)
-        top = ctx.cursor.place(height)
-        bar = _shape(ctx, MSO_SHAPE.RECTANGLE, ctx.layout.content_left, top,
-                     Pt(4), height)
-        solid(bar, theme.ACCENT4)
-        no_line(bar)
-        ctx.cursor.advance(GAP)
+            draw_line(ctx, head, Look(size=theme.CAPTION_PT, color=theme.DK2))
+        if not in_line:
+            bold = set(content.get("bold") or ())
+            lines = [[Run(line or " ")] for line in commands] + [
+                [Run(line or " ", bold=number in bold)]
+                for number, line in enumerate(outputs, start=1)
+            ]
+            draw_code(ctx, lines, commands=len(commands), accent=theme.ACCENT4)
+        if head or not in_line:
+            ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
         """A command as the book has to print it: verbatim, with its output.

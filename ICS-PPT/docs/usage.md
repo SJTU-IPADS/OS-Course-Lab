@@ -15,7 +15,8 @@ LEC=path/to/your/lecture
 Four commands, each doing one thing. `inspect` and `build` are pure and need no
 Node; `render` and `view` produce a complete viewer bundle and run Marp (the
 viewer's own tool) to build `slides.html`. `render --to` picks what to produce,
-as described in [Targets](#targets).
+as described in [Targets](#targets). The PowerPoint and the transcript are read
+with Marp's parser, so they need Node as well.
 
 `inspect` prints the deck's [variables](dsl.md#variables-and-controls) under
 its title, one line each (`$T = 1 in [0, 10]`, `$size = 480 in [100, 800] step 10`),
@@ -66,6 +67,8 @@ A rendered bundle contains:
 - `index.html` / `viewer.css` / `viewer.js` / `outline.css` — the outline shell
 - `outline.html` — a standalone print page used only for the PDF outline
 - `slides.html` — the Marp-rendered deck (pages only)
+- `head.html` — what the deck's `<head>` opens with: the colour scheme and its
+  pictures. The build puts it in the file, and `view --watch` in what it serves
 - `theme.css`, the bundled `*.woff2` fonts and `assets/` — what the deck loads
   (`theme-pdf.css` too, once a PDF or PNG export has run)
 - `<title>.pdf`, `slides.NNN.png` — with `--to pdf` / `--to png` (see
@@ -149,6 +152,28 @@ The PDF and the PNG are printed at the defaults: the control at its default
 position, the bound figure as its file shows it. PowerPoint, the transcript
 sheet and the book draw the defaults and print each control as one line of
 text.
+
+### Colour scheme
+
+The web pages (the outline, the deck and the preview's error page) follow the
+system by default: dark where it is dark, and changing with it.
+`--color-scheme` pins one, on `view` and on `render`:
+
+```bash
+python3 -m lecturekit.cli view "$LEC" --watch --color-scheme dark  # auto (default), or a file of themes/schemes/
+```
+
+The names are `auto` and the files of `themes/schemes/`
+([adding one](theme.md#adding-a-colour-scheme)). A picture is never recoloured.
+A scheme shows the one [drawn for it](dsl.md#pictures-for-a-colour-scheme)
+where the lecture has one. Otherwise the picture stays as it is, on a white
+sheet in the dark, and a page over such a background picture stays light.
+
+Everything else is `light` whatever the flag says: PDF, PNG, a page printed
+from the browser, and the other targets. `render` refuses the flag when no
+target is a web page (`--to pptx`). The scheme is fixed when the bundle is
+rendered, or when a watch session starts; to change it, render again or restart
+the session.
 
 ### Marp is a viewer detail
 
@@ -248,6 +273,10 @@ The whole bundle (`lecture.json`, the outline, `slides.md`, and any deck build)
 reflects only the selected pages; sections survive only if they still hold one.
 Unknown ids or out-of-range indices are an error.
 
+While a preview is running, give a one-page render its own `--out` (e.g.
+`--out build/scratch-page`): otherwise it writes into the preview's directory,
+`build/<id>-viewer`, and replaces the files the preview serves.
+
 ## Rendering in another language
 
 `--lang LANG` lays the lecture's `i18n/<LANG>.toml` translation overlay over the
@@ -319,7 +348,7 @@ so it needs a local Chrome/Chromium. `pdf` and `png` can be combined: `--to pdf,
 `render --to pptx` writes an **editable** PowerPoint deck instead of a viewer
 bundle. Unlike the PDF/PNG exports (which render the Marp deck to images), this
 is a native renderer: each page becomes a slide of real text frames, tables,
-pictures, and shapes you can edit in PowerPoint — no Marp, no Chrome.
+pictures, shapes, and equations you can edit in PowerPoint — no Chrome.
 
 ```bash
 python3 -m lecturekit.cli render "$LEC" --to pptx          # -> build/<id>-pptx/<slug>.pptx
@@ -327,9 +356,58 @@ python3 -m lecturekit.cli render "$LEC" --to pptx --out build/deck
 ```
 
 The deck is named after the lecture title (slugified), like the PDF export, and
-`--pages` works the same way. It needs no Node or Chrome — only the
-`python-pptx` dependency (plus an SVG renderer if the deck has vector figures,
-see below).
+`--pages` works the same way. It needs the `python-pptx` dependency, Node
+and the vendored `node_modules/` of [`scripts/prepare.sh`](#rendering-offline)
+(a `marp` on `PATH` or `npx` is not enough), plus an SVG renderer if the deck
+has vector figures (see below).
+
+**The content is the deck's.** Slide text is parsed once, by the parser the
+deck uses (markdown, raw HTML, formulas, entities, emoji), and every other
+field is read as the deck reads it: a caption, a footnote, a bubble or a
+sidenote's body takes `**bold**`, `*italic*`, `` `code` `` and links, and a
+`$` in one is a dollar sign. So each slide holds the same text, formulas,
+pictures, listings and tables as the deck's, in the same order, and the deck's
+references page closes the file. Speaker notes are not exported.
+
+**The layout is approximate.** Colors, fonts, explicit image sizes, and
+per-block styling are ported from the viewer theme
+(`themes/basic-office.css`), but with no browser to measure text, blocks are
+stacked top-to-bottom by an *estimated* height. Line breaks, spacing and sizes
+differ from the viewer, and a very full page can pass the bottom of the slide.
+PowerPoint sets some things in its own way:
+
+- A picture inside a line of text takes a line of its own, since a text frame
+  holds no picture, and a picture inside a table cell follows the table.
+- `image_right` gets no text wrap: the picture sits at the content box's right
+  edge and the text box is narrowed to sit beside it.
+- An architecture diagram that would not fit the room left on the page is
+  measured again at a smaller font (down to 55% of the diagram size).
+- A listing is set in one ink, without syntax colours.
+- A picture that cannot be embedded (a web address, a missing file, a format
+  PowerPoint does not read) is skipped, and named on stderr.
+
+### Checking an export against the deck
+
+`scripts/check-pptx.py` reads the two outputs, prints the slides whose content
+differs, and is silent when none does. Its exit status is 0, 1 for a
+difference, or 2 for bad usage.
+
+```bash
+python3 -m lecturekit.cli render "$LEC" --out build/deck-html
+python3 -m lecturekit.cli render "$LEC" --to pptx --out build/deck-pptx
+scripts/check-pptx.py build/deck-html/slides.html build/deck-pptx/*.pptx
+```
+
+It compares what is visible on each slide, in reading order: the text without
+its white space, the symbols of each formula, each picture's file name, each
+table's cells and each listing's lines. A cell's pictures count after the
+table. Three differences are by design, each a rule for a kind of element on
+every slide, stated at the top of the script:
+
+- a demo's run button and a control's reset button are interface;
+- a block held back on an animation's earlier frame is not on that frame;
+- a control prints as `label = value` with its range and marks in a
+  parenthesis.
 
 ### SVG figures
 
@@ -349,56 +427,22 @@ The rest of the deck exports normally.
 
 ### Math
 
-`$…$` and `$$…$$` are translated into **OMML**, PowerPoint's own equation
-markup, so an equation is typeset by PowerPoint and stays editable in its
-equation editor — it is not a picture. Display math is centered on its own line;
-inline math sits in the run of text around it. It works in slide text, table
-cells, asides, highlights, and footnotes — everywhere this renderer parses
-inline markdown. Page titles, figure captions, and sidenote bodies are still
-drawn as plain text here, so `$…$` in one of those reaches the slide as source
-(as `**bold**` in one already does).
+`$…$` and `$$…$$` are read by the deck's own MathJax, which hands over MathML,
+and the MathML is written as **OMML**, PowerPoint's equation markup. So a
+formula the deck can typeset (matrices, `aligned`, `cases`, accents, braces,
+macros) is an equation here as well, editable in PowerPoint's equation editor,
+and there is no list of supported commands. Display math is centered on its
+own line and inline math sits in the run of text around it. Formulas appear
+where the deck typesets them: slide text, columns, table cells, titles, asides
+and highlight chips.
 
-The translation covers what lecture math uses:
-
-| | |
-| --- | --- |
-| scripts | `x_i`, `x^2`, `C_a^b` (folded into one base) |
-| fractions and roots | `\frac{a}{b}`, `\sqrt{x}`, `\sqrt[3]{x}` |
-| big operators | `\sum` `\prod` `\int` … with `_`/`^` limits |
-| delimiters | `\left( … \right)`, auto-sized around what they hold |
-| upright text | `\mathrm` `\operatorname` `\text` `\mathsf` `\mathbf` |
-| script styles | `\mathbb` `\mathcal` `\mathfrak` |
-| symbols | Greek, `\times` `\approx` `\in` `\to` `\infty` … |
-| spacing | `\,` `\;` `\!` `\quad` `\qquad` |
-
-Anything else — matrices, `align` environments, accents — is not parsed and
-falls through as literal text, so an unrecognized command shows its own name
-rather than taking the export down with it. Each equation also carries a
-plain-text fallback for readers that do not implement the math extension.
+A formula MathJax cannot read keeps what the deck shows for it, and one line
+on stderr names it. Each equation also carries a plain-text fallback for
+readers that do not implement PowerPoint's math extension: LibreOffice Impress
+shows that text in place of the equation.
 
 A `$$` fence must be **indented by one space**; see the note in
 [dsl.md](dsl.md#math-in-slides).
-
-**Style is faithful but layout is approximate.** Colors, fonts, explicit image
-sizes, and per-block styling are ported from the viewer theme
-(`themes/basic-office.css`), but with no browser to measure text, blocks are
-stacked top-to-bottom by an *estimated* height; spacing won't match the viewer
-exactly. The text boxes auto-fit on open, so the rendered result is clean — just
-not pixel-identical.
-
-Every block the deck draws reaches the slide: slide markdown, code, demo
-transcripts, links, images, rows, architecture diagrams, tables, asides,
-sidenotes, highlight chips, bridges, footnotes. **Annotation bubbles** are the
-one exception — they are positioned against the viewer's measured geometry, so a
-deck that uses them exports without them.
-
-Two figures are drawn to the same content but not by the same mechanism.
-`image_right` gets no text wrap: PowerPoint cannot flow text around a shape, so
-the picture sits at the content box's right edge and the text box is narrowed to
-sit beside it, rather than the text closing back under the figure. An
-architecture diagram that would not fit the room left on the page is measured
-again at a smaller font (down to 55% of the diagram size) instead of running off
-the slide.
 
 ### Fonts
 
@@ -426,7 +470,10 @@ python3 -m lecturekit.cli render "$LEC" --to transcript        # -> build/<id>-t
 python3 -m lecturekit.cli render "$LEC" --to transcript-pdf    # and the PDF beside it
 ```
 
-It is derived from what the deck says, so there is nothing more to write. It
+It is derived from what the deck says, so there is nothing more to write. Its
+text is parsed as the [PowerPoint export](#powerpoint-export)'s is, by the
+deck's parser, so it needs Node and the vendored `node_modules/` too. A
+formula is MathML, which browsers typeset and print without a script. It
 leaves out what a sheet cannot use or would print twice: speaker notes, book
 prose, the cover, the reference list, an animation's earlier frames, a reveal
 pair's first half, and pages borrowed from another lecture. Every figure is
@@ -460,11 +507,18 @@ borrowed slide reloads it. Each extra root is named on startup. Adding or
 dropping a review source mid-session re-arms the watcher on the next render; no
 restart needed.
 
-`Ctrl-C` stops a session. One left running in the background, or in a terminal
-since closed, is stopped by `scripts/stop-watch.sh` (every session) or
-`scripts/stop-watch.sh 3031` (the one on that port); a session killed outright
-can leave its `marp --watch` worker behind, which the port-less form also
-reaps.
+`Ctrl-C` stops a session. So do `kill` (SIGTERM) and closing its terminal
+(SIGHUP). Each of them, and an error that ends the session, also ends
+`marp --watch` and every demo with what it started, and frees the port. The exit
+status is 0 after `Ctrl-C`, 143 after SIGTERM, 129 after SIGHUP, and 1 after an
+error. A second `Ctrl-C` does not cut the cleanup short. A signal that the
+session was started ignoring stays ignored, so one under `nohup` outlives its
+terminal.
+
+A session left running in the background is stopped by `scripts/stop-watch.sh`
+(every session) or `scripts/stop-watch.sh 3031` (the one on that port). One
+killed with SIGKILL has no chance to clean up: its demos stay, and so does its
+`marp --watch` worker, which the port-less form also reaps.
 
 ### Running a demo from the deck
 
@@ -598,7 +652,7 @@ rebuild; they belong to the address the deck is served from, so another port
 starts from the defaults.
 
 There is no stop *request* behind any of this: the browser drops the connection,
-and the server kills that command's whole process group when its next write has
+and the server kills that command's whole session when its next write has
 nowhere to go. So a command with no natural end — `ollama serve` — is a
 perfectly good demo.
 
@@ -606,8 +660,14 @@ A demo is killed after 120 seconds unless it says otherwise, and its output is
 truncated past 512 KB. `--demo-timeout S` moves the default and `--demo-timeout 0`
 removes it; a block's own [`timeout=`](dsl.md#demos) wins over both, and
 `timeout=0` on a block is how `ollama serve` gets to keep running. The process
-gets its own session, so a pipeline is killed whole rather than leaving its tail
-behind.
+gets its own session, so a run is killed whole rather than leaving its tail
+behind: the rest of a pipeline, a child in a process group of its own
+(`timeout`), and what bash put in the background, also when bash itself is
+already over. A run ends by itself when bash is over and nothing holds its
+output open. What it then left in the background stays until the watch session
+ends. A process that starts a session of its own (`setsid`, a daemon) is out of
+reach of both. On Windows, which has no sessions, the tree under bash is killed
+while bash runs.
 
 **The browser cannot invent a command.** The button carries a hash of the
 command, not the command; the server maps that id back to what the author wrote via
@@ -715,7 +775,7 @@ name (`.c`, `.h`, `.s`, `.S`, `.py`, `.sh`, `.sed`, `Makefile`, `.cu`, ...) and
 the lexing is done by [Pygments](https://pygments.org) on the server, so the
 deck ships no highlighter. The colours are the roles the theme gives a `p.code`
 block — keyword, type, name being defined, string, number, comment — on the
-panel's dark ground. A file Pygments has no lexer for is shown as plain text,
+panel's ground. A file Pygments has no lexer for is shown as plain text,
 and so is every file when Pygments is not installed.
 
 Armed with ▶, in a watch session and nowhere else. **The browser cannot
@@ -790,7 +850,11 @@ python3 -m pytest tests/test_marp.py -v
 python3 -m pytest -k highlight
 ```
 
-Install it first with `pip install -e ".[dev]"`.
+Install it first with `pip install -e ".[dev]"`, and run `scripts/prepare.sh`
+once: the tests of the PowerPoint and transcript renderers run the deck's
+parser on Node. `tests/test_check_pptx.py` compares both exports of the
+showcase and of a lecture with every kind of block
+([the check](#checking-an-export-against-the-deck)).
 
 Most tests are stdlib `unittest.TestCase` classes, but a few need pytest's
 `monkeypatch` / `tmp_path` fixtures and are written as bare `def test_*`

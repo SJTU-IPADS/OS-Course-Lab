@@ -60,19 +60,25 @@ class LectureCliTest(unittest.TestCase):
             self.assertEqual(exit_code, 0)
             for name in ("index.html", "viewer.css", "viewer.js", "lecture.json", "slides.md"):
                 self.assertTrue(Path(tmp, name).exists(), f"missing {name}")
-            build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
+            build.assert_called_once_with(
+                Path(tmp), ("html",), name="sample-lecture"
+            )
 
     def test_render_to_pdf_requests_html_and_pdf(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
                 main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "pdf"])
-            build.assert_called_once_with(Path(tmp), ("html", "pdf"), name="sample-lecture")
+            build.assert_called_once_with(
+                Path(tmp), ("html", "pdf"), name="sample-lecture"
+            )
 
     def test_render_to_viewer_is_html(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
                 main(["render", LECTURE_SOURCE, "--out", tmp, "--to", "html"])
-            build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
+            build.assert_called_once_with(
+                Path(tmp), ("html",), name="sample-lecture"
+            )
 
     def test_render_unknown_target_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -96,7 +102,9 @@ class LectureCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
                 main(["render", LECTURE_SOURCE, "--out", tmp])
-            build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
+            build.assert_called_once_with(
+                Path(tmp), ("html",), name="sample-lecture"
+            )
 
     def test_render_no_build_skips_marp(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -122,7 +130,9 @@ class LectureCliTest(unittest.TestCase):
                 exit_code = main(["view", LECTURE_SOURCE, "--out", tmp])
             self.assertEqual(exit_code, 0)
             self.assertTrue(Path(tmp, "index.html").exists())
-            build.assert_called_once_with(Path(tmp), ("html",), name="sample-lecture")
+            build.assert_called_once_with(
+                Path(tmp), ("html",), name="sample-lecture"
+            )
             opener.assert_called_once_with(Path(tmp, "index.html"))
 
     def test_view_no_build_skips_marp(self):
@@ -142,7 +152,7 @@ class LectureCliTest(unittest.TestCase):
             serve.assert_called_once_with(
                 Path(LECTURE_SOURCE), Path(tmp), port=4111, reveal=False,
                 debounce_ms=DEFAULT_DEBOUNCE_MS, lang=None, strict=False,
-                demo_timeout_s=DEFAULT_DEMO_TIMEOUT_S,
+                demo_timeout_s=DEFAULT_DEMO_TIMEOUT_S, color_scheme="auto",
             )
 
     def test_view_watch_arms_demos_without_being_asked(self):
@@ -343,13 +353,17 @@ class PngExportCliTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
                 main(["render", MULTIPAGE_SOURCE, "--out", tmp, "--to", "png"])
-            build.assert_called_once_with(Path(tmp), ("html", "png"), name="multi")
+            build.assert_called_once_with(
+                Path(tmp), ("html", "png"), name="multi"
+            )
 
     def test_render_pdf_and_png_together_in_one_build(self):
         with tempfile.TemporaryDirectory() as tmp:
             with patch("lecturekit.cli.build_deck") as build:
                 main(["render", MULTIPAGE_SOURCE, "--out", tmp, "--to", "pdf", "--to", "png"])
-            build.assert_called_once_with(Path(tmp), ("html", "pdf", "png"), name="multi")
+            build.assert_called_once_with(
+                Path(tmp), ("html", "pdf", "png"), name="multi"
+            )
 
 
 class SiblingModuleIsolationTest(unittest.TestCase):

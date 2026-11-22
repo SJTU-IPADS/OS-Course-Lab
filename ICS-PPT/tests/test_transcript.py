@@ -11,8 +11,9 @@ from lecturekit.dsl import Lecture
 from lecturekit.renderers import get_renderer
 from lecturekit.renderers.transcript import TranscriptRenderer, build_html
 from lecturekit.renderers.transcript.images import Embedder
+from lecturekit.markup import Reader
+from lecturekit.renderers.transcript.blocks import Sheet
 from lecturekit.renderers.transcript.renderer import kept_page_ids
-from lecturekit.renderers.transcript.text import markdown
 
 SVG = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"></svg>'
 
@@ -24,6 +25,12 @@ def _built(lecture):
 def _render(lecture, asset_root=None):
     built = _built(lecture)
     return build_html(built, Embedder(asset_root, built.borrowed))
+
+
+def markdown(text):
+    """Slide text as the sheet writes it."""
+    with Reader() as read:
+        return Sheet(Embedder(None), read).blocks(read.slide(text))
 
 
 def _lecture_with(body, **page_kwargs):
@@ -292,10 +299,20 @@ class SelfContained(unittest.TestCase):
         def body(p):
             p.title("Escaping")
             p.slide("<script>alert(1)</script> and 5 < 6")
+            p.slide("a tag shown as code: `<script>`")
+            p.slide('<b onclick="steal()">bold</b> [go](https://x.test)')
+            p.slide('<a href="javascript:steal()">press</a>')
+            p.code("html", "<b>not markup</b>")
 
         html = _render(_lecture_with(body))
         self.assertNotIn("<script", html)
+        # The deck runs a script; the sheet has none, and prints none of it.
+        self.assertNotIn("alert(1)", html)
+        self.assertIn("5 &lt; 6", html)
         self.assertIn("&lt;script&gt;", html)
+        self.assertNotIn("steal()", html)
+        self.assertIn("press", html)
+        self.assertIn("&lt;b&gt;not markup&lt;/b&gt;", html)
 
 
 class Review(unittest.TestCase):
@@ -365,9 +382,25 @@ class MarkdownSubset(unittest.TestCase):
 
     def test_math_is_typeset_without_a_script(self):
         html = markdown(r"cost is $T \approx \frac{2PN}{W}$")
-        self.assertIn("tx-mathspan", html)
+        self.assertIn("<math", html)
         self.assertIn("≈", html)
-        self.assertIn("tx-frac", html)
+        self.assertIn("<mfrac>", html)
+        self.assertNotIn("<script", html)
+
+    def test_math_an_author_wrote_is_only_math(self):
+        html = markdown('<math><mtext><iframe src="https://x.test"></iframe></mtext>'
+                        '<mi href="https://y.test" onclick="f()">x</mi></math>')
+        self.assertIn("<mi>x</mi>", html)
+        for unwanted in ("<iframe", "x.test", "y.test", "onclick"):
+            self.assertNotIn(unwanted, html)
+
+    def test_alphabets_and_alignment_are_spelled_for_mathml_core(self):
+        # Browsers dropped `mathvariant` and `columnalign`.
+        html = markdown(r"$\mathbb{R}\mathbf{v}$ $\begin{aligned}a&=b\end{aligned}$")
+        self.assertIn("ℝ", html)
+        self.assertIn("𝐯", html)
+        self.assertIn("text-align:right", html)
+        self.assertNotIn("data-mjx", html)
 
     def test_a_link_keeps_its_url(self):
         html = markdown("see [the paper](https://example.com/p.pdf)")

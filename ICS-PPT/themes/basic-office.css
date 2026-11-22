@@ -69,6 +69,8 @@
 }
 
 :root {
+  /* Geometry and faces. The colours are a scheme's: themes/schemes/<name>.css,
+     light for every export (see docs/theme.md). */
   --layout-gutter: 24px;
 
   /* A content page is three bands in the slide's padding box: the title, the
@@ -82,16 +84,7 @@
   --slide-padding-bottom: 14px;
   --footnote-band-min: 56px;
   --side-gap: 40px;
-  --color-bg: #ffffff;       /* lt1 */
-  --color-fg: #000000;       /* dk1 / tx1 */
-  --color-dk2: #0e2841;
-  --color-lt2: #e8e8e8;
-  --color-accent1: #156082;
-  --color-accent2: #e97132;
-  --color-accent3: #196b24;
-  --color-accent4: #0f9ed5;
-  --color-link: #467886;     /* hlink */
-  --color-link-visited: #96607d;
+
   --font-base: "Lato", "Helvetica Neue", Helvetica, Arial,
     "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-mono: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono",
@@ -109,49 +102,6 @@
   --pptx-font-cjk: "PingFang SC";
   --pptx-font-mono: "Cascadia Code";
 
-  /* Code syntax colors, consumed by the `.hljs-*` rules further down (Marp
-     emits the classes; a custom theme has to supply the palette). Kept dark
-     enough to stay legible at the deck's small code size, and few enough that
-     a listing reads as text with accents rather than a coloured mosaic. */
-  --code-keyword: #1769c2;
-  --code-string: #417a28;
-  --code-comment: #6b7c8d;
-  --code-number: #b33f16;
-  --code-title: #0e2841;
-  --code-type: #0e4d93;
-
-  /* The three categories the `pseudo` language adds. Message and state are
-     figure colors on purpose: a message or a state name should be the same
-     color in the code block as in the diagram beside it. The keyword gets the
-     green — not the blue every other language's keywords take — because blue
-     is already spoken for by the message, and a keyword drawn in the body's
-     own navy is only bold, which at code size is no color at all. */
-  --pseudo-keyword: #417a28;
-  --pseudo-message: #1769c2;
-  --pseudo-state: #f15a24;
-
-  /* Sidenote color wheel: six soft pastels stepping around the hue circle.
-     The viewer renderer cycles a per-slide counter through these (--sidenote-1
-     is the default, later notes get an inline background of the next slot) so a
-     stack of callouts doesn't read as one monotonous block. All are kept light
-     (high lightness, low saturation) so the navy border, navy body text and
-     accent1 title stay readable on every one. */
-  --sidenote-1: #f7d6d4;  /* blush  */
-  --sidenote-2: #fae2cb;  /* peach  */
-  --sidenote-3: #f5efc4;  /* butter */
-  --sidenote-4: #d9ecd4;  /* sage   */
-  --sidenote-5: #d2e7ef;  /* sky    */
-  --sidenote-6: #e2ddf0;  /* lilac  */
-
-  /* Marker-pen strokes for `<mark>`: the figure palette's own colours, held at
-     low alpha. A stroke is thin, so it needs a saturated ink to register — the
-     pastel washes the sidenotes use go invisible at this height, and at full
-     line height they shout louder than the word they mark. */
-  --stroke-yellow: rgba(246, 197, 21, 0.45);
-  --stroke-orange: rgba(241, 90, 36, 0.28);
-  --stroke-green:  rgba(95, 175, 60, 0.28);
-  --stroke-blue:   rgba(23, 105, 194, 0.22);
-
   /* Where the stroke sits on the word. The deck paints it as a gradient over
      the inline box: from --mark-top (38%, about where an x-height begins) to
      --mark-bottom (just past the baseline). The book draws the same stroke as
@@ -165,31 +115,6 @@
   --mark-bottom: 99%;
   --mark-tex-raise: -0.30ex;
   --mark-tex-height: 1.28ex;
-
-  /* The cover title's ink. A token because the PPTX cover paints it too. */
-  --cover-accent: #bd3f55;
-
-  /* Two hairlines that outlive the deck: a sidenote's border and an
-     architecture module's. They are tokens rather than literals in the rules
-     below because PowerPoint draws these boxes too, and reads its palette from
-     here (lecturekit/tokens.py). */
-  --sidenote-border: #0d2332;
-  --box-border: #c9d3da;
-
-  /* Highlight chip ink: `p.highlight(tone=…)` colours its text with these
-     rather than sitting on a wash. */
-  --chip-yellow: #156082;
-  --chip-orange: #c2410c;
-  --chip-green:  #3f7a2a;
-  --chip-blue:   #1769c2;
-
-  /* A control bound to a deck variable (`p.slider`, `p.input`): the accent of
-     the thumb, the box and a mark under the pointer; the track the thumb runs
-     on; and the ink of the marks and the range, which say where the value can
-     go rather than what it is. */
-  --control-accent: #0f9ed5;
-  --control-track: #d5dde3;
-  --control-muted: #6b7c8d;
 }
 
 section {
@@ -436,7 +361,8 @@ section.cover > .lk-cover:not(:has(.lk-cover-logos)) {
   width: auto;
   max-width: min(320px, 32%);
   max-height: 70px;
-  object-fit: contain;
+  --lk-fit: contain;
+  object-fit: var(--lk-fit);
   margin: 0;
 }
 
@@ -466,7 +392,7 @@ section.cover > .lk-cover:not(:has(.lk-cover-logos)) {
 
 .lk-cover-meta {
   margin-top: 76px;
-  color: #3a3a3a;
+  color: var(--cover-ink);
   font-size: 23pt;
   line-height: 1.35;
 }
@@ -477,7 +403,7 @@ section.cover > .lk-cover:not(:has(.lk-cover-logos)) {
 
 .lk-cover-time {
   margin-top: 0.32em;
-  color: #777;
+  color: var(--cover-muted);
 }
 
 /* --- An untranslated block (`--lang` with no overlay entry) --- */
@@ -487,7 +413,7 @@ section.cover > .lk-cover:not(:has(.lk-cover-logos)) {
    not a slide element. Only the deck draws it: the book and PPTX ignore
    `Block.untranslated` entirely. */
 .lk-untranslated {
-  background: rgba(241, 90, 36, 0.12);
+  background: var(--untranslated-bg);
   border-radius: 3px;
 }
 
@@ -609,8 +535,14 @@ code {
   color: var(--color-accent1);
   background: var(--color-lt2);
   padding: 0 0.32em;
-  border: 1px solid rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--code-border);
   border-radius: 3px;
+}
+
+/* Inline code's own ink can be lost under a stroke. */
+code:has(mark),
+mark code {
+  color: var(--adapt-marked-code);
 }
 
 pre {
@@ -710,13 +642,14 @@ pre.lk-pseudo .tok-cm {
 
 /* A marked line (`p.code(..., mark=[2, 7])`). The wash runs the height of the
    line rather than through its lower half: the unit being marked is a whole
-   line of code, and a half-height stroke under one reads as an underline. It is
-   the same marker ink `<mark>` lays over a word — held at low alpha, so it
-   composites over the block's own grey and lands at the weight a mark does over
-   the white page. The negative left margin cancels the left padding exactly, so
-   a marked line's indentation still lines up with its neighbours. */
+   line of code, and a half-height stroke under one reads as an underline. On
+   paper it is the same marker ink `<mark>` lays over a word — held at low
+   alpha, so it composites over the block's own grey and lands at the weight a
+   mark does over the white page. The negative left margin cancels the left
+   padding exactly, so a marked line's indentation still lines up with its
+   neighbours. */
 pre.lk-pseudo .lk-codemark {
-  background: var(--stroke-yellow);
+  background: var(--codemark-yellow);
   border-radius: 2px;
   padding: 0.12em 0.35em;
   margin-left: -0.35em;
@@ -724,9 +657,9 @@ pre.lk-pseudo .lk-codemark {
   -webkit-box-decoration-break: clone;
 }
 
-pre.lk-pseudo .lk-codemark--orange { background: var(--stroke-orange); }
-pre.lk-pseudo .lk-codemark--green  { background: var(--stroke-green); }
-pre.lk-pseudo .lk-codemark--blue   { background: var(--stroke-blue); }
+pre.lk-pseudo .lk-codemark--orange { background: var(--codemark-orange); }
+pre.lk-pseudo .lk-codemark--green  { background: var(--codemark-green); }
+pre.lk-pseudo .lk-codemark--blue   { background: var(--codemark-blue); }
 
 /* --- Blockquote --- */
 
@@ -767,7 +700,7 @@ span.lk-highlight {
   /* The same soft lift a framed figure gets (`.lk-figure--framed`), so the two
      cards on a slide sit at one height. Neutral navy rather than the tone: a
      coloured shadow reads as a second, blurred copy of the frame. */
-  box-shadow: 0 2px 8px rgba(13, 35, 50, 0.18);
+  box-shadow: 0 2px 8px var(--shadow-card);
   font-weight: 700;
   font-size: 26pt;          /* the slide title's size — big, but not louder than it */
   line-height: 1.4;
@@ -858,7 +791,7 @@ span.lk-highlight {
 
 .lk-demo-run[disabled] {
   border-color: var(--color-lt2);
-  color: #9a9a9a;
+  color: var(--color-disabled);
   cursor: default;
 }
 
@@ -885,7 +818,7 @@ span.lk-highlight {
 
 .lk-demo-file[disabled] {
   border-color: var(--color-lt2);
-  color: #9a9a9a;
+  color: var(--color-disabled);
   cursor: default;
 }
 
@@ -938,7 +871,7 @@ span.lk-highlight {
    so by losing its colour. It keeps its outline and its icon: the reader of a
    PDF still sees that the word names a file. */
 .lk-text-file[disabled] {
-  border-color: #9a9a9a;
+  border-color: var(--color-disabled);
   background: var(--color-bg);
   color: inherit;
   cursor: default;
@@ -1181,7 +1114,7 @@ span.lk-highlight {
 .lk-demo-desc {
   font-size: 0.75em;
   color: var(--color-dk2);
-  opacity: 0.75;
+  opacity: var(--adapt-demo-desc);
 }
 
 .lk-demo[data-lk-demo-form="inline"] .lk-demo-desc {
@@ -1401,10 +1334,10 @@ section :where(.lk-main, .lk-side) > figure.lk-figure {
    transparent line diagrams aren't boxed. */
 .lk-figure--framed img {
   padding: 6px;
-  background: #fff;
+  background: var(--frame-fill);
   border: 1px solid var(--color-lt2);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(13, 35, 50, 0.18);
+  box-shadow: 0 2px 8px var(--shadow-card);
 }
 
 /* A row of side-by-side images. Like figure.lk-figure, the row is a flex item
@@ -1497,7 +1430,9 @@ section :where(.lk-main, .lk-side) > figure.lk-row > figcaption {
   height: auto;
   max-width: none;
   margin: 0;
-  object-fit: contain;
+  /* Named, for a colour scheme's variant to be painted the same way. */
+  --lk-fit: contain;
+  object-fit: var(--lk-fit);
 }
 
 .lk-side-cover,
@@ -1507,7 +1442,7 @@ section :where(.lk-main, .lk-side) > figure.lk-row > figcaption {
 }
 
 .lk-side-cover img {
-  object-fit: cover;          /* Marp's default for a background: fill, cropped */
+  --lk-fit: cover;            /* Marp's default for a background: fill, cropped */
 }
 
 /* --- Pagination + footer --- */
@@ -1565,14 +1500,14 @@ section.lk-references {
 /* --- Inverted section ( <!-- _class: invert --> ) --- */
 
 section.invert {
-  background: var(--color-dk2);
-  color: #ffffff;
+  background: var(--invert-bg);
+  color: var(--invert-fg);
 }
 
 section.invert h1,
 section.invert h2,
 section.invert h3 {
-  color: #ffffff;
+  color: var(--invert-fg);
 }
 
 section.invert strong {
@@ -1580,17 +1515,17 @@ section.invert strong {
 }
 
 section.invert code {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.55);
+  color: var(--invert-fg);
+  background: var(--invert-code-bg);
+  border-color: var(--invert-code-border);
 }
 
 section.invert a {
-  color: var(--color-accent4, #0f9ed5);
+  color: var(--color-accent4);
 }
 
 section.invert blockquote {
-  color: var(--color-lt2);
+  color: var(--adapt-invert-quote);
   border-left-color: var(--color-accent1);
 }
 
@@ -1628,7 +1563,7 @@ img.sidenote-logo {
   height: auto;
   border: 1.5px solid var(--sidenote-border);
   border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(13, 35, 50, 0.35);
+  box-shadow: 0 1px 3px var(--shadow-logo);
 }
 
 .sidenote--single-line .sidenote-logo {
@@ -1780,7 +1715,7 @@ section :where(.lk-main, .lk-side) > figure.lk-arch {
   background: var(--sidenote-1);
   border: 1.5px solid var(--sidenote-border);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(13, 35, 50, 0.25);
+  box-shadow: 0 2px 6px var(--shadow-bubble);
   color: var(--color-fg);
   font-size: 0.8em;
   line-height: 1.35;
@@ -1876,7 +1811,7 @@ section :where(.lk-main, .lk-side) > figure.lk-arch {
   text-align: center;
   overflow-wrap: anywhere;  /* wrap module text onto multiple lines */
   padding: 8px 10px;
-  background: #fff;
+  background: var(--box-fill);
   border: 1px solid var(--box-border);
   border-radius: 6px;
 }
@@ -1905,4 +1840,66 @@ section :where(.lk-main, .lk-side) > figure.lk-arch {
   text-align: center;
   font-style: italic;
   color: var(--color-dk2);
+}
+
+/* --- A picture and its ground ---
+
+   One set of rules for every colour scheme: the `--adapt-*` tokens say what
+   each paints, and on paper that is nothing. They come last, over what the
+   rules above paint. */
+
+/* A sheet behind a figure. It is only a background: the box keeps its size.
+   An SVG can ask for the page's scheme, and a figure is drawn for paper. */
+img:where(:not([data-marp-twemoji], .emoji)) {
+  color-scheme: light;
+  color: var(--adapt-picture-fg);       /* the alt text, while there is no picture */
+  background-color: var(--adapt-picture-bg);
+}
+
+/* What can lie over a figure brings its own ground: the footnote marker on its
+   corner, a chip, the page number, and the text after a figure, which a figure
+   too tall for its room runs under. That text's ground is a rim round each
+   glyph, in the page's colour so that it shows only over a sheet: a background
+   would hide the figure's own labels beside the words, and ::first-line breaks
+   lines elsewhere. */
+.footnote-ref--corner,
+.lk-highlight span {
+  background: var(--adapt-over-picture);
+}
+
+/* MathJax has no glyph for Chinese, so it names "serif" for those characters:
+   on a page in Chinese that is a Song face among the page's Hei. */
+mjx-container text[font-family="serif"] {
+  font-family: var(--font-base);
+}
+
+/* The colour alone: the shorthand would inherit the slide's picture as well. */
+section::after {
+  background-color: var(--adapt-page-number, inherit);
+}
+
+:where(.lk-main, .lk-side, .lk-content) > :where(:is(img, :has(img)) ~ *) {
+  text-shadow:
+    2px 0 var(--adapt-over-picture), -2px 0 var(--adapt-over-picture),
+    0 2px var(--adapt-over-picture), 0 -2px var(--adapt-over-picture),
+    0 0 3px var(--adapt-over-picture), 0 0 3px var(--adapt-over-picture);
+}
+
+/* Not inside what has a ground of another colour. */
+code,
+pre,
+mark,
+button,
+.sidenote,
+.annotation,
+.lk-arch-layer,
+.lk-untranslated,
+.lk-demo[data-lk-demo-form="inline"] {
+  text-shadow: none;
+}
+
+/* An inverted page is a ground of its own. */
+section.invert > * {
+  --color-bg: var(--adapt-invert-ground);
+  --adapt-over-picture: var(--adapt-invert-over-picture);
 }

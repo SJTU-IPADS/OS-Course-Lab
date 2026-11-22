@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import atexit
+import contextlib
 import json
-import os
 import re
 import secrets
 import select
@@ -15,13 +16,15 @@ import traceback
 import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 from urllib.parse import parse_qs, urlsplit
 
 from watchfiles import Change, watch
 
 from . import demo as demo_module
+from . import procs
 from . import source as source_module
+from .renderers.viewer import colorscheme
 from .renderers.viewer.marp import (
     MARP_PACKAGE,
     before_body_end,
@@ -30,6 +33,7 @@ from .renderers.viewer.marp import (
     strip_watch_client,
     watch_command,
 )
+from .tokens import DEFAULT_SCHEME
 
 LIVERELOAD_PATH = "/__livereload"
 DEMO_PATH = "/__demo"
@@ -75,6 +79,16 @@ DEFAULT_DEBOUNCE_MS = 400
 # A cold start (even via npx, on a big deck) is a few seconds; 20 is generous.
 MARP_GRACE_S = 20.0
 
+# How long marp has to exit when it is asked to. Under the 5 s that
+# scripts/stop-watch.sh waits before it escalates.
+MARP_STOP_S = 3.0
+
+# What ends a watch session: Ctrl-C, `kill`, and the terminal going away.
+_STOP_SIGNALS = tuple(
+    getattr(signal, name) for name in ("SIGINT", "SIGTERM", "SIGHUP") if hasattr(signal, name)
+)
+_HANGUP = getattr(signal, "SIGHUP", None)  # Windows has none
+
 # marp-cli logs an identical "[ INFO ] slides.md => slides.html" line on every
 # rebuild, which floods the dev console with no new signal. We drop those and
 # forward only the lines that carry signal (warnings, errors, anything else).
@@ -83,9 +97,14 @@ _MARP_INFO_LINE = re.compile(r"\[\s*INFO\s*\]")
 # The page is served knowing the generation it was built at (the %d); it asks
 # the server for the current one and reloads once the two differ. A server that
 # restarted counts from 0 again, which also differs, and a reload is right then.
+# A page framed by one that asks already (the deck in its shell) leaves it to
+# that one: two reloads at once cut the inner one short, which Firefox shows as
+# a white frame.
 LIVERELOAD_CLIENT = (
     "<script>\n"
     "(function(){var seen=%d;"
+    "try{if(parent!==window&&parent.lkLiveReload){return;}}catch(e){}"
+    "window.lkLiveReload=true;"
     "function poll(){fetch(" + repr(LIVERELOAD_PATH) + ",{cache:'no-store'})"
     ".then(function(r){return r.text();})"
     ".then(function(t){if(parseInt(t,10)!==seen){location.reload();}"
@@ -94,6 +113,22 @@ LIVERELOAD_CLIENT = (
     "setTimeout(poll," + str(LIVERELOAD_POLL_MS) + ");})();\n"
     "</script>"
 )
+
+# The error page, and not http.server's: that one's own stylesheet comes after
+# anything put into its <head>, and it declares a colour scheme. A %-template
+# of what `send_error` fills in. Its ground is the shell's.
+ERROR_PAGE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>%(code)d %(message)s</title>
+<style>body { background: var(--shell-bg); color: var(--shell-fg); }</style>
+</head>
+<body>
+<h1>%(code)d %(message)s</h1>
+<p>%(explain)s</p>
+</body>
+</html>
+"""
 
 _REVEAL_ASSETS = Path(__file__).resolve().parent / "renderers" / "viewer" / "assets"
 
@@ -306,6 +341,7 @@ def make_handler(
     demo_timeout_s: float | None = demo_module.DEFAULT_TIMEOUT_S,
     demo_quiet: "DemoQuiet | None" = None,
     panel_saves: "PanelSaves | None" = None,
+    demo_sessions: "procs.Sessions | None" = None,
 ):
     """Build a request handler that serves ``directory`` with live reload.
 
@@ -324,7 +360,12 @@ def make_handler(
     ``demo_cwd`` turns on ``p.demo(...)`` execution: the deck gets the demo
     controller and ``POST /__demo`` runs a command in that directory. Left at
     ``None`` — the default, and what a statically served bundle passes —
-    the endpoint is not there and the chips stay inert.
+    the endpoint is not there and the chips stay inert. ``demo_sessions`` is
+    where the runs are listed, for their owner to end when it stops serving.
+
+    The deck and an error page (a deck marp has not built yet is a 404 inside
+    the iframe) get the head the renderer left in ``directory``, so neither
+    opens white. ``index.html`` is rendered with its own.
     """
     directory = directory.resolve()
     # Interactive runs in progress, by the token each one's stream handed its
@@ -340,6 +381,12 @@ def make_handler(
     class LiveReloadHandler(SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=str(directory), **kwargs)
+
+        @property
+        def error_message_format(self):
+            # A %-template, so a percent sign in the head is doubled.
+            head = colorscheme.page_head(directory).replace("%", "%%")
+            return colorscheme.insert(ERROR_PAGE, head)
 
         def log_message(self, *args):  # keep the dev console quiet
             pass
@@ -632,6 +679,7 @@ def make_handler(
                 timeout_s=demo_module.timeout_for(spec, demo_timeout_s),
                 terminal=terminal,
                 show=spec.show,
+                sessions=demo_sessions,
             )
             try:
                 if terminal is not None:
@@ -649,7 +697,7 @@ def make_handler(
                     if demo_quiet is not None:
                         demo_quiet.touch()
                     self._send_event(event)
-            except (BrokenPipeError, ConnectionResetError, ValueError):
+            except (BrokenPipeError, ConnectionResetError, ValueError, procs.Closed):
                 pass
             finally:
                 events.close()
@@ -722,7 +770,7 @@ def make_handler(
             # rebuild, so the controllers are injected into the response body
             # rather than the file. The deck's own ride every deck; the reveal
             # controller is the preview feature `--reveal` turns on.
-            html = inject_deck_scripts(html)
+            html = colorscheme.dress(inject_deck_scripts(html), directory)
             if reveal:
                 html = inject_reveal(html)
             if demo_cwd is not None:
@@ -819,6 +867,7 @@ def handle_changes(
     strict: bool = False,
     demo_quiet: "DemoQuiet | None" = None,
     panel_saves: "PanelSaves | None" = None,
+    color_scheme: str = DEFAULT_SCHEME,
 ) -> tuple[Path, ...]:
     """Render source changes and reload after Marp emits ``slides.html``.
 
@@ -835,12 +884,13 @@ def handle_changes(
     if source_changed:
         try:
             review_dirs = render_once(
-                lecture_dir, output_dir, reveal=reveal, lang=lang, strict=strict
+                lecture_dir, output_dir, reveal=reveal, lang=lang, strict=strict,
+                color_scheme=color_scheme,
             )
         except Exception as exc:
             print("lecturekit: render failed, showing error preview:", file=sys.stderr)
             traceback.print_exc()
-            render_error_preview(output_dir, exc, reveal=reveal)
+            render_error_preview(output_dir, exc, reveal=reveal, color_scheme=color_scheme)
 
     if slides_html in changed_paths:
         if demo_quiet is not None and demo_quiet.active():
@@ -886,6 +936,7 @@ def render_once(
     reveal: bool = True,
     lang: str | None = None,
     strict: bool = False,
+    color_scheme: str = DEFAULT_SCHEME,
 ) -> tuple[Path, ...]:
     """Re-load the lecture source and render the static viewer into ``output_dir``.
 
@@ -900,8 +951,9 @@ def render_once(
     controller injection in ``make_handler``); pass ``False`` for a plain live
     preview. ``lang`` applies that translation overlay on every render, so
     editing ``i18n/<lang>.toml`` reloads the deck exactly as editing a page
-    does. Marp is not invoked here; the persistent ``marp --watch`` process
-    owns ``slides.html``.
+    does. ``color_scheme`` is the renderer's, which writes the pages' heads for
+    it. Marp is not invoked here; the persistent ``marp --watch`` process owns
+    ``slides.html``.
     """
     from .cli import load_lecture
     from .renderers.viewer import StaticViewerRenderer
@@ -912,11 +964,18 @@ def render_once(
         from . import i18n
 
         lecture = i18n.apply(lecture, lecture_dir, lang, strict=strict)
-    StaticViewerRenderer(asset_root=lecture_dir, reveal=reveal).render(lecture, output_dir)
+    StaticViewerRenderer(
+        asset_root=lecture_dir, reveal=reveal, color_scheme=color_scheme
+    ).render(lecture, output_dir)
     return tuple(Path(entry.directory) for entry in lecture.borrowed)
 
 
-def render_error_preview(output_dir: Path, error: BaseException, reveal: bool = True) -> None:
+def render_error_preview(
+    output_dir: Path,
+    error: BaseException,
+    reveal: bool = True,
+    color_scheme: str = DEFAULT_SCHEME,
+) -> None:
     """Write a valid viewer bundle showing a source-load/render failure."""
     from . import model
     from .renderers.viewer import StaticViewerRenderer
@@ -945,7 +1004,7 @@ def render_error_preview(output_dir: Path, error: BaseException, reveal: bool = 
         title="Lecture source error",
         children=[page],
     )
-    StaticViewerRenderer(reveal=reveal).render(lecture, output_dir)
+    StaticViewerRenderer(reveal=reveal, color_scheme=color_scheme).render(lecture, output_dir)
 
 
 def pump_marp_output(stream, out=sys.stderr) -> None:
@@ -969,8 +1028,10 @@ def watch_marp_health(
     grace_s: float = MARP_GRACE_S,
     poll_s: float = 0.5,
     out=sys.stderr,
+    stopped: threading.Event | None = None,
 ) -> None:
-    """Complain if marp never produces a deck; return once it does.
+    """Complain if marp never produces a deck; return once it does, or once
+    ``stopped`` says that its going is the session's own doing.
 
     ``marp --watch`` is the only writer of ``slides.html``, and a reload is only
     broadcast when that file changes — so when marp fails to start, every save
@@ -984,8 +1045,11 @@ def watch_marp_health(
     # deadline is monotonic, so a clock adjustment cannot stretch or skip it.
     deadline = time.monotonic() + grace_s
     warned = False
+    stopped = stopped or threading.Event()
     while True:
         status = proc.poll()
+        if stopped.is_set():
+            return
         if status is not None:
             print(
                 f"\nlecturekit: marp exited ({status}) — the deck will not "
@@ -1015,7 +1079,7 @@ def watch_marp_health(
                 file=out,
                 flush=True,
             )
-        time.sleep(poll_s)
+        stopped.wait(poll_s)
 
 
 def inject_livereload(html: str, generation: int = 0) -> str:
@@ -1028,42 +1092,80 @@ def inject_livereload(html: str, generation: int = 0) -> str:
 
 
 def _terminate_process_group(proc) -> None:
-    """Stop ``proc`` and every process it spawned, by signalling its group.
+    """Stop the marp watcher and whatever it started.
 
-    ``proc`` (the marp watcher) is launched with ``start_new_session=True``, so
-    it leads its own process group and ``os.getpgid(proc.pid) == proc.pid``.
-    Signalling the group reaches any wrapper (an ``npx`` fallback spawns the real
-    ``node`` marp worker as a grandchild) *and* the worker that binds marp's
-    live-reload port, so nothing is orphaned and the port is released. SIGTERM
-    first, then SIGKILL if it does not exit promptly.
+    It leads a session of its own (``start_new_session=True``). Ending all of
+    that reaches any wrapper (an ``npx`` fallback spawns the real ``node`` marp
+    worker as a grandchild) *and* the worker that binds marp's live-reload
+    port, so nothing is orphaned and the port is released. See `procs.stop`.
 
-    Windows has no process groups (``start_new_session`` is ignored there), so
-    ``taskkill /T`` walks the tree from ``proc`` instead.
+    One that was already reaped (it failed to start, maybe hours ago) is left
+    alone: nothing holds its pid, so that can name anybody's session by now.
     """
-    if proc.poll() is not None:
-        return
-    if os.name != "posix":
-        demo_module.kill_tree(proc)
+    if proc.returncode is None:
+        procs.stop(proc, MARP_STOP_S)
+
+
+class _StopSignals:
+    """The signals that end a session, raised only where that is safe.
+
+    The first one becomes a ``KeyboardInterrupt``, and only inside
+    `interruptible`. Anywhere else an exception could lose a child that has
+    just started, or cut the cleanup short, so a signal is only noted there
+    and a second Ctrl-C changes nothing. A signal that was being ignored stays
+    ignored (``nohup``, a job in the background). Off the main thread none is
+    touched: only that thread may install a handler.
+    """
+
+    def __init__(self) -> None:
+        self.signum: int | None = None
+        self._raises = False
+        self._previous: dict[int, Any] = {}
+
+    def __enter__(self) -> "_StopSignals":
+        if threading.current_thread() is threading.main_thread():
+            for signum in _STOP_SIGNALS:
+                if signal.getsignal(signum) not in (signal.SIG_IGN, None):
+                    self._previous[signum] = signal.signal(signum, self._received)
+        return self
+
+    def __exit__(self, *exc) -> None:
+        if self.is_set():
+            # One more while the process exits would replace the status, as
+            # Python puts the signals back to killing it on its way out.
+            atexit.register(_ignore_signals, tuple(self._previous))
+        for signum, previous in self._previous.items():
+            signal.signal(signum, previous)
+
+    def _received(self, signum, frame) -> None:
+        if self.signum is None:
+            self.signum = signum
+        if self._raises:
+            self._raises = False
+            raise KeyboardInterrupt
+
+    def is_set(self) -> bool:
+        """For ``watch(stop_event=...)``, should something swallow the exception."""
+        return self.signum is not None
+
+    @contextlib.contextmanager
+    def interruptible(self):
+        self._raises = True
         try:
-            proc.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            pass
-        return
-    try:
-        pgid = os.getpgid(proc.pid)
-    except (ProcessLookupError, OSError):
-        return
-    try:
-        os.killpg(pgid, signal.SIGTERM)
-    except (ProcessLookupError, OSError):
-        return
-    try:
-        proc.wait(timeout=5)
-    except subprocess.TimeoutExpired:
-        try:
-            os.killpg(pgid, signal.SIGKILL)
-        except (ProcessLookupError, OSError):
-            pass
+            self._check()
+            yield
+        finally:
+            self._raises = False
+        self._check()
+
+    def _check(self) -> None:
+        if self.is_set():
+            raise KeyboardInterrupt
+
+
+def _ignore_signals(signums: Iterable[int]) -> None:
+    for signum in signums:
+        signal.signal(signum, signal.SIG_IGN)
 
 
 def serve(
@@ -1077,6 +1179,7 @@ def serve(
     lang: str | None = None,
     strict: bool = False,
     demo_timeout_s: float | None = demo_module.DEFAULT_TIMEOUT_S,
+    color_scheme: str = DEFAULT_SCHEME,
 ) -> None:
     """Run the live-reload dev server until interrupted.
 
@@ -1087,112 +1190,148 @@ def serve(
     the reveal-on-Enter preview (block wrappers + injected controller); pass
     ``False`` for a plain live preview. ``lang``/``strict`` carry a translation
     overlay into every render (an ``i18n/<lang>.toml`` edit is a source edit, so
-    it reloads like any other). ``debounce_ms`` is the quiet window: a
+    it reloads like any other). ``color_scheme`` holds for the whole session:
+    it is handed to every render.
+    ``debounce_ms`` is the quiet window: a
     batch of file changes renders once, ``debounce_ms`` after the last change
     (see ``DEFAULT_DEBOUNCE_MS``). The lecture's ``p.demo(...)`` chips are armed:
     a press runs that command in ``lecture_dir``. A watch session is the author
     at their own machine, and a chip that cannot be pressed is a chip that has
     to be explained; the server binds 127.0.0.1 and checks Origin, which is
-    where that trust ends. Ctrl-C tears the subprocess and server down.
+    where that trust ends.
+
+    Whatever ends the session, an error included, ends marp and every demo
+    and closes the port. Ctrl-C returns normally. SIGTERM and SIGHUP clean up
+    the same way and then raise ``SystemExit`` with the shell's status for
+    them (143, 129). Called off the main thread, it leaves the signals alone.
     """
     review_dirs: tuple[Path, ...] = ()
-    try:
-        review_dirs = render_once(
-            lecture_dir, output_dir, reveal=reveal, lang=lang, strict=strict
-        )
-    except Exception as exc:
-        print("lecturekit: initial render failed, showing error preview:", file=sys.stderr)
-        traceback.print_exc()
-        render_error_preview(output_dir, exc, reveal=reveal)
+    demos = procs.Sessions()
+    stopped = threading.Event()
+    marp = server = None
+    with _StopSignals() as stop:
+        try:
+            with stop.interruptible():
+                try:
+                    review_dirs = render_once(
+                        lecture_dir, output_dir, reveal=reveal, lang=lang, strict=strict,
+                        color_scheme=color_scheme,
+                    )
+                except Exception as exc:
+                    print(
+                        "lecturekit: initial render failed, showing error preview:",
+                        file=sys.stderr,
+                    )
+                    traceback.print_exc()
+                    render_error_preview(
+                        output_dir, exc, reveal=reveal, color_scheme=color_scheme
+                    )
 
-    marp_started_at = time.time()
-    marp = subprocess.Popen(
-        watch_command(output_dir),
-        cwd=output_dir,
-        # marp reads stdin whenever it is not a TTY and waits for EOF before
-        # converting; an inherited pipe or socket never closes, so it hangs.
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        # Node writes UTF-8 whatever the locale says; Windows' default codec
-        # would choke on a CJK file name in an error.
-        encoding="utf-8",
-        errors="replace",
-        # Own session/process group: marp is spawned via `npx`, so the real
-        # `node .../marp` worker (which binds marp's fixed live-reload port) is a
-        # grandchild. A plain terminate() would signal only the npx wrapper and
-        # orphan that worker, leaking the port; a process group lets us take the
-        # whole subtree down at shutdown. See _terminate_process_group.
-        start_new_session=True,
-    )
-    threading.Thread(target=pump_marp_output, args=(marp.stdout,), daemon=True).start()
-    threading.Thread(
-        target=watch_marp_health,
-        args=(marp, output_dir / "slides.html", marp_started_at),
-        daemon=True,
-    ).start()
-    broadcaster = ReloadBroadcaster()
-    quiet = DemoQuiet()
-    panel_saves = PanelSaves()
-    server = QuietHTTPServer(
-        ("127.0.0.1", port),
-        make_handler(
-            output_dir,
-            broadcaster,
-            reveal=reveal,
-            demo_cwd=lecture_dir.resolve(),
-            demo_timeout_s=demo_timeout_s,
-            demo_quiet=quiet,
-            panel_saves=panel_saves,
-        ),
-    )
-    server_thread = threading.Thread(target=server.serve_forever, daemon=True)
-    server_thread.start()
-
-    url = f"http://127.0.0.1:{port}/"
-    print(f"lecturekit: live viewer on {url} (Ctrl-C to stop)")
-    if demo_module.BASH is not None:
-        print(
-            f"lecturekit: demo chips armed — a press runs its command in "
-            f"{lecture_dir} (timeout {demo_timeout_s:g}s)"
-        )
-    else:
-        print("lecturekit: no bash found, so demo chips answer a press with why")
-    if open_browser:
-        webbrowser.open(url)
-
-    try:
-        # The watched roots are fixed when `watch()` is called, but a review
-        # source can be added or dropped by an edit to the lecture itself. When
-        # the set moves, break out and start a fresh watch over the new roots.
-        while True:
-            watched = review_dirs
-            paths = _watch_paths(lecture_dir, output_dir, watched)
-            for path in watched:
-                print(f"lecturekit: also watching review source {path}", file=sys.stderr)
-            change_filter = LectureWatchFilter(lecture_dir, output_dir, watched)
-            for changes in watch(
-                *paths,
-                watch_filter=change_filter,
-                step=debounce_ms,
-                # Cap the grouping window well above `step` so a long, uninterrupted
-                # write stream still coalesces (it only yields once quiet), while a
-                # never-quiet pathological stream can't stall updates indefinitely.
-                debounce=max(1600, debounce_ms * 25),
-            ):
-                review_dirs = handle_changes(
-                    changes, lecture_dir, output_dir, broadcaster,
-                    reveal=reveal, review_dirs=watched,
-                    lang=lang, strict=strict, demo_quiet=quiet,
+            # Not interruptible from here until what is started can be cleaned up.
+            marp_started_at = time.time()
+            marp = subprocess.Popen(
+                watch_command(output_dir),
+                cwd=output_dir,
+                # marp reads stdin whenever it is not a TTY and waits for EOF before
+                # converting; an inherited pipe or socket never closes, so it hangs.
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                # Node writes UTF-8 whatever the locale says; Windows' default codec
+                # would choke on a CJK file name in an error.
+                encoding="utf-8",
+                errors="replace",
+                # Own session: marp may be spawned via `npx`, so the real
+                # `node .../marp` worker (which binds marp's fixed live-reload port)
+                # is a grandchild. A plain terminate() would signal only the npx
+                # wrapper and orphan that worker, leaking the port; a session lets us
+                # take the whole subtree down. See _terminate_process_group.
+                start_new_session=True,
+            )
+            threading.Thread(target=pump_marp_output, args=(marp.stdout,), daemon=True).start()
+            threading.Thread(
+                target=watch_marp_health,
+                args=(marp, output_dir / "slides.html", marp_started_at),
+                kwargs={"stopped": stopped},
+                daemon=True,
+            ).start()
+            broadcaster = ReloadBroadcaster()
+            quiet = DemoQuiet()
+            panel_saves = PanelSaves()
+            server = QuietHTTPServer(
+                ("127.0.0.1", port),
+                make_handler(
+                    output_dir,
+                    broadcaster,
+                    reveal=reveal,
+                    demo_cwd=lecture_dir.resolve(),
+                    demo_timeout_s=demo_timeout_s,
+                    demo_quiet=quiet,
                     panel_saves=panel_saves,
-                )
-                if set(review_dirs) != set(watched):
-                    break
-            else:
-                break
-    except KeyboardInterrupt:
-        print("\nlecturekit: shutting down")
-    finally:
-        _terminate_process_group(marp)
-        server.shutdown()
-        server.server_close()
+                    demo_sessions=demos,
+                ),
+            )
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+
+            with stop.interruptible():
+                url = f"http://127.0.0.1:{port}/"
+                print(f"lecturekit: live viewer on {url} (Ctrl-C to stop)")
+                if demo_module.BASH is not None:
+                    print(
+                        f"lecturekit: demo chips armed — a press runs its command in "
+                        f"{lecture_dir} (timeout {demo_timeout_s:g}s)",
+                        flush=True,
+                    )
+                else:
+                    print(
+                        "lecturekit: no bash found, so demo chips answer a press with why",
+                        flush=True,
+                    )
+                if open_browser:
+                    webbrowser.open(url)
+
+                # The watched roots are fixed when `watch()` is called, but a review
+                # source can be added or dropped by an edit to the lecture itself. When
+                # the set moves, break out and start a fresh watch over the new roots.
+                while True:
+                    watched = review_dirs
+                    paths = _watch_paths(lecture_dir, output_dir, watched)
+                    for path in watched:
+                        print(f"lecturekit: also watching review source {path}", file=sys.stderr)
+                    change_filter = LectureWatchFilter(lecture_dir, output_dir, watched)
+                    for changes in watch(
+                        *paths,
+                        watch_filter=change_filter,
+                        stop_event=stop,
+                        step=debounce_ms,
+                        # Cap the grouping window well above `step` so a long, uninterrupted
+                        # write stream still coalesces (it only yields once quiet), while a
+                        # never-quiet pathological stream can't stall updates indefinitely.
+                        debounce=max(1600, debounce_ms * 25),
+                    ):
+                        review_dirs = handle_changes(
+                            changes, lecture_dir, output_dir, broadcaster,
+                            reveal=reveal, review_dirs=watched,
+                            lang=lang, strict=strict, demo_quiet=quiet,
+                            panel_saves=panel_saves, color_scheme=color_scheme,
+                        )
+                        if set(review_dirs) != set(watched):
+                            break
+                    else:
+                        break
+        except KeyboardInterrupt:
+            # To stderr, as stdout may be a pipe that the same Ctrl-C closed, and
+            # to neither after a hangup: there is no terminal to write to.
+            if stop.signum is None or stop.signum != _HANGUP:
+                with contextlib.suppress(OSError):
+                    print("\nlecturekit: shutting down", file=sys.stderr, flush=True)
+        finally:
+            stopped.set()
+            demos.close()
+            if marp is not None:
+                _terminate_process_group(marp)
+            if server is not None:
+                server.shutdown()
+                server.server_close()
+    if stop.signum is not None and stop.signum != signal.SIGINT:
+        raise SystemExit(128 + stop.signum)

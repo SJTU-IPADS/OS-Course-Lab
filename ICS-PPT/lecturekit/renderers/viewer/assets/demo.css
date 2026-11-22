@@ -1,10 +1,10 @@
 /* The demo drawer: where a command's output lands.
 
-   Deliberately not slide furniture. It is chrome over the deck — its own dark
-   terminal palette, its own type — because what it shows is not authored
-   content but whatever the machine said back, at whatever length. Keeping it
-   out of the slide's flow is what lets a compiler dump forty lines without
-   moving a single element of the page underneath.
+   Deliberately not slide furniture. It is chrome over the deck — its own
+   terminal palette (the scheme's `--panel-*` tokens), its own type — because
+   what it shows is not authored content but whatever the machine said back, at
+   whatever length. Keeping it out of the slide's flow is what lets a compiler
+   dump forty lines without moving a single element of the page underneath.
 
    The output itself is an xterm.js terminal per run (vendor/xterm), which
    draws its own rows; this file lays out the frame around it. demo.js sizes
@@ -25,13 +25,13 @@
   flex-direction: column;
   max-height: 55vh;
   overflow: hidden;
-  background: #10171d;
-  color: #dfe6ec;
+  background: var(--panel-bg);
+  color: var(--panel-fg);
   font-family: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas,
     "Liberation Mono", Menlo, monospace;
   font-size: 14px;
   line-height: 1.5;
-  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 -6px 24px var(--panel-shadow);
   /* Slid out of view rather than removed, so reopening does not reflow. */
   transform: translateY(100%);
   transition: transform 0.18s ease-out;
@@ -58,11 +58,11 @@
 }
 
 .lk-drawer-grip:hover {
-  border-top-color: #2c4a63;
+  border-top-color: var(--panel-edge);
 }
 
 .lk-drawer-grip[data-dragging="1"] {
-  border-top-color: #8fd3ff;
+  border-top-color: var(--panel-accent);
 }
 
 /* One row of chrome: the text size, a tab per run, then the shown run's
@@ -75,8 +75,8 @@
   gap: 0.75em;
   flex: none;
   padding: 0.4em 0.9em 0;
-  background: #0c1217;
-  border-bottom: 1px solid #263039;
+  background: var(--panel-bar);
+  border-bottom: 1px solid var(--panel-line);
 }
 
 .lk-drawer-tabs {
@@ -94,17 +94,17 @@
   display: flex;
   align-items: center;
   max-width: 24em;
-  border: 1px solid #263039;
+  border: 1px solid var(--panel-line);
   border-bottom: 0;
   border-radius: 5px 5px 0 0;
-  background: #141c23;
-  color: #7f94a5;
+  background: var(--panel-button-bg);
+  color: var(--panel-muted);
   font-size: 0.9em;
 }
 
 .lk-drawer-tab[data-active="1"] {
-  background: #10171d;
-  color: #dfe6ec;
+  background: var(--panel-bg);
+  color: var(--panel-fg);
 }
 
 /* Two controls in one tab: the body of it selects, the ✕ closes. */
@@ -133,7 +133,7 @@
   padding: 0.3em 0.6em 0.3em 0.3em;
   border: 0;
   background: none;
-  color: #6d8294;
+  color: var(--panel-faint);
   font: inherit;
   font-size: 0.95em;
   line-height: 1;
@@ -141,11 +141,11 @@
 }
 
 .lk-drawer-tab-close:hover {
-  color: #ff9a8a;
+  color: var(--panel-fail);
 }
 
 .lk-drawer-tab[data-active="1"] .lk-drawer-tab-close {
-  color: #9fb3c2;
+  color: var(--panel-label);
 }
 
 /* The dot is the tab's whole status report: still going, ended well, ended
@@ -155,20 +155,20 @@
   width: 0.55em;
   height: 0.55em;
   border-radius: 50%;
-  background: #5d7386;
+  background: var(--panel-dim);
 }
 
 .lk-drawer-tab[data-state="running"] .lk-drawer-dot {
-  background: #8fd3ff;
+  background: var(--panel-accent);
   animation: lk-drawer-pulse 1.4s ease-in-out infinite;
 }
 
 .lk-drawer-tab[data-state="ok"] .lk-drawer-dot {
-  background: #7ddc94;
+  background: var(--panel-ok);
 }
 
 .lk-drawer-tab[data-state="fail"] .lk-drawer-dot {
-  background: #ff9a8a;
+  background: var(--panel-fail);
 }
 
 /* Exit status, the one number worth reading at a glance from the back row. */
@@ -178,18 +178,18 @@
   padding: 0.05em 0.6em;
   border-radius: 999px;
   font-size: 0.85em;
-  background: #23303a;
-  color: #9fb3c2;
+  background: var(--panel-badge-bg);
+  color: var(--panel-label);
 }
 
 .lk-drawer-status[data-ok="1"] {
-  background: #17331f;
-  color: #7ddc94;
+  background: var(--panel-ok-bg);
+  color: var(--panel-ok);
 }
 
 .lk-drawer-status[data-ok="0"] {
-  background: #3a1c1c;
-  color: #ff9a8a;
+  background: var(--panel-fail-bg);
+  color: var(--panel-fail);
 }
 
 /* Only offered while something is running: a demo with no natural end is
@@ -199,10 +199,10 @@
   flex: none;
   margin-bottom: 0.35em;
   padding: 0.05em 0.7em;
-  border: 1px solid #4a2a2a;
+  border: 1px solid var(--panel-stop-border);
   border-radius: 999px;
-  background: #2a1818;
-  color: #ff9a8a;
+  background: var(--panel-stop-bg);
+  color: var(--panel-fail);
   font: inherit;
   font-size: 0.85em;
   cursor: pointer;
@@ -213,8 +213,8 @@
 }
 
 .lk-drawer-stop:hover {
-  background: #3a1c1c;
-  color: #ffc4ba;
+  background: var(--panel-fail-bg);
+  color: var(--panel-fail-hover);
 }
 
 /* A− and A+: the size of the terminal's text, for the room rather than for
@@ -229,18 +229,18 @@
 
 .lk-drawer-zoom {
   padding: 0.05em 0.55em;
-  border: 1px solid #263039;
+  border: 1px solid var(--panel-line);
   border-radius: 5px;
-  background: #141c23;
-  color: #9fb3c2;
+  background: var(--panel-button-bg);
+  color: var(--panel-label);
   font: inherit;
   font-size: 0.85em;
   cursor: pointer;
 }
 
 .lk-drawer-zoom:hover {
-  border-color: #3a4a57;
-  color: #dfe6ec;
+  border-color: var(--panel-line-hover);
+  color: var(--panel-fg);
 }
 
 .lk-drawer-zoom:disabled {
@@ -265,7 +265,7 @@
   margin-bottom: 0.35em;
   border: 0;
   background: transparent;
-  color: #7f94a5;
+  color: var(--panel-muted);
   font: inherit;
   font-size: 1.1em;
   line-height: 1;
@@ -273,7 +273,7 @@
 }
 
 .lk-drawer-close:hover {
-  color: #dfe6ec;
+  color: var(--panel-fg);
 }
 
 /* The shown run's terminal. Its height is the terminal's own — as many rows
@@ -292,13 +292,13 @@
    reads as an edge rather than a control. */
 .lk-drawer-term .xterm-viewport {
   scrollbar-width: thin;
-  scrollbar-color: #2b3945 transparent;
+  scrollbar-color: var(--panel-scrollbar) transparent;
 }
 
 /* The keyboard is a run's only while it is interactive and going: a cursor
    says so, and so does the edge. */
 .lk-drawer-term[data-input="1"] {
-  box-shadow: -3px 0 0 #2c4a63;
+  box-shadow: -3px 0 0 var(--panel-edge);
 }
 
 /* Put away, still running. The drawer slides out of the way on ▾ without
@@ -310,20 +310,20 @@
   bottom: 14px;
   z-index: 9001;
   padding: 0.35em 0.9em;
-  border: 1px solid #263039;
+  border: 1px solid var(--panel-line);
   border-radius: 999px;
-  background: #182028;
-  color: #8fd3ff;
+  background: var(--panel-head);
+  color: var(--panel-accent);
   font-family: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas,
     "Liberation Mono", Menlo, monospace;
   font-size: 13px;
   line-height: 1.5;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 12px var(--panel-shadow);
   cursor: pointer;
 }
 
 .lk-drawer-peek:hover {
-  color: #dfe6ec;
+  color: var(--panel-fg);
 }
 
 .lk-drawer-peek[hidden] {

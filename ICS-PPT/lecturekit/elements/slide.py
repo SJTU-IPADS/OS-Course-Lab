@@ -14,8 +14,9 @@ class Slide(Block):
     FILE_LINKS = True
 
     def to_marp(self, ctx):
-        from ..renderers.viewer.blocks import file_buttons, float_image_html
-        content = file_buttons(str(self.content).strip())
+        from ..markup.fields import slide_text
+        from ..renderers.viewer.blocks import float_image_html
+        content = slide_text(self.content)
         image = self.float_image
         if image and image.get("valign") == "middle":
             # `valign="middle"`: the text and the image side by side in one flex
@@ -54,33 +55,13 @@ class Slide(Block):
         return [content, ""]
 
     def to_pptx(self, ctx):
-        from ..renderers.pptx.blocks import (
-            FLOAT_GAP,
-            GAP,
-            estimate_paras_height,
-            fill_paras,
-            float_picture,
-            textbox,
-        )
-        from ..renderers.pptx.text import parse_markdown
-        pic = None
-        width = ctx.layout.content_width
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import draw_document, draw_float
+        blocks = ctx.read.slide(self.content)
         if self.float_image:
-            pic = float_picture(self.float_image, ctx, ctx.cursor.top)
-            if pic is not None:
-                width -= pic.width + FLOAT_GAP
-        paras = parse_markdown(str(self.content))
-        height = estimate_paras_height(paras, width)
-        box, tf = textbox(ctx, height, width=width)
-        fill_paras(tf, paras)
-        # A floated picture may be taller than the text beside it; the block owns
-        # whichever is taller, so the next block clears both.
-        band = max(height, pic.height) if pic is not None else height
-        if pic is not None and self.float_image.get("valign") == "middle":
-            # `valign="middle"`: each is centred in the band the taller one sets.
-            pic.top = box.top + (band - pic.height) // 2
-            box.top = box.top + (band - height) // 2
-        ctx.cursor.place(band)
+            draw_float(ctx, self.float_image, blocks)
+        else:
+            draw_document(ctx, blocks)
         ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
@@ -88,14 +69,12 @@ class Slide(Block):
         from ..renderers.latex.text import blocks as md_blocks
         return md_blocks(self.content, refs=ctx.resolve_ref) + footnotes(self, ctx)
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         from ..renderers.transcript.blocks import img
-        from ..renderers.transcript.text import markdown
-        body = markdown(self.content)
+        body = ctx.blocks(ctx.read.slide(self.content))
         if self.float_image:
             floated = img(
-                self.float_image["src"], self.float_image.get("alt", ""), embedder,
-                pct=38,
+                self.float_image["src"], self.float_image.get("alt", ""), ctx, pct=38,
             )
             body = f'<span class="tx-float">{floated}</span>{body}'
         return f'<div class="tx-slide">{body}</div>'

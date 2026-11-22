@@ -11,8 +11,9 @@ class Sidenote(Block):
     TARGETS = frozenset({"viewer", "pptx", "latex", "transcript"})
 
     def to_marp(self, ctx):
+        from ..markup.fields import escape_html, inline_md
         from ..renderers.viewer.blocks import (
-            SIDENOTE_WHEEL_SIZE, escape_html, inline_md, sidenote_classes, sidenote_logo_html,
+            SIDENOTE_WHEEL_SIZE, sidenote_classes, sidenote_logo_html,
         )
         # The first sidenote of a page keeps the bare markup; later ones cycle
         # through the theme's colors, so each counts itself in.
@@ -45,6 +46,8 @@ class Sidenote(Block):
         return [html, ""]
 
     def to_pptx(self, ctx):
+        """The box, then the logo, then the text over them: the deck's reading order."""
+        from dataclasses import replace
         from pptx.enum.shapes import MSO_SHAPE
         from pptx.util import Emu, Pt
         from .. import model
@@ -52,61 +55,55 @@ class Sidenote(Block):
         from ..renderers.pptx.blocks import (
             GAP,
             LOGO_SIZE,
-            _line,
-            _shape,
-            apply_runs,
+            add_picture,
+            natural_size,
+            outline,
             resolve_image,
-            set_line_spacing,
+            shape_at,
             solid,
-            style_run,
+            textbox,
         )
-        from ..renderers.pptx.layout import estimate_text_height, fit_within
-        from ..renderers.pptx.text import parse_inline
+        from ..renderers.pptx.draw import Look, runs_height, space_lines, write_runs
+        from ..renderers.pptx.layout import fit_within
+        from ..renderers.pptx.text import Run, runs
         note = self.content
         raw_logo = note.get("logo")
-        title = f"{note['title']}："
-        body = str(note["text"])
         fill = theme.SIDENOTE_WHEEL[ctx.sidenote_index % len(theme.SIDENOTE_WHEEL)]
         ctx.sidenote_index += 1
 
         # An image logo embeds as a picture in a left gutter (the theme floats it);
         # an emoji/glyph logo stays an inline text run. A path that won't resolve
         # falls back to the default book glyph rather than leaking the path as text.
-        logo_path = resolve_image(raw_logo, ctx) if model.logo_is_image(raw_logo) else None
-        logo_glyph = "" if logo_path is not None else (raw_logo or "📖")
+        is_image = model.logo_is_image(raw_logo)
+        logo = resolve_image(raw_logo, ctx) if is_image else None
+        head = [
+            replace(run, bold=True, link=note.get("link"))
+            for run in runs(ctx.read.plain(f"{note['title']}："))
+        ]
+        items = head + runs(ctx.read.inline(note["text"]))
+        if logo is None:
+            glyph = "📖" if is_image or not raw_logo else raw_logo
+            items.insert(0, Run(f"{glyph} "))
 
-        height = estimate_text_height(
-            logo_glyph + title + body, font_pt=theme.SIDENOTE_PT,
-            width=ctx.layout.content_width,
-        ) + Emu(Pt(16))
-        box_top = ctx.cursor.top
-        shape = _shape(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, ctx.layout.content_left,
-                       box_top, ctx.layout.content_width, height)
-        solid(shape, fill)
-        _line(shape, theme.SIDENOTE_BORDER, 1.0)
-        tf = shape.text_frame
-        tf.word_wrap = True
-        if logo_path is not None:
-            tf.margin_left = LOGO_SIZE + Pt(16)
-        p = tf.paragraphs[0]
-        set_line_spacing(p, theme.SIDENOTE_PT)
-        if logo_glyph:
-            style_run(p.add_run(), logo_glyph + " ", size_pt=theme.SIDENOTE_PT, color=theme.FG)
-        title_run = p.add_run()
-        style_run(title_run, title, size_pt=theme.SIDENOTE_PT, color=theme.ACCENT1, bold=True)
-        if note.get("link"):
-            title_run.hyperlink.address = note["link"]
-        apply_runs(p, parse_inline(body), size_pt=theme.SIDENOTE_PT, color=theme.FG)
-
-        if logo_path is not None:
-            pic = ctx.slide.shapes.add_picture(
-                str(logo_path), ctx.layout.content_left + Pt(10), box_top + Pt(8),
-                width=LOGO_SIZE,
-            )
-            # keep the logo inside the box even for a tall source image
-            if pic.height > height - Pt(16):
-                pic.width, pic.height = fit_within(pic.width, pic.height, LOGO_SIZE, height - Pt(16))
-
+        inset, pad = Emu(Pt(10)), Emu(Pt(8))
+        gutter = LOGO_SIZE + pad if logo else 0
+        left, top = ctx.layout.content_left, ctx.cursor.top
+        width = max(1, ctx.layout.content_width - 2 * inset - gutter)
+        size = theme.SIDENOTE_PT
+        text_height = runs_height(items, size, width)
+        height = max(text_height, LOGO_SIZE if logo else 0) + 2 * pad
+        box = shape_at(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, left, top,
+                       ctx.layout.content_width, height)
+        solid(box, fill)
+        outline(box, theme.SIDENOTE_BORDER, 1.0)
+        if logo:
+            logo_width, logo_height = fit_within(*natural_size(logo), LOGO_SIZE, LOGO_SIZE)
+            add_picture(ctx, logo, raw_logo, left + inset, top + pad,
+                        logo_width, logo_height)
+        text, frame = textbox(ctx, text_height, left=left + inset + gutter, width=width)
+        text.top = top + pad
+        space_lines(frame.paragraphs[0], items, size)
+        write_runs(frame.paragraphs[0], items, Look(size=size))
         ctx.cursor.place(height)
         ctx.cursor.advance(GAP)
 
@@ -120,13 +117,13 @@ class Sidenote(Block):
         body = md_blocks(content["text"], refs=ctx.resolve_ref) + footnotes(self, ctx)
         return "\\begin{booksidenote}{%s}\n%s\n\\end{booksidenote}" % (title, body)
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         import html
         from .. import model
-        from ..renderers.transcript.text import escape, inline, markdown
+        from ..renderers.transcript.text import escape
         content = self.content
         logo = content.get("logo") or "📖"
-        title = inline(content["title"])
+        title = ctx.inline(ctx.read.plain(content["title"]))
         if content.get("link"):
             url = html.escape(content["link"], quote=True)
             title = f'<a href="{url}">{title}</a>'
@@ -135,6 +132,6 @@ class Sidenote(Block):
         if model.logo_is_image(logo):
             logo = "📖"
         return (
-            f'<div class="tx-sidenote"><span class="tx-logo">{escape(str(logo))}</span>'
-            f'<strong>{title}</strong> {markdown(content["text"])}</div>'
+            f'<div class="tx-sidenote"><span class="tx-logo">{escape(logo)}</span>'
+            f'<strong>{title}</strong> <p>{ctx.inline(ctx.read.inline(content["text"]))}</p></div>'
         )

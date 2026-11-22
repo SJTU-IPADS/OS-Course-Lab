@@ -20,13 +20,13 @@
   width: min(46vw, 720px);
   display: flex;
   flex-direction: column;
-  background: #10171d;
-  color: #dfe6ec;
+  background: var(--panel-bg);
+  color: var(--panel-fg);
   font-family: "Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas,
     "Liberation Mono", Menlo, monospace;
   font-size: 14px;
   line-height: 1.55;
-  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.35);
+  box-shadow: -6px 0 24px var(--panel-shadow);
   /* Slid out of view rather than removed, so reopening does not reflow. */
   transform: translateX(100%);
   transition: transform 0.18s ease-out;
@@ -52,11 +52,11 @@
 }
 
 .lk-file-grip:hover {
-  border-left-color: #2c4a63;
+  border-left-color: var(--panel-edge);
 }
 
 .lk-file-grip[data-dragging="1"] {
-  border-left-color: #8fd3ff;
+  border-left-color: var(--panel-accent);
 }
 
 .lk-file-head {
@@ -65,8 +65,8 @@
   gap: 0.75em;
   flex: none;
   padding: 0.5em 0.9em;
-  background: #182028;
-  border-bottom: 1px solid #263039;
+  background: var(--panel-head);
+  border-bottom: 1px solid var(--panel-line);
 }
 
 /* The path in full, because the button that opened it showed only a name and
@@ -77,7 +77,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #8fd3ff;
+  color: var(--panel-accent);
 }
 
 /* `margin-right: auto` keeps the whole row to the left and leaves the corner
@@ -89,8 +89,8 @@
   padding: 0.05em 0.6em;
   border-radius: 999px;
   font-size: 0.85em;
-  background: #23303a;
-  color: #9fb3c2;
+  background: var(--panel-badge-bg);
+  color: var(--panel-label);
 }
 
 /* A− and A+: the size of the file's text. Beside ▸ on the left, for the reason
@@ -103,18 +103,18 @@
 
 .lk-file-zoom {
   padding: 0.05em 0.55em;
-  border: 1px solid #263039;
+  border: 1px solid var(--panel-line);
   border-radius: 5px;
-  background: #141c23;
-  color: #9fb3c2;
+  background: var(--panel-button-bg);
+  color: var(--panel-label);
   font: inherit;
   font-size: 0.85em;
   cursor: pointer;
 }
 
 .lk-file-zoom:hover {
-  border-color: #3a4a57;
-  color: #dfe6ec;
+  border-color: var(--panel-line-hover);
+  color: var(--panel-fg);
 }
 
 .lk-file-zoom:disabled {
@@ -127,7 +127,7 @@
   flex: none;
   border: 0;
   background: transparent;
-  color: #7f94a5;
+  color: var(--panel-muted);
   font: inherit;
   font-size: 1.1em;
   line-height: 1;
@@ -135,7 +135,7 @@
 }
 
 .lk-file-close:hover {
-  color: #dfe6ec;
+  color: var(--panel-fg);
 }
 
 /* Save and Reset, when the file can be edited. Beside A− and A+, on the left. */
@@ -151,24 +151,24 @@
 
 .lk-file-act {
   padding: 0.05em 0.7em;
-  border: 1px solid #2c4a63;
+  border: 1px solid var(--panel-edge);
   border-radius: 5px;
-  background: #1a3247;
-  color: #8fd3ff;
+  background: var(--panel-action-bg);
+  color: var(--panel-accent);
   font: inherit;
   font-size: 0.85em;
   cursor: pointer;
 }
 
 .lk-file-act[data-act="reset"] {
-  border-color: #263039;
-  background: #141c23;
-  color: #9fb3c2;
+  border-color: var(--panel-line);
+  background: var(--panel-button-bg);
+  color: var(--panel-label);
 }
 
 .lk-file-act:hover:not(:disabled) {
-  border-color: #8fd3ff;
-  color: #dfe6ec;
+  border-color: var(--panel-accent);
+  color: var(--panel-fg);
 }
 
 .lk-file-act:disabled {
@@ -206,7 +206,7 @@
   width: 3.2em;
   padding-right: 0.6em;
   text-align: right;
-  color: #4e6272;
+  color: var(--panel-line-number);
   user-select: none;
 }
 
@@ -220,34 +220,34 @@
    The hues follow the theme's, lifted for a dark ground; text under no role
    keeps the panel's own colour. */
 .lk-tok-comment {
-  color: #7f93a3;
+  color: var(--panel-code-comment);
   font-style: italic;
 }
 
 .lk-tok-keyword {
-  color: #7ab8ff;
+  color: var(--panel-code-keyword);
   font-weight: 700;
 }
 
 .lk-tok-type {
-  color: #6fd3c7;
+  color: var(--panel-code-type);
 }
 
 .lk-tok-title {
-  color: #f1d58a;
+  color: var(--panel-code-title);
   font-weight: 700;
 }
 
 .lk-tok-string {
-  color: #a3d98a;
+  color: var(--panel-code-string);
 }
 
 .lk-tok-number {
-  color: #f2a27c;
+  color: var(--panel-code-number);
 }
 
 .lk-tok-meta {
-  color: #c9a6f0;
+  color: var(--panel-code-meta);
 }
 
 /* The editor. A gutter, and a stack of two layers with the same text in the same
@@ -268,13 +268,13 @@
   padding-right: 0.6em;
   text-align: right;
   white-space: pre;
-  color: #4e6272;
+  color: var(--panel-line-number);
   user-select: none;
   /* Stays at the left edge as a long line is scrolled along. */
   position: sticky;
   left: 0;
   z-index: 1;
-  background: #10171d;
+  background: var(--panel-bg);
 }
 
 .lk-file-stack {
@@ -311,10 +311,10 @@
   overflow: hidden;
   background: transparent;
   color: transparent;
-  caret-color: #dfe6ec;
+  caret-color: var(--panel-fg);
   outline: none;
 }
 
 .lk-file-input::selection {
-  background: rgba(143, 211, 255, 0.28);
+  background: var(--panel-selection);
 }

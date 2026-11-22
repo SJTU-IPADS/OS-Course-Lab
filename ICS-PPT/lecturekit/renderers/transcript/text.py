@@ -1,188 +1,130 @@
-"""Markdown → HTML for the transcript sheet.
+"""The document tree as the HTML of the transcript sheet.
 
-The viewer hands its markdown to Marp and the book hands it to a LaTeX
-converter; the transcript writes one standalone HTML file with no build step
-behind it, so it converts the DSL's markdown subset itself. Same vocabulary the
-DSL documents: headings, bullet/ordered lists, paragraphs, fenced code, and
-inline `**bold**` / `*italic*` / `` `code` `` / `[label](url)` / `$math$` /
-`<mark>`.
-
-Everything else is escaped, except the inline tags a sidenote body may carry
-(`<u> <b> <i> <em> <strong> <code> <sup> <sub> <br>`) — those are restored after
-escaping, which is what keeps a stray `<script>` in slide text inert.
+No text is parsed here. Text is escaped and only the elements written below
+come out, so markup an author wrote cannot act on the sheet. A formula is
+written as MathML, which browsers typeset and print by themselves.
 """
 
 from __future__ import annotations
 
 import html
 import re
+from collections.abc import Callable
 
-from lecturekit import filelinks, inlinemath, marks
+from lecturekit import marks
+from lecturekit.markup import document as doc
 
-from .math import math_html
+from . import mathml
 
-# The inline tags the DSL whitelists in sidenote/footnote/annotation bodies.
-_ALLOWED_TAGS = ("u", "b", "i", "em", "strong", "code", "sup", "sub", "br")
-_TAG_RE = re.compile(
-    rf"&lt;(/?)({'|'.join(_ALLOWED_TAGS)})\s*(/?)&gt;", re.IGNORECASE
-)
+SPAN_TAGS = {
+    "strong": "strong", "em": "em", "code": "code", "strike": "s",
+    "underline": "u", "sup": "sup", "sub": "sub", "small": "small",
+}
+_LINKABLE = re.compile(r"(https?:|mailto:|#)", re.IGNORECASE)
+_LENGTH = re.compile(r"[\d.]+(px|%|em|rem|pt)?")
 
-# An `<img>` written straight into a table cell — the icon-in-a-cell idiom the
-# viewer renders because Marp passes cell markdown through. This target is HTML
-# too, so it honors it; the src is embedded afterwards, in `renderer`.
-_IMG_RE = re.compile(r"&lt;img\s+([^&<>]*?)/?&gt;", re.IGNORECASE)
 
-# Longest delimiter first, and math first so a `*` or `_` inside a formula is
-# never read as emphasis. Mirrors the pptx renderer's inline grammar.
-_INLINE_RE = re.compile(
-    rf"{marks.SPAN_RE.pattern}"                      # <mark>keyword</mark>
-    r"|\$\$(?P<dmath>.+?)\$\$"                       # $$\frac{a}{b}$$
-    rf"|{inlinemath.INLINE}"                         # $x^2$
-    r"|\[(?P<ltext>[^\]]+)\]\((?P<lurl>[^)\s]+)\)"   # [label](url)
-    r"|\*\*(?P<bold>.+?)\*\*"                        # **bold**
-    r"|\*(?P<italic>[^*]+?)\*"                       # *italic*
-    r"|`(?P<code>[^`]+)`"                            # `code`
-)
-
-_HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
-_BULLET_RE = re.compile(r"^(\s*)[-*+]\s+(.*)$")
-_ORDERED_RE = re.compile(r"^(\s*)\d+[.)]\s+(.*)$")
-_FENCE_RE = re.compile(r"^\s*(```|~~~)")
-_DISPLAY_MATH = "$$"
+def is_display(node: doc.Inline) -> bool:
+    return isinstance(node, doc.Formula) and node.display
 
 
 def escape(text: str) -> str:
-    """HTML-escape, then let the whitelisted inline tags back through."""
-    escaped = html.escape(text, quote=False)
-    return _IMG_RE.sub(r"<img \1>", _TAG_RE.sub(r"<\1\2\3>", escaped))
+    return html.escape(str(text), quote=False)
 
 
-def inline(text: str) -> str:
-    """One line of the DSL's inline markdown as HTML."""
-    out: list[str] = []
-    pos = 0
-    for match in _INLINE_RE.finditer(text):
-        if match.start() > pos:
-            out.append(escape(text[pos:match.start()]))
-        if match.group("body") is not None:
-            tone = marks.tone_of(match)
-            css = "" if tone == "yellow" else f' class="{tone}"'
-            out.append(f"<mark{css}>{inline(match.group('body'))}</mark>")
-        elif match.group("dmath") is not None:
-            # Display math written inside a line — a `p.highlight` row, say. The
-            # sheet has one math style, so it renders as the inline one does.
-            out.append(math_html(match.group("dmath").strip()))
-        elif match.group("math") is not None:
-            out.append(math_html(match.group("math")))
-        elif match.group("ltext") is not None:
-            if filelinks.path_of(match.group("lurl")) is not None:
-                # A file button has nothing to open on a sheet: its label is text.
-                out.append(inline(match.group("ltext")))
-            else:
-                url = html.escape(match.group("lurl"), quote=True)
-                out.append(f'<a href="{url}">{inline(match.group("ltext"))}</a>')
-        elif match.group("bold") is not None:
-            out.append(f"<strong>{inline(match.group('bold'))}</strong>")
-        elif match.group("italic") is not None:
-            out.append(f"<em>{inline(match.group('italic'))}</em>")
-        elif match.group("code") is not None:
-            out.append(f"<code>{escape(match.group('code'))}</code>")
-        pos = match.end()
-    if pos < len(text):
-        out.append(escape(text[pos:]))
-    return "".join(out)
+class HtmlWriter:
+    """Writes documents. ``embed`` turns a picture's path into a ``data:`` URI."""
 
+    def __init__(self, embed: Callable[[str], str | None]) -> None:
+        self.embed = embed
 
-def markdown(md: str) -> str:
-    """A markdown block (a `slide` / `aside` / sidenote body) as HTML."""
-    lines = md.splitlines()
-    out: list[str] = []
-    stack: list[str] = []          # open list tags, outermost first
-    paragraph: list[str] = []
-    index = 0
+    def inline(self, inlines: list[doc.Inline]) -> str:
+        return "".join(self._inline(node) for node in inlines)
 
-    def close_paragraph() -> None:
-        if paragraph:
-            out.append(f"<p>{inline(' '.join(paragraph))}</p>")
-            paragraph.clear()
+    def _inline(self, node: doc.Inline) -> str:
+        match node:
+            case doc.Text(text):
+                return escape(text)
+            case doc.Break():
+                return "<br>"
+            case doc.Formula(math):
+                return mathml.write(math)
+            case doc.Image():
+                return self._image(node)
+            case doc.Span("link", children, address):
+                body = self.inline(children)
+                if not _LINKABLE.match(address or ""):
+                    return body
+                return f'<a href="{html.escape(address, quote=True)}">{body}</a>'
+            case doc.Span("mark", children, tone):
+                other = tone in marks.TONES and tone != marks.DEFAULT_TONE
+                css = f' class="{tone}"' if other else ""
+                return f"<mark{css}>{self.inline(children)}</mark>"
+            case doc.Span(kind, children):
+                tag = SPAN_TAGS[kind]
+                return f"<{tag}>{self.inline(children)}</{tag}>"
+        raise TypeError(f"not an inline: {node!r}")
 
-    def close_lists(depth: int = 0) -> None:
-        while len(stack) > depth:
-            out.append(f"</{stack.pop()}>")
+    def _image(self, image: doc.Image) -> str:
+        uri = self.embed(image.src)
+        if uri is None:
+            return ""   # the row it labels still reads; no broken-image box
+        styles = ["max-width:100%"]
+        for name, value in (("width", image.width), ("height", image.height)):
+            if value and _LENGTH.fullmatch(value):
+                styles.append(f"{name}:{value}px" if value.isdigit() else f"{name}:{value}")
+        return (f'<img src="{uri}" alt="{html.escape(image.alt, quote=True)}" '
+                f'style="{";".join(styles)}">')
 
-    def open_item(tag: str, level: int, body: str) -> None:
-        close_paragraph()
-        # One level per two spaces of indent, but never skipping a level: a
-        # deeper jump than the list has open would leave an unclosed <ul>.
-        level = min(level, len(stack))
-        close_lists(level + 1)
-        if len(stack) == level:
-            out.append(f"<{tag}>")
-            stack.append(tag)
-        elif stack[level] != tag:
-            # Same depth, other kind of list: <ul> and <ol> don't interleave.
-            out.append(f"</{stack.pop()}>")
-            out.append(f"<{tag}>")
-            stack.append(tag)
-        out.append(f"<li>{inline(body)}</li>")
+    def blocks(self, nodes: list[doc.Node]) -> str:
+        return "".join(self._block(node) for node in nodes)
 
-    while index < len(lines):
-        line = lines[index]
-        index += 1
+    def _block(self, node: doc.Node) -> str:
+        match node:
+            case doc.Paragraph(children, heading, align):
+                if heading:
+                    return f'<p class="tx-h">{self.inline(children)}</p>'
+                if len(children) == 1 and is_display(children[0]):
+                    return f'<p class="tx-math">{self.inline(children)}</p>'
+                style = f' style="text-align:{align}"' if align in ("center", "right") else ""
+                return f"<p{style}>{self.inline(children)}</p>"
+            case doc.List(items, ordered, start):
+                tag = "ol" if ordered else "ul"
+                first = f' start="{start}"' if ordered and start != 1 else ""
+                body = "".join(f"<li>{self._compact(item)}</li>" for item in items)
+                return f"<{tag}{first}>{body}</{tag}>"
+            case doc.Code(children):
+                return f'<pre class="tx-code">{self.inline(children)}</pre>'
+            case doc.Table():
+                return self.table(node)
+            case doc.Quote(inner):
+                return f'<div class="tx-aside">{self.blocks(inner)}</div>'
+            case doc.Columns(items):
+                return "".join(self.blocks(item) for item in items)     # paper prints them in order
+        raise TypeError(f"not a block: {node!r}")
 
-        if line.strip() == _DISPLAY_MATH:
-            close_paragraph()
-            close_lists()
-            body: list[str] = []
-            while index < len(lines) and lines[index].strip() != _DISPLAY_MATH:
-                body.append(lines[index])
-                index += 1
-            index += 1  # the closing fence
-            latex = " ".join(part.strip() for part in body if part.strip())
-            if latex:
-                out.append(f'<p class="tx-math">{math_html(latex)}</p>')
-            continue
+    def _compact(self, nodes: list[doc.Node]) -> str:
+        """A list item or a cell: its first line takes no paragraph of its own."""
+        match nodes:
+            case [doc.Paragraph(children, 0), *rest] if not any(map(is_display, children)):
+                return self.inline(children) + self.blocks(rest)
+        return self.blocks(nodes)
 
-        fence = _FENCE_RE.match(line)
-        if fence:
-            close_paragraph()
-            close_lists()
-            marker = fence.group(1)
-            body = []
-            while index < len(lines) and not lines[index].strip().startswith(marker):
-                body.append(lines[index])
-                index += 1
-            index += 1
-            out.append(f'<pre class="tx-code">{escape(chr(10).join(body))}</pre>')
-            continue
+    def table(self, table: doc.Table, widths: list[float] | None = None) -> str:
+        def row(cells: list[doc.Cell]) -> str:
+            written = []
+            for cell in cells:
+                tag = "th" if cell.header else "td"
+                written.append(f'<{tag} style="text-align:{cell.align or "left"}">'
+                               f"{self._compact(cell.blocks)}</{tag}>")
+            return f"<tr>{''.join(written)}</tr>"
 
-        if not line.strip():
-            # A blank line ends a paragraph but not a list: slide bullets are
-            # commonly written one blank line apart, and closing the <ul> here
-            # would spell each of them as a list of its own.
-            close_paragraph()
-            continue
-
-        heading = _HEADING_RE.match(line)
-        if heading:
-            close_paragraph()
-            close_lists()
-            out.append(f'<p class="tx-h">{inline(heading.group(2))}</p>')
-            continue
-
-        bullet = _BULLET_RE.match(line)
-        if bullet:
-            open_item("ul", len(bullet.group(1)) // 2, bullet.group(2))
-            continue
-
-        ordered = _ORDERED_RE.match(line)
-        if ordered:
-            open_item("ol", len(ordered.group(1)) // 2, ordered.group(2))
-            continue
-
-        close_lists()
-        paragraph.append(line.strip())
-
-    close_paragraph()
-    close_lists()
-    return "".join(out)
+        rows, head = table.rows, ""
+        if rows and rows[0] and all(cell.header for cell in rows[0]):
+            head, rows = f"<thead>{row(rows[0])}</thead>", rows[1:]
+        body = f"<tbody>{''.join(row(cells) for cells in rows)}</tbody>"
+        if widths is None:
+            return f'<table class="tx-table">{head}{body}</table>'
+        cols = "".join(f'<col style="width:{100 * width:.2f}%">' for width in widths)
+        return ('<table class="tx-table" style="table-layout:fixed;width:100%">'
+                f"<colgroup>{cols}</colgroup>{head}{body}</table>")

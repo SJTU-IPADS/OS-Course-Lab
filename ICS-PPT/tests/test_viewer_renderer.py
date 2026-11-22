@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from lecturekit import Lecture, model
+from lecturekit import Lecture, i18n, model
 from lecturekit.renderers.viewer import (
     StaticViewerRenderer,
     build_marp_markdown,
@@ -45,7 +45,7 @@ class StaticViewerRendererTest(unittest.TestCase):
             outline_css = Path(tmp, "outline.css").read_text(encoding="utf-8")
             viewer_css = Path(tmp, "viewer.css").read_text(encoding="utf-8")
         self.assertIn(".outline .row", outline_css)
-        self.assertIn("--icon", outline_css)
+        self.assertIn("--outline-icon", outline_css)
         self.assertNotIn(".outline .row", viewer_css)
 
     def test_lecture_json_has_nested_tree_and_linear_pages(self):
@@ -95,6 +95,24 @@ class StaticViewerRendererTest(unittest.TestCase):
         self.assertIn("theme: basic-office", md)
         self.assertIn("paginate: true", md)
         self.assertIn("# 一句话指令背后的庞然大物", md)
+
+    def test_the_deck_is_in_chinese_unless_told_otherwise(self):
+        md = build_marp_markdown(sample_lecture().build())
+        front_matter = md.split("---", 2)[1].splitlines()
+        self.assertIn(f"lang: {i18n.DEFAULT_UI_LANG}", front_matter)
+
+    def test_the_deck_declares_the_lectures_language(self):
+        lecture = Lecture(id="lec", title="L", lang="en")
+
+        def body(p):
+            p.title("T")
+            p.slide("- point")
+
+        lecture.page("p1", body=body)
+        md = build_marp_markdown(lecture.build())
+        front_matter = md.split("---", 2)[1].splitlines()
+        self.assertIn("lang: en", front_matter)
+        self.assertNotIn(f"lang: {i18n.DEFAULT_UI_LANG}", front_matter)
 
     def test_pagination_can_be_disabled(self):
         lecture = sample_lecture().build()
@@ -552,10 +570,14 @@ class StaticViewerRendererTest(unittest.TestCase):
         self.assertNotIn("var(--sidenote-1)", md)
 
     def test_theme_styles_the_sidenote_box(self):
+        from lecturekit import tokens
+
         css = Path("themes/basic-office.css").read_text(encoding="utf-8")
         self.assertIn(".sidenote {", css)
-        self.assertIn("#f7d6d4", css)   # box background
-        self.assertIn("#0d2332", css)   # box border
+        self.assertIn("var(--sidenote-1)", css)
+        self.assertIn("var(--sidenote-border)", css)
+        self.assertEqual(tokens.value("--sidenote-1"), "#f7d6d4")       # box background
+        self.assertEqual(tokens.value("--sidenote-border"), "#0d2332")  # box border
         self.assertIn(".sidenote-title", css)
         self.assertIn(".sidenote--single-line .sidenote-logo", css)
         self.assertIn("max-height: 1lh", css)

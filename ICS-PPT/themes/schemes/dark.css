@@ -1,0 +1,155 @@
+/*
+ * The dark scheme. See light.css for what each token paints.
+ *
+ * It changes paint and nothing else, so no box moves with the scheme.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- The slide --- */
+  --color-bg: #1b1d1f;
+  --color-fg: #d6d6d3;
+  --color-dk2: #b4c8dc;
+  --color-lt2: #2b2f33;
+  --color-accent1: #68b4d4;
+  --color-accent2: #ee8a52;
+  --color-accent3: #78c07c;
+  --color-accent4: #35b2e6;
+  --color-link: #82b7c4;
+  --color-link-visited: #c69db4;
+  --color-disabled: #9a9a9a;
+
+  --code-keyword: #68a9f0;
+  --code-string: #92c47c;
+  --code-comment: #98a5b2;
+  --code-number: #e8926a;
+  --code-title: #c6d8ea;
+  --code-type: #93b9ee;
+  --code-border: rgba(255, 255, 255, 0.42);
+
+  --pseudo-keyword: #92c47c;
+  --pseudo-message: #68a9f0;
+  --pseudo-state: #f5844f;
+
+  /* The same six hues, deep instead of pale. */
+  --sidenote-1: #463230;
+  --sidenote-2: #46382b;
+  --sidenote-3: #403c25;
+  --sidenote-4: #2c3d2e;
+  --sidenote-5: #263b43;
+  --sidenote-6: #373344;
+
+  /* A light ink is easier to drown than a black one, so the yellow is thinner;
+     the others are stronger, to show on the dark page at all. */
+  --stroke-yellow: rgba(246, 197, 21, 0.27);
+  --stroke-orange: rgba(241, 90, 36, 0.34);
+  --stroke-green: rgba(95, 175, 60, 0.32);
+  --stroke-blue: rgba(23, 105, 194, 0.48);
+  /* A marked line of code has six inks on it, so its wash is a deep tone of
+     the stroke's hue: translucent over the block's grey it would drown them. */
+  --codemark-yellow: #39330f;
+  --codemark-orange: #482312;
+  --codemark-green: #1b3818;
+  --codemark-blue: #0f2e4c;
+
+  --cover-accent: #e57f90;
+  --cover-ink: #c4c4c0;
+  --cover-muted: #9b9b98;
+
+  --sidenote-border: #8595a3;
+  --box-border: #6f7c86;
+  --box-fill: #202326;
+  --frame-fill: #ffffff;
+
+  --shadow-card: rgba(13, 35, 50, 0.18);
+  --shadow-logo: rgba(13, 35, 50, 0.35);
+  --shadow-bubble: rgba(13, 35, 50, 0.25);
+  --untranslated-bg: rgba(241, 90, 36, 0.12);
+
+  --invert-bg: #14314f;
+  --invert-fg: #e2e6ea;
+  --invert-code-bg: rgba(255, 255, 255, 0.16);
+  --invert-code-border: rgba(255, 255, 255, 0.55);
+
+  --chip-yellow: #62b8cc;
+  --chip-orange: #ee8650;
+  --chip-green: #88c06e;
+  --chip-blue: #68a6f2;
+
+  --control-accent: #35b2e6;
+  --control-track: #808c96;
+  --control-muted: #98a5b2;
+
+  /* --- What the ground asks of the slide ---
+     A figure is usually black ink on transparency, so it gets the paper back.
+     What lies over one then needs the page's ground, or its light ink would be
+     on the figure's sheet. */
+  --adapt-picture-bg: #ffffff;
+  --adapt-picture-fg: #000000;
+  --adapt-over-picture: var(--color-bg);
+  --adapt-page-number: initial;
+  --adapt-marked-code: var(--color-fg);
+  --adapt-demo-desc: 0.85;
+  --adapt-invert-ground: var(--invert-bg);
+  --adapt-invert-over-picture: var(--invert-bg);
+  --adapt-invert-quote: var(--invert-fg);
+
+  /* --- The shell: the outline and the slide stand on one ground --- */
+  --shell-bg: var(--color-bg);
+  --shell-fg: var(--color-fg);
+  --shell-muted: var(--control-muted);
+  --shell-scrollbar: var(--control-track) var(--color-bg);
+
+  --outline-connector: var(--control-muted);
+  --outline-marker: var(--color-fg);
+  --outline-icon: #c79a3b;
+  --outline-hover: rgba(107, 163, 221, 0.18);
+  --outline-selected: #6ba3dd;
+  --outline-selected-hover: var(--outline-selected);
+  --outline-selected-fg: #0a0a0a;
+
+  --stage-bg: var(--color-bg);
+  /* A frame cut short before the deck has declared its scheme is white in
+     Firefox, so the stage shows until the deck is in. */
+  --stage-loading: 0;
+  --stage-button-bg: var(--color-lt2);
+  --stage-button-fg: var(--color-fg);
+  --stage-button-opacity: 0.6;
+
+  /* --- The live preview's panels --- */
+  --panel-bg: #10171d;
+  --panel-fg: #dfe6ec;
+  --panel-head: #182028;
+  --panel-bar: #0c1217;
+  --panel-line: #263039;
+  --panel-line-hover: #3a4a57;
+  --panel-edge: #2c4a63;
+  --panel-button-bg: #141c23;
+  --panel-action-bg: #1a3247;
+  --panel-badge-bg: #23303a;
+  --panel-accent: #8fd3ff;
+  --panel-label: #9fb3c2;
+  --panel-muted: #7f94a5;
+  --panel-faint: #6d8294;
+  --panel-dim: #5d7386;
+  --panel-line-number: #4e6272;
+  --panel-scrollbar: #2b3945;
+  --panel-selection: rgba(143, 211, 255, 0.28);
+  --panel-shadow: rgba(0, 0, 0, 0.35);
+  --panel-ok: #7ddc94;
+  --panel-ok-bg: #17331f;
+  --panel-fail: #ff9a8a;
+  --panel-fail-hover: #ffc4ba;
+  --panel-fail-bg: #3a1c1c;
+  --panel-stop-bg: #2a1818;
+  --panel-stop-border: #4a2a2a;
+
+  --panel-code-comment: #7f93a3;
+  --panel-code-keyword: #7ab8ff;
+  --panel-code-type: #6fd3c7;
+  --panel-code-title: #f1d58a;
+  --panel-code-string: #a3d98a;
+  --panel-code-number: #f2a27c;
+  --panel-code-meta: #c9a6f0;
+}

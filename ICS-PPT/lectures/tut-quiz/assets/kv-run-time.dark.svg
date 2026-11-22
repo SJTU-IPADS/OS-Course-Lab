@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 446" width="1120" height="446">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#68b4d4"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ee8a52"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c6d8ea"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#78c07c"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f37b84"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#99a6b3"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#556067"/></marker></defs>
+<text x="4.0" y="22.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c6d8ea" text-anchor="start">请求的先后</text>
+<text x="4.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="start">文本 + 回答的前 7 个 = 之后缓存的 token</text>
+<text x="4.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#f37b84" text-anchor="start">不使用 KV Cache 时重新计算的次数</text>
+<rect x="318.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#68b4d4" stroke-width="2"/>
+<g data-key="sent/0/who">
+<text x="343.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#68b4d4" text-anchor="middle">A</text>
+</g>
+<g data-key="sent/0/cached">
+<text x="343.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">13+7=20</text>
+</g>
+<g data-key="sent/0/again">
+<text x="343.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">190</text>
+</g>
+<rect x="390.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#68b4d4" stroke-width="2"/>
+<g data-key="sent/1/who">
+<text x="415.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#68b4d4" text-anchor="middle">A</text>
+</g>
+<line x1="370.0" y1="16.0" x2="387.0" y2="16.0" stroke="#99a6b3" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<g data-key="sent/1/cached">
+<text x="415.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">35+7=42</text>
+</g>
+<g data-key="sent/1/again">
+<text x="415.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">671</text>
+</g>
+<rect x="462.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#b3a2e0" stroke-width="2"/>
+<g data-key="sent/2/who">
+<text x="487.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#b3a2e0" text-anchor="middle">B</text>
+</g>
+<line x1="442.0" y1="16.0" x2="459.0" y2="16.0" stroke="#99a6b3" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<g data-key="sent/2/cached">
+<text x="487.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">12+7=19</text>
+</g>
+<g data-key="sent/2/again">
+<text x="487.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">171</text>
+</g>
+<rect x="534.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#c9aa7c" stroke-width="2"/>
+<g data-key="sent/3/who">
+<text x="559.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#c9aa7c" text-anchor="middle">C</text>
+</g>
+<line x1="514.0" y1="16.0" x2="531.0" y2="16.0" stroke="#99a6b3" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<g data-key="sent/3/cached">
+<text x="559.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">14+7=21</text>
+</g>
+<g data-key="sent/3/again">
+<text x="559.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">210</text>
+</g>
+<rect x="606.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#b3a2e0" stroke-width="2"/>
+<g data-key="sent/4/who">
+<text x="631.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#b3a2e0" text-anchor="middle">B</text>
+</g>
+<line x1="586.0" y1="16.0" x2="603.0" y2="16.0" stroke="#99a6b3" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<g data-key="sent/4/cached">
+<text x="631.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">37+7=44</text>
+</g>
+<g data-key="sent/4/again">
+<text x="631.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">775</text>
+</g>
+<rect x="678.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#68b4d4" stroke-width="2"/>
+<g data-key="sent/5/who">
+<text x="703.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#68b4d4" text-anchor="middle">A</text>
+</g>
+<line x1="658.0" y1="16.0" x2="675.0" y2="16.0" stroke="#99a6b3" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<g data-key="sent/5/cached">
+<text x="703.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">60+7=67</text>
+</g>
+<g data-key="sent/5/again">
+<text x="703.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">1350</text>
+</g>
+<rect x="750.0" y="2.0" width="50.0" height="28.0" rx="5" fill="#1b1d1f" stroke="#c9aa7c" stroke-width="2"/>
+<g data-key="sent/6/who">
+<text x="775.0" y="22.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="18" font-weight="bold" fill="#c9aa7c" text-anchor="middle">C</text>
+</g>
+<line x1="730.0" y1="16.0" x2="747.0" y2="16.0" stroke="#99a6b3" stroke-width="1.6" marker-end="url(#ah-5a6b78)"/>
+<g data-key="sent/6/cached">
+<text x="775.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">36+7=43</text>
+</g>
+<g data-key="sent/6/again">
+<text x="775.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="middle">693</text>
+</g>
+<g data-key="total/cached">
+<text x="826.0" y="51.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="start">67 + 44 + 43 = 154 个 token</text>
+</g>
+<g data-key="total/again">
+<text x="826.0" y="75.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="start">共 4060 次，比如 190 = 0+1+…+19</text>
+</g>
+<line x1="2.0" y1="85.0" x2="1118.0" y2="85.0" stroke="#556067" stroke-width="1.2"/>
+<text x="360.0" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c6d8ea" text-anchor="start">运行时间（各测一次）</text>
+<text x="792.0" y="110.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c6d8ea" text-anchor="start">经过模型的 token</text>
+<g data-key="run/0/name">
+<text x="4.0" y="140.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">182 块：全部会话都放得下</text>
+</g>
+<g data-key="run/0/what">
+<text x="4.0" y="164.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">没有失效</text>
+</g>
+<rect x="360.0" y="126.0" width="91.4" height="32.0" rx="3" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.6"/>
+<g data-key="run/0/seconds">
+<text x="459.4" y="148.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">181.9 s</text>
+</g>
+<g data-key="run/0/new">
+<rect x="792.0" y="126.0" width="207.9" height="32.0" rx="2" fill="#46301f" stroke="#ee8a52" stroke-width="1.6"/>
+<text x="896.0" y="147.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">154</text>
+</g>
+<g data-key="run/1/name">
+<text x="4.0" y="208.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">96 块，最小缓存优先</text>
+</g>
+<g data-key="run/1/what">
+<text x="4.0" y="232.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">失效 3 次，重新计算 21 个 token</text>
+</g>
+<rect x="360.0" y="194.0" width="110.7" height="32.0" rx="3" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.6"/>
+<g data-key="run/1/seconds">
+<text x="478.7" y="216.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">220.2 s</text>
+</g>
+<g data-key="run/1/new">
+<rect x="792.0" y="194.0" width="207.9" height="32.0" rx="2" fill="#46301f" stroke="#ee8a52" stroke-width="1.6"/>
+<text x="896.0" y="215.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">154</text>
+</g>
+<g data-key="run/1/again">
+<rect x="999.9" y="194.0" width="28.4" height="32.0" rx="2" fill="#452726" stroke="#f37b84" stroke-width="1.6"/>
+<text x="1014.1" y="215.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">21</text>
+</g>
+<g data-key="run/2/name">
+<text x="4.0" y="276.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">96 块，最近最少使用</text>
+</g>
+<g data-key="run/2/what">
+<text x="4.0" y="300.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">失效 4 次，重新计算 63 个 token</text>
+</g>
+<rect x="360.0" y="262.0" width="137.1" height="32.0" rx="3" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.6"/>
+<g data-key="run/2/seconds">
+<text x="505.1" y="284.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">272.7 s</text>
+</g>
+<g data-key="run/2/new">
+<rect x="792.0" y="262.0" width="207.9" height="32.0" rx="2" fill="#46301f" stroke="#ee8a52" stroke-width="1.6"/>
+<text x="896.0" y="283.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">154</text>
+</g>
+<g data-key="run/2/again">
+<rect x="999.9" y="262.0" width="85.1" height="32.0" rx="2" fill="#452726" stroke="#f37b84" stroke-width="1.6"/>
+<text x="1042.4" y="283.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">63</text>
+</g>
+<g data-key="run/3/name">
+<text x="4.0" y="344.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">不使用 KV Cache</text>
+</g>
+<g data-key="run/3/what">
+<text x="4.0" y="368.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">每一步重新计算之前 token 的键与值</text>
+</g>
+<rect x="360.0" y="330.0" width="310.0" height="32.0" rx="3" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.6"/>
+<g data-key="run/3/seconds">
+<text x="678.0" y="352.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="start">616.8 s</text>
+</g>
+<g data-key="run/3/new">
+<rect x="792.0" y="330.0" width="207.9" height="32.0" rx="2" fill="#46301f" stroke="#ee8a52" stroke-width="1.6"/>
+<text x="896.0" y="351.6" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">154</text>
+</g>
+<g data-key="run/3/rows">
+<text x="792.0" y="383.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#f37b84" text-anchor="start">另有键与值的重新计算 4060 次</text>
+</g>
+<line x1="360.0" y1="118.0" x2="360.0" y2="366.0" stroke="#99a6b3" stroke-width="1.2"/>
+<line x1="792.0" y1="118.0" x2="792.0" y2="366.0" stroke="#99a6b3" stroke-width="1.2"/>
+<text x="560.0" y="409.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="middle">使用 KV Cache 时，运行时间随经过模型的 token 数增长</text>
+<rect x="293.2" y="424.0" width="24.0" height="17.0" rx="3" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.4"/>
+<text x="325.2" y="438.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">运行时间</text>
+<rect x="411.2" y="424.0" width="24.0" height="17.0" rx="3" fill="#46301f" stroke="#ee8a52" stroke-width="1.4"/>
+<text x="443.2" y="438.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">第一次计算的 token</text>
+<rect x="614.0" y="424.0" width="24.0" height="17.0" rx="3" fill="#452726" stroke="#f37b84" stroke-width="1.4"/>
+<text x="646.0" y="438.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="start">失效后重新计算的 token</text>
+</svg>

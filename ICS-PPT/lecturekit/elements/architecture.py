@@ -46,7 +46,7 @@ class Architecture(Block):
         HTML through untouched rather than reparsing it as markdown.
         """
         from .. import model
-        from ..renderers.viewer.blocks import escape_html, inline_md
+        from ..markup.fields import escape_html, inline_md
         diagram = self.content
         flow = diagram.get("flow")
         parts = ['<figure class="lk-arch">']
@@ -93,11 +93,11 @@ class Architecture(Block):
             ARCH_MIN_SCALE,
             ArchMetrics,
             GAP,
-            _caption,
             arch_band,
             arch_flow,
             arch_layout,
         )
+        from ..renderers.pptx.draw import draw_caption
         from ..renderers.pptx.layout import LINE_HEIGHT
         diagram = self.content
         caption = diagram.get("caption")
@@ -121,7 +121,8 @@ class Architecture(Block):
             top += band["height"]
         ctx.cursor.advance(GAP)
         if caption:
-            _caption(caption, "center", ctx)
+            draw_caption(ctx, caption)
+            ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
         from ..renderers.latex.blocks import FLOW_ARROWS, figure
@@ -141,7 +142,7 @@ class Architecture(Block):
         separator = f"\n\n{arrow}\n\n" if arrow else "\n\n"
         return figure(separator.join(layers), content.get("caption"), self, ctx)
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         from ..renderers.transcript.blocks import FLOW_GLYPH, caption, is_more
         from ..renderers.transcript.text import escape
         content = self.content
@@ -162,7 +163,7 @@ class Architecture(Block):
             bands.append(f'<div class="tx-layer">{title}<div class="tx-mods">{modules}</div></div>')
         return (
             f'<figure class="tx-fig tx-arch">{"".join(bands)}'
-            f'{caption(content.get("caption"))}</figure>'
+            f'{caption(content.get("caption"), ctx)}</figure>'
         )
 
     def redraw_pptx(self, ctx, top, max_height):

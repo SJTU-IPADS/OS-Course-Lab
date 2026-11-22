@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 300" width="1040" height="300">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#68b4d4"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ee8a52"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c6d8ea"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#78c07c"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f37b84"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#99a6b3"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#556067"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b3a2e0"/></marker></defs>
+<rect x="60.0" y="128.0" width="256.0" height="34.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="2"/>
+<line x1="76.0" y1="156.0" x2="76.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="92.0" y1="156.0" x2="92.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="108.0" y1="156.0" x2="108.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="124.0" y1="156.0" x2="124.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="140.0" y1="156.0" x2="140.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="156.0" y1="156.0" x2="156.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="172.0" y1="156.0" x2="172.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="188.0" y1="156.0" x2="188.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="204.0" y1="156.0" x2="204.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="220.0" y1="156.0" x2="220.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="236.0" y1="156.0" x2="236.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="252.0" y1="156.0" x2="252.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="268.0" y1="156.0" x2="268.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="284.0" y1="156.0" x2="284.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="300.0" y1="156.0" x2="300.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<text x="188.0" y="184.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">0x12340</text>
+<text x="188.0" y="204.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#68b4d4" text-anchor="middle">组 13</text>
+<rect x="324.0" y="128.0" width="256.0" height="34.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="2"/>
+<line x1="340.0" y1="156.0" x2="340.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="356.0" y1="156.0" x2="356.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="372.0" y1="156.0" x2="372.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="388.0" y1="156.0" x2="388.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="404.0" y1="156.0" x2="404.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="420.0" y1="156.0" x2="420.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="436.0" y1="156.0" x2="436.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="452.0" y1="156.0" x2="452.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="468.0" y1="156.0" x2="468.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="484.0" y1="156.0" x2="484.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="500.0" y1="156.0" x2="500.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="516.0" y1="156.0" x2="516.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="532.0" y1="156.0" x2="532.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="548.0" y1="156.0" x2="548.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<line x1="564.0" y1="156.0" x2="564.0" y2="162.0" stroke="#68b4d4" stroke-width="1"/>
+<text x="452.0" y="184.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="middle">0x12380</text>
+<text x="452.0" y="204.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#68b4d4" text-anchor="middle">组 14</text>
+<rect x="300.0" y="132.0" width="16.0" height="26.0" rx="1" fill="#ee8a52" stroke="#ee8a52" stroke-width="1"/>
+<rect x="324.0" y="132.0" width="16.0" height="26.0" rx="1" fill="#ee8a52" stroke="#ee8a52" stroke-width="1"/>
+<rect x="60.0" y="27.0" width="108.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="114.0" y="45.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_read</text>
+<text x="174.0" y="45.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="start">(0x1237c, dst, 8)</text>
+<rect x="216.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="242.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="268.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="294.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="320.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="346.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="372.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="398.0" y="64.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<text x="434.0" y="82.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#ee8a52" text-anchor="start">dst</text>
+<line x1="308.0" y1="125.0" x2="268.0" y2="92.0" stroke="#ee8a52" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<line x1="332.0" y1="125.0" x2="372.0" y2="92.0" stroke="#ee8a52" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<rect x="60.0" y="249.0" width="117.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="118.5" y="267.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_write</text>
+<text x="183.0" y="267.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="start">(0x1237c, src, 8)</text>
+<rect x="216.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="242.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="268.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="294.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="320.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="346.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="372.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<rect x="398.0" y="222.0" width="26.0" height="26.0" rx="0" fill="#46301f" stroke="#ee8a52" stroke-width="1.2"/>
+<text x="434.0" y="240.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#ee8a52" text-anchor="start">src</text>
+<line x1="268.0" y1="220.0" x2="308.0" y2="165.0" stroke="#ee8a52" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<line x1="372.0" y1="220.0" x2="332.0" y2="165.0" stroke="#ee8a52" stroke-width="2" marker-end="url(#ah-e97132)"/>
+<text x="580.0" y="267.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#f37b84" text-anchor="end">两行都置 dirty = 1</text>
+<text x="634.0" y="66.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">逐行处理：每一轮一行</text>
+<text x="668.0" y="113.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="end">第 1 轮</text>
+<rect x="680.0" y="95.5" width="194.4" height="25.0" rx="12.5" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="777.2" y="112.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_access(0x1237c)</text>
+<text x="680.0" y="138.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">组 13，offset 60，4 字节</text>
+<text x="668.0" y="175.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="end">第 2 轮</text>
+<rect x="680.0" y="157.5" width="194.4" height="25.0" rx="12.5" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="777.2" y="174.9" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_access(0x12380)</text>
+<text x="680.0" y="200.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">组 14，offset 0，4 字节</text>
+<text x="634.0" y="244.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#c6d8ea" text-anchor="start">两行各计一次命中或缺失</text>
+</svg>

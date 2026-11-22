@@ -38,17 +38,6 @@
   var FONT =
     '"Cascadia Code", "SFMono-Regular", "JetBrains Mono", Consolas, ' +
     '"Liberation Mono", Menlo, monospace';
-  var THEME = {
-    background: "#10171d",
-    foreground: "#dfe6ec",
-    cursor: "#8fd3ff",
-    cursorAccent: "#10171d",
-    selectionBackground: "#2c4a63"
-  };
-  // A command line as the transcript shows it: the prompt dim, the command in
-  // pale italics, so it reads as what was typed rather than what came back.
-  var PROMPT = "\x1b[0;38;2;93;115;134m";
-  var TYPED = "\x1b[0;3;38;2;159;179;194m";
   var RESET = "\x1b[0m";
   var HIDE_CURSOR = "\x1b[?25l";
   var SHOW_CURSOR = "\x1b[?25h";
@@ -156,6 +145,42 @@
     };
   }
 
+  // ---- the colours ----------------------------------------------------------
+
+  // xterm paints without CSS, so it is handed the scheme's tokens as values,
+  // and again when the system moves the page to another scheme.
+  function palette() {
+    var style = window.getComputedStyle(document.documentElement);
+    function token(name) { return style.getPropertyValue(name).trim(); }
+    return {
+      background: token("--panel-bg"),
+      foreground: token("--panel-fg"),
+      cursor: token("--panel-accent"),
+      cursorAccent: token("--panel-bg"),
+      selectionBackground: token("--panel-edge")
+    };
+  }
+
+  // A colour token as the "r;g;b" of a terminal's escape sequence.
+  function rgb(name) {
+    var probe = document.createElement("i");
+    probe.style.color = "var(" + name + ")";
+    document.body.appendChild(probe);
+    var colour = window.getComputedStyle(probe).color;
+    probe.remove();
+    return colour.match(/[\d.]+/g).slice(0, 3).join(";");
+  }
+
+  function repaint() {
+    for (var i = 0; i < runs.length; i++) {
+      if (runs[i].term) runs[i].term.options.theme = palette();
+    }
+  }
+  var schemes = document.querySelectorAll("style[data-lk-scheme]");
+  for (var i = 0; i < schemes.length; i++) {
+    window.matchMedia(schemes[i].media).addEventListener("change", repaint);
+  }
+
   // ---- the terminal -------------------------------------------------------
 
   function terminal(run) {
@@ -172,7 +197,7 @@
       fontSize: fontSize,
       lineHeight: 1.2,
       scrollback: 5000,
-      theme: THEME
+      theme: palette()
     });
     run.fit = new window.FitAddon.FitAddon();
     run.term.loadAddon(run.fit);
@@ -196,11 +221,15 @@
 
   // A command bash is about to run, on a line of its own. The server puts a
   // two-character prompt on every line, "$ " or "> ", as bash would echo it.
+  // The prompt is dim and the command in pale italics, so it reads as what was
+  // typed rather than what came back.
   function command(run, text) {
+    var prompt = "\x1b[0;38;2;" + rgb("--panel-dim") + "m";
+    var typed = "\x1b[0;3;38;2;" + rgb("--panel-label") + "m";
     var out = run.fresh ? "" : RESET + "\r\n";
     var lines = text.split("\n");
     for (var i = 0; i < lines.length; i++) {
-      out += PROMPT + lines[i].slice(0, 2) + TYPED + lines[i].slice(2) + RESET + "\r\n";
+      out += prompt + lines[i].slice(0, 2) + typed + lines[i].slice(2) + RESET + "\r\n";
     }
     write(run, out);
   }

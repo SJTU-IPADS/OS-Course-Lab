@@ -16,13 +16,27 @@ from pptx import Presentation
 from lecturekit import filelinks, model, source
 from lecturekit.dsl import Lecture
 from lecturekit.renderers.latex.text import inline as latex_inline
+from lecturekit.markup import Reader, document
 from lecturekit.renderers.pptx import PptxRenderer
-from lecturekit.renderers.pptx.text import parse_inline
-from lecturekit.renderers.transcript.text import inline as sheet_inline
+from lecturekit.renderers.pptx.text import runs as pptx_runs
+from lecturekit.renderers.transcript.text import HtmlWriter
 from lecturekit.renderers.viewer.blocks import render_block
 
 ASSETS = Path(__file__).parent.parent / "lecturekit" / "renderers" / "viewer" / "assets"
 THEME = Path(__file__).parent.parent / "themes" / "basic-office.css"
+
+
+def read_line(text: str) -> list:
+    with Reader() as read:
+        return document.phrasing(read.slide(text))
+
+
+def parse_inline(text: str) -> list:
+    return pptx_runs(read_line(text))
+
+
+def sheet_inline(text: str) -> str:
+    return HtmlWriter(lambda src: None).inline(read_line(text))
 
 
 def lecture_of(body) -> Lecture:

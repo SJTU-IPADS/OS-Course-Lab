@@ -42,7 +42,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
-from . import bind, model
+from . import bind, model, variants
 
 NAME = r"[A-Za-z_][A-Za-z0-9_]*"
 NAME_RE = re.compile(NAME)
@@ -380,6 +380,8 @@ def check_figures(lecture: model.Lecture, asset_root: Path | None) -> None:
     variable, the values it is drawn at are their defaults, and each bound
     attribute and text in the file is what its expression gives there. The
     file is then what every static target shows, and the viewer starts from it.
+    Its variants (:mod:`lecturekit.variants`) are bound figures of the same
+    variables at the same values, so they move with it.
     """
     declared = {var.name: var for var in lecture.variables}
     checked: set[str] = set()
@@ -393,10 +395,9 @@ def check_figures(lecture: model.Lecture, asset_root: Path | None) -> None:
                 if figure is None:
                     continue
                 path = model.resolve_asset(src, asset_root, lecture.borrowed)
-                try:
-                    bind.check_figure(path)
-                except bind.BindError as error:
-                    raise model.ValidationError(f"{page.id}: {error}") from None
+                _check_drawing(path, page.id)
+                for variant in variants.drawn(path):
+                    _check_variant(figure, variant, page.id)
                 for name, drawn in figure.inputs.items():
                     var = _declared(name, declared, f"{page.id}: the figure {src}")
                     if drawn != var.default:
@@ -405,6 +406,23 @@ def check_figures(lecture: model.Lecture, asset_root: Path | None) -> None:
                             f"{number_text(drawn)}, but ${name} defaults to "
                             f"{number_text(var.default)}; draw it at the default"
                         )
+
+
+def _check_drawing(path: Path, page_id: str) -> None:
+    try:
+        bind.check_figure(path)
+    except bind.BindError as error:
+        raise model.ValidationError(f"{page_id}: {error}") from None
+
+
+def _check_variant(figure: Figure, variant: Path, page_id: str) -> None:
+    if not bind.is_bound(variant) or bind.read_inputs(variant) != figure.inputs:
+        inputs = ", ".join(f"{name} = {number_text(v)}" for name, v in figure.inputs.items())
+        raise model.ValidationError(
+            f"{page_id}: {variant.name} replaces {figure.src}, a bound figure, in a "
+            f"colour scheme; bind it to the same variables at the same values ({inputs})"
+        )
+    _check_drawing(variant, page_id)
 
 
 # --------------------------------------------------------------------------
@@ -570,13 +588,21 @@ def page_table(lecture: model.Lecture, page: model.Page,
     body = json.dumps(table, ensure_ascii=False).replace("</", "<\\/")
     out = [f'<script type="application/json" data-lk-vars>{body}</script>']
     for figure in page_figures(page, bound):
-        if "</script" in figure.svg.lower():
-            raise model.ValidationError(
-                f"{figure.src}: a bound figure cannot contain '</script'"
-            )
-        out.append(f'<script type="image/svg+xml" data-lk-figure="{_attr(figure.src)}">'
-                   f"{figure.svg.strip()}</script>")
+        out.append(figure_script(figure.src, figure.svg))
     return "\n".join(out)
+
+
+def figure_script(src: str, svg: str, paint: str | None = None) -> str:
+    """A bound figure's source, as a page carries it for ``vars.js``.
+
+    ``paint`` is the custom property a variant's drawing is shown through,
+    since no ``<img>`` has a variant for its ``src``.
+    """
+    if "</script" in svg.lower():
+        raise model.ValidationError(f"{src}: a bound figure cannot contain '</script'")
+    where = f' data-lk-paint="{paint}"' if paint else ""
+    return (f'<script type="image/svg+xml" data-lk-figure="{_attr(src)}"{where}>'
+            f"{svg.strip()}</script>")
 
 
 def _attr(text: str) -> str:

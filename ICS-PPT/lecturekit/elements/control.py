@@ -57,7 +57,7 @@ class Control(Block):
         return variables.number_text(value, variables.control_places(self.content))
 
     def label_html(self) -> str:
-        from ..renderers.viewer.blocks import escape_html
+        from ..markup.fields import escape_html
         label = self.content.get("label")
         if label:
             return f'<span class="lk-control-label">{escape_html(label)}</span>'
@@ -74,7 +74,7 @@ class Control(Block):
     def box(self, extra: str = "") -> str:
         """The number box the value is shown and typed in."""
         from .. import variables
-        from ..renderers.viewer.blocks import escape_html
+        from ..markup.fields import escape_html
         var = self.variable()
         step = variables.number_text(var["step"]) if var["step"] is not None else "any"
         name = escape_html(self.content.get("label") or var["name"])
@@ -96,7 +96,7 @@ class Control(Block):
         page without script (the PDF) carries no button that does nothing.
         """
         from .. import i18n
-        from ..renderers.viewer.blocks import escape_html
+        from ..markup.fields import escape_html
         title = escape_html(i18n.ui(self.content.get("lang"), "control_reset").format(
             value=self.fmt(self.variable()["default"])))
         return (f'<button type="button" class="lk-control-reset" title="{title}" '
@@ -119,22 +119,22 @@ class Control(Block):
 
     # --- the targets that cannot move it: one line of text ---
 
-    def to_pptx(self, ctx):
-        from pptx.enum.text import PP_ALIGN
+    def printed(self, read):
+        """The line, read. A label given is shown as written, as on the deck;
+        only the variable's name on its own is a math symbol."""
         from .. import variables
+        from ..markup import document
+        text = variables.control_text(self.content)
+        if self.content.get("label"):
+            return read.plain(text)
+        return document.phrasing(read.markdown(text))
+
+    def to_pptx(self, ctx):
         from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import GAP, apply_runs, set_line_spacing, textbox
-        from ..renderers.pptx.layout import estimate_text_height
-        from ..renderers.pptx.text import parse_inline
-        line = variables.control_text(self.content)
-        height = estimate_text_height(line, font_pt=theme.BODY_PT,
-                                      width=ctx.layout.content_width)
-        box, tf = textbox(ctx, height)
-        paragraph = tf.paragraphs[0]
-        paragraph.alignment = PP_ALIGN.CENTER
-        set_line_spacing(paragraph, theme.BODY_PT)
-        apply_runs(paragraph, parse_inline(line), size_pt=theme.BODY_PT, color=theme.DK2)
-        ctx.cursor.place(height)
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import Look, draw_line
+        from ..renderers.pptx.text import runs
+        draw_line(ctx, runs(self.printed(ctx.read)), Look(color=theme.DK2, align="center"))
         ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
@@ -144,10 +144,8 @@ class Control(Block):
         line = inline(variables.control_text(self.content), refs=ctx.resolve_ref)
         return "\\begin{center}\n%s%s\n\\end{center}" % (line, footnotes(self, ctx))
 
-    def to_transcript(self, embedder):
-        from .. import variables
-        from ..renderers.transcript.text import inline
-        return f'<p class="tx-control">{inline(variables.control_text(self.content))}</p>'
+    def to_transcript(self, ctx):
+        return f'<p class="tx-control">{ctx.inline(self.printed(ctx.read))}</p>'
 
 
 @element
@@ -161,7 +159,7 @@ class Slider(Control):
 
     def to_marp(self, ctx):
         from .. import variables
-        from ..renderers.viewer.blocks import escape_html
+        from ..markup.fields import escape_html
         var = self.variable()
         step = self.content["step_used"]
         marks = self.content.get("marks") or [var["min"], var["max"]]

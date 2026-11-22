@@ -39,7 +39,7 @@ class Columns(Block):
         Columns share the track evenly; a weighted column carries its share as the
         flex grow factor.
         """
-        from ..renderers.viewer.blocks import file_buttons
+        from ..markup.fields import slide_text
         content = self.content
         widths = content.get("widths")
         lines = ['<div class="lk-columns">']
@@ -47,7 +47,7 @@ class Columns(Block):
             style = f' style="flex-grow:{100 * widths[i]:.2f}"' if widths else ""
             lines += [
                 f'<div class="lk-column"{style}>', "",
-                file_buttons(str(text).strip()), "", "</div>",
+                slide_text(text), "", "</div>",
             ]
         lines += ["</div>", ""]
         return lines
@@ -55,35 +55,14 @@ class Columns(Block):
     def to_pptx(self, ctx):
         """Slide text in side-by-side text boxes that share the content width.
 
-        One text box per column, all at the cursor's top; the block owns the
-        tallest of them. Columns split the width left after the gaps evenly, or by
-        the block's ``widths`` shares.
+        All start at the cursor's top, and the block owns the tallest of them.
+        Columns split the width left after the gaps evenly, or by the block's
+        ``widths`` shares.
         """
-        from pptx.util import Emu, Pt
-        from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import (
-            COLUMN_GAP_EM,
-            GAP,
-            estimate_paras_height,
-            fill_paras,
-            textbox,
-        )
-        from ..renderers.pptx.text import parse_markdown
-        items = self.content["items"]
-        gap = Emu(Pt(theme.BODY_PT * COLUMN_GAP_EM))
-        track = ctx.layout.content_width - gap * (len(items) - 1)
-        shares = self.content.get("widths") or [1 / len(items)] * len(items)
-        left = ctx.layout.content_left
-        tallest = 0
-        for text, share in zip(items, shares):
-            width = round(track * share)
-            paras = parse_markdown(str(text))
-            height = estimate_paras_height(paras, width)
-            _, tf = textbox(ctx, height, left=left, width=width)
-            fill_paras(tf, paras)
-            tallest = max(tallest, height)
-            left += width + gap
-        ctx.cursor.place(tallest)
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import draw_columns
+        items = [ctx.read.slide(text) for text in self.content["items"]]
+        draw_columns(ctx, items, self.content.get("widths"))
         ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
@@ -93,10 +72,9 @@ class Columns(Block):
         text = "\n\n".join(str(item).strip() for item in self.content["items"])
         return md_blocks(text, refs=ctx.resolve_ref) + footnotes(self, ctx)
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         """Slide text the deck sets side by side; the sheet prints it in order."""
-        from ..renderers.transcript.text import markdown
         return "".join(
-            f'<div class="tx-slide">{markdown(text)}</div>'
+            f'<div class="tx-slide">{ctx.blocks(ctx.read.slide(text))}</div>'
             for text in self.content["items"]
         )

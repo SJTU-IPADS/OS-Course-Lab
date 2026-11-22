@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import json
-import re
 import shutil
 from dataclasses import dataclass, replace
 from pathlib import Path
 
 from lecturekit import demo, i18n, model, references, source, tokens, variables
+from lecturekit.markup.fields import escape_html, title_html
+from . import colorscheme
 from .blocks import (
-    MarpCtx, annotation_markup, escape_html, render_block, render_footnotes,
+    MarpCtx, annotation_markup, render_block, render_footnotes,
 )
 from .marp import CJK_FONT
 from .pdf import SLIDE_LINK_PREFIX
@@ -17,7 +18,6 @@ ASSETS = Path(__file__).resolve().parent / "assets"
 REFERENCES_PAGE_ID = "__references__"
 OUTLINE_CSS = (ASSETS / "outline.css").read_text(encoding="utf-8")
 
-_TITLE_MARK_RE = re.compile(r"\\emph\{([^{}]+)\}")
 
 # Where an alignment puts content in a flex box.
 _CSS_ALIGN = {"left": "flex-start", "center": "center", "right": "flex-end",
@@ -296,10 +296,12 @@ class StaticViewerRenderer:
         asset_root: Path | None = None,
         reveal: bool = False,
         paginate: bool = True,
+        color_scheme: str = tokens.DEFAULT_SCHEME,
     ):
         self.asset_root = asset_root
         self.reveal = reveal
         self.paginate = paginate
+        self.color_scheme = color_scheme
 
     def render(self, lecture: model.Lecture, output_dir: Path) -> None:
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -329,10 +331,21 @@ class StaticViewerRenderer:
             (ASSETS / "viewer.js").read_text(encoding="utf-8"), encoding="utf-8"
         )
         Path(output_dir, "index.html").write_text(
-            render_index_html(
-                lecture.title, json.dumps(data, ensure_ascii=False), lecture.lang
+            colorscheme.insert(
+                render_index_html(
+                    lecture.title, json.dumps(data, ensure_ascii=False), lecture.lang
+                ),
+                colorscheme.head(self.color_scheme),
             ),
             encoding="utf-8",
+        )
+        # After the assets, whose variants it names, and before slides.md,
+        # whose change sets off the rebuild that reloads a watched page. A
+        # render of no lecture's assets (an error preview) has no variants,
+        # whatever an earlier one left in the bundle.
+        pictured = output_dir if self.asset_root else None
+        Path(output_dir, colorscheme.HEAD_FILE).write_text(
+            colorscheme.head(self.color_scheme, pictured), encoding="utf-8"
         )
         Path(output_dir, "slides.md").write_text(
             build_marp_markdown(lecture, reveal=self.reveal, paginate=self.paginate,
@@ -510,6 +523,9 @@ def build_marp_markdown(
         "marp: true",
         "math: mathjax",
         f"theme: {theme}",
+        # Without it Marp takes the system locale, and the browser picks the
+        # fallback CJK face (and so the glyph forms) by this attribute.
+        f"lang: {lecture.lang or i18n.DEFAULT_UI_LANG}",
         f"size: {lecture.ratio}",
         f"paginate: {paginate_value}",
         "---",
@@ -583,7 +599,7 @@ def build_outline_html(lecture: model.Lecture) -> str:
     rows.append(
         '<div class="row root-row"><span class="label">'
         f'<span class="marker">▼</span>'
-        f'<span class="node-title"> {_title_html(lecture.title)}</span></span></div>'
+        f'<span class="node-title"> {title_html(lecture.title)}</span></span></div>'
     )
     _walk_outline(lecture.children, [], rows, [0], spans)
     return '<div class="outline">\n' + "\n".join(rows) + "\n</div>"
@@ -605,11 +621,13 @@ def build_outline_print_html(lecture: model.Lecture) -> str:
     # outline font to a fixed px below (after OUTLINE_CSS, to win the cascade).
     width = model.RATIOS[lecture.ratio][0]
     style = (
+        # Paper, so the default scheme's colours whatever the web pages show.
+        f"{colorscheme.default_colours()}"
         f'@font-face {{ font-family: "Noto Sans SC";'
         f' src: url("{CJK_FONT}") format("woff2"); }}\n'
         "@page { margin: 0; }\n"
         "html, body { margin: 0; padding: 0; }\n"
-        f"body {{ width: {width}px; background: #fff;"
+        f"body {{ width: {width}px; background: var(--color-bg);"
         ' font-family: "Lato", "Helvetica Neue", Helvetica, Arial,'
         ' "Noto Sans SC", sans-serif; }\n'
         f".print-wrap {{ box-sizing: border-box; width: {width}px;"
@@ -679,7 +697,7 @@ def _outline_row(
     page_index: list[int],
     spans: dict[str, int],
 ) -> str:
-    title = f'<span class="node-title"> {_title_html(node.title)}</span>'
+    title = f'<span class="node-title"> {title_html(node.title)}</span>'
     page_number = ""
     if isinstance(node, model.Section):
         marker, marker_class, kind = "▼", "marker", "section-row"
@@ -720,7 +738,7 @@ def render_marp_page(
     out = []
     if page.id == REFERENCES_PAGE_ID:
         out.extend(["<!-- _class: lk-references -->", ""])
-    out.extend([f"# {_title_html(page.title)}", ""])
+    out.extend([f"# {title_html(page.title)}", ""])
     draw = _PageDraw(page, slide_size, reveal)
     out.extend(draw.body(visible_blocks))
     out.extend([render_footnotes(draw.footnotes), ""])
@@ -770,7 +788,7 @@ def _render_cover_page(page: model.Page, block: model.Block) -> str:
         out.append(logos)
     out.extend([
         '<div class="lk-cover-main">',
-        f'<h1 class="lk-cover-title">{_title_html(page.title)}</h1>',
+        f'<h1 class="lk-cover-title">{title_html(page.title)}</h1>',
     ])
     meta = []
     if cover.get("author"):
@@ -846,17 +864,3 @@ def render_index_html(title: str, embedded_json: str, lang: str | None = None) -
         lang=escape_html(lang or "zh"),
         data=embedded_json.replace("</", "<\\/"),
     )
-
-
-def _title_html(text: str) -> str:
-    parts: list[str] = []
-    last = 0
-    for match in _TITLE_MARK_RE.finditer(text):
-        parts.append(escape_html(text[last:match.start()]))
-        parts.append(
-            '<span class="title-parenthetical">'
-            f"{escape_html(match.group(1))}</span>"
-        )
-        last = match.end()
-    parts.append(escape_html(text[last:]))
-    return "".join(parts)

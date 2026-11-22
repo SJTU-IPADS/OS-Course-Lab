@@ -278,8 +278,8 @@ class StaticTest(unittest.TestCase):
         from lecturekit.renderers.transcript.images import Embedder
         built = lecture_with(sample, T, SIZE, GAP).build()
         html = build_html(built, Embedder(None))
-        self.assertIn('<p class="tx-control"><span class="tx-mathspan">T</span> = 1.0'
-                      '（取值 0 – 10，刻度 0、1、10）</p>', html)
+        self.assertRegex(html, r'<p class="tx-control"><math>\s*<mi>T</mi>\s*</math> = 1\.0'
+                               '（取值 0 – 10，刻度 0、1、10）</p>')
         self.assertIn('<p class="tx-control">温度 T = 1（取值 0 – 10）</p>', html)
 
         from lecturekit.renderers.latex.assets import AssetCopier

@@ -72,53 +72,19 @@ class Code(Block):
         return blocks.mark_tucked(lines, numbers)
 
     def to_pptx(self, ctx):
-        from pptx.enum.shapes import MSO_SHAPE
-        from pptx.util import Emu, Pt
         from .. import model
-        from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import (
-            GAP,
-            _shape,
-            no_line,
-            set_line_spacing,
-            solid,
-            style_run,
-            textbox,
-        )
-        from ..renderers.pptx.layout import LINE_HEIGHT
-        code = str(self.content["content"]).strip("\n")
-        lines = code.split("\n")
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import draw_code
+        from ..renderers.pptx.text import Run
         # A marked line takes PowerPoint's own text highlight — the same wash a
         # `<mark>` gets here, at line scale.
         marked = set(self.content.get("mark") or ())
         tone = self.content.get("tone") or model.DEFAULT_HIGHLIGHT_TONE
-        # Match the background to the actual code rows.  The previous ``n + 1``
-        # estimate effectively reserved a blank line in every block, so short
-        # listings looked especially loose.  Give each row the same exact leading
-        # used elsewhere, plus a small and explicit vertical inset.
-        vertical_pad_pt = 4
-        height = Emu(Pt(
-            len(lines) * theme.CODE_PT * LINE_HEIGHT + 2 * vertical_pad_pt
-        ))
-        box, tf = textbox(ctx, height)
-        solid(box, theme.LT2)
-        no_line(box)
-        tf.margin_left = Pt(10)
-        tf.margin_top = tf.margin_bottom = Pt(vertical_pad_pt)
-        first = True
-        for number, line in enumerate(lines, start=1):
-            p = tf.paragraphs[0] if first else tf.add_paragraph()
-            first = False
-            set_line_spacing(p, theme.CODE_PT)
-            style_run(p.add_run(), line or " ", size_pt=theme.CODE_PT,
-                       color=theme.FG, mono=True,
-                       mark=tone if number in marked else None)
-        top = ctx.cursor.place(height)
-        # accent1 left bar (pre border-left).
-        bar = _shape(ctx, MSO_SHAPE.RECTANGLE, ctx.layout.content_left, top,
-                     Pt(4), height)
-        solid(bar, theme.ACCENT1)
-        no_line(bar)
+        lines = str(self.content["content"]).strip("\n").split("\n")
+        draw_code(ctx, [
+            [Run(line or " ", mark=tone if number in marked else None)]
+            for number, line in enumerate(lines, start=1)
+        ])
         ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
@@ -136,7 +102,7 @@ class Code(Block):
             option, self.content["content"], footnotes(self, ctx)
         )
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         from .. import model, pseudo
         from ..renderers.transcript.blocks import PSEUDO_CLASSES
         from ..renderers.transcript.text import escape

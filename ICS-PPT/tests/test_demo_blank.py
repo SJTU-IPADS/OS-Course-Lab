@@ -105,15 +105,20 @@ class BlankCommandDeckTest(unittest.TestCase):
 
 
 class BlankCommandStillTargetsTest(unittest.TestCase):
-    def test_the_pptx_prints_the_name_and_no_listing(self):
-        # The title and the caption; the listing box and its accent bar are not drawn.
+    def test_the_pptx_prints_the_label_the_name_and_no_listing(self):
+        # What the deck's chip holds, in its order; the listing box and its
+        # accent bar are not drawn.
         texts = slide_texts(demo_lecture(description="the caller"))
-        self.assertEqual(texts, ["P", "show the source — the caller"])
-        with_command = slide_texts(demo_lecture("make", description="the caller"))
-        self.assertEqual(with_command[:3], texts + ["$ make"])
+        self.assertEqual(texts, ["P", "main.c  show the source  the caller"])
+        one_line = slide_texts(demo_lecture("make", description="the caller"))
+        self.assertEqual(one_line, ["P", "main.c  show the source  $ make  the caller"])
+        recorded = slide_texts(demo_lecture("make", description="the caller", output="42"))
+        self.assertEqual(recorded[:4],
+                         ["P", "main.c  show the source  the caller", "$ make", "42"])
 
-    def test_the_pptx_draws_nothing_for_a_blank_command_without_a_name(self):
-        self.assertEqual(slide_texts(demo_lecture(name="")), ["P"])
+    def test_the_pptx_prints_only_the_label_for_a_blank_command_without_a_name(self):
+        # As in the deck, the file's button is the whole of the block.
+        self.assertEqual(slide_texts(demo_lecture(name="")), ["P", "main.c"])
 
     def test_the_book_prints_the_box_without_a_listing(self):
         ctx = Ctx(lecture_id="lec", page_id="p1", slide_width=1280, assets=None)

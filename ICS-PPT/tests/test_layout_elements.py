@@ -239,7 +239,8 @@ def test_pptx_nested_columns_share_row_height_and_child_override(tmp_path):
 
 
 def test_containers_are_transparent_on_paper(tmp_path):
-    from lecturekit.renderers.transcript.blocks import render_block
+    from lecturekit.markup import Reader
+    from lecturekit.renderers.transcript.blocks import Sheet, render_block
     from lecturekit.renderers.transcript.images import Embedder
 
     def body(p):
@@ -253,7 +254,9 @@ def test_containers_are_transparent_on_paper(tmp_path):
     assert [b.kind for b in transcript] == ["slide", "code"]
     latex_blocks = model.select_blocks(page, "latex")
     assert [b.kind for b in latex_blocks] == ["prose", "code"]
-    printed = "".join(render_block(b, Embedder(tmp_path)) for b in transcript)
+    with Reader() as read:
+        sheet = Sheet(Embedder(tmp_path), read)
+        printed = "".join(render_block(b, sheet) for b in transcript)
     assert printed.index("first") < printed.index("last")
     from lecturekit.renderers.latex.blocks import Ctx, emit_block
     from lecturekit.renderers.latex.assets import AssetCopier

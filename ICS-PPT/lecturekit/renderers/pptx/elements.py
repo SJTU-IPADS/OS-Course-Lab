@@ -10,9 +10,11 @@ from dataclasses import replace
 
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.enum.text import PP_ALIGN
+from pptx.oxml.ns import qn
 
 from lecturekit import model, tokens
 from .blocks import Ctx
+from .draw import draw_block
 from .layout import Cursor, estimate_text_width, px
 from . import theme
 
@@ -41,7 +43,9 @@ def _hug_text(shapes):
     keeps the full measure; native tables keep their column geometry.
     """
     for shape in shapes:
-        if not shape.has_text_frame or not shape.text.strip():
+        if not shape.has_text_frame:
+            continue
+        if not any((t.text or "").strip() for t in shape._element.iter(qn("a:t"))):
             continue
         # A label in its own textbox can hug its text. A bordered native
         # shape (chip, module, sidenote) already owns its geometry and padding.
@@ -51,10 +55,16 @@ def _hug_text(shapes):
         widest = 0
         for paragraph in tf.paragraphs:
             line = 0
-            for run in paragraph.runs:
-                size = run.font.size.pt if run.font.size is not None else theme.BODY_PT
-                line += estimate_text_width(run.text, font_pt=size)
-            widest = max(widest, line)
+            # A formula's fallback is a run too, so a formula has its width.
+            for node in paragraph._p.iter(qn("a:r"), qn("a:br")):
+                if node.tag == qn("a:br"):
+                    line = 0
+                    continue
+                properties = node.find(qn("a:rPr"))
+                sized = properties is not None and properties.get("sz")
+                size = int(sized) / 100 if sized else theme.BODY_PT
+                line += estimate_text_width(node.findtext(qn("a:t")) or "", font_pt=size)
+                widest = max(widest, line)
         inset = tf.margin_left + tf.margin_right
         # A small allowance avoids changing wrapping because of an estimated
         # glyph advance. Never widen a drawer's box.
@@ -96,8 +106,7 @@ def draw_elements(elements, ctx: Ctx, *, inherited=(None, None), held_shapes=Non
         top = ctx.cursor.top
         halign, valign = model.resolve_align(element, inherited)
         if isinstance(element, model.Block):
-            element.to_pptx(ctx)
-            shapes = list(ctx.slide.shapes)[before:]
+            shapes = draw_block(ctx, element)
             if halign is not None:
                 _hug_text(shapes)
             if held_shapes is not None and page is not None and model.block_held(page, element):

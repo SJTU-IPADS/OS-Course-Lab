@@ -28,8 +28,8 @@ This module knows nothing about the lecture model or any renderer, as
 :mod:`lecturekit.marks` does not. It owns the spelling and answers three
 questions: *where are the links* (:func:`find`), *is this text's use of them
 legal* (:func:`errors`), and *what does the text become* (:func:`replace`, for
-the renderer that draws buttons; :func:`path_of`, for the ones that parse
-``[label](url)`` themselves).
+:mod:`lecturekit.markup.fields`, which draws the button; :func:`path_of`, for
+the book, which parses ``[label](url)`` itself).
 """
 
 from __future__ import annotations

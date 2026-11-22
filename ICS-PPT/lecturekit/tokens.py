@@ -7,16 +7,20 @@ for it, kept in step by hand and by a comment saying "one source of truth", and
 they had already drifted: the book flattened the deck's stroke onto white, the
 PPTX and transcript exports reached for a sidenote pastel instead.
 
-So the palette lives in the theme's ``:root`` block — a stylesheet is where
-style belongs, and it is the file an author already edits to change a colour —
-and everything else reads it from here. No renderer spells a colour out.
+So the palette lives in a stylesheet — where style belongs, and the file an
+author already edits to change a colour — and everything else reads it from
+here. No renderer spells a colour out. The colours are a scheme's,
+``themes/schemes/<name>.css``: one file of values each, all defining the same
+tokens. What this module hands a renderer is the default scheme's, the palette
+of every export; the others are for the viewer's web pages alone.
 
 Not only colours: a font stack, the face PowerPoint should pick out of it, and
-the geometry of a marker stroke are style too, and live in the same block. A
-number in a coordinate system only one target has (``--mark-top: 38%`` of an
-inline box for the browser, ``--mark-tex-height: 1.28ex`` for LaTeX) is still
-the theme's to state — the theme says what the stroke looks like in each
-target; the code only carries it there.
+the geometry of a marker stroke are style too, and live in the theme's
+``:root``, whatever the scheme. A number in a coordinate system only one target
+has (``--mark-top: 38%`` of an inline box for the browser,
+``--mark-tex-height: 1.28ex`` for LaTeX) is still the theme's to state — the
+theme says what the stroke looks like in each target; the code only carries it
+there.
 
 One thing this module does *not* try to be is a second config format. The
 tokens are CSS custom properties, read with a regex. The deck loads the theme
@@ -31,18 +35,25 @@ hand-flattened hex literals.
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
 PKG_ROOT = Path(__file__).resolve().parents[1]
 THEME_DIR = PKG_ROOT / "themes"
+SCHEME_DIR = THEME_DIR / "schemes"
 DEFAULT_THEME = "basic-office"
+DEFAULT_SCHEME = "light"  # what every export is painted in
 
-# `--name: value;` inside the theme's `:root { … }`. Comments are stripped
-# first, so a `/* … */` between declarations cannot be read as a value.
+# `--name: value;` inside the theme's first `:root` block. Comments are
+# stripped first, so a `/* … */` between declarations cannot be read as a value.
 _COMMENT = re.compile(r"/\*.*?\*/", re.DOTALL)
 _ROOT_BLOCK = re.compile(r":root\s*\{(.*?)\}", re.DOTALL)
 _DECL = re.compile(r"(--[\w-]+)\s*:\s*([^;]+);")
+# A scheme file is one `:root` block of declarations, and nothing else.
+_SCHEME_FILE = re.compile(r"\s*:root\s*\{([^{}]*)\}\s*")
+_SCHEME_DECL = re.compile(r"([\w-]+)\s*:\s*([^;]+);")
+_REFERENCE = re.compile(r"var\(\s*(--[\w-]+)")
 _RGBA = re.compile(
     r"rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)\s*(?:[,/]\s*([\d.]+)\s*)?\)"
 )
@@ -53,9 +64,55 @@ class UnknownToken(KeyError):
     """A token the theme does not define — a typo, or a renamed property."""
 
 
+@dataclass(frozen=True)
+class Scheme:
+    """A colour scheme, as its file states it."""
+
+    name: str
+    base: str  # the ground it is built on, `light` or `dark`
+    colours: dict[str, str]
+
+
+def schemes() -> tuple[str, ...]:
+    """The name of every scheme there is: one per file."""
+    return tuple(sorted(path.stem for path in SCHEME_DIR.glob("*.css")))
+
+
+@lru_cache(maxsize=None)
+def scheme(name: str) -> Scheme:
+    """The scheme ``name``, checked to define the default one's tokens exactly."""
+    found = _read_scheme(name)
+    known = found.colours if name == DEFAULT_SCHEME else scheme(DEFAULT_SCHEME).colours
+    named = {ref for css in found.colours.values() for ref in _REFERENCE.findall(css)}
+    missing = sorted(known.keys() - found.colours.keys())
+    unknown = sorted((found.colours.keys() | named) - known.keys())
+    if missing or unknown:
+        problems = [
+            f"{what} {', '.join(names)}"
+            for what, names in (("lacks", missing), ("has unknown", unknown))
+            if names
+        ]
+        raise ValueError(f"themes/schemes/{name}.css {' and '.join(problems)}")
+    return found
+
+
+def _read_scheme(name: str) -> Scheme:
+    css = (SCHEME_DIR / f"{name}.css").read_text(encoding="utf-8")
+    block = _SCHEME_FILE.fullmatch(_COMMENT.sub("", css))
+    if not block:
+        raise ValueError(f"themes/schemes/{name}.css is not one :root block of tokens")
+    found = {key: value.strip() for key, value in _SCHEME_DECL.findall(block.group(1))}
+    base = found.pop("color-scheme", None)
+    if base not in ("light", "dark"):
+        raise ValueError(
+            f"themes/schemes/{name}.css needs color-scheme: light or dark, got {base!r}"
+        )
+    return Scheme(name, base, found)
+
+
 @lru_cache(maxsize=None)
 def tokens(theme: str = DEFAULT_THEME) -> dict[str, str]:
-    """Every custom property in ``theme``'s ``:root``, as authored."""
+    """``theme``'s ``:root`` and the default scheme's colours, as authored."""
     path = THEME_DIR / f"{theme}.css"
     if not path.is_file():
         # `themes/` lives beside the package, not inside it, so a wheel does
@@ -70,7 +127,8 @@ def tokens(theme: str = DEFAULT_THEME) -> dict[str, str]:
     block = _ROOT_BLOCK.search(css)
     if not block:
         raise ValueError(f"theme {theme!r} has no :root block to read tokens from")
-    return {name: value.strip() for name, value in _DECL.findall(block.group(1))}
+    own = {name: value.strip() for name, value in _DECL.findall(block.group(1))}
+    return {**own, **scheme(DEFAULT_SCHEME).colours}
 
 
 def value(name: str, theme: str = DEFAULT_THEME) -> str:
@@ -79,7 +137,8 @@ def value(name: str, theme: str = DEFAULT_THEME) -> str:
         return tokens(theme)[name]
     except KeyError:
         raise UnknownToken(
-            f"{name} is not in themes/{theme}.css :root — renamed, or a typo?"
+            f"{name} is not in themes/{theme}.css :root or "
+            f"themes/schemes/{DEFAULT_SCHEME}.css — renamed, or a typo?"
         ) from None
 
 

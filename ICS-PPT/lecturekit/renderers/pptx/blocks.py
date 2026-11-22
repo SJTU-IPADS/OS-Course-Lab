@@ -1,17 +1,18 @@
-"""Helpers the elements' ``to_pptx`` methods draw with.
+"""The drawing context, and the shapes the elements draw with.
 
 An element class (``lecturekit.elements``) draws itself from a :class:`Ctx`
-(slide, layout, vertical cursor, asset root): it adds shape(s) at the cursor and
-advances the cursor by the block's estimated height. This module holds the
-shapes and measures several of them share. Styling comes from :mod:`theme`.
-Annotation bubbles are the one deferred overlay and never reach here. The page
-itself (its bands, the image column, the footnotes) is laid out in :mod:`page`.
+(slide, layout, vertical cursor, reader): it adds shape(s) at the cursor and
+advances the cursor by the block's estimated height. Shapes, pictures and the
+architecture diagram are here. What is written in them is drawn by :mod:`draw`,
+and the page itself (bands, image column, footnotes, bubbles) by :mod:`page`.
+Styling comes from :mod:`theme`.
 """
 
 from __future__ import annotations
 
+import re
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from pptx.dml.color import RGBColor
@@ -19,15 +20,16 @@ from pptx.enum.dml import MSO_LINE_DASH_STYLE
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE, PP_ALIGN
 from pptx.oxml.ns import qn
+from pptx.parts.image import Image as ImageFile
 from pptx.util import Emu, Pt
 
 from lecturekit import model, rasterize, tokens
-from . import omml, theme
+from lecturekit.markup import Reader
+from . import theme
 from .layout import (
     LINE_HEIGHT, Cursor, Layout, estimate_text_height, estimate_text_width,
     fit_within, px,
 )
-from .text import Para, Run, emphasize, parse_inline
 
 # Image formats python-pptx can embed. `.svg` is not one of them — it is
 # rasterized to PNG first (see `resolve_image`), so authors need no separate
@@ -36,9 +38,6 @@ RASTER_EXTS = (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff")
 EMBEDDABLE_EXTS = RASTER_EXTS + (".svg",)
 
 GAP = Emu(Pt(8))            # vertical gap between blocks (~0.6em of body)
-PARA_GAP_EM = 0.45          # space after each paragraph (~viewer p/li margins)
-GROUP_GAP_EM = 0.55         # extra space before a numbered group heading
-LIST_INDENT = Emu(Pt(18))   # approx indent per list level (drives width estimate)
 
 
 @dataclass
@@ -46,6 +45,7 @@ class Ctx:
     slide: object
     layout: Layout
     cursor: Cursor
+    read: Reader
     asset_root: Path | None = None
     sidenote_index: int = 0
     rasterizer: rasterize.SvgRasterizer | None = None
@@ -54,6 +54,11 @@ class Ctx:
     borrowed: tuple = ()
     # The page's title, for the cover that draws it.
     title: str = ""
+    # The footnote numbers each block is marked with, by the block's id().
+    numbers: dict[int, tuple[int, ...]] = field(default_factory=dict)
+    # Elements the block being drawn set beside its text (a float), which its
+    # footnote marker does not follow.
+    floated: list[object] = field(default_factory=list)
 
 
 # --- shared helpers ---
@@ -64,12 +69,12 @@ def solid(shape, color: RGBColor) -> None:
     shape.fill.fore_color.rgb = color
 
 
-def _line(shape, color: RGBColor, width_pt: float) -> None:
+def outline(shape, color: RGBColor, width_pt: float) -> None:
     shape.line.color.rgb = color
     shape.line.width = Pt(width_pt)
 
 
-def _shape(ctx: Ctx, preset, left: int, top: int, width: int, height: int):
+def shape_at(ctx: Ctx, preset, left: int, top: int, width: int, height: int):
     """An autoshape carrying no styling of its own — the caller sets all of it.
 
     ``add_shape`` attaches a ``<p:style>`` pointing at the Office theme's accent
@@ -98,7 +103,7 @@ def drop_shadow(shape, color: RGBColor, *, alpha: float,
     python-pptx exposes only shadow *inheritance*, so the effect goes in by
     hand. `<a:effectLst>` follows the fill and the line inside `<a:spPr>`, and
     PowerPoint rejects a file that orders them otherwise, so it is appended
-    last — after `solid`/`_line` have written theirs. `dir` is in 60000ths of
+    last — after `solid`/`outline` have written theirs. `dir` is in 60000ths of
     a degree, and 90 degrees points straight down.
     """
     spPr = shape._element.spPr
@@ -196,58 +201,6 @@ def style_run(run, text: str, *, size_pt: float, color: RGBColor,
         set_highlight(run, mark)
 
 
-def draw_math(paragraph, latex: str, *, size_pt: float, display: bool = False) -> None:
-    """Append a native PowerPoint equation to the paragraph (see :mod:`omml`)."""
-    node = omml.to_alternate_content(latex, display=display)
-    omml.apply_run_props(node, size_pt=size_pt, color=f"{theme.FG}")
-    paragraph._p.append(node)
-
-
-def apply_runs(paragraph, runs: list[Run], *, size_pt: float, color: RGBColor) -> None:
-    for r in runs:
-        if r.math:
-            draw_math(paragraph, r.math, size_pt=size_pt)
-            continue
-        run = paragraph.add_run()
-        if r.link:
-            style_run(run, r.text, size_pt=size_pt, color=theme.LINK, mark=r.mark)
-            run.hyperlink.address = r.link
-        elif r.code:
-            style_run(run, r.text, size_pt=size_pt, color=theme.ACCENT1,
-                       mono=True, mark=r.mark)
-        elif r.bold:
-            style_run(run, r.text, size_pt=size_pt, color=theme.DK2,
-                       bold=True, mark=r.mark)
-        else:
-            style_run(run, r.text, size_pt=size_pt, color=color,
-                       italic=r.italic, mark=r.mark)
-
-
-# --- title (the slide's h1) ---
-
-
-def draw_title(title: str, ctx: Ctx) -> None:
-    size = theme.TITLE_PT
-    height = estimate_text_height(
-        title, font_pt=size, width=ctx.layout.content_width
-    )
-    box, tf = textbox(ctx, height)
-    set_line_spacing(tf.paragraphs[0], size)
-    style_run(tf.paragraphs[0].add_run(), title,
-               size_pt=size, color=theme.FG, bold=True)
-    top = ctx.cursor.place(height)
-    # The accent rule under the title (h1 border-bottom), with a deliberate
-    # weight — a hairline reads as nearly invisible in PowerPoint.
-    rule_y = top + height
-    rule = ctx.slide.shapes.add_connector(
-        1, ctx.layout.content_left, rule_y,
-        ctx.layout.content_left + ctx.layout.content_width, rule_y,
-    )
-    rule.line.color.rgb = theme.ACCENT1
-    rule.line.width = Pt(theme.TITLE_RULE_PT)
-    ctx.cursor.advance(GAP)
-
-
 # --- cover ---
 
 
@@ -282,159 +235,13 @@ def draw_cover_logo(src: str, left: int, top: int, ctx: Ctx) -> None:
     path = resolve_image(src, ctx)
     if path is None:
         return
-    pic = ctx.slide.shapes.add_picture(str(path), left, top, width=COVER_LOGO_MAX_W)
+    pic = add_picture(ctx, path, src, left, top, width=COVER_LOGO_MAX_W)
     if pic.height > COVER_LOGO_MAX_H:
         pic.width, pic.height = fit_within(
             pic.width, pic.height, COVER_LOGO_MAX_W, COVER_LOGO_MAX_H
         )
     if pic.width < COVER_LOGO_MAX_W:
         pic.left = left + (COVER_LOGO_MAX_W - pic.width) // 2
-
-
-# --- slide (markdown body) ---
-
-
-def para_size(para: Para) -> int:
-    return theme.HEADING_PT[para.level] if para.kind == "heading" else theme.BODY_PT
-
-
-def para_space_before(para: Para, index: int) -> float:
-    """Extra space (pt) above a paragraph, to group sections like the viewer.
-
-    A numbered top-level item (an ordered list at level 0) starts a new group,
-    so it gets a gap above it — except the very first paragraph on the slide.
-    """
-    if index and para.kind == "ordered" and para.level == 0:
-        return theme.BODY_PT * GROUP_GAP_EM
-    return 0.0
-
-
-# Gap between an `image_right` picture and the text beside it (theme: 0.8em).
-FLOAT_GAP = Emu(Pt(16))
-# The float never takes more than this share of the column, so the text it sits
-# beside keeps a readable measure even when the author asked for a wide image.
-FLOAT_MAX_SHARE = 0.45
-
-
-def float_picture(image: dict, ctx: Ctx, top: int):
-    """Place an ``image_right`` picture flush with the content box's right edge.
-
-    Returns the picture, or ``None`` when the source cannot be embedded (a URL,
-    or an SVG on a machine with no rasterizer). The caller narrows its text box
-    by the picture's width: PowerPoint cannot wrap text around a shape, so the
-    two sit side by side rather than the text flowing around the figure.
-    """
-    path = resolve_image(image["src"], ctx)
-    if path is None:
-        return None
-    pic = ctx.slide.shapes.add_picture(str(path), ctx.layout.content_left, top)
-    requested = requested_image_size(image, pic.width, pic.height, ctx.layout)
-    if requested is not None:
-        pic.width, pic.height = requested
-    pic.width, pic.height = fit_within(
-        pic.width, pic.height,
-        round(ctx.layout.content_width * FLOAT_MAX_SHARE),
-        max(Emu(Pt(theme.BODY_PT)), ctx.cursor.remaining()),
-    )
-    pic.left = ctx.layout.content_left + ctx.layout.content_width - pic.width
-    pic.top = top
-    return pic
-
-
-# Gap between the columns of a `columns` block (theme: `.lk-columns { gap: 2em }`).
-COLUMN_GAP_EM = 2.0
-
-
-def fill_paras(tf, paras: list[Para]) -> None:
-    """Write parsed slide markdown into a text frame, one paragraph each."""
-    first = True
-    ordinals: dict[int, int] = {}      # running number per list level
-    for index, para in enumerate(paras):
-        p = tf.paragraphs[0] if first else tf.add_paragraph()
-        first = False
-        size = para_size(para)
-        if para.kind == "math":
-            # Display equation: no exact line spacing, so PowerPoint can give
-            # stacked limits and fractions the vertical room they need.
-            p.space_after = Pt(size * PARA_GAP_EM)
-            p.alignment = PP_ALIGN.CENTER
-            draw_math(p, para.runs[0].math, size_pt=size, display=True)
-            continue
-        set_line_spacing(p, size)
-        p.space_after = Pt(size * PARA_GAP_EM)
-        before = para_space_before(para, index)
-        if before:
-            p.space_before = Pt(before)
-        if para.kind in ("bullet", "ordered"):
-            p.level = min(para.level, 8)
-            # A nested item leaves the outer count alone; an item at this
-            # level or shallower ends every deeper list.
-            for deeper in [lv for lv in ordinals if lv > para.level]:
-                del ordinals[deeper]
-            if para.kind == "ordered":
-                # The first item sets the start; later items count up from it.
-                ordinals[para.level] = (ordinals[para.level] + 1
-                                        if para.level in ordinals else para.number)
-            else:
-                ordinals.pop(para.level, None)
-            marker = f"{ordinals[para.level]}.  " if para.kind == "ordered" else "•  "
-            hanging_indent(p, marker, size_pt=size, level=para.level)
-            style_run(p.add_run(), marker, size_pt=size, color=theme.ACCENT1, bold=True)
-        else:
-            ordinals.clear()           # a paragraph ends every open list
-        if para.kind == "heading":
-            for r in para.runs:
-                style_run(p.add_run(), r.text, size_pt=size, color=theme.FG,
-                           bold=True, mark=r.mark)
-        else:
-            apply_runs(p, para.runs, size_pt=size, color=theme.FG)
-
-
-def hanging_indent(paragraph, marker: str, *, size_pt: float, level: int) -> None:
-    """Hang a list item's wrapped lines under its text, not under its marker.
-
-    The marker is an ordinary run here, so without this a second line starts at
-    the box edge and reads as a new paragraph. The list level's own indent plus
-    the marker's estimated width is where the text begins; the negative
-    ``indent`` pulls the marker itself back out to the level's indent.
-    """
-    marker_width = estimate_text_width(marker, font_pt=size_pt)
-    pPr = paragraph._pPr if paragraph._pPr is not None else paragraph._p.get_or_add_pPr()
-    pPr.set("marL", str(LIST_INDENT * level + marker_width))
-    pPr.set("indent", str(-marker_width))
-
-
-def estimate_paras_height(paras: list[Para], width: int) -> int:
-    total = 0
-    for index, para in enumerate(paras):
-        size = para_size(para)
-        # Estimate against the real text (CJK-aware), prefixing the list marker
-        # so its width counts; indent eats into a bullet/ordered line's width.
-        text = "".join(r.text for r in para.runs)
-        if para.kind == "math":
-            # A display equation is one centered line, but a fraction or a sum
-            # with limits stacks well above it.
-            lines = omml.visual_lines(para.runs[0].math or "")
-            total += Emu(Pt(size * LINE_HEIGHT * lines + size * PARA_GAP_EM))
-            continue
-        if para.kind in ("bullet", "ordered"):
-            text = "•   " + text
-        eff_width = width - LIST_INDENT * (para.level + 1) if para.kind in ("bullet", "ordered") else width
-        total += estimate_text_height(text, font_pt=size, width=max(eff_width, width // 4))
-        total += Emu(Pt(size * PARA_GAP_EM + para_space_before(para, index)))
-    return total or Emu(Pt(theme.BODY_PT))
-
-
-# --- code ---
-
-
-# --- demo (a command, and what it printed) ---
-
-
-# --- link ---
-
-
-# --- aside (blockquote) ---
 
 
 # --- highlight (centered emphasis chip) ---
@@ -452,52 +259,58 @@ HIGHLIGHT_SHADOW = {"alpha": 0.18, "blur_pt": 6.0, "dist_pt": 1.5}
 LOGO_SIZE = Emu(Pt(36))     # sidenote image-logo box (~2.4em at 18pt, like the theme)
 
 
-# --- table (booktabs-ish) ---
+# --- text ---
 
 
 ALIGN = {"left": PP_ALIGN.LEFT, "center": PP_ALIGN.CENTER, "right": PP_ALIGN.RIGHT}
-
-
-def fill_cell(cell, text: str, *, bold: bool, align, col: int) -> None:
-    # No fills (the theme's tables are booktabs-style — rules, not blocks).
-    cell.fill.background()
-    p = cell.text_frame.paragraphs[0]
-    if align is not None:
-        p.alignment = ALIGN[align[col]]
-    # A cell carries the same inline markdown as slide text — including $math$,
-    # so a table of formulas is typeset, not printed as LaTeX source.
-    runs = parse_inline(text) if text else [Run("")]
-    apply_runs(p, emphasize(runs, bold=bold), size_pt=theme.BODY_PT * 0.85,
-                color=theme.FG)
 
 
 # --- image ---
 
 
 def resolve_image(src: str, ctx: Ctx) -> Path | None:
-    """The local file to embed for ``src``, rasterizing an SVG on the way."""
+    """The local file to embed for ``src``, rasterizing an SVG on the way.
+
+    ``None`` for what cannot be embedded, which is named on stderr.
+    """
     if src.startswith(("http://", "https://")):
-        return None
+        return skipped(src, "a picture on the web is not downloaded")
     if not src.lower().endswith(EMBEDDABLE_EXTS):
-        return None
+        return skipped(src, "PowerPoint cannot embed this format")
     path = model.resolve_asset(src, ctx.asset_root, ctx.borrowed)
     if not path.exists():
-        return None
+        return skipped(src, "no such file")
     if path.suffix.lower() != ".svg":
         return path
     png = ctx.rasterizer.png(path) if ctx.rasterizer else None
-    if png is None:
-        warn_svg_skipped(path, ctx)
-    return png
+    if png is not None:
+        return png
+    if ctx.rasterizer is None or ctx.rasterizer.backend is None:
+        return skipped(path, f"no SVG renderer found — {rasterize.BACKEND_HINT}")
+    return skipped(path, f"{ctx.rasterizer.backend} could not convert it")
 
 
-def warn_svg_skipped(path: Path, ctx: Ctx) -> None:
-    reason = (
-        f"no SVG renderer found — {rasterize.BACKEND_HINT}"
-        if ctx.rasterizer is None or ctx.rasterizer.backend is None
-        else f"{ctx.rasterizer.backend} could not convert it"
-    )
-    print(f"lecturekit: skipping {path} in PPTX: {reason}", file=sys.stderr)
+def add_picture(ctx: Ctx, path: Path, src: str, left: int, top: int,
+                width: int | None = None, height: int | None = None):
+    """Embed ``path``, which is what ``src`` resolved to.
+
+    The picture's description names ``src``: a rasterized figure's own file is
+    a throwaway PNG, and the author looks for the figure by the name written.
+    """
+    picture = ctx.slide.shapes.add_picture(str(path), left, top, width, height)
+    picture._element._nvXxPr.cNvPr.set("descr", str(src))
+    return picture
+
+
+def skipped(source: str | Path, reason: str) -> None:
+    print(f"lecturekit: skipping {source} in PPTX: {reason}", file=sys.stderr)
+
+
+def natural_size(path: Path) -> tuple[int, int]:
+    """A picture's own size in EMU, the size python-pptx would add it at."""
+    image = ImageFile.from_file(str(path))
+    (width, height), (dpi_x, dpi_y) = image.size, image.dpi
+    return round(914400 * width / dpi_x), round(914400 * height / dpi_y)
 
 
 def requested_image_size(image: dict, natural_w: int, natural_h: int,
@@ -517,27 +330,18 @@ def requested_image_size(image: dict, natural_w: int, natural_h: int,
 
 
 def size_to_emu(value, whole: int) -> int | None:
+    """A CSS length (px, %, em of the body's type) as EMU; None for any other."""
     if value is None:
         return None
     if isinstance(value, int):
-        return int(Emu(value * 914400 / 96))
-    text = str(value).strip()
-    if text.endswith("px"):
-        return int(Emu(float(text[:-2]) * 914400 / 96))
-    if text.endswith("%"):
-        return round(whole * float(text[:-1]) / 100)
-    return None
-
-
-def _caption(text: str, align: str, ctx: Ctx) -> None:
-    height = estimate_text_height(text, font_pt=theme.CAPTION_PT,
-                                  width=ctx.layout.content_width)
-    box, tf = textbox(ctx, height)
-    p = tf.paragraphs[0]
-    p.alignment = ALIGN.get(align, PP_ALIGN.CENTER)
-    style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2, italic=True)
-    ctx.cursor.place(height)
-    ctx.cursor.advance(GAP)
+        return px(value)
+    found = re.fullmatch(r"([\d.]+)(px|%|em)?", str(value).strip())
+    if found is None:
+        return None
+    number, unit = float(found[1]), found[2]
+    if unit == "%":
+        return round(whole * number / 100)
+    return Emu(Pt(number * theme.BODY_PT)) if unit == "em" else px(number)
 
 
 # --- architecture diagram (layered bands of module boxes) ---
@@ -668,10 +472,10 @@ def arch_flow(glyph: str, top: int, m: ArchMetrics, ctx: Ctx) -> int:
 def arch_band(layer: dict, band: dict, top: int, m: ArchMetrics,
                ctx: Ctx) -> None:
     """One layer: the tinted band, its bold label, and its module boxes."""
-    shape = _shape(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, ctx.layout.content_left,
+    shape = shape_at(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, ctx.layout.content_left,
                    top, ctx.layout.content_width, band["height"])
     solid(shape, theme.LT2)
-    _line(shape, theme.BOX_BORDER, ARCH_BORDER_PT)
+    outline(shape, theme.BOX_BORDER, ARCH_BORDER_PT)
     left = ctx.layout.content_left + m.band_pad_x
     title = layer.get("title")
     if title:
@@ -698,12 +502,12 @@ def arch_module(text: str, left: int, top: int, width: int, height: int,
                  m: ArchMetrics, ctx: Ctx) -> None:
     """One module box: white and solid, or faded and dashed for `…`."""
     more = text == model.ARCH_ELLIPSIS
-    shape = _shape(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
+    shape = shape_at(ctx, MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
     if more:
         shape.fill.background()
     else:
         solid(shape, theme.BG)
-    _line(shape, theme.BOX_BORDER, ARCH_BORDER_PT)
+    outline(shape, theme.BOX_BORDER, ARCH_BORDER_PT)
     if more:
         shape.line.dash_style = MSO_LINE_DASH_STYLE.DASH
     tf = shape.text_frame
@@ -730,20 +534,7 @@ def row_widths(items: list[dict], track: int, layout: Layout) -> list[int]:
             sized[i] = width
     shared = len(items) - len(sized)
     each = max(0, track - sum(sized.values())) // shared if shared else 0
-    return [sized.get(i, each) for i in range(len(items))]
-
-
-def row_caption(text: str, pic, ctx: Ctx) -> int:
-    """One item's caption, centered under its picture; returns the height used."""
-    height = estimate_text_height(text, font_pt=theme.CAPTION_PT, width=pic.width)
-    box = ctx.slide.shapes.add_textbox(
-        pic.left, pic.top + pic.height + GAP, pic.width, height
-    )
-    tf = box.text_frame
-    tf.word_wrap = True
-    tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-    p = tf.paragraphs[0]
-    p.alignment = PP_ALIGN.CENTER
-    style_run(p.add_run(), text, size_pt=theme.CAPTION_PT, color=theme.DK2,
-               italic=True)
-    return GAP + height
+    widths = [sized.get(i, each) for i in range(len(items))]
+    if sum(widths) > track > 0:     # too wide together: shrink, as flex does
+        widths = [round(width * track / sum(widths)) for width in widths]
+    return widths

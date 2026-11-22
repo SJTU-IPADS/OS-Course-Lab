@@ -12,8 +12,10 @@ class Table(Block):
     FILE_LINKS = True
     CENTERED = True
 
-    def to_marp(self, ctx):
-        from ..renderers.viewer.blocks import ALIGN_DELIMITERS, fixed_table, table_cell
+    def markdown(self) -> list[str]:
+        """The table as the deck's parser is given it."""
+        from ..markup.fields import table_cell
+        from ..renderers.viewer.blocks import ALIGN_DELIMITERS
         table = self.content
         headers = table["headers"]
         align = table["align"]
@@ -27,7 +29,12 @@ class Table(Block):
         ]
         for row in table["rows"]:
             lines.append("| " + " | ".join(table_cell(c) for c in row) + " |")
-        widths = table.get("widths")
+        return lines
+
+    def to_marp(self, ctx):
+        from ..renderers.viewer.blocks import fixed_table
+        lines = self.markdown()
+        widths = self.content.get("widths")
         if widths is None:
             return [*lines, ""]
         return fixed_table(lines, widths)
@@ -37,37 +44,15 @@ class Table(Block):
         return blocks.mark_tucked(lines, numbers)
 
     def to_pptx(self, ctx):
-        from pptx.util import Emu, Pt
-        from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import GAP, fill_cell
-        content = self.content
-        headers = content["headers"]
-        rows = content["rows"]
-        align = content["align"]
-        n_rows = len(rows) + 1
-        n_cols = len(headers)
-        row_h = Emu(Pt(theme.BODY_PT * 0.85 * 1.6))
-        height = row_h * n_rows
-        frame = ctx.slide.shapes.add_table(
-            n_rows, n_cols, ctx.layout.content_left, ctx.cursor.top,
-            ctx.layout.content_width, height,
-        )
-        table = frame.table
-        table.first_row = True
-        widths = content.get("widths")
-        if widths is not None:
-            # the last column takes the rounding remainder, so the sum is exact
-            total = ctx.layout.content_width
-            spans = [Emu(int(total * w)) for w in widths[:-1]]
-            spans.append(Emu(total - sum(spans)))
-            for column, span in zip(table.columns, spans):
-                column.width = span
-        for c, header in enumerate(headers):
-            fill_cell(table.cell(0, c), str(header), bold=True, align=align, col=c)
-        for r, row in enumerate(rows, start=1):
-            for c, cell in enumerate(row):
-                fill_cell(table.cell(r, c), str(cell), bold=False, align=align, col=c)
-        ctx.cursor.place(height)
+        from ..markup import document
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import draw_document, draw_table
+        widths = self.content.get("widths")
+        for block in ctx.read.markdown("\n".join(self.markdown())):
+            if isinstance(block, document.Table):
+                draw_table(ctx, block, widths)
+            else:
+                draw_document(ctx, [block])
         ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
@@ -92,27 +77,10 @@ class Table(Block):
         lines += [r"\bottomrule", r"\end{tabular}", r"\end{center}"]
         return "\n".join(lines) + footnotes(self, ctx)
 
-    def to_transcript(self, embedder):
-        from ..renderers.transcript.text import inline
-        content = self.content
-        align = content.get("align") or ["left"] * len(content["headers"])
-        head = "".join(
-            f'<th style="text-align:{a}">{inline(cell)}</th>'
-            for cell, a in zip(content["headers"], align)
-        )
-        body = "".join(
-            "<tr>%s</tr>" % "".join(
-                f'<td style="text-align:{a}">{inline(cell)}</td>'
-                for cell, a in zip(row, align)
-            )
-            for row in content["rows"]
-        )
-        widths = content.get("widths")
-        if widths is None:
-            return f'<table class="tx-table"><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>'
-        cols = "".join(f'<col style="width:{100 * w:.2f}%">' for w in widths)
-        return (
-            '<table class="tx-table" style="table-layout:fixed;width:100%">'
-            f"<colgroup>{cols}</colgroup>"
-            f"<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
+    def to_transcript(self, ctx):
+        from ..markup import document
+        widths = self.content.get("widths")
+        return "".join(
+            ctx.table(block, widths) if isinstance(block, document.Table) else ctx.blocks([block])
+            for block in ctx.read.markdown("\n".join(self.markdown()))
         )

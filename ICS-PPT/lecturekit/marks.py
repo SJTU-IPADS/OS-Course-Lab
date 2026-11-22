@@ -14,7 +14,7 @@ Marking a word is the commonest edit a slide gets, and thirteen characters of
 tag around a four-character word is enough friction to skip it. So the same two
 spellings have a shorthand — `==sequence==`, `==orange:not==` — which
 :func:`expand` rewrites into the tag before anything downstream looks at the
-text. The tag stays the one form the validator and the three renderers know.
+text. The tag stays the one form the validator and the renderers know.
 
 It is deliberately legal in **`p.slide(...)` text only**. Elsewhere — a title, a
 caption, a sidenote, prose — a highlight is either meaningless or the sign that
@@ -26,8 +26,8 @@ normal, because the author would only find out on the projector.
 This module knows nothing about the lecture model or any renderer. It owns the
 vocabulary (the tag, the tones, the shorthand) and answers three questions:
 *what does this text mean* (:func:`expand`), *is its use of `<mark>` legal*
-(:func:`errors`), and *where are the marks* (:data:`SPAN_RE`, for the renderers
-that must translate them).
+(:func:`errors`), and *where are the marks* (:data:`SPAN_RE`, for the book,
+which translates them itself).
 """
 
 from __future__ import annotations

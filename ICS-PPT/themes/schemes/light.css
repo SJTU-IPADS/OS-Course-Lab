@@ -1,0 +1,203 @@
+/*
+ * The light scheme: the colours of the deck, and of every export.
+ *
+ * A scheme is data: the value of each colour token, and whether it is built on
+ * a light or a dark ground (`color-scheme`). The rules that use the tokens are
+ * in basic-office.css and the viewer's assets, and are the same for every
+ * scheme. This file's tokens are the ones every scheme defines.
+ *
+ * A value may name another token. `initial` switches off what the token paints.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* --- The slide --- */
+
+  --color-bg: #ffffff;       /* lt1 */
+  --color-fg: #000000;       /* dk1 / tx1 */
+  --color-dk2: #0e2841;
+  --color-lt2: #e8e8e8;
+  --color-accent1: #156082;
+  --color-accent2: #e97132;
+  --color-accent3: #196b24;
+  --color-accent4: #0f9ed5;
+  --color-link: #467886;     /* hlink */
+  --color-link-visited: #96607d;
+  --color-disabled: #9a9a9a;
+
+  /* Code syntax colours, consumed by the theme's `.hljs-*` rules (Marp emits
+     the classes; a custom theme has to supply the palette). Kept dark enough
+     to stay legible at the deck's small code size, and few enough that a
+     listing reads as text with accents rather than a coloured mosaic. */
+  --code-keyword: #1769c2;
+  --code-string: #417a28;
+  --code-comment: #6b7c8d;
+  --code-number: #b33f16;
+  --code-title: #0e2841;
+  --code-type: #0e4d93;
+  /* The hairline round inline code. */
+  --code-border: rgba(0, 0, 0, 0.55);
+
+  /* The three categories the `pseudo` language adds. Message and state are
+     figure colors on purpose: a message or a state name should be the same
+     color in the code block as in the diagram beside it. The keyword gets the
+     green — not the blue every other language's keywords take — because blue
+     is already spoken for by the message, and a keyword drawn in the body's
+     own navy is only bold, which at code size is no color at all. */
+  --pseudo-keyword: #417a28;
+  --pseudo-message: #1769c2;
+  --pseudo-state: #f15a24;
+
+  /* Sidenote color wheel: six soft pastels stepping around the hue circle.
+     The viewer renderer cycles a per-slide counter through these (--sidenote-1
+     is the default, later notes get an inline background of the next slot) so a
+     stack of callouts doesn't read as one monotonous block. All are kept light
+     (high lightness, low saturation) so the navy border, navy body text and
+     accent1 title stay readable on every one. */
+  --sidenote-1: #f7d6d4;  /* blush  */
+  --sidenote-2: #fae2cb;  /* peach  */
+  --sidenote-3: #f5efc4;  /* butter */
+  --sidenote-4: #d9ecd4;  /* sage   */
+  --sidenote-5: #d2e7ef;  /* sky    */
+  --sidenote-6: #e2ddf0;  /* lilac  */
+
+  /* Marker-pen strokes for `<mark>`: the figure palette's own colours, held at
+     low alpha. A stroke is thin, so it needs a saturated ink to register — the
+     pastel washes the sidenotes use go invisible at this height, and at full
+     line height they shout louder than the word they mark. */
+  --stroke-yellow: rgba(246, 197, 21, 0.45);
+  --stroke-orange: rgba(241, 90, 36, 0.28);
+  --stroke-green:  rgba(95, 175, 60, 0.28);
+  --stroke-blue:   rgba(23, 105, 194, 0.22);
+  /* The wash behind a marked line of code. */
+  --codemark-yellow: var(--stroke-yellow);
+  --codemark-orange: var(--stroke-orange);
+  --codemark-green:  var(--stroke-green);
+  --codemark-blue:   var(--stroke-blue);
+
+  /* The cover title's ink. A token because the PPTX cover paints it too. */
+  --cover-accent: #bd3f55;
+  /* The cover's author, and the fainter line under it. */
+  --cover-ink: #3a3a3a;
+  --cover-muted: #777777;
+
+  /* Two hairlines that outlive the deck: a sidenote's border and an
+     architecture module's. They are tokens rather than literals in the rules
+     because PowerPoint draws these boxes too, and reads its palette from
+     here (lecturekit/tokens.py). */
+  --sidenote-border: #0d2332;
+  --box-border: #c9d3da;
+  /* An architecture module, lifted off the layer it sits in. */
+  --box-fill: #ffffff;
+  /* The matte of a framed figure. */
+  --frame-fill: #ffffff;
+
+  --shadow-card: rgba(13, 35, 50, 0.18);
+  --shadow-logo: rgba(13, 35, 50, 0.35);
+  --shadow-bubble: rgba(13, 35, 50, 0.25);
+
+  /* A block `--lang` found no translation for. */
+  --untranslated-bg: rgba(241, 90, 36, 0.12);
+
+  /* An inverted page (`<!-- _class: invert -->`). Its ground is not --color-dk2
+     itself, which is an ink, and a light one on a dark ground. */
+  --invert-bg: #0e2841;
+  --invert-fg: #ffffff;
+  --invert-code-bg: rgba(255, 255, 255, 0.16);
+  --invert-code-border: rgba(255, 255, 255, 0.55);
+
+  /* Highlight chip ink: `p.highlight(tone=…)` colours its text with these
+     rather than sitting on a wash. */
+  --chip-yellow: #156082;
+  --chip-orange: #c2410c;
+  --chip-green:  #3f7a2a;
+  --chip-blue:   #1769c2;
+
+  /* A control bound to a deck variable (`p.slider`, `p.input`): the accent of
+     the thumb, the box and a mark under the pointer; the track the thumb runs
+     on; and the ink of the marks and the range, which say where the value can
+     go rather than what it is. */
+  --control-accent: #0f9ed5;
+  --control-track: #d5dde3;
+  --control-muted: #6b7c8d;
+
+  /* --- What the ground asks of the slide: `--adapt-*` ---
+     Figures are drawn for white paper, so a ground of another colour may need
+     a sheet behind each and a ground of its own under what lies over one.
+     Paper needs none of it. These hold on a page over a background picture
+     too, all but the page number's, and otherwise it keeps this scheme. */
+
+  /* The sheet behind a picture, and the ink of its alt text. */
+  --adapt-picture-bg: transparent;
+  --adapt-picture-fg: currentColor;
+  /* Under what can lie over a picture, and round the text after one. */
+  --adapt-over-picture: initial;
+  /* Under the page number. `initial` is the slide's own background colour. */
+  --adapt-page-number: transparent;
+  /* Inline code that is marked. */
+  --adapt-marked-code: var(--color-accent1);
+  /* How much of a demo's description shows. */
+  --adapt-demo-desc: 0.75;
+  /* Inside an inverted page: the ground, what lies over a picture, a quote. */
+  --adapt-invert-ground: var(--color-bg);
+  --adapt-invert-over-picture: initial;
+  --adapt-invert-quote: var(--color-lt2);
+
+  /* --- The viewer's shell: the outline, the stage, the scrollbar --- */
+
+  --shell-bg: #ffffff;
+  --shell-fg: #111315;
+  --shell-muted: #6b6f76;
+  --shell-scrollbar: auto;
+  --outline-connector: #9aa0a6;
+  --outline-marker: #111315;
+  --outline-icon: #c79a3b;
+  --outline-hover: rgba(107, 163, 221, 0.18);
+  --outline-selected: #6ba3dd;
+  --outline-selected-hover: var(--outline-hover);
+  --outline-selected-fg: #0a0a0a;
+  --stage-bg: #1b1d1f;
+  /* How much of the deck's frame shows before the deck is in it. */
+  --stage-loading: 1;
+  --stage-button-bg: rgba(20, 22, 24, 0.6);
+  --stage-button-fg: #f2f2f2;
+  --stage-button-opacity: 0.35;
+
+  /* --- The live preview's panels: the demo drawer and the file panel --- */
+
+  --panel-bg: #10171d;
+  --panel-fg: #dfe6ec;
+  --panel-head: #182028;
+  --panel-bar: #0c1217;
+  --panel-line: #263039;
+  --panel-line-hover: #3a4a57;
+  --panel-edge: #2c4a63;
+  --panel-button-bg: #141c23;
+  --panel-action-bg: #1a3247;
+  --panel-badge-bg: #23303a;
+  --panel-accent: #8fd3ff;
+  --panel-label: #9fb3c2;
+  --panel-muted: #7f94a5;
+  --panel-faint: #6d8294;
+  --panel-dim: #5d7386;
+  --panel-line-number: #4e6272;
+  --panel-scrollbar: #2b3945;
+  --panel-selection: rgba(143, 211, 255, 0.28);
+  --panel-shadow: rgba(0, 0, 0, 0.35);
+  --panel-ok: #7ddc94;
+  --panel-ok-bg: #17331f;
+  --panel-fail: #ff9a8a;
+  --panel-fail-hover: #ffc4ba;
+  --panel-fail-bg: #3a1c1c;
+  --panel-stop-bg: #2a1818;
+  --panel-stop-border: #4a2a2a;
+  /* The file panel's syntax colours: the slide's hues, for the panel's ground. */
+  --panel-code-comment: #7f93a3;
+  --panel-code-keyword: #7ab8ff;
+  --panel-code-type: #6fd3c7;
+  --panel-code-title: #f1d58a;
+  --panel-code-string: #a3d98a;
+  --panel-code-number: #f2a27c;
+  --panel-code-meta: #c9a6f0;
+}

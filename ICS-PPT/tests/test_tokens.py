@@ -3,7 +3,7 @@
 The tests that matter here are about the *invariant*, not about individual
 colours: no renderer spells a colour out, and every target's translation of a
 token (LaTeX's opaque `\\definecolor`, the transcript sheet's `#rrggbb`,
-PowerPoint's `RGBColor`) comes from the same value in `themes/basic-office.css`.
+PowerPoint's `RGBColor`) comes from the same value in `themes/schemes/`.
 """
 
 import re
@@ -14,6 +14,11 @@ from lecturekit import tokens
 
 REPO = Path(__file__).resolve().parents[1]
 PKG = REPO / "lecturekit"
+THEME = REPO / "themes" / "basic-office.css"
+PAGES = sorted(
+    path for path in (PKG / "renderers" / "viewer" / "assets").glob("*")
+    if path.suffix in (".css", ".js", ".html")
+)
 
 
 class ParseTest(unittest.TestCase):
@@ -54,11 +59,15 @@ class FlattenTest(unittest.TestCase):
             with self.subTest(name=name):
                 self.assertRegex(tokens.opaque(name), r"^#[0-9a-f]{6}$")
 
-    def test_only_fonts_and_geometry_are_not_colours(self):
-        # Everything else in :root is paint. A new non-colour token is fine —
-        # add it here so the list stays a statement of what the theme carries.
-        others = {n for n in tokens.tokens() if not tokens.is_colour(n)}
-        self.assertEqual(others, {
+    def test_the_theme_root_holds_only_fonts_and_geometry(self):
+        # Paint is a scheme's, so no colour has a second home here. A new token
+        # is fine — add it here so the list stays a statement of what the theme
+        # carries.
+        css = re.sub(r"/\*.*?\*/", "", THEME.read_text(encoding="utf-8"), flags=re.S)
+        root = re.search(r":root\s*\{(.*?)\}", css, re.S).group(1)
+        own = set(re.findall(r"(--[\w-]+)\s*:", root))
+        self.assertEqual(own & set(tokens.scheme(tokens.DEFAULT_SCHEME).colours), set())
+        self.assertEqual(own, {
             "--font-base", "--font-mono", "--font-math", "--pptx-font-cjk", "--pptx-font-mono",
             "--mark-top", "--mark-bottom", "--mark-tex-raise", "--mark-tex-height",
             "--layout-gutter", "--slide-padding-top", "--slide-padding-x",
@@ -129,6 +138,25 @@ class NoLiteralsTest(unittest.TestCase):
                     self.HEX.search(path.read_text(encoding="utf-8")),
                     f"{path.name} holds a colour literal; take it from a token",
                 )
+
+    def test_no_stylesheet_or_script_spells_a_colour_out(self):
+        literal = re.compile(r"#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?)\(\s*\d")
+        for path in [THEME, *PAGES]:
+            with self.subTest(file=path.name):
+                text = re.sub(r"/\*.*?\*/", "", path.read_text(encoding="utf-8"), flags=re.S)
+                self.assertIsNone(
+                    literal.search(text),
+                    f"{path.name} holds a colour literal; take it from a scheme's token",
+                )
+
+    def test_every_token_a_page_reads_is_defined(self):
+        text = "".join(path.read_text(encoding="utf-8") for path in [THEME, *PAGES])
+        text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+        local = set(re.findall(r"(--[\w-]+)\s*:", text))
+        read = set(re.findall(r"""(?:var|token|rgb)\(\s*["']?(--[\w-]+)""", text))
+        # --lk… are set on the elements, by the renderer and the scripts.
+        undefined = {n for n in read - local - set(tokens.tokens()) if not n.startswith("--lk")}
+        self.assertEqual(undefined, set())
 
 
 class TargetsTest(unittest.TestCase):

@@ -1,0 +1,22 @@
+/* Inlined first thing in the <head> of the viewer's pages (colorscheme.py):
+   what a page needs on its root before any stylesheet of its own has arrived,
+   and what no theme can reach there, as Marp scopes a theme to the slides. */
+
+:root {
+  scrollbar-color: var(--shell-scrollbar);
+}
+
+/* The canvas, until there is a body to paint one. */
+:root:not(:has(> body)) {
+  background-color: var(--color-bg);
+}
+
+/* Where a scheme's own pictures are fetched ahead of their slide. */
+:root::after {
+  position: fixed;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}

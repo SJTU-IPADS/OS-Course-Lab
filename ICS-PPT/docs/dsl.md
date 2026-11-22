@@ -28,9 +28,13 @@ lec.page(id="intro", body=intro)
 
 The root. `ratio` sets the deck aspect ratio for every page; allowed values are
 `16:9` (default), `4:3`, `16:10`, `3:2`. `lang` names the language the
-lecture is *written* in (`"en"`), which only picks lecturekit's own chrome —
-the 参考文献 / References page, the outline button, the book's fixed headings;
-it defaults to Chinese, and `--lang` (see [i18n.md](i18n.md)) overrides it. `assets=<dir>` names the asset root (the directory containing `assets/`) for
+lecture is *written* in (`"en"`). It translates nothing: it picks lecturekit's
+own chrome — the 参考文献 / References page, the outline button, the book's
+fixed headings — and is the `lang` attribute of the deck's HTML and of each
+slide. The browser picks fallback fonts and line breaking by that attribute:
+`zh` gets simplified Chinese glyph forms, where `en` may draw Chinese in a
+Japanese face. It defaults to Chinese (`zh`) whatever the system locale, and
+`--lang` (see [i18n.md](i18n.md)) overrides it. `assets=<dir>` names the asset root (the directory containing `assets/`) for
 inline notebook rendering; it is inert for the CLI build. See
 [notebook.md](notebook.md).
 
@@ -791,14 +795,19 @@ followed by a character that is not a space; the closing `$` is the next `$`,
 follows a character that is not a space, and is not followed by a digit. So
 `$55 和 $4`, `$8，$10`, and an assembly immediate such as `movl $1, %eax` are
 plain text, and `$x$` is a formula. This is the deck's rule (Marp's, and
-pandoc's); the PowerPoint, the transcript sheet and the book read `$` the same
-way (`lecturekit/inlinemath.py`).
+pandoc's). PowerPoint and the transcript sheet use the deck's parser itself,
+and the book reads `$` the same way (`lecturekit/inlinemath.py`).
+
+A caption, a footnote, a bubble, a sidenote's body and a control's label are
+raw HTML in the deck, where nothing is math: a `$` there is a dollar sign, in
+PowerPoint and on the transcript sheet as well.
 
 This applies to the viewer, watch mode, PDF, and PNG exports because they share
-the Marp deck. The PPTX export translates the same `$…$` / `$$…$$` into
-**OMML**, PowerPoint's own equation markup, so a formula is typeset there too —
-and stays editable in PowerPoint's equation editor rather than arriving as a
-picture. See [usage.md](usage.md#math) for the vocabulary it covers.
+the Marp deck. The PPTX export takes the MathML the deck's MathJax makes of a
+formula and writes it as **OMML**, PowerPoint's own equation markup, so a
+formula is typeset there too and stays editable in PowerPoint's equation
+editor. The transcript writes the MathML itself. Whatever the deck can
+typeset, both take ([usage.md](usage.md#math)).
 
 ### Columns
 
@@ -830,7 +839,7 @@ column, relative like a table's (`widths=[2, 3]`).
 
 The block is one unit: it takes one reveal step, one footnote chain, and one
 translation key per column (`<page>.columns.<n>.col.<k>`). The viewer, PDF and
-PNG set the columns side by side, as does PowerPoint (one text box per column).
+PNG set the columns side by side, as does PowerPoint.
 The transcript prints the columns in order, one after the other. The book does
 not render the block; `only=["latex"]` forces it in, as with a `slide`, and it
 then prints as prose in column order.
@@ -929,6 +938,28 @@ wins:
 p.image("arch.svg").framed().width_px(480).footnote("来源：CSAPP 3e")
 p.image("arch.svg", caption="图 1").caption_align("right")
 ```
+
+#### Pictures for a colour scheme
+
+A picture can be drawn again for a [colour scheme](usage.md#colour-scheme), in
+a file beside it. The page still names `assets/fig.svg`, and nothing else
+changes.
+
+| the scheme shows | when |
+| --- | --- |
+| `assets/fig.<scheme>.svg` | that file exists: `fig.dark.svg`, `fig.sepia.svg` |
+| `assets/fig.<ground>.svg` | otherwise, if it exists. The ground is the scheme's `light` or `dark`, so a second dark scheme takes the `.dark` pictures |
+| `assets/fig.svg` | otherwise. `light`, every export and a printed page always show this one |
+
+The name works wherever a picture goes: every image block, frames, logos, a
+borrowed page, a raw `<img>`, a background picture. The extension is the
+picture's. A variant has no sheet put behind it.
+
+Let the figure's script write the second file: the same drawing on the same
+canvas, in inks for that ground, on a transparent background. Loading the
+lecture refuses a variant of another aspect ratio, since it is shown in the
+picture's box. A [bound figure](#bound-figures)'s variant is bound to the same
+variables at the same values, and moves with it.
 
 ### Side images
 
@@ -1464,8 +1495,9 @@ p.demo("查看源码", "", files=["examples/main.c"])
 ```
 
 Such a block has nothing to run. The deck draws the file buttons and the name,
-without ▶ and without a `$` line; the PPTX and the book print the name and the
-description and no listing; `demos.json` does not list it. An `output=` is
+without ▶ and without a `$` line; the PPTX prints the buttons' labels, the name
+and the description, the book the name and the description, and neither a
+listing; `demos.json` does not list it. An `output=` is
 still shown when one is given.
 
 A file that a sentence already mentions needs no block: the sentence names it,
@@ -1479,9 +1511,10 @@ an `output=`. The ▶ button is inert in a rendered bundle and live under
 `view --watch`; see
 [Running a demo from the deck](usage.md#running-a-demo-from-the-deck) for what
 pressing it does and what it can reach. The **book** prints a 动手试试 box and
-the **PPTX** the same still transcript the deck shows at rest — neither can run
-anything, so `output=` is the whole of what their readers get. The transcript
-sheet skips the block.
+the **PPTX** what the deck shows at rest, in the deck's order: the files'
+labels, the name, the description, and the one-line command or the transcript
+box. Neither can run anything, so `output=` is the whole of what their readers
+get. The transcript sheet skips the block.
 
 Commands run in the **lecture directory**, so a demo refers to its files the way
 the lecture does (`demo.c`, not a path). Like any block it takes `only=` /
@@ -1587,7 +1620,7 @@ range; `Enter` or leaving the box sets what is there, a value outside the
 range brought to its nearest end, and `Escape` puts the box back. A variable
 with a step takes the nearest value on its grid.
 
-`label` is plain text and a translation entry (`<page>.slider.<n>.label`) when
+`label` is plain text (no markdown, no math) and a translation entry (`<page>.slider.<n>.label`) when
 given. Without one the control is labelled with the variable's name set as a
 math symbol, in the face and italic the figures set it in. A control is
 centred on its line, and in the viewer carries a ↺ button that puts the
@@ -1608,7 +1641,7 @@ figure its pages show (below).
 | --- | --- |
 | the viewer, live preview and the rendered bundle | the controls, live; every use follows the value (see [usage.md](usage.md#deck-variables-in-the-viewer)) |
 | PDF, PNG | the same page at the defaults: the slider at its default position with its marks, the bound figure as its file shows it. No ↺ button |
-| PowerPoint, the transcript sheet, the book | the default size and the figure's file; a control prints as one line, `T = 1.0（取值 0 – 10，刻度 0、1、10）` with `T` as math (English: `T = 1.0 (range 0 – 10, ticks 0, 1, 10)`) |
+| PowerPoint, the transcript sheet, the book | the default size and the figure's file; a control prints as one line, `T = 1.0（取值 0 – 10，刻度 0、1、10）` with an unlabelled `T` as math (English: `T = 1.0 (range 0 – 10, ticks 0, 1, 10)`) |
 
 The static line says what the slider shows: the label, the value the page is
 drawn at, the range and the marks.
@@ -1705,7 +1738,10 @@ text box across the padding box, the notes at its bottom. Its height is
 estimated from the notes' wrapped lines (10pt at line-height 1.3, plus the 4px
 inset), so three one-line notes fill the 56px minimum.
 
-Footnote bodies use the same inline formatting as a sidenote. **The marker
+Footnote bodies use the same inline formatting as a sidenote. PowerPoint
+numbers and marks as the deck does: the number ends the block's last line, or
+sits at the block's bottom-right corner when the block ends in a picture, a
+table, a listing or a display formula. **The marker
 never claims a line of its own.** On a figure (`image`,
 `row`, `architecture`) it rides the figure: on the figure's caption when it has
 one, otherwise as a small superscript pinned to the top-right corner (the
@@ -1744,6 +1780,8 @@ a sidenote.
 
 Positioning is the author's job — nothing measures a block's laid-out position, so
 the bubble's tail is a cosmetic speech-bubble cue, not a precise arrow.
+PowerPoint draws each bubble at the same anchor and offset, over the slide,
+without the tail. The transcript sheet prints it as a line under its block.
 
 ### Reveal a bubble as a build step
 

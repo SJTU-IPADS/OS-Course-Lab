@@ -1,172 +1,214 @@
-"""Markdown → structured paragraphs/runs for the PPTX renderer.
+"""The document tree as PowerPoint sets text: paragraphs of styled runs.
 
-Marp parses the slide markdown in the viewer; the native PPTX renderer has no
-markdown engine, so this module turns the small markdown subset the DSL emits
-(headings, bullet/ordered lists, paragraphs, and inline bold/italic/code/links)
-into plain data the block drawers map onto python-pptx paragraphs and runs.
+A PowerPoint text frame has paragraphs, runs and line breaks, and nothing
+nested. :func:`flow` lays a document out as that, giving a list item its
+marker, and leaves between the paragraphs what is a shape of its own there: a
+table, a listing, pictures, columns, a quote. No text is parsed here.
 """
 
 from __future__ import annotations
 
-import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
-from ... import filelinks, inlinemath, marks
+from ...markup import document as doc
 from . import omml
 
+BULLET = "•  "
+NUMBER = "{}.  "
+BREAK = "\n"        # the text of a run that is a line break
 
-@dataclass
+
+@dataclass(frozen=True)
 class Run:
-    """One styled span of text within a paragraph.
+    """One styled piece of a paragraph.
 
-    A math run carries its LaTeX source in ``math``; ``text`` then holds a
-    plain-text rendering of it, which is what the layout measures.
+    A formula is a run too. It keeps its MathML in ``math``, and ``text`` is
+    then its one-line rendering, which is what the layout measures.
     """
 
     text: str
     bold: bool = False
     italic: bool = False
     code: bool = False
+    strike: bool = False
+    underline: bool = False
+    baseline: int = 0               # 1 superscript, -1 subscript
+    small: bool = False
     link: str | None = None
-    math: str | None = None
-    # The wash a `<mark>` puts under this run, or None. A tone name, not a
-    # colour: the palette belongs to the theme.
-    mark: str | None = None
+    mark: str | None = None         # a tone; the colour is the theme's
+    math: doc.Formula | None = None
 
 
 @dataclass
 class Para:
-    """One paragraph: a kind, a nesting/heading level, and styled runs."""
-
-    kind: str  # "para" | "heading" | "bullet" | "ordered" | "math"
     runs: list[Run] = field(default_factory=list)
-    level: int = 0
-    # The number an ordered item is written with. Only the first item of a
-    # list uses it (as in CommonMark): it is the number the list starts at.
-    number: int = 1
+    marker: str = ""
+    level: int | None = None        # the depth in a list, from 0
+    heading: int = 0
+    align: str | None = None
+
+    @property
+    def display(self) -> bool:
+        """Whether the paragraph is one display formula and nothing else."""
+        return (len(self.runs) == 1 and self.runs[0].math is not None
+                and self.runs[0].math.display)
 
 
-_HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
-_BULLET_RE = re.compile(r"^(\s*)[-*+]\s+(.*)$")
-_ORDERED_RE = re.compile(r"^(\s*)(\d+)[.)]\s+(.*)$")
-
-# Inline spans, longest-delimiter-first so `**` wins over `*`. Math comes first
-# so a `*` or `_` inside a formula is never read as markdown emphasis. A mark's
-# body is parsed recursively, so emphasis and a wash compose either way round.
-_INLINE_RE = re.compile(
-    rf"{marks.SPAN_RE.pattern}"                     # <mark>keyword</mark>
-    r"|\$\$(?P<dmath>.+?)\$\$"                      # $$\frac{a}{b}$$
-    rf"|{inlinemath.INLINE}"                        # $x^2$
-    r"|\[(?P<ltext>[^\]]+)\]\((?P<lurl>[^)\s]+)\)"  # [label](url)
-    r"|\*\*(?P<bold>.+?)\*\*"                       # **bold**
-    r"|\*(?P<italic>[^*]+?)\*"                       # *italic*
-    r"|`(?P<code>[^`]+)`"                            # `code`
-)
-
-_DISPLAY_MATH = "$$"
+@dataclass
+class Pictures:
+    images: list[doc.Image]
 
 
-def parse_markdown(md: str) -> list[Para]:
-    """Parse the DSL's markdown subset into a flat list of paragraphs."""
+Part = Para | Pictures | doc.Table | doc.Code | doc.Columns | doc.Quote
+
+_STYLE = {
+    "strong": {"bold": True}, "em": {"italic": True}, "code": {"code": True},
+    "strike": {"strike": True}, "underline": {"underline": True},
+    "sup": {"baseline": 1}, "sub": {"baseline": -1}, "small": {"small": True},
+}
+
+
+def pieces(inlines: list[doc.Inline], style: Run = Run("")) -> list[Run | doc.Image]:
+    """Inlines as runs, with the pictures among them where they stand."""
+    out: list[Run | doc.Image] = []
+    for node in inlines:
+        match node:
+            case doc.Text(text):
+                out.append(replace(style, text=text))
+            case doc.Break():
+                out.append(Run(BREAK))
+            case doc.Formula(math):
+                out.append(replace(style, text=omml.plain_text(math), math=node))
+            case doc.Image():
+                out.append(node)
+            case doc.Span("link", children, value):
+                out.extend(pieces(children, replace(style, link=value)))
+            case doc.Span("mark", children, value):
+                out.extend(pieces(children, replace(style, mark=value)))
+            case doc.Span(kind, children):
+                out.extend(pieces(children, replace(style, **_STYLE[kind])))
+    return _merged(out)
+
+
+def _merged(items: list[Run | doc.Image]) -> list[Run | doc.Image]:
+    out: list[Run | doc.Image] = []
+    for item in items:
+        last = out[-1] if out else None
+        if (isinstance(item, Run) and isinstance(last, Run)
+                and item.math is None and BREAK not in (item.text, last.text)
+                and replace(item, text="") == replace(last, text="")):
+            out[-1] = replace(last, text=last.text + item.text)
+        else:
+            out.append(item)
+    return out
+
+
+def runs(inlines: list[doc.Inline]) -> list[Run]:
+    """A field that holds text only (a title, a caption) as runs."""
+    return [item for item in pieces(inlines) if isinstance(item, Run)]
+
+
+def plain(items: list[Run]) -> str:
+    return "".join(run.text for run in items)
+
+
+def split_lines(items: list[Run]) -> list[list[Run]]:
+    """Runs cut at their line breaks."""
+    lines: list[list[Run]] = [[]]
+    for run in items:
+        for number, text in enumerate([run.text] if run.math else run.text.split("\n")):
+            if number:
+                lines.append([])
+            if text:
+                lines[-1].append(replace(run, text=text))
+    return lines
+
+
+def flow(blocks: list[doc.Node], level: int | None = None) -> list[Part]:
+    """A document as paragraphs, and what stands between paragraphs."""
+    out: list[Part] = []
+    for block in blocks:
+        match block:
+            case doc.Paragraph():
+                out.extend(_paragraph(block, level))
+            case doc.List():
+                out.extend(_list(block, 0 if level is None else level + 1))
+            case _:
+                out.append(block)
+    return out
+
+
+def _paragraph(block: doc.Paragraph, level: int | None) -> list[Part]:
+    out: list[Part] = []
+    pending: list[Run] = []
+
+    def end_text() -> None:
+        while pending and pending[0].text == BREAK:
+            del pending[0]
+        while pending and pending[-1].text == BREAK:
+            del pending[-1]
+        # The space beside a picture on the line is not text.
+        if any(run.math or run.text.strip(" \n") for run in pending):
+            if not pending[0].math:
+                pending[0] = replace(pending[0], text=pending[0].text.lstrip(" "))
+            if not pending[-1].math:
+                pending[-1] = replace(pending[-1], text=pending[-1].text.rstrip(" "))
+            out.append(Para(pending.copy(), level=level, heading=block.heading, align=block.align))
+        pending.clear()
+
+    for item in pieces(block.children):
+        if isinstance(item, Run):
+            pending.append(item)
+            continue
+        end_text()
+        if out and isinstance(out[-1], Pictures):
+            out[-1].images.append(item)
+        else:
+            out.append(Pictures([item]))
+    end_text()
+    return out
+
+
+def _list(block: doc.List, level: int) -> list[Part]:
+    out: list[Part] = []
+    for number, item in enumerate(block.items, block.start):
+        marker = NUMBER.format(number) if block.ordered else BULLET
+        parts = flow(item, level)
+        first = parts[0] if parts else None
+        if isinstance(first, Para) and first.level == level and not first.display:
+            first.marker = marker
+        else:  # the item opens with something that is not its text
+            out.append(Para(marker=marker, level=level))
+        out.extend(parts)
+    return out
+
+
+def cell(blocks: list[doc.Node]) -> tuple[list[Para], list[doc.Image]]:
+    """A table cell, which holds paragraphs only; its pictures are drawn after the table."""
     paras: list[Para] = []
-    lines = md.splitlines()
-    index = 0
-    while index < len(lines):
-        line = lines[index]
-        index += 1
-        if line.strip() == _DISPLAY_MATH:
-            # $$ … $$ — everything up to the closing fence is one formula, so a
-            # multi-line display equation stays a single paragraph.
-            body: list[str] = []
-            while index < len(lines) and lines[index].strip() != _DISPLAY_MATH:
-                body.append(lines[index])
-                index += 1
-            index += 1  # the closing fence
-            latex = " ".join(part.strip() for part in body if part.strip())
-            if latex:
-                paras.append(Para("math", [Run(omml.plain_text(latex), math=latex)]))
-            continue
-        if not line.strip():
-            continue
-        heading = _HEADING_RE.match(line)
-        if heading:
-            level = len(heading.group(1))
-            paras.append(Para("heading", parse_inline(heading.group(2)), level))
-            continue
-        bullet = _BULLET_RE.match(line)
-        if bullet:
-            level = len(bullet.group(1)) // 2
-            paras.append(Para("bullet", parse_inline(bullet.group(2)), level))
-            continue
-        ordered = _ORDERED_RE.match(line)
-        if ordered:
-            level = len(ordered.group(1)) // 2
-            paras.append(Para("ordered", parse_inline(ordered.group(3)), level,
-                              int(ordered.group(2))))
-            continue
-        paras.append(Para("para", parse_inline(line.strip())))
-    return paras
+    images: list[doc.Image] = []
 
+    def add(parts: list[Part]) -> None:
+        for part in parts:
+            match part:
+                case Para():
+                    paras.append(part)
+                case Pictures(found):
+                    images.extend(found)
+                case doc.Code(children):
+                    paras.extend(
+                        Para([replace(run, code=True) for run in line])
+                        for line in split_lines(runs(children))
+                    )
+                case doc.Table(rows):
+                    for row in rows:
+                        for inner in row:
+                            add(flow(inner.blocks))
+                case doc.Columns(items):
+                    for item in items:
+                        add(flow(item))
+                case doc.Quote(inner):
+                    add(flow(inner))
 
-def emphasize(runs: list[Run], *, bold: bool = False, italic: bool = False) -> list[Run]:
-    """Carry emphasis onto already-parsed runs.
-
-    `**…**` is parsed recursively, because the DSL's auto-bold wraps a whole
-    headline — including any `$math$` in it — in one pair of asterisks. An
-    equation has no bold cut, so a math run just keeps its own styling.
-    """
-    for run in runs:
-        if run.math is None:
-            run.bold = run.bold or bold
-            run.italic = run.italic or italic
-    return runs
-
-
-def carry_mark(runs: list[Run], tone: str) -> list[Run]:
-    """Put a `<mark>`'s wash on every text run of its body.
-
-    A math run is skipped for the same reason `emphasize` skips it: an equation
-    leaves this renderer as a native OMML node carrying its own run properties,
-    not as a text run this flag could reach.
-    """
-    for run in runs:
-        if run.math is None:
-            run.mark = run.mark or tone
-    return runs
-
-
-def parse_inline(text: str) -> list[Run]:
-    """Split a line into styled runs (bold/italic/code/link + plain spans)."""
-    runs: list[Run] = []
-    pos = 0
-    for match in _INLINE_RE.finditer(text):
-        if match.start() > pos:
-            runs.append(Run(text[pos:match.start()]))
-        if match.group("body") is not None:
-            runs.extend(carry_mark(parse_inline(match.group("body")),
-                                   marks.tone_of(match)))
-        elif match.group("dmath") is not None:
-            # Display math written inside a line — a `p.highlight` row, say.
-            # It is one formula like any other; only a `$$` on its own line
-            # (above) makes a paragraph of it.
-            latex = match.group("dmath").strip()
-            runs.append(Run(omml.plain_text(latex), math=latex))
-        elif match.group("math") is not None:
-            latex = match.group("math")
-            runs.append(Run(omml.plain_text(latex), math=latex))
-        elif match.group("ltext") is not None:
-            if filelinks.path_of(match.group("lurl")) is not None:
-                # A file button has nothing to open here: its label is text.
-                runs.extend(parse_inline(match.group("ltext")))
-            else:
-                runs.append(Run(match.group("ltext"), link=match.group("lurl")))
-        elif match.group("bold") is not None:
-            runs.extend(emphasize(parse_inline(match.group("bold")), bold=True))
-        elif match.group("italic") is not None:
-            runs.extend(emphasize(parse_inline(match.group("italic")), italic=True))
-        elif match.group("code") is not None:
-            runs.append(Run(match.group("code"), code=True))
-        pos = match.end()
-    if pos < len(text):
-        runs.append(Run(text[pos:]))
-    return runs or [Run("")]
+    add(flow(blocks))
+    return paras, images

@@ -25,10 +25,10 @@ class SideImage(Block):
         # At the picture's corner, as on a captionless `p.image`.
         return blocks.mark_figure(lines, numbers, inside_image=True)
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         from ..renderers.transcript.blocks import img
         # A side column on the slide; on paper it is simply another figure.
         return (
             f'<figure class="tx-fig">'
-            f'{img(self.content["src"], self.content.get("alt", ""), embedder)}</figure>'
+            f'{img(self.content["src"], self.content.get("alt", ""), ctx)}</figure>'
         )

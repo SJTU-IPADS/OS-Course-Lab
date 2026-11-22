@@ -497,17 +497,22 @@ class Block(LecturekitElement):
     def to_pptx(self, ctx: Any) -> None:
         """Draw onto ``ctx.slide`` (the pptx renderer's ``Ctx``), advancing its cursor."""
 
+    def read_deck(self, read: Any) -> list:
+        """The document of this block's own deck markdown, for a kind whose
+        markdown is all content (``read`` is a :class:`lecturekit.markup.Reader`)."""
+        return read.markdown("\n".join(self.to_marp(None)))
+
     def to_latex(self, ctx: Any) -> str:
         """The LaTeX the book sets for it (``ctx`` is the latex renderer's ``Ctx``)."""
         raise ValidationError(f"LaTeX renderer cannot emit block kind: {self.kind}")
 
-    def to_transcript(self, embedder: Any) -> str:
-        """HTML for the printable sheet. A kind the sheet does not normally draw,
+    def to_transcript(self, ctx: Any) -> str:
+        """HTML for the printable sheet (``ctx`` is the transcript renderer's
+        ``Sheet``). A kind the sheet does not normally draw,
         forced in with ``only=["transcript"]``, is set as body text if it is
         markdown, and dropped otherwise."""
         if isinstance(self.content, str):
-            from .renderers.transcript.text import markdown
-            return f'<div class="tx-slide">{markdown(self.content)}</div>'
+            return f'<div class="tx-slide">{ctx.blocks(ctx.read.slide(self.content))}</div>'
         return ""
 
 
@@ -601,7 +606,8 @@ class Lecture:
     borrowed: tuple[Borrowed, ...] = ()
     # The translation overlay actually applied (`i18n/<lang>.toml`), or None for
     # the baseline Python. Renderers read it only to pick their own fixed
-    # strings; nothing else in the tree remembers that languages exist.
+    # strings and to declare their page's language; nothing else in the tree
+    # remembers that languages exist.
     lang: str | None = None
     # Full i18n keys whose overlay entry was missing, so the baseline text is
     # what renders. `--strict` refuses to render a lecture with any. See `i18n`.

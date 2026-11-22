@@ -12,21 +12,28 @@ the body, the same for both.
 Every box is a :class:`Layout`: the slide with a smaller box on it. The blocks
 of a column draw into its box with the ordinary drawers, and the column is
 then moved as one group.
+
+Shapes are added in the deck's reading order: the title, the column on the
+left, the column on the right, the footnote band, the annotation bubbles.
 """
 
 from __future__ import annotations
 
 from dataclasses import replace
 
-from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Emu, Inches, Pt
 
 from lecturekit import model, tokens
 from . import theme
-from .blocks import GAP, Ctx, apply_runs, draw_title, resolve_image, style_run
+from .blocks import GAP, Ctx, add_picture, outline, resolve_image, shape_at, solid, style_run, textbox
+from .draw import (
+    Look, draw_block, finish_block, marker_box, runs_height, space_lines, write_runs,
+)
 from .elements import draw_elements
-from .layout import Cursor, Layout, estimate_text_height, px
-from .text import parse_markdown
+from .layout import Cursor, Layout, estimate_text_height, estimate_text_width, px
+from .text import Run, plain, runs, split_lines
 
 # The footnote band's least height and the gap beside the image column, in px.
 FOOTNOTE_BAND_MIN = tokens.px("--footnote-band-min")
@@ -37,6 +44,13 @@ SIDE_GAP = tokens.px("--side-gap")
 FOOTNOTE_LINE_HEIGHT = 1.3
 FOOTNOTE_INSET = 4
 
+# An annotation bubble (theme `.annotation`): 0.8em type, its padding in px,
+# and as wide as its text up to 42% of the slide.
+BUBBLE_PT = theme.BODY_PT * 0.8
+BUBBLE_PAD_X, BUBBLE_PAD_Y = 17, 11
+BUBBLE_MAX_SHARE = 0.42
+BUBBLE_LINE_HEIGHT = 1.35
+
 
 def draw_page(page: model.Page, blocks: list[model.Block], ctx: Ctx) -> None:
     """Draw a content page's ``blocks`` (those this frame shows) into its slide."""
@@ -45,30 +59,94 @@ def draw_page(page: model.Page, blocks: list[model.Block], ctx: Ctx) -> None:
     under = [block for block in rest if sides and block.in_side]
     main = [block for block in rest if not (sides and block.in_side)]
     valign = model.page_valign(page, blocks)
-    # Numbered as the viewer numbers them: the image column first.
-    notes = [note for block in (*sides, *under, *main)
-             if not model.block_held(page, block) for note in block.footnotes]
+    elements = model.layout(main)
+    marked = [(block, ()) for block in (*sides, *under)] + list(closed(elements))
+    ctx.numbers, notes = footnotes_of(page, marked, ctx)
+    bubbles = [note for block, _ in marked if not model.block_held(page, block)
+               for note in block.annotations] if page.show_annotations else []
 
-    draw_title(page.title, ctx)
-    body, band = bands(ctx.layout, ctx.cursor.top,
-                       footnote_height(notes, ctx.layout.content_width))
+    whole = ctx.layout
+    draw_title(ctx.read.title(page.title), ctx)
+    body, band = bands(whole, ctx.cursor.top,
+                       footnote_height([plain(note) for note in notes], whole.content_width))
     main_box, column = columns(body, sides)
     held: list[object] = []
-    if column is not None:
+
+    def draw_side() -> None:
         align_column(draw_side_column(sides, under, column, ctx, page, held),
                      column, valign)
 
-    ctx.layout, ctx.cursor = main_box, Cursor(main_box)
-    elements = model.layout(main)
-    groups = draw_elements(elements, ctx, inherited=(page.halign, valign),
-                           held_shapes=held, page=page)
-    reclaim_overflow(elements, groups, ctx)
-    spread_page_blocks(page.gap, groups, ctx)
-    align_column([shape for group in groups for shape in group], main_box, valign)
+    def draw_main() -> None:
+        ctx.layout, ctx.cursor = main_box, Cursor(main_box)
+        groups = draw_elements(elements, ctx, inherited=(page.halign, valign),
+                               held_shapes=held, page=page)
+        reclaim_overflow(elements, groups, ctx)
+        spread_page_blocks(page.gap, groups, ctx)
+        align_column([shape for group in groups for shape in group], main_box, valign)
+
+    if column is None:
+        draw_main()
+    elif sides[0].content.get("side") == "left":
+        draw_side()
+        draw_main()
+    else:
+        draw_main()
+        draw_side()
 
     draw_footnotes(notes, band, ctx)
+    for note in bubbles:
+        draw_bubble(note, ctx)
     for shape in held:
         shape._element.getparent().remove(shape._element)
+
+
+def closed(elements: list, closers: tuple = ()):
+    """The leaves in order, each with the containers it is the last leaf of."""
+    for element in elements:
+        if isinstance(element, model.Block):
+            yield element, closers
+        else:
+            yield from closed(element.children[:-1])
+            yield from closed(element.children[-1:], (element, *closers))
+
+
+def footnotes_of(page: model.Page, marked: list, ctx: Ctx
+                 ) -> tuple[dict[int, tuple[int, ...]], list[list[Run]]]:
+    """The numbers each block is marked with, and the notes, numbered as the deck does.
+
+    The image column comes first. A container's notes mark its last leaf,
+    after the leaf's own, and a block held back on this frame has none.
+    """
+    numbers: dict[int, tuple[int, ...]] = {}
+    texts: list[str] = []
+    for block, closers in marked:
+        if model.block_held(page, block):
+            continue
+        start = len(texts)
+        for element in (block, *closers):
+            texts.extend(element.footnotes)
+        if len(texts) > start:
+            numbers[id(block)] = tuple(range(start + 1, len(texts) + 1))
+    return numbers, [runs(ctx.read.inline(text)) for text in texts]
+
+
+def draw_title(title: list, ctx: Ctx) -> None:
+    """The slide's h1 and the rule under it."""
+    items, size = runs(title), theme.TITLE_PT
+    height = runs_height(items, size, ctx.layout.content_width)
+    _, frame = textbox(ctx, height)
+    space_lines(frame.paragraphs[0], items, size)
+    write_runs(frame.paragraphs[0], items, Look(size=size, bold=True))
+    rule_y = ctx.cursor.place(height) + height
+    # The accent rule (h1 border-bottom), with a deliberate weight: a hairline
+    # reads as nearly invisible in PowerPoint.
+    rule = ctx.slide.shapes.add_connector(
+        1, ctx.layout.content_left, rule_y,
+        ctx.layout.content_left + ctx.layout.content_width, rule_y,
+    )
+    rule.line.color.rgb = theme.ACCENT1
+    rule.line.width = Pt(theme.TITLE_RULE_PT)
+    ctx.cursor.advance(GAP)
 
 
 # --- the boxes ---
@@ -140,20 +218,19 @@ def draw_side_column(sides: list, texts: list, column: Layout, ctx: Ctx,
     leave and is cropped to it.
     """
     slide = ctx.slide
+    first = len(slide.shapes)
     left, top, width = column.content_left, column.content_top, column.content_width
     pictures = []
     for block in sides:
         path = resolve_image(block.content["src"], ctx)
         if path is not None:
-            pictures.append((block, slide.shapes.add_picture(str(path), left, top)))
+            pictures.append((block, add_picture(ctx, path, block.content["src"], left, top)))
 
     saved = ctx.layout, ctx.cursor
     ctx.layout, ctx.cursor = column, Cursor(column)
     text_shapes = []
     for block in texts:
-        mark = len(slide.shapes)
-        block.to_pptx(ctx)
-        shapes = list(slide.shapes)[mark:]
+        shapes = draw_block(ctx, block)
         text_shapes.extend(shapes)
         if model.block_held(page, block):
             held.extend(shapes)
@@ -181,7 +258,12 @@ def draw_side_column(sides: list, texts: list, column: Layout, ctx: Ctx,
     shift = y - top if pictures else 0
     for shape in text_shapes:
         shape.top += shift
-    return [pic for _, pic in pictures] + text_shapes
+    for block, pic in pictures:
+        if numbers := ctx.numbers.get(id(block)):
+            marker = marker_box(ctx, numbers,
+                                pic.left + pic.width, pic.top + pic.height)
+            pic._element.addnext(marker._element)   # it is read right after its picture
+    return list(slide.shapes)[first:]
 
 
 def _cover(pic, width: int, height: int) -> None:
@@ -218,13 +300,17 @@ def reclaim_overflow(elements: list, groups: list[list[object]], ctx: Ctx) -> No
     shapes = groups[index]
     top = min(shape.top for shape in shapes)
     height = max(shape.top + shape.height for shape in shapes) - top
+    tree = shapes[0]._element.getparent()
+    position = tree.index(shapes[0]._element)
     for shape in shapes:                       # python-pptx has no shape delete
-        shape._element.getparent().remove(shape._element)
+        tree.remove(shape._element)
 
     end = ctx.cursor.top
     mark = len(ctx.slide.shapes)
     redrawn = elements[index].redraw_pptx(ctx, top, height - overflow)
-    groups[index] = list(ctx.slide.shapes)[mark:]
+    groups[index] = finish_block(ctx, elements[index], mark)
+    for offset, shape in enumerate(groups[index]):
+        tree.insert(position + offset, shape._element)      # back in reading order
     lift = height - redrawn
     for group in groups[index + 1:]:
         for shape in group:
@@ -270,25 +356,21 @@ def footnote_height(texts: list[str], width: int) -> int:
     included, over the band's inset; three one-line notes fill the minimum.
     """
     lines = sum(
-        estimate_text_height(f"{i} {_plain(text)}", font_pt=theme.FOOTNOTE_PT,
+        estimate_text_height(line, font_pt=theme.FOOTNOTE_PT,
                              width=width, line_height=FOOTNOTE_LINE_HEIGHT)
         for i, text in enumerate(texts, 1)
+        for line in f"{i} {text}".split("\n")
     )
     return max(px(FOOTNOTE_BAND_MIN), lines + px(FOOTNOTE_INSET))
 
 
-def _plain(text: str) -> str:
-    paras = parse_markdown(text)
-    return "".join(run.text for run in paras[0].runs) if paras else text
-
-
-def draw_footnotes(texts: list[str], band: Layout, ctx: Ctx) -> None:
+def draw_footnotes(notes: list[list[Run]], band: Layout, ctx: Ctx) -> None:
     """The page's footnotes, numbered, in one text box that is the band.
 
     The text sits at the band's bottom; the box keeps the band's size, since
     PowerPoint fitting it to the text would move the text to the band's top.
     """
-    if not texts:
+    if not notes:
         return
     size = theme.FOOTNOTE_PT
     box = ctx.slide.shapes.add_textbox(
@@ -301,8 +383,46 @@ def draw_footnotes(texts: list[str], band: Layout, ctx: Ctx) -> None:
     tf.vertical_anchor = MSO_ANCHOR.BOTTOM
     tf.margin_left = tf.margin_right = tf.margin_bottom = 0
     tf.margin_top = px(FOOTNOTE_INSET)
-    for i, text in enumerate(texts, 1):
+    for i, note in enumerate(notes, 1):
         p = tf.paragraphs[0] if i == 1 else tf.add_paragraph()
         p.line_spacing = Pt(size * FOOTNOTE_LINE_HEIGHT)
         style_run(p.add_run(), f"{i} ", size_pt=size, color=theme.ACCENT1)
-        apply_runs(p, parse_markdown(text)[0].runs, size_pt=size, color=theme.DK2)
+        write_runs(p, note, Look(size=size, color=theme.DK2))
+
+
+# --- the annotation bubbles ---
+
+
+def draw_bubble(note: model.Annotation, ctx: Ctx) -> None:
+    """A bubble at its anchor of the slide, nudged by dx and dy, over everything.
+
+    As in the deck, the bubble's matching edge or centre is at that point.
+    """
+    items = runs(ctx.read.inline(note.text))
+    slide = ctx.layout
+    pad_x, pad_y = px(BUBBLE_PAD_X), px(BUBBLE_PAD_Y)
+    widest = max(estimate_text_width(plain(line), font_pt=BUBBLE_PT)
+                 for line in split_lines(items))
+    width = min(round(slide.width * BUBBLE_MAX_SHARE), widest + 2 * pad_x + px(4))
+    inner = width - 2 * pad_x
+    height = 2 * pad_y + sum(
+        estimate_text_height(plain(line), font_pt=BUBBLE_PT, width=inner,
+                             line_height=BUBBLE_LINE_HEIGHT)
+        for line in split_lines(items)
+    )
+    sides = note.at.split("-")
+    across = next((model.ALIGN_FRACTION[p] for p in sides if p in ("left", "right")), 0.5)
+    down = next((model.ALIGN_FRACTION[p] for p in sides if p in ("top", "bottom")), 0.5)
+    shape = shape_at(ctx, MSO_SHAPE.ROUNDED_RECTANGLE,
+                     round((slide.width - width) * across) + px(note.dx),
+                     round((slide.height - height) * down) + px(note.dy), width, height)
+    solid(shape, theme.SIDENOTE_WHEEL[0])
+    outline(shape, theme.SIDENOTE_BORDER, 1.0)
+    frame = shape.text_frame
+    frame.word_wrap = True
+    frame.margin_left = frame.margin_right = pad_x
+    frame.margin_top = frame.margin_bottom = pad_y
+    paragraph = frame.paragraphs[0]
+    paragraph.alignment = PP_ALIGN.LEFT
+    paragraph.line_spacing = Pt(BUBBLE_PT * BUBBLE_LINE_HEIGHT)
+    write_runs(paragraph, items, Look(size=BUBBLE_PT))

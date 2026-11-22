@@ -259,25 +259,8 @@ figcaption { font-size: 7pt; color: var(--grey); margin-top: 0.5mm; }
 .tx-mod-more { border-style: dashed; color: var(--grey); background: none; }
 .tx-flow { font-size: 8pt; color: var(--accent); line-height: 1; }
 
-/* --- Math, rendered without a typesetting engine --- */
-.tx-mathspan {
-  font-family: "Latin Modern Math", "Cambria Math", Georgia, serif;
-  font-style: italic;
-  white-space: nowrap;
-}
-.tx-mathspan .tx-up { font-style: normal; }
-.tx-mathspan sup, .tx-mathspan sub { font-size: 0.7em; }
-.tx-nary { font-size: 1.15em; }
-.tx-frac {
-  display: inline-flex;
-  flex-direction: column;
-  vertical-align: middle;
-  text-align: center;
-  font-size: 0.85em;
-}
-.tx-frac .tx-num { border-bottom: 0.4pt solid currentColor; padding: 0 0.4mm; }
-.tx-frac .tx-den { padding: 0 0.4mm; }
-.tx-root { border-top: 0.4pt solid currentColor; }
+/* --- Math: MathML, which the browser typesets --- */
+math { font-family: "Latin Modern Math", "Cambria Math", "STIX Two Math", math; }
 .tx-math { text-align: center; margin: 0.8mm 0; }
 
 /* Screen reading: the sheet is printed, but it is also opened in a browser. */

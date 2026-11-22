@@ -39,7 +39,8 @@ class Row(Block):
         (`flex:0 0 <width>`) and the rest split the remainder. A row-level caption
         renders as a trailing <figcaption>.
         """
-        from ..renderers.viewer.blocks import css_length, figure_classes, figure_inner, inline_md
+        from ..markup.fields import inline_md
+        from ..renderers.viewer.blocks import css_length, figure_classes, figure_inner
         content = self.content
         parts = ['<figure class="lk-row"><div class="lk-row-track">']
         for image in content["items"]:
@@ -68,63 +69,10 @@ class Row(Block):
         centered, so pictures of differing heights line up at their tops and each
         caption sits directly under its own picture.
         """
-        from pptx.util import Emu, Pt
-        from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import (
-            GAP,
-            _caption,
-            requested_image_size,
-            resolve_image,
-            row_caption,
-            row_widths,
-        )
-        from ..renderers.pptx.layout import fit_within, LINE_HEIGHT
-        content = self.content
-        items = content["items"]
-        gap = Emu(Pt(theme.BODY_PT * 1.2))     # .lk-row-track gap: 1.2em
-        caption = content.get("caption")
-        reserve = Emu(Pt(theme.CAPTION_PT * LINE_HEIGHT)) + GAP if caption else 0
-        max_height = max(Emu(Pt(theme.BODY_PT)), ctx.cursor.remaining() - reserve)
-        widths = row_widths(items, ctx.layout.content_width - gap * (len(items) - 1),
-                             ctx.layout)
-
-        # Pictures land at their natural size, so each has to be added before its
-        # final width is known; the track can only be centered once all are placed.
-        top = ctx.cursor.top
-        placed = []
-        for item, width in zip(items, widths):
-            path = resolve_image(item["src"], ctx)
-            if path is None:
-                continue
-            pic = ctx.slide.shapes.add_picture(str(path), ctx.layout.content_left, top)
-            requested = requested_image_size(item, pic.width, pic.height, ctx.layout)
-            if requested is not None:
-                pic.width, pic.height = requested
-            item_reserve = (
-                Emu(Pt(theme.CAPTION_PT * LINE_HEIGHT)) + GAP
-                if item.get("caption") else 0
-            )
-            pic.width, pic.height = fit_within(
-                pic.width, pic.height, width, max(Emu(Pt(1)), max_height - item_reserve)
-            )
-            placed.append((pic, item))
-        if not placed:
-            return
-
-        used = sum(pic.width for pic, _ in placed) + gap * (len(placed) - 1)
-        left = ctx.layout.content_left + (ctx.layout.content_width - used) // 2
-        height = 0
-        for pic, item in placed:
-            pic.left, pic.top = left, top
-            left += pic.width + gap
-            below = pic.height
-            if item.get("caption"):
-                below += row_caption(item["caption"], pic, ctx)
-            height = max(height, below)
-        ctx.cursor.place(height)
+        from ..renderers.pptx.blocks import GAP
+        from ..renderers.pptx.draw import draw_pictures
+        draw_pictures(ctx, self.content["items"], caption=self.content.get("caption"))
         ctx.cursor.advance(GAP)
-        if caption:
-            _caption(caption, "center", ctx)
 
     def to_latex(self, ctx):
         from ..renderers.latex.blocks import _graphic, figure, fmt
@@ -142,13 +90,13 @@ class Row(Block):
             )
         return figure("\n".join(parts), self.content.get("caption"), self, ctx)
 
-    def to_transcript(self, embedder):
+    def to_transcript(self, ctx):
         from ..renderers.transcript.blocks import caption, img
         from ..renderers.transcript.images import DEFAULT_WIDTH_PX
         items = self.content["items"]
         widths = []
         for item in items:
-            figure = embedder.embed(item["src"])
+            figure = ctx.embedder.embed(item["src"])
             widths.append(figure.width_px if figure else DEFAULT_WIDTH_PX)
         total = sum(widths) or 1
         cells = []
@@ -156,10 +104,10 @@ class Row(Block):
             share = max(15, round(100 * width / total) - 2)
             cells.append(
                 f'<span class="tx-cell" style="width:{share}%">'
-                f'{img(item["src"], item.get("alt", ""), embedder, pct=100)}'
-                f'{caption(item.get("caption"))}</span>'
+                f'{img(item["src"], item.get("alt", ""), ctx, pct=100)}'
+                f'{caption(item.get("caption"), ctx)}</span>'
             )
         return (
             f'<figure class="tx-fig tx-row">{"".join(cells)}'
-            f'{caption(self.content.get("caption"))}</figure>'
+            f'{caption(self.content.get("caption"), ctx)}</figure>'
         )

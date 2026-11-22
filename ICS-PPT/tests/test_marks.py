@@ -4,7 +4,14 @@ from lecturekit import marks, model
 from lecturekit.autobold import autobold
 from lecturekit.dsl import Lecture
 from lecturekit.renderers.latex.text import inline as latex_inline
-from lecturekit.renderers.pptx.text import parse_inline
+from lecturekit.markup import Reader, document
+from lecturekit.renderers.pptx.text import runs as pptx_runs
+
+
+def parse_inline(text: str) -> list:
+    """Slide text as the PPTX's runs."""
+    with Reader() as read:
+        return pptx_runs(document.phrasing(read.slide(text)))
 
 
 def slide(content: str) -> model.Block:

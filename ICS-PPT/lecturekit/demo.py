@@ -38,17 +38,16 @@ import os
 import queue
 import select
 import shutil
-import signal
 import struct
 import subprocess
 import threading
 import time
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
 from . import env as env_module
-from . import model
+from . import model, procs
 
 # The keyboard end of an interactive demo, and POSIX only. Windows has none of
 # the three; it still runs every other demo, and the renderer imports this module
@@ -656,6 +655,7 @@ def stream(
     timeout_s: float | None = DEFAULT_TIMEOUT_S,
     terminal: Terminal | None = None,
     show: str | None = None,
+    sessions: procs.Sessions | None = None,
 ) -> Iterator[Command | Chunk | Tick | Done]:
     """Run ``command`` through bash in ``cwd``, yielding the transcript as it comes.
 
@@ -676,37 +676,40 @@ def stream(
     terminal, sized to the drawer — and the terminal carries the keystrokes;
     without one, stdin is ``/dev/null``.
 
-    The child gets its own session, so a pipeline is killed whole rather than
-    leaving the tail of it running. That happens on **any** way out of this
-    generator: a timeout, or the consumer closing it — which is the whole stop
-    mechanism, because the consumer is a socket and closing it is what a listener
-    that walked away does for itself.
+    The child gets its own session, so a run is killed whole rather than
+    leaving the tail of it running. That happens on any way out of this
+    generator but the command's own end: a timeout, or the consumer closing
+    it — which is the whole stop mechanism, because the consumer is a socket
+    and closing it is what a listener that walked away does for itself. What a
+    command that ended left in the background stays, until the owner of
+    ``sessions`` closes them.
 
     ``timeout_s=None`` lets the command run until it, or somebody, stops it.
     """
     started = time.monotonic()
     argv, env = _launch(command)
+    transcript = _Transcript(command, show)
+    start = sessions.start if sessions is not None else procs.start
     if terminal is None:
-        proc = subprocess.Popen(
+        proc = start(
             argv,
             cwd=str(cwd),
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             stdin=subprocess.DEVNULL,
-            start_new_session=True,  # ignored on Windows; `_kill_session` copes
         )
         reads = _pumped(proc.stdout)
     else:
-        proc, fd = _spawn_on(terminal, argv, cwd, {**env, "TERM": TERM})
+        proc, fd = _spawn_on(terminal, argv, cwd, {**env, "TERM": TERM}, start)
         reads = _polled(fd)
-    transcript = _Transcript(command, show)
     markers = _Markers()
     decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
     deadline = None if timeout_s is None else started + timeout_s
     sent = 0
     capped = False
     timed_out = False
+    ended = False  # by itself
     try:
         for data in reads:
             if data is None:
@@ -736,15 +739,19 @@ def stream(
         if rest and not capped:
             yield Chunk(rest)
         exit_code = None if timed_out else _shell_status(proc.wait())
+        ended = not timed_out
         yield Done(
             exit_code=exit_code,
             timed_out=timed_out,
             duration_s=time.monotonic() - started,
         )
     finally:
-        if proc.poll() is None:
-            _kill_session(proc)
+        if not ended:
+            # Whether or not bash is over: its background can hold the output.
+            procs.kill(proc)
             proc.wait()
+        if sessions is not None:
+            sessions.release(proc)
         if terminal is not None:
             terminal._detach()
 
@@ -825,20 +832,23 @@ def _polled(fd: int) -> Iterator[bytes | None]:
 
 
 def _spawn_on(
-    terminal: Terminal, argv: list[str], cwd: Path, env: dict[str, str]
+    terminal: Terminal,
+    argv: list[str],
+    cwd: Path,
+    env: dict[str, str],
+    start: Callable[..., subprocess.Popen],
 ) -> tuple[subprocess.Popen, int]:
     """Start ``argv`` on a fresh pseudo-terminal; return it and the master."""
     master, slave = pty.openpty()
     try:
         _set_window(slave, terminal.cols, terminal.rows)
-        proc = subprocess.Popen(
+        proc = start(
             argv,
             cwd=str(cwd),
             env=env,
             stdin=slave,
             stdout=slave,
             stderr=slave,
-            start_new_session=True,
             preexec_fn=_take_terminal,
         )
     except BaseException:
@@ -877,36 +887,3 @@ def run(
 def _shell_status(code: int) -> int:
     """A status as a shell reports it: death by signal N is 128 + N."""
     return 128 - code if code < 0 else code
-
-
-def _kill_session(proc: subprocess.Popen) -> None:
-    """Kill the child's whole process group, falling back to the child itself.
-
-    Windows has no process groups to signal; there the tree is walked instead.
-    """
-    if os.name != "posix":
-        kill_tree(proc)
-        return
-    try:
-        os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-    except (ProcessLookupError, PermissionError, OSError):
-        try:
-            proc.kill()
-        except OSError:
-            pass
-
-
-def kill_tree(proc: subprocess.Popen) -> None:
-    """Kill ``proc`` and every process under it, on Windows (``taskkill /T``)."""
-    try:
-        subprocess.run(
-            ["taskkill", "/T", "/F", "/PID", str(proc.pid)],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-    except OSError:
-        try:
-            proc.kill()
-        except OSError:
-            pass

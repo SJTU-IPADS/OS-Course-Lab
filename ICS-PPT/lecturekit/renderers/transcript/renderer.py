@@ -8,7 +8,8 @@ entry under it, and the figures come along beside the entry they belong to, at
 a size a student can still read.
 
 It derives everything from what the deck already says: there is no third body
-to write. What it leaves behind is what a sheet cannot use — speaker notes,
+to write, and text is parsed by the deck's own parser (:mod:`lecturekit.markup`).
+What it leaves behind is what a sheet cannot use — speaker notes,
 book prose, source footnotes, the cover, the reference list — and what would be
 printed twice: an animation collapses to its finished frame, a reveal pair to
 its revealed half, and a borrowed review page to nothing at all (the reader has
@@ -18,16 +19,15 @@ that lecture's own sheet).
 from __future__ import annotations
 
 import html
-import re
 from pathlib import Path
 
 from lecturekit import model, variables
 from lecturekit.dsl import slugify
+from lecturekit.markup import Reader
 
-from .blocks import render_annotations, render_block
+from .blocks import Sheet, render_annotations, render_block
 from .images import Embedder
 from .style import CSS
-from .text import inline
 
 # The deepest heading the sheet prints; below it, entries keep the numbering but
 # reuse the last heading level rather than shrinking into the body text.
@@ -55,10 +55,10 @@ def build_html(lecture: model.Lecture, embedder: Embedder) -> str:
     # The sheet is drawn at each variable's default.
     lecture = variables.for_static(lecture)
     keep = kept_page_ids(lecture)
-    body = _embed_inline_images(
-        "".join(_nodes(lecture.children, keep, embedder, prefix="", depth=0)),
-        embedder,
-    )
+    with Reader() as read:
+        sheet = Sheet(embedder, read)
+        title = sheet.inline(read.cover_title(lecture.title))
+        body = "".join(_nodes(lecture.children, keep, sheet, prefix="", depth=0))
     subtitle = (
         f'<div class="tx-sub">{html.escape(lecture.subtitle)}</div>'
         if lecture.subtitle else ""
@@ -68,35 +68,10 @@ def build_html(lecture: model.Lecture, embedder: Embedder) -> str:
         '<html lang="zh">\n<head>\n<meta charset="utf-8">\n'
         f"<title>{html.escape(lecture.title)}</title>\n"
         f"<style>{CSS}</style>\n</head>\n<body>\n"
-        f'<header class="tx-head"><h1>{html.escape(lecture.title)}</h1>{subtitle}</header>\n'
+        f'<header class="tx-head"><h1>{title}</h1>{subtitle}</header>\n'
         f'<main class="tx-doc">{body}</main>\n'
         "</body>\n</html>\n"
     )
-
-
-_INLINE_IMG_RE = re.compile(r"<img\b[^>]*>", re.IGNORECASE)
-_SRC_RE = re.compile(r'(\bsrc=")([^"]*)(")', re.IGNORECASE)
-
-
-def _embed_inline_images(document: str, embedder: Embedder) -> str:
-    """Embed the figures an author wrote as raw `<img>` inside slide markdown.
-
-    The block renderers embed their own figures as they go; this catches the
-    ones that arrived as HTML in a table cell, where the src is still a path
-    relative to the lecture. One that cannot be read is dropped whole rather
-    than left as a broken-image box — the row it labels still reads.
-    """
-    def replace(match: re.Match) -> str:
-        tag = match.group(0)
-        src = _SRC_RE.search(tag)
-        if src is None or src.group(2).startswith("data:"):
-            return tag
-        figure = embedder.embed(src.group(2))
-        if figure is None:
-            return ""
-        return _SRC_RE.sub(lambda m: f"{m.group(1)}{figure.uri}{m.group(3)}", tag, count=1)
-
-    return _INLINE_IMG_RE.sub(replace, document)
 
 
 def kept_page_ids(lecture: model.Lecture) -> set[str]:
@@ -156,7 +131,7 @@ def _same_content(page: model.Page, other: model.Page) -> bool:
 def _nodes(
     children: list[model.Section | model.Page],
     keep: set[str],
-    embedder: Embedder,
+    sheet: Sheet,
     *,
     prefix: str,
     depth: int,
@@ -169,28 +144,29 @@ def _nodes(
             if child.id not in keep:
                 continue
             counter += 1
-            out.append(_page(child, f"{prefix}{counter}", embedder, depth))
+            out.append(_page(child, f"{prefix}{counter}", sheet, depth))
             continue
-        body = _nodes(child.children, keep, embedder,
+        body = _nodes(child.children, keep, sheet,
                       prefix=f"{prefix}{counter + 1}.", depth=depth + 1)
         if not body:
             # A section whose every page dropped out has nothing to head.
             continue
         counter += 1
-        out.append(_heading(depth, f"{prefix}{counter}", child.title))
+        out.append(_heading(depth, f"{prefix}{counter}", child.title, sheet))
         out.extend(body)
     return out
 
 
-def _page(page: model.Page, number: str, embedder: Embedder, depth: int) -> str:
-    parts = [_heading(depth, number, page.title)]
+def _page(page: model.Page, number: str, sheet: Sheet, depth: int) -> str:
+    parts = [_heading(depth, number, page.title, sheet)]
     for block in visible_blocks(page):
-        parts.append(render_block(block, embedder))
+        parts.append(render_block(block, sheet))
         if page.show_annotations:
-            parts.append(render_annotations(block))
+            parts.append(render_annotations(block, sheet))
     return "".join(parts)
 
 
-def _heading(depth: int, number: str, title: str) -> str:
+def _heading(depth: int, number: str, title: str, sheet: Sheet) -> str:
     tag = f"h{min(depth + 2, _MAX_HEADING)}"
-    return f'<{tag}><span class="tx-num">{number}</span>{inline(title)}</{tag}>'
+    text = sheet.inline(sheet.read.title(title))
+    return f'<{tag}><span class="tx-num">{number}</span>{text}</{tag}>'

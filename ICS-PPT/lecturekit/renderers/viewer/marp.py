@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 
 from ... import tokens
-from . import pdf
+from . import colorscheme, pdf
 
 PKG_ROOT = tokens.PKG_ROOT
 THEME_DIR = tokens.THEME_DIR
@@ -75,10 +75,15 @@ def marp_command() -> list[str]:
 
 
 def _copy_theme(output_dir: Path, theme_dir: Path) -> bool:
+    """Write the web page's ``theme.css``: the theme, in the default colours.
+
+    It holds for every colour scheme: a page gets the one chosen in its <head>.
+    """
     theme_src = theme_dir / "basic-office.css"
     if not theme_src.exists():
         return False
-    shutil.copyfile(theme_src, output_dir / "theme.css")
+    css = colorscheme.theme(theme_src.read_text(encoding="utf-8"))
+    (output_dir / "theme.css").write_text(css, encoding="utf-8")
     _copy_latin_fonts(output_dir, theme_dir)
     return True
 
@@ -131,7 +136,8 @@ def _write_pdf_theme(output_dir: Path, theme_dir: Path) -> str | None:
     )
     theme_name = "theme-pdf.css"
     (output_dir / theme_name).write_text(
-        base_src.read_text(encoding="utf-8") + override, encoding="utf-8"
+        colorscheme.theme(base_src.read_text(encoding="utf-8")) + override,
+        encoding="utf-8",
     )
     return theme_name
 
@@ -240,6 +246,7 @@ def build_deck(
     are merged into ``{name}.pdf`` (the intermediates are removed) — ``name``
     defaults to ``slides`` but the CLI passes the lecture's slugified title so the
     exported PDF is named after the lecture. PNG emits one image per page.
+    The HTML alone gets the head the renderer wrote (``colorscheme.dress``).
     """
     if "html" in formats:
         command = marp_command() + [
@@ -250,10 +257,8 @@ def build_deck(
         subprocess.run(command, cwd=output_dir, check=True, stdin=subprocess.DEVNULL)
         slides_html = output_dir / "slides.html"
         if slides_html.exists():
-            slides_html.write_text(
-                inject_deck_scripts(slides_html.read_text(encoding="utf-8")),
-                encoding="utf-8",
-            )
+            html = inject_deck_scripts(slides_html.read_text(encoding="utf-8"))
+            slides_html.write_text(colorscheme.dress(html, output_dir), encoding="utf-8")
 
     if "png" in formats:
         render_pages_png(output_dir, theme_dir=theme_dir)

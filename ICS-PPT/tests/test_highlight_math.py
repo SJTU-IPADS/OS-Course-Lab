@@ -140,7 +140,8 @@ class TranscriptTest(unittest.TestCase):
     def test_a_display_row_is_typeset_in_the_sheet_s_own_math(self):
         html = self.html(FENCED)
         self.assertIn('<p class="tx-highlight tx-yellow">', html)
-        self.assertIn('<span class="tx-frac">', html)
+        self.assertIn("<mfrac>", html)
+        self.assertIn("<math", html)
         self.assertNotIn("$$", html)
 
     def test_inline_math_still_works(self):

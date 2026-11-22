@@ -36,7 +36,7 @@ class Bridge(Block):
 
     def to_marp(self, ctx):
         """A transition page's centered lines. Plain text — escaped, no inline md."""
-        from ..renderers.viewer.blocks import escape_html
+        from ..markup.fields import escape_html
         body = "<br>".join(
             escape_html(line) for line in str(self.content["text"]).splitlines()
         )
@@ -50,7 +50,9 @@ class Bridge(Block):
         """
         from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
         from ..renderers.pptx import theme
-        from ..renderers.pptx.blocks import BRIDGE_PT, set_line_spacing, style_run
+        from ..renderers.pptx.blocks import BRIDGE_PT, set_line_spacing
+        from ..renderers.pptx.draw import Look, write_runs
+        from ..renderers.pptx.text import runs
         width = int(ctx.layout.width * 0.82)
         left = (ctx.layout.width - width) // 2
         box = ctx.slide.shapes.add_textbox(left, 0, width, ctx.layout.height)
@@ -64,4 +66,4 @@ class Bridge(Block):
             first = False
             p.alignment = PP_ALIGN.CENTER
             set_line_spacing(p, BRIDGE_PT)
-            style_run(p.add_run(), line, size_pt=BRIDGE_PT, color=theme.FG)
+            write_runs(p, runs(ctx.read.plain(line)), Look(size=BRIDGE_PT, color=theme.FG))

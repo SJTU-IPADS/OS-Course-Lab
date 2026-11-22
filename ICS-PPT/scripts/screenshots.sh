@@ -39,7 +39,8 @@ rm -rf "$BUILD"
 # One render of the whole lecture, then the slides worth showing are copied out
 # by deck index (`inspect` prints the order; animations count one PNG a frame).
 echo "screenshots: rendering the deck …"
-lecturekit render "$LEC" --out "$BUILD/viewer" --to png >/dev/null
+# The README's shots are light, whatever this desktop's scheme is.
+lecturekit render "$LEC" --out "$BUILD/viewer" --to png --color-scheme light >/dev/null
 
 cp "$BUILD/viewer/slides.002.png" "$OUT/slide-marks.png"     # marks, chip, marked code
 cp "$BUILD/viewer/slides.008.png" "$OUT/slide-logging.png"   # the page shown in all 3 targets

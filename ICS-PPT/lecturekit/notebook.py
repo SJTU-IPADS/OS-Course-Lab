@@ -25,14 +25,14 @@ _ASSET_REF = re.compile(r"assets/[\w./\-]+")
 # Bump when the render pipeline changes in a way that alters output for the same
 # AST (e.g. pagination turned off), so on-disk bundles cached by a prior version
 # are invalidated rather than served stale.
-_CACHE_VERSION = "2"
+_CACHE_VERSION = "4"
 
 
 def build_one_page_lecture(lecture, page_spec) -> model.Lecture:
     """Project a single ``PageSpec`` into a one-page ``model.Lecture``.
 
     ``lecture`` is the owning ``dsl.Lecture`` builder; the projection carries its
-    ``id``/``title``/``subtitle``/``ratio`` so the page renders exactly as it
+    ``id``/``title``/``subtitle``/``ratio``/``lang`` so the page renders as it
     would in the full deck. Reuses ``dsl.build_child`` — the same call the CLI
     makes — so there is no second rendering path to drift. A page carrying
     ``p.frames(...)`` builds into one page per frame, so the cell shows the
@@ -43,6 +43,7 @@ def build_one_page_lecture(lecture, page_spec) -> model.Lecture:
         title=lecture.title,
         subtitle=lecture.subtitle,
         ratio=lecture.ratio,
+        lang=lecture.lang,
         children=dsl.build_child(page_spec),
         # The page may use the lecture's variables (`lecture.variable`).
         variables=tuple(getattr(lecture, "_variables", ())),

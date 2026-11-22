@@ -38,7 +38,8 @@ class Highlight(Block):
         box is the same one; only the tag it is drawn on differs.
         """
         from .. import model
-        from ..renderers.viewer.blocks import CHIP_MATH_RE, chip_math_md, inline_md
+        from ..markup.fields import inline_md
+        from ..renderers.viewer.blocks import CHIP_MATH_RE, chip_math_md
         content = self.content
         lines = model.highlight_lines(content["text"])
         tone = content["tone"]
@@ -63,55 +64,47 @@ class Highlight(Block):
         """
         from pptx.enum.shapes import MSO_SHAPE
         from pptx.enum.text import PP_ALIGN
-        from pptx.util import Emu, Pt
-        from .. import model
+        from ..markup import document
         from ..renderers.pptx import theme
         from ..renderers.pptx.blocks import (
             GAP,
             HIGHLIGHT_PAD,
             HIGHLIGHT_RULE_PT,
             HIGHLIGHT_SHADOW,
-            _line,
-            _shape,
-            apply_runs,
             drop_shadow,
-            set_line_spacing,
+            outline,
+            shape_at,
         )
-        from ..renderers.pptx.layout import estimate_text_width, LINE_HEIGHT
-        from ..renderers.pptx.text import parse_markdown, Run
-        content = self.content
-        lines = model.highlight_lines(content["text"])
-        rows = [parse_markdown(line)[0].runs if line.strip() else [Run("")]
-                for line in lines]
-        size = theme.HIGHLIGHT_PT
-        # Measured on the parsed runs, not the source: a `$$…$$` row is typeset as
-        # an equation, so what the chip has to be wide enough for is the formula's
-        # plain-text rendering, not the LaTeX that spelled it.
-        width = min(
-            ctx.layout.content_width,
-            max(estimate_text_width("".join(run.text for run in runs), font_pt=size)
-                for runs in rows)
-            + 2 * HIGHLIGHT_PAD,
-        )
-        height = Emu(Pt(len(lines) * size * LINE_HEIGHT)) + 2 * HIGHLIGHT_PAD
+        from ..renderers.pptx.draw import Look, runs_height, space_lines, write_runs
+        from ..renderers.pptx.layout import estimate_text_width
+        from ..renderers.pptx.text import plain, runs, split_lines
+        rows = split_lines(runs(document.phrasing(self.read_deck(ctx.read))))
+        ink = theme.CHIP_INK[self.content["tone"]]
+        look = Look(size=theme.HIGHLIGHT_PT, color=ink, bold=True)
+        # Measured on what is shown, not on the source: a formula is as wide as
+        # its typeset text, not as the markup that spelled it.
+        wanted = max(estimate_text_width(plain(row), font_pt=look.size) for row in rows)
+        room = ctx.layout.content_width - 2 * HIGHLIGHT_PAD
+        wraps = wanted > room
+        text_width = min(room, wanted)
+        width = text_width + 2 * HIGHLIGHT_PAD
+        height = 2 * HIGHLIGHT_PAD + sum(
+            runs_height(row, look.size, room if wraps else ctx.layout.width) for row in rows)
         left = ctx.layout.content_left + (ctx.layout.content_width - width) // 2
 
         top = ctx.cursor.place(height)
-        shape = _shape(ctx, MSO_SHAPE.RECTANGLE, left, top, width, height)
+        shape = shape_at(ctx, MSO_SHAPE.RECTANGLE, left, top, width, height)
         shape.fill.background()
-        _line(shape, theme.CHIP_INK[content["tone"]], HIGHLIGHT_RULE_PT)
+        outline(shape, ink, HIGHLIGHT_RULE_PT)
         drop_shadow(shape, theme.SIDENOTE_BORDER, **HIGHLIGHT_SHADOW)
 
-        tf = shape.text_frame
-        tf.word_wrap = False
-        for i, runs in enumerate(rows):
-            para = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        frame = shape.text_frame
+        frame.word_wrap = wraps
+        for i, row in enumerate(rows):
+            para = frame.add_paragraph() if i else frame.paragraphs[0]
             para.alignment = PP_ALIGN.CENTER
-            set_line_spacing(para, size)
-            apply_runs(para, runs, size_pt=size,
-                        color=theme.CHIP_INK[content["tone"]])
-            for run in para.runs:
-                run.font.bold = True
+            space_lines(para, row, look.size)
+            write_runs(para, row, look)
         ctx.cursor.advance(GAP)
 
     def to_latex(self, ctx):
@@ -137,10 +130,8 @@ class Highlight(Block):
             out += "\n" + r"\footnotetext{%s}" % inline(note, refs=ctx.resolve_ref)
         return out
 
-    def to_transcript(self, embedder):
-        from .. import model
-        from ..renderers.transcript.text import inline
+    def to_transcript(self, ctx):
+        from ..markup import document
         tone = self.content.get("tone", "yellow")
-        lines = model.highlight_lines(self.content["text"])
-        body = "<br>".join(inline(line) for line in lines if line)
+        body = ctx.inline(document.phrasing(self.read_deck(ctx.read)))
         return f'<p class="tx-highlight tx-{tone}"><span>{body}</span></p>'

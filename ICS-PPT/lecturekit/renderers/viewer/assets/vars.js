@@ -14,7 +14,9 @@
   //     with bind.js, the same language as lecturekit/bind.py, and the result
   //     is shown in place of the file through the same <img>, so its box,
   //     fonts and look are the file's. At the values the file is drawn at,
-  //     the <img> shows the file itself;
+  //     the <img> shows the file itself. A colour scheme's variant of the
+  //     figure is redrawn too, into the custom property it is painted from
+  //     (data-lk-paint, see colorscheme.py);
   //   - every control bound to it, on any slide.
   //
   // The value is kept in localStorage under the lecture's id. All slides are
@@ -112,12 +114,13 @@
     if (window.console) console.warn("lecturekit: " + figure.key + ": " + error.message);
   }
 
-  function Figure(key, source) {
+  function Figure(key, source, paint) {
     var doc = new DOMParser().parseFromString(source, "image/svg+xml");
     if (doc.getElementsByTagName("parsererror").length) throw new Error("not well-formed SVG");
     var declaration = doc.querySelector("[data-lk-vars]");
     if (!declaration) throw new Error("no data-lk-vars");
     this.key = key;
+    this.paint = paint;
     this.doc = doc;
     this.drawn = {};
     var inputs = B.parseProgram(declaration.getAttribute("data-lk-vars"));
@@ -158,6 +161,11 @@
       if (img.lkFile === undefined) img.lkFile = img.getAttribute("src");
       img.setAttribute("src", src === null ? img.lkFile : src);
     }
+    if (this.paint) {
+      var style = document.documentElement.style;
+      if (src === null) style.removeProperty(this.paint);
+      else style.setProperty(this.paint, 'url("' + src + '")');
+    }
     if (this.url && this.url !== src) URL.revokeObjectURL(this.url);
     this.url = src;
   };
@@ -197,7 +205,11 @@
       }
     }
     var svg = new XMLSerializer().serializeToString(this.doc);
-    var url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+    // A variant is painted as a background, which would blank for a frame
+    // while a blob is fetched: a data URL is read at once.
+    var url = this.paint
+      ? "data:image/svg+xml," + encodeURIComponent(svg)
+      : URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
     var figure = this;
     this.wanted = url;
     var next = new Image();
@@ -229,7 +241,7 @@
       if (seen[key]) continue;
       seen[key] = true;
       try {
-        figures.push(new Figure(key, sources[i].textContent));
+        figures.push(new Figure(key, sources[i].textContent, sources[i].getAttribute("data-lk-paint")));
       } catch (e) {
         warn({ key: key }, e);
       }

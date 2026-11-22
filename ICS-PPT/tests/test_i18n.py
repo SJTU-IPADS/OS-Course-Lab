@@ -659,6 +659,19 @@ class CliTest(unittest.TestCase):
             default_out_dir(lecture, "viewer", "en"), Path("build/sample-en-viewer")
         )
 
+    def test_the_slides_declare_the_overlays_language(self):
+        write_overlay(self.dir, "en", {"lecture.title": "Title"})
+        for select in ([], ["--pages", "1"]):
+            with self.subTest(select=select):
+                out_dir = Path(self.tmp.name, f"out{len(select)}")
+                code, out = self.run_cli([
+                    "render", str(self.dir), "--lang", "en", *select,
+                    "--no-build", "--out", str(out_dir),
+                ])
+                self.assertEqual(code, 0, out)
+                md = Path(out_dir, "slides.md").read_text(encoding="utf-8")
+                self.assertIn("\nlang: en\n", md)
+
     def test_strict_refuses_to_render_a_half_translated_deck(self):
         write_overlay(self.dir, "en", {"lecture.title": "Title"})
         out_dir = Path(self.tmp.name, "out")
@@ -691,6 +704,7 @@ class DevServerTest(unittest.TestCase):
             data = json.loads(Path(out, "lecture.json").read_text())
             self.assertEqual(data["lecture"]["title"], "Sample (EN)")
             self.assertEqual(data["ui"]["outline"], "Outline")
+            self.assertIn("\nlang: en\n", Path(out, "slides.md").read_text())
 
     def test_an_overlay_edit_is_a_watched_source_change(self):
         from lecturekit.dev_server import LectureWatchFilter

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 172" width="820" height="172">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#68b4d4"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ee8a52"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c6d8ea"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#78c07c"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f37b84"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#99a6b3"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#556067"/></marker></defs>
+<rect x="40.0" y="8.0" width="170.0" height="56.0" rx="6" fill="#2b2f33" stroke="#c6d8ea" stroke-width="1.6"/>
+<text x="125.0" y="33.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c6d8ea" text-anchor="middle">显存</text>
+<text x="125.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">容量 80 GB</text>
+<line x1="125.0" y1="66.0" x2="125.0" y2="110.0" stroke="#ee8a52" stroke-width="3" marker-end="url(#ah-e97132)"/>
+<text x="137.0" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#ee8a52" text-anchor="start">带宽 3350 GB/s</text>
+<rect x="40.0" y="112.0" width="170.0" height="52.0" rx="6" fill="#223842" stroke="#68b4d4" stroke-width="1.6"/>
+<text x="125.0" y="144.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="middle">GPU 1</text>
+<line x1="212.0" y1="138.0" x2="358.0" y2="138.0" stroke="#c6d8ea" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="285.0" y="128.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">传递数据的时间忽略</text>
+<rect x="360.0" y="8.0" width="170.0" height="56.0" rx="6" fill="#2b2f33" stroke="#c6d8ea" stroke-width="1.6"/>
+<text x="445.0" y="33.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="17" font-weight="bold" fill="#c6d8ea" text-anchor="middle">显存</text>
+<text x="445.0" y="54.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">容量 80 GB</text>
+<line x1="445.0" y1="66.0" x2="445.0" y2="110.0" stroke="#ee8a52" stroke-width="3" marker-end="url(#ah-e97132)"/>
+<text x="457.0" y="94.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="bold" fill="#ee8a52" text-anchor="start">带宽 3350 GB/s</text>
+<rect x="360.0" y="112.0" width="170.0" height="52.0" rx="6" fill="#223842" stroke="#68b4d4" stroke-width="1.6"/>
+<text x="445.0" y="144.5" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="middle">GPU 2</text>
+<line x1="532.0" y1="138.0" x2="678.0" y2="138.0" stroke="#c6d8ea" stroke-width="2" marker-end="url(#ah-0e2841)"/>
+<text x="700.0" y="146.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="24" font-weight="bold" fill="#68b4d4" text-anchor="start">⋯</text>
+<text x="720.0" y="42.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#68b4d4" text-anchor="middle">各块 GPU</text>
+<text x="720.0" y="64.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="normal" fill="#68b4d4" text-anchor="middle">参数相同</text>
+</svg>
