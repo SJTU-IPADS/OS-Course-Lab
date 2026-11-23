@@ -1,7 +1,8 @@
-/* Load a statically linked, non-PIE ET_EXEC into the guest.
+/* Software: the loader, which loads a statically linked, non-PIE ET_EXEC
+ * into the guest.
  *
- * The steps are those of the loader in lecture 5, done here without a
- * kernel, so the page tables are filled in one page at a time:
+ * The loader runs without a kernel, so the page tables are filled in one
+ * page at a time:
  *
  *   1. every PT_LOAD segment gets physical frames mapped at its address;
  *   2. the part of a segment beyond p_filesz (.bss) is cleared;
@@ -23,19 +24,20 @@
 #define STACK_TOP   0x00007ffffffff000ULL
 #define STACK_PAGES 64
 
-static uint64_t page_down(uint64_t v) { return v & ~(uint64_t)(PAGE_SIZE - 1); }
-static uint64_t page_up(uint64_t v)   { return page_down(v + PAGE_SIZE - 1); }
+static uint64_t page_down(uint64_t addr) { return addr & ~(uint64_t)(PAGE_SIZE - 1); }
+static uint64_t page_up(uint64_t addr)   { return page_down(addr + PAGE_SIZE - 1); }
 
-/* Make sure [va, va+n) is backed by frames; mapped pages are kept. */
-static int ensure(uint64_t va, uint64_t n, uint64_t flags)
+/* Make sure [va, va+nbytes) is backed by frames; mapped pages are kept. */
+static int ensure(uint64_t va, uint64_t nbytes, uint64_t flags)
 {
-    for (uint64_t p = page_down(va); p < page_up(va + n); p += PAGE_SIZE) {
+    for (uint64_t page = page_down(va); page < page_up(va + nbytes); page += PAGE_SIZE) {
         uint64_t pa;
-        if (mmu_translate(p, MEM_READ, &pa) == 0)
+        if (mmu_translate(page, MEM_READ, &pa) == 0)
             continue;
-        uint64_t f = mmu_alloc_frame();
-        if (!f || mmu_map(p, f, flags) < 0) {
-            fprintf(stderr, "load: mapping virtual page %#lx failed\n", (unsigned long)p);
+        uint64_t frame = mmu_alloc_frame();
+        if (!frame || mmu_map(page, frame, flags) < 0) {
+            fprintf(stderr, "load: mapping virtual page %#lx failed\n",
+                    (unsigned long)page);
             return -1;
         }
     }
@@ -45,30 +47,30 @@ static int ensure(uint64_t va, uint64_t n, uint64_t flags)
 
 /* Write bytes at a guest virtual address, zeros when src is NULL. The
    machine is not running yet, so this bypasses the cache. */
-static int put(uint64_t va, const void *src, uint64_t n)
+static int put(uint64_t va, const void *src, uint64_t nbytes)
 {
-    const uint8_t *s = src;
-    while (n) {
+    const uint8_t *from = src;
+    while (nbytes) {
         uint64_t pa;
         if (mmu_translate(va, MEM_READ, &pa) < 0) {
             fprintf(stderr, "load: virtual address %#lx was just mapped but does not translate;"
                             " the page table walk cannot find the mapping\n", (unsigned long)va);
             return -1;
         }
-        uint64_t k = PAGE_SIZE - va % PAGE_SIZE;
-        if (k > n) k = n;
-        uint8_t *p = dram_ptr(pa, k);
-        if (!p) {
+        uint64_t chunk = PAGE_SIZE - va % PAGE_SIZE;
+        if (chunk > nbytes) chunk = nbytes;
+        uint8_t *dst = dram_ptr(pa, chunk);
+        if (!dst) {
             fprintf(stderr, "load: physical address %#lx is out of range\n", (unsigned long)pa);
             return -1;
         }
-        if (s) memcpy(p, s, k); else memset(p, 0, k);
-        va += k; n -= k; if (s) s += k;
+        if (from) memcpy(dst, from, chunk); else memset(dst, 0, chunk);
+        va += chunk; nbytes -= chunk; if (from) from += chunk;
     }
     return 0;
 }
 
-int loader_exec(mcpu *c, const char *path, char **argv, int argc)
+int loader_exec(mcpu *cpu, const char *path, char **argv, int argc)
 {
     int fd = open(path, O_RDONLY);
     if (fd < 0) { perror(path); return -1; }
@@ -97,25 +99,25 @@ int loader_exec(mcpu *c, const char *path, char **argv, int argc)
 
     uint64_t top = 0;
     Elf64_Phdr *ph = (Elf64_Phdr *)(img + eh->e_phoff);
-    for (unsigned i = 0; i < eh->e_phnum; ++i) {
-        if (ph[i].p_type != PT_LOAD)
+    for (unsigned idx = 0; idx < eh->e_phnum; ++idx) {
+        if (ph[idx].p_type != PT_LOAD)
             continue;
         uint64_t flags = PTE_P | PTE_U;
-        if (ph[i].p_flags & PF_W) flags |= PTE_W;
-        if (ensure(ph[i].p_vaddr, ph[i].p_memsz, flags) < 0)
+        if (ph[idx].p_flags & PF_W) flags |= PTE_W;
+        if (ensure(ph[idx].p_vaddr, ph[idx].p_memsz, flags) < 0)
             return -1;
-        if (put(ph[i].p_vaddr, img + ph[i].p_offset, ph[i].p_filesz) < 0)
+        if (put(ph[idx].p_vaddr, img + ph[idx].p_offset, ph[idx].p_filesz) < 0)
             return -1;
-        if (ph[i].p_memsz > ph[i].p_filesz &&
-            put(ph[i].p_vaddr + ph[i].p_filesz, NULL,
-                ph[i].p_memsz - ph[i].p_filesz) < 0)
+        if (ph[idx].p_memsz > ph[idx].p_filesz &&
+            put(ph[idx].p_vaddr + ph[idx].p_filesz, NULL,
+                ph[idx].p_memsz - ph[idx].p_filesz) < 0)
             return -1;
-        if (ph[i].p_vaddr + ph[i].p_memsz > top)
-            top = ph[i].p_vaddr + ph[i].p_memsz;
+        if (ph[idx].p_vaddr + ph[idx].p_memsz > top)
+            top = ph[idx].p_vaddr + ph[idx].p_memsz;
     }
     uint64_t entry = eh->e_entry;
     munmap(img, (size_t)sb.st_size);
-    c->brk = page_up(top);
+    cpu->brk = page_up(top);
 
     /* stack */
     uint64_t stack_lo = STACK_TOP - (uint64_t)STACK_PAGES * PAGE_SIZE;
@@ -127,27 +129,27 @@ int loader_exec(mcpu *c, const char *path, char **argv, int argc)
     uint64_t sp = STACK_TOP;
     uint64_t ptr[16];
     if (argc > 15) argc = 15;
-    for (int i = argc - 1; i >= 0; --i) {
-        uint64_t n = strlen(argv[i]) + 1;
-        sp -= n;
-        put(sp, argv[i], n);
-        ptr[i] = sp;
+    for (int arg = argc - 1; arg >= 0; --arg) {
+        uint64_t nbytes = strlen(argv[arg]) + 1;
+        sp -= nbytes;
+        put(sp, argv[arg], nbytes);
+        ptr[arg] = sp;
     }
     sp &= ~15ULL;
     /* auxv terminator, envp terminator, argv terminator, argv, argc */
-    uint64_t z = 0;
-    sp -= 8; put(sp, &z, 8);                    /* AT_NULL value */
-    sp -= 8; put(sp, &z, 8);                    /* AT_NULL */
-    sp -= 8; put(sp, &z, 8);                    /* envp[0] = NULL */
-    sp -= 8; put(sp, &z, 8);                    /* argv[argc] = NULL */
-    for (int i = argc - 1; i >= 0; --i) { sp -= 8; put(sp, &ptr[i], 8); }
-    uint64_t n = (uint64_t)argc;
-    sp -= 8; put(sp, &n, 8);
+    uint64_t zero = 0;
+    sp -= 8; put(sp, &zero, 8);                 /* AT_NULL value */
+    sp -= 8; put(sp, &zero, 8);                 /* AT_NULL */
+    sp -= 8; put(sp, &zero, 8);                 /* envp[0] = NULL */
+    sp -= 8; put(sp, &zero, 8);                 /* argv[argc] = NULL */
+    for (int arg = argc - 1; arg >= 0; --arg) { sp -= 8; put(sp, &ptr[arg], 8); }
+    uint64_t argc_word = (uint64_t)argc;
+    sp -= 8; put(sp, &argc_word, 8);
 
-    memset(c->r, 0, sizeof c->r);
-    c->r[RSP] = sp;
-    c->rip = entry;
-    c->rflags = 0x2;
+    memset(cpu->r, 0, sizeof cpu->r);
+    cpu->r[RSP] = sp;
+    cpu->rip = entry;
+    cpu->rflags = 0x2;
     mmu_tlb_flush();
     return 0;
 }

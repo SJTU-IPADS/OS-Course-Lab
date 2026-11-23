@@ -55,28 +55,29 @@ class Xorshift32:
         self.state = (seed * 2654435761 ^ 0x9e3779b9) & 0xffffffff or 1
 
     def next(self):
-        s = self.state
-        s ^= (s << 13) & 0xffffffff
-        s ^= s >> 17
-        s ^= (s << 5) & 0xffffffff
-        self.state = s
-        return s
+        state = self.state
+        state ^= (state << 13) & 0xffffffff
+        state ^= state >> 17
+        state ^= (state << 5) & 0xffffffff
+        self.state = state
+        return state
 
     def unit(self):                             # a number in [0, 1)
         return self.next() / 2.0 ** 32
 
 
-def printable(b):                               # as in guest/ollama/tokenizer.c
-    return 33 <= b <= 126 or 161 <= b <= 172 or b >= 174
+def printable(byte):                            # as in guest/ollama/tokenizer.c
+    return 33 <= byte <= 126 or 161 <= byte <= 172 or byte >= 174
 
 
 def vocabulary():
     """The token texts, and the tokens of the bytes 0x20 .. 0x7e."""
-    shown = [b for b in range(256) if printable(b)]
-    other = [b for b in range(256) if not printable(b)]
+    shown = [byte for byte in range(256) if printable(byte)]
+    other = [byte for byte in range(256) if not printable(byte)]
     order = shown + other
-    tokens = [chr(b) for b in shown] + [chr(256 + i) for i in range(len(other))]
-    ascii_tokens = {i for i, b in enumerate(order) if 0x20 <= b <= 0x7e}
+    tokens = [chr(byte) for byte in shown]
+    tokens += [chr(256 + index) for index in range(len(other))]
+    ascii_tokens = {token for token, byte in enumerate(order) if 0x20 <= byte <= 0x7e}
     tokens += ["<|im_start|>", "<|im_end|>"]
     tokens += [left + right for left, right in MERGES]
     return tokens, ascii_tokens
@@ -84,32 +85,33 @@ def vocabulary():
 
 def q4_matrix(rng, rows, cols, live=None):
     """rows x cols weights in Q4_0, one row after another. 32 weights take
-    18 bytes: a half-precision scale d, then 16 bytes with weight j in the
+    18 bytes: a half-precision scale, then 16 bytes with weight j in the
     low 4 bits of byte j and weight j + 16 in the high 4 bits. A stored
-    value q means the weight d * (q - 8). Rows outside live are zero.
+    value q means the weight scale * (q - 8). Rows outside live are zero.
 
-    (q - 8)^2 is 21.5 on average, so with d = 1 / sqrt(21.5 * cols) a row
-    times a vector of root mean square 1 is about 1 in size."""
-    d = 1 / math.sqrt(21.5 * cols)
+    (q - 8)^2 is 21.5 on average, so with scale = 1 / sqrt(21.5 * cols) a
+    row times a vector of root mean square 1 is about 1 in size."""
+    scale = 1 / math.sqrt(21.5 * cols)
     out = bytearray()
-    for r in range(rows):
-        for _ in range(cols // 32):
-            out += struct.pack("<e", d * (0.75 + 0.5 * rng.unit()))
-            if live is None or r in live:
-                out += bytes(rng.next() >> 24 for _ in range(16))
+    for row in range(rows):
+        for block in range(cols // 32):
+            out += struct.pack("<e", scale * (0.75 + 0.5 * rng.unit()))
+            if live is None or row in live:
+                out += bytes(rng.next() >> 24 for byte in range(16))
             else:
                 out += b"\x88" * 16             # q = 8 in both halves
     return bytes(out)
 
 
-def gains(rng, n):
-    """n floats between 0.9 and 1.1: the gain of a normalization."""
-    return struct.pack("<%df" % n, *[0.9 + 0.2 * rng.unit() for _ in range(n)])
+def gains(rng, count):
+    """count floats between 0.9 and 1.1: the gain of a normalization."""
+    return struct.pack("<%df" % count,
+                       *[0.9 + 0.2 * rng.unit() for index in range(count)])
 
 
-def string(s):
-    b = s.encode("utf-8")
-    return struct.pack("<Q", len(b)) + b
+def string(text):
+    encoded = text.encode("utf-8")
+    return struct.pack("<Q", len(encoded)) + encoded
 
 
 def pair(key, kind, value):
@@ -129,18 +131,18 @@ def main(argv):
         sys.exit("usage: mkmodel.py [SEED] > tiny.gguf")
     rng = Xorshift32(int(argv[0]) if argv else 1)
     tokens, ascii_tokens = vocabulary()
-    e, f, d = N_EMBD, N_FF, HEAD_DIM
-    q, kv = N_HEAD * d, N_HEAD_KV * d
+    embd, ff, head_dim = N_EMBD, N_FF, HEAD_DIM
+    q_dim, kv_dim = N_HEAD * head_dim, N_HEAD_KV * head_dim
 
     pairs = [
         pair("general.architecture", STR, "tiny"),
         pair("general.alignment", U32, ALIGNMENT),
         pair("tiny.block_count", U32, N_LAYER),
-        pair("tiny.embedding_length", U32, e),
-        pair("tiny.feed_forward_length", U32, f),
+        pair("tiny.embedding_length", U32, embd),
+        pair("tiny.feed_forward_length", U32, ff),
         pair("tiny.attention.head_count", U32, N_HEAD),
         pair("tiny.attention.head_count_kv", U32, N_HEAD_KV),
-        pair("tiny.attention.key_length", U32, d),
+        pair("tiny.attention.key_length", U32, head_dim),
         pair("tiny.attention.layer_norm_rms_epsilon", F32, EPS),
         pair("tiny.rope.freq_base", F32, ROPE_BASE),
         pair("tokenizer.ggml.tokens", ARR, tokens),
@@ -151,22 +153,23 @@ def main(argv):
     # (name, columns, rows, bytes): a matrix is rows x columns in Q4_0, a
     # vector has no rows and is stored as floats.
     tensors = [
-        ("token_embd.weight", e, len(tokens), q4_matrix(rng, len(tokens), e, ascii_tokens)),
-        ("output_norm.weight", e, 0, gains(rng, e)),
+        ("token_embd.weight", embd, len(tokens),
+         q4_matrix(rng, len(tokens), embd, ascii_tokens)),
+        ("output_norm.weight", embd, 0, gains(rng, embd)),
     ]
-    for l in range(N_LAYER):
+    for layer in range(N_LAYER):
         tensors += [
-            ("blk.%d.attn_norm.weight" % l, e, 0, gains(rng, e)),
-            ("blk.%d.attn_q.weight" % l, e, q, q4_matrix(rng, q, e)),
-            ("blk.%d.attn_k.weight" % l, e, kv, q4_matrix(rng, kv, e)),
-            ("blk.%d.attn_v.weight" % l, e, kv, q4_matrix(rng, kv, e)),
-            ("blk.%d.attn_q_norm.weight" % l, d, 0, gains(rng, d)),
-            ("blk.%d.attn_k_norm.weight" % l, d, 0, gains(rng, d)),
-            ("blk.%d.attn_output.weight" % l, q, e, q4_matrix(rng, e, q)),
-            ("blk.%d.ffn_norm.weight" % l, e, 0, gains(rng, e)),
-            ("blk.%d.ffn_gate.weight" % l, e, f, q4_matrix(rng, f, e)),
-            ("blk.%d.ffn_up.weight" % l, e, f, q4_matrix(rng, f, e)),
-            ("blk.%d.ffn_down.weight" % l, f, e, q4_matrix(rng, e, f)),
+            ("blk.%d.attn_norm.weight" % layer, embd, 0, gains(rng, embd)),
+            ("blk.%d.attn_q.weight" % layer, embd, q_dim, q4_matrix(rng, q_dim, embd)),
+            ("blk.%d.attn_k.weight" % layer, embd, kv_dim, q4_matrix(rng, kv_dim, embd)),
+            ("blk.%d.attn_v.weight" % layer, embd, kv_dim, q4_matrix(rng, kv_dim, embd)),
+            ("blk.%d.attn_q_norm.weight" % layer, head_dim, 0, gains(rng, head_dim)),
+            ("blk.%d.attn_k_norm.weight" % layer, head_dim, 0, gains(rng, head_dim)),
+            ("blk.%d.attn_output.weight" % layer, q_dim, embd, q4_matrix(rng, embd, q_dim)),
+            ("blk.%d.ffn_norm.weight" % layer, embd, 0, gains(rng, embd)),
+            ("blk.%d.ffn_gate.weight" % layer, embd, ff, q4_matrix(rng, ff, embd)),
+            ("blk.%d.ffn_up.weight" % layer, embd, ff, q4_matrix(rng, ff, embd)),
+            ("blk.%d.ffn_down.weight" % layer, ff, embd, q4_matrix(rng, embd, ff)),
         ]
 
     # The directory gives each tensor its offset in the data area; both the

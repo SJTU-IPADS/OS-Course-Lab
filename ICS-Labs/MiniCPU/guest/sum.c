@@ -1,14 +1,14 @@
-/* One dependency chain: the sum of 1..n. Lecture 4 measures the CPI of this loop. */
+/* One dependency chain: the sum of 1..limit. */
 #include "mini.h"
 
 int guest_main(int argc, char **argv)
 {
     (void)argv;
-    long n = argc > 1 ? 1000 : 100;
-    long s = 0;
-    for (long i = 1; i <= n; ++i)
-        s += i;
+    long limit = argc > 1 ? 1000 : 100;
+    long total = 0;
+    for (long number = 1; number <= limit; ++number)
+        total += number;
     puts("sum = ");
-    putint(s);
+    putint(total);
     return 0;
 }

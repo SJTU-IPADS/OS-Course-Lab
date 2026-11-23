@@ -13,84 +13,91 @@ far less likely to agree on a wrong result than on the right one.
 import sys
 
 
-def sum_ref(n):
-    s = 0
-    for i in range(1, n + 1):
-        s += i
-    return s
+def sum_ref(count):
+    total = 0
+    for number in range(1, count + 1):
+        total += number
+    return total
 
 
-def matmul_ref(n):
-    a = [[i + 2 * j for j in range(n)] for i in range(n)]
-    b = [[3 * i - j + 1 for j in range(n)] for i in range(n)]
-    c = [[sum(a[i][k] * b[k][j] for k in range(n)) for j in range(n)]
-         for i in range(n)]
-    return sum(sum(row) for row in c)
+def matmul_ref(size):
+    left = [[row + 2 * col for col in range(size)] for row in range(size)]
+    right = [[3 * row - col + 1 for col in range(size)] for row in range(size)]
+    product = [[sum(left[row][inner] * right[inner][col] for inner in range(size))
+                for col in range(size)]
+               for row in range(size)]
+    return sum(sum(line) for line in product)
 
 
-def simd_ref(n):
-    s = 5 + sum((i % 7 - 3) * (2 * i + 1) for i in range(n))
-    return (s + 2**31) % 2**32 - 2**31          # an int in the guest
+def simd_ref(count):
+    total = 5 + sum((index % 7 - 3) * (2 * index + 1) for index in range(count))
+    return (total + 2**31) % 2**32 - 2**31      # an int in the guest
 
 
-def tinytf_ref(seed, n):
+def tinytf_ref(seed, count):
     """guest/tinytf: one attention layer and one MLP in integers. Written
     from its description: weights from xorshift32, products scaled by >> 4,
     activations clamped to [-1024, 1024], attention weights
     min(max(q.k >> 16, 0), 15) + 1, the average truncated toward zero."""
-    V, D, H, P = 16, 16, 36, 4
-    T = P + 12
-    if not 1 <= n <= T - P:
-        n = 8
-    st = [(seed * 2654435761 ^ 0x9e3779b9) & 0xffffffff or 1]
+    VOCAB, DIM, HIDDEN, PROMPT = 16, 16, 36, 4
+    LONGEST = PROMPT + 12
+    if not 1 <= count <= LONGEST - PROMPT:
+        count = 8
+    rng = [(seed * 2654435761 ^ 0x9e3779b9) & 0xffffffff or 1]
 
     def weight():
-        r = st[0]
-        r ^= (r << 13) & 0xffffffff
-        r ^= r >> 17
-        r ^= (r << 5) & 0xffffffff
-        st[0] = r
-        return r % 16 - 8
+        state = rng[0]
+        state ^= (state << 13) & 0xffffffff
+        state ^= state >> 17
+        state ^= (state << 5) & 0xffffffff
+        rng[0] = state
+        return state % 16 - 8
 
-    def matrix(r, c):
-        return [[weight() for _ in range(c)] for _ in range(r)]
+    def matrix(rows, cols):
+        return [[weight() for col in range(cols)] for row in range(rows)]
 
-    def dot(w, x, b=0):
-        s = b + sum(p * q for p, q in zip(w, x))
-        assert -2**31 <= s < 2**31
-        return s
+    def dot(row, vector, bias=0):
+        total = bias + sum(left * right for left, right in zip(row, vector))
+        assert -2**31 <= total < 2**31
+        return total
 
-    def mul(w, x, b=None):
-        return [dot(row, x, b[i] if b else 0) >> 4 for i, row in enumerate(w)]
+    def mul(weights, vector, bias=None):
+        return [dot(row, vector, bias[index] if bias else 0) >> 4
+                for index, row in enumerate(weights)]
 
-    def clamp(v):
-        return max(-1024, min(1024, v))
+    def clamp(value):
+        return max(-1024, min(1024, value))
 
-    emb, pos = matrix(V, D), matrix(T, D)
-    wq, wk, wv, wo = matrix(D, D), matrix(D, D), matrix(D, D), matrix(D, D)
-    w1, b1 = matrix(H, D), matrix(1, H)[0]
-    w2, b2 = matrix(D, H), matrix(1, D)[0]
-    un = matrix(V, D)
-    tok = [weight() + 8 for _ in range(P)]
+    emb, pos = matrix(VOCAB, DIM), matrix(LONGEST, DIM)
+    wq, wk, wv, wo = (matrix(DIM, DIM), matrix(DIM, DIM),
+                      matrix(DIM, DIM), matrix(DIM, DIM))
+    w1, b1 = matrix(HIDDEN, DIM), matrix(1, HIDDEN)[0]
+    w2, b2 = matrix(DIM, HIDDEN), matrix(1, DIM)[0]
+    un = matrix(VOCAB, DIM)
+    tok = [weight() + 8 for index in range(PROMPT)]
 
     keys, vals, total = [], [], 0
-    for t in range(P + n - 1):
-        x = [e + p for e, p in zip(emb[tok[t]], pos[t])]
-        q = mul(wq, x)
-        keys.append(mul(wk, x))
-        vals.append(mul(wv, x))
-        es = [min(max(dot(q, k) >> 16, 0), 15) + 1 for k in keys]
-        a = [sum(e * v[j] for e, v in zip(es, vals)) for j in range(D)]
-        a = [abs(s) // sum(es) * (1 if s >= 0 else -1) for s in a]
-        x = [clamp(p + q) for p, q in zip(x, mul(wo, a))]
-        h = [max(v, 0) for v in mul(w1, x, b1)]
-        x = [clamp(p + q) for p, q in zip(x, mul(w2, h, b2))]
-        if t >= P - 1:
-            logits = [dot(u, x) for u in un]
+    for step in range(PROMPT + count - 1):
+        residual = [left + right for left, right in zip(emb[tok[step]], pos[step])]
+        query = mul(wq, residual)
+        keys.append(mul(wk, residual))
+        vals.append(mul(wv, residual))
+        scores = [min(max(dot(query, key) >> 16, 0), 15) + 1 for key in keys]
+        attended = [sum(score * value[col] for score, value in zip(scores, vals))
+                    for col in range(DIM)]
+        attended = [abs(weighted) // sum(scores) * (1 if weighted >= 0 else -1)
+                    for weighted in attended]
+        residual = [clamp(left + right)
+                    for left, right in zip(residual, mul(wo, attended))]
+        hidden = [max(value, 0) for value in mul(w1, residual, b1)]
+        residual = [clamp(left + right)
+                    for left, right in zip(residual, mul(w2, hidden, b2))]
+        if step >= PROMPT - 1:
+            logits = [dot(row, residual) for row in un]
             total += sum(logits)
             tok.append(logits.index(max(logits)))
     return "prompt = %s\ntokens = %s\nlogits = %d" % (
-        " ".join(map(str, tok[:P])), " ".join(map(str, tok[P:])), total)
+        " ".join(map(str, tok[:PROMPT])), " ".join(map(str, tok[PROMPT:])), total)
 
 
 which = sys.argv[1] if len(sys.argv) > 1 else "matmul"

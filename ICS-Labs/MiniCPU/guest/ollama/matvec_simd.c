@@ -16,42 +16,44 @@
 #include "libc.h"
 #include "mini_ollama.h"
 
-/* The sum over j = 0 .. 15 of (b[j] & 15) * x[j] + (b[j] >> 4) * x[j + 16]:
-   b is the 16 bytes of a Q4_0 block, x has 32 integers. */
-int dot_q4(const unsigned char *b, const int *x);
+/* The sum over j = 0 .. 15 of
+   (packed[j] & 15) * input[j] + (packed[j] >> 4) * input[j + 16]:
+   packed is the 16 bytes of a Q4_0 block, input has 32 integers. */
+int dot_q4(const unsigned char *packed, const int *input);
 
-/* v rounded to the nearest integer, a half away from zero. */
-static int nearest(float v)
+/* value rounded to the nearest integer, a half away from zero. */
+static int nearest(float value)
 {
-    int n = (int)v;                     /* the fraction is cut off */
-    float rest = v - (float)n;
+    int whole = (int)value;             /* the fraction is cut off */
+    float rest = value - (float)whole;
     if (rest >= 0.5f)
-        n++;
+        whole++;
     if (rest <= -0.5f)
-        n--;
-    return n;
+        whole--;
+    return whole;
 }
 
-/* x[0..32) as integers xi[0..32) from -127 to 127: x[j] is close to
-   scale * xi[j], where scale is the largest |x[j]| / 127. Returns scale and
-   leaves the sum of the integers in *sum. A block of zeros has scale 0. */
-static float to_integers(int *xi, const float *x, int *sum)
+/* in[0..32) as integers rounded[0..32) from -127 to 127: in[j] is close to
+   scale * rounded[j], where scale is the largest |in[j]| / 127. Returns
+   scale and leaves the sum of the integers in *sum. A block of zeros has
+   scale 0. */
+static float to_integers(int *rounded, const float *in, int *sum)
 {
     float max = 0, min = 0;
-    for (int j = 0; j < 32; j++) {
-        if (x[j] > max)
-            max = x[j];
-        if (x[j] < min)
-            min = x[j];
+    for (int idx = 0; idx < 32; idx++) {
+        if (in[idx] > max)
+            max = in[idx];
+        if (in[idx] < min)
+            min = in[idx];
     }
     if (-min > max)
-        max = -min;                     /* the largest |x[j]| */
+        max = -min;                     /* the largest |in[j]| */
 
     float scale = max / 127;
     *sum = 0;
-    for (int j = 0; j < 32; j++) {
-        xi[j] = scale > 0 ? nearest(x[j] / scale) : 0;
-        *sum += xi[j];
+    for (int idx = 0; idx < 32; idx++) {
+        rounded[idx] = scale > 0 ? nearest(in[idx] / scale) : 0;
+        *sum += rounded[idx];
     }
     return scale;
 }
@@ -60,22 +62,24 @@ static float to_integers(int *xi, const float *x, int *sum)
    18 bytes: a half-precision scale d, then 16 bytes. Byte j has weight j in
    its low 4 bits and weight j + 16 in its high 4 bits; a stored value q
    means the weight d * (q - 8). */
-void matvec(float *y, const struct tensor *w, const float *x)
+void matvec(float *out, const struct tensor *weights, const float *in)
 {
-    size_t n = w->cols / 32;            /* blocks in a row */
-    int xi[w->cols], xsum[n];
-    float xscale[n];
+    size_t nblocks = weights->cols / 32;    /* blocks in a row */
+    int rounded[weights->cols], rounded_sum[nblocks];
+    float input_scale[nblocks];
 
-    for (size_t i = 0; i < n; i++)
-        xscale[i] = to_integers(xi + 32 * i, x + 32 * i, &xsum[i]);
+    for (size_t block = 0; block < nblocks; block++)
+        input_scale[block] = to_integers(rounded + 32 * block, in + 32 * block,
+                                         &rounded_sum[block]);
 
-    const uint8_t *blk = w->data;
-    for (size_t r = 0; r < w->rows; r++) {
+    const uint8_t *blk = weights->data;
+    for (size_t row = 0; row < weights->rows; row++) {
         float sum = 0;
-        for (size_t i = 0; i < n; i++, blk += 18) {
-            float d = fp16[blk[0] | blk[1] << 8];
-            sum += d * xscale[i] * (float)(dot_q4(blk + 2, xi + 32 * i) - 8 * xsum[i]);
+        for (size_t block = 0; block < nblocks; block++, blk += 18) {
+            float weight_scale = fp16[blk[0] | blk[1] << 8];
+            sum += weight_scale * input_scale[block] *
+                   (float)(dot_q4(blk + 2, rounded + 32 * block) - 8 * rounded_sum[block]);
         }
-        y[r] = sum;
+        out[row] = sum;
     }
 }

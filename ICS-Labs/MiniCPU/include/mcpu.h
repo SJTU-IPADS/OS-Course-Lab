@@ -1,4 +1,4 @@
-/* mini-cpu: an x86-64 machine that runs in user mode, built over six labs.
+/* mini-cpu: an x86-64 machine that runs in user mode, built over five labs.
  *
  * This header is the whole interface between the code of the labs and the
  * framework. Every function a lab asks for is declared here under the
@@ -15,33 +15,41 @@
  *                            x86_neg, x86_shift,
  *                            x86_mul, x86_div
  *        src/lab1/interp.c   cond, interp_run
- *   2    src/lab2/seq.c      execute, memory,       -
- *                            writeback, cpu_step
- *        src/lab2/pipe.c     pipe_predict .. pipe_move
- *   3    src/lab3/objload.c  obj_sections,          -
+ *   2    src/lab2/cache.c    cache_init .. flush    frame/cpu/nocache.c (no cache)
+ *   3    src/lab3/mmu.c      mmu_translate,         frame/cpu/pagemap.c and
+ *                            mmu_map, mmu_tlb_flush   frame/os/pagemap.c
+ *                                                     (a table on the host)
+ *   4    src/lab4/objload.c  obj_sections,          -
  *                            obj_symbols, obj_relocs
- *   4    src/lab4/mmu.c      mmu_translate,         frame/pagemap.c
- *                            mmu_map, mmu_tlb_flush   (a table on the host)
- *   5    src/lab5/cache.c    cache_init .. flush    frame/nocache.c (no cache)
- *   6    src/lab6/syscall.c  sys_read, sys_open,    frame/sysbase.c answers
+ *   5    src/lab5/syscall.c  sys_read, sys_open,    frame/os/sysbase.c answers
  *                            sys_close                -ENOSYS for the three
- *        src/lab6/blk.c      blk_kick, ramfs_*      -
+ *        src/lab5/blk.c      blk_kick, ramfs_*      -
  *
- * A later lab runs on the code of the earlier ones: the decoder of lab 2
- * calls modrm_decode, its instructions take their flags from alu.c and
- * their conditions from cond, the loader of lab 3 runs its code on the
- * CPU of lab 2, and every memory access of labs 1 to 3 goes through the
- * MMU of lab 4 and the cache of lab 5 once those exist.
+ * A later lab runs on the code of the earlier ones: the interpreter of
+ * lab 1 runs every program, the code placed by the loader of lab 4
+ * included, and every memory access goes through the cache of lab 2 and,
+ * once it exists, the MMU of lab 3.
  *
  * The layers of a memory access, from the CPU down:
  *
- *   interp.c, seq.c, pipe.c   virtual address
+ *   interp.c         an operand of one instruction, at a virtual address
  *        |
+ *   frame/cpu/mem.c  the memory access unit of the CPU: page by page, then
+ *        |           line by line
  *   mmu.c            page tables + TLB   -> physical address
  *        |
- *   cache.c          set-associative cache, whole 64-byte lines on a miss
- *        |
- *   dram.c           a file mapped with mmap, used as physical memory
+ *   cache.c          set-associative cache, one line per access, whole
+ *        |           64-byte lines on a miss
+ *   frame/cpu/dram.c a file mapped with mmap, used as physical memory
+ *
+ * The framework is split as the machine is. frame/cpu/ simulates the
+ * hardware: the instructions, the memory access unit, the stand-ins of
+ * the cache and the MMU, DRAM, the block device and the commit log.
+ * frame/os/ is the software that runs on it: the loader, the system
+ * calls, the allocator of page frames, the copies into and out of guest
+ * memory, and the runtime of lab 4. frame/ itself holds the programs of
+ * the host: mini-cpu (main.c), mini-jit (jit.c), the probe of --memtrace
+ * and --cache 0 (memtrace.c) and the disassembler (translate.c, disasm.c).
  *
  * The framework is compiled with -DLAB=n, n being the highest lab present.
  */
@@ -54,7 +62,7 @@
 #include <stdlib.h>
 
 #ifndef LAB
-#define LAB 6
+#define LAB 5
 #endif
 
 /* What a function that is not written yet calls: prints
@@ -82,7 +90,7 @@ enum {                              /* register numbers as encoded in machine co
 #define RIP       17                /* R[17] is rip */
 #define FLAGS_REG RFLAGS
 #define NVEC      16                /* vector registers ymm0 .. ymm15 */
-#define YMM0      18                /* register number of ymm0 in an insn and the logs */
+#define YMM0      18                /* register number of ymm0 in arch_get and the logs */
 #define NARCH     (YMM0 + NVEC)     /* register numbers 0 .. 33 */
 
 enum { CF = 1u << 0, PF = 1u << 2, ZF = 1u << 6,
@@ -92,7 +100,7 @@ enum { MEM_FETCH = 0, MEM_READ = 1, MEM_WRITE = 2 };
 
 enum { FAULT_NONE = 0, FAULT_PAGE, FAULT_DIV, FAULT_ILL };
 
-/* A 256-bit value: a ymm register, and in an insn any register value. The
+/* A 256-bit value: a ymm register, and in arch_get any register value. The
    low 128 bits of ymm n are xmm n. q, d and b are its 64-bit, 32-bit and
    8-bit lanes, lane 0 lowest; f are the 32-bit lanes as floats. */
 typedef union {
@@ -121,25 +129,25 @@ typedef struct mcpu {
     uint64_t brk;                   /* top of the guest heap */
 } mcpu;
 
-/* Register n of the architectural state: 0..15 the integer registers,
+/* Register reg of the architectural state: 0..15 the integer registers,
    16 rflags, YMM0 + i the vector register ymm i. An integer register is
    the lane q[0] of the value; its other lanes are zero. */
-static inline u256 arch_get(const mcpu *c, int n)
+static inline u256 arch_get(const mcpu *cpu, int reg)
 {
-    u256 v = { { 0 } };
-    if (n >= YMM0)
-        v = c->Y[n - YMM0];
+    u256 value = { { 0 } };
+    if (reg >= YMM0)
+        value = cpu->Y[reg - YMM0];
     else
-        v.q[0] = c->R[n];
-    return v;
+        value.q[0] = cpu->R[reg];
+    return value;
 }
 
-static inline void arch_set(mcpu *c, int n, u256 v)
+static inline void arch_set(mcpu *cpu, int reg, u256 value)
 {
-    if (n >= YMM0)
-        c->Y[n - YMM0] = v;
+    if (reg >= YMM0)
+        cpu->Y[reg - YMM0] = value;
     else
-        c->R[n] = v.q[0];
+        cpu->R[reg] = value.q[0];
 }
 
 /* ------------------------------------------------------- lab 1: modrm.c */
@@ -172,19 +180,17 @@ typedef struct {
  * bytes used, 1 to 6, or 0 when the n bytes end before the operand does.
  *
  * With mod 3, base and index are -1, scale is 1, and rip, dsize and disp
- * are 0. The interpreter (frame/x86.c: modrm), the disassembler
- * (frame/translate.c) and the decoder of lab 2 (frame/decode.c) all read
- * their operands through this function. */
+ * are 0. The interpreter (frame/cpu/x86.c: modrm) and the disassembler
+ * (frame/translate.c) both read their operands through this function. */
 unsigned modrm_decode(const uint8_t *p, unsigned n, uint8_t rex, modrm_t *m);
 
-/* -------------------------------- lab 1: alu.c, and frame/arith.c */
+/* ---------------------------- lab 1: alu.c, and frame/cpu/arith.c */
 
-/* Values and flags, shared by the interpreter of lab 1 and the CPU of
- * lab 2, so that the two compute every result and every flag the same way.
- * size is the operand size in bytes: 1, 2, 4 or 8. A flag function changes
- * only CF, PF, ZF, SF and OF. */
+/* Values and flags of the integer instructions. size is the operand size
+ * in bytes: 1, 2, 4 or 8. A flag function changes only CF, PF, ZF, SF
+ * and OF. */
 
-/* The low size bytes of v; v sign-extended from size bytes (frame/arith.c). */
+/* The low size bytes of v; v sign-extended from size bytes (frame/cpu/arith.c). */
 uint64_t trunc_val(uint64_t v, int size);
 int64_t  sext(uint64_t v, int size);
 
@@ -288,14 +294,14 @@ void     x86_mul(uint64_t *f, int sub, uint64_t a, uint64_t b, int size,
 int      x86_div(int sub, uint64_t hi, uint64_t lo, uint64_t v, int size,
                  uint64_t *q, uint64_t *r);
 
-/* The rest are in frame/arith.c. */
+/* The rest are in frame/cpu/arith.c. */
 /* One of the eight ALU operations by its number aop, the ModRM reg field
  * of group 1: 0 add, 1 or, 2 adc, 3 sbb, 4 and, 5 sub, 6 xor, 7 cmp. Calls
  * x86_add, x86_sub and x86_logic. Returns the result; cmp returns a - b,
  * which the caller does not store. */
 uint64_t x86_alu(uint64_t *f, int aop, uint64_t a, uint64_t b, int size);
 /* rol (sub 0) or ror (sub 1) of v by n: the rotations of c0/c1/d0..d3,
- * which no lecture covers. */
+ * which lab 1 does not implement. */
 uint64_t x86_rotate(uint64_t *f, int sub, uint64_t v, unsigned n, int size);
 
 /* ---------------------------------------------------- lab 1: interp.c */
@@ -313,12 +319,11 @@ uint64_t x86_rotate(uint64_t *f, int sub, uint64_t v, unsigned n, int size);
  *   c l    SF != OF        d ge   SF == OF
  *   e le   ZF or SF != OF  f g    !ZF and SF == OF
  *
- * x86_other uses it for cmovcc and setcc, and the CPU of lab 2 for every
- * conditional instruction. */
+ * interp.c uses it for jcc, x86_other for cmovcc and setcc. */
 int cond(uint64_t f, int cc);
 
 /* The instruction being interpreted, filled by x86_begin and modrm
- * (frame/x86.c). interp.c reads op, size, rex, reg, sub, v and vlen; the
+ * (frame/cpu/x86.c). interp.c reads op, size, rex, reg, sub, v and vlen; the
  * other fields belong to the helpers. */
 typedef struct {
     mcpu    *c;
@@ -371,7 +376,7 @@ int      x86_end(x86 *x);
    size other than REX.W, 8-bit forms, multiply and divide, shifts,
    movzx and movsx, cmov and setcc, endbr64 and nop, syscall, the
    floating-point instructions and the vector instructions outside interp.c
-   (frame/simd.c lists both), and others. An opcode it does not know either
+   (frame/cpu/simd.c lists both), and others. An opcode it does not know either
    is an illegal instruction. */
 void     x86_other(x86 *x);
 
@@ -414,7 +419,7 @@ void     vset(x86 *x, int reg, const u256 *v, int n);
    VEX.W, and vvvv decoded to a register number. */
 int      vex_known(unsigned op, int pp, int l, int w, int v);
 
-/* ------------------------------------------- frame/simd.c: SSE and AVX2 */
+/* --------------------------------------- frame/cpu/simd.c: SSE and AVX2 */
 
 /* The floating-point instructions of the machine: scalar single precision
  * in the SSE encoding (a prefix, 0f, one opcode byte, ModRM), what gcc
@@ -444,270 +449,192 @@ extern const sse_op sse_ops[];
 /* The row of opcode op under prefix pp, NULL if the machine has none. */
 const sse_op *sse_find(unsigned op, int pp);
 
-/* What the instruction s computes. a is the register it writes, as it was
-   (the integer destinations and SSE_CMP take the reg operand here), b the
-   other operand, an integer in q[0]; mem says that b came from memory.
-   *r becomes the whole new value of the destination, an integer in q[0];
-   SSE_CMP sets CF, PF and ZF in *f and clears SF and OF. isz is the
-   integer operand size. */
-void sse_compute(const sse_op *s, int mem, int isz, const u256 *a, const u256 *b,
-                 u256 *r, uint64_t *f);
+/* What the instruction of row computes. dest is the register it writes,
+   as it was (the integer destinations and SSE_CMP take the reg operand
+   here), other the other operand, an integer in q[0]; mem says that other
+   came from memory. *result becomes the whole new value of the
+   destination, an integer in q[0]; SSE_CMP sets CF, PF and ZF in *flags
+   and clears SF and OF. isz is the integer operand size. */
+void sse_compute(const sse_op *row, int mem, int isz, const u256 *dest, const u256 *other,
+                 u256 *result, uint64_t *flags);
 
 /* The vector instructions outside interp.c: vpand (0x11db), vpsrld by an
-   immediate (0x1172 /2) and vpmovzxbd (0x1231). a is the register vvvv
-   (not read by vpmovzxbd), b the rm operand, imm the immediate; *r becomes
-   the low vlen bytes of the result, the bytes above cleared. */
-void vex_compute(unsigned op, int vlen, unsigned imm, const u256 *a, const u256 *b,
-                 u256 *r);
+   immediate (0x1172 /2) and vpmovzxbd (0x1231). from_vvvv is the register
+   vvvv (not read by vpmovzxbd), from_rm the rm operand, imm the immediate;
+   *result becomes the low vlen bytes of the result, the bytes above
+   cleared. */
+void vex_compute(unsigned op, int vlen, unsigned imm, const u256 *from_vvvv,
+                 const u256 *from_rm, u256 *result);
 
-/* The instruction at buf, n bytes read from address pc, in the AT&T syntax
-   of objdump -d: writes at most size bytes, the NUL included, to out and
-   returns the length of the instruction. An unknown or truncated
-   instruction is written as "(bad)" with length 1 (frame/translate.c). */
-unsigned translate(uint64_t pc, const uint8_t *buf, unsigned n, char *out, size_t size);
+/* The instruction at bytes, nbytes of them read from address pc, in the
+   AT&T syntax of objdump -d: writes at most size bytes, the NUL included,
+   to out and returns the length of the instruction. An unknown or
+   truncated instruction is written as "(bad)" with length 1
+   (frame/translate.c). */
+unsigned translate(uint64_t pc, const uint8_t *bytes, unsigned nbytes, char *out, size_t size);
 
 /* mini-cpu --disasm: the code sections of the ELF file at path, one
    instruction per line, as "address:<tab>bytes<tab>instruction"
    (frame/disasm.c). Returns 0, or -1 if the file cannot be read. */
-int disasm(const char *path, FILE *f);
+int disasm(const char *path, FILE *out);
 
-/* ------------------------------------------------------------ instruction */
+/* ------------------------------------------------------- lab 2: cache.c */
 
-/* One instruction on its way through the CPU of lab 2.
+/* A physical address has three fields, | tag | set | offset |: the offset
+ * takes 6 bits (a line is LINE_SIZE = 64 bytes), so the line number is
+ * pa / 64; the set is the line number modulo the number of sets, the tag
+ * the line number divided by it.
  *
- * decode() fills the first group from the bytes alone, without reading
- * registers or memory. The caller then copies the value of every register
- * in src[] into in[]: cpu_step() reads the register file, the pipeline may
- * take a value forwarded from a later stage. execute() and memory()
- * compute the outputs, writeback() stores them.
+ * The cache is set-associative with write-back and write allocation, and
+ * evicts the least recently used line of a set. Below it there are only
+ * dram_line_read and dram_line_write, which move one whole line. */
+
+/* DRAM is the file dram.img, mapped into the host process, and every line
+ * moved between the cache and DRAM (dram_line_read, dram_line_write) is
+ * removed from the caches of the host, so it is read from or written to
+ * the DRAM of the host. The cache keeps its lines in memory of the host,
+ * which the caches of the host serve, so a hit costs a few loads and
+ * stores. */
+
+/* Lab 2: (re)build the cache with sets * ways lines, all invalid, and
+ * reset the three counters. The driver calls it before loading the
+ * program and again after: release what the earlier call allocated.
+ * 0 for sets or ways means 1. src/lab2/cache.c gives this function
+ * written out, as an example. */
+void cache_init(unsigned sets, unsigned ways);
+
+/* Lab 2: copy nbytes bytes at physical address pa to dst, through the cache.
+ * The bytes lie within one line: pa % LINE_SIZE + nbytes <= LINE_SIZE, and
+ * nbytes is at least 1. The memory access unit of the CPU (frame/cpu/mem.c)
+ * splits every access at the line boundaries, as the hardware does, so a
+ * call is exactly one cache access (frame/memtrace.c stops the program
+ * when a call breaks this rule). A line found in its set is a hit
+ * (cache_hits). Otherwise it is a miss (cache_misses): the victim is an
+ * invalid line of the set if there is one, else the least recently used;
+ * a dirty victim is first written back with dram_line_write
+ * (cache_writebacks); then dram_line_read brings the line in. */
+void cache_read(uint64_t pa, void *dst, unsigned nbytes);
+
+/* Lab 2: copy nbytes bytes from src to physical address pa, through the cache.
+ * The bytes lie within one line, as for cache_read. The same search as
+ * cache_read, including the read of the whole line on a miss (write
+ * allocation); then the bytes go into the line and the line becomes dirty.
+ * Nothing is written to memory here. */
+void cache_write(uint64_t pa, const void *src, unsigned nbytes);
+
+/* Lab 2: write every dirty line back with dram_line_write, count each in
+ * cache_writebacks, and mark it clean. The lines stay valid. */
+void cache_flush(void);
+
+extern uint64_t cache_hits, cache_misses, cache_writebacks;     /* frame/cpu/dram.c */
+
+/* frame/cpu/dram.c: physical memory, whole lines only */
+int      dram_open(const char *path, size_t size);
+void     dram_close(void);
+uint8_t *dram_ptr(uint64_t pa, size_t nbytes);  /* NULL when out of range */
+/* The file open as descriptor fd of the host becomes read-only memory at
+   ROM_BASE, without being copied. Returns its size, 0 if that fails. */
+uint64_t dram_rom(int fd);
+/* One whole line, the one holding pa, read from or written to the DRAM of
+   the host, counted in dram_reads and dram_writes. */
+void     dram_line_read(uint64_t pa, uint8_t *dst);
+void     dram_line_write(uint64_t pa, const uint8_t *src);
+extern uint64_t dram_reads, dram_writes;
+
+/* The machine without a cache, mini-cpu --cache 0. opt_nocache is set, and
+   frame/memtrace.c sends every call of cache_read and cache_write to these
+   two functions instead of the cache of lab 2 (cache_flush then does
+   nothing). A call, within one line, is one transfer, made and counted
+   like those of dram_line_read and dram_line_write: the bytes read come
+   from the DRAM of the host, and only the bytes written go to it. */
+extern int opt_nocache;
+void uncached_read(uint64_t pa, void *dst, unsigned nbytes);
+void uncached_write(uint64_t pa, const void *src, unsigned nbytes);
+
+/* mini-cpu --stats: the lines "cache" and "dram" (frame/cpu/dram.c).
+   Without a cache every line access is a transfer. */
+void memory_stats(FILE *out);
+
+/* -------------------------------------------------------- lab 3: mmu.c */
+
+enum { PTE_P = 1u << 0, PTE_W = 1u << 1, PTE_U = 1u << 2,
+       PTE_A = 1u << 5, PTE_D = 1u << 6 };
+
+/* The low 48 bits of a virtual address are split as on x86-64:
  *
- * Register values are u256: an integer register uses the lane q[0], a
- * vector register (YMM0 + i) all four. Loaded and stored values are u256
- * as well, msize bytes of them, so a vector load or store fits. */
-#define NSRC 4
-#define NDST 3
+ *     47..39  PML4 index     38..30  PDPT index    29..21  PD index
+ *     20..12  PT index       11..0   page offset
+ *
+ * Each level is a 4 KiB table of 512 eight-byte entries: the low 12 bits
+ * of an entry are flags (PTE_*), bit 12 and up the physical address of the
+ * next table or of the page frame. mmu_cr3() is the address of the PML4. */
 
-enum { OP_ALU = 0, OP_MOV, OP_LOAD, OP_STORE, OP_MUL, OP_DIV,
-       OP_BRANCH, OP_JUMP, OP_CALL, OP_RET, OP_SYSCALL, OP_NOP };
+/* Index of va in the table of level lvl, from 3 (PML4) down to 0 (PT). */
+#define PT_INDEX(va, lvl) ((unsigned)(((va) >> (12 + 9 * (lvl))) & 0x1ff))
+/* The physical address held in an entry. */
+#define PTE_ADDR(entry)   ((entry) & 0x000ffffffffff000ULL)
 
-enum { BR_NONE = 0,
-       BR_COND,                     /* jcc rel: target known at decode */
-       BR_DIRECT,                   /* jmp rel, call rel: always taken */
-       BR_INDIRECT };               /* ret, jmp *x, call *x: target computed */
-
-/* The five stages; insn.t[] and pipe_st[] are indexed by them. */
-enum { S_IF = 0, S_ID, S_EX, S_MEM, S_WB, NSTAGE };
-
-typedef struct insn {
-    /* decode() */
-    uint64_t pc;
-    uint8_t  len;
-    uint16_t opc;                   /* primary opcode; 0f xx is 0x100 | xx,
-                                       VEX is 0x1000 | map << 8 | xx as in x86 */
-    uint8_t  size;                  /* operand size: 1, 2, 4 or 8 */
-    uint8_t  rex;                   /* with VEX: its R, X, B and W bits */
-    uint8_t  vex;                   /* VEX prefix present */
-    uint8_t  sse;                   /* an SSE instruction: its row in sse_ops[] plus 1 */
-    uint8_t  vlen;                  /* VEX.L: 16 or 32 bytes */
-    int8_t   v;                     /* VEX.vvvv as a register number 0..15 */
-    uint8_t  sub;                   /* ModRM reg field, 0..7 */
-    int8_t   reg;                   /* register operand, -1 if none */
-    int8_t   rm;                    /* ModRM rm register when mod == 3, else -1 */
-    uint8_t  reg_hi, rm_hi;         /* the operand is ah, ch, dh or bh */
-    uint8_t  is_mem;                /* the instruction has an address to compute:
-                                       ea = disp + base + index * scale */
-    int8_t   base, index;           /* registers of that address, -1 if absent */
-    uint8_t  scale;
-    int64_t  disp;                  /* rip-relative: includes pc + len */
-    uint64_t imm;                   /* sign-extended where the encoding says so */
-    uint8_t  cls;                   /* OP_* */
-    uint8_t  br;                    /* BR_* */
-    uint64_t target;                /* BR_COND and BR_DIRECT */
-    uint8_t  load, store;           /* memory() reads from ea / writes to sa */
-    uint8_t  msize;                 /* bytes loaded or stored, at most 32 */
-    uint8_t  exec;                  /* cycles in EX: 1, 3 for multiply, 20 for divide */
-    uint8_t  nsrc, src[NSRC];       /* registers read, 0 .. NARCH - 1 */
-    uint8_t  ndst, dst[NDST];       /* registers written */
-
-    /* the caller, before execute() */
-    u256     in[NSRC];              /* in[k] is the value of src[k] */
-
-    /* execute() and memory() */
-    uint64_t ea;                    /* operand address */
-    u256     lval;                  /* value loaded from ea */
-    uint64_t sa;                    /* store sval at sa */
-    u256     sval;
-    u256     out[NDST];             /* out[k] is the new value of dst[k] */
-    uint64_t next;                  /* address of the next instruction */
-    uint8_t  taken;
-    uint8_t  fault;                 /* FAULT_* */
-    uint64_t fault_va;
-
-    /* the pipeline */
-    uint64_t t[NSTAGE];             /* cycle it entered IF, ID, EX, MEM, WB */
-    uint8_t  mcyc;                  /* cycles spent in MEM */
-} insn;
-
-/* Outputs of a load, and of a system call, exist only after memory(). */
-static inline int insn_late(const insn *d)
+/* Entry idx of the table at physical address table, read and written
+   through the cache, like every other access to guest memory. */
+static inline uint64_t pte_read(uint64_t table, unsigned idx)
 {
-    return d->load || d->cls == OP_SYSCALL;
+    uint64_t entry;
+    cache_read(table + idx * 8, &entry, 8);
+    return entry;
 }
 
-/* The position of register r in d->src[], -1 if d does not read it. */
-static inline int insn_src(const insn *d, int r)
+static inline void pte_write(uint64_t table, unsigned idx, uint64_t entry)
 {
-    for (unsigned k = 0; k < d->nsrc; ++k)
-        if (d->src[k] == r)
-            return (int)k;
-    return -1;
+    cache_write(table + idx * 8, &entry, 8);
 }
 
-/* The position of register r in d->dst[], -1 if d does not write it. */
-static inline int insn_dst(const insn *d, int r)
-{
-    for (unsigned k = 0; k < d->ndst; ++k)
-        if (d->dst[k] == r)
-            return (int)k;
-    return -1;
-}
-
-/* Decode the n bytes at buf, fetched from address pc: prefixes, opcode,
-   ModRM (through modrm_decode of lab 1), immediate; which registers the
-   instruction reads and writes, whether it loads or stores. Returns 0; on
-   an illegal or truncated instruction sets d->fault and returns -1
-   (frame/decode.c). */
-int  decode(insn *d, uint64_t pc, const uint8_t *buf, unsigned n);
-
-/* The operation of the instruction: from in[], imm, ea and lval to out[],
-   next, taken, sa and sval, with the flags of alu.c and the conditions of
-   cond. Needs ea, and lval if the instruction loads. Sets d->fault on a
-   divide error (frame/compute.c). */
-void compute(insn *d);
-
-/* The system call of an OP_SYSCALL instruction: runs the handler on the
-   register file of c, which every earlier instruction has reached by now,
-   and puts the results into out[] (frame/compute.c). */
-void insn_syscall(mcpu *c, insn *d);
-
-/* ------------------------------------------------------- lab 2: seq.c */
-
-/* Lab 2: the first half of an instruction. If d->fault is set, do nothing.
- * Otherwise compute d->ea when d->is_mem, from disp and the values of base
- * and index in in[]; then, unless the instruction is late (insn_late: its
- * result needs memory() first), call compute(d). */
-void execute(insn *d);
-
-/* Lab 2: the second half. If d->fault is set, do nothing. A system call
- * is insn_syscall(c, d) and nothing else. Otherwise: a load reads msize
- * bytes at ea into lval (cleared first) and then calls compute(d); a store
- * writes msize bytes of sval at sa. A failed access sets d->fault to
- * FAULT_PAGE and d->fault_va to c->fault_va and ends the function; so does
- * a fault set by compute. */
-void memory(mcpu *c, insn *d);
-
-/* Lab 2: store out[k] into register dst[k] for every k, and next into rip. */
-void writeback(mcpu *c, insn *d);
-
-/* Lab 2: run one instruction on the register file of c: fetch_bytes,
- * decode, in[] from the registers, execute, memory; then cpu_trap if the
- * instruction faulted, else writeback and cpu_commit. Returns 0, or -1
- * after a fault or once c->halted is set. */
-int  cpu_step(mcpu *c);
-
-/* ------------------------------------------------------ lab 2: pipe.c */
-
-/* One stage of the pipeline: the instruction in it, if any. */
-typedef struct {
-    int      valid;                 /* the stage holds an instruction */
-    insn     d;
-    uint64_t pred;                  /* next pc assumed when it was fetched */
-} pipe_stage;
-
-extern pipe_stage pipe_st[NSTAGE];  /* frame/pipeline.c */
-extern uint64_t   pipe_pc;          /* address IF fetches from next */
-
-/* Run until the guest exits or faults, one clock cycle at a time, and
- * return the number of cycles (frame/pipeline.c). Cycle now is
+/* Lab 3: translate va for an access of kind acc (MEM_FETCH, MEM_READ or
+ * MEM_WRITE). Returns 0 and sets *pa, or -1 on a page fault.
  *
- *     if (pipe_wb(c, now)) stop;
- *     pipe_mem(c, now);
- *     pipe_ex(c, now);
- *     pipe_if(c, now);
- *     pipe_move(now + 1);
+ *   1. Look up the page of va in the TLB; count the lookup in tlb_hits or
+ *      tlb_misses.
+ *   2. On a miss walk the four tables from mmu_cr3() with pte_read. An
+ *      entry without PTE_P at any level is a page fault. In the entry of
+ *      level 0 set PTE_A, and PTE_D as well for MEM_WRITE, and write the
+ *      entry back with pte_write when that changed it. Put the page into
+ *      the TLB with the flags of that entry.
+ *   3. MEM_WRITE to a page without PTE_W is a page fault.
+ *   4. *pa = frame + offset of va in the page.
  *
- * The work of the stages runs from WB back to IF, so that WB has written
- * the register file before EX reads it, and a flush in EX or MEM happens
- * before IF fetches. Before the first cycle every stage is empty except
- * IF, which holds an empty slot with t[S_IF] = 1, and pipe_pc is c->rip. */
-uint64_t pipe_run(mcpu *c);
+ * Every page fault adds one to page_faults. The size of the TLB and its
+ * replacement are yours to choose, with one requirement: a page that was
+ * just translated is found in the TLB by the next lookup, and stays there
+ * until mmu_tlb_flush or until other pages push it out. */
+int  mmu_translate(uint64_t va, int acc, uint64_t *pa);
 
-/* Lab 2: the address the pipeline fetches after d, decided when d is
- * fetched. A backward conditional branch (target <= pc) is predicted
- * taken, a forward one not taken; a direct jump or call goes to its
- * target; everything else falls through to pc + len. An instruction whose
- * decode faulted falls through as well, with length 1 if len is 0. */
-uint64_t pipe_predict(const insn *d);
+/* Lab 3: empty the TLB. The framework calls it after it changed page
+ * tables: the loader after mapping the program, brk after growing the
+ * heap, arena_seal after removing write permission. */
+void mmu_tlb_flush(void);
 
-/* Lab 2: whether d, in ID, may enter EX next cycle: 1 if every register in
- * d->src[] will have its final value by then. Look at the nearest writer
- * of a register only: the instruction in MEM if it writes the register,
- * otherwise the one in WB.
- *   writer in MEM   with forwarding ready, unless it is late (insn_late):
- *                   its value exists only after memory(); without
- *                   forwarding not ready
- *   writer in WB    with forwarding ready: WB writes the register file
- *                   before EX reads it; without forwarding not ready
- * opt_forward is 0 without forwarding. pipe_move calls this after it has
- * moved the instructions ahead of d, so pipe_st[] holds the positions of
- * next cycle. */
-int  pipe_ready(const insn *d);
+/* Lab 3: map the page of va to the frame of pa with the given flags. Walk
+ * from mmu_cr3(); at levels 3 to 1 an entry without PTE_P gets a new table
+ * from mmu_alloc_frame() (0 means out of memory: return -1), entered as
+ * frame | PTE_P | PTE_W | PTE_U. The entry of level 0 becomes
+ * (pa & ~0xfff) | flags | PTE_P, replacing whatever was there. Returns 0.
+ * The caller flushes the TLB. */
+int  mmu_map(uint64_t va, uint64_t pa, uint64_t flags);
 
-/* Lab 2: fill d->in[] in the first cycle of EX. The value of a register
- * is the one in the register file of c, unless the instruction in MEM
- * writes that register: then it is that instruction's out[] entry. */
-void pipe_forward(mcpu *c, insn *d);
+extern uint64_t tlb_hits, tlb_misses, page_faults;      /* frame/cpu/cr3.c */
 
-/* Lab 2: a branch in stage s (S_EX or S_MEM) now knows its next pc. If the
- * instruction has no fault and next differs from the prediction, empty
- * every stage from S_IF up to the one before s and set pipe_pc to next. */
-void pipe_resolve(int s);
+/* frame/cpu/cr3.c: the register that holds the root of the page tables;
+   writing it empties the TLB. */
+void     mmu_set_cr3(uint64_t pa);
+uint64_t mmu_cr3(void);
+/* frame/os/frames.c */
+uint64_t mmu_alloc_frame(void);     /* a zeroed frame, 0 when memory is exhausted */
 
-/* Lab 2: the work of WB in cycle now. Returns 1 when the run is over. An
- * instruction with a fault: cpu_trap, return 1. Otherwise writeback and
- * cpu_commit, empty the stage, and return 1 if the machine halted or
- * opt_max instructions have committed (opt_max 0: no limit). */
-int  pipe_wb(mcpu *c, uint64_t now);
+/* The stand-in before lab 3: entry pte of virtual page number vpn in the
+   table on the host that frame/cpu/pagemap.c translates with, written by
+   mmu_map of frame/os/pagemap.c. Returns 0, or -1 when the table is full. */
+int      pagemap_set(uint64_t vpn, uint64_t pte);
 
-/* Lab 2: the work of MEM. In the first cycle of the instruction there
- * (now == t[S_MEM]) call memory() and set mcyc: opt_miss if cache_misses
- * changed during the call, 1 otherwise. In its last cycle
- * (now + 1 == t[S_MEM] + mcyc) a late branch is resolved. */
-void pipe_mem(mcpu *c, uint64_t now);
-
-/* Lab 2: the work of EX. In the first cycle (now == t[S_EX]) call
- * pipe_forward and execute. In the last cycle (now + 1 == t[S_EX] + exec)
- * a branch that is not late is resolved. */
-void pipe_ex(mcpu *c, uint64_t now);
-
-/* Lab 2: the work of IF. A stage that became valid for this cycle
- * (now == t[S_IF]) fetches: fetch_bytes at pipe_pc, decode into the insn
- * of the stage (decode clears it, so set t[S_IF] = now again), and both
- * pred of the stage and pipe_pc become pipe_predict of the instruction. */
-void pipe_if(mcpu *c, uint64_t now);
-
-/* Lab 2: move the instructions for cycle next, from MEM back to IF. An
- * instruction moves when it has spent its cycles in the stage (mcyc in
- * MEM, exec in EX, 1 in ID and IF) and the stage ahead is empty; WB is
- * always empty here. ID -> EX also needs pipe_ready. The instruction that
- * moves gets t[new stage] = next. At the end, an empty IF becomes valid
- * with t[S_IF] = next: it fetches in that cycle. */
-void pipe_move(uint64_t next);
-
-extern int opt_forward;             /* --no-forward clears it */
-extern unsigned opt_miss;           /* --miss N: MEM cycles on a cache miss */
-
-/* ---------------------------------------------------- lab 3: objload.c */
+/* ---------------------------------------------------- lab 4: objload.c */
 
 /* A relocatable object file (gcc -c), mapped read-only, and where it was
    loaded. obj_open fills everything but the contents of secbase[] and
@@ -729,45 +656,46 @@ typedef struct {
     int         loaded;             /* obj_load succeeded */
 } obj;
 
-int  obj_open(obj *o, const char *path);        /* frame/objfile.c */
-void obj_close(obj *o);
-/* The name of section idx; of symbol i, a section symbol having the name
-   of its section; of a relocation type, "?" for one not listed below. */
-const char *obj_secname(const obj *o, unsigned idx);
-const char *obj_symname(const obj *o, unsigned i);
+int  obj_open(obj *object, const char *path);        /* frame/os/objfile.c */
+void obj_close(obj *object);
+/* The name of section sec_idx; of symbol sym_idx, a section symbol having
+   the name of its section; of a relocation type, "?" for one not listed
+   below. */
+const char *obj_secname(const obj *object, unsigned sec_idx);
+const char *obj_symname(const obj *object, unsigned sym_idx);
 const char *obj_relname(unsigned type);
 
-/* Load o into guest memory and relocate it: obj_sections, obj_symbols,
+/* Load object into guest memory and relocate it: obj_sections, obj_symbols,
    obj_relocs, in this order. Returns 0, or -1 as soon as one of them does.
    With opt_verbose it prints every loaded section, and every relocation
    with the bytes found at its place afterwards. */
-int      obj_load(mcpu *c, obj *o);
-/* Guest address of a symbol defined by o, 0 if absent or not loaded. */
-uint64_t obj_lookup(const obj *o, const char *name);
+int      obj_load(mcpu *cpu, obj *object);
+/* Guest address of a symbol defined by object, 0 if absent or not loaded. */
+uint64_t obj_lookup(const obj *object, const char *name);
 /* Guest address of code that jumps to target: 13 bytes in the code arena,
    one per target, as an entry of a PLT. Returns 0 on an error. */
-uint64_t obj_stub(mcpu *c, uint64_t target);
+uint64_t obj_stub(mcpu *cpu, uint64_t target);
 
-/* Lab 3: copy the sections into guest memory. Section i is loaded when it
- * has SHF_ALLOC and its size is not 0: reserve sh_size bytes aligned to
+/* Lab 4: copy the sections into guest memory. Section sec is loaded when
+ * it has SHF_ALLOC and its size is not 0: reserve sh_size bytes aligned to
  * sh_addralign with arena_alloc (ARENA_CODE with SHF_EXECINSTR, else
  * ARENA_DATA), fill them with guest_write, from the file at sh_offset or
- * with zeros for SHT_NOBITS, and record the address in o->secbase[i].
+ * with zeros for SHT_NOBITS, and record the address in object->secbase[sec].
  * Returns 0, or -1 when arena_alloc returns 0 or guest_write fails. */
-int obj_sections(mcpu *c, obj *o);
+int obj_sections(mcpu *cpu, obj *object);
 
-/* Lab 3: give every symbol its guest address in o->value[i], i from 1:
+/* Lab 4: give every symbol its guest address in object->value[sym], sym from 1:
  *   st_shndx SHN_UNDEF   the host function of that name, host_lookup(name);
  *                        if there is none, print
- *                        "<o->path>: undefined symbol <name>" to stderr and
+ *                        "<object->path>: undefined symbol <name>" to stderr and
  *                        return -1. A symbol with an empty name keeps 0.
  *   SHN_ABS              st_value
- *   a loaded section     o->secbase[st_shndx] + st_value
+ *   a loaded section     object->secbase[st_shndx] + st_value
  *   anything else        0
  * Returns 0 or -1. */
-int obj_symbols(obj *o);
+int obj_symbols(obj *object);
 
-/* Lab 3: apply every relocation of every SHT_RELA section whose target
+/* Lab 4: apply every relocation of every SHT_RELA section whose target
  * section (sh_info) is loaded. With S the value of the symbol, A the
  * addend and P = secbase of the target + r_offset, the address patched:
  *
@@ -776,195 +704,67 @@ int obj_symbols(obj *o);
  *   R_X86_64_32S     4 bytes  S + A, must fit in 32 bits signed
  *   R_X86_64_PC32    4 bytes  S + A - P, must fit in 32 bits signed
  *   R_X86_64_PLT32   4 bytes  S + A - P; when that does not fit, S is
- *                             replaced by obj_stub(c, S), code within reach
+ *                             replaced by obj_stub(cpu, S), code within reach
  *                             that jumps to S (0 from obj_stub is an error)
  *
  * The value is written at P with guest_write. A value that does not fit
- * prints "<o->path>: <obj_relname> against <obj_symname> overflows", a
- * type not in this table "<o->path>: unimplemented relocation type
+ * prints "<object->path>: <obj_relname> against <obj_symname> overflows", a
+ * type not in this table "<object->path>: unimplemented relocation type
  * <number>", both to stderr, and the function returns -1; so it does when
  * guest_write fails. Returns 0 when all relocations are applied. */
-int obj_relocs(mcpu *c, obj *o);
+int obj_relocs(mcpu *cpu, obj *object);
 
-/* Guest memory for sections, below 2 GB (frame/arena.c). */
+/* Guest memory for sections, below 2 GB (frame/os/arena.c). */
 enum { ARENA_DATA = 0, ARENA_CODE = 1 };
-uint64_t arena_alloc(uint64_t n, uint64_t align, int kind);
+uint64_t arena_alloc(uint64_t size, uint64_t align, int kind);
 void     arena_range(int kind, uint64_t *base, uint64_t *used);
 /* Remove write permission from the code pages allocated so far. */
 void     arena_seal(void);
 
 /* Guest address of the entry of a host function such as nn_matmul,
-   0 if the name is not exported (frame/hostcall.c). */
+   0 if the name is not exported (frame/os/hostcall.c). */
 uint64_t host_lookup(const char *name);
 #define HOSTCALL_BASE 0x00007f0000000000ULL
 #define HOSTCALL_NR   0x1000        /* system call numbers of host functions */
 /* Map the page of host function entries; run a host function. */
-int hostcall_install(mcpu *c);
-int hostcall(mcpu *c, unsigned idx);
+int hostcall_install(mcpu *cpu);
+int hostcall(mcpu *cpu, unsigned idx);
 extern uint64_t hostcall_count;
-
-/* Guest memory as the loader sees it: through the MMU and the cache.
-   src NULL writes n zero bytes. Returns 0, or -1 if a page is absent. */
-int guest_write(mcpu *c, uint64_t va, const void *src, uint64_t n);
 
 extern int opt_verbose;             /* mini-jit -v */
 
-/* -------------------------------------------------------- lab 4: mmu.c */
-
-enum { PTE_P = 1u << 0, PTE_W = 1u << 1, PTE_U = 1u << 2,
-       PTE_A = 1u << 5, PTE_D = 1u << 6 };
-
-/* The low 48 bits of a virtual address are split as on x86-64:
- *
- *     47..39  PML4 index     38..30  PDPT index    29..21  PD index
- *     20..12  PT index       11..0   page offset
- *
- * Each level is a 4 KiB table of 512 eight-byte entries: the low 12 bits
- * of an entry are flags (PTE_*), bit 12 and up the physical address of the
- * next table or of the page frame. mmu_cr3() is the address of the PML4. */
-
-/* Index of va in the table of level lvl, from 3 (PML4) down to 0 (PT). */
-#define PT_INDEX(va, lvl) ((unsigned)(((va) >> (12 + 9 * (lvl))) & 0x1ff))
-/* The physical address held in an entry. */
-#define PTE_ADDR(e)       ((e) & 0x000ffffffffff000ULL)
-
-void cache_read(uint64_t pa, void *dst, unsigned n);
-void cache_write(uint64_t pa, const void *src, unsigned n);
-
-/* Entry idx of the table at physical address table, read and written
-   through the cache, like every other access to guest memory. */
-static inline uint64_t pte_read(uint64_t table, unsigned idx)
-{
-    uint64_t e;
-    cache_read(table + idx * 8, &e, 8);
-    return e;
-}
-
-static inline void pte_write(uint64_t table, unsigned idx, uint64_t e)
-{
-    cache_write(table + idx * 8, &e, 8);
-}
-
-/* Lab 4: translate va for an access of kind acc (MEM_FETCH, MEM_READ or
- * MEM_WRITE). Returns 0 and sets *pa, or -1 on a page fault.
- *
- *   1. Look up the page of va in the TLB; count the lookup in tlb_hits or
- *      tlb_misses.
- *   2. On a miss walk the four tables from mmu_cr3() with pte_read. An
- *      entry without PTE_P at any level is a page fault. In the entry of
- *      level 0 set PTE_A, and PTE_D as well for MEM_WRITE, and write the
- *      entry back with pte_write when that changed it. Put the page into
- *      the TLB with the flags of that entry.
- *   3. MEM_WRITE to a page without PTE_W is a page fault.
- *   4. *pa = frame + offset of va in the page.
- *
- * Every page fault adds one to page_faults. The size of the TLB and its
- * replacement are yours to choose, with one requirement: a page that was
- * just translated is found in the TLB by the next lookup, and stays there
- * until mmu_tlb_flush or until other pages push it out. */
-int  mmu_translate(uint64_t va, int acc, uint64_t *pa);
-
-/* Lab 4: empty the TLB. The framework calls it after it changed page
- * tables: the loader after mapping the program, brk after growing the
- * heap, arena_seal after removing write permission. */
-void mmu_tlb_flush(void);
-
-/* Lab 4: map the page of va to the frame of pa with the given flags. Walk
- * from mmu_cr3(); at levels 3 to 1 an entry without PTE_P gets a new table
- * from mmu_alloc_frame() (0 means out of memory: return -1), entered as
- * frame | PTE_P | PTE_W | PTE_U. The entry of level 0 becomes
- * (pa & ~0xfff) | flags | PTE_P, replacing whatever was there. Returns 0.
- * The caller flushes the TLB. */
-int  mmu_map(uint64_t va, uint64_t pa, uint64_t flags);
-
-extern uint64_t tlb_hits, tlb_misses, page_faults;      /* frame/frames.c */
-
-/* frame/frames.c */
-void     mmu_set_cr3(uint64_t pa);
-uint64_t mmu_cr3(void);
-uint64_t mmu_alloc_frame(void);     /* a zeroed frame, 0 when memory is exhausted */
-
-/* ------------------------------------------------------ lab 5: cache.c */
-
-/* A physical address has three fields, | tag | set | offset |: the offset
- * takes 6 bits (a line is LINE_SIZE = 64 bytes), so the line number is
- * pa / 64; the set is the line number modulo the number of sets, the tag
- * the line number divided by it.
- *
- * The cache is set-associative with write-back and write allocation, and
- * evicts the least recently used line of a set. Below it there are only
- * dram_line_read and dram_line_write, which move one whole line. */
-
-/* Lab 5: (re)build the cache with sets * ways lines, all invalid, and
- * reset the three counters. The driver calls it before loading the
- * program and again after: release what the earlier call allocated.
- * 0 for sets or ways means 1. */
-void cache_init(unsigned sets, unsigned ways);
-
-/* Lab 5: copy n bytes at physical address pa to dst, through the cache.
- * The access may span several lines; each line it touches is one cache
- * access. A line found in its set is a hit (cache_hits). Otherwise it is a
- * miss (cache_misses): the victim is an invalid line of the set if there
- * is one, else the least recently used; a dirty victim is first written
- * back with dram_line_write (cache_writebacks); then dram_line_read
- * brings the line in. */
-void cache_read(uint64_t pa, void *dst, unsigned n);
-
-/* Lab 5: copy n bytes from src to physical address pa, through the cache.
- * The same search as cache_read, including the read of the whole line on
- * a miss (write allocation); then the bytes go into the line and the line
- * becomes dirty. Nothing is written to memory here. */
-void cache_write(uint64_t pa, const void *src, unsigned n);
-
-/* Lab 5: write every dirty line back with dram_line_write, count each in
- * cache_writebacks, and mark it clean. The lines stay valid. */
-void cache_flush(void);
-
-extern uint64_t cache_hits, cache_misses, cache_writebacks;     /* frame/dram.c */
-
-/* frame/dram.c: physical memory, whole lines only */
-int      dram_open(const char *path, size_t size);
-void     dram_close(void);
-uint8_t *dram_ptr(uint64_t pa, size_t n);       /* NULL when out of range */
-/* The file open as descriptor fd of the host becomes read-only memory at
-   ROM_BASE, without being copied. Returns its size, 0 if that fails. */
-uint64_t dram_rom(int fd);
-void     dram_line_read(uint64_t pa, uint8_t *dst);
-void     dram_line_write(uint64_t pa, const uint8_t *src);
-extern uint64_t dram_reads, dram_writes;
-
-/* ----------------------------------------------- lab 6: syscall.c, blk.c */
+/* ----------------------------------------------- lab 5: syscall.c, blk.c */
 
 /* The system calls follow the Linux x86-64 convention: the number in rax,
  * the arguments in rdi rsi rdx r10 r8 r9, the result in rax, a negative
- * result being a negated errno. sys_dispatch (frame/sysbase.c) implements
+ * result being a negated errno. sys_dispatch (frame/os/sysbase.c) implements
  * write, brk, getpid, exit, fstat of the descriptors 0 to 2, and mmap of
  * standard input (read-only: the file appears in the address space of the
  * guest without being copied); it passes read, open and close to the
- * three functions below; before lab 6 these three return -ENOSYS.
+ * three functions below; before lab 5 these three return -ENOSYS.
  *
  * A pointer argument is a guest virtual address: the host reaches the
- * bytes with mem_read and mem_write, through the page tables and the
+ * bytes with guest_read and guest_write, through the page tables and the
  * cache of the guest. */
-int  sys_dispatch(mcpu *c);
-extern uint64_t syscall_count;      /* frame/sysbase.c */
+int  sys_dispatch(mcpu *cpu);
+extern uint64_t syscall_count;      /* frame/os/sysbase.c */
 
-/* Lab 6: read(fd, buf, n). Descriptors 0, 1 and 2 are those of the host:
+/* Lab 5: read(fd, buf, count). Descriptors 0, 1 and 2 are those of the host:
  * read at most 4096 bytes with read(2) into a buffer of the host and copy
- * what arrived to the guest at buf with mem_write. Returns the count,
+ * what arrived to the guest at buf with guest_write. Returns the count,
  * -EIO if the host read fails, -EFAULT if the copy fails. Any other
  * descriptor is a file of the ramfs: ramfs_read, and -EBADF when it
  * returns -1. */
-long sys_read(mcpu *c, uint64_t fd, uint64_t buf, uint64_t n);
+long sys_read(mcpu *cpu, uint64_t fd, uint64_t buf, uint64_t count);
 
-/* Lab 6: open(path). path is the guest address of a NUL-terminated name:
- * read it one byte at a time until the NUL or 63 bytes, whichever comes
- * first; -EFAULT if a byte cannot be read. Then ramfs_open; -ENOENT when
+/* Lab 5: open(path). path is the guest address of a NUL-terminated name:
+ * read it one byte at a time with guest_read until the NUL or 63 bytes,
+ * whichever comes first; -EFAULT if a byte cannot be read. Then ramfs_open; -ENOENT when
  * it returns -1, otherwise the descriptor. */
-long sys_open(mcpu *c, uint64_t path);
+long sys_open(mcpu *cpu, uint64_t path);
 
-/* Lab 6: close(fd). ramfs_close; 0, or -EBADF when it returns -1. */
-long sys_close(mcpu *c, uint64_t fd);
+/* Lab 5: close(fd). ramfs_close; 0, or -EBADF when it returns -1. */
+long sys_close(mcpu *cpu, uint64_t fd);
 
 /* The block device. Its whole interface is a ring in guest physical
  * memory: the driver places a request in desc[tail % BLK_RING], advances
@@ -992,28 +792,35 @@ typedef struct {
     blk_req  desc[BLK_RING];
 } blk_ring;
 
-/* frame/blkdev.c: open the image and put the ring at physical address
-   ring_pa. Returns 0, or -1 if the image cannot be opened. */
+/* frame/os/blkdrv.c, the driver: open the image and put the ring at
+   physical address ring_pa. Returns 0, or -1 if the image cannot be
+   opened. */
 int  blk_attach(const char *image, uint64_t ring_pa);
 /* The driver side: place one request on the ring, set the doorbell and
-   call blk_kick. Returns 0 if the device reports success, else -1. */
+   ring it, which calls blk_kick. Returns 0 if the device reports success,
+   else -1. */
 int  blk_request(uint32_t type, uint64_t sector, uint64_t pa, uint32_t len);
-extern uint64_t blk_reads, blk_writes;
+/* frame/cpu/blkdev.c, the device: connect it to the image and tell it
+   where the ring is (-1 if the image cannot be opened); the doorbell,
+   which processes the ring with blk_kick (-1 before blkdev_open). */
+int  blkdev_open(const char *image, uint64_t ring_pa);
+int  blkdev_doorbell(void);
+extern uint64_t blk_reads, blk_writes;  /* frame/cpu/blkdev.c */
 
-/* Lab 6: the device side. Process every request of ring r from head to
- * tail against the image open as fd, then clear r->doorbell. For a
- * request q, in this order:
- *   - its buffer is q->len bytes of guest physical memory at q->addr:
- *     dram_ptr(q->addr, q->len). NULL means the buffer is not inside guest
- *     memory: status 2, and no byte of the host is read or written. On a
- *     real machine the IOMMU makes this check.
- *   - BLK_IN: pread q->len bytes at offset q->sector * BLK_SECTOR into the
- *     buffer; bytes beyond the end of the image read as zeros. Count it in
- *     blk_reads.
+/* Lab 5: the device side. Process every request of ring from head to
+ * tail against the image open as fd, then clear ring->doorbell. For a
+ * request req, in this order:
+ *   - its buffer is req->len bytes of guest physical memory at req->addr:
+ *     dram_ptr(req->addr, req->len). NULL means the buffer is not inside
+ *     guest memory: status 2, and no byte of the host is read or written.
+ *     On a real machine the IOMMU makes this check.
+ *   - BLK_IN: pread req->len bytes at offset req->sector * BLK_SECTOR into
+ *     the buffer; bytes beyond the end of the image read as zeros. Count
+ *     it in blk_reads.
  *   - BLK_OUT: pwrite the buffer at that offset. Count it in blk_writes.
  *   - status 1, or 2 if pread or pwrite failed (and then no count);
- *     advance r->head. */
-void blk_kick(blk_ring *r, int fd);
+ *     advance ring->head. */
+void blk_kick(blk_ring *ring, int fd);
 
 /* The ramfs: read-only files on the block device. Layout of the image,
  * written by tools/mkfs.py:
@@ -1033,10 +840,10 @@ typedef struct {
     uint32_t size;                  /* bytes */
 } ramfs_dirent;
 
-extern ramfs_dirent ramfs_dir[RAMFS_MAXFILE];   /* frame/blkdev.c */
+extern ramfs_dirent ramfs_dir[RAMFS_MAXFILE];   /* frame/os/blkdrv.c */
 extern unsigned     ramfs_ndir;
 
-/* Lab 6: read the directory. Take one frame with mmu_alloc_frame() as the
+/* Lab 5: read the directory. Take one frame with mmu_alloc_frame() as the
  * bounce page, the buffer of every request this file makes, and keep its
  * address. Read sector 0 into it with blk_request, check the magic (if it
  * differs print "ramfs: bad magic in the image" to stderr), and copy the
@@ -1045,60 +852,70 @@ extern unsigned     ramfs_ndir;
  * dram_ptr(page, BLK_SECTOR). Returns 0, or -1 on any failure. */
 int  ramfs_mount(void);
 
-/* Lab 6: open the file called name. Returns a descriptor, 3 or above, at
+/* Lab 5: open the file called name. Returns a descriptor, 3 or above, at
  * position 0, or -1 if there is no such file or RAMFS_MAXFD files are
  * open already. A closed descriptor can be handed out again. */
 int  ramfs_open(const char *name);
 
-/* Lab 6: read up to n bytes of file fd from its position into guest
+/* Lab 5: read up to count bytes of file fd from its position into guest
  * memory at virtual address va, and advance the position. Returns the
- * number of bytes read: 0 at the end of the file, fewer than n near it.
+ * number of bytes read: 0 at the end of the file, fewer than count near it.
  * Returns -1 for a descriptor that is not open.
  *
  * One sector at a time: blk_request(BLK_IN, sector, bounce page,
- * BLK_SECTOR), then mem_write of the part of the sector that belongs to
+ * BLK_SECTOR), then guest_write of the part of the sector that belongs to
  * this read. The device takes a physical address while va is virtual, and
  * a guest buffer may span frames that are not adjacent; hence the bounce
  * page. If a step fails, return the bytes copied so far, with the position
  * advanced by as many, or -1 if none. */
-long ramfs_read(int fd, uint64_t va, long n, mcpu *c);
+long ramfs_read(int fd, uint64_t va, long count, mcpu *cpu);
 
-/* Lab 6: close descriptor fd. Returns 0, or -1 if it is not open. */
+/* Lab 5: close descriptor fd. Returns 0, or -1 if it is not open. */
 int  ramfs_close(int fd);
 
-/* mini-cpu --ls: one line per entry of ramfs_dir (frame/blkdev.c). */
-void ramfs_list(FILE *f);
+/* mini-cpu --ls: one line per entry of ramfs_dir (frame/os/blkdrv.c). */
+void ramfs_list(FILE *out);
 
 /* -------------------------------------------------------------- framework */
 
-/* Virtual memory access for the CPU: MMU, then cache. Returns -1 and sets
-   c->fault_va if a page is absent; never sets c->fault. */
-int mem_read(mcpu *c, uint64_t va, void *dst, unsigned n, int acc);
-int mem_write(mcpu *c, uint64_t va, const void *src, unsigned n);
+/* frame/cpu/mem.c, the memory access unit of the CPU: one access of an
+   instruction at a virtual address, nbytes at most LINE_SIZE (a longer
+   one ends the program with status 4), translated page by page with
+   mmu_translate and made line by line with cache_read or cache_write.
+   Returns -1 and sets cpu->fault_va if a page is absent; never sets
+   cpu->fault. */
+int mem_read(mcpu *cpu, uint64_t va, void *dst, unsigned nbytes, int acc);
+int mem_write(mcpu *cpu, uint64_t va, const void *src, unsigned nbytes);
 
-/* Copy up to MAX_INSN bytes at pc into buf; returns how many were readable. */
-unsigned fetch_bytes(mcpu *c, uint64_t pc, uint8_t *buf);
+/* Copy up to MAX_INSN bytes at pc into bytes; returns how many were readable. */
+unsigned fetch_bytes(mcpu *cpu, uint64_t pc, uint8_t *bytes);
 
-/* The syscall instruction: host functions (lab 3) or sys_dispatch. */
-int  syscall_enter(mcpu *c);
+/* frame/os/copy.c: software copies a range of guest virtual memory of any
+   length, as copy_from_user and copy_to_user do, cut at line boundaries
+   into one mem_read or mem_write per line. guest_write with src NULL
+   writes nbytes zero bytes. Both return 0, or -1 with cpu->fault_va set
+   if a page is absent; the pieces before it have been copied. */
+int guest_read(mcpu *cpu, uint64_t va, void *dst, uint64_t nbytes);
+int guest_write(mcpu *cpu, uint64_t va, const void *src, uint64_t nbytes);
 
-/* Record a committed instruction: counts it and writes the logs. Call once
-   per instruction, right after writeback(). */
-void cpu_commit(mcpu *c, const insn *d);
-/* The commit log line of the instruction at pc, for either CPU: the store,
-   if any, then every register that differs from the previous line. */
-void commit_line(const mcpu *c, uint64_t pc, int store, uint64_t sa,
+/* The syscall instruction: host functions (lab 4) or sys_dispatch
+   (frame/os/trap.c). */
+int  syscall_enter(mcpu *cpu);
+
+/* The commit log line of the instruction at pc (x86_end writes it): the
+   store, if any, then every register that differs from the previous line
+   (frame/cpu/commit.c). */
+void commit_line(const mcpu *cpu, uint64_t pc, int store, uint64_t sa,
                  const u256 *sval, int msize);
 /* The registers the first line of the commit log is compared with. */
-void commit_start(const mcpu *c);
-/* Record a fault raised by d: copies it into c. */
-void cpu_trap(mcpu *c, const insn *d);
-void cpu_dump(const mcpu *c, FILE *f);
-const char *reg_name(int n);
+void commit_start(const mcpu *cpu);
+void cpu_dump(const mcpu *cpu, FILE *out);
+const char *reg_name(int reg);
 
-int  loader_exec(mcpu *c, const char *path, char **argv, int argc);
+/* Load the ELF executable at path with its arguments (frame/os/loader.c). */
+int  loader_exec(mcpu *cpu, const char *path, char **argv, int argc);
 
-extern FILE *commit_out, *timeline_out;
+extern FILE *commit_out;
 extern FILE *memtrace_out;          /* frame/memtrace.c, mini-cpu --memtrace */
 extern int opt_steps;               /* mini-cpu -v: one line per instruction */
 

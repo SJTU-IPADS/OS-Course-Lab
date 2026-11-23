@@ -1,7 +1,8 @@
-/* The instructions the interpreter of lab 1 leaves to the framework.
+/* Hardware: the instructions the interpreter of lab 1 leaves to the
+ * framework.
  *
- * interp.c implements the instructions a lecture on x86 covers: mov, lea,
- * the eight ALU operations, test, push and pop, call and ret, jmp and jcc.
+ * interp.c implements the instructions of lab 1: mov, lea, the eight ALU
+ * operations, test, push and pop, call and ret, jmp and jcc.
  * gcc also emits instructions outside that set: 8-bit and 16-bit forms,
  * movzx and movsx, cmov and setcc, multiply and divide, shifts, endbr64,
  * syscall; tests/lab1/flagops.py adds pushfq and popfq. x86_other runs
@@ -12,7 +13,7 @@
  * those of the eight ALU operations do.
  *
  * The floating-point instructions and three more vector instructions run
- * here as well; frame/simd.c lists them and computes their values.
+ * here as well; frame/cpu/simd.c lists them and computes their values.
  *
  * The opcodes of interp.c are illegal here, its seven vector instructions
  * included.
@@ -134,7 +135,7 @@ static void group5(x86 *x, unsigned op)                 /* fe, ff */
     }
 }
 
-/* A floating-point instruction, row s of sse_ops[] (frame/simd.c). Its
+/* A floating-point instruction, row s of sse_ops[] (frame/cpu/simd.c). Its
    vector operands are xmm registers; bits 128..255 of a register it writes
    stay as they are. */
 static void sse(x86 *x, const sse_op *s)
@@ -183,7 +184,7 @@ static void sse(x86 *x, const sse_op *s)
     }
 }
 
-/* The vector instructions outside interp.c (frame/simd.c). */
+/* The vector instructions outside interp.c (frame/cpu/simd.c). */
 static void vex_other(x86 *x)
 {
     u256 a, b, r;

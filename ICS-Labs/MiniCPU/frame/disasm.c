@@ -1,4 +1,5 @@
-/* mini-cpu --disasm FILE: the code of an ELF file as assembly.
+/* Neither hardware nor software of the machine: a tool of the host,
+ * mini-cpu --disasm FILE, the code of an ELF file as assembly.
  *
  * Every section with code (SHF_EXECINSTR) is translated from its first
  * byte to its last by translate() of frame/translate.c. One line per
@@ -15,7 +16,7 @@
 
 #include "mcpu.h"
 
-int disasm(const char *path, FILE *f)
+int disasm(const char *path, FILE *out)
 {
     FILE *in = fopen(path, "rb");
     if (!in) { perror(path); return -1; }
@@ -40,22 +41,23 @@ int disasm(const char *path, FILE *f)
         return -1;
     }
     Elf64_Shdr *sh = (Elf64_Shdr *)(data + eh->e_shoff);
-    for (unsigned s = 0; s < eh->e_shnum; ++s) {
-        if (sh[s].sh_type != SHT_PROGBITS || !(sh[s].sh_flags & SHF_EXECINSTR) ||
-            sh[s].sh_offset + sh[s].sh_size > (uint64_t)size)
+    for (unsigned sec = 0; sec < eh->e_shnum; ++sec) {
+        if (sh[sec].sh_type != SHT_PROGBITS || !(sh[sec].sh_flags & SHF_EXECINSTR) ||
+            sh[sec].sh_offset + sh[sec].sh_size > (uint64_t)size)
             continue;
-        const uint8_t *code = data + sh[s].sh_offset;
+        const uint8_t *code = data + sh[sec].sh_offset;
         uint64_t len;
-        for (uint64_t off = 0; off < sh[s].sh_size; off += len) {
+        for (uint64_t off = 0; off < sh[sec].sh_size; off += len) {
             char text[256], bytes[3 * MAX_INSN + 1];
-            unsigned left = sh[s].sh_size - off < MAX_INSN ?
-                            (unsigned)(sh[s].sh_size - off) : MAX_INSN;
-            len = translate(sh[s].sh_addr + off, code + off, left, text, sizeof text);
-            int k = 0;
-            for (uint64_t j = 0; j < len; ++j)
-                k += snprintf(bytes + k, sizeof bytes - (size_t)k, "%02x ", code[off + j]);
-            fprintf(f, "%8llx:\t%-21s\t%s\n",
-                    (unsigned long long)(sh[s].sh_addr + off), bytes, text);
+            unsigned left = sh[sec].sh_size - off < MAX_INSN ?
+                            (unsigned)(sh[sec].sh_size - off) : MAX_INSN;
+            len = translate(sh[sec].sh_addr + off, code + off, left, text, sizeof text);
+            int pos = 0;
+            for (uint64_t idx = 0; idx < len; ++idx)
+                pos += snprintf(bytes + pos, sizeof bytes - (size_t)pos, "%02x ",
+                                code[off + idx]);
+            fprintf(out, "%8llx:\t%-21s\t%s\n",
+                    (unsigned long long)(sh[sec].sh_addr + off), bytes, text);
         }
     }
     free(data);

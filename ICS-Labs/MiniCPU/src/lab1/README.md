@@ -1,16 +1,16 @@
 # 实验一：x86-64 指令解释器
 
-本实验由三个文件组成。你要写的函数与 `case` 是一段 `TODO` 注释加一个 `todo("名字")` 调用；另有几个函数与 `case` 已经写出，作为示例，它们保留了说明做法的注释：
+本实验由三个文件组成。你需要实现的函数与 `case` 是一段 `TODO` 注释加一个 `todo("名字")` 调用；另有几个函数与 `case` 已经写出，作为示例，它们保留了说明做法的注释：
 
-| 文件       | 你要写的                                                                                               | 已经写出的示例                                                                                                     | 内容                                                                             |
+| 文件       | 由你实现的                                                                                             | 已经写出的示例                                                                                                     | 内容                                                                             |
 | ---------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
 | `modrm.c`  | `modrm_decode`                                                                                         | 无                                                                                                                 | 解析 ModRM 字节以及随后的 SIB 字节与位移，得到指令的操作数                       |
 | `alu.c`    | `x86_szp`、`x86_logic`、`x86_sub`、`x86_dec`、`x86_neg`、`x86_mul`；`x86_shift` 中 `shr`、`sar` 的部分 | `x86_add`、`x86_inc`、`x86_div`；`x86_shift` 中 `shl`、`sal` 的部分                                                | 整数运算的结果与标志位：加、减、逻辑运算、`inc`、`dec`、`neg`、移位、乘法与除法  |
 | `interp.c` | `cond`；`interp_run` 中其余指令的 `case`                                                               | `interp_run` 的主循环；`case`：带立即数的八种运算（`0x81`、`0x83`）、`push`、两种 `jmp`、`vphaddd`、`vextracti128` | 条件码的判断；解释器的主循环，每次循环取出一条指令，按操作码直接修改寄存器与内存 |
 
-实验分为五个部分，你按顺序完成。前四个部分计分，共 100 分，一个部分的评测项目只依赖这一部分与它之前的部分；第五部分不计分：
+实验分为五个部分，你需要按顺序完成。前四个部分计分，共 100 分，一个部分的评测项目只依赖这一部分与它之前的部分；第五部分不计分：
 
-| 部分     | 文件       | 你要写的内容                                                             | 分值   |
+| 部分     | 文件       | 由你实现的内容                                                           | 分值   |
 | -------- | ---------- | ------------------------------------------------------------------------ | ------ |
 | 第一部分 | `modrm.c`  | `modrm_decode`                                                           | 30     |
 | 第二部分 | `alu.c`    | 十个整数运算函数中尚未写出的六个，以及 `shr`、`sar` 两种移位             | 30     |
@@ -18,11 +18,11 @@
 | 第四部分 | `interp.c` | `interp_run` 中其余的五条向量指令                                        | 10     |
 | 第五部分 | 无         | 没有要写的代码：用解释器运行真实模型，与同一个程序直接在本机运行比较用时 | 不计分 |
 
-前三部分不涉及向量指令。第三部分完成后，`guest/` 下的 `hello`、`sum`、`matmul`、`heap`、`pattern` 与 `mini-ollama` 能够正确运行，`deep` 在栈溢出处报告缺页；第四部分完成后，使用向量指令的 `simd`、`tinytf` 与 `mini-ollama-simd` 也能正确运行。`guest/mini-ollama` 与 `guest/mini-ollama-simd` 是第三讲的 `mini_ollama`，第五部分用它们在你的解释器上读入第二讲实验生成的模型并生成回答。
+前三部分不涉及向量指令。第三部分完成后，`guest/` 下的 `hello`、`sum`、`matmul`、`heap`、`pattern` 与 `mini-ollama` 能够正确运行，`deep` 在栈溢出处报告缺页；第四部分完成后，使用向量指令的 `simd`、`tinytf` 与 `mini-ollama-simd` 也能正确运行。`guest/mini-ollama` 与 `guest/mini-ollama-simd` 是读取 Q4_0 模型并生成文本的程序 `mini_ollama`，第五部分用它们在你的解释器上读入真实模型并生成回答。
 
 每个函数的接口与要求写在 `include/mcpu.h` 中以 `Lab 1:` 开头的注释里，`TODO` 注释列出实现的步骤。已经写出的示例按同样的接口与要求实现，评测项目检查整个文件，示例也在其中，因此你修改示例时要保持它们正确。运行到尚未完成的函数时，`todo` 在 stderr 上打印 `名字 is not implemented yet`，程序以状态 3 退出。你需要读的只有本文件、`mcpu.h` 中 `Lab 1:` 注释所在的三段与三个源文件的注释；`frame/` 中的代码你不需要读。
 
-解释器实现课堂上讲过的指令。第三部分是 `mov`、`lea`、八种算术逻辑运算、`test`、`push`、`pop`、`call`、`ret`、`jmp` 与条件跳转；第四部分是 `guest/linear.s` 中向量循环 `linear_simd` 使用的七条向量指令。七条中的 `vpxor`、`vmovdqu`、`vpmulld`、`vpaddd` 四条是第三讲 SIMD 一节 `dot_product_avx2`（`examples/dot_intrin.c`）循环体的指令；另外三条 `vextracti128`、`vphaddd`、`vmovd` 把八个通道的和相加，讲义中这一步是用内建函数写的 C 函数 `sum_lanes`，`linear.s` 用汇编写出。`gcc` 生成的其余指令（8 位与 16 位形式、乘除法、移位、`movzx`、`cmov`、`endbr64`、`syscall` 等）与单精度浮点运算的 SSE 指令由框架的 `x86_other` 执行；其中 `inc`、`dec`、`neg`、移位、乘法与除法的操作数由 `x86_other` 取出，结果与标志位由 `alu.c` 中的函数计算。
+解释器实现以下指令。第三部分是 `mov`、`lea`、八种算术逻辑运算、`test`、`push`、`pop`、`call`、`ret`、`jmp` 与条件跳转；第四部分是 `guest/linear.s` 中向量循环 `linear_simd` 使用的七条向量指令。七条中的 `vpxor`、`vmovdqu`、`vpmulld`、`vpaddd` 四条是向量点积循环体的指令，每条处理 8 个 32 位整数。另外三条 `vextracti128`、`vphaddd`、`vmovd` 把八个通道的和相加为一个数。`gcc` 生成的其余指令（8 位与 16 位形式、乘除法、移位、`movzx`、`cmov`、`endbr64`、`syscall` 等）与单精度浮点运算的 SSE 指令由框架的 `x86_other` 执行；其中 `inc`、`dec`、`neg`、移位、乘法与除法的操作数由 `x86_other` 取出，结果与标志位由 `alu.c` 中的函数计算。
 
 前四个部分的顺序就是依赖的顺序：解释器的 `modrm` 调用 `modrm_decode`，条件跳转读取 `alu.c` 设置的标志位，向量指令的 `case` 写在第三部分的主循环中。每一部分完成后你可以做的检查：
 
@@ -60,7 +60,7 @@ typedef union { uint64_t q[4]; uint32_t d[8]; uint8_t b[32]; } u256;
 
 ## 第一部分：`modrm.c`
 
-`modrm_decode(p, n, rex, &m)` 从 `p` 处可读的 `n` 个字节中解析 ModRM 字节 `p[0]`，以及随后的 SIB 字节与位移（如果有），填写 `modrm_t m` 的全部字段，返回用掉的字节数（1 到 6）；`n` 个字节在操作数结束之前用完时返回 0。`rex` 是指令的 REX 前缀，没有时为 0：第 2 位是 REX.R，第 1 位 REX.X，第 0 位 REX.B。它只读字节，不访问寄存器与内存。第三讲“指令的字节表示”一页说明指令以操作码开头、其后是长度可变的操作数字段；ModRM、SIB 与 REX 的全部规则在下面三小节与 `modrm.c` 的注释中。
+`modrm_decode(p, n, rex, &m)` 从 `p` 处可读的 `n` 个字节中解析 ModRM 字节 `p[0]`，以及随后的 SIB 字节与位移（如果有），填写 `modrm_t m` 的全部字段，返回用掉的字节数（1 到 6）；`n` 个字节在操作数结束之前用完时返回 0。`rex` 是指令的 REX 前缀，没有时为 0：第 2 位是 REX.R，第 1 位 REX.X，第 0 位 REX.B。它只读字节，不访问寄存器与内存。指令以操作码开头，其后是长度可变的操作数字段。ModRM、SIB 与 REX 的全部规则在下面三小节与 `modrm.c` 的注释中。
 
 | 字段            | 含义                                                                      |
 | --------------- | ------------------------------------------------------------------------- |
@@ -149,7 +149,7 @@ VEX 前缀中的 R、X、B 位已经由调用者换算成 `rex` 的对应位，`
 | `inc`、`dec`、`neg` | `x86_inc`、`x86_dec`、`x86_neg`              | `x86_add`、`x86_sub`，各调用一次                                            |
 | 移位、乘法与除法    | `x86_shift`、`x86_mul`、`x86_div`            | 前两个自己计算 CF、OF，用 `x86_szp` 设置 ZF、SF、PF；`x86_div` 不改变标志位 |
 
-其中 `x86_add`、`x86_inc`、`x86_div` 三个函数与 `x86_shift` 中 `shl`、`sal` 的分支（`switch` 的 `default`）已经写出。你写其余六个函数与 `x86_shift` 中 `shr`、`sar` 的两个 `case`：`x86_sub` 的结构与 `x86_add` 相同，CF 与 OF 的条件不同；`x86_dec` 的结构与 `x86_inc` 相同；`shr`、`sar` 的两个 `case` 与 `default` 一样算出 `cf`、`r`、`of`，三者的值见“移位”一节的表。`x86_add` 与 `x86_inc` 调用 `x86_szp`，因此 `x86_szp` 完成之前它们也会打印 `x86_szp is not implemented yet`。
+其中 `x86_add`、`x86_inc`、`x86_div` 三个函数与 `x86_shift` 中 `shl`、`sal` 的分支（`switch` 的 `default`）已经写出。你需要实现其余六个函数与 `x86_shift` 中 `shr`、`sar` 的两个 `case`：`x86_sub` 的结构与 `x86_add` 相同，CF 与 OF 的条件不同；`x86_dec` 的结构与 `x86_inc` 相同；`shr`、`sar` 的两个 `case` 与 `default` 一样算出 `cf`、`r`、`of`，三者的值见“移位”一节的表。`x86_add` 与 `x86_inc` 调用 `x86_szp`，因此 `x86_szp` 完成之前它们也会打印 `x86_szp is not implemented yet`。
 
 ### 加、减与逻辑运算
 
@@ -202,7 +202,7 @@ VEX 前缀中的 R、X、B 位已经由调用者换算成 `rex` 的对应位，`
 | `shr`        | 右移，高位补 0            | 最后移出的一位，即截断后的 `v` 的第 `n - 1` 位                            | `v` 的最高位                 |
 | `sar`        | 右移，高位补 `v` 的最高位 | 符号扩展后的 `v` 的第 `n - 1` 位                                          | 0                            |
 
-x86 只在移动 1 位时定义 OF，只在位数小于操作数的位数时定义 `shl` 与 `shr` 的 CF。本机器的提交日志记录标志位，因此任何位数都按上表计算。循环移位 `rol`、`ror` 由框架的 `x86_rotate`（`frame/arith.c`）计算。
+x86 只在移动 1 位时定义 OF，只在位数小于操作数的位数时定义 `shl` 与 `shr` 的 CF。本机器的提交日志记录标志位，因此任何位数都按上表计算。循环移位 `rol`、`ror` 由框架的 `x86_rotate`（`frame/cpu/arith.c`）计算。
 
 `size` 为 1 时的例子：
 
@@ -250,9 +250,9 @@ uint64_t lo = (uint64_t)p, hi = (uint64_t)(p >> 64);
 
 ### 调用这些函数的代码
 
-前四个函数由框架的 `x86_alu(f, aop, a, b, size)`（`frame/arith.c`）按运算编号（0 add，1 or，2 adc，3 sbb，4 and，5 sub，6 xor，7 cmp）调用，返回结果并更新标志位；cmp 返回 `a - b`，调用者不写回。解释器的 `case` 调用的是 `x86_alu`，见第三部分。
+前四个函数由框架的 `x86_alu(f, aop, a, b, size)`（`frame/cpu/arith.c`）按运算编号（0 add，1 or，2 adc，3 sbb，4 and，5 sub，6 xor，7 cmp）调用，返回结果并更新标志位；cmp 返回 `a - b`，调用者不写回。解释器的 `case` 调用的是 `x86_alu`，见第三部分。
 
-其余六个函数由框架的 `x86_other`（`frame/x86rest.c`）调用：它取出 `inc`、`dec`（`fe`/`ff`）、`neg`、`mul`、`imul`、`div`、`idiv`（`f6`/`f7`）、`imul`（`0f af`、`69`、`6b`）与移位（`c0`/`c1`/`d0`..`d3`）的操作数，调用对应的函数，再写回结果。你的 `interp.c` 不需要为这些指令写 `case`。`not` 不改变标志位，由 `x86_other` 直接按位取反。
+其余六个函数由框架的 `x86_other`（`frame/cpu/x86rest.c`）调用：它取出 `inc`、`dec`（`fe`/`ff`）、`neg`、`mul`、`imul`、`div`、`idiv`（`f6`/`f7`）、`imul`（`0f af`、`69`、`6b`）与移位（`c0`/`c1`/`d0`..`d3`）的操作数，调用对应的函数，再写回结果。你的 `interp.c` 不需要为这些指令写 `case`。`not` 不改变标志位，由 `x86_other` 直接按位取反。
 
 ## 第三部分：`interp.c` 的整数指令
 
@@ -287,11 +287,11 @@ while (!c->halted && !(opt_max && c->icount >= opt_max)) {
 
 操作码是一个字节时 `op` 就是这个字节；以 `0f` 开头的两字节操作码返回 `0x100 | 第二个字节`，例如 `0f 84`（位移为 4 字节的 `je`）为 `0x184`，`syscall`（`0f 05`）为 `0x105`。
 
-跳转指令的位移相对于下一条指令的地址。位移读出之后 `R[RIP]` 已经指向下一条指令，因此你把跳转写成 `R[RIP] += rel`。
+跳转指令的位移相对于下一条指令的地址。位移读出之后 `R[RIP]` 已经指向下一条指令，因此你需要把跳转写成 `R[RIP] += rel`。
 
 ### 一条指令的字节
 
-第三讲“指令的字节表示”一页说明：指令以操作码开头，其后是长度可变的操作数字段。`objdump -d` 在每条指令的左边打印它的字节，这些字节从左到右最多分为四段：
+指令以操作码开头，其后是长度可变的操作数字段。`objdump -d` 在每条指令的左边打印它的字节，这些字节从左到右最多分为四段：
 
 | 段                 | 内容                                                                                   | 读它的代码                                  |
 | ------------------ | -------------------------------------------------------------------------------------- | ------------------------------------------- |
@@ -351,7 +351,7 @@ while (!c->halted && !(opt_max && c->icount >= opt_max)) {
 | `ea`                                      | 内存操作数的地址。rip 相对寻址的地址在调用时加上 `R[RIP]`                                                    |
 | `load(&x, a, n)`、`store(&x, a, n, v)`    | 在地址 `a` 读写 `n` 字节。访问失败时记录缺页，`load` 返回 0，`store` 不写                                    |
 
-计算结果与标志位时，你用第二部分的 `x86_alu(f, aop, a, b, size)`，`f` 是标志寄存器的地址，一般写 `&R[RFLAGS]`；条件跳转用 `cond(R[RFLAGS], op)`。`alu.c` 的其余六个函数（`x86_inc` 到 `x86_div`）由 `x86_other` 调用，你的 `case` 不需要它们。
+计算结果与标志位时，你需要用第二部分的 `x86_alu(f, aop, a, b, size)`，`f` 是标志寄存器的地址，一般写 `&R[RFLAGS]`；条件跳转用 `cond(R[RFLAGS], op)`。`alu.c` 的其余六个函数（`x86_inc` 到 `x86_div`）由 `x86_other` 调用，你的 `case` 不需要它们。
 
 ### `interp_run`
 
@@ -372,7 +372,7 @@ case 0x81: case 0x83:                       /* rm = rm OP imm */
     break;
 ```
 
-整数指令按操作码之后还有哪些字节分为五组，已经写出的 `case` 在“做的事”一列中注明，其余的由你写。各表中“例子”一列是 `objdump -d` 打印的字节与汇编，最后一列是 `guest/` 下首先执行到这条指令的程序（顺序为 hello、sum、matmul、heap、pattern、block、deep）。
+整数指令按操作码之后还有哪些字节分为五组，已经写出的 `case` 在“做的事”一列中注明，其余的由你实现。各表中“例子”一列是 `objdump -d` 打印的字节与汇编，最后一列是 `guest/` 下首先执行到这条指令的程序（顺序为 hello、sum、matmul、heap、pattern、block、deep）。
 
 **第一组：只有操作码。** `case` 中没有读指令的调用。`push` 与 `pop` 的寄存器编号是 `(op & 7) | ((x.rex & 1) << 3)`。
 
@@ -436,7 +436,7 @@ case 0x81: case 0x83:                       /* rm = rm OP imm */
 
 `switch` 的 `default` 把其余操作码交给框架的 `x86_other`，它执行：8 位与 al/eax 立即数形式的算术逻辑运算（`00`、`02`、`04`、`05` 等）、`80`、`84`、`88`、`8a`、`b0`..`b7`、`c6`，`movsxd`（`63`）、`movzx`/`movsx`（`0f b6`/`b7`/`be`/`bf`）、`cmovcc`、`setcc`，`imul`（`0f af`、`69`、`6b`）、组 3（`f6`/`f7`：`test`、`not`、`neg`、`mul`、`imul`、`div`、`idiv`）、移位（`c0`/`c1`/`d0`..`d3`），`cltq`/`cqto`（`98`/`99`）、`test al/eax, imm`（`a8`/`a9`）、`xchg`（`87`）、`push imm`（`68`/`6a`）、`leave`（`c9`）、组 4、5（`fe`/`ff`：`inc`、`dec`、`call *`、`jmp *`、`push`）、`nop`、`endbr64` 与多字节 `nop`、`pushfq`、`popfq`、`syscall`。`x86_other` 遇到本部分的表与第四部分的表中的操作码时报告非法指令。其中 `inc`、`dec`、`neg`、`mul`、`imul`、`div`、`idiv` 与 `shl`、`shr`、`sal`、`sar` 的结果和标志位由你的 `alu.c` 计算，见第二部分“调用这些函数的代码”。
 
-`x86_other` 还执行 `guest/ollama/` 用到的浮点指令与另外三条向量指令，运算写在 `frame/simd.c` 中：
+`x86_other` 还执行 `guest/ollama/` 用到的浮点指令与另外三条向量指令，运算写在 `frame/cpu/simd.c` 中：
 
 | 指令                                                            | 内容                                                                                                               |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -523,7 +523,7 @@ case 0x11ef:                                /* vpxor: reg = v ^ rm */
 
 ### 模型文件
 
-真实模型是 Hands-on 实验 `nano-quant` 以 `--recipe q4_0` 生成的 `q4_0.gguf`，也就是 ollama 装载的那个文件。如果你在 `nano-quant` 中已经得到 `q4_0.gguf` ，可以直接使用它，否则可以从下面的云盘链接里下载：
+真实模型是 Q4_0 格式的模型文件 `q4_0.gguf`：Qwen3-VL-2B-Instruct 的语言模型，每个矩阵为 Q4_0 格式，974 196 320 字节，ollama 也能装载这个文件。你的机器上已有这个文件时直接使用它，否则从下面的云盘链接下载：
 
 <https://pan.sjtu.edu.cn/web/share/a853ce437a176a0064df9a5af1942ecf>
 
@@ -576,7 +576,7 @@ sys	0m0.293s
 
 ### 两次运行的比较
 
-你再直接运行一次只生成第一个 token 的命令，与解释器上的那一次比较：
+你需要再直接运行一次只生成第一个 token 的命令，与解释器上的那一次比较：
 
 ```bash
 time guest/mini-ollama-simd "用一句话介绍你自己。" 1 < "$MODEL"
@@ -588,7 +588,7 @@ time guest/mini-ollama-simd "用一句话介绍你自己。" 1 < "$MODEL"
 | 用时（`real`） | 3.6 秒                                   | 26 分 32 秒                      |
 | 每秒执行的指令 | 约 66 亿条                               | 约 1500 万条                     |
 
-在这台机器上，解释执行的用时是直接运行的约 440 倍。你在自己的机器上测出这三行的数值。直接运行改用 `guest/mini-ollama-ref` 时，两次运行执行的指令不同，只比较用时。
+在这台机器上，解释执行的用时是直接运行的约 440 倍。你需要在自己的机器上测出这三行的数值。直接运行改用 `guest/mini-ollama-ref` 时，两次运行执行的指令不同，只比较用时。
 
 用时的差别来自一条指令的执行方式。直接运行时，取出指令、识别操作码、计算内存地址、读写内存与设置标志位都由 CPU 的电路完成。在解释器上，这些步骤各由一段 C 代码完成，每一段都是本机的若干条指令：
 
@@ -620,7 +620,7 @@ fault (illegal instruction) after 0 instructions:
 rip  0000000000401000  flags -----
 ```
 
-你用 `objdump -d guest/hello` 查看该地址处的指令：
+你需要用 `objdump -d guest/hello` 查看该地址处的指令：
 
 ```
   401000:	48 8b 3c 24          	mov    (%rsp),%rdi
@@ -810,7 +810,7 @@ make check                 # 或 sh tests/lab1/run.sh
 
 随机参数由 `make check` 第一行打印的种子决定，`SEED=种子 make check` 重复同一次评测。测试之前 `tests/srccheck.sh` 检查源文件：你的代码只能使用 `tests/symbols.txt` 中 `lab1` 与 `libc` 两行的名字，规则见 [`../../README.md`](../../README.md) 的“源文件检查”。
 
-提交日志只比较 `cksum` 的结果（校验和与字节数）。本实验没有可以对照的日志，校验和不一致而输出正确时，你用 `--commit` 写出日志，对照 `objdump -d` 检查标志位与写入的宽度；向量指令的每一条写入都对照第四部分“七条指令”一表的语义检查。
+提交日志只比较 `cksum` 的结果（校验和与字节数）。本实验没有可以对照的日志，校验和不一致而输出正确时，你需要用 `--commit` 写出日志，对照 `objdump -d` 检查标志位与写入的宽度；向量指令的每一条写入都对照第四部分“七条指令”一表的语义检查。
 
 ## 提交
 
@@ -827,17 +827,17 @@ make handin
 | `src/lab1/modrm.c`                    | 你的代码：`modrm_decode`                                                                                                                                                                                                                                                   |
 | `src/lab1/alu.c`                      | 你的代码：`x86_szp`、`x86_logic`、`x86_sub`、`x86_dec`、`x86_neg`、`x86_mul`，`x86_shift` 的 `shr`、`sar`；已经写出的示例：`x86_add`、`x86_inc`、`x86_div`，`x86_shift` 的 `shl`、`sal`                                                                                    |
 | `src/lab1/interp.c`                   | 你的代码：`cond`，`interp_run` 中其余指令的 `case`；已经写出的示例：主循环，`0x81`、`0x83`、`push`、`jmp`、`vphaddd`、`vextracti128` 的 `case`                                                                                                                             |
-| `include/mcpu.h`                      | `mcpu`（寄存器）、`modrm_t`（ModRM 的解析结果）与 `x86`（一条指令）的定义；你要写的函数的接口；辅助函数的声明；内联的 `flag`、`msb`、`parity`                                                                                                                              |
-| `frame/x86.c`                         | 辅助函数：取指、`modrm`、按操作数大小读写寄存器、读写内存，`x86_begin` 与 `x86_end`                                                                                                                                                                                        |
-| `frame/x86rest.c`                     | `x86_other`：`interp.c` 之外的指令；整数运算的结果与标志位调用 `alu.c`                                                                                                                                                                                                     |
-| `frame/simd.c`                        | `x86_other` 执行的 SSE 浮点指令与 `vpmovzxbd`、`vpand`、`vpsrld` 的运算                                                                                                                                                                                                    |
-| `frame/sysbase.c`                     | 系统调用：`write`、`brk`、`exit`、`getpid`，以及 `mini-ollama` 读入模型用的 `fstat` 与 `mmap`                                                                                                                                                                              |
-| `frame/arith.c`                       | `trunc_val`、`sext`，按运算编号调用 `alu.c` 的 `x86_alu`，循环移位 `x86_rotate`                                                                                                                                                                                            |
+| `include/mcpu.h`                      | `mcpu`（寄存器）、`modrm_t`（ModRM 的解析结果）与 `x86`（一条指令）的定义；由你实现的函数的接口；辅助函数的声明；内联的 `flag`、`msb`、`parity`                                                                                                                              |
+| `frame/cpu/x86.c`                     | 辅助函数：取指、`modrm`、按操作数大小读写寄存器、读写内存，`x86_begin` 与 `x86_end`                                                                                                                                                                                        |
+| `frame/cpu/x86rest.c`                 | `x86_other`：`interp.c` 之外的指令；整数运算的结果与标志位调用 `alu.c`                                                                                                                                                                                                     |
+| `frame/cpu/simd.c`                    | `x86_other` 执行的 SSE 浮点指令与 `vpmovzxbd`、`vpand`、`vpsrld` 的运算                                                                                                                                                                                                    |
+| `frame/os/sysbase.c`                  | 系统调用：`write`、`brk`、`exit`、`getpid`，以及 `mini-ollama` 读入模型用的 `fstat` 与 `mmap`                                                                                                                                                                              |
+| `frame/cpu/arith.c`                   | `trunc_val`、`sext`，按运算编号调用 `alu.c` 的 `x86_alu`，循环移位 `x86_rotate`                                                                                                                                                                                            |
 | `frame/translate.c`、`frame/disasm.c` | 反汇编器 `translate` 与 `mini-cpu --disasm`：读 ELF 文件的代码节，逐条翻译为 `objdump -d` 格式的 AT&T 汇编                                                                                                                                                                 |
-| `frame/mem.c`                         | `fetch_bytes`、`mem_read`、`mem_write`：按虚拟地址读写客户机内存                                                                                                                                                                                                           |
-| `frame/commit.c`                      | 提交日志 `commit_line`，异常时的寄存器打印 `cpu_dump`                                                                                                                                                                                                                      |
+| `frame/cpu/mem.c`                     | CPU 的访存单元 `fetch_bytes`、`mem_read`、`mem_write`：一条指令对客户机内存的读写                                                                                                                                                                                          |
+| `frame/cpu/commit.c`                  | 提交日志 `commit_line`，异常时的寄存器打印 `cpu_dump`                                                                                                                                                                                                                      |
 | `frame/main.c`                        | 装载程序，调用 `interp_run`，打印统计                                                                                                                                                                                                                                      |
-| `guest/linear.s`、`guest/simd.c`      | `linear_scalar`（逐个元素的循环）与 `linear_simd`（第三讲 SIMD 一节的 AVX2 循环，加上汇编写成的八通道求和与偏置参数 `b`，没有 `vzeroupper`）；`guest/simd` 比较二者的结果                                                                                                  |
+| `guest/linear.s`、`guest/simd.c`      | `linear_scalar`（逐个元素的循环）与 `linear_simd`（AVX2 的向量循环，加上汇编写成的八通道求和与偏置参数 `b`，没有 `vzeroupper`）；`guest/simd` 比较二者的结果                                                                                                  |
 | `guest/tinytf.c`                      | 整数运算的小型 Transformer，矩阵乘法全部调用 `linear_simd`，`guest/tinytf [种子 [个数]]` 生成若干 token                                                                                                                                                                    |
-| `guest/ollama/`                       | 第三讲的 `mini_ollama`：`mini_ollama.c`（生成循环与一层的运算）、`model.c`（读 GGUF 文件）、`tokenizer.c`、`matvec.c` 与 `matvec_simd.c`（`matvec` 的两个版本）、`dot_q4.s` 与 `dot_q4.c`（一个 Q4_0 块的整数内积，汇编与 C）、`libc.c` 与 `math.c`（程序用到的 C 库函数） |
+| `guest/ollama/`                       | 读取 Q4_0 模型并生成文本的程序 `mini_ollama`：`mini_ollama.c`（生成循环与一层的运算）、`model.c`（读 GGUF 文件）、`tokenizer.c`、`matvec.c` 与 `matvec_simd.c`（`matvec` 的两个版本）、`dot_q4.s` 与 `dot_q4.c`（一个 Q4_0 块的整数内积，汇编与 C）、`libc.c` 与 `math.c`（程序用到的 C 库函数） |
 | `tools/mkmodel.py`                    | `python3 tools/mkmodel.py [种子]` 向标准输出写一个小模型，`make` 用它生成 `guest/tiny.gguf`                                                                                                                                                                                |

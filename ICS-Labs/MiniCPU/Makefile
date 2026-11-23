@@ -1,6 +1,6 @@
-# mini-cpu: an x86-64 machine built over six labs.
+# mini-cpu: an x86-64 machine built over five labs.
 #
-#   make              build mini-cpu and mini-unit (and mini-jit from lab 3 on)
+#   make              build mini-cpu and mini-unit (and mini-jit from lab 4 on)
 #                     from src/
 #   make LAB=n        build as of lab n instead of the highest lab present
 #   make guests       rebuild the guest programs
@@ -13,51 +13,51 @@
 # directory of the previous lab raises LAB by one without touching the
 # student's earlier code.
 #
-# SRCDIR is the directory holding lab1 .. lab6, BINDIR the directory the two
-# programs are written to, and RT the host operators linked from lab 3 on;
+# SRCDIR is the directory holding lab1 .. lab5, BINDIR the directory the two
+# programs are written to, and RT the host operators linked from lab 4 on;
 # all default to this directory's layout.
 
 SRCDIR  ?= src
 BINDIR  ?= .
 RT      ?= model/rt.c
-LABS    := $(sort $(patsubst $(SRCDIR)/lab%,%,$(wildcard $(SRCDIR)/lab[1-6])))
+LABS    := $(sort $(patsubst $(SRCDIR)/lab%,%,$(wildcard $(SRCDIR)/lab[1-5])))
 LAB     ?= $(lastword $(LABS))
 
 CC      := gcc
-CFLAGS  := -std=c11 -O2 -g -Wall -Wextra -Iinclude -Imodel -D_GNU_SOURCE -DLAB=$(LAB)
-LDFLAGS := -lm
-# frame/memtrace.c sees these calls first (mini-cpu --memtrace)
+CFLAGS  := -std=c11 -O2 -g -Wall -Wextra -pthread -Iinclude -Imodel -D_GNU_SOURCE -DLAB=$(LAB)
+LDFLAGS := -lm -pthread
+# frame/memtrace.c sees these calls first (mini-cpu --memtrace, --cache 0)
 LDFLAGS += -Wl,--wrap=mmu_translate,--wrap=cache_read,--wrap=cache_write,--wrap=cache_flush
 
 upto     = $(filter-out $(wordlist $(shell expr $(LAB) + 1),9,1 2 3 4 5 6 7 8 9),$(1))
-LABDIRS  = $(foreach n,$(call upto,1 2 3 4 5 6),$(1)/lab$(n))
+LABDIRS  = $(foreach lab,$(call upto,1 2 3 4 5),$(1)/lab$(lab))
 
-# Framework files. A stand-in is linked until the lab that replaces it.
-CORE    := frame/dram.c frame/frames.c frame/mem.c frame/trap.c frame/commit.c \
-           frame/loader.c frame/arith.c frame/x86.c frame/x86rest.c frame/memtrace.c \
-           frame/translate.c frame/disasm.c frame/sysbase.c frame/simd.c
-ifneq ($(filter 2 3 4 5 6,$(LAB)),)
-CORE    += frame/decode.c frame/compute.c frame/pipeline.c
+# Framework files: frame/cpu/ the hardware of the machine, frame/os/ the
+# software that runs on it, frame/ the programs of the host around them. A
+# stand-in is linked until the lab that replaces it.
+CORE    := frame/cpu/x86.c frame/cpu/x86rest.c frame/cpu/arith.c frame/cpu/simd.c \
+           frame/cpu/commit.c frame/cpu/mem.c frame/cpu/cr3.c frame/cpu/dram.c \
+           frame/os/loader.c frame/os/sysbase.c frame/os/trap.c frame/os/frames.c \
+           frame/os/copy.c frame/memtrace.c frame/translate.c frame/disasm.c
+ifeq ($(filter 2 3 4 5,$(LAB)),)
+CORE    += frame/cpu/nocache.c
 endif
-ifneq ($(filter 3 4 5 6,$(LAB)),)
-CORE    += frame/objfile.c frame/arena.c frame/hostcall.c $(RT)
+ifneq ($(filter 4 5,$(LAB)),)
+CORE    += frame/os/objfile.c frame/os/arena.c frame/os/hostcall.c $(RT)
 endif
-ifeq ($(filter 4 5 6,$(LAB)),)
-CORE    += frame/pagemap.c
+ifeq ($(filter 3 4 5,$(LAB)),)
+CORE    += frame/cpu/pagemap.c frame/os/pagemap.c
 endif
-ifeq ($(filter 5 6,$(LAB)),)
-CORE    += frame/nocache.c
-endif
-ifneq ($(filter 6,$(LAB)),)
-CORE    += frame/blkdev.c
+ifneq ($(filter 5,$(LAB)),)
+CORE    += frame/cpu/blkdev.c frame/os/blkdrv.c
 endif
 
 # Files of labs 1 .. LAB.
-STU     := $(foreach n,$(call upto,1 2 3 4 5 6),$(wildcard $(SRCDIR)/lab$(n)/*.c))
+STU     := $(foreach lab,$(call upto,1 2 3 4 5),$(wildcard $(SRCDIR)/lab$(lab)/*.c))
 HDR     := include/mcpu.h $(BINDIR)/.lab
 
 BIN     := $(BINDIR)/mini-cpu $(BINDIR)/mini-unit
-ifneq ($(filter 3 4 5 6,$(LAB)),)
+ifneq ($(filter 4 5,$(LAB)),)
 BIN     += $(BINDIR)/mini-jit
 endif
 
@@ -68,23 +68,23 @@ endif
 #                                       what the compiler emits. The vector
 #                                       subset of lab 1 appears only in the
 #                                       hand-written guest/linear.s
-#   -Og                                 disassembly matches the lectures
+#   -Og                                 disassembly stays close to the C source
 GCFLAGS := -std=c11 -Og -fno-pic -no-pie -nostdlib -nostdinc -ffreestanding \
            -mno-sse -fno-asynchronous-unwind-tables -fno-stack-protector \
            -Wall -Iguest
 GUESTS  := guest/hello guest/sum guest/matmul guest/heap guest/deep guest/pattern \
            guest/simd guest/block guest/tinytf guest/readonly
-ifneq ($(filter 2 3 4 5 6,$(LAB)),)
-GUESTS  += guest/linear-loop guest/wrongpath
+ifneq ($(filter 2 3 4 5,$(LAB)),)
+GUESTS  += guest/rowcol
 endif
-ifneq ($(filter 6,$(LAB)),)
+ifneq ($(filter 5,$(LAB)),)
 GUESTS  += guest/cat guest/tee guest/readn
 endif
 FILES   := guest/poem.txt guest/numbers.txt guest/scratch.txt
 
-# mini-ollama, the program of lecture 3, as a guest (guest/ollama). It
-# computes with floats and is built with -O2, as in the lecture; in the
-# options of the other guests, these take the place of -mno-sse:
+# mini-ollama, a program that generates text from a quantized model, as a
+# guest (guest/ollama). It computes with floats and is built with -O2; in
+# the options of the other guests, these take the place of -mno-sse:
 #   -msse2 -mno-avx -mfpmath=sse        floats in xmm registers, no VEX
 #                                       encodings from the compiler
 #   -fno-tree-vectorize                 one weight at a time
@@ -97,7 +97,7 @@ FILES   := guest/poem.txt guest/numbers.txt guest/scratch.txt
 # file with vector instructions). guest/mini-ollama-ref is the second
 # program with dot_q4 in C (dot_q4.c): it runs on a machine without AVX2
 # and prints the same text, which make check compares with. OLLAMA_SRC is
-# every file of the port.
+# every source file of mini-ollama.
 OLLAMA        := guest/mini-ollama guest/mini-ollama-simd guest/mini-ollama-ref
 OLLAMA_SRC    := guest/ollama/mini_ollama.c guest/ollama/model.c guest/ollama/tokenizer.c \
                  guest/ollama/libc.c guest/ollama/math.c guest/ollama/matvec.c \
@@ -108,14 +108,14 @@ OLLAMA_CFLAGS := $(subst -mno-sse,-msse2 -mno-avx -mfpmath=sse -fno-tree-vectori
 # The files all three programs are built from.
 OLLAMA_BOTH   := guest/start.S $(filter-out %/matvec.c %/matvec_simd.c %/dot_q4.c %.s %.h,$(OLLAMA_SRC))
 
-# Layers of the model (lab 3). -mno-sse keeps floating point out of guest
+# Layers of the model (lab 4). -mno-sse keeps floating point out of guest
 # code: the operators are host functions reached through a system call.
 LAYERS  := model/layer0.o model/layer1.o model/layer2.o model/layer3.o model/head.o
 LAYER_CFLAGS := -std=c11 -Og -fno-pic -mno-sse -fno-asynchronous-unwind-tables \
                 -Wall -Imodel
 
-all: $(BIN) guests $(if $(filter 3 4 5 6,$(LAB)),$(LAYERS)) \
-     $(if $(filter 6,$(LAB)),disk.img)
+all: $(BIN) guests $(if $(filter 4 5,$(LAB)),$(LAYERS)) \
+     $(if $(filter 5,$(LAB)),disk.img)
 
 $(BINDIR)/mini-cpu: $(CORE) frame/main.c $(STU) $(HDR)
 	$(CC) $(CFLAGS) -o $@ $(filter %.c,$^) $(LDFLAGS)
@@ -184,7 +184,7 @@ check: all
 
 clean:
 	rm -f $(BINDIR)/mini-cpu $(BINDIR)/mini-jit $(BINDIR)/mini-unit $(BINDIR)/.lab $(GUESTS) \
-	      guest/cat guest/tee guest/readn guest/linear-loop guest/wrongpath $(LAYERS) disk.img dram.img \
+	      guest/cat guest/tee guest/readn guest/rowcol $(LAYERS) disk.img dram.img \
 	      $(OLLAMA) guest/tiny.gguf
 
 .PHONY: all guests check handin clean FORCE

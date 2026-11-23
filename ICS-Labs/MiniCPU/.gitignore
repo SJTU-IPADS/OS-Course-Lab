@@ -11,8 +11,7 @@ guest/matmul
 guest/heap
 guest/deep
 guest/pattern
-guest/linear-loop
-guest/wrongpath
+guest/rowcol
 guest/block
 guest/cat
 guest/tee

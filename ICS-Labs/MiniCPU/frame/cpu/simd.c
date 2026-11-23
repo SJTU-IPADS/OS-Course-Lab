@@ -1,5 +1,5 @@
-/* The instructions of the machine outside the integer subset and the seven
- * vector instructions of interp.c: what they compute.
+/* Hardware: the instructions of the machine outside the integer subset and
+ * the seven vector instructions of interp.c, what they compute.
  *
  *   SSE     scalar single-precision arithmetic, the moves and the logic
  *           operations that come with it: what gcc emits for float code
@@ -10,10 +10,9 @@
  *           unpack 4-bit weights.
  *
  * The functions here read no register file and no memory: x86_other of
- * the interpreter (frame/x86rest.c) and compute() of the CPU of lab 2
- * (frame/compute.c) fetch the operands, call them and store the result,
- * so both write the same commit log. frame/decode.c and frame/translate.c
- * read the operands of an SSE instruction from the same table.
+ * the interpreter (frame/cpu/x86rest.c) fetches the operands, calls them and
+ * stores the result. frame/translate.c reads the operands of an SSE
+ * instruction from the same table.
  *
  * Floating-point arithmetic is done by the host in IEEE single precision,
  * rounding to nearest. There is no MXCSR register: exceptions are masked
@@ -65,99 +64,115 @@ const sse_op *sse_find(unsigned op, int pp)
     static int ready;
 
     if (!ready) {
-        for (const sse_op *s = sse_ops; s->name; ++s)
-            at[s->op & 0xff][s->pp] = s;
+        for (const sse_op *row = sse_ops; row->name; ++row)
+            at[row->op & 0xff][row->pp] = row;
         ready = 1;
     }
     return op >= 0x100 && op < 0x200 ? at[op & 0xff][pp & 3] : NULL;
 }
 
-void sse_compute(const sse_op *s, int mem, int isz, const u256 *a, const u256 *b,
-                 u256 *r, uint64_t *f)
+void sse_compute(const sse_op *row, int mem, int isz, const u256 *dest,
+                 const u256 *other, u256 *result, uint64_t *flags)
 {
-    float x = a->f[0], y = b->f[0];
-    unsigned op = s->op & 0xff;
+    float first = dest->f[0], second = other->f[0];
+    unsigned op = row->op & 0xff;
 
-    switch (s->form) {
+    switch (row->form) {
     case SSE_CMP:                                       /* unordered: one of them is a NaN */
-        *f &= ~(uint64_t)(CF | PF | ZF | SF | OF);
-        if (x != x || y != y) *f |= CF | PF | ZF;
-        else if (x < y)       *f |= CF;
-        else if (x == y)      *f |= ZF;
+        *flags &= ~(uint64_t)(CF | PF | ZF | SF | OF);
+        if (first != first || second != second) *flags |= CF | PF | ZF;
+        else if (first < second)                 *flags |= CF;
+        else if (first == second)                *flags |= ZF;
         return;
     case SSE_RM_TO_INT:                                 /* cvttss2si: towards zero; a value */
-        memset(r, 0, sizeof *r);                        /* that does not fit gives 80..0 */
+        memset(result, 0, sizeof *result);              /* that does not fit gives 80..0 */
         if (isz == 8)
-            r->q[0] = y >= -0x1p63f && y < 0x1p63f ? (uint64_t)(int64_t)y : 1ULL << 63;
+            result->q[0] = second >= -0x1p63f && second < 0x1p63f
+                           ? (uint64_t)(int64_t)second : 1ULL << 63;
         else
-            r->q[0] = y >= -0x1p31f && y < 0x1p31f ? (uint32_t)(int32_t)y : 1u << 31;
+            result->q[0] = second >= -0x1p31f && second < 0x1p31f
+                           ? (uint32_t)(int32_t)second : 1u << 31;
         return;
     case SSE_REG_TO_INT:                                /* movd, movq */
-        memset(r, 0, sizeof *r);
-        r->q[0] = isz == 8 ? b->q[0] : b->d[0];
+        memset(result, 0, sizeof *result);
+        result->q[0] = isz == 8 ? other->q[0] : other->d[0];
         return;
     case SSE_INT_TO_REG:
-        *r = *a;
+        *result = *dest;
         if (op == 0x2a) {                               /* cvtsi2ss */
-            r->f[0] = isz == 8 ? (float)(int64_t)b->q[0] : (float)(int32_t)b->q[0];
+            result->f[0] = isz == 8 ? (float)(int64_t)other->q[0]
+                                    : (float)(int32_t)other->q[0];
         } else {                                        /* movd, movq */
-            r->q[0] = isz == 8 ? b->q[0] : (uint32_t)b->q[0];
-            r->q[1] = 0;
+            result->q[0] = isz == 8 ? other->q[0] : (uint32_t)other->q[0];
+            result->q[1] = 0;
         }
         return;
     }
 
-    *r = *a;                                            /* a vector register is written */
+    *result = *dest;                                    /* a vector register is written */
     switch (op) {
-    case 0x51: r->f[0] = sqrtf(y); break;
-    case 0x54: r->q[0] = a->q[0] & b->q[0];  r->q[1] = a->q[1] & b->q[1];  break;
-    case 0x55: r->q[0] = ~a->q[0] & b->q[0]; r->q[1] = ~a->q[1] & b->q[1]; break;
-    case 0x56: r->q[0] = a->q[0] | b->q[0];  r->q[1] = a->q[1] | b->q[1];  break;
+    case 0x51: result->f[0] = sqrtf(second); break;
+    case 0x54:
+        result->q[0] = dest->q[0] & other->q[0];
+        result->q[1] = dest->q[1] & other->q[1];
+        break;
+    case 0x55:
+        result->q[0] = ~dest->q[0] & other->q[0];
+        result->q[1] = ~dest->q[1] & other->q[1];
+        break;
+    case 0x56:
+        result->q[0] = dest->q[0] | other->q[0];
+        result->q[1] = dest->q[1] | other->q[1];
+        break;
     case 0x57:
-    case 0xef: r->q[0] = a->q[0] ^ b->q[0];  r->q[1] = a->q[1] ^ b->q[1];  break;
-    case 0x58: r->f[0] = x + y; break;
-    case 0x59: r->f[0] = x * y; break;
-    case 0x5c: r->f[0] = x - y; break;
-    case 0x5d: r->f[0] = x < y ? x : y; break;          /* minss, maxss: the second operand */
-    case 0x5e: r->f[0] = x / y; break;                  /* when one of them is a NaN */
-    case 0x5f: r->f[0] = x > y ? x : y; break;
+    case 0xef:
+        result->q[0] = dest->q[0] ^ other->q[0];
+        result->q[1] = dest->q[1] ^ other->q[1];
+        break;
+    case 0x58: result->f[0] = first + second; break;
+    case 0x59: result->f[0] = first * second; break;
+    case 0x5c: result->f[0] = first - second; break;
+    /* minss, maxss: the second operand when one of them is a NaN */
+    case 0x5d: result->f[0] = first < second ? first : second; break;
+    case 0x5e: result->f[0] = first / second; break;
+    case 0x5f: result->f[0] = first > second ? first : second; break;
     default:                                            /* the moves */
-        if (s->width == 16) {
-            r->q[0] = b->q[0];
-            r->q[1] = b->q[1];
-        } else if (s->width == 8) {                     /* movq */
-            r->q[0] = b->q[0];
-            r->q[1] = 0;
+        if (row->width == 16) {
+            result->q[0] = other->q[0];
+            result->q[1] = other->q[1];
+        } else if (row->width == 8) {                   /* movq */
+            result->q[0] = other->q[0];
+            result->q[1] = 0;
         } else {                                        /* movss */
-            r->d[0] = b->d[0];
+            result->d[0] = other->d[0];
             if (mem) {
-                r->d[1] = 0;
-                r->q[1] = 0;
+                result->d[1] = 0;
+                result->q[1] = 0;
             }
         }
         break;
     }
 }
 
-void vex_compute(unsigned op, int vlen, unsigned imm, const u256 *a, const u256 *b,
-                 u256 *r)
+void vex_compute(unsigned op, int vlen, unsigned imm, const u256 *from_vvvv,
+                 const u256 *from_rm, u256 *result)
 {
-    u256 t;
+    u256 value;
 
-    memset(&t, 0, sizeof t);
+    memset(&value, 0, sizeof value);
     switch (op) {
     case 0x11db:                                        /* vpand */
-        for (int i = 0; i < vlen / 8; ++i)
-            t.q[i] = a->q[i] & b->q[i];
+        for (int lane = 0; lane < vlen / 8; ++lane)
+            value.q[lane] = from_vvvv->q[lane] & from_rm->q[lane];
         break;
     case 0x1172:                                        /* vpsrld: a count above 31 gives 0 */
-        for (int i = 0; i < vlen / 4; ++i)
-            t.d[i] = imm > 31 ? 0 : b->d[i] >> imm;
+        for (int lane = 0; lane < vlen / 4; ++lane)
+            value.d[lane] = imm > 31 ? 0 : from_rm->d[lane] >> imm;
         break;
-    default:                                            /* vpmovzxbd: byte i becomes lane i */
-        for (int i = 0; i < vlen / 4; ++i)
-            t.d[i] = b->b[i];
+    default:                                            /* vpmovzxbd: each byte becomes a lane */
+        for (int lane = 0; lane < vlen / 4; ++lane)
+            value.d[lane] = from_rm->b[lane];
         break;
     }
-    *r = t;
+    *result = value;
 }

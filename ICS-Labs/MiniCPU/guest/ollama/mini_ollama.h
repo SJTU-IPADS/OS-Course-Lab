@@ -1,9 +1,7 @@
 /* mini_ollama.h -- what the source files share.
 
-   The file of the same name of lecture 3 (lectures/3-asm/examples/
-   mini-ollama), for a guest of mini-cpu. What differs: libc.h stands in for
-   the standard headers, MAX_CTX is 128, load_model() takes the file from
-   standard input, matvec() is declared here, and die() is in libc.c.
+   libc.h stands in for the standard headers. load_model() takes the file
+   from standard input. matvec() is declared here, and die() is in libc.c.
 
      mini_ollama.c   the generation loop and the arithmetic of one layer
      matvec.c        y = W x, one weight at a time
@@ -16,13 +14,14 @@
 
 #include "libc.h"
 
-/* Prompt and answer together, in tokens. The lecture has 512, whose key and
-   value caches take 117 MB; the machine has 64 MB, and 128 takes 29 MB. */
+/* Prompt and answer together, in tokens. The machine has 64 MB, and the key
+   and value caches of 128 tokens take 29 MB of it. Those of 512 tokens
+   would take 117 MB. */
 enum { MAX_CTX = 128 };
 
 /* A string inside the file: not terminated, so it carries its length. */
 struct str {
-    const char *p;
+    const char *chars;
     size_t      len;
 };
 
@@ -59,14 +58,14 @@ struct model {
 
 /* model.c */
 struct model *load_model(void);
-extern float  fp16[1 << 16];            /* fp16[h]: the value of the half-precision bits h */
+extern float  fp16[1 << 16];            /* fp16[bits]: the value of the half-precision bits */
 
 /* matvec.c or matvec_simd.c */
-void matvec(float *y, const struct tensor *w, const float *x);
+void matvec(float *out, const struct tensor *weights, const float *in);
 
 /* tokenizer.c */
-void tokenizer_init(struct model *m);
-int  tokenize(const struct model *m, const char *prompt, int *tok);
-void print_token(const struct model *m, int tok);
+void tokenizer_init(struct model *model);
+int  tokenize(const struct model *model, const char *prompt, int *tok);
+void print_token(const struct model *model, int tok);
 
 #endif

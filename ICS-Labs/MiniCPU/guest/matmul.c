@@ -1,31 +1,31 @@
-/* Multiplies two N x N integer matrices. Changing N or the cache's sets and
-   ways changes the hit rate noticeably. */
+/* Multiplies two SIZE x SIZE integer matrices. Changing SIZE or the cache's
+   sets and ways changes the hit rate noticeably. */
 #include "mini.h"
 
-#define N 24
+#define SIZE 24
 
-static long a[N][N], b[N][N], c[N][N];
+static long left[SIZE][SIZE], right[SIZE][SIZE], product[SIZE][SIZE];
 
 int guest_main(int argc, char **argv)
 {
     (void)argc; (void)argv;
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N; ++j) {
-            a[i][j] = i + 2 * j;
-            b[i][j] = 3 * i - j + 1;
+    for (int row = 0; row < SIZE; ++row)
+        for (int col = 0; col < SIZE; ++col) {
+            left[row][col] = row + 2 * col;
+            right[row][col] = 3 * row - col + 1;
         }
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N; ++j) {
-            long s = 0;
-            for (int k = 0; k < N; ++k)
-                s += a[i][k] * b[k][j];
-            c[i][j] = s;
+    for (int row = 0; row < SIZE; ++row)
+        for (int col = 0; col < SIZE; ++col) {
+            long element = 0;
+            for (int inner = 0; inner < SIZE; ++inner)
+                element += left[row][inner] * right[inner][col];
+            product[row][col] = element;
         }
-    long t = 0;
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N; ++j)
-            t += c[i][j];
+    long total = 0;
+    for (int row = 0; row < SIZE; ++row)
+        for (int col = 0; col < SIZE; ++col)
+            total += product[row][col];
     puts("sum = ");
-    putint(t);
+    putint(total);
     return 0;
 }

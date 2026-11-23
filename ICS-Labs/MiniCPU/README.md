@@ -1,48 +1,47 @@
 # mini-cpu
 
-你在六个实验中逐步构造一台运行在用户态的 x86-64 机器：先写指令解释器，再把它改成五级流水线，然后在这台机器上装载目标文件，最后依次加入页表与 TLB、高速缓存、系统调用与块设备。后一个实验可能会复用前一个实验的代码，因此请尽量确保前面的实验实现正确。
+你将在五个实验中逐步构造一台运行在用户态的 x86-64 机器：先写指令解释器，再依次为它加入缓存、页表与 TLB，然后在这台机器上装载目标文件，最后加入系统调用与块设备。后一个实验可能会复用前一个实验的代码，因此请尽量确保前面的实验实现正确。
 
 ## 目录结构
 
 | 路径 | 内容 |
 | --- | --- |
-| `src/labN/` | 你在各实验中要写的源文件与该实验的说明 `README.md`。源文件中是你要写的函数；实验一的源文件另有几个已经写出的示例 |
+| `src/labN/` | 各实验中由你实现的源文件与该实验的说明 `README.md`。源文件中是你需要实现的函数；实验一的源文件另有几个已经写出的示例 |
 | `include/mcpu.h` | 全部接口：机器状态、各实验函数的声明与要求（以 `Lab N:` 开头的注释）、框架函数的声明、`todo` |
-| `frame/` | 框架代码：主程序、装载器、物理内存、提交日志、反汇编器，以及后面的实验完成之前使用的替代实现 |
-| `guest/` | 在模拟机器上运行的客户机程序（C 与汇编源码，`mini.h` 提供系统调用）；`guest/ollama/` 是第三讲的 `mini_ollama`，生成 `guest/mini-ollama` 与 `guest/mini-ollama-simd` |
+| `frame/` | 框架代码，分为三部分：`frame/cpu/` 模拟机器的硬件，包括指令的执行、CPU 的访存单元、内存与提交日志；`frame/os/` 是在这台机器上运行的软件，包括装载器、系统调用，以及在客户机内存与宿主之间复制数据的函数；`frame/` 中的其余文件是宿主上的程序，包括主程序、访存轨迹与反汇编器。后面的实验完成之前使用的替代实现按同样的划分放在 `frame/cpu/` 与 `frame/os/` 中 |
+| `guest/` | 在模拟机器上运行的客户机程序（C 与汇编源码，`mini.h` 提供系统调用）；`guest/ollama/` 是读取 Q4_0 模型并生成文本的程序 `mini_ollama`，生成 `guest/mini-ollama` 与 `guest/mini-ollama-simd` |
 | `tools/` | `mkmodel.py` 生成 `mini-ollama` 的小模型 |
 | `tests/` | 评测脚本 `labN/run.sh`、参考结果、评测运行的客户机程序 `binary/`、单个函数的检查程序 `unit.c`（生成 `mini-unit`）、生成客户机程序的 `lab1/*.py`、独立计算参考值的 `reference.py`、源文件检查 `srccheck.sh` 与 `symbols.txt`，见“评测” |
 
 仓库中的实验目录只含到已发布的实验为止用到的文件，现在发布的是实验一；后面的实验发布时加入各自的文件，本文件随之更新（见“获取代码与更新”）。
 
-## 六个实验
+## 五个实验
 
 | 实验 | 内容 |
 | --- | --- |
 | 1 | 指令解释器 |
-| 2 | 五级流水线的 CPU |
-| 3 | 目标文件的装载 |
-| 4 | 页表与 TLB |
-| 5 | 高速缓存 |
-| 6 | 系统调用与块设备 |
+| 2 | 组相联缓存 |
+| 3 | 页表与 TLB |
+| 4 | 目标文件的装载 |
+| 5 | 系统调用与块设备 |
 
 实验一的源文件是 `src/lab1/modrm.c`、`src/lab1/alu.c` 与 `src/lab1/interp.c`，内容有三项：ModRM、SIB 与位移的解析，解释器与反汇编器 `./mini-cpu --disasm 程序` 共用；整数运算的结果与标志位，包括加、减、逻辑运算、`inc`、`dec`、`neg`、移位、乘法与除法；指令解释器，即一个主循环，按操作码直接修改寄存器与内存。
 
-页表、高速缓存与系统调用在后面的实验中由你实现，此前由 `frame/` 中的替代实现提供，因此实验一的解释器从一开始就能运行带页表访问与系统调用的程序。
+缓存、页表与系统调用在后面的实验中由你实现，此前由 `frame/` 中的替代实现提供，因此实验一的解释器从一开始就能运行带页表访问与系统调用的程序。
 
-`src/labN/` 中的源文件是你在该实验中要写的函数，每个函数的函数体是一段 `TODO` 注释加一个 `todo("名字")` 调用：`TODO` 注释列出实现的步骤，`todo`（`include/mcpu.h`）在 stderr 上打印 `名字 is not implemented yet` 并以状态 3 退出程序。`include/mcpu.h` 是完整的接口：你要写的每个函数都在以 `Lab N:` 开头的注释之下声明，注释写明参数、返回值与要求；框架只调用这些函数，源文件也只需要 `mcpu.h` 声明的内容。实验一的源文件中另有几个函数与 `case` 已经写出，作为示例，见 `src/lab1/README.md`；除此之外，给出的代码全部在 `frame/` 中。每个实验的函数、流程、变量含义与你要完成的内容见对应的 `src/labN/README.md`。
+`src/labN/` 中的源文件是你在该实验中需要实现的函数，每个函数的函数体是一段 `TODO` 注释加一个 `todo("名字")` 调用：`TODO` 注释列出实现的步骤，`todo`（`include/mcpu.h`）在 stderr 上打印 `名字 is not implemented yet` 并以状态 3 退出程序。`include/mcpu.h` 是完整的接口：你需要实现的每个函数都在以 `Lab N:` 开头的注释之下声明，注释写明参数、返回值与要求；框架只调用这些函数，源文件也只需要 `mcpu.h` 声明的内容。实验一的源文件中另有几个函数与 `case` 已经写出，作为示例，见 `src/lab1/README.md`；除此之外，给出的代码全部在 `frame/` 中。每个实验的函数、流程、变量含义与你要完成的内容见对应的 `src/labN/README.md`。
 
 ## 运行环境
 
-你在 **x86-64 的 Linux** 上完成实验：
+你需要在 **x86-64 的 Linux** 上完成实验：
 
 | 机器 | 做法 |
 | --- | --- |
 | x86-64 Linux | 直接运行 |
 | x86-64 Windows | 在 WSL2（Ubuntu）中完成，命令与 Linux 完全相同 |
-| arm64 macOS | 用 x86-64 的 Linux 容器（`docker run --platform linux/amd64`）或课程服务器 |
+| arm64 macOS | 用 x86-64 的 Linux 容器（`docker run --platform linux/amd64`）或一台远程的 x86-64 Linux 机器 |
 
-依赖 x86-64 Linux 的四处：客户机程序是 x86-64 的 ELF 文件；`Makefile` 用到 GNU ld 的 `--wrap`；`frame/loader.c` 用 `<elf.h>`；`make check` 把生成的客户机程序在本机运行一次，以它的输出作为期望值（`tests/lab1/*.py`）。macOS 上没有其中任何一项，因此不提供原生做法。
+依赖 x86-64 Linux 的四处：客户机程序是 x86-64 的 ELF 文件；`Makefile` 用到 GNU ld 的 `--wrap`；`frame/os/loader.c` 用 `<elf.h>`；`make check` 把生成的客户机程序在本机运行一次，以它的输出作为期望值（`tests/lab1/*.py`）。macOS 上没有其中任何一项，因此不提供原生做法。
 
 ## 编译与运行
 
@@ -59,11 +58,11 @@ make clean
 ```bash
 ./mini-cpu guest/hello
 ./mini-cpu --stats guest/sum
-./mini-cpu guest/mini-ollama "hello" 8 < guest/tiny.gguf    # 第三讲的 mini_ollama，模型从标准输入给出
+./mini-cpu guest/mini-ollama "hello" 8 < guest/tiny.gguf    # mini_ollama 由模型生成文本，模型从标准输入给出
 ./mini-cpu -h                 # 列出当前实验可用的选项
 ```
 
-`guest/mini-ollama` 与 `guest/mini-ollama-simd` 也能读入第二讲实验生成的 `q4_0.gguf`，在模拟机器上生成完整的回答，模型文件的下载地址、命令与所需的时间见 [`src/lab1/README.md`](src/lab1/README.md) 的“第五部分”一节，这一部分不计分。
+`guest/mini-ollama` 与 `guest/mini-ollama-simd` 也能读入真实模型 `q4_0.gguf`，在模拟机器上生成完整的回答，模型文件的下载地址、命令与所需的时间见 [`src/lab1/README.md`](src/lab1/README.md) 的“第五部分”一节，这一部分不计分。
 
 物理内存是当前目录下的文件 `dram.img`，程序运行期间加锁。你在同一目录下同时运行两个模拟器时，后启动的一个报错退出；这时用 `--ram 文件名` 给其中一个指定另一个文件。
 
@@ -78,15 +77,15 @@ make clean
 int guest_main(int argc, char **argv)
 {
     (void)argv;
-    long s = 0;
-    for (long i = 1; i <= 50; ++i)
-        s += i * i;
-    putint(s);
+    long total = 0;
+    for (long number = 1; number <= 50; ++number)
+        total += number * number;
+    putint(total);
     return argc;
 }
 ```
 
-`make guest/名字` 用 `guest/` 中其他程序的编译选项（`Makefile` 中的 `GCFLAGS`）编译它，生成 `guest/名字`。这个程序不依赖 libc，在 host 与 mini-cpu 上都能运行。当你的解释器实现正确时，两次运行的输出与退出码相同：
+`make guest/名字` 用 `guest/` 中其他程序的编译选项（`Makefile` 中的 `GCFLAGS`）编译它，生成 `guest/名字`。这个程序不依赖 libc，在本机与 mini-cpu 上都能运行。在本机运行时，本机的 CPU 执行同一批指令，因此你的解释器正确时，两次运行的输出与退出码相同：
 
 ```bash
 make guest/mine
@@ -95,12 +94,29 @@ make guest/mine
 cmp native.txt mine.txt                     # 两个文件相同时不打印任何内容
 ```
 
+`guest/mine` 两次都输出 `42925`，退出码都是 1（`argc`）。两次运行的结果不同时，用 `objdump -d guest/mine` 查看程序的指令，再用 `-v`、`--max` 与 `--commit` 逐条检查寄存器的值，这些选项见 [`src/lab1/README.md`](src/lab1/README.md) 的“运行与调试”一节。
+
+用汇编写的程序放在 `guest/名字.s` 中，同样用 `make guest/名字` 编译。这时不链接 `guest/start.S`，程序自己定义 `_start`，以系统调用 60（`exit`）结束，`%edi` 是退出码。只检查一两条指令时，可以把结果作为退出码：
+
+```asm
+# guest/imul.s: the exit code is 7 * 6
+        .globl  _start
+        .text
+_start:
+        mov     $7, %edi
+        imul    $6, %edi, %edi
+        mov     $60, %eax               # exit
+        syscall
+```
+
+`./guest/imul; echo $?` 与 `./mini-cpu guest/imul; echo $?` 都打印 `42`。
+
 编写时注意以下几点：
 
-- 编译选项中有 `-mno-sse`，`gcc` 把 `float` 与 `double` 的运算编译成 x87 指令，mini-cpu 不执行 x87 指令，报告 `fault (illegal instruction)`，因此程序只能使用整数运算。
-- 数组的整体初始化（例如 `long a[64] = {0};`）可能被编译成 `rep stos`，mini-cpu 同样不执行这条指令，这时请改用循环逐个赋值。
-- 实验一的 mini-cpu 提供的系统调用是 `write`、`brk`、`exit`、`getpid`、`fstat` 与 `mmap`，其余的系统调用返回 `-ENOSYS`。
-- 输出地址的程序以及输出 `getpid` 结果的程序，两次运行的输出不同：hots 上的栈与堆由内核放在随机的位置，mini-cpu 的 `getpid` 返回 1。
+- 编译选项中有 `-mno-sse`，`gcc` 把 `float` 与 `double` 的运算编译成 x87 指令，mini-cpu 不执行 x87 指令，报告 `fault (illegal instruction)`，因此程序只用整数运算。
+- 数组的整体初始化（例如 `long a[64] = {0};`）可能被编译成 `rep stos`，mini-cpu 同样不执行这条指令；这时用循环逐个赋值。
+- 实验一的 mini-cpu 提供的系统调用是 `write`、`brk`、`exit`、`getpid`、`fstat` 与 `mmap`（`frame/os/sysbase.c`），其余的系统调用返回 `-ENOSYS`。
+- 输出地址的程序（例如局部变量的地址、`brk` 的返回值）以及输出 `getpid` 结果的程序，两次运行的输出不同：本机的栈与堆由内核放在随机的位置，mini-cpu 的 `getpid` 返回 1。
 - 你的程序用本机的 `gcc` 编译，不参与评测。
 
 ## 评测
@@ -259,14 +275,14 @@ git clone https://github.com/SJTU-IPADS/OS-Course-Lab.git
 cd OS-Course-Lab/ICS-Labs/MiniCPU
 ```
 
-后面的实验与框架的修改都在这个目录中更新，不另外发布压缩包。有更新时，你在仓库目录中重新拉取代码：
+后面的实验与框架的修改都在这个目录中更新，不另外发布压缩包。有更新时，你需要在仓库目录中重新拉取代码：
 
 ```bash
 git pull
 make check
 ```
 
-发布实验 N 的更新加入 `src/labN/`，并更新 `Makefile`、`README.md`、`frame/`、`include/`、`guest/`、`tests/` 等框架文件；它不改动 `src/lab1` .. `src/lab(N-1)` 中的源文件，因此你已经写好的代码保持不变。拉取之后 `LAB` 自动变为新的编号，`make` 重新编译。
+发布实验 N 的更新加入 `src/labN/`，并更新 `Makefile`、`README.md`、`frame/`、`include/`、`guest/`、`tests/` 等框架文件以及 `src/lab1` .. `src/lab(N-1)` 中的实验说明 `README.md`。它不改动 `src/lab1` .. `src/lab(N-1)` 中的源文件，因此你已经写好的代码保持不变。拉取之后 `LAB` 自动变为新的编号，`make` 重新编译。
 
 ## 提交
 
@@ -278,4 +294,4 @@ make handin
 
 - 你对 `src/` 以外的修改（包括 `frame/`、`include/mcpu.h`、`Makefile`）不会生效，你的代码只依赖发布的框架；
 - 你新增的辅助文件放在 `src/labN/` 中，`Makefile` 会编译其中所有的 `.c` 文件；
-- 你提交前先运行 `make check`，并用 `unzip -l labN.zip` 确认文件齐全；判定时在新的框架中运行同样的测试，随机参数的种子不同，因此你的实现对任意参数都要正确。
+- 你提交前需要先运行 `make check`，并用 `unzip -l labN.zip` 确认文件齐全；判定时在新的框架中运行同样的测试，随机参数的种子不同，因此你的实现对任意参数都要正确。

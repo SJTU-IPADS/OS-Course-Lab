@@ -3,12 +3,13 @@
  * linear_simd of guest/linear.s, so the program runs on the vector subset
  * of lab 1.
  *
- *   tinytf [seed [n]]      seed selects the weights and the prompt (default 1),
- *                          n is the number of generated tokens, 1 .. 12 (default 8)
+ *   tinytf [seed [count]]  seed selects the weights and the prompt (default 1),
+ *                          count is the number of generated tokens, 1 .. 12
+ *                          (default 8)
  *
  * Output:
  *   prompt  = four tokens
- *   tokens  = the n generated tokens
+ *   tokens  = the count generated tokens
  *   logits  = the sum of all logits computed, a check on every step
  *
  * Sizes: vocabulary 16, width 16 (two vector iterations per product),
@@ -20,20 +21,20 @@
  */
 #include "mini.h"
 
-#define V 16            /* vocabulary */
-#define D 16            /* width */
-#define H 36            /* hidden width of the MLP */
-#define P 4             /* prompt length */
-#define T (P + 12)      /* longest sequence */
+#define VOCAB 16                /* vocabulary */
+#define DIM 16                  /* width */
+#define HIDDEN 36               /* hidden width of the MLP */
+#define PROMPT 4                /* prompt length */
+#define LONGEST (PROMPT + 12)   /* longest sequence */
 #define LIM 1024
 
-int linear_simd(const int *w, const int *x, int b, int n);
+int linear_simd(const int *weights, const int *input, int bias, int count);
 
-static int emb[V][D], pos[T][D];
-static int wq[D][D], wk[D][D], wv[D][D], wo[D][D];
-static int w1[H][D], b1[H], w2[D][H], b2[D];
-static int un[V][D];
-static int keys[T][D], vals[T][D];
+static int emb[VOCAB][DIM], pos[LONGEST][DIM];
+static int wq[DIM][DIM], wk[DIM][DIM], wv[DIM][DIM], wo[DIM][DIM];
+static int w1[HIDDEN][DIM], b1[HIDDEN], w2[DIM][HIDDEN], b2[DIM];
+static int un[VOCAB][DIM];
+static int keys[LONGEST][DIM], vals[LONGEST][DIM];
 
 static unsigned rng;
 
@@ -45,43 +46,45 @@ static int weight(void)
     return (int)(rng % 16) - 8;
 }
 
-static void fill(int *m, int n)
+static void fill(int *values, int count)
 {
-    for (int i = 0; i < n; ++i)
-        m[i] = weight();
+    for (int idx = 0; idx < count; ++idx)
+        values[idx] = weight();
 }
 
-static int clamp(int v)
+static int clamp(int value)
 {
-    return v < -LIM ? -LIM : v > LIM ? LIM : v;
+    return value < -LIM ? -LIM : value > LIM ? LIM : value;
 }
 
-/* y = (W x + b) >> 4 for an R x C matrix W */
-static void mul(int *y, const int *w, const int *b, const int *x, int r, int c)
+/* out = (weights * vector + bias) >> 4; weights is nrows x ncols */
+static void mul(int *out, const int *weights, const int *bias,
+                const int *vector, int nrows, int ncols)
 {
-    for (int i = 0; i < r; ++i)
-        y[i] = linear_simd(w + i * c, x, b ? b[i] : 0, c) >> 4;
+    for (int row = 0; row < nrows; ++row)
+        out[row] = linear_simd(weights + row * ncols, vector,
+                               bias ? bias[row] : 0, ncols) >> 4;
 }
 
-static unsigned number(const char *s)
+static unsigned number(const char *str)
 {
-    unsigned v = 0;
-    for (; *s >= '0' && *s <= '9'; ++s)
-        v = v * 10 + (unsigned)(*s - '0');
-    return v;
+    unsigned value = 0;
+    for (; *str >= '0' && *str <= '9'; ++str)
+        value = value * 10 + (unsigned)(*str - '0');
+    return value;
 }
 
-static void putnums(const char *name, const int *a, int n)
+static void putnums(const char *name, const int *values, int count)
 {
     char buf[3];
     puts(name);
-    for (int i = 0; i < n; ++i) {       /* tokens are 0 .. 15 */
-        int k = 0;
-        buf[k++] = ' ';
-        if (a[i] >= 10)
-            buf[k++] = (char)('0' + a[i] / 10);
-        buf[k++] = (char)('0' + a[i] % 10);
-        write(1, buf, (size_t)k);
+    for (int idx = 0; idx < count; ++idx) {     /* tokens are 0 .. 15 */
+        int len = 0;
+        buf[len++] = ' ';
+        if (values[idx] >= 10)
+            buf[len++] = (char)('0' + values[idx] / 10);
+        buf[len++] = (char)('0' + values[idx] % 10);
+        write(1, buf, (size_t)len);
     }
     puts("\n");
 }
@@ -89,75 +92,76 @@ static void putnums(const char *name, const int *a, int n)
 int guest_main(int argc, char **argv)
 {
     unsigned seed = argc > 1 ? number(argv[1]) : 1;
-    int n = argc > 2 ? (int)number(argv[2]) : 8;
-    if (n < 1 || n > T - P) n = 8;
+    int count = argc > 2 ? (int)number(argv[2]) : 8;
+    if (count < 1 || count > LONGEST - PROMPT) count = 8;
     rng = seed * 2654435761u ^ 0x9e3779b9u;
     if (rng == 0) rng = 1;
 
-    fill(emb[0], V * D);
-    fill(pos[0], T * D);
-    fill(wq[0], D * D);
-    fill(wk[0], D * D);
-    fill(wv[0], D * D);
-    fill(wo[0], D * D);
-    fill(w1[0], H * D);
-    fill(b1, H);
-    fill(w2[0], D * H);
-    fill(b2, D);
-    fill(un[0], V * D);
+    fill(emb[0], VOCAB * DIM);
+    fill(pos[0], LONGEST * DIM);
+    fill(wq[0], DIM * DIM);
+    fill(wk[0], DIM * DIM);
+    fill(wv[0], DIM * DIM);
+    fill(wo[0], DIM * DIM);
+    fill(w1[0], HIDDEN * DIM);
+    fill(b1, HIDDEN);
+    fill(w2[0], DIM * HIDDEN);
+    fill(b2, DIM);
+    fill(un[0], VOCAB * DIM);
 
-    int tok[T];
-    for (int i = 0; i < P; ++i)
-        tok[i] = weight() + 8;
+    int tok[LONGEST];
+    for (int idx = 0; idx < PROMPT; ++idx)
+        tok[idx] = weight() + 8;
 
     long total = 0;
-    int x[D], q[D], a[D], o[D], h[H], y[D], logit[V];
-    for (int t = 0; t < P + n - 1; ++t) {
-        for (int j = 0; j < D; ++j)
-            x[j] = emb[tok[t]][j] + pos[t][j];
+    int residual[DIM], query[DIM], attended[DIM], attn_out[DIM];
+    int hidden[HIDDEN], mlp_out[DIM], logit[VOCAB];
+    for (int step = 0; step < PROMPT + count - 1; ++step) {
+        for (int col = 0; col < DIM; ++col)
+            residual[col] = emb[tok[step]][col] + pos[step][col];
 
-        /* attention over positions 0 .. t: the weight of s is
-           min(max(q.k >> 16, 0), 15) + 1, the average is truncated */
-        mul(q, wq[0], 0, x, D, D);
-        mul(keys[t], wk[0], 0, x, D, D);
-        mul(vals[t], wv[0], 0, x, D, D);
+        /* attention over the positions past = 0 .. step, each with the
+           weight min(max(q.k >> 16, 0), 15) + 1; the average is truncated */
+        mul(query, wq[0], 0, residual, DIM, DIM);
+        mul(keys[step], wk[0], 0, residual, DIM, DIM);
+        mul(vals[step], wv[0], 0, residual, DIM, DIM);
         int sum = 0;
-        for (int j = 0; j < D; ++j)
-            a[j] = 0;
-        for (int s = 0; s <= t; ++s) {
-            int e = linear_simd(q, keys[s], 0, D) >> 16;
-            e = (e < 0 ? 0 : e > 15 ? 15 : e) + 1;
-            sum += e;
-            for (int j = 0; j < D; ++j)
-                a[j] += e * vals[s][j];
+        for (int col = 0; col < DIM; ++col)
+            attended[col] = 0;
+        for (int past = 0; past <= step; ++past) {
+            int score = linear_simd(query, keys[past], 0, DIM) >> 16;
+            score = (score < 0 ? 0 : score > 15 ? 15 : score) + 1;
+            sum += score;
+            for (int col = 0; col < DIM; ++col)
+                attended[col] += score * vals[past][col];
         }
-        for (int j = 0; j < D; ++j)
-            a[j] /= sum;
-        mul(o, wo[0], 0, a, D, D);
-        for (int j = 0; j < D; ++j)
-            x[j] = clamp(x[j] + o[j]);
+        for (int col = 0; col < DIM; ++col)
+            attended[col] /= sum;
+        mul(attn_out, wo[0], 0, attended, DIM, DIM);
+        for (int col = 0; col < DIM; ++col)
+            residual[col] = clamp(residual[col] + attn_out[col]);
 
         /* MLP */
-        mul(h, w1[0], b1, x, H, D);
-        for (int j = 0; j < H; ++j)
-            if (h[j] < 0) h[j] = 0;
-        mul(y, w2[0], b2, h, D, H);
-        for (int j = 0; j < D; ++j)
-            x[j] = clamp(x[j] + y[j]);
+        mul(hidden, w1[0], b1, residual, HIDDEN, DIM);
+        for (int col = 0; col < HIDDEN; ++col)
+            if (hidden[col] < 0) hidden[col] = 0;
+        mul(mlp_out, w2[0], b2, hidden, DIM, HIDDEN);
+        for (int col = 0; col < DIM; ++col)
+            residual[col] = clamp(residual[col] + mlp_out[col]);
 
-        if (t < P - 1)
+        if (step < PROMPT - 1)
             continue;
         int best = 0;
-        for (int v = 0; v < V; ++v) {
-            logit[v] = linear_simd(un[v], x, 0, D);
-            total += logit[v];
-            if (logit[v] > logit[best]) best = v;
+        for (int token = 0; token < VOCAB; ++token) {
+            logit[token] = linear_simd(un[token], residual, 0, DIM);
+            total += logit[token];
+            if (logit[token] > logit[best]) best = token;
         }
-        tok[t + 1] = best;
+        tok[step + 1] = best;
     }
 
-    putnums("prompt =", tok, P);
-    putnums("tokens =", tok + P, n);
+    putnums("prompt =", tok, PROMPT);
+    putnums("tokens =", tok + PROMPT, count);
     puts("logits = ");
     putint(total);
     return 0;

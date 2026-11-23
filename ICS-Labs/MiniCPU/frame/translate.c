@@ -1,4 +1,5 @@
-/* Machine code back into assembly: the disassembler of mini-cpu --disasm.
+/* Neither hardware nor software of the machine: a tool of the host,
+ * machine code back into assembly, the disassembler of mini-cpu --disasm.
  *
  * translate() reads one instruction from a buffer of bytes and writes it in
  * the AT&T syntax that objdump -d prints, in the order the bytes come:
@@ -6,7 +7,7 @@
  *   1. prefixes     66 (operand size 16), f2 f3, segment prefixes, then REX;
  *                   or a VEX prefix (c4, c5), which carries REX bits itself.
  *                   Before an SSE opcode, 66 and f3 select the instruction
- *                   (the table sse_ops[] of frame/simd.c)
+ *                   (the table sse_ops[] of frame/cpu/simd.c)
  *   2. opcode       one byte, or 0f and a second byte
  *   3. the switch   the opcode decides the operands: whether a ModRM byte,
  *                   an immediate or a relative offset follows
@@ -29,19 +30,19 @@
 typedef struct {
     uint64_t       pc;
     const uint8_t *buf;
-    unsigned       n;               /* bytes in buf */
-    unsigned       i;               /* bytes read so far */
-    int            bad;             /* ran past n, or an unknown encoding */
+    unsigned       nbytes;          /* bytes in buf */
+    unsigned       pos;             /* bytes read so far */
+    int            bad;             /* ran past nbytes, or an unknown encoding */
     int            size;            /* operand size in bytes: 1, 2, 4 or 8 */
     uint8_t        rex;             /* REX prefix, 0 if none; the bits of VEX */
     int            n66, rep, repne; /* prefixes seen */
     const char    *seg;             /* fs or gs before a memory operand, NULL */
-    int            vex, vlen, v;    /* VEX: its prefix, 16 or 32, VEX.vvvv */
+    int            vex, vlen, vvvv; /* VEX: its prefix, 16 or 32, VEX.vvvv */
     int            mod;             /* ModRM mod field */
     int            reg;             /* ModRM reg field with REX.R */
     int            sub;             /* ModRM reg field alone, 0..7 */
     int            rm;              /* ModRM rm register with REX.B, -1 for memory */
-    modrm_t        m;               /* the ModRM byte; the memory operand when rm is -1 */
+    modrm_t        modrm;           /* the ModRM byte; the memory operand when rm is -1 */
     char           ops[3][48];      /* operands in AT&T order, source first */
     int            nops;
     int            memop_at;        /* index in ops of the memory operand, -1 */
@@ -49,146 +50,151 @@ typedef struct {
 
 /* ------------------------------------------------------------- bytes */
 
-/* w bytes, little endian. Reading past the buffer marks the instruction bad. */
-static uint64_t take(dis *d, unsigned w)
+/* count bytes, little endian. Reading past the buffer marks the instruction bad. */
+static uint64_t take(dis *inst, unsigned count)
 {
-    uint64_t v = 0;
-    if (d->i + w > d->n || d->i + w > MAX_INSN)
-        d->bad = 1;
+    uint64_t value = 0;
+    if (inst->pos + count > inst->nbytes || inst->pos + count > MAX_INSN)
+        inst->bad = 1;
     else
-        memcpy(&v, d->buf + d->i, w);
-    d->i += w;
-    return v;
+        memcpy(&value, inst->buf + inst->pos, count);
+    inst->pos += count;
+    return value;
 }
 
-static int64_t take_s8(dis *d)  { return (int8_t)take(d, 1); }
-static int64_t take_s32(dis *d) { return (int32_t)take(d, 4); }
+static int64_t take_s8(dis *inst)  { return (int8_t)take(inst, 1); }
+static int64_t take_s32(dis *inst) { return (int32_t)take(inst, 4); }
 
 /* An immediate of the operand size, at most 4 bytes, sign-extended. */
-static int64_t take_imm(dis *d)
+static int64_t take_imm(dis *inst)
 {
-    switch (d->size) {
-    case 1:  return (int8_t)take(d, 1);
-    case 2:  return (int16_t)take(d, 2);
-    default: return (int32_t)take(d, 4);
+    switch (inst->size) {
+    case 1:  return (int8_t)take(inst, 1);
+    case 2:  return (int16_t)take(inst, 2);
+    default: return (int32_t)take(inst, 4);
     }
 }
 
 /* ---------------------------------------------------------- operands */
 
-static void op(dis *d, const char *fmt, ...)
+static void op(dis *inst, const char *fmt, ...)
 {
     va_list ap;
-    if (d->nops == 3) { d->bad = 1; return; }
+    if (inst->nops == 3) { inst->bad = 1; return; }
     va_start(ap, fmt);
-    vsnprintf(d->ops[d->nops++], sizeof d->ops[0], fmt, ap);
+    vsnprintf(inst->ops[inst->nops++], sizeof inst->ops[0], fmt, ap);
     va_end(ap);
 }
 
-/* The name of register n at size bytes; 16 and 32 name xmm n and ymm n. */
-static const char *regname(const dis *d, int n, int size)
+/* The name of register reg at size bytes; 16 and 32 name xmm reg and ymm reg. */
+static const char *regname(const dis *inst, int reg, int size)
 {
-    static const char *const q[16] = {
+    static const char *const name64[16] = {
         "rax", "rcx", "rdx", "rbx", "rsp", "rbp", "rsi", "rdi",
         "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15" };
-    static const char *const b[8] = { "al", "cl", "dl", "bl", "spl", "bpl", "sil", "dil" };
-    static const char *const h[8] = { "al", "cl", "dl", "bl", "ah", "ch", "dh", "bh" };
-    static char s[16];
+    static const char *const name8_rex[8] = {
+        "al", "cl", "dl", "bl", "spl", "bpl", "sil", "dil" };
+    static const char *const name8_norex[8] = {
+        "al", "cl", "dl", "bl", "ah", "ch", "dh", "bh" };
+    static char text[16];
     switch (size) {
-    case 8:  return q[n];
-    case 16: snprintf(s, sizeof s, "xmm%d", n); return s;
-    case 32: snprintf(s, sizeof s, "ymm%d", n); return s;
+    case 8:  return name64[reg];
+    case 16: snprintf(text, sizeof text, "xmm%d", reg); return text;
+    case 32: snprintf(text, sizeof text, "ymm%d", reg); return text;
     }
-    if (n >= 8) {
-        snprintf(s, sizeof s, "%s%s", q[n], size == 4 ? "d" : size == 2 ? "w" : "b");
-        return s;
+    if (reg >= 8) {
+        snprintf(text, sizeof text, "%s%s", name64[reg],
+                 size == 4 ? "d" : size == 2 ? "w" : "b");
+        return text;
     }
-    if (size == 4) { snprintf(s, sizeof s, "e%s", q[n] + 1); return s; }
-    if (size == 2) return q[n] + 1;
-    return d->rex ? b[n] : h[n];
+    if (size == 4) { snprintf(text, sizeof text, "e%s", name64[reg] + 1); return text; }
+    if (size == 2) return name64[reg] + 1;
+    return inst->rex ? name8_rex[reg] : name8_norex[reg];
 }
 
-static void op_reg(dis *d, int n, int size)
+static void op_reg(dis *inst, int reg, int size)
 {
-    op(d, "%%%s", regname(d, n, size));
+    op(inst, "%%%s", regname(inst, reg, size));
 }
 
 /* The r/m operand: register rm at size bytes, or the memory operand, which
    is written out when the length of the instruction is known. */
-static void op_rm(dis *d, int size)
+static void op_rm(dis *inst, int size)
 {
-    if (d->rm >= 0) {
-        op_reg(d, d->rm, size);
+    if (inst->rm >= 0) {
+        op_reg(inst, inst->rm, size);
     } else {
-        d->memop_at = d->nops;
-        op(d, "");
+        inst->memop_at = inst->nops;
+        op(inst, "");
     }
 }
 
 /* An immediate, shown at the operand size as objdump shows it. */
-static void op_imm(dis *d, int64_t v, int size)
+static void op_imm(dis *inst, int64_t value, int size)
 {
-    uint64_t u = trunc_val((uint64_t)v, size);
-    op(d, "$0x%llx", (unsigned long long)u);
+    uint64_t truncated = trunc_val((uint64_t)value, size);
+    op(inst, "$0x%llx", (unsigned long long)truncated);
 }
 
 /* ------------------------------------------------------ ModRM and SIB */
 
 /* The ModRM byte, with its SIB byte and displacement: modrm_decode of
    lab 1 on the bytes that are left. */
-static void read_modrm(dis *d)
+static void read_modrm(dis *inst)
 {
-    unsigned end = d->n < MAX_INSN ? d->n : MAX_INSN;
-    unsigned k = d->i < end ? modrm_decode(d->buf + d->i, end - d->i, d->rex, &d->m) : 0;
-    if (k == 0 || k > end - d->i) {
-        d->bad = 1;
-        d->rm = -1;
-        memset(&d->m, 0, sizeof d->m);
-        d->m.base = d->m.index = -1;
-        d->i += 1;
+    unsigned end = inst->nbytes < MAX_INSN ? inst->nbytes : MAX_INSN;
+    unsigned used = inst->pos < end ? modrm_decode(inst->buf + inst->pos, end - inst->pos,
+                                                   inst->rex, &inst->modrm) : 0;
+    if (used == 0 || used > end - inst->pos) {
+        inst->bad = 1;
+        inst->rm = -1;
+        memset(&inst->modrm, 0, sizeof inst->modrm);
+        inst->modrm.base = inst->modrm.index = -1;
+        inst->pos += 1;
         return;
     }
-    d->i += k;
-    d->mod = d->m.mod;
-    d->sub = d->m.sub;
-    d->reg = d->m.reg;
-    d->rm = d->m.rm;
+    inst->pos += used;
+    inst->mod = inst->modrm.mod;
+    inst->sub = inst->modrm.sub;
+    inst->reg = inst->modrm.reg;
+    inst->rm = inst->modrm.rm;
 }
 
 /* A signed number in hex: -0x10, 0x0. */
-static int signed_hex(char *s, size_t n, int64_t v)
+static int signed_hex(char *out, size_t size, int64_t value)
 {
-    if (v < 0)
-        return snprintf(s, n, "-0x%llx", (unsigned long long)-(uint64_t)v);
-    return snprintf(s, n, "0x%llx", (unsigned long long)v);
+    if (value < 0)
+        return snprintf(out, size, "-0x%llx", (unsigned long long)-(uint64_t)value);
+    return snprintf(out, size, "0x%llx", (unsigned long long)value);
 }
 
 /* The memory operand in AT&T syntax. */
-static void memtext(const dis *d, char *s, size_t n)
+static void memtext(const dis *inst, char *out, size_t size)
 {
-    const modrm_t *m = &d->m;
-    int k = 0;
-    if (d->seg) {
-        k = snprintf(s, n, "%%%s:", d->seg);
-        s += k; n -= (size_t)k; k = 0;
+    const modrm_t *mem = &inst->modrm;
+    int len = 0;
+    if (inst->seg) {
+        len = snprintf(out, size, "%%%s:", inst->seg);
+        out += len; size -= (size_t)len; len = 0;
     }
-    if (m->rip) {
-        k = signed_hex(s, n, m->disp);
-        snprintf(s + k, n - (size_t)k, "(%%rip)");
+    if (mem->rip) {
+        len = signed_hex(out, size, mem->disp);
+        snprintf(out + len, size - (size_t)len, "(%%rip)");
         return;
     }
-    if (m->base < 0 && m->index < 0) {              /* an absolute address */
-        snprintf(s, n, "0x%llx", (unsigned long long)m->disp);
+    if (mem->base < 0 && mem->index < 0) {          /* an absolute address */
+        snprintf(out, size, "0x%llx", (unsigned long long)mem->disp);
         return;
     }
-    if (m->dsize)
-        k = signed_hex(s, n, m->disp);
-    k += snprintf(s + k, n - (size_t)k, "(");
-    if (m->base >= 0)
-        k += snprintf(s + k, n - (size_t)k, "%%%s", regname(d, m->base, 8));
-    if (m->index >= 0)
-        k += snprintf(s + k, n - (size_t)k, ",%%%s,%d", regname(d, m->index, 8), m->scale);
-    snprintf(s + k, n - (size_t)k, ")");
+    if (mem->dsize)
+        len = signed_hex(out, size, mem->disp);
+    len += snprintf(out + len, size - (size_t)len, "(");
+    if (mem->base >= 0)
+        len += snprintf(out + len, size - (size_t)len, "%%%s", regname(inst, mem->base, 8));
+    if (mem->index >= 0)
+        len += snprintf(out + len, size - (size_t)len, ",%%%s,%d",
+                        regname(inst, mem->index, 8), mem->scale);
+    snprintf(out + len, size - (size_t)len, ")");
 }
 
 /* ------------------------------------------------------------ opcodes */
@@ -212,28 +218,29 @@ enum {
 };
 
 /* A jump or call to the address after the instruction plus rel. */
-static void op_target(dis *d, int64_t rel)
+static void op_target(dis *inst, int64_t rel)
 {
-    op(d, "%llx", (unsigned long long)(d->pc + d->i + (uint64_t)rel));
+    op(inst, "%llx", (unsigned long long)(inst->pc + inst->pos + (uint64_t)rel));
 }
 
 /* The instructions with a VEX prefix. Returns the mnemonic, NULL if unknown. */
-static const char *vex_insn(dis *d, unsigned map, unsigned pp, unsigned b)
+static const char *vex_insn(dis *inst, unsigned map, unsigned pp, unsigned opcode)
 {
-    int w = d->vlen;
-    if (map == 1 && pp == 2 && b == 0x6f) {             /* vmovdqu rm, reg */
-        read_modrm(d); op_rm(d, w); op_reg(d, d->reg, w);
+    int vlen = inst->vlen;
+    if (map == 1 && pp == 2 && opcode == 0x6f) {        /* vmovdqu rm, reg */
+        read_modrm(inst); op_rm(inst, vlen); op_reg(inst, inst->reg, vlen);
         return "vmovdqu";
     }
-    if (map == 1 && pp == 2 && b == 0x7f) {             /* vmovdqu reg, rm */
-        read_modrm(d); op_reg(d, d->reg, w); op_rm(d, w);
+    if (map == 1 && pp == 2 && opcode == 0x7f) {        /* vmovdqu reg, rm */
+        read_modrm(inst); op_reg(inst, inst->reg, vlen); op_rm(inst, vlen);
         return "vmovdqu";
     }
-    if ((map == 1 && pp == 1 && (b == 0xef || b == 0xfe || b == 0xfa || b == 0xd4 ||
-                                 b == 0xdb)) ||
-        (map == 2 && pp == 1 && (b == 0x40 || b == 0x02))) {  /* rm, v, reg */
-        read_modrm(d); op_rm(d, w); op_reg(d, d->v, w); op_reg(d, d->reg, w);
-        switch (map << 8 | b) {
+    if ((map == 1 && pp == 1 && (opcode == 0xef || opcode == 0xfe || opcode == 0xfa ||
+                                 opcode == 0xd4 || opcode == 0xdb)) ||
+        (map == 2 && pp == 1 && (opcode == 0x40 || opcode == 0x02))) {  /* rm, vvvv, reg */
+        read_modrm(inst);
+        op_rm(inst, vlen); op_reg(inst, inst->vvvv, vlen); op_reg(inst, inst->reg, vlen);
+        switch (map << 8 | opcode) {
         case 0x1ef: return "vpxor";
         case 0x1db: return "vpand";
         case 0x1fe: return "vpaddd";
@@ -243,205 +250,210 @@ static const char *vex_insn(dis *d, unsigned map, unsigned pp, unsigned b)
         default:    return "vphaddd";
         }
     }
-    if (map == 1 && pp == 1 && b == 0x72) {             /* vpsrld imm, rm, v: 72 /2 ib */
-        read_modrm(d);
-        int64_t imm = (uint8_t)take(d, 1);
-        if (d->sub != 2 || d->rm < 0)
+    if (map == 1 && pp == 1 && opcode == 0x72) {        /* vpsrld imm, rm, vvvv: 72 /2 ib */
+        read_modrm(inst);
+        int64_t imm = (uint8_t)take(inst, 1);
+        if (inst->sub != 2 || inst->rm < 0)
             return NULL;
-        op_imm(d, imm, 1); op_reg(d, d->rm, w); op_reg(d, d->v, w);
+        op_imm(inst, imm, 1); op_reg(inst, inst->rm, vlen); op_reg(inst, inst->vvvv, vlen);
         return "vpsrld";
     }
-    if (map == 2 && pp == 1 && b == 0x31) {             /* vpmovzxbd xmm/m64, reg */
-        read_modrm(d); op_rm(d, 16); op_reg(d, d->reg, w);
+    if (map == 2 && pp == 1 && opcode == 0x31) {        /* vpmovzxbd xmm/m64, reg */
+        read_modrm(inst); op_rm(inst, 16); op_reg(inst, inst->reg, vlen);
         return "vpmovzxbd";
     }
-    if (map == 3 && pp == 1 && b == 0x39 && w == 32) {  /* vextracti128 imm, reg, rm */
-        read_modrm(d);
-        int64_t imm = (uint8_t)take(d, 1);
-        op_imm(d, imm, 1); op_reg(d, d->reg, 32); op_rm(d, 16);
+    if (map == 3 && pp == 1 && opcode == 0x39 && vlen == 32) {  /* vextracti128 imm, reg, rm */
+        read_modrm(inst);
+        int64_t imm = (uint8_t)take(inst, 1);
+        op_imm(inst, imm, 1); op_reg(inst, inst->reg, 32); op_rm(inst, 16);
         return "vextracti128";
     }
-    if (map == 1 && pp == 1 && b == 0x7e && w == 16) {  /* vmovd xmm, r/m32 */
-        read_modrm(d); op_reg(d, d->reg, 16); op_rm(d, d->rex & 8 ? 8 : 4);
-        return d->rex & 8 ? "vmovq" : "vmovd";
+    if (map == 1 && pp == 1 && opcode == 0x7e && vlen == 16) {  /* vmovd xmm, r/m32 */
+        read_modrm(inst); op_reg(inst, inst->reg, 16); op_rm(inst, inst->rex & 8 ? 8 : 4);
+        return inst->rex & 8 ? "vmovq" : "vmovd";
     }
-    if (map == 1 && pp == 1 && b == 0x6e && w == 16) {  /* vmovd r/m32, xmm */
-        read_modrm(d); op_rm(d, d->rex & 8 ? 8 : 4); op_reg(d, d->reg, 16);
-        return d->rex & 8 ? "vmovq" : "vmovd";
+    if (map == 1 && pp == 1 && opcode == 0x6e && vlen == 16) {  /* vmovd r/m32, xmm */
+        read_modrm(inst); op_rm(inst, inst->rex & 8 ? 8 : 4); op_reg(inst, inst->reg, 16);
+        return inst->rex & 8 ? "vmovq" : "vmovd";
     }
     return NULL;
 }
 
 /* The instruction after its prefixes. Returns the mnemonic, NULL if
    unknown, and sets *flags. */
-static const char *legacy_insn(dis *d, unsigned b, int *flags)
+static const char *legacy_insn(dis *inst, unsigned opcode, int *flags)
 {
     static char name[16];
     int64_t imm;
-    unsigned b2;
+    unsigned opcode2;
 
-    if (b < 0x40 && (b & 7) < 6) {                      /* ALU: 00 .. 3d */
-        switch (b & 7) {
-        case 0: d->size = 1; /* fall through */
-        case 1: read_modrm(d); op_reg(d, d->reg, d->size); op_rm(d, d->size); break;
-        case 2: d->size = 1; /* fall through */
-        case 3: read_modrm(d); op_rm(d, d->size); op_reg(d, d->reg, d->size); break;
-        case 4: d->size = 1; /* fall through */
-        case 5: imm = take_imm(d); op_imm(d, imm, d->size); op_reg(d, RAX, d->size); break;
+    if (opcode < 0x40 && (opcode & 7) < 6) {            /* ALU: 00 .. 3d */
+        switch (opcode & 7) {
+        case 0: inst->size = 1; /* fall through */
+        case 1: read_modrm(inst);
+                op_reg(inst, inst->reg, inst->size); op_rm(inst, inst->size); break;
+        case 2: inst->size = 1; /* fall through */
+        case 3: read_modrm(inst);
+                op_rm(inst, inst->size); op_reg(inst, inst->reg, inst->size); break;
+        case 4: inst->size = 1; /* fall through */
+        case 5: imm = take_imm(inst);
+                op_imm(inst, imm, inst->size); op_reg(inst, RAX, inst->size); break;
         }
-        return alu_name[b >> 3];
+        return alu_name[opcode >> 3];
     }
-    if (b >= 0x50 && b <= 0x5f) {                       /* push r, pop r */
-        op_reg(d, (b & 7) | (d->rex & 1) << 3, 8);
-        return b < 0x58 ? "push" : "pop";
+    if (opcode >= 0x50 && opcode <= 0x5f) {             /* push r, pop r */
+        op_reg(inst, (opcode & 7) | (inst->rex & 1) << 3, 8);
+        return opcode < 0x58 ? "push" : "pop";
     }
-    if (b >= 0x70 && b <= 0x7f) {                       /* jcc rel8 */
-        op_target(d, take_s8(d));
-        snprintf(name, sizeof name, "j%s", cc_name[b & 15]);
+    if (opcode >= 0x70 && opcode <= 0x7f) {             /* jcc rel8 */
+        op_target(inst, take_s8(inst));
+        snprintf(name, sizeof name, "j%s", cc_name[opcode & 15]);
         return name;
     }
-    if (b >= 0xb0 && b <= 0xbf) {                       /* mov r, imm */
-        int r = (b & 7) | (d->rex & 1) << 3;
-        if (b < 0xb8) {
-            d->size = 1;
-            op_imm(d, (uint8_t)take(d, 1), 1);
-            op_reg(d, r, 1);
+    if (opcode >= 0xb0 && opcode <= 0xbf) {             /* mov r, imm */
+        int reg = (opcode & 7) | (inst->rex & 1) << 3;
+        if (opcode < 0xb8) {
+            inst->size = 1;
+            op_imm(inst, (uint8_t)take(inst, 1), 1);
+            op_reg(inst, reg, 1);
             return "mov";
         }
-        if (d->size == 8) {
-            op_imm(d, (int64_t)take(d, 8), 8);
-            op_reg(d, r, 8);
+        if (inst->size == 8) {
+            op_imm(inst, (int64_t)take(inst, 8), 8);
+            op_reg(inst, reg, 8);
             return "movabs";
         }
-        op_imm(d, take_imm(d), d->size);
-        op_reg(d, r, d->size);
+        op_imm(inst, take_imm(inst), inst->size);
+        op_reg(inst, reg, inst->size);
         return "mov";
     }
 
-    switch (b) {
+    switch (opcode) {
     case 0x63:                                          /* movslq r/m32, r64 */
-        if (d->size != 8)
+        if (inst->size != 8)
             return NULL;
-        read_modrm(d); op_rm(d, 4); op_reg(d, d->reg, 8);
+        read_modrm(inst); op_rm(inst, 4); op_reg(inst, inst->reg, 8);
         return "movslq";
     case 0x68: case 0x6a:                               /* push imm */
-        imm = b == 0x68 ? take_s32(d) : take_s8(d);
-        op_imm(d, imm, 8);
+        imm = opcode == 0x68 ? take_s32(inst) : take_s8(inst);
+        op_imm(inst, imm, 8);
         return "push";
     case 0x69: case 0x6b:                               /* imul imm, r/m, r */
-        read_modrm(d);
-        imm = b == 0x69 ? take_imm(d) : take_s8(d);
-        op_imm(d, imm, d->size); op_rm(d, d->size); op_reg(d, d->reg, d->size);
+        read_modrm(inst);
+        imm = opcode == 0x69 ? take_imm(inst) : take_s8(inst);
+        op_imm(inst, imm, inst->size);
+        op_rm(inst, inst->size); op_reg(inst, inst->reg, inst->size);
         return "imul";
     case 0x80: case 0x81: case 0x83:                    /* ALU imm, r/m */
-        if (b == 0x80) d->size = 1;
-        read_modrm(d);
-        imm = b == 0x81 ? take_imm(d) : take_s8(d);
-        op_imm(d, imm, d->size); op_rm(d, d->size);
+        if (opcode == 0x80) inst->size = 1;
+        read_modrm(inst);
+        imm = opcode == 0x81 ? take_imm(inst) : take_s8(inst);
+        op_imm(inst, imm, inst->size); op_rm(inst, inst->size);
         *flags = SUF;
-        return alu_name[d->sub];
+        return alu_name[inst->sub];
     case 0x84: case 0x85: case 0x86: case 0x87:         /* test, xchg r, r/m */
     case 0x88: case 0x89:                               /* mov r, r/m */
-        if (!(b & 1)) d->size = 1;
-        read_modrm(d); op_reg(d, d->reg, d->size); op_rm(d, d->size);
-        return b < 0x86 ? "test" : b < 0x88 ? "xchg" : "mov";
+        if (!(opcode & 1)) inst->size = 1;
+        read_modrm(inst); op_reg(inst, inst->reg, inst->size); op_rm(inst, inst->size);
+        return opcode < 0x86 ? "test" : opcode < 0x88 ? "xchg" : "mov";
     case 0x8a: case 0x8b:                               /* mov r/m, r */
-        if (b == 0x8a) d->size = 1;
-        read_modrm(d); op_rm(d, d->size); op_reg(d, d->reg, d->size);
+        if (opcode == 0x8a) inst->size = 1;
+        read_modrm(inst); op_rm(inst, inst->size); op_reg(inst, inst->reg, inst->size);
         return "mov";
     case 0x8d:                                          /* lea m, r */
-        read_modrm(d);
-        if (d->rm >= 0)
+        read_modrm(inst);
+        if (inst->rm >= 0)
             return NULL;
-        op_rm(d, d->size); op_reg(d, d->reg, d->size);
+        op_rm(inst, inst->size); op_reg(inst, inst->reg, inst->size);
         return "lea";
     case 0x91: case 0x92: case 0x93: case 0x94: case 0x95: case 0x96: case 0x97:
     case 0x90:
-        if (b != 0x90 || d->rex & 1) {                  /* xchg rax, r */
-            op_reg(d, RAX, d->size); op_reg(d, (b & 7) | (d->rex & 1) << 3, d->size);
+        if (opcode != 0x90 || inst->rex & 1) {          /* xchg rax, r */
+            op_reg(inst, RAX, inst->size);
+            op_reg(inst, (opcode & 7) | (inst->rex & 1) << 3, inst->size);
             return "xchg";
         }
-        if (d->rep) { d->rep = 0; return "pause"; }
-        if (d->size == 2) {
-            op_reg(d, RAX, 2); op_reg(d, RAX, 2);
+        if (inst->rep) { inst->rep = 0; return "pause"; }
+        if (inst->size == 2) {
+            op_reg(inst, RAX, 2); op_reg(inst, RAX, 2);
             return "xchg";
         }
         return "nop";
-    case 0x98: return d->size == 8 ? "cltq" : d->size == 4 ? "cwtl" : "cbtw";
-    case 0x99: return d->size == 8 ? "cqto" : d->size == 4 ? "cltd" : "cwtd";
+    case 0x98: return inst->size == 8 ? "cltq" : inst->size == 4 ? "cwtl" : "cbtw";
+    case 0x99: return inst->size == 8 ? "cqto" : inst->size == 4 ? "cltd" : "cwtd";
     case 0x9c: return "pushf";
     case 0x9d: return "popf";
     case 0xa0: case 0xa1: case 0xa2: case 0xa3: {       /* mov al/eax <-> moffs */
-        if (b % 2 == 0) d->size = 1;
+        if (opcode % 2 == 0) inst->size = 1;
         char addr[24];
-        snprintf(addr, sizeof addr, "0x%llx", (unsigned long long)take(d, 8));
-        if (b < 0xa2) { op(d, "%s", addr); op_reg(d, RAX, d->size); }
-        else          { op_reg(d, RAX, d->size); op(d, "%s", addr); }
+        snprintf(addr, sizeof addr, "0x%llx", (unsigned long long)take(inst, 8));
+        if (opcode < 0xa2) { op(inst, "%s", addr); op_reg(inst, RAX, inst->size); }
+        else               { op_reg(inst, RAX, inst->size); op(inst, "%s", addr); }
         return "movabs";
     }
     case 0xa8: case 0xa9:                               /* test imm, al / eax */
-        if (b == 0xa8) d->size = 1;
-        imm = take_imm(d);
-        op_imm(d, imm, d->size); op_reg(d, RAX, d->size);
+        if (opcode == 0xa8) inst->size = 1;
+        imm = take_imm(inst);
+        op_imm(inst, imm, inst->size); op_reg(inst, RAX, inst->size);
         return "test";
     case 0xc0: case 0xc1: case 0xd0: case 0xd1: case 0xd2: case 0xd3:  /* shifts */
-        if (!(b & 1)) d->size = 1;
-        read_modrm(d);
-        if (!shift_name[d->sub])
+        if (!(opcode & 1)) inst->size = 1;
+        read_modrm(inst);
+        if (!shift_name[inst->sub])
             return NULL;
-        if (b <= 0xc1)      op_imm(d, (uint8_t)take(d, 1), 1);
-        else if (b <= 0xd1) op(d, "$1");
-        else                op_reg(d, RCX, 1);
-        op_rm(d, d->size);
+        if (opcode <= 0xc1)      op_imm(inst, (uint8_t)take(inst, 1), 1);
+        else if (opcode <= 0xd1) op(inst, "$1");
+        else                     op_reg(inst, RCX, 1);
+        op_rm(inst, inst->size);
         *flags = SUF;
-        return shift_name[d->sub];
+        return shift_name[inst->sub];
     case 0xc3:
-        if (d->rep) { d->rep = 0; return "repz ret"; }
+        if (inst->rep) { inst->rep = 0; return "repz ret"; }
         return "ret";
     case 0xc6: case 0xc7:                               /* mov imm, r/m */
-        if (b == 0xc6) d->size = 1;
-        read_modrm(d);
-        if (d->sub != 0)
+        if (opcode == 0xc6) inst->size = 1;
+        read_modrm(inst);
+        if (inst->sub != 0)
             return NULL;
-        op_imm(d, take_imm(d), d->size); op_rm(d, d->size);
+        op_imm(inst, take_imm(inst), inst->size); op_rm(inst, inst->size);
         *flags = SUF;
         return "mov";
     case 0xc9: return "leave";
     case 0xcc: return "int3";
     case 0xe8: case 0xe9:                               /* call, jmp rel32 */
-        op_target(d, take_s32(d));
-        return b == 0xe8 ? "call" : "jmp";
+        op_target(inst, take_s32(inst));
+        return opcode == 0xe8 ? "call" : "jmp";
     case 0xeb:                                          /* jmp rel8 */
-        op_target(d, take_s8(d));
+        op_target(inst, take_s8(inst));
         return "jmp";
     case 0xf4: return "hlt";
     case 0xf6: case 0xf7:                               /* group 3 */
-        if (b == 0xf6) d->size = 1;
-        read_modrm(d);
-        if (!grp3_name[d->sub])
+        if (opcode == 0xf6) inst->size = 1;
+        read_modrm(inst);
+        if (!grp3_name[inst->sub])
             return NULL;
-        if (d->sub == 0)
-            op_imm(d, take_imm(d), d->size);
-        op_rm(d, d->size);
+        if (inst->sub == 0)
+            op_imm(inst, take_imm(inst), inst->size);
+        op_rm(inst, inst->size);
         *flags = SUF;
-        return grp3_name[d->sub];
+        return grp3_name[inst->sub];
     case 0xfe: case 0xff:                               /* group 4 and 5 */
-        if (b == 0xfe) d->size = 1;
-        read_modrm(d);
-        if (d->sub <= 1) {
-            op_rm(d, d->size);
+        if (opcode == 0xfe) inst->size = 1;
+        read_modrm(inst);
+        if (inst->sub <= 1) {
+            op_rm(inst, inst->size);
             *flags = SUF;
-            return d->sub ? "dec" : "inc";
+            return inst->sub ? "dec" : "inc";
         }
-        if (b == 0xfe)
+        if (opcode == 0xfe)
             return NULL;
-        if (d->sub == 2 || d->sub == 4) {               /* call *, jmp * */
-            op_rm(d, 8);
+        if (inst->sub == 2 || inst->sub == 4) {         /* call *, jmp * */
+            op_rm(inst, 8);
             *flags = STAR;
-            return d->sub == 2 ? "call" : "jmp";
+            return inst->sub == 2 ? "call" : "jmp";
         }
-        if (d->sub == 6) {
-            op_rm(d, 8);
+        if (inst->sub == 6) {
+            op_rm(inst, 8);
             return "push";
         }
         return NULL;
@@ -451,160 +463,162 @@ static const char *legacy_insn(dis *d, unsigned b, int *flags)
         return NULL;
     }
 
-    b2 = (unsigned)take(d, 1);                          /* 0f xx */
-    const sse_op *s = sse_find(0x100 | b2, d->rep ? 2 : d->repne ? 3 : d->n66 == 1);
-    if (s) {                                            /* SSE: the prefix is part of the opcode */
-        int isz = d->rex & 8 ? 8 : 4;                   /* of an integer operand */
-        d->rep = d->repne = 0;
-        d->size = isz;
-        read_modrm(d);
-        switch (s->form) {
-        case SSE_REG_TO_RM:  op_reg(d, d->reg, 16); op_rm(d, 16); break;
-        case SSE_INT_TO_REG: op_rm(d, isz); op_reg(d, d->reg, 16); break;
-        case SSE_RM_TO_INT:  op_rm(d, 16); op_reg(d, d->reg, isz); break;
-        case SSE_REG_TO_INT: op_reg(d, d->reg, 16); op_rm(d, isz); break;
-        default:             op_rm(d, 16); op_reg(d, d->reg, 16); break;
+    opcode2 = (unsigned)take(inst, 1);                  /* 0f xx */
+    const sse_op *row = sse_find(0x100 | opcode2,
+                                 inst->rep ? 2 : inst->repne ? 3 : inst->n66 == 1);
+    if (row) {                                          /* SSE: the prefix is part of the opcode */
+        int isz = inst->rex & 8 ? 8 : 4;                /* of an integer operand */
+        inst->rep = inst->repne = 0;
+        inst->size = isz;
+        read_modrm(inst);
+        switch (row->form) {
+        case SSE_REG_TO_RM:  op_reg(inst, inst->reg, 16); op_rm(inst, 16); break;
+        case SSE_INT_TO_REG: op_rm(inst, isz); op_reg(inst, inst->reg, 16); break;
+        case SSE_RM_TO_INT:  op_rm(inst, 16); op_reg(inst, inst->reg, isz); break;
+        case SSE_REG_TO_INT: op_reg(inst, inst->reg, 16); op_rm(inst, isz); break;
+        default:             op_rm(inst, 16); op_reg(inst, inst->reg, 16); break;
         }
-        if (s->width)
-            return s->name;
-        if (b2 == 0x2a) {                               /* cvtsi2ssl, cvtsi2ssq from memory */
+        if (row->width)
+            return row->name;
+        if (opcode2 == 0x2a) {                          /* cvtsi2ssl, cvtsi2ssq from memory */
             *flags = SUF;
-            return s->name;
+            return row->name;
         }
         return isz == 8 ? "movq" : "movd";
     }
-    if (b2 >= 0x40 && b2 <= 0x4f) {                     /* cmovcc r/m, r */
-        read_modrm(d); op_rm(d, d->size); op_reg(d, d->reg, d->size);
-        snprintf(name, sizeof name, "cmov%s", cc_name[b2 & 15]);
+    if (opcode2 >= 0x40 && opcode2 <= 0x4f) {           /* cmovcc r/m, r */
+        read_modrm(inst); op_rm(inst, inst->size); op_reg(inst, inst->reg, inst->size);
+        snprintf(name, sizeof name, "cmov%s", cc_name[opcode2 & 15]);
         return name;
     }
-    if (b2 >= 0x80 && b2 <= 0x8f) {                     /* jcc rel32 */
-        op_target(d, take_s32(d));
-        snprintf(name, sizeof name, "j%s", cc_name[b2 & 15]);
+    if (opcode2 >= 0x80 && opcode2 <= 0x8f) {           /* jcc rel32 */
+        op_target(inst, take_s32(inst));
+        snprintf(name, sizeof name, "j%s", cc_name[opcode2 & 15]);
         return name;
     }
-    if (b2 >= 0x90 && b2 <= 0x9f) {                     /* setcc r/m8 */
-        d->size = 1;
-        read_modrm(d); op_rm(d, 1);
-        snprintf(name, sizeof name, "set%s", cc_name[b2 & 15]);
+    if (opcode2 >= 0x90 && opcode2 <= 0x9f) {           /* setcc r/m8 */
+        inst->size = 1;
+        read_modrm(inst); op_rm(inst, 1);
+        snprintf(name, sizeof name, "set%s", cc_name[opcode2 & 15]);
         return name;
     }
-    switch (b2) {
+    switch (opcode2) {
     case 0x05: return "syscall";
     case 0x0b: return "ud2";
     case 0x1e:                                          /* f3 0f 1e fa */
-        if (d->rep && take(d, 1) == 0xfa) { d->rep = 0; return "endbr64"; }
+        if (inst->rep && take(inst, 1) == 0xfa) { inst->rep = 0; return "endbr64"; }
         return NULL;
     case 0x1f:                                          /* nop r/m */
-        read_modrm(d); op_rm(d, d->size);
+        read_modrm(inst); op_rm(inst, inst->size);
         *flags = SUF;
         return "nop";
     case 0xaf:                                          /* imul r/m, r */
-        read_modrm(d); op_rm(d, d->size); op_reg(d, d->reg, d->size);
+        read_modrm(inst); op_rm(inst, inst->size); op_reg(inst, inst->reg, inst->size);
         return "imul";
     case 0xb6: case 0xb7: case 0xbe: case 0xbf: {       /* movzx, movsx */
-        int from = b2 & 1 ? 2 : 1;
-        read_modrm(d); op_rm(d, from); op_reg(d, d->reg, d->size);
-        snprintf(name, sizeof name, "mov%c%c%c", b2 < 0xb8 ? 'z' : 's',
-                 suffix(from), suffix(d->size));
+        int from = opcode2 & 1 ? 2 : 1;
+        read_modrm(inst); op_rm(inst, from); op_reg(inst, inst->reg, inst->size);
+        snprintf(name, sizeof name, "mov%c%c%c", opcode2 < 0xb8 ? 'z' : 's',
+                 suffix(from), suffix(inst->size));
         return name;
     }
     }
     return NULL;
 }
 
-unsigned translate(uint64_t pc, const uint8_t *buf, unsigned n, char *out, size_t size)
+unsigned translate(uint64_t pc, const uint8_t *bytes, unsigned nbytes, char *out, size_t size)
 {
-    dis d;
+    dis inst;
     const char *name = NULL;
     char prefix[64] = "", mnem[80], mem[64], args[160];
-    int flags = 0, k;
-    unsigned b;
+    int flags = 0, len;
+    unsigned byte;
 
-    memset(&d, 0, sizeof d);
-    d.pc = pc;
-    d.buf = buf;
-    d.n = n;
-    d.size = 4;
-    d.rm = -1;
-    d.memop_at = -1;
+    memset(&inst, 0, sizeof inst);
+    inst.pc = pc;
+    inst.buf = bytes;
+    inst.nbytes = nbytes;
+    inst.size = 4;
+    inst.rm = -1;
+    inst.memop_at = -1;
 
     /* 1. prefixes */
     for (;;) {
-        b = (unsigned)take(&d, 1);
-        if (d.bad) break;
-        if (b == 0x66) {
-            if (d.n66++) strcat(prefix, "data16 ");
-            d.size = 2;
-        } else if (b == 0xf3) {
-            d.rep = 1;
-        } else if (b == 0xf2) {
-            d.repne = 1;
-        } else if (b == 0x2e) {
+        byte = (unsigned)take(&inst, 1);
+        if (inst.bad) break;
+        if (byte == 0x66) {
+            if (inst.n66++) strcat(prefix, "data16 ");
+            inst.size = 2;
+        } else if (byte == 0xf3) {
+            inst.rep = 1;
+        } else if (byte == 0xf2) {
+            inst.repne = 1;
+        } else if (byte == 0x2e) {
             strcat(prefix, "cs ");
-        } else if (b == 0x3e) {
+        } else if (byte == 0x3e) {
             strcat(prefix, "ds ");
-        } else if (b == 0x64 || b == 0x65) {
-            d.seg = b == 0x64 ? "fs" : "gs";
-        } else if ((b & 0xf0) == 0x40) {                /* REX, the last prefix */
-            d.rex = (uint8_t)b;
-            if (b & 8) d.size = 8;
-            b = (unsigned)take(&d, 1);
+        } else if (byte == 0x64 || byte == 0x65) {
+            inst.seg = byte == 0x64 ? "fs" : "gs";
+        } else if ((byte & 0xf0) == 0x40) {             /* REX, the last prefix */
+            inst.rex = (uint8_t)byte;
+            if (byte & 8) inst.size = 8;
+            byte = (unsigned)take(&inst, 1);
             break;
         } else {
             break;
         }
-        if (strlen(prefix) > 40) d.bad = 1;
+        if (strlen(prefix) > 40) inst.bad = 1;
     }
 
     /* 2 .. 5 */
-    if (!d.bad && (b == 0xc4 || b == 0xc5)) {
-        unsigned b1 = (unsigned)take(&d, 1), b2 = b1, map = 1, w = 0;
-        if (b == 0xc4) {
-            map = b1 & 0x1f;
-            b2 = (unsigned)take(&d, 1);
-            w = b2 >> 7;
+    if (!inst.bad && (byte == 0xc4 || byte == 0xc5)) {
+        unsigned vex1 = (unsigned)take(&inst, 1), vex2 = vex1, map = 1, rex_w = 0;
+        if (byte == 0xc4) {
+            map = vex1 & 0x1f;
+            vex2 = (unsigned)take(&inst, 1);
+            rex_w = vex2 >> 7;
         }
-        d.vex = 1;
-        d.rex = (uint8_t)(0x40 | w << 3 | !(b1 & 0x80) << 2 |
-                          (b == 0xc4 && !(b1 & 0x40)) << 1 | (b == 0xc4 && !(b1 & 0x20)));
-        d.v = (int)(~b2 >> 3 & 15);
-        d.vlen = b2 & 4 ? 32 : 16;
-        b = (unsigned)take(&d, 1);
-        if (!d.bad && !d.n66 && !d.rep && !d.repne)
-            name = vex_insn(&d, map, b2 & 3, b);
-    } else if (!d.bad) {
-        name = legacy_insn(&d, b, &flags);
+        inst.vex = 1;
+        inst.rex = (uint8_t)(0x40 | rex_w << 3 | !(vex1 & 0x80) << 2 |
+                             (byte == 0xc4 && !(vex1 & 0x40)) << 1 |
+                             (byte == 0xc4 && !(vex1 & 0x20)));
+        inst.vvvv = (int)(~vex2 >> 3 & 15);
+        inst.vlen = vex2 & 4 ? 32 : 16;
+        byte = (unsigned)take(&inst, 1);
+        if (!inst.bad && !inst.n66 && !inst.rep && !inst.repne)
+            name = vex_insn(&inst, map, vex2 & 3, byte);
+    } else if (!inst.bad) {
+        name = legacy_insn(&inst, byte, &flags);
     }
 
-    if (!name || d.bad) {
+    if (!name || inst.bad) {
         snprintf(out, size, "(bad)");
         return 1;
     }
-    if (d.rep)   strcat(prefix, "repz ");
-    if (d.repne) strcat(prefix, "repnz ");
+    if (inst.rep)   strcat(prefix, "repz ");
+    if (inst.repne) strcat(prefix, "repnz ");
 
     /* the mnemonic, with a suffix when no register operand gives the size */
-    k = snprintf(mnem, sizeof mnem, "%s%s", prefix, name);
-    if ((flags & SUF) && d.rm < 0)
-        snprintf(mnem + k, sizeof mnem - (size_t)k, "%c", suffix(d.size));
+    len = snprintf(mnem, sizeof mnem, "%s%s", prefix, name);
+    if ((flags & SUF) && inst.rm < 0)
+        snprintf(mnem + len, sizeof mnem - (size_t)len, "%c", suffix(inst.size));
 
     /* the operands, source first */
     args[0] = 0;
-    for (int j = 0; j < d.nops; ++j) {
-        if (j == d.memop_at)
-            memtext(&d, mem, sizeof mem);
-        k = (int)strlen(args);
-        snprintf(args + k, sizeof args - (size_t)k, "%s%s%s", j ? "," : "",
+    for (int operand = 0; operand < inst.nops; ++operand) {
+        if (operand == inst.memop_at)
+            memtext(&inst, mem, sizeof mem);
+        len = (int)strlen(args);
+        snprintf(args + len, sizeof args - (size_t)len, "%s%s%s", operand ? "," : "",
                  (flags & STAR) ? "*" : "",
-                 j == d.memop_at ? mem : d.ops[j]);
+                 operand == inst.memop_at ? mem : inst.ops[operand]);
     }
-    if (!d.nops)
-        k = snprintf(out, size, "%s", mnem);
+    if (!inst.nops)
+        len = snprintf(out, size, "%s", mnem);
     else
-        k = snprintf(out, size, "%-6s %s", mnem, args);
-    if (d.memop_at >= 0 && d.m.rip && k >= 0 && (size_t)k < size)
-        snprintf(out + k, size - (size_t)k, "        # %llx",
-                 (unsigned long long)(pc + d.i + (uint64_t)d.m.disp));
-    return d.i;
+        len = snprintf(out, size, "%-6s %s", mnem, args);
+    if (inst.memop_at >= 0 && inst.modrm.rip && len >= 0 && (size_t)len < size)
+        snprintf(out + len, size - (size_t)len, "        # %llx",
+                 (unsigned long long)(pc + inst.pos + (uint64_t)inst.modrm.disp));
+    return inst.pos;
 }

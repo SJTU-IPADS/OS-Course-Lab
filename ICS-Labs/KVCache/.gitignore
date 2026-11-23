@@ -1,0 +1,12 @@
+# What make leaves behind.
+build/
+mini-ollama
+kvcache-selftest
+*.exe
+
+# What editor tooling such as clangd uses and leaves behind.
+compile_commands.json
+.cache/
+
+# The model file (README.md), downloaded, moved or linked here.
+*.gguf

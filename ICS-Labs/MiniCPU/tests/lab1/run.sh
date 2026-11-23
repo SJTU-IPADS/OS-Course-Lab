@@ -1,6 +1,5 @@
 #!/bin/sh
-# Lab 1: modrm.c, alu.c and interp.c. From lab 2 on, mini-cpu runs the
-# interpreter with --interp.
+# Lab 1: modrm.c, alu.c and interp.c.
 #
 #   sh tests/lab1/run.sh [DIR]
 #
@@ -43,27 +42,87 @@
 # instructions) is computed in Python.
 LABNO=1 DIR=${1:-.}
 . tests/lib.sh
-if has --interp; then MODE=--interp; fi
+
+# From lab 2 on mini-cpu has a cache, the student's cache.c. The items of
+# lab 1 check the interpreter alone, so they run on the machine without a
+# cache (--cache 0, the framework's own path to memory): their scores do
+# not depend on lab 2. A build of lab 1 does not know --cache and lists no
+# such option.
+if "$CPU" -h 2>&1 | grep -q -e '--cache'; then
+    CPU_OPTS="--cache 0"
+fi
+
+# build NAME: assemble $TMP/NAME.s into the program $TMP/NAME, without libc.
+build() { ${CC:-gcc} -nostdlib -no-pie -o "$TMP/$1" "$TMP/$1.s"; }
+
+# Three generated programs. X_make writes the program $TMP/X and its
+# expected output $TMP/X.want; X_run compares the output of mini-cpu with
+# it and describes the first difference.
+#
+#   condops   every condition code under every combination of flags
+#   randops   blocks of random integer instructions (seed RS)
+#   vecops    blocks of random vector instructions (seed VS)
+BLOCKS=60
+condops_make() {
+    python3 tests/lab1/condops.py > "$TMP/condops.s" && build condops &&
+        "$TMP/condops" > "$TMP/condops.want" ||
+        { echo "condops: does not run on this machine"; return 1; }
+}
+condops_run() {
+    cpu "$TMP/condops" > "$TMP/got" 2> "$TMP/err"
+    cmp -s "$TMP/condops.want" "$TMP/got" && return 0
+    echo "(tests/lab1/condops.py)"
+    head -n 3 "$TMP/err"
+    python3 tests/lab1/condops.py --explain "$TMP/condops.want" "$TMP/got"
+    return 1
+}
+randops_make() {
+    rand 1000000; RS=$RND
+    python3 tests/lab1/randops.py $RS $BLOCKS > "$TMP/randops.s" && build randops &&
+        "$TMP/randops" > "$TMP/randops.want" ||
+        { echo "randops $RS: does not run on this machine"; return 1; }
+}
+randops_run() {
+    cpu "$TMP/randops" > "$TMP/got" 2> "$TMP/err"
+    cmp -s "$TMP/randops.want" "$TMP/got" && return 0
+    echo "(tests/lab1/randops.py $RS $BLOCKS)"
+    head -n 3 "$TMP/err"
+    python3 tests/lab1/randops.py --explain $RS $BLOCKS "$TMP/randops.want" "$TMP/got"
+    return 1
+}
+vecops_make() {
+    rand 1000000; VS=$RND
+    python3 tests/lab1/vecops.py $VS $BLOCKS > "$TMP/vecops.s" && build vecops &&
+        python3 tests/lab1/vecops.py --want $VS $BLOCKS > "$TMP/vecops.want"
+}
+vecops_run() {
+    cpu "$TMP/vecops" > "$TMP/got" 2> "$TMP/err"
+    cmp -s "$TMP/vecops.want" "$TMP/got" && return 0
+    echo "(tests/lab1/vecops.py $VS $BLOCKS)"
+    head -n 3 "$TMP/err"
+    python3 tests/lab1/vecops.py --explain $VS $BLOCKS "$TMP/got"
+    return 1
+}
 
 hello() {
     out "hello from the guest
-argc = 1" cpu $MODE $G/hello &&
-    out "sum = $(python3 tests/reference.py sum 100)" cpu $MODE $G/sum &&
-    out "sum = $(python3 tests/reference.py sum 1000)" cpu $MODE $G/sum x &&
-    hasline "insns 100  syscalls 0  exit 1" cpu $MODE --max 100 --stats $G/sum   # stops after exactly 100
+argc = 1" cpu $G/hello &&
+    out "sum = $(python3 tests/reference.py sum 100)" cpu $G/sum &&
+    out "sum = $(python3 tests/reference.py sum 1000)" cpu $G/sum x &&
+    hasline "insns 100  syscalls 0  exit 1" cpu --max 100 --stats $G/sum   # stops after exactly 100
 }
 programs() {
-    out "sum = $(python3 tests/reference.py matmul 24)" cpu $MODE $G/matmul &&
-    out "sum = 1566720" cpu $MODE $G/heap &&
-    out "s = 39500" cpu $MODE $G/pattern &&
-    out "sum = 501590016" cpu $MODE $G/block 8
+    out "sum = $(python3 tests/reference.py matmul 24)" cpu $G/matmul &&
+    out "sum = 1566720" cpu $G/heap &&
+    out "s = 39500" cpu $G/pattern &&
+    out "sum = 501590016" cpu $G/block 8
 }
 # two page faults: past the end of the stack, and a store to the code
 faults() {
-    hasline "fault (page fault) after 2853 instructions:" cpu $MODE $G/deep &&
-    hasline "faulting address 0x7ffffffbec80" cpu $MODE $G/deep &&
-    hasline "fault (page fault) after 2 instructions:" cpu $MODE $G/readonly &&
-    hasline "faulting address 0x401000" cpu $MODE $G/readonly
+    hasline "fault (page fault) after 2853 instructions:" cpu $G/deep &&
+    hasline "faulting address 0x7ffffffbec80" cpu $G/deep &&
+    hasline "fault (page fault) after 2 instructions:" cpu $G/readonly &&
+    hasline "faulting address 0x401000" cpu $G/readonly
 }
 logs1() { log hello $G/hello && log sum $G/sum; }
 logs2() {
@@ -72,13 +131,13 @@ logs2() {
 }
 simd() {
     out "scalar = $(python3 tests/reference.py simd 19)
-simd   = $(python3 tests/reference.py simd 19)" cpu $MODE $G/simd &&
+simd   = $(python3 tests/reference.py simd 19)" cpu $G/simd &&
     out "scalar = $(python3 tests/reference.py simd 1000)
-simd   = $(python3 tests/reference.py simd 1000)" cpu $MODE $G/simd x
+simd   = $(python3 tests/reference.py simd 1000)" cpu $G/simd x
 }
 # tinytf [SEED N]: the output equals that of tests/reference.py tinytf
 tinytf() {
-    out "$(python3 tests/reference.py tinytf "$@")" cpu $MODE $G/tinytf "$@" && return 0
+    out "$(python3 tests/reference.py tinytf "$@")" cpu $G/tinytf "$@" && return 0
     echo "($G/tinytf ${*:-1 8})"
     return 1
 }
@@ -107,9 +166,9 @@ ollama() {
     python3 tools/mkmodel.py $MS > "$TMP/model.gguf" &&
         "$2" "$MP" $MN < "$TMP/model.gguf" > "$TMP/want" 2> "$TMP/want2" ||
         { echo "$2: does not run on this machine"; head -n 3 "$TMP/want2"; return 1; }
-    cpu $MODE "$1" "$MP" $MN < "$TMP/model.gguf" > "$TMP/got" 2> "$TMP/got2"
+    cpu "$1" "$MP" $MN < "$TMP/model.gguf" > "$TMP/got" 2> "$TMP/got2"
     cmp -s "$TMP/want" "$TMP/got" && cmp -s "$TMP/want2" "$TMP/got2" && return 0
-    echo "(python3 tools/mkmodel.py $MS > m.gguf; mini-cpu $MODE $1 \"$MP\" $MN < m.gguf)"
+    echo "(python3 tools/mkmodel.py $MS > m.gguf; mini-cpu $1 \"$MP\" $MN < m.gguf)"
     printf 'expected: %s\ngot:      %s\n' "$(cat "$TMP/want")" "$(cat "$TMP/got")"
     diff "$TMP/want2" "$TMP/got2" | grep '^[<>]' | head -n 4       # the report on stderr
     return 1
@@ -151,7 +210,7 @@ flags() {
     rand 1000000
     python3 tests/lab1/flagops.py "$RND" 1000 > "$TMP/flagops.s" && build flagops &&
         "$TMP/flagops" > "$TMP/want" || { echo "flagops: does not run on this machine"; return 1; }
-    cpu $MODE "$TMP/flagops" > "$TMP/got" 2> "$TMP/err"
+    cpu "$TMP/flagops" > "$TMP/got" 2> "$TMP/err"
     cmp -s "$TMP/want" "$TMP/got" && return 0
     _b=$(cmp "$TMP/want" "$TMP/got" 2>&1 | sed -n 's/.* byte \([0-9]*\).*/\1/p')
     [ -n "$_b" ] || { echo "(the output of mini-cpu is shorter)"; head -n 3 "$TMP/err"; return 1; }

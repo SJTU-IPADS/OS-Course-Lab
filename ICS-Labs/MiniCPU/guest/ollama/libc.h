@@ -47,42 +47,42 @@ static inline void *mmap(void *addr, size_t len, int prot, int flags, int fd, lo
     register long r10 __asm__("r10") = flags;
     register long r8 __asm__("r8") = fd;
     register long r9 __asm__("r9") = off;
-    long r;
-    __asm__ volatile ("syscall" : "=a"(r)
+    long result;
+    __asm__ volatile ("syscall" : "=a"(result)
                       : "a"(9L), "D"(addr), "S"(len), "d"((long)prot),
                         "r"(r10), "r"(r8), "r"(r9)
                       : "rcx", "r11", "memory");
-    return (unsigned long)r > -4096UL ? MAP_FAILED : (void *)r;
+    return (unsigned long)result > -4096UL ? MAP_FAILED : (void *)result;
 }
 
 /* ---------------- libc.c ---------------- */
 
-void *malloc(size_t n);
-void *calloc(size_t n, size_t size);
-void  free(void *p);
+void *malloc(size_t size);
+void *calloc(size_t count, size_t size);
+void  free(void *ptr);
 
-void *memcpy(void *dst, const void *src, size_t n);
-void *memmove(void *dst, const void *src, size_t n);
-void *memset(void *dst, int c, size_t n);
-int   memcmp(const void *a, const void *b, size_t n);
-char *strstr(const char *s, const char *sub);
-int   atoi(const char *s);
+void *memcpy(void *dst, const void *src, size_t count);
+void *memmove(void *dst, const void *src, size_t count);
+void *memset(void *dst, int ch, size_t count);
+int   memcmp(const void *left, const void *right, size_t count);
+char *strstr(const char *str, const char *sub);
+int   atoi(const char *str);
 
 /* The conversions are %s, %.*s, %d, %u, %llu and %%. */
 int   snprintf(char *buf, size_t size, const char *fmt, ...);
 void  die(const char *fmt, ...);        /* a message on standard error, exit status 1 */
 
-int   putchar(int c);                   /* collects the bytes ... */
+int   putchar(int ch);                  /* collects the bytes ... */
 void  flush(void);                      /* ... and this writes them */
 
 /* ---------------- math.c ---------------- */
 
-float sqrtf(float x);
-float expf(float x);
-float logf(float x);
-float powf(float x, float y);
-float sinf(float x);
-float cosf(float x);
-float ldexpf(float x, int e);
+float sqrtf(float value);
+float expf(float value);
+float logf(float value);
+float powf(float base, float exponent);
+float sinf(float angle);
+float cosf(float angle);
+float ldexpf(float value, int exponent);
 
 #endif

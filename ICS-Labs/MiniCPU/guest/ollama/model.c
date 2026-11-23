@@ -1,9 +1,8 @@
 /* model.c -- bring a GGUF file into memory and find the tensors in it.
 
-   This is model.c of lecture 3 (lectures/3-asm/examples/mini-ollama). What
-   differs: the file is standard input, mapped with fstat and mmap, so the
-   program opens nothing and the branch for Windows is gone; die() is in
-   libc.c; MAX_WIDTH is 8192, for a stack of 256 KiB.
+   The file is standard input, mapped with fstat and mmap, so the program
+   opens nothing. die() is in libc.c. MAX_WIDTH is 8192, for a stack of
+   256 KiB.
 
    GGUF version 3, every integer little endian:
 
@@ -26,49 +25,50 @@ float fp16[1 << 16];
 /* ---------------- reading the bytes ---------------- */
 
 struct reader {
-    const uint8_t *p, *end;
+    const uint8_t *next, *end;
 };
 
-static const uint8_t *take(struct reader *r, uint64_t n)
+static const uint8_t *take(struct reader *reader, uint64_t nbytes)
 {
-    const uint8_t *p = r->p;
-    if (n > (uint64_t)(r->end - r->p))
+    const uint8_t *taken = reader->next;
+    if (nbytes > (uint64_t)(reader->end - reader->next))
         die("the file ends inside its header");
-    r->p += n;
-    return p;
+    reader->next += nbytes;
+    return taken;
 }
 
-static uint32_t rd_u32(struct reader *r)
+static uint32_t rd_u32(struct reader *reader)
 {
-    uint32_t v;
-    memcpy(&v, take(r, 4), 4);
-    return v;
+    uint32_t value;
+    memcpy(&value, take(reader, 4), 4);
+    return value;
 }
 
-static uint64_t rd_u64(struct reader *r)
+static uint64_t rd_u64(struct reader *reader)
 {
-    uint64_t v;
-    memcpy(&v, take(r, 8), 8);
-    return v;
+    uint64_t value;
+    memcpy(&value, take(reader, 8), 8);
+    return value;
 }
 
-static struct str rd_str(struct reader *r)
+static struct str rd_str(struct reader *reader)
 {
-    struct str s;
-    s.len = rd_u64(r);
-    s.p = (const char *)take(r, s.len);
-    return s;
+    struct str str;
+    str.len = rd_u64(reader);
+    str.chars = (const char *)take(reader, str.len);
+    return str;
 }
 
-static int str_is(struct str s, const char *name)
+static int str_is(struct str str, const char *name)
 {
-    return s.len == strlen(name) && memcmp(s.p, name, s.len) == 0;
+    return str.len == strlen(name) && memcmp(str.chars, name, str.len) == 0;
 }
 
-static int str_ends(struct str s, const char *tail)
+static int str_ends(struct str str, const char *tail)
 {
-    size_t n = strlen(tail);
-    return s.len >= n && memcmp(s.p + s.len - n, tail, n) == 0;
+    size_t tail_len = strlen(tail);
+    return str.len >= tail_len &&
+           memcmp(str.chars + str.len - tail_len, tail, tail_len) == 0;
 }
 
 /* ---------------- the key-value pairs ---------------- */
@@ -76,86 +76,87 @@ static int str_ends(struct str s, const char *tail)
 enum { U8, I8, U16, I16, U32, I32, F32, BOOL, STR, ARR, U64, I64, F64, N_TYPES };
 static const int value_size[N_TYPES] = { 1, 1, 2, 2, 4, 4, 4, 1, 0, 0, 8, 8, 8 };
 
-static void skip_value(struct reader *r, uint32_t type)
+static void skip_value(struct reader *reader, uint32_t type)
 {
     if (type == STR) {
-        rd_str(r);
+        rd_str(reader);
     } else if (type == ARR) {
-        uint32_t elem = rd_u32(r);
-        for (uint64_t n = rd_u64(r); n > 0; n--)
-            skip_value(r, elem);
+        uint32_t elem = rd_u32(reader);
+        for (uint64_t remaining = rd_u64(reader); remaining > 0; remaining--)
+            skip_value(reader, elem);
     } else if (type < N_TYPES) {
-        take(r, value_size[type]);
+        take(reader, value_size[type]);
     } else {
         die("unknown value type %u", (unsigned)type);
     }
 }
 
-static int rd_int(struct reader *r, uint32_t type, struct str key)
+static int rd_int(struct reader *reader, uint32_t type, struct str key)
 {
     if (type != U32)
-        die("%.*s is not a uint32", (int)key.len, key.p);
-    return (int)rd_u32(r);
+        die("%.*s is not a uint32", (int)key.len, key.chars);
+    return (int)rd_u32(reader);
 }
 
-static float rd_float(struct reader *r, uint32_t type, struct str key)
+static float rd_float(struct reader *reader, uint32_t type, struct str key)
 {
-    float v;
+    float value;
     if (type != F32)
-        die("%.*s is not a float", (int)key.len, key.p);
-    memcpy(&v, take(r, 4), 4);
-    return v;
+        die("%.*s is not a float", (int)key.len, key.chars);
+    memcpy(&value, take(reader, 4), 4);
+    return value;
 }
 
-static struct str *rd_strings(struct reader *r, uint32_t type, struct str key, int *n)
+static struct str *rd_strings(struct reader *reader, uint32_t type, struct str key,
+                              int *n_strings)
 {
-    if (type != ARR || rd_u32(r) != STR)
-        die("%.*s is not an array of strings", (int)key.len, key.p);
-    uint64_t count = rd_u64(r);
-    if (count > (uint64_t)(r->end - r->p) / 8)
-        die("%.*s is longer than the file", (int)key.len, key.p);
-    struct str *v = malloc((count + 1) * sizeof *v);
-    if (!v)
+    if (type != ARR || rd_u32(reader) != STR)
+        die("%.*s is not an array of strings", (int)key.len, key.chars);
+    uint64_t count = rd_u64(reader);
+    if (count > (uint64_t)(reader->end - reader->next) / 8)
+        die("%.*s is longer than the file", (int)key.len, key.chars);
+    struct str *strings = malloc((count + 1) * sizeof *strings);
+    if (!strings)
         die("out of memory");
-    for (uint64_t i = 0; i < count; i++)
-        v[i] = rd_str(r);
-    *n = (int)count;
-    return v;
+    for (uint64_t idx = 0; idx < count; idx++)
+        strings[idx] = rd_str(reader);
+    *n_strings = (int)count;
+    return strings;
 }
 
 /* The numbers that describe the model carry the name of the architecture
    in front (qwen3vl.block_count), so they are matched by their ending. */
-static void rd_pair(struct model *m, struct reader *r, uint32_t *alignment)
+static void rd_pair(struct model *model, struct reader *reader, uint32_t *alignment)
 {
-    struct str key = rd_str(r);
-    uint32_t type = rd_u32(r);
+    struct str key = rd_str(reader);
+    uint32_t type = rd_u32(reader);
 
     if (str_ends(key, ".block_count"))
-        m->n_layer = rd_int(r, type, key);
+        model->n_layer = rd_int(reader, type, key);
     else if (str_ends(key, ".embedding_length"))
-        m->n_embd = rd_int(r, type, key);
+        model->n_embd = rd_int(reader, type, key);
     else if (str_ends(key, ".feed_forward_length"))
-        m->n_ff = rd_int(r, type, key);
+        model->n_ff = rd_int(reader, type, key);
     else if (str_ends(key, ".attention.head_count"))
-        m->n_head = rd_int(r, type, key);
+        model->n_head = rd_int(reader, type, key);
     else if (str_ends(key, ".attention.head_count_kv"))
-        m->n_head_kv = rd_int(r, type, key);
+        model->n_head_kv = rd_int(reader, type, key);
     else if (str_ends(key, ".attention.key_length"))
-        m->head_dim = rd_int(r, type, key);
+        model->head_dim = rd_int(reader, type, key);
     else if (str_ends(key, ".attention.layer_norm_rms_epsilon"))
-        m->eps = rd_float(r, type, key);
+        model->eps = rd_float(reader, type, key);
     else if (str_ends(key, ".rope.freq_base"))
-        m->rope_base = rd_float(r, type, key);
+        model->rope_base = rd_float(reader, type, key);
     else if (str_is(key, "general.alignment"))
-        *alignment = (uint32_t)rd_int(r, type, key);
+        *alignment = (uint32_t)rd_int(reader, type, key);
     else if (str_is(key, "tokenizer.ggml.eos_token_id"))
-        m->eos = rd_int(r, type, key);
+        model->eos = rd_int(reader, type, key);
     else if (str_is(key, "tokenizer.ggml.tokens"))
-        m->vocab = rd_strings(r, type, key, &m->n_vocab);
+        model->vocab = rd_strings(reader, type, key, &model->n_vocab);
     else if (str_is(key, "tokenizer.ggml.merges"))
-        m->merges = rd_strings(r, type, key, &m->n_merges);
+        model->merges = rd_strings(reader, type, key, &model->n_merges);
     else
-        skip_value(r, type);
+        skip_value(reader, type);
 }
 
 /* ---------------- the tensor directory ---------------- */
@@ -170,21 +171,22 @@ struct entry {
 
 struct directory {
     struct entry  *entry;
-    uint64_t       n;
+    uint64_t       count;
     const uint8_t *data, *end;          /* the data area */
 };
 
-static void rd_entry(struct reader *r, struct entry *e)
+static void rd_entry(struct reader *reader, struct entry *entry)
 {
-    e->name = rd_str(r);
-    e->n_dims = rd_u32(r);
-    if (e->n_dims < 1 || e->n_dims > 2)
-        die("%.*s has %u dimensions", (int)e->name.len, e->name.p, (unsigned)e->n_dims);
-    e->dims[1] = 1;
-    for (uint32_t i = 0; i < e->n_dims; i++)
-        e->dims[i] = rd_u64(r);
-    e->type = rd_u32(r);
-    e->offset = rd_u64(r);
+    entry->name = rd_str(reader);
+    entry->n_dims = rd_u32(reader);
+    if (entry->n_dims < 1 || entry->n_dims > 2)
+        die("%.*s has %u dimensions", (int)entry->name.len, entry->name.chars,
+            (unsigned)entry->n_dims);
+    entry->dims[1] = 1;
+    for (uint32_t dim = 0; dim < entry->n_dims; dim++)
+        entry->dims[dim] = rd_u64(reader);
+    entry->type = rd_u32(reader);
+    entry->offset = rd_u64(reader);
 }
 
 /* The tensor called name (layer is put in for %d), which has to be a Q4_0
@@ -195,59 +197,62 @@ static struct tensor find(const struct directory *dir, const char *name, int lay
     char full[64];
     snprintf(full, sizeof full, name, layer);
 
-    for (uint64_t i = 0; i < dir->n; i++) {
-        const struct entry *e = &dir->entry[i];
-        if (!str_is(e->name, full))
+    for (uint64_t idx = 0; idx < dir->count; idx++) {
+        const struct entry *entry = &dir->entry[idx];
+        if (!str_is(entry->name, full))
             continue;
-        if (e->dims[0] != (uint64_t)cols || e->dims[1] != (uint64_t)rows)
+        if (entry->dims[0] != (uint64_t)cols || entry->dims[1] != (uint64_t)rows)
             die("%s is %llu x %llu, expected %d x %d", full,
-                (unsigned long long)e->dims[0], (unsigned long long)e->dims[1], cols, rows);
-        if (rows > 1 && e->type != TYPE_Q4_0)
-            die("%s is not Q4_0: build the model with nano-quant --recipe q4_0", full);
-        if (rows == 1 && e->type != TYPE_F32)
+                (unsigned long long)entry->dims[0], (unsigned long long)entry->dims[1],
+                cols, rows);
+        if (rows > 1 && entry->type != TYPE_Q4_0)
+            die("%s is not Q4_0: use a model with every matrix in Q4_0", full);
+        if (rows == 1 && entry->type != TYPE_F32)
             die("%s is not a float vector", full);
         if (rows > 1 && cols % 32 != 0)
             die("%s: a row is not a whole number of Q4_0 blocks", full);
 
         uint64_t bytes = rows > 1 ? (uint64_t)rows * (cols / 32) * 18 : (uint64_t)cols * 4;
         uint64_t room = (uint64_t)(dir->end - dir->data);
-        if (e->offset > room || bytes > room - e->offset)
+        if (entry->offset > room || bytes > room - entry->offset)
             die("%s lies outside the file", full);
-        struct tensor t = { (size_t)cols, (size_t)rows, dir->data + e->offset };
-        return t;
+        struct tensor tensor = { (size_t)cols, (size_t)rows,
+                                 dir->data + entry->offset };
+        return tensor;
     }
     die("the file has no tensor %s", full);
     return (struct tensor){ 0, 0, NULL };
 }
 
-static void find_tensors(struct model *m, const struct directory *dir)
+static void find_tensors(struct model *model, const struct directory *dir)
 {
-    int e = m->n_embd, f = m->n_ff, d = m->head_dim;
-    int q = m->n_head * d, kv = m->n_head_kv * d;
+    int n_embd = model->n_embd, n_ff = model->n_ff, head_dim = model->head_dim;
+    int query_dim = model->n_head * head_dim, kv_dim = model->n_head_kv * head_dim;
 
-    m->token_embd  = find(dir, "token_embd.weight", 0, e, m->n_vocab);
-    m->output_norm = find(dir, "output_norm.weight", 0, e, 1);
-    m->logits = malloc((size_t)m->n_vocab * sizeof *m->logits);
-    m->layer = calloc((size_t)m->n_layer, sizeof *m->layer);
-    if (!m->logits || !m->layer)
+    model->token_embd  = find(dir, "token_embd.weight", 0, n_embd, model->n_vocab);
+    model->output_norm = find(dir, "output_norm.weight", 0, n_embd, 1);
+    model->logits = malloc((size_t)model->n_vocab * sizeof *model->logits);
+    model->layer = calloc((size_t)model->n_layer, sizeof *model->layer);
+    if (!model->logits || !model->layer)
         die("out of memory");
 
-    for (int l = 0; l < m->n_layer; l++) {
-        struct layer *L = &m->layer[l];
-        L->attn_norm   = find(dir, "blk.%d.attn_norm.weight", l, e, 1);
-        L->attn_q      = find(dir, "blk.%d.attn_q.weight", l, e, q);
-        L->attn_k      = find(dir, "blk.%d.attn_k.weight", l, e, kv);
-        L->attn_v      = find(dir, "blk.%d.attn_v.weight", l, e, kv);
-        L->attn_q_norm = find(dir, "blk.%d.attn_q_norm.weight", l, d, 1);
-        L->attn_k_norm = find(dir, "blk.%d.attn_k_norm.weight", l, d, 1);
-        L->attn_output = find(dir, "blk.%d.attn_output.weight", l, q, e);
-        L->ffn_norm    = find(dir, "blk.%d.ffn_norm.weight", l, e, 1);
-        L->ffn_gate    = find(dir, "blk.%d.ffn_gate.weight", l, e, f);
-        L->ffn_up      = find(dir, "blk.%d.ffn_up.weight", l, e, f);
-        L->ffn_down    = find(dir, "blk.%d.ffn_down.weight", l, f, e);
-        L->k_cache = malloc((size_t)MAX_CTX * kv * sizeof(float));
-        L->v_cache = malloc((size_t)MAX_CTX * kv * sizeof(float));
-        if (!L->k_cache || !L->v_cache)
+    /* GGUF calls a layer a block: blk.0, blk.1, ... */
+    for (int layer = 0; layer < model->n_layer; layer++) {
+        struct layer *block = &model->layer[layer];
+        block->attn_norm   = find(dir, "blk.%d.attn_norm.weight", layer, n_embd, 1);
+        block->attn_q      = find(dir, "blk.%d.attn_q.weight", layer, n_embd, query_dim);
+        block->attn_k      = find(dir, "blk.%d.attn_k.weight", layer, n_embd, kv_dim);
+        block->attn_v      = find(dir, "blk.%d.attn_v.weight", layer, n_embd, kv_dim);
+        block->attn_q_norm = find(dir, "blk.%d.attn_q_norm.weight", layer, head_dim, 1);
+        block->attn_k_norm = find(dir, "blk.%d.attn_k_norm.weight", layer, head_dim, 1);
+        block->attn_output = find(dir, "blk.%d.attn_output.weight", layer, query_dim, n_embd);
+        block->ffn_norm    = find(dir, "blk.%d.ffn_norm.weight", layer, n_embd, 1);
+        block->ffn_gate    = find(dir, "blk.%d.ffn_gate.weight", layer, n_embd, n_ff);
+        block->ffn_up      = find(dir, "blk.%d.ffn_up.weight", layer, n_embd, n_ff);
+        block->ffn_down    = find(dir, "blk.%d.ffn_down.weight", layer, n_ff, n_embd);
+        block->k_cache = malloc((size_t)MAX_CTX * kv_dim * sizeof(float));
+        block->v_cache = malloc((size_t)MAX_CTX * kv_dim * sizeof(float));
+        if (!block->k_cache || !block->v_cache)
             die("out of memory");
     }
 }
@@ -258,11 +263,11 @@ static void find_tensors(struct model *m, const struct directory *dir)
    are finite, so infinity and NaN are not told apart from large numbers. */
 static void fill_fp16(void)
 {
-    for (int h = 0; h < 1 << 16; h++) {
-        int exp = h >> 10 & 31, frac = h & 1023;
-        float v = exp == 0 ? ldexpf((float)frac, -24)
-                           : ldexpf((float)(frac + 1024), exp - 25);
-        fp16[h] = h >> 15 ? -v : v;
+    for (int bits = 0; bits < 1 << 16; bits++) {
+        int exp = bits >> 10 & 31, frac = bits & 1023;
+        float value = exp == 0 ? ldexpf((float)frac, -24)
+                               : ldexpf((float)(frac + 1024), exp - 25);
+        fp16[bits] = bits >> 15 ? -value : value;
     }
 }
 
@@ -273,60 +278,61 @@ static const uint8_t *load_file(size_t *size)
     struct stat st;
     if (fstat(0, &st) != 0)
         die("standard input is not open");
-    void *p = st.st_size > 0
-            ? mmap(NULL, (size_t)st.st_size, PROT_READ, MAP_PRIVATE, 0, 0)
-            : MAP_FAILED;
-    if (p == MAP_FAILED)
+    void *mapping = st.st_size > 0
+                  ? mmap(NULL, (size_t)st.st_size, PROT_READ, MAP_PRIVATE, 0, 0)
+                  : MAP_FAILED;
+    if (mapping == MAP_FAILED)
         die("cannot map standard input: it has to be a file, < MODEL.gguf");
     *size = (size_t)st.st_size;
-    return p;
+    return mapping;
 }
 
 struct model *load_model(void)
 {
     size_t size;
     const uint8_t *file = load_file(&size);
-    struct reader r = { file, file + size };
-    struct model *m = calloc(1, sizeof *m);
+    struct reader reader = { file, file + size };
+    struct model *model = calloc(1, sizeof *model);
     struct directory dir;
     uint32_t alignment = 32;
 
-    if (!m)
+    if (!model)
         die("out of memory");
-    if (memcmp(take(&r, 4), "GGUF", 4) != 0 || rd_u32(&r) != 3)
+    if (memcmp(take(&reader, 4), "GGUF", 4) != 0 || rd_u32(&reader) != 3)
         die("standard input is not a GGUF version 3 file");
-    dir.n = rd_u64(&r);
-    uint64_t n_pairs = rd_u64(&r);
+    dir.count = rd_u64(&reader);
+    uint64_t n_pairs = rd_u64(&reader);
 
-    m->eos = -1;
-    for (uint64_t i = 0; i < n_pairs; i++)
-        rd_pair(m, &r, &alignment);
-    if (m->n_layer <= 0 || m->n_embd <= 0 || m->n_ff <= 0 || m->n_head <= 0 ||
-        m->n_head_kv <= 0 || m->head_dim <= 0 || m->n_head % m->n_head_kv != 0 ||
-        m->head_dim % 2 != 0 || m->rope_base <= 0 || !m->vocab || !m->merges ||
-        m->eos < 0 || m->eos >= m->n_vocab || alignment == 0 ||
-        m->n_embd > MAX_WIDTH || m->n_ff > MAX_WIDTH ||
-        m->n_head > MAX_WIDTH / m->head_dim)
+    model->eos = -1;
+    for (uint64_t pair = 0; pair < n_pairs; pair++)
+        rd_pair(model, &reader, &alignment);
+    if (model->n_layer <= 0 || model->n_embd <= 0 || model->n_ff <= 0 ||
+        model->n_head <= 0 || model->n_head_kv <= 0 || model->head_dim <= 0 ||
+        model->n_head % model->n_head_kv != 0 || model->head_dim % 2 != 0 ||
+        model->rope_base <= 0 || !model->vocab || !model->merges ||
+        model->eos < 0 || model->eos >= model->n_vocab || alignment == 0 ||
+        model->n_embd > MAX_WIDTH || model->n_ff > MAX_WIDTH ||
+        model->n_head > MAX_WIDTH / model->head_dim)
         die("the file does not describe a model this program can run");
 
-    if (dir.n > (uint64_t)(r.end - r.p) / 24)
+    if (dir.count > (uint64_t)(reader.end - reader.next) / 24)
         die("the tensor directory is longer than the file");
-    dir.entry = malloc((dir.n + 1) * sizeof *dir.entry);
+    dir.entry = malloc((dir.count + 1) * sizeof *dir.entry);
     if (!dir.entry)
         die("out of memory");
-    for (uint64_t i = 0; i < dir.n; i++)
-        rd_entry(&r, &dir.entry[i]);
+    for (uint64_t idx = 0; idx < dir.count; idx++)
+        rd_entry(&reader, &dir.entry[idx]);
 
-    uint64_t header = (uint64_t)(r.p - file);
+    uint64_t header = (uint64_t)(reader.next - file);
     uint64_t start = (header + alignment - 1) / alignment * alignment;
     if (start > size)
         die("the file ends before its data area");
     dir.data = file + start;
     dir.end = file + size;
 
-    find_tensors(m, &dir);
+    find_tensors(model, &dir);
     free(dir.entry);
     fill_fp16();
-    tokenizer_init(m);
-    return m;
+    tokenizer_init(model);
+    return model;
 }

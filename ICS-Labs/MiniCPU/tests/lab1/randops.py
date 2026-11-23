@@ -28,8 +28,7 @@ the data area to stdout; the exit status is 0 when everything is written.
 No instruction has a result or flag that x86 leaves undefined, and no
 value depends on the address of the stack, so the output on this machine
 and under mini-cpu must be the same. tests/lab1/run.sh assembles the
-program, runs it both ways, and compares the outputs; tests/lab2/run.sh
-also runs it on the CPU of lab 2.
+program, runs it both ways, and compares the outputs.
 """
 import random
 import struct

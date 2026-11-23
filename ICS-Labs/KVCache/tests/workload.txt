@@ -1,0 +1,16 @@
+# The workload of make test: one conversation of twelve turns, answered by
+# the small model of tools/mkmodel.py. One turn per line: the message of the
+# user. Some answers end early at the end token of the model, so a later
+# turn starts from fewer cached tokens than the capacity before it.
+What is memory?
+last one
+hello
+Why?
+谢谢
+ok
+hi
+What is a KV cache?
+bye
+Why keep keys?
+Which is fastest?
+ok

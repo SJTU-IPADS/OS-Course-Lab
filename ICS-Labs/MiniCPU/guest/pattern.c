@@ -10,15 +10,15 @@
 int guest_main(int argc, char **argv)
 {
     (void)argv;
-    long n = argc > 1 ? 4000 : 400;
-    long s = 0;
-    for (long i = 0; i < n; ++i) {
-        if ((i & 3) < 2)                /* taken taken not-taken not-taken */
-            s += i;
+    long iterations = argc > 1 ? 4000 : 400;
+    long total = 0;
+    for (long step = 0; step < iterations; ++step) {
+        if ((step & 3) < 2)             /* taken taken not-taken not-taken */
+            total += step;
         else
-            s -= 1;
+            total -= 1;
     }
     puts("s = ");
-    putint(s);
+    putint(total);
     return 0;
 }

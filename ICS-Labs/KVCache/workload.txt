@@ -1,0 +1,8 @@
+# The workload of make run: one conversation of five turns. One turn per
+# line: the message of the user. The limit of make run, 32M, holds 146
+# blocks of the model, one token each, more than the conversation needs.
+用一句话介绍你自己。
+什么是缓存？
+它为什么快？
+内存和硬盘有什么区别？
+哪一个更便宜？

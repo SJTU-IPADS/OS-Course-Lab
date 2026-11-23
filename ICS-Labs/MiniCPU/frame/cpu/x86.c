@@ -1,5 +1,6 @@
-/* Helpers of the interpreter of lab 1: fetching, operands, memory, and
- * the start and end of every instruction.
+/* Hardware: the helpers of the interpreter of lab 1, fetching, operands,
+ * memory, and the start and end of every instruction. The memory of an
+ * operand goes through the memory access unit of frame/cpu/mem.c.
  *
  * interp.c works on the registers directly (R[RAX], R[RIP], ...). What it
  * leaves to this file is the part of x86 that is bookkeeping rather than

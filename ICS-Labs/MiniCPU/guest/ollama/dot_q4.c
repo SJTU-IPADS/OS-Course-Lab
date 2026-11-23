@@ -6,12 +6,14 @@
    expected output of guest/mini-ollama-simd under mini-cpu. Both functions
    add up the same 32 integers, so the two programs print the same text. */
 
-/* The sum over j = 0 .. 15 of (b[j] & 15) * x[j] + (b[j] >> 4) * x[j + 16]:
-   b is the 16 bytes of a Q4_0 block, x has 32 integers. */
-int dot_q4(const unsigned char *b, const int *x)
+/* The sum over j = 0 .. 15 of
+   (packed[j] & 15) * input[j] + (packed[j] >> 4) * input[j + 16]:
+   packed is the 16 bytes of a Q4_0 block, input has 32 integers. */
+int dot_q4(const unsigned char *packed, const int *input)
 {
     int sum = 0;
-    for (int j = 0; j < 16; j++)
-        sum += (b[j] & 15) * x[j] + (b[j] >> 4) * x[j + 16];
+    for (int byte = 0; byte < 16; byte++)
+        sum += (packed[byte] & 15) * input[byte] +
+               (packed[byte] >> 4) * input[byte + 16];
     return sum;
 }
