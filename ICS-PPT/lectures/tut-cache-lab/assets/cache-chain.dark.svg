@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 474" width="1120" height="474">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#68b4d4"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ee8a52"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c6d8ea"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#78c07c"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f37b84"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#99a6b3"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#556067"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b3a2e0"/></marker></defs>
+<rect x="4.0" y="14.0" width="862.0" height="454.0" rx="10" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.4"/>
+<rect x="414.0" y="4.0" width="42.0" height="20.0" rx="10" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.1"/>
+<text x="435.0" y="19.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#99a6b3" text-anchor="middle">硬件</text>
+<rect x="18.0" y="38.0" width="834.0" height="48.0" rx="8" fill="#1b1d1f" stroke="#c6d8ea" stroke-width="1.8"/>
+<rect x="83.5" y="28.0" width="53.0" height="20.0" rx="10" fill="#1b1d1f" stroke="#c6d8ea" stroke-width="1.1"/>
+<text x="110.0" y="42.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c6d8ea" text-anchor="middle">实验一</text>
+<text x="34.0" y="67.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#c6d8ea" text-anchor="start">src/lab1/interp.c</text>
+<rect x="417.0" y="49.0" width="108.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="471.0" y="67.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">interp_run</text>
+<rect x="18.0" y="112.0" width="834.0" height="48.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="34.0" y="141.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">frame/cpu/x86.c</text>
+<rect x="213.5" y="123.0" width="97.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="262.0" y="141.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">x86_begin</text>
+<rect x="374.5" y="123.0" width="61.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="405.0" y="141.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">store</text>
+<rect x="534.0" y="123.0" width="52.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="560.0" y="141.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">load</text>
+<rect x="645.0" y="123.0" width="70.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="680.0" y="141.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">rm_get</text>
+<line x1="418.8" y1="76.0" x2="262.0" y2="120.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="454.5" y1="76.0" x2="405.0" y2="120.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="523.2" y1="76.0" x2="680.0" y2="120.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="644.0" y1="136.0" x2="589.0" y2="136.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="18.0" y="182.0" width="622.0" height="108.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="34.0" y="211.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">frame/cpu/mem.c</text>
+<text x="34.0" y="271.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">CPU 的访存单元</text>
+<rect x="204.5" y="193.0" width="115.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="262.0" y="211.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">fetch_bytes</text>
+<line x1="262.0" y1="150.0" x2="262.0" y2="190.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="356.5" y="193.0" width="97.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="405.0" y="211.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">mem_write</text>
+<line x1="405.0" y1="150.0" x2="405.0" y2="190.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="516.0" y="193.0" width="88.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="560.0" y="211.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">mem_read</text>
+<line x1="560.0" y1="150.0" x2="560.0" y2="190.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="352.0" y="253.0" width="106.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="405.0" y="271.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">mem_access</text>
+<line x1="262.0" y1="220.0" x2="373.5" y2="250.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="405.0" y1="220.0" x2="405.0" y2="250.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="560.0" y1="220.0" x2="439.1" y2="250.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="656.0" y="226.0" width="196.0" height="64.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="754.0" y="246.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">frame/cpu/pagemap.c</text>
+<rect x="687.5" y="259.0" width="133.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="754.0" y="277.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">mmu_translate</text>
+<line x1="459.0" y1="272.0" x2="684.5" y2="272.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<text x="549.0" y="264.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c6d8ea" text-anchor="middle">每页一次</text>
+<rect x="18.0" y="314.0" width="834.0" height="52.0" rx="8" fill="#1b1d1f" stroke="#c6d8ea" stroke-width="2.6"/>
+<rect x="88.7" y="304.0" width="42.6" height="20.0" rx="10" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.1"/>
+<text x="110.0" y="318.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#1b1d1f" text-anchor="middle">TODO</text>
+<text x="34.0" y="345.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="bold" fill="#c6d8ea" text-anchor="start">src/lab2/cache.c</text>
+<rect x="346.5" y="327.0" width="117.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="405.0" y="345.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_write</text>
+<line x1="405.0" y1="280.0" x2="405.0" y2="324.0" stroke="#c6d8ea" stroke-width="2.0" marker-end="url(#ah-0e2841)"/>
+<rect x="506.0" y="327.0" width="108.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="560.0" y="345.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_read</text>
+<line x1="439.1" y1="280.0" x2="560.0" y2="324.0" stroke="#c6d8ea" stroke-width="2.0" marker-end="url(#ah-0e2841)"/>
+<text x="393.0" y="312.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c6d8ea" text-anchor="end">每行一次</text>
+<text x="626.0" y="345.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="normal" fill="#99a6b3" text-anchor="start">实验一中为 </text>
+<text x="698.1" y="345.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="normal" fill="#99a6b3" text-anchor="start">frame/cpu/nocache.c</text>
+<rect x="18.0" y="408.0" width="834.0" height="48.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="34.0" y="437.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">frame/cpu/dram.c</text>
+<rect x="304.5" y="419.0" width="151.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="380.0" y="437.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">dram_line_write</text>
+<path d="M 482.5 367.0 L 482.5 381.0 L 380.0 381.0 L 380.0 416.0" fill="none" stroke="#f37b84" stroke-width="1.8" marker-end="url(#ah-c0392b)"/>
+<rect x="489.0" y="419.0" width="142.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="560.0" y="437.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">dram_line_read</text>
+<path d="M 482.5 367.0 L 482.5 381.0 L 560.0 381.0 L 560.0 416.0" fill="none" stroke="#f37b84" stroke-width="1.8" marker-end="url(#ah-c0392b)"/>
+<text x="645.0" y="437.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#f37b84" text-anchor="start">一次读写一行，访问宿主的内存</text>
+<rect x="882.0" y="14.0" width="234.0" height="202.0" rx="10" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.4"/>
+<rect x="978.0" y="4.0" width="42.0" height="20.0" rx="10" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.1"/>
+<text x="999.0" y="19.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#99a6b3" text-anchor="middle">软件</text>
+<rect x="896.0" y="42.0" width="206.0" height="62.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="999.0" y="62.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">frame/os/sysbase.c</text>
+<rect x="937.0" y="73.0" width="124.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="999.0" y="91.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">sys_dispatch</text>
+<rect x="896.0" y="126.0" width="206.0" height="62.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<rect x="946.0" y="135.0" width="106.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="999.0" y="153.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">guest_read</text>
+<text x="999.0" y="177.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">frame/os/copy.c</text>
+<line x1="999.0" y1="100.0" x2="999.0" y2="132.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<text x="1009.0" y="120.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">write</text>
+<path d="M 945.0 148.0 L 874.0 148.0 L 874.0 206.0 L 607.0 206.0" fill="none" stroke="#c6d8ea" stroke-width="2.0" marker-end="url(#ah-0e2841)"/>
+<text x="753.0" y="198.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#c6d8ea" text-anchor="middle">每行一次</text>
+<rect x="900.0" y="250.0" width="26.0" height="17.0" rx="8.5" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.2"/>
+<text x="934.0" y="263.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">你实现的函数</text>
+<rect x="900.0" y="278.0" width="26.0" height="17.0" rx="3" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.2"/>
+<text x="934.0" y="291.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">框架的函数</text>
+</svg>

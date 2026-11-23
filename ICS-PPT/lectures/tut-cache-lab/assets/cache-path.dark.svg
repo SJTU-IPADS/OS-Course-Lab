@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1012 482" width="1012" height="482">
+<defs><marker id="ah-156082" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#68b4d4"/></marker><marker id="ah-e97132" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ee8a52"/></marker><marker id="ah-0e2841" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c6d8ea"/></marker><marker id="ah-2e7d4f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#78c07c"/></marker><marker id="ah-c0392b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f37b84"/></marker><marker id="ah-5a6b78" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#99a6b3"/></marker><marker id="ah-9fb5c3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#556067"/></marker><marker id="ah-6c5a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b3a2e0"/></marker></defs>
+<rect x="4.0" y="2.0" width="1004.0" height="478.0" rx="10" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.4"/>
+<text x="24.0" y="466.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#99a6b3" text-anchor="start">mini-cpu 进程</text>
+<rect x="24.0" y="26.0" width="210.0" height="66.0" rx="8" fill="#1b1d1f" stroke="#c6d8ea" stroke-width="1.8"/>
+<text x="129.0" y="56.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">src/lab1/interp.c</text>
+<text x="129.0" y="82.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="middle">解释器</text>
+<rect x="102.5" y="16.0" width="53.0" height="20.0" rx="10" fill="#1b1d1f" stroke="#c6d8ea" stroke-width="1.1"/>
+<text x="129.0" y="30.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#c6d8ea" text-anchor="middle">实验一</text>
+<line x1="68.0" y1="92.0" x2="68.0" y2="127.0" stroke="#c6d8ea" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="80.0" y="109.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">取指、读数据、写数据</text>
+<rect x="24.0" y="130.0" width="210.0" height="250.0" rx="8" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.6"/>
+<text x="129.0" y="160.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">frame/cpu/mem.c</text>
+<text x="129.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="middle">CPU 的访存单元</text>
+<rect x="109.0" y="120.0" width="40.0" height="20.0" rx="10" fill="#2b2f33" stroke="#99a6b3" stroke-width="1.1"/>
+<text x="129.0" y="134.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#99a6b3" text-anchor="middle">框架</text>
+<rect x="71.5" y="213.0" width="115.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="129.0" y="231.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">fetch_bytes</text>
+<rect x="85.0" y="255.0" width="88.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="129.0" y="273.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">mem_read</text>
+<rect x="80.5" y="297.0" width="97.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="129.0" y="315.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">mem_write</text>
+<text x="129.0" y="362.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">给出物理地址 pa</text>
+<rect x="778.0" y="130.0" width="210.0" height="250.0" rx="8" fill="#1b1d1f" stroke="#78c07c" stroke-width="2.0"/>
+<text x="883.0" y="160.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#78c07c" text-anchor="middle">dram.img 的映射</text>
+<text x="883.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#78c07c" text-anchor="middle">物理内存</text>
+<rect x="799.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="208.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="225.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="242.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="259.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="276.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="293.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="310.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="799.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="813.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="827.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="841.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="855.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="869.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="883.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="897.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="911.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="925.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="939.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<rect x="953.0" y="327.0" width="14.0" height="13.0" rx="0" fill="#24382a" stroke="#78c07c" stroke-width="0.8"/>
+<text x="883.0" y="364.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#78c07c" text-anchor="middle">64 MiB</text>
+<line x1="678.0" y1="247.0" x2="775.0" y2="247.0" stroke="#c6d8ea" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="678.0" y1="310.0" x2="775.0" y2="310.0" stroke="#c6d8ea" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<text x="728.0" y="284.5" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="bold" fill="#c6d8ea" text-anchor="middle">dram_ptr</text>
+<line x1="717.0" y1="236.0" x2="739.0" y2="258.0" stroke="#f37b84" stroke-width="3.4"/>
+<line x1="717.0" y1="258.0" x2="739.0" y2="236.0" stroke="#f37b84" stroke-width="3.4"/>
+<line x1="717.0" y1="299.0" x2="739.0" y2="321.0" stroke="#f37b84" stroke-width="3.4"/>
+<line x1="717.0" y1="321.0" x2="739.0" y2="299.0" stroke="#f37b84" stroke-width="3.4"/>
+<rect x="870.0" y="22.0" width="26.0" height="17.0" rx="8.5" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.2"/>
+<text x="904.0" y="35.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">你实现的函数</text>
+<rect x="870.0" y="46.0" width="26.0" height="17.0" rx="8.5" fill="#7d8891" stroke="#7d8891" stroke-width="1.2"/>
+<text x="904.0" y="59.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">已写出的函数</text>
+<rect x="870.0" y="70.0" width="26.0" height="17.0" rx="3" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.2"/>
+<text x="904.0" y="83.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="start">框架的函数</text>
+<rect x="334.0" y="130.0" width="344.0" height="250.0" rx="8" fill="#1b1d1f" stroke="#c6d8ea" stroke-width="2.6"/>
+<text x="506.0" y="160.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="middle">src/lab2/cache.c</text>
+<text x="506.0" y="186.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="18" font-weight="bold" fill="#c6d8ea" text-anchor="middle">缓存</text>
+<rect x="484.7" y="120.0" width="42.6" height="20.0" rx="10" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.1"/>
+<text x="506.0" y="134.7" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="13" font-weight="bold" fill="#1b1d1f" text-anchor="middle">TODO</text>
+<rect x="355.4" y="234.0" width="108.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="409.4" y="252.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_read</text>
+<rect x="350.9" y="297.0" width="117.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="409.4" y="315.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_write</text>
+<path d="M 189.5 226.0 L 284.0 226.0 L 284.0 247.0" fill="none" stroke="#c6d8ea" stroke-width="1.8"/>
+<path d="M 176.0 268.0 L 284.0 268.0 L 284.0 247.0" fill="none" stroke="#c6d8ea" stroke-width="1.8"/>
+<line x1="284.0" y1="247.0" x2="352.4" y2="247.0" stroke="#c6d8ea" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<line x1="180.5" y1="310.0" x2="347.9" y2="310.0" stroke="#c6d8ea" stroke-width="1.8" marker-end="url(#ah-0e2841)"/>
+<rect x="493.9" y="208.0" width="167.1" height="160.0" rx="6" fill="none" stroke="#68b4d4" stroke-width="1.4" stroke-dasharray="6 4"/>
+<rect x="517.2" y="199.0" width="120.5" height="18.0" rx="0" fill="#1b1d1f" stroke="none" stroke-width="0"/>
+<text x="577.5" y="213.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#68b4d4" text-anchor="middle">宿主 CPU 的缓存</text>
+<text x="539.0" y="240.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#68b4d4" text-anchor="end">组 0</text>
+<rect x="549.0" y="226.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="575.0" y="226.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="601.0" y="226.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="627.0" y="226.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<text x="539.0" y="263.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#68b4d4" text-anchor="end">组 1</text>
+<rect x="549.0" y="249.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="575.0" y="249.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="601.0" y="249.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="627.0" y="249.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<text x="539.0" y="286.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#68b4d4" text-anchor="end">组 2</text>
+<rect x="549.0" y="272.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="575.0" y="272.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="601.0" y="272.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="627.0" y="272.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<text x="601.0" y="310.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="16" font-weight="normal" fill="#99a6b3" text-anchor="middle">⋮</text>
+<text x="539.0" y="332.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="14" font-weight="bold" fill="#68b4d4" text-anchor="end">组 63</text>
+<rect x="549.0" y="318.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="575.0" y="318.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="601.0" y="318.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<rect x="627.0" y="318.0" width="26.0" height="18.0" rx="0" fill="#223842" stroke="#68b4d4" stroke-width="1.2"/>
+<line x1="467.4" y1="247.0" x2="491.9" y2="247.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="471.9" y1="310.0" x2="491.9" y2="310.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<text x="601.0" y="358.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#68b4d4" text-anchor="middle">64 组 × 4 路</text>
+<text x="335.5" y="438.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="normal" fill="#99a6b3" text-anchor="end">frame/cpu/dram.c</text>
+<rect x="347.5" y="437.0" width="142.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="418.5" y="455.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">dram_line_read</text>
+<rect x="513.5" y="403.0" width="151.0" height="26.0" rx="4" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.3"/>
+<text x="589.0" y="421.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#c6d8ea" text-anchor="middle">dram_line_write</text>
+<line x1="418.5" y1="432.0" x2="418.5" y2="383.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<line x1="589.0" y1="382.0" x2="589.0" y2="400.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<path d="M 666.5 416.0 L 818.0 416.0 L 818.0 383.0" fill="none" stroke="#f37b84" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
+<path d="M 948.0 382.0 L 948.0 450.0 L 492.5 450.0" fill="none" stroke="#f37b84" stroke-width="2.4" marker-end="url(#ah-c0392b)"/>
+<text x="883.0" y="406.0" font-family="PingFang SC, Noto Sans CJK SC, Source Han Sans SC, sans-serif" font-size="15" font-weight="bold" fill="#f37b84" text-anchor="middle">访问物理内存</text>
+<rect x="374.0" y="26.0" width="264.0" height="30.0" rx="6" fill="#1b1d1f" stroke="#99a6b3" stroke-width="1.4"/>
+<text x="506.0" y="46.0" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="normal" fill="#99a6b3" text-anchor="middle">frame/main.c</text>
+<line x1="411.0" y1="56.0" x2="411.0" y2="118.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="357.0" y="73.0" width="108.0" height="26.0" rx="13.0" fill="#7d8891" stroke="#7d8891" stroke-width="1.3"/>
+<text x="411.0" y="91.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_init</text>
+<line x1="601.0" y1="56.0" x2="601.0" y2="118.0" stroke="#c6d8ea" stroke-width="1.6" marker-end="url(#ah-0e2841)"/>
+<rect x="542.5" y="73.0" width="117.0" height="26.0" rx="13.0" fill="#c6d8ea" stroke="#c6d8ea" stroke-width="1.3"/>
+<text x="601.0" y="91.2" font-family="SFMono-Regular, Menlo, DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="bold" fill="#1b1d1f" text-anchor="middle">cache_flush</text>
+</svg>
